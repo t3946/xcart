@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
-import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
@@ -17,8 +15,6 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import { StoreDto } from "@s3stores-mail/ts/types";
-import classNames from "classnames";
 import { useBreakPoint } from "../hooks/useBreakPoint";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
@@ -39,14 +35,13 @@ import TSVSettings from "@client/modules/account/components/login-and-security/T
 import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
 import { EditCard } from "@client/modules/account/pages/EditCard";
 import { AddCard } from "@client/modules/account/pages/AddCard";
-import { RemoveCard } from "@client/modules/account/components/wallet/RemoveCard";
 import { RemoveCardPage } from "@client/modules/account/pages/RemoveCardPage";
+import { PageContainerHoc } from "@client/modules/account/hoc/PageContainerHoc";
+import { InvitationPage } from "../pages/InvitationPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
   const user = useSelector((e: AccountStore) => e.user);
-
-  const isList = useSelector((e: AccountStore) => e.main.isList);
 
   useEffect(() => {
     useBreakPoint();
@@ -57,22 +52,6 @@ export const AccountRouters = (): any => {
   }, []);
 
   dispatch(setBreadcrumbsAddresses(staticRoutes));
-
-  const leftColumnClasses = [
-    "col account-page-left-column d-none",
-    {
-      "d-lg-block": user !== null,
-    },
-  ];
-
-  const rightColumnClasses = [
-    "col",
-    {
-      "account-page-right-column": user !== null,
-      "d-flex": user === null,
-      "justify-content-center": user === null,
-    },
-  ];
 
   return (
     <Provider store={accountStore as any}>
@@ -90,130 +69,156 @@ export const AccountRouters = (): any => {
             {user && <BreadCrumbs />}
 
             <div className="row">
-              <div className={classNames(leftColumnClasses)}>
-                {isList ? <ListsSidebarMenu /> : <SideBarMenu />}
-              </div>
-
-              <div className={classNames(rightColumnClasses)}>
-                <Switch>
-                  <Route
-                    exact
-                    path="/account/addresses"
-                    component={AddressDialogHOC(
-                      <Addresses />,
-                      <AddAddressDialog />
-                    )}
-                  />
-
-                  <Route
-                    exact
-                    path="/account/addresses/add"
-                    component={AddAddressPage}
-                  />
-                  <Route
-                    exact
-                    path="/account/addresses/edit"
-                    component={AddAddressPage}
-                  />
-
-                  <Route
-                    exact
-                    path="/account/payments/wallet"
-                    component={Wallet}
-                  />
-                  <Route
-                    exact
-                    path="/account/payments/wallet/edit"
-                    component={EditCard}
-                  />
-                  <Route
-                    exact
-                    path="/account/payments/wallet/add"
-                    component={AddCard}
-                  />
-                  <Route
-                    exact
-                    path="/account/payments/wallet/remove"
-                    component={RemoveCardPage}
-                  />
-
-                  <Route
-                    exact
-                    path="/account/payments/transactions"
-                    component={Transactions}
-                  />
-                  <Route
-                    exact
-                    path="/account/your-lists/:id"
-                    component={ListsPage}
-                  />
-                  <Route
-                    exact
-                    path="/account/your-lists"
-                    component={ListsPage}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:login")}
-                    component={LoginForm}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:register")}
-                    component={RegisterForm}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:public-profile")}
-                    component={PublicProfile}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:login-and-security")}
-                    component={LoginAndSecurity}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:edit-name")}
-                    component={FormEditUserName}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:edit-email")}
-                    component={FormEditUserEmail}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:edit-phone")}
-                    component={FormEditUserPhone}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:edit-password")}
-                    component={FormChangePassword}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:two-step-verification-settings")}
-                    component={TSVSettings}
-                  />
-
-                  <Route
-                    exact
-                    path={route("account:two-step-verification-add-new")}
-                    component={TSVAddNewApp}
-                  />
-                </Switch>
-              </div>
+              <Switch>
+                <Route
+                  exact
+                  path="/account/addresses"
+                  component={PageContainerHoc(<SideBarMenu />, <Addresses />)}
+                />
+                <Route
+                  exact
+                  path="/account/addresses/add"
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <AddAddressPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/addresses/edit"
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <AddAddressPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet"
+                  component={PageContainerHoc(<SideBarMenu />, <Wallet />)}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet/edit"
+                  component={PageContainerHoc(<SideBarMenu />, <EditCard />)}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet/add"
+                  component={PageContainerHoc(<SideBarMenu />, <AddCard />)}
+                />
+                <Route
+                  exact
+                  path="/account/payments/wallet/remove"
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <RemoveCardPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/payments/transactions"
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <Transactions />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/:id"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <ListsPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <ListsPage />
+                  )}
+                />
+                http://localhost/account/your-lists/invite/dfjU7G93+2udow==
+                <Route
+                  exact
+                  path="/account/your-lists/invite/:encryptUrl"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <InvitationPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:login")}
+                  component={LoginForm}
+                />
+                <Route
+                  exact
+                  path={route("account:register")}
+                  component={RegisterForm}
+                />
+                <Route
+                  exact
+                  path={route("account:public-profile")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <PublicProfile />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:login-and-security")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <LoginAndSecurity />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:edit-name")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <FormEditUserName />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:edit-email")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <FormEditUserEmail />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:edit-phone")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <FormEditUserPhone />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:edit-password")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <FormChangePassword />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:two-step-verification-settings")}
+                  component={PageContainerHoc(<SideBarMenu />, <TSVSettings />)}
+                />
+                <Route
+                  exact
+                  path={route("account:two-step-verification-add-new")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <TSVAddNewApp />
+                  )}
+                />
+              </Switch>
             </div>
           </div>
         </BrowserRouter>

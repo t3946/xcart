@@ -5,6 +5,8 @@ import LoginFormInputLogin from "./LoginFormInputLogin";
 import LoginFormInputPassword from "./LoginFormInputPassword";
 import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
+import classNames from "classnames";
+import { noSidebarClasses } from "@client/modules/account/ts/consts/no-sidebar-classes";
 
 const LoginForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);
@@ -48,9 +50,11 @@ const LoginForm: React.FC<any> = () => {
   }
 
   return (
-    <div className="account-auth-form account_auth-form">
-      <h1 className="account-form-header">Sign-In</h1>
-      {formTemplate()}
+    <div className={classNames(noSidebarClasses)}>
+      <div className="account-auth-form account_auth-form">
+        <h1 className="account-form-header">Sign-In</h1>
+        {formTemplate()}
+      </div>
     </div>
   );
 };

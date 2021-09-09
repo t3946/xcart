@@ -155,4 +155,9 @@ class AccountController extends FrontendController
     {
         $this->actionIndex();
     }
+
+    public function listInvite()
+    {
+
+    }
 }

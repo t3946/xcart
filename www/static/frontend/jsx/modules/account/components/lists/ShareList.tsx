@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import { ShareListBlock } from "@client/modules/account/components/lists/ShareListBlock";
+import React, { useContext } from "react";
 import { ShowSharedStatusEnum } from "@client/modules/account/ts/types/show-shared-status.enum";
 import { useDispatch } from "react-redux";
 import { encryptUrl } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import { ShareListInviteSection } from "@client/modules/account/components/lists/ShareListInviteSection";
+import { ShareListManagePeople } from "@client/modules/account/components/lists/ShareListManagePeople";
 
 interface ShareListProps {
   onClose: () => void;
@@ -43,6 +43,8 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
   return (
     <div>
       <ShareListInviteSection onCopyLinkFunc={encodeUrl} />
+      <hr className="share-list-center-line" />
+      <ShareListManagePeople />
     </div>
   );
 };

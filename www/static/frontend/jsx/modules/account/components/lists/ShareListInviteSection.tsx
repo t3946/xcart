@@ -6,41 +6,69 @@ export const ShareListInviteSection = ({ onCopyLinkFunc }) => {
   const [showSharedStatus, setShowSharedStatus] = useState(
     ShowSharedStatusEnum.VIEW
   );
+
+  const setNewStatus = (value: ShowSharedStatusEnum) => {
+    setShowSharedStatus(value);
+  };
   return (
     <React.Fragment>
-      <div className="share-list-label">Invite someone to</div>
+      <div className="share-list-label">Invite</div>
       <RadioBtn
         name="radio"
         id={"radio-item-view"}
-        viewValue={"View"}
+        viewValue={
+          <div>
+            <b>Viewer</b>
+            <div className="share-list-radio-subtitle">
+              Anyone with a link can view your list without making edits
+            </div>
+          </div>
+        }
+        groupClasses={{
+          group: "share-list-radio",
+        }}
         groupValue={showSharedStatus}
         radioValue={ShowSharedStatusEnum.VIEW}
-        onChange={setShowSharedStatus}
-        groupClasses={{
-          group: "billing-address-item-container",
-          checked: "form-radio-checked",
-        }}
+        onChange={setNewStatus}
       />
       <RadioBtn
         name="radio"
         id={"radio-item-edit"}
-        viewValue={"Edit"}
+        viewValue={
+          <div>
+            <b>Edit</b>
+            <div className="share-list-radio-subtitle">
+              Invited people can add or remove items from your list
+            </div>
+          </div>
+        }
+        groupClasses={{
+          group: "share-list-radio",
+        }}
         groupValue={showSharedStatus}
         radioValue={ShowSharedStatusEnum.VIEW}
-        onChange={setShowSharedStatus}
-        groupClasses={{
-          group: "billing-address-item-container",
-          checked: "form-radio-checked",
-        }}
+        onChange={setNewStatus}
       />
       <div className="share-variants-container">
-        <div
-          onClick={onCopyLinkFunc}
-          className="share-variants-label share-variants-label-copy"
-        >
-          Copy link
+        <div className="share-variants-logo-container">
+          <img
+            className="share-variants-logo"
+            src="/static/frontend/images/icons/account/paper_clip.svg"
+          />
+          <div
+            onClick={onCopyLinkFunc}
+            className="share-variants-label share-variants-label-copy"
+          >
+            Copy link
+          </div>
         </div>
-        <div className="share-variants-label">Invite by email</div>
+        <div className="share-variants-logo-container">
+          <img
+            className="share-variants-logo"
+            src="/static/frontend/images/icons/account/email.svg"
+          />
+          <div className="share-variants-label">Invite by email</div>
+        </div>
       </div>
     </React.Fragment>
   );

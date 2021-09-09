@@ -89,7 +89,9 @@ function* encryptUrl(action: AnyAction): Generator {
     .post<any>(`/account/api/lists/get-url-encrypt`, action.privateType)
     .then((response) => response);
 
-  yield action.callback(result.text);
+  yield action.callback(
+    `http://localhost/account/your-lists/invite/${result.text}`
+  );
 }
 
 export function* listsActionWatcher(): SagaIterator {

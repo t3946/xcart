@@ -115,6 +115,11 @@ return [
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'
     ],
+    [
+        'route' => '/your-lists/invite/{*:slug}',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'list-invite'
+    ],
 
     //api
     [

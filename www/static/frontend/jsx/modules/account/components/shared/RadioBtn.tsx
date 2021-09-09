@@ -3,15 +3,15 @@ import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 
 interface RadioBtnProps {
-  id: number;
-  groupValue: number;
-  radioValue: number;
+  id: number | string;
+  groupValue: number | string;
+  radioValue: number | string;
   viewValue: string | ReactNode;
-  onChange: Dispatch<number>;
+  onChange: (value: string | number) => void;
   name: string;
   groupClasses: {
-    group: string | string[];
-    checked: string | string[];
+    group?: string | string[];
+    checked?: string | string[];
   };
 }
 
@@ -30,9 +30,9 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
       container
       onClick={() => onChange(radioValue)}
       className={
-        classnames(groupClasses.group) +
+        classnames(groupClasses?.group) +
         ` form-radio ${
-          groupValue === radioValue && classnames(groupClasses.checked)
+          groupValue === radioValue && classnames(groupClasses?.checked)
         }`
       }
     >

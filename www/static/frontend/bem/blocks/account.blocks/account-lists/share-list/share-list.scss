@@ -25,11 +25,29 @@ cursor: pointer;
 }
 
 .share-list-label{
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.share-list-radio{
+  margin-bottom: 15px;
+}
+
+.share-list-radio-subtitle{
+  color: #787878;
 }
 
 .share-list-center-line{
   color: #C4C4C4;
   margin: 16px 0;
+}
+
+.share-variants-logo{
+  margin-right: 10px;
+}
+
+.share-variants-logo-container{
+  display: flex;
+  align-items: center;
 }

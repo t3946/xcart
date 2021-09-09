@@ -14,7 +14,7 @@ export const ShareListDialog: React.FC<ShareListDialogProps> = ({
   return (
     <BootstrapDialogHOC
       show={open}
-      title={"Invite others to your list"}
+      title={"Share list with others"}
       onClose={handleClose}
     >
       <ShareList onClose={handleClose} />

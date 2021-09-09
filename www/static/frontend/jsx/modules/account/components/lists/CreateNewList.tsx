@@ -46,7 +46,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   };
 
   return (
-    <div className="list-dialog-container">
+    <div>
       <form className="your-order-form" encType="multipart/form-data">
         <FormInput
           name={"name"}
