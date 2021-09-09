@@ -369,23 +369,10 @@ class ManyToManyField extends RelatedField
         }
 
         if (\is_array($value) && \count($value) > 0) {
-            if (
-                is_numeric($value[0]) ||
-                $value[0] instanceof Model
-            ) {
-                return $value;
-            }
-            else {
-                if (empty($value[0])) {
-                    return [];
-                }
+            return $value;
+        }
 
-                throw new RuntimeException("{$this->getName()}: ManyToMany field can set only arrays of Models or existing primary keys");
-            }
-        }
-        else {
-            return [];
-        }
+        return [];
     }
 
     /**
@@ -403,8 +390,8 @@ class ManyToManyField extends RelatedField
         $manager->clean();
 
         foreach ($value as $linkModel) {
-            if ($linkModel === '') {
-                    continue;
+            if (!$linkModel) {
+                continue;
             }
             if (
                 ($linkModel instanceof ModelInterface) === false &&
