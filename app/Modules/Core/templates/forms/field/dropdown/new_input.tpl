@@ -8,7 +8,6 @@
                         {if $key in list $field->getSelected()}selected="selected"{/if} {if $key in list $field->disabled}disabled{/if}>{$field_name}</option>
             {/foreach}
         </select>
-        <input type="hidden" name="{$name}" value="" />
 </span>
 {if $extended}
     {$field->getForm()->getField($extended)->renderInput()}
