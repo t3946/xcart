@@ -30,7 +30,7 @@ class DateField extends CharField
 
 	public function getRenderValue()
 	{
-		if (!is_null($this->value)) {
+		if (!is_null($this->value) && $this->value != 0) {
 			$date = $this->getDateFromValue();
 
 			return ($date) ? $date->format('Y-m-d H:i:s') : '';

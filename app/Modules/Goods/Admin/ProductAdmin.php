@@ -3,6 +3,7 @@
 namespace Modules\Goods\Admin;
 
 
+use DateTime;
 use Modules\Admin\Contrib\Admin;
 use Modules\Brand\Models\BrandModel;
 use Modules\Distributor\Models\DistributorModel;
@@ -101,9 +102,9 @@ class ProductAdmin extends Admin
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';
         }
-/*        if ($property === 'add_date') {
+        if ($property === 'add_date') {
             return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
-        }*/
+        }
 
 		return parent::getItemProperty($item, $property);
 	}
