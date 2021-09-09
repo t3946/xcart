@@ -98,7 +98,9 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
                 />
 
                 {(!errors.password || !touched.password) && (
-                  <RBForm.Text className={"auth-form-info_input-caption form-group-text"}>
+                  <RBForm.Text
+                    className={"auth-form-info_input-caption form-group-text"}
+                  >
                     {"Password must be at least 6 characters"}
                   </RBForm.Text>
                 )}
