@@ -1,0 +1,12 @@
+.public-profile-footer-button {
+  width: 100%;
+  padding: 0;
+
+  @include breakpoint(md up) {
+    width: rem-calc(180);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(160);
+  }
+}

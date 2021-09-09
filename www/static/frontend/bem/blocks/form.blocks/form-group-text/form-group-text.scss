@@ -1,0 +1,15 @@
+.form-group-text {
+  color: #959595;
+  font-size: rem-calc(12);
+  line-height: rem-calc(14);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(14);
+    line-height: rem-calc(17);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(12);
+    line-height: rem-calc(14);
+  }
+}
