@@ -45,7 +45,7 @@ class QueueImagesActiveCommand extends Command
                     echo "==============Old image data=============\n";
                     print_r($image_by_link->getAttributes());
                     echo "==============New image data=============\n";
-                    print_r($image_by_hash);
+                    print_r($image_by_hash->getAttributes());
                     echo "==============End=============\n";
 
                     $image_by_link = $image_by_hash;
