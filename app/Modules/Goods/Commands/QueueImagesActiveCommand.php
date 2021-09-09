@@ -39,7 +39,15 @@ class QueueImagesActiveCommand extends Command
                     echo "new image\n";
                 } else {
                     // изменилась ссылка у картинки
-                    echo "image link changed\n";
+                    echo "Image link changed\n";
+                    echo "==============Queue data=============\n";
+                    print_r($data);
+                    echo "==============Old image data=============\n";
+                    print_r($image_by_link->getAttributes());
+                    echo "==============New image data=============\n";
+                    print_r($image_by_hash);
+                    echo "==============End=============\n";
+
                     $image_by_link = $image_by_hash;
                 }
             } else {
