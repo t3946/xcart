@@ -403,6 +403,9 @@ class ManyToManyField extends RelatedField
         $manager->clean();
 
         foreach ($value as $linkModel) {
+            if ($linkModel === '') {
+                    continue;
+            }
             if (
                 ($linkModel instanceof ModelInterface) === false &&
                 !is_a($linkModel, $this->modelClass)) {
