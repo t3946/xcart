@@ -36,18 +36,23 @@ class VrsController extends Controller
       $this->jsonResponse(['status' => $status]);
   }
 
-  public function getMessageFromDomain(string $domain){
-      $site_model = VrsHelperSitesModel::objects()->filter(['domain' => $domain])->asArray(true)->all()[0];
-      if($site_model['status'] === 'active' || $site_model['status'] === 'inactive' )
+  public function getMessageFromDomain(string $domain): array
+  {
+      /** @var VrsHelperSitesModel $site_model */
+      if (!$site_model = VrsHelperSitesModel::objects()->get(['domain' => $domain])) {
+          return [];
+      }
+
+      if($site_model->status === 'active' || $site_model->status === 'inactive' )
       {
+          /** @var DistributorModel $dx */
           $dx = DistributorModel::objects()->limit(1)->get(['url__contains' => $domain]);
-          $status = $site_model['status'];
+          $status = $site_model->status;
           $dx_created_user = ['b_firstname' => $dx->provider_model->getAttributes()['b_firstname'], 'b_lastname' => $dx->provider_model->getAttributes()['b_lastname']];
           $first_message = ['message_text' => "This is our $status Dx",'status' => 'status','ourDx'=> true, 'date' => $dx->created_at, 'user' => $dx_created_user];
       }
 
-
-      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->count() > 0))
+      if(!(VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model->site_id])->count() > 0))
       {
           if($first_message){
               return  [$first_message];
@@ -55,12 +60,11 @@ class VrsController extends Controller
           return [];
       }
 
-
-      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model['site_id']])->order(['date'])->asArray(true)->all();
+      $messages = VrsHelperMessagesModel::objects()->filter(['site_id' => $site_model->site_id])->order(['date'])->asArray(true)->all();
       $a = [];
       foreach ($messages as $message)
       {
-          if ($user_model = UserModel::objects()->get(['id'=>$message['user_id']])) {
+          if ($user_model = UserModel::objects()->get(['id' => $message['user_id']])) {
               $message['user'] = [
                   'id' => $user_model->id,
                   'firstname' => $user_model->firstname,
@@ -71,8 +75,7 @@ class VrsController extends Controller
 
               $a[] = $message;
           }
-      }
-
+      } 
 
       if($first_message)
       {
