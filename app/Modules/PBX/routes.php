@@ -1,9 +1,11 @@
 <?php
 
+use Modules\PBX\Controllers\PBXController;
+
 return [
         [
             'route' => '/call/',
-            'target' => ['\Modules\PBX\Controllers\PBXController', 'actionCallback'],
+            'target' => [PBXController::class, 'actionCallback'],
             'name' => 'pbx_call'
         ]
     ];

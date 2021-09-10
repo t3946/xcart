@@ -2,15 +2,12 @@
 
 namespace Modules\PBX\Controllers\Admin;
 
-use Xcart\App\QueryBuilder\Expression;
-use Xcart\App\QueryBuilder\Q\QOr;
+use Modules\PBX\Forms\CallsFilterForm;
 use Modules\Admin\Controllers\BackendController;
 use Modules\Order\Models\OrderModel;
-use Modules\PBX\Forms\TranslatesFilterForm;
 use Modules\PBX\Helpers\PBXHelper;
 use Modules\PBX\Models\AnveoListensModel;
 use Modules\PBX\Models\PbxAnveoCallModel;
-use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -19,7 +16,7 @@ class PBXController extends BackendController
 {
     public function index()
     {
-        $form = new TranslatesFilterForm();
+        $form = new CallsFilterForm();
         $form->populate($_GET);
 
         $qs = PbxAnveoCallModel::objects()->order(['-start_at']);
