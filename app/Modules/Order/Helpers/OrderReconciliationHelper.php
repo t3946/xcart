@@ -144,11 +144,14 @@ class OrderReconciliationHelper
                         $a[] = new QOr(['description_csv__contains' => str_replace('_', '\_', strtoupper(trim($k)))]);
                     }
                 }
-                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
+                $_additional_filter = [
                     'distributors__manufacturerid__isnull' => true,
                     'action' => '',
-                    new QOr($a),
-                ])) as $all) {
+                ];
+                if ($a) {
+                    $_additional_filter[] = new QOr($a);
+                }
+                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, $_additional_filter)) as $all) {
                     $all->action = 'D';
                     $all->save();
                 }
@@ -164,9 +167,12 @@ class OrderReconciliationHelper
                         $a[] = new QOr(['description_csv__contains' => strtoupper(trim($k))]);
                     }
                 }
-                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, [
-                    new QOr($a),
-                ])) as $all){
+                $_additional_filter = [];
+                if ($a) {
+                    $_additional_filter[] = new QOr($a);
+                }
+
+                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, $_additional_filter)) as $all){
                     [$rdm, $is_new] = ReconciliationManufacturerModel::objects()->getOrCreate([
                         'manufacturer_id' => $distributor->manufacturerid,
                         'reconciliation_id' => $all->id,
