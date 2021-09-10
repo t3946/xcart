@@ -1,0 +1,13 @@
+.login-and-security-edit-button {
+  font-size: rem-calc(20);
+  width: 100%;
+
+  @include breakpoint(md up) {
+    width: rem-calc(180);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+    width: rem-calc(170);
+  }
+}

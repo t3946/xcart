@@ -9,6 +9,8 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import { editNameAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 const FormEditUserName = (): any => {
   const history = useHistory();
@@ -50,72 +52,74 @@ const FormEditUserName = (): any => {
   }
 
   return (
-    <div>
-      <div className="account-page_hat">
-        <h1 className="text-center text-lg-start">
-          Change your name
-        </h1>
-      </div>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={submit}
+    >
+      {function ({ isSubmitting, values, errors, touched, handleChange }) {
+        return (
+          <Form>
+            <InnerPage
+              header={"Change your name"}
+              bodyClasses={"content-panel"}
+              footerClasses={"text-center text-lg-start"}
+              footer={
+                <SubmitCancelButtonsGroup
+                  submitText={"save changes"}
+                  disabled={isSubmitting}
+                  buttonAdvancedClasses={"form-button__submit-and-cancel p-0"}
+                  groupAdvancedClasses={
+                    "d-md-flex justify-content-center justify-content-lg-start"
+                  }
+                  onCancel={() => {
+                    history.push(route("account:login-and-security"));
+                  }}
+                />
+              }
+            >
+              <p className="form-info">
+                If you want to change the name associated with your S3 Stores
+                customer account, you may do so below. Be sure to click the{" "}
+                <b>Save Changes</b> button when you are done.
+              </p>
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={submit}
-      >
-        {function ({ isSubmitting, values, errors, touched, handleChange }) {
-          return (
-            <Form>
-              <div className="content-panel">
-                <p className="form-info">
-                  If you want to change the name associated with your S3 Stores
-                  customer account, you may do so below. Be sure to click the{" "}
-                  <b>Save Changes</b> button when you are done.
-                </p>
-
-                <RBForm.Group controlId="EditUserName" className={"row"}>
-                  <div
+              <RBForm.Group controlId="EditUserName" className={"row"}>
+                <div
+                  className={
+                    "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
+                  }
+                >
+                  <RBForm.Label
                     className={
-                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
+                      "form-input-label mb-1 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
                     }
                   >
-                    <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
-                      New Full name
-                    </RBForm.Label>
-                  </div>
+                    New Full name
+                  </RBForm.Label>
+                </div>
 
-                  <div className={"col-12 col-md-6 col-lg-6"}>
-                    <RBForm.Control
-                      type="text"
-                      name="name"
-                      value={values.name}
-                      onChange={handleChange}
-                      className={"form-input"}
-                      isInvalid={!!touched.name && !!errors.name}
-                      isValid={touched.name && !errors.name}
-                    />
+                <div className={"col-12 col-md-6 col-lg-6"}>
+                  <RBForm.Control
+                    type="text"
+                    name="name"
+                    value={values.name}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={!!touched.name && !!errors.name}
+                    isValid={touched.name && !errors.name}
+                  />
 
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.name}
-                    </RBForm.Control.Feedback>
-                  </div>
-                </RBForm.Group>
-              </div>
-
-              <div className="account-page_footer text-center text-lg-start">
-                <button
-                  className={
-                    "admin-form-control form-button form-button__wide w-md-auto d-inline-block"
-                  }
-                  disabled={isSubmitting}
-                >
-                  save changes
-                </button>
-              </div>
-            </Form>
-          );
-        }}
-      </Formik>
-    </div>
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.name}
+                  </RBForm.Control.Feedback>
+                </div>
+              </RBForm.Group>
+            </InnerPage>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

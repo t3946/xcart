@@ -119,7 +119,7 @@ const PublicProfile = (): any => {
 
   return (
     <InnerPage
-      header={<h1 className="account-page-header mb-0">Public Profile</h1>}
+      header={"Public Profile"}
       bodyClasses={"p-0"}
     >
       <Formik

@@ -20,6 +20,7 @@ export interface AccountStore {
   departmentsMenuDesktop: {
     isVisible: boolean;
   };
+  countries: any;
 }
 
 export interface AccountAddressesStore {

@@ -9,6 +9,8 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import { editEmailAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 const FormEditUserEmail = (): any => {
   const history = useHistory();
@@ -54,12 +56,6 @@ const FormEditUserEmail = (): any => {
 
   return (
     <div>
-      <div className="account-page_hat">
-        <h1 className="text-center text-lg-start">
-          Change your email address
-        </h1>
-      </div>
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -68,7 +64,24 @@ const FormEditUserEmail = (): any => {
         {function ({ isSubmitting, values, errors, touched, handleChange }) {
           return (
             <Form>
-              <div className="content-panel">
+              <InnerPage
+                header={"Change your email address"}
+                headerClasses={"text-center text-lg-start"}
+                bodyClasses={"content-panel"}
+                footer={
+                  <SubmitCancelButtonsGroup
+                    submitText={"save changes"}
+                    disabled={isSubmitting}
+                    buttonAdvancedClasses={"form-button__submit-and-cancel p-0"}
+                    groupAdvancedClasses={
+                      "d-md-flex justify-content-center justify-content-lg-start"
+                    }
+                    onCancel={() => {
+                      history.push(route("account:login-and-security"));
+                    }}
+                  />
+                }
+              >
                 <p className="form-info">
                   Current email address: <b>{user.email}</b>
                   <br />
@@ -104,18 +117,7 @@ const FormEditUserEmail = (): any => {
                     </RBForm.Control.Feedback>
                   </div>
                 </RBForm.Group>
-              </div>
-
-              <div className="account-page_footer text-center text-lg-start">
-                <button
-                  className={
-                    "admin-form-control form-button form-button__wide w-md-auto d-inline-block"
-                  }
-                  disabled={isSubmitting}
-                >
-                  save changes
-                </button>
-              </div>
+              </InnerPage>
             </Form>
           );
         }}

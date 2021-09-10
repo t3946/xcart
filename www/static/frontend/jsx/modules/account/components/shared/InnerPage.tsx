@@ -15,17 +15,14 @@ interface PropsInterface {
 
 const InnerPage: React.FC<PropsInterface> = function (props: PropsInterface) {
   function headerTemplate() {
-    let headerClasses;
-
-    if (props.headerClasses) {
-      headerClasses = props.headerClasses;
-    } else {
-      headerClasses = "mb-0";
-    }
-
     if (props.header) {
       return (
-        <h1 className={classnames("account-page-header", headerClasses)}>
+        <h1
+          className={classnames(
+            "account-page-header mb-0",
+            props.headerClasses
+          )}
+        >
           {props.header}
         </h1>
       );

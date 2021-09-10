@@ -10,6 +10,8 @@ import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserAct
 import { getCountryByCode } from "@client/jsx/utils/Countries";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
+import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 const FormEditUserPhone = (props): any => {
   const history = useHistory();
@@ -75,68 +77,66 @@ const FormEditUserPhone = (props): any => {
   }
 
   return (
-    <div>
-      <div className="account-page_hat">
-        <h1 className="text-center text-lg-start">
-          Change Mobile Phone Number
-        </h1>
-      </div>
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={submit}
-      >
-        {function ({
-          isSubmitting,
-          setFieldValue,
-          values,
-          errors,
-          touched,
-          handleChange,
-        }) {
-          return (
-            <Form>
-              <div className="content-panel">
-                <FormInputPhone
-                  setFieldValue={setFieldValue}
-                  handleChange={handleChange}
-                  touched={touched}
-                  errors={errors}
-                  name={"phone"}
-                  values={{
-                    phoneCountryCode: values.phoneCountryCode,
-                    phone: values.phone,
-                  }}
-                  mode={"mobile"}
-                  label={"New Mobile number"}
-                />
-
-                <p className="form-info mb-0">
-                  By enrolling a mobile phone number, you consent to receive
-                  automated text messages from or on behalf of S3 Stores related
-                  to account management and security. Remove your number in{" "}
-                  <b>Login & Security</b> to cancel. Message and data rates may
-                  apply.
-                </p>
-              </div>
-
-              <div className="account-page_footer text-center text-lg-start">
-                <button
-                  className={
-                    "admin-form-control form-button form-button__wide w-md-auto d-inline-block"
-                  }
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={submit}
+    >
+      {function ({
+        isSubmitting,
+        setFieldValue,
+        values,
+        errors,
+        touched,
+        handleChange,
+      }) {
+        return (
+          <Form>
+            <InnerPage
+              header={"Change Mobile Phone Number"}
+              headerClasses={"text-center text-lg-start"}
+              bodyClasses={"content-panel"}
+              footerClasses={"text-center text-lg-start"}
+              footer={
+                <SubmitCancelButtonsGroup
+                  submitText={"save changes"}
                   disabled={isSubmitting}
-                  type="submit"
-                >
-                  continue
-                </button>
-              </div>
-            </Form>
-          );
-        }}
-      </Formik>
-    </div>
+                  buttonAdvancedClasses={"form-button__submit-and-cancel p-0"}
+                  groupAdvancedClasses={
+                    "d-md-flex justify-content-center justify-content-lg-start"
+                  }
+                  onCancel={() => {
+                    history.push(route("account:login-and-security"));
+                  }}
+                />
+              }
+            >
+              <FormInputPhone
+                setFieldValue={setFieldValue}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
+                name={"phone"}
+                values={{
+                  phoneCountryCode: values.phoneCountryCode,
+                  phone: values.phone,
+                }}
+                mode={"mobile"}
+                label={"New Mobile number"}
+              />
+
+              <p className="form-info mb-0">
+                By enrolling a mobile phone number, you consent to receive
+                automated text messages from or on behalf of S3 Stores related
+                to account management and security. Remove your number in{" "}
+                <b>Login & Security</b> to cancel. Message and data rates may
+                apply.
+              </p>
+            </InnerPage>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
 

@@ -86,7 +86,11 @@ const LoginAndSecurity = (): any => {
               exact={true}
               className="common-link login-and-security_submit-button d-inline-block text-decoration-none"
             >
-              <button className={"form-button form-button__outline w-auto"}>
+              <button
+                className={
+                  "form-button form-button__outline login-and-security-edit-button"
+                }
+              >
                 edit
               </button>
             </NavLink>

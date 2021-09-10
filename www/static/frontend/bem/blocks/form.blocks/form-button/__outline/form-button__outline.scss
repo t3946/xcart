@@ -2,10 +2,7 @@
   border: rem-calc(2) solid #ffb500;
   color: #4a4949;
   background-color: #ffffff;
-
-  @include breakpoint(lg up) {
-    border-width: rem-calc(1);
-  }
+  font-weight: normal;
 
   &:hover, &:focus {
     background-color: #fffaef;

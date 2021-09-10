@@ -48,10 +48,13 @@ const TSVSettings = (): any => {
   }
 
   function disableTSVButtonTemplate() {
+    const className =
+      "form-button form-button__outline w-100 w-sm-auto form-button__micro";
+
     return breakpoint({
       xs: (
         <NavLink
-          className="form-button form-button__outline w-100 w-sm-auto"
+          className={className}
           to={route("account:two-step-verification-settings-disable")}
           exact={true}
         >
@@ -59,10 +62,7 @@ const TSVSettings = (): any => {
         </NavLink>
       ),
       lg: (
-        <button
-          className="form-button form-button__outline w-100 w-sm-auto"
-          onClick={disableTSVModal.handleClickOpen}
-        >
+        <button className={className} onClick={disableTSVModal.handleClickOpen}>
           disable
         </button>
       ),
@@ -101,9 +101,9 @@ const TSVSettings = (): any => {
       />
 
       <InnerPage
-        header={<>Two-Step Verification (2SV) Settings</>}
+        header={"Two-Step Verification (2SV) Settings"}
         hat={<>{disableTSVTemplate()}</>}
-        bodyClasses={"tsv-settings-body"}
+        bodyClasses={"content-panel"}
       >
         <div className="row two-step-row__bordered two-step-row__header mx-0 pb-lg-2 lg-2">
           <div className="col-12 px-lg-0">

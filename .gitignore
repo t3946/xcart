@@ -19,7 +19,7 @@ package-lock.json
 /www/media/
 /www/files/
 /www/product_files/
-/.idea/
+/**/.idea/
 /www/verificator/cookies/*
 /www/include/system/
 node_modules
