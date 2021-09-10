@@ -59,7 +59,7 @@ const PublicProfile = (): any => {
       }),
   });
 
-  const inputFileRef = React.useRef();
+  const inputFileRef = React.useRef<HTMLInputElement>();
 
   function submit(values, actions) {
     const formData = new FormData();
