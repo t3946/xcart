@@ -111,9 +111,33 @@ return [
     ],
 
     [
+        'route' => '/login-and-security/two-step-verification/settings/disable',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-settings-disable',
+    ],
+
+    [
         'route' => '/login-and-security/two-step-verification/settings/add-new',
         'target' => [AccountController::class, 'actionTSVAddNew'],
         'name' => 'two-step-verification-add-new',
+    ],
+
+    [
+        'route' => '/login-and-security/two-step-verification/settings/preferred-method',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-settings-preferred-method',
+    ],
+
+    [
+        'route' => '/login-and-security/two-step-verification/recovery',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-recovery',
+    ],
+
+    [
+        'route' => '/login-and-security/two-step-verification/password-assistance',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'two-step-verification-recovery-password-assistance',
     ],
 
     [
@@ -169,6 +193,12 @@ return [
     [
         'route' => '/api/lists',
         'path' => 'Modules.Account.routes.routes_lists_api',
+        'namespace' => 'api',
+    ],
+
+    [
+        'route' => '/api/reset-password',
+        'path' => 'Modules.Account.routes.routes_reset-password_api',
         'namespace' => 'api',
     ],
 ];

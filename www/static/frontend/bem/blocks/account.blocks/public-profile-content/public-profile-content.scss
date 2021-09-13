@@ -1,6 +1,0 @@
-.public-profile-content {
-    @include breakpoint(md up) {
-        border: rem-calc(1) solid #C4C4C4;
-        padding: rem-calc(15) rem-calc(20);
-    }
-}

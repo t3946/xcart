@@ -9,6 +9,17 @@ export interface AccountStore {
   payments: AccountPaymentsStore;
   mobileMenu: any;
   lists: AccountListsStore;
+  shadowPanel: {
+    isVisible: boolean;
+    zIndex: number;
+    subscribers: Record<string, boolean>;
+  };
+  departmentsMenuMobile: {
+    isVisible: boolean;
+  };
+  departmentsMenuDesktop: {
+    isVisible: boolean;
+  };
 }
 
 export interface AccountAddressesStore {

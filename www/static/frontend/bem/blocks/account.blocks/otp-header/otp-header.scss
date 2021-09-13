@@ -1,0 +1,9 @@
+.otp-header{
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #c4c4c4;
+
+  @include breakpoint(lg up) {
+    background-color: transparent;
+    border-bottom: none;
+  }
+}

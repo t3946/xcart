@@ -16,6 +16,7 @@ import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import { useBreakPoint } from "../hooks/useBreakPoint";
+import classNames from "classnames";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -38,6 +39,10 @@ import { AddCard } from "@client/modules/account/pages/AddCard";
 import { RemoveCardPage } from "@client/modules/account/pages/RemoveCardPage";
 import { PageContainerHoc } from "@client/modules/account/hoc/PageContainerHoc";
 import { InvitationPage } from "../pages/InvitationPage";
+import TSVDisable from "@client/modules/account/components/login-and-security/TSVDisable";
+import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
+import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
+import PasswordAssistance from "@client/modules/account/components/password-assistance/PasswordAssistance";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -46,6 +51,7 @@ export const AccountRouters = (): any => {
   useEffect(() => {
     useBreakPoint();
     dispatch(getTerritory());
+
     if (accountStore.getState().user) {
       dispatch(getAddresses(accountStore.getState().user.id));
     }
@@ -68,7 +74,7 @@ export const AccountRouters = (): any => {
           <div className={"container"}>
             {user && <BreadCrumbs />}
 
-            <div className="row">
+            <div className="row mt-lg-20">
               <Switch>
                 <Route
                   exact
@@ -217,6 +223,33 @@ export const AccountRouters = (): any => {
                     <SideBarMenu />,
                     <TSVAddNewApp />
                   )}
+                />
+                <Route
+                    exact
+                    path={route(
+                        "account:two-step-verification-settings-disable"
+                    )}
+                    component={TSVDisable}
+                />
+                <Route
+                    exact
+                    path={route(
+                        "account:two-step-verification-settings-preferred-method"
+                    )}
+                    component={TSVChangePreferredMethod}
+                />
+
+                <Route
+                    exact
+                    path={route("account:two-step-verification-recovery")}
+                    component={TSVRecovery}
+                />
+
+
+                <Route
+                    exact
+                    path={route("account:two-step-verification-recovery-password-assistance")}
+                    component={PasswordAssistance}
                 />
               </Switch>
             </div>

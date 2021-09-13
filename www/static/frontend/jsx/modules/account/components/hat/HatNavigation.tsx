@@ -1,17 +1,24 @@
 import React from "react";
 import HatLoginButton from "./HatLoginButton";
 import TopLine from "@client/modules/account/components/hat/TopLine";
-import { useDispatch } from "react-redux";
-import { showAction as showMobileMenu } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
-import { showShadowPanelAction as showShadow } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import { useDispatch, useSelector } from "react-redux";
+import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
+import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
 
-  function openMobileMenu(e) {
+  const isVisibleMenu = useSelector(
+    (e: AccountStore) => e.departmentsMenuMobile.isVisible
+  );
+
+  function toggleMobileDepartmentsMenu(e) {
     e.stopPropagation();
-    dispatch(showMobileMenu());
-    dispatch(showShadow());
+    HideAllMenu(dispatch);
+    dispatch(setDepartmentsMenuMobileIsVisibleAction(!isVisibleMenu));
+    dispatch(setVisibleShadowPanelAction(!isVisibleMenu));
   }
 
   return (
@@ -34,7 +41,7 @@ const HatNavigation = (): any => {
                     href="#"
                     data-toggle="offCanvasLeft"
                     className="mobile_menu middle-inline-block hamburger"
-                    onClick={openMobileMenu}
+                    onClick={toggleMobileDepartmentsMenu}
                   />
                 </div>
 

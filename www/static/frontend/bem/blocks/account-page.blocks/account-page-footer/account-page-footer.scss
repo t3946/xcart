@@ -1,0 +1,11 @@
+.account-page-footer {
+  padding: rem-calc(26) 0 0;
+
+  @include breakpoint(md up) {
+    padding: rem-calc(30) rem-calc(20) 0;
+  }
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(24) rem-calc(24) 0;
+  }
+}

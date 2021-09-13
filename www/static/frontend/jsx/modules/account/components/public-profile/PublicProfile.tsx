@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { Formik, Form } from "formik";
@@ -9,10 +9,17 @@ import { route } from "@client/jsx/utils/AppData";
 import { savePublicProfileAction } from "@client/jsx/redux/actions/account-actions/ProfileActions";
 import classnames from "classnames";
 import TimesLightIcon from "@client/jsx/components/icons/font-awesome/times/TimesLightIcon";
+import InnerPage from "@client/modules/account/components/shared/InnerPage";
 
 const PublicProfile = (): any => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const user = useSelector((e: StoreDto) => e.user);
+
+  if (!user) {
+    history.push(route("account:login"));
+  }
+
   const FILE_SIZE_B = 100 * 1024;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
@@ -52,7 +59,7 @@ const PublicProfile = (): any => {
       }),
   });
 
-  const inputFileRef = React.useRef();
+  const inputFileRef = React.useRef<HTMLInputElement>();
 
   function submit(values, actions) {
     const formData = new FormData();
@@ -111,17 +118,10 @@ const PublicProfile = (): any => {
   }
 
   return (
-    <>
-      {!user && <Redirect to={route("account:login")} />}
-
-      <h1 className="page-label">Public Profile</h1>
-
-      <p className="account-text">
-        Public Profile allows you to share a little about yourself with other S3
-        Stores customers. This is how you’ll be shown to other shoppers on S3
-        Stores when you post Reviews, Q&A, Lists, and more.
-      </p>
-
+    <InnerPage
+      header={<h1 className="account-page-header mb-0">Public Profile</h1>}
+      bodyClasses={"p-0"}
+    >
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -130,7 +130,14 @@ const PublicProfile = (): any => {
         {function ({ isSubmitting, values, errors, touched, handleChange }) {
           return (
             <Form>
-              <div className={"public-profile-content mb-4"}>
+              <div className="content-panel">
+                <p className="account-text mb-3 mb-md-4 mb-lg-20">
+                  Public Profile allows you to share a little about yourself
+                  with other S3 Stores customers. This is how you’ll be shown to
+                  other shoppers on S3 Stores when you post Reviews, Q&A, Lists,
+                  and more.
+                </p>
+
                 <div className="public-profile-fields-container">
                   <RBForm.Group
                     controlId="PublicProfileFormPublicName"
@@ -149,10 +156,14 @@ const PublicProfile = (): any => {
                         Public Name
                       </RBForm.Label>
 
-                      <div className="form-input-caption mb-2.5">
+                      <RBForm.Text
+                        className={
+                          "auth-form-info_input-caption form-group-text d-block mb-10 mb-md-0"
+                        }
+                      >
                         This is required but can be different to the name
                         associated with your account {user.name}
-                      </div>
+                      </RBForm.Text>
                     </div>
 
                     <div className={"col-12 col-md-6 col-lg-6"}>
@@ -174,7 +185,7 @@ const PublicProfile = (): any => {
 
                   <RBForm.Group
                     controlId="PublicProfileFormLocation"
-                    className={"row"}
+                    className={"row mt-20 mt-md-12 mt-lg-10"}
                   >
                     <div className="col-12 col-md-6 col-lg-6 text-md-end text-lg-start">
                       <RBForm.Label
@@ -210,7 +221,7 @@ const PublicProfile = (): any => {
                     <div className="d-block d-md-none d-lg-flex col-12 col-lg-6 align-items-center">
                       <RBForm.Label
                         className={
-                          "form-input-label form-input-label__optional"
+                          "form-input-label form-input-label__optional mt-20 md-lg-0"
                         }
                       >
                         Upload a public profile picture
@@ -298,20 +309,30 @@ const PublicProfile = (): any => {
                 </div>
               </div>
 
-              <div className="text-md-center text-lg-start">
-                <button
-                  type="submit"
-                  className="admin-form-control form-button w-md-auto d-inline-block public-profile_submit-button"
-                  disabled={isSubmitting}
-                >
-                  Submit
-                </button>
+              <div className="account-page-footer">
+                <div className="text-md-center text-lg-start d-md-flex">
+                  <button
+                    type="submit"
+                    className="form-button public-profile-footer-button mb-14 mb-md-0"
+                    disabled={isSubmitting}
+                  >
+                    Submit
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="form-button public-profile-footer-button form-button__outline ms-md-12"
+                    disabled={isSubmitting}
+                  >
+                    not now
+                  </button>
+                </div>
               </div>
             </Form>
           );
         }}
       </Formik>
-    </>
+    </InnerPage>
   );
 };
 

@@ -13,7 +13,7 @@ const CallAfterHours = () => {
             className="call-after-hours-clock"
           />
 
-          <span className="online-ordering-time ml-1">
+          <span className="online-ordering-time d-inline-block ms-1 me-10">
             24/7 online ordering
           </span>
 

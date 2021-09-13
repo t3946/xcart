@@ -3,8 +3,10 @@ import React from "react";
 import SidebarMenu from "../sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { setTabletMenuIsVisible } from "../../../../redux/actions/account-actions/MenuActions";
+import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 
 const TabletLoginButton: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -62,11 +64,17 @@ const TabletLoginButton: React.FC<any> = () => {
     (e: any) => e.mobileMenu.isTabletMenuVisible
   );
 
+  function toggleMenu(isVisible) {
+    HideAllMenu(dispatch);
+    isVisible && dispatch(setTabletMenuIsVisible(true));
+    isVisible && dispatch(setVisibleShadowPanelAction(true));
+  }
+
   return (
     <Dropdown
       show={isTabletMenuVisible}
       onToggle={(prop) => {
-        dispatch(setTabletMenuIsVisible(prop));
+        toggleMenu(prop);
       }}
       onClick={(e) => e.stopPropagation()}
     >

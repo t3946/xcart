@@ -1,6 +1,8 @@
 <?php
+
 namespace Modules\Account\Controllers\Api;
 
+use Modules\User\Models\FingerprintModel;
 use Modules\Account\Models\UserListModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
@@ -41,8 +43,7 @@ class AccountAuthorizationApi extends FrontendController
             UserListModel::objects()->create(['user_id' =>$user->user_id, 'product_list_id' => $model->product_list_id]);
             $user->authenticate();
             $this->jsonResponse($user->toArray());
-        }
-        else {
+        } else {
             $this->jsonResponse(["errors" => $form->getErrors()]);
         }
     }
@@ -61,47 +62,56 @@ class AccountAuthorizationApi extends FrontendController
 
             if (!$user) {
                 $form->addError('login', 'User with that email or phone not found');
-            }
-
-            if (!$user->login($attributes['password'], $attributes['remember_me'])) {
-                $form->addError('password', 'Password is incorrect');
-            }
-
-            if ($form->hasErrors()) {
                 $this->jsonResponse(["errors" => $form->getErrors()]);
                 return;
             }
 
-            $this->jsonResponse([
-                "user" => $user->toArray(),
-            ]);
-        }
-        else {
+            if (!$user->checkPassword($attributes['password'])) {
+                $form->addError('password', 'Password is incorrect');
+                $this->jsonResponse(["errors" => $form->getErrors()]);
+                return;
+            }
+
+            // tsv is enabled
+            if ($user->getAttribute("tsv_count") > 0) {
+                // unknown fingerprint
+                if ($attributes['fingerprint'] && !$user->checkFingerprint($attributes['fingerprint'])) {
+                    if (!$attributes['otp']) {
+                        $this->jsonResponse([]);
+                        return;
+                    }
+
+                    if (!$user->checkTSVCode($attributes['otp'])) {
+                        $this->jsonResponse(["errors" => ['otp' => ['OTP is incorrect']]]);
+                        return;
+                    }
+
+                    //remember fingerprint
+                    if ($attributes['rememberBrowser']) {
+                        (new FingerprintModel([
+                            'user_id' => $user->getAttribute('user_id'),
+                            'fingerprint' => $attributes['fingerprint'],
+                        ]))->save();
+                    }
+                }
+            }
+
+            $user->authenticate($attributes['remember_me']);
+            $this->jsonResponse(["user" => $user->toArray()]);
+        } else {
             $this->jsonResponse(["errors" => $form->getErrors()]);
         }
     }
 
+    /**
+     * Check user exist by login
+     */
     public function checkLogin()
     {
         $json = json_decode(file_get_contents('php://input'), true);
-        $form = (new LoginForm)->populate($json);
-        $form->isValid();
-
-        if (!isset($form->getErrors()['login'])) {
-            $email = $form->getAttributes()["login"];
-            $user = UserModel::objects()->filter(["email" => $email])->get();
-
-            if (!$user) {
-                $form->addError('login', "User not found");
-                $this->jsonResponse(["errors" => $form->getErrors()]);
-                return;
-            }
-
-            $this->jsonResponse($user->toArray());
-        }
-        else {
-            $this->jsonResponse(["errors" => $form->getErrors()]);
-        }
+        $login = $json['LoginForm']['login'];
+        $user = UserModel::objects()->filter(['email' => $login])->get();
+        $this->jsonResponse($user ? [] : ['errors' => ['login' => ['User not found']]]);
     }
 
     public function logout()

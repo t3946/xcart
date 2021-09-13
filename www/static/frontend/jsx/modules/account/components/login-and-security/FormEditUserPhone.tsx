@@ -2,38 +2,21 @@ import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import React, { useContext } from "react";
 import { Formik, Form } from "formik";
-import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { editPhoneAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
 
-const FormEditUserPhone = (): any => {
+const FormEditUserPhone = (props): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const countries = useSelector((e: StoreDto) => e.countries);
   const { showSnackbar } = useContext(SnackbarContext);
-
-  let initialCountryCode;
-
-  if (user.phone_country_code) {
-    const country = getCountryByCode(user.phone_country_code, countries);
-
-    initialCountryCode = {
-      viewValue: country.name + " +" + country.phone_code,
-      previewValue: country.code + " +" + country.phone_code,
-      value: country.code,
-    };
-  } else {
-    initialCountryCode = { viewValue: "Code" };
-  }
-
-  const [countryCode, setCountryCode] = React.useState(initialCountryCode);
 
   /**
    * Get phone number without country code prefix
@@ -46,21 +29,21 @@ const FormEditUserPhone = (): any => {
 
   const initialValues = {
     phone: getPhoneNumberInnerPart(user.phone_country_code, user.phone),
-    phone_country_code: initialCountryCode,
+    phoneCountryCode: user.phone_country_code,
   };
 
   const validationSchema = yup.object().shape({
     phone: yup.string().required("Name is a required field"),
-    phone_country_code: yup.string().required("Name is a required field"),
+    phoneCountryCode: yup.string().required("Name is a required field"),
   });
 
   function submit(values, actions) {
     const phoneCode = getCountryByCode(
-      values.phone_country_code,
+      values.phoneCountryCode,
       countries
     ).phone_code;
     const form = {
-      phone_country_code: values.phone_country_code,
+      phone_country_code: values.phoneCountryCode,
       phone: `+${phoneCode}${values.phone}`,
     };
 
@@ -70,7 +53,9 @@ const FormEditUserPhone = (): any => {
 
         success(res) {
           dispatch(userSetAction(res.user));
-          history.push(route("account:login-and-security"));
+          const path =
+            props.location.state?.from || route("account:login-and-security");
+          history.push(path);
           showSnackbar({
             header: "Success",
             message: "You have successfully modified your account!",
@@ -89,27 +74,13 @@ const FormEditUserPhone = (): any => {
     );
   }
 
-  function getSelectItems() {
-    const codes = [];
-
-    for (const country of countries) {
-      if (country.phone_code) {
-        codes.push({
-          viewValue: country.name + " +" + country.phone_code,
-          previewValue: country.code + " +" + country.phone_code,
-          value: country.code,
-        });
-      }
-    }
-
-    return codes;
-  }
-
   return (
     <div>
-      <h1 className="account-page_header text-center text-lg-start">
-        Change Mobile Phone Number
-      </h1>
+      <div className="account-page_hat">
+        <h1 className="text-center text-lg-start">
+          Change Mobile Phone Number
+        </h1>
+      </div>
 
       <Formik
         initialValues={initialValues}
@@ -127,49 +98,21 @@ const FormEditUserPhone = (): any => {
           return (
             <Form>
               <div className="content-panel">
-                <RBForm.Group controlId="EditUserPhone" className={"row"}>
-                  <div
-                    className={
-                      "col-12 col-md-3 col-lg-3 text-md-end text-lg-start"
-                    }
-                  >
-                    <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
-                      New Mobile number
-                    </RBForm.Label>
-                  </div>
+                <FormInputPhone
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  touched={touched}
+                  errors={errors}
+                  name={"phone"}
+                  values={{
+                    phoneCountryCode: values.phoneCountryCode,
+                    phone: values.phone,
+                  }}
+                  mode={"mobile"}
+                  label={"New Mobile number"}
+                />
 
-                  <div className={"col-4 col-md-3 col-lg-3"}>
-                    <FormSelect
-                      items={getSelectItems()}
-                      classes={{ selectList: "form-select-list__fit-content" }}
-                      value={countryCode}
-                      onClick={(item) => {
-                        setFieldValue("phone_country_code", item.value);
-                        setCountryCode(item);
-                      }}
-                      name={"phone_country_code"}
-                      id={"add-address-state"}
-                    />
-                  </div>
-
-                  <div className={"col-8 col-md-6 col-lg-6"}>
-                    <RBForm.Control
-                      type="text"
-                      name="phone"
-                      value={values.phone}
-                      onChange={handleChange}
-                      className={"form-input"}
-                      isInvalid={!!touched.phone && !!errors.phone}
-                      isValid={touched.phone && !errors.phone}
-                    />
-
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.phone}
-                    </RBForm.Control.Feedback>
-                  </div>
-                </RBForm.Group>
-
-                <p className="form-info">
+                <p className="form-info mb-0">
                   By enrolling a mobile phone number, you consent to receive
                   automated text messages from or on behalf of S3 Stores related
                   to account management and security. Remove your number in{" "}

@@ -74,4 +74,8 @@
 @import "pages/checkout_shipping";
 @import "pages/product_view_list";
 
-@import '../bem/dist/bem';
+body {
+  overflow-x: hidden;
+}
+
+//@import '../bem/dist/bem';

@@ -1,17 +1,21 @@
 .form-button__outline {
-    border: 1px solid #ffb500;
-    color: #4a4949;
-    background-color: #ffffff;
+  border: rem-calc(2) solid #ffb500;
+  color: #4a4949;
+  background-color: #ffffff;
 
-    &:hover, &:focus {
-        background-color: #fffaef;
-    }
+  @include breakpoint(lg up) {
+    border-width: rem-calc(1);
+  }
 
-    &:active {
-        background-color: #fff3d7;
-    }
+  &:hover, &:focus {
+    background-color: #fffaef;
+  }
 
-    &:hover, &:active, &:focus {
-        color: #000000;
-    }
+  &:active {
+    background-color: #fff3d7;
+  }
+
+  &:hover, &:active, &:focus {
+    color: #000000;
+  }
 }

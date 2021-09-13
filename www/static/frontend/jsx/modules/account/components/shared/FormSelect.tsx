@@ -52,7 +52,7 @@ export const FormSelect = ({
           {selectedItem.previewValue || selectedItem.viewValue}
         </div>
         {open && (
-          <ul className={`form-select-list`}>
+          <ul className={classnames("form-select-list", classes?.selectList)}>
             {items.map((item) => {
               return (
                 <li onClick={() => onClick(item)} className="form-select-item">

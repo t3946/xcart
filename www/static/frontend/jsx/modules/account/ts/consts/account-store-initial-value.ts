@@ -40,13 +40,20 @@ export const accountStoreInitialValue = {
   lists: accountListsInitialValue,
 };
 
-export const shadowPanelInitialValue = { isVisible: false };
+export const shadowPanelInitialValue = {
+  isVisible: false,
+  subscribers: {},
+};
 
 export const countries = appData.countries || [];
 
 export const departmentsMenu = appData.departmentsMenu || [];
 
 export const departmentsMenuMobile = {
+  isVisible: false,
+};
+
+export const departmentsMenuDesktop = {
   isVisible: false,
 };
 

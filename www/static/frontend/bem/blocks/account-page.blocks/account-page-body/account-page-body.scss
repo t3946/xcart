@@ -1,0 +1,9 @@
+.account-page-body {
+  @include breakpoint(md up) {
+    padding: rem-calc(24) rem-calc(20) rem-calc(16);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(24);
+  }
+}

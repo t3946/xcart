@@ -3,21 +3,16 @@ import { Formik, Form } from "formik";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
-import { loginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
-import { userSetAction } from "../../../../redux/actions/account-actions/UserActions";
-import { useDispatch } from "react-redux";
 import * as yup from "yup";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const LoginFormInputPassword = function (props: Record<any, any>): any {
   const history = useHistory();
-  const dispatch = useDispatch();
   const inputRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     inputRef.current.focus();
   });
 
@@ -34,41 +29,46 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
     rememberMe: yup.bool(),
   });
 
-  function submit(values, actions) {
-    dispatch(
-      loginAction({
-        form: {
-          login: props.userLogin,
-          password: values.password,
-          remember_me: values.rememberMe,
-        },
+  async function generateFp() {
+    // Initialize an agent at application startup.
+    const fpPromise = FingerprintJS.load();
 
-        success(res) {
-          dispatch(userSetAction(res.user));
+    return await (async () => {
+      // Get the visitor identifier when you need it.
+      const fp = await fpPromise;
+      const result = await fp.get();
+
+      // This is the visitor identifier:
+      return result.visitorId;
+    })();
+  }
+
+  async function submit(values, actions) {
+    props.submit({
+      actions,
+      form: {
+        login: props.lastSentForm.login,
+        password: values.password,
+        remember_me: values.rememberMe,
+        fingerprint: await generateFp(),
+      },
+
+      success(res) {
+        if (!res.user) {
+          props.goToOTPInput();
+        } else {
           history.push(route("account:index"));
-        },
+        }
+      },
 
-        error(err) {
-          actions.setErrors({ password: err.password[0] });
-        },
-
-        complete() {
-          actions.setSubmitting(false);
-        },
-      })
-    );
+      error(err) {
+        actions.setErrors({ password: err.password[0] });
+      },
+    });
   }
 
   return (
     <>
-      <p className={"auth-form-info d-flex justify-content-between mt-3 mb-3"}>
-        <span>{props.userLogin}</span>
-
-        <a href="#" onClick={props.goToInputLogin} className="common-link">
-          Change
-        </a>
-      </p>
-
       <Formik
         initialValues={initialState}
         validationSchema={validationSchema}
@@ -78,29 +78,52 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
         {({ isSubmitting, handleChange, values, errors }) => {
           return (
             <Form>
-              <RBForm.Group controlId="LoginFormPassword">
-                <RBForm.Label className="d-flex justify-content-between align-items-center">
-                  <span className={"form-input-label"}>Password</span>
+              <div className="px-12 px-sm-0">
+                <p
+                  className={
+                    "auth-form-info d-flex justify-content-between mt-3 mb-3"
+                  }
+                >
+                  <span>{props.lastSentForm.login}</span>
 
-                  <a href="#" className="common-link auth-form-info">
-                    Forgot your password?
+                  <a
+                    href="#"
+                    onClick={props.goToInputLogin}
+                    className="common-link"
+                  >
+                    Change
                   </a>
-                </RBForm.Label>
+                </p>
 
-                <RBForm.Control
-                  ref={inputRef}
-                  type="password"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  className={"form-input form-input__password"}
-                  isInvalid={!!errors.password}
-                />
+                <RBForm.Group controlId="LoginFormPassword">
+                  <RBForm.Label className="d-flex justify-content-between align-items-center">
+                    <span className={"form-input-label"}>Password</span>
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.password}
-                </RBForm.Control.Feedback>
-              </RBForm.Group>
+                    <Link
+                      to={route(
+                        "account:two-step-verification-recovery-password-assistance"
+                      )}
+                      className={"common-link auth-form-info"}
+                    >
+                      Forgot your password?
+                    </Link>
+                  </RBForm.Label>
+
+                  <RBForm.Control
+                    ref={inputRef}
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    className={"form-input"}
+                    isInvalid={!!errors.password}
+                  />
+
+                  <RBForm.Control.Feedback type="invalid">
+                    {errors.password}
+                  </RBForm.Control.Feedback>
+                </RBForm.Group>
+              </div>
 
               <button
                 type="submit"
@@ -110,7 +133,7 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
                 sign-in
               </button>
 
-              <RBForm.Group className={"mb-0"}>
+              <RBForm.Group className={"mb-0 px-12 px-sm-0"}>
                 <input
                   name="rememberMe"
                   onChange={handleChange}
