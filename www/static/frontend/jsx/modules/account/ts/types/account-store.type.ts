@@ -21,6 +21,7 @@ export interface AccountStore {
     isVisible: boolean;
   };
   countries: any;
+  loginAndSecurity: AccountLoginAndSecurityStore;
 }
 
 export interface AccountAddressesStore {
@@ -46,4 +47,11 @@ export interface AccountPaymentsStore {
   submitFormData?: SubmitFormDataDto | null;
   submitCardFormLoading?: boolean;
   transactions: any;
+}
+
+export interface AccountLoginAndSecurityStore {
+  alert: {
+    variant: string;
+    message: string;
+  };
 }

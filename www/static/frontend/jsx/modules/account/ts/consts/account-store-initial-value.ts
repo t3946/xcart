@@ -30,6 +30,10 @@ export const accountListsInitialValue = {
 
 export const accountUserInitialValue = appData.user || null;
 
+export const accountLoginAndSecurityValue = {
+  alert: null,
+};
+
 export const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -37,6 +41,7 @@ export const accountStoreInitialValue = {
   payments: accountPaymentsStoreInitialValue,
   mobileMenu: accountMenuInitialValue,
   lists: accountListsInitialValue,
+  loginAndSecurity: accountLoginAndSecurityValue,
 };
 
 export const shadowPanelInitialValue = {

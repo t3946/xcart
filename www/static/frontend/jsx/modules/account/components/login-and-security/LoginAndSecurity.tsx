@@ -1,24 +1,27 @@
 import React from "react";
-import { NavLink, Redirect } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classnames from "classnames";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
+import Alert from "@client/modules/account/components/shared/Alert";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { setAlertAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
+import InnerPage from "@client/modules/account/components/shared/InnerPage";
 
 const LoginAndSecurity = (): any => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const user = useSelector((e: StoreDto) => e.user);
-  const countries = useSelector((e: any) => e.countries);
+  const countries = useSelector((e: AccountStore) => e.countries);
+  const alert = useSelector((e: AccountStore) => e.loginAndSecurity.alert);
+  const [show, setShow] = React.useState(alert !== null);
+  const ALERT_SHOW_TIME_MS = 3000;
 
-  function formatPhoneNumber() {
-    const phoneCountry = getCountryByCode(user.phone_country_code, countries);
-
-    if (!phoneCountry) {
-      return;
-    }
-
-    const countryPrefix = "+" + phoneCountry.phone_code;
-    return user.phone.replace(countryPrefix, `${countryPrefix} `);
+  if (!user) {
+    history.push(route("account:login"));
+    return;
   }
 
   const listItems = [
@@ -60,6 +63,26 @@ const LoginAndSecurity = (): any => {
       route: "",
     },
   ];
+
+  if (alert) {
+    setTimeout(() => {
+      setShow(false);
+      setTimeout(() => {
+        dispatch(setAlertAction(null));
+      }, 500);
+    }, ALERT_SHOW_TIME_MS);
+  }
+
+  function formatPhoneNumber() {
+    const phoneCountry = getCountryByCode(user.phone_country_code, countries);
+
+    if (!phoneCountry) {
+      return;
+    }
+
+    const countryPrefix = "+" + phoneCountry.phone_code;
+    return user.phone.replace(countryPrefix, `${countryPrefix} `);
+  }
 
   function settingsItemsTemplate() {
     const items = [];
@@ -104,24 +127,30 @@ const LoginAndSecurity = (): any => {
 
   return (
     <>
-      <div className="page-label">Login & security</div>
-      {!user && <Redirect to={route("account:login")} />}
-
-      <div className="content-panel login-and-security-settings-panel p-0">
-        <ul className={"list-unstyled m-0"}>{settingsItemsTemplate()}</ul>
-      </div>
-
-      <NavLink
-        to={route("account:dashboard")}
-        exact={true}
-        className="common-link login-and-security_submit-button d-inline-block mt-4 text-decoration-none"
+      <InnerPage
+        beforePage={
+          <Alert
+            show={show}
+            variant={alert?.variant}
+            message={alert?.message}
+            classes={{ container: "pt-20 pt-lg-0 pb-5" }}
+          />
+        }
+        header={"Login & security"}
+        bodyClasses={"content-panel p-0"}
+        footer={
+          <button
+            className={
+              "admin-form-control form-button w-md-auto d-inline-block"
+            }
+            onClick={() => history.push(route("account:dashboard"))}
+          >
+            done
+          </button>
+        }
       >
-        <button
-          className={"admin-form-control form-button w-md-auto d-inline-block"}
-        >
-          done
-        </button>
-      </NavLink>
+        <ul className={"list-unstyled m-0"}>{settingsItemsTemplate()}</ul>
+      </InnerPage>
     </>
   );
 };

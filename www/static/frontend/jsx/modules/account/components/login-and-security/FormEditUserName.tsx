@@ -1,14 +1,16 @@
 import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
-import React, { useContext } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { editNameAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
+import {
+  editNameAction,
+  setAlertAction,
+} from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
@@ -16,7 +18,6 @@ const FormEditUserName = (): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
-  const { showSnackbar } = useContext(SnackbarContext);
   const initialValues = {
     name: user.name,
   };
@@ -33,11 +34,12 @@ const FormEditUserName = (): any => {
         success(res) {
           dispatch(userSetAction(res.user));
           history.push(route("account:login-and-security"));
-          showSnackbar({
-            header: "Success",
-            message: "You have successfully modified your account!",
-            theme: "success",
-          });
+          dispatch(
+            setAlertAction({
+              variant: "success",
+              message: "You have successfully modified your account!",
+            })
+          );
         },
 
         error(err) {

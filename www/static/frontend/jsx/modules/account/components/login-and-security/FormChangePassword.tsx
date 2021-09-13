@@ -1,14 +1,16 @@
 import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
-import React, { useContext } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { changePasswordAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
+import {
+  changePasswordAction,
+  setAlertAction,
+} from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
@@ -16,7 +18,6 @@ const FormChangePassword = (): any => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
-  const { showSnackbar } = useContext(SnackbarContext);
   const initialValues = {
     old_password: "",
     new_password: "",
@@ -44,11 +45,13 @@ const FormChangePassword = (): any => {
         success(res) {
           dispatch(userSetAction(res.user));
           history.push(route("account:login-and-security"));
-          showSnackbar({
-            header: "Success",
-            message: "You have successfully modified your account!",
-            theme: "success",
-          });
+
+          dispatch(
+            setAlertAction({
+              variant: "success",
+              message: "You have successfully modified your account!",
+            })
+          );
         },
 
         error(err) {
@@ -71,26 +74,26 @@ const FormChangePassword = (): any => {
       >
         {function ({ isSubmitting, values, errors, touched, handleChange }) {
           return (
-            <InnerPage
-              header={"Change password"}
-              headerClasses={"text-center text-lg-start"}
-              bodyClasses={"content-panel"}
-              footerClasses={"text-center text-lg-start"}
-              footer={
-                <SubmitCancelButtonsGroup
-                  submitText={"save changes"}
-                  disabled={isSubmitting}
-                  buttonAdvancedClasses={"form-button__submit-and-cancel p-0"}
-                  groupAdvancedClasses={
-                    "d-md-flex justify-content-center justify-content-lg-start"
-                  }
-                  onCancel={() => {
-                    history.push(route("account:login-and-security"));
-                  }}
-                />
-              }
-            >
-              <Form>
+            <Form>
+              <InnerPage
+                header={"Change password"}
+                headerClasses={"text-center text-lg-start"}
+                bodyClasses={"content-panel"}
+                footerClasses={"text-center text-lg-start"}
+                footer={
+                  <SubmitCancelButtonsGroup
+                    submitText={"save changes"}
+                    disabled={isSubmitting}
+                    buttonAdvancedClasses={"form-button__submit-and-cancel p-0"}
+                    groupAdvancedClasses={
+                      "d-md-flex justify-content-center justify-content-lg-start"
+                    }
+                    onCancel={() => {
+                      history.push(route("account:login-and-security"));
+                    }}
+                  />
+                }
+              >
                 <p className="form-info">
                   Use the form below to change the password for your S3 Stores
                   account
@@ -200,8 +203,8 @@ const FormChangePassword = (): any => {
                     </RBForm.Control.Feedback>
                   </div>
                 </RBForm.Group>
-              </Form>
-            </InnerPage>
+              </InnerPage>
+            </Form>
           );
         }}
       </Formik>

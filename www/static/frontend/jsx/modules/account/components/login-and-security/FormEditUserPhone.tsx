@@ -5,10 +5,12 @@ import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { editPhoneAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
+import {
+  editPhoneAction,
+  setAlertAction,
+} from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
@@ -18,7 +20,6 @@ const FormEditUserPhone = (props): any => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const countries = useSelector((e: StoreDto) => e.countries);
-  const { showSnackbar } = useContext(SnackbarContext);
 
   /**
    * Get phone number without country code prefix
@@ -58,11 +59,13 @@ const FormEditUserPhone = (props): any => {
           const path =
             props.location.state?.from || route("account:login-and-security");
           history.push(path);
-          showSnackbar({
-            header: "Success",
-            message: "You have successfully modified your account!",
-            theme: "success",
-          });
+
+          dispatch(
+            setAlertAction({
+              variant: "success",
+              message: "You have successfully modified your account!",
+            })
+          );
         },
 
         error(err) {
