@@ -9,6 +9,7 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property int $image_id
+ * @property ProductImageModel $image
  */
 class ProductImageLinkModel extends Model
 {

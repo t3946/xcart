@@ -33,7 +33,10 @@ class QueueImagesCommand extends Command
                         $link_hash = md5($image_link);
 
                         /** @var ProductImageLinkModel $link */
-                        if (!$link = ProductImageLinkModel::objects()->get(['hash' => $link_hash])) {
+                        if ($link = ProductImageLinkModel::objects()->get(['hash' => $link_hash])) {
+                            $found_images[] = $link->image_id;
+                            QueueImagesActiveCommand::addProductImage($product, $link->image, ($key + 1) * 10);
+                        } else {
                             //create image
                             $action = [
                                 'product_id' => $product->pk,
@@ -43,9 +46,6 @@ class QueueImagesCommand extends Command
                                 'action' => 'create'
                             ];
                             $to_create[] = $action;
-
-                        } else {
-                            $found_images[] = $link->image_id;
                         }
                     }
 
@@ -107,13 +107,4 @@ class QueueImagesCommand extends Command
         $message->ack();
     }
 
-    private static function saveImages($product, $images): void
-    {
-        try {
-            $product->detail_images = $images;
-            $product->save();
-        } catch (Throwable $exception) {
-            echo "{$exception->getCode()} {$exception->getMessage()}\n";
-        }
-    }
 }

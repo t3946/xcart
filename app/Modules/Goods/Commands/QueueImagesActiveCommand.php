@@ -77,7 +77,7 @@ class QueueImagesActiveCommand extends Command
         $message->ack();
     }
 
-    private static function addProductImage(ProductModel $product, ProductImageModel $image, int $order_by): void
+    public static function addProductImage(ProductModel $product, ProductImageModel $image, int $order_by): void
     {
         try {
             [$model] = ProductImagesModel::objects()->getOrNew([
