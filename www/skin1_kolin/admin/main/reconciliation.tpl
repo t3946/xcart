@@ -824,7 +824,7 @@ function func_show_full_orders_info(id){
 	<td>{$v.search_keyphrase}</td>
 	<td>{if $v.manufacturerid ne ""}Payment to distributor{else}Expense{/if}</td>
 	<td>{if $v.code ne ""}{$v.code}{/if}</td>
-	<td>{if $v.manufacturer ne ""}<a href="manufacturers.php?manufacturerid={$v.manufacturerid}&distributor_section=11" target="_blank">{$v.manufacturer}</a>{/if}</td>
+	<td>{if $v.manufacturer ne ""}<a href="/admin/distributor/{$v.manufacturerid}/11" target="_blank">{$v.manufacturer}</a>{/if}</td>
 	</tr>
 
 	{/foreach}
