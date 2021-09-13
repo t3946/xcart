@@ -208,7 +208,7 @@ class DistributorShippingPolicyForm extends DistributorForm
             'd_drop_ship_fee_type' => [
                 'class' => DropDownField::class,
                 'choices' => [
-                    'value' => 'US$',
+                    'value' => $dx->symbol_prefix.$dx->symbol,
                     'percent' => '% of subtotal in Cost to us pricing',
                 ]
             ],
