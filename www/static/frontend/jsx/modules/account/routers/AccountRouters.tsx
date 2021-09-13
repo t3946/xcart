@@ -141,7 +141,7 @@ export const AccountRouters = (): any => {
                 http://localhost/account/your-lists/invite/dfjU7G93+2udow==
                 <Route
                   exact
-                  path="/account/your-lists/invite/:encryptUrl"
+                  path="/account/your-lists/invite/:encryptUrl/:tag"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
                     <InvitationPage />

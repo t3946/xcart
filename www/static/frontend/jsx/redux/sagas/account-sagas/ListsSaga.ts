@@ -11,7 +11,6 @@ const getUser = () => {
 };
 
 function* getLists(action: AnyAction): Generator {
-  console.log(getUser());
   const result: any = yield api
     .post<any>(`/account/api/lists/get-lists`, getUser().id)
     .then((response) => response);
@@ -72,7 +71,7 @@ function* deleteList(action: AnyAction): Generator {
 }
 
 function* moveProduct(action: AnyAction): Generator {
-  const result: any = yield api
+  yield api
     .post<any>(
       `/account/api/lists/move-product`,
       JSON.stringify({
@@ -86,12 +85,30 @@ function* moveProduct(action: AnyAction): Generator {
 
 function* encryptUrl(action: AnyAction): Generator {
   const result: any = yield api
-    .post<any>(`/account/api/lists/get-url-encrypt`, action.privateType)
+    .post<any>(
+      `/account/api/lists/get-url-encrypt`,
+      JSON.stringify({ privateType: action.privateType, hash: action.hash })
+    )
     .then((response) => response);
 
   yield action.callback(
-    `http://localhost/account/your-lists/invite/${result.text}`
+    `http://localhost/account/your-lists/invite/${result.text}/${result.tag}`
   );
+}
+
+function* acceptInvite(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/accept-invite`,
+      JSON.stringify({ list_id: action.listId })
+    )
+    .then((response) => response);
+
+  yield put({
+    type: "GET_LISTS",
+  });
+
+  yield action.callback();
 }
 
 export function* listsActionWatcher(): SagaIterator {
@@ -101,4 +118,5 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("DELETE_LIST", deleteList);
   yield takeLatest("MOVE_PRODUCT", moveProduct);
   yield takeLatest("ENCRYPT_URL", encryptUrl);
+  yield takeLatest("ACCEPT_INVITE", acceptInvite);
 }

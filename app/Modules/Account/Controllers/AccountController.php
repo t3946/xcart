@@ -2,7 +2,10 @@
 
 namespace Modules\Account\Controllers;
 
+use Modules\Account\Models\ProductListsModel;
+use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\AdminHelper;
+use Modules\Core\Helpers\CoreHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
@@ -156,8 +159,29 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-    public function listInvite()
+    public function listInvite(string $code, string $tag)
     {
+        $user = Xcart::app()->auth->getUser(true);
 
+        if($user->getIsGuest()){
+            $this->redirect('account:login', [], 301);
+            $this->actionIndex();
+        }
+
+        [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag)) ;
+
+        $list_id = ProductListsModel::objects()->get(['cache_url' => $listHash])->product_list_id;
+
+        if(UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $list_id])->user_id){
+            $this->redirect('/account/your-lists/' . $listHash, [], 301);
+        }
+
+        StorageHelper::push([
+            "userId" => $user_id,
+            "type" => $type,
+            "listId" => $list_id,
+        ], null, 'invite_data');
+
+        $this->actionIndex();
     }
 }

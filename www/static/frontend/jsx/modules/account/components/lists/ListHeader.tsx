@@ -11,12 +11,14 @@ interface ListHeaderProps {
   label: string;
   shippingList: boolean;
   listId: string;
+  edit: boolean;
 }
 
 export const ListHeader: React.FC<ListHeaderProps> = ({
   label,
   shippingList,
   listId,
+  edit,
 }) => {
   const dispatch = useDispatch();
 
@@ -44,27 +46,33 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
       <div className="list-header-left-side">
         <div className="list-header-name">{label}</div>
         <div className="list-header-actions">
-          <div className="list-header-action-item blue">Manage List</div>
-          {shippingList && (
-            <div
-              onClick={handleDeleteList}
-              className="list-header-action-item red"
-            >
-              Delete List
-            </div>
+          {edit && (
+            <React.Fragment>
+              <div className="list-header-action-item blue">Manage List</div>
+              {shippingList && (
+                <div
+                  onClick={handleDeleteList}
+                  className="list-header-action-item red"
+                >
+                  Delete List
+                </div>
+              )}
+            </React.Fragment>
           )}
         </div>
       </div>
+      {edit && (
+        <div className="list-header-shared-block">
+          <ShareIcon className="list-header-share-btn blue" />
 
-      <div className="list-header-shared-block">
-        <ShareIcon className="list-header-share-btn blue" />
-        <div
-          className="list-header-share-text blue"
-          onClick={shareDialog.handleClickOpen}
-        >
-          Share list with others
+          <div
+            className="list-header-share-text blue"
+            onClick={shareDialog.handleClickOpen}
+          >
+            Share list with others
+          </div>
         </div>
-      </div>
+      )}
       <ShareListDialog
         open={shareDialog.open}
         handleClose={shareDialog.handleClose}

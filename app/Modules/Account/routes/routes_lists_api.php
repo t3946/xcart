@@ -33,4 +33,9 @@ return [
         'target' => [AccountListsApi::class, 'getUrlEncrypt'],
         'name' => 'encrypt-url'
     ],
+    [
+        'route' => '/accept-invite',
+        'target' => [AccountListsApi::class, 'acceptInvitation'],
+        'name' => 'accept-invite'
+    ],
 ];

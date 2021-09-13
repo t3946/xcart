@@ -46,7 +46,7 @@ export const ShareListInviteSection = ({ onCopyLinkFunc }) => {
           group: "share-list-radio",
         }}
         groupValue={showSharedStatus}
-        radioValue={ShowSharedStatusEnum.VIEW}
+        radioValue={ShowSharedStatusEnum.VIEW_EDIT}
         onChange={setNewStatus}
       />
       <div className="share-variants-container">
@@ -56,7 +56,7 @@ export const ShareListInviteSection = ({ onCopyLinkFunc }) => {
             src="/static/frontend/images/icons/account/paper_clip.svg"
           />
           <div
-            onClick={onCopyLinkFunc}
+            onClick={() => onCopyLinkFunc(showSharedStatus)}
             className="share-variants-label share-variants-label-copy"
           >
             Copy link

@@ -61,9 +61,20 @@ export const undoDeleteProduct = (
 
 export const encryptUrl = (
   privateType: ShowSharedStatusEnum,
+  hash: string,
   callback: (url: string) => void
 ): any => ({
   type: "ENCRYPT_URL",
+  hash,
   privateType,
+  callback,
+});
+
+export const acceptInvite = (
+  listId: ShowSharedStatusEnum,
+  callback: () => void
+): any => ({
+  type: "ACCEPT_INVITE",
+  listId,
   callback,
 });

@@ -1,7 +1,30 @@
 import React from "react";
 import { Button } from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { acceptInvite } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { useHistory } from "react-router";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 export const InvitationPage = () => {
+  const dispatch = useDispatch();
+
+  const history = useHistory();
+
+  const appDataWindow: any = window;
+
+  const onAccepted = () => {
+    history.push("/account/your-lists");
+  };
+
+  const loading = useSelector((store: AccountStore) => store.lists.listLoading);
+
+  const onAcceptClick = () => {
+    console.log(appDataWindow.appData);
+    dispatch(
+      acceptInvite(appDataWindow.appData.invite_data.listId, onAccepted)
+    );
+  };
+
   return (
     <div>
       <div className="page-label">Collaboration invitation</div>
@@ -24,16 +47,22 @@ export const InvitationPage = () => {
         </div>
         <Button
           onClick={null}
+          disabled={loading}
           className="account-submit-btn account-submit-btn-outline auto-width-button edit-profile-btn"
         >
           EDIT
         </Button>
       </div>
       <div className="page-invitation-btns">
-        <Button className="account-submit-btn auto-width-button accept-list-btn">
+        <Button
+          onClick={onAcceptClick}
+          disabled={loading}
+          className="account-submit-btn auto-width-button accept-list-btn"
+        >
           accept and join the list
         </Button>
         <Button
+          disabled={loading}
           onClick={null}
           className="account-submit-btn account-submit-btn-outline auto-width-button"
         >

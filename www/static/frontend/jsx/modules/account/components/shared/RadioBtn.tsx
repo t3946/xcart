@@ -24,11 +24,14 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
   name,
   groupClasses,
 }) => {
+  console.log(radioValue);
   return (
     <Grid
       alignContent={"center"}
       container
-      onClick={() => onChange(radioValue)}
+      onClick={() => {
+        onChange(radioValue);
+      }}
       className={
         classnames(groupClasses?.group) +
         ` form-radio ${

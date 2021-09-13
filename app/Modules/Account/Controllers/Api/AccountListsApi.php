@@ -32,6 +32,7 @@ class AccountListsApi extends FrontendController
                 $items[$key]['products'][$product_key]['product'] = $product->product->getAttributes();
                 $items[$key]['products'][$product_key]['image'] =  (string) $product->product->getMainImage();
             }
+            $items[$key]['list_info'] = UserListModel::objects()->get(['product_list_id' =>$list->product_list_id, 'user_id' => $user->user_id])->getAttributes();
 
         }
 
@@ -117,12 +118,22 @@ class AccountListsApi extends FrontendController
 
     public function getUrlEncrypt()
     {
+        [$private_type,$hash] = array_values(json_decode(file_get_contents('php://input'),true));
         $user = Xcart::app()->auth->getUser(true);
 
-        $private_type = array_values(json_decode(file_get_contents('php://input')));
-
-        $encrypt_params = CoreHelper::cipherText($user . '/' . $private_type);
+        $encrypt_params = CoreHelper::cipherText($user->user_id . '/' . $private_type .'/'. $hash);
 
         $this->jsonResponse($encrypt_params);
+    }
+
+    public function acceptInvitation()
+    {
+        [$list_id] = array_values(json_decode(file_get_contents('php://input'),true));
+
+        $user = Xcart::app()->auth->getUser(true);
+
+        UserListModel::objects()->create(['user_id' => $user->user_id, 'product_list_id' => $list_id]);
+
+        $this->jsonResponse('success');
     }
 }

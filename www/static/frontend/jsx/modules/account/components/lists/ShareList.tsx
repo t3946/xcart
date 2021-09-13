@@ -5,6 +5,7 @@ import { encryptUrl } from "@client/jsx/redux/actions/account-actions/ListsActio
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import { ShareListInviteSection } from "@client/modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@client/modules/account/components/lists/ShareListManagePeople";
+import { useParams } from "react-router-dom";
 
 interface ShareListProps {
   onClose: () => void;
@@ -13,10 +14,13 @@ interface ShareListProps {
 export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
+  const { id }: { id: string } = useParams();
+
   const dispatch = useDispatch();
 
   const encodeUrl = (type: ShowSharedStatusEnum) => {
-    dispatch(encryptUrl(type, onUrlEncoded));
+    console.log(id);
+    dispatch(encryptUrl(type, id, onUrlEncoded));
   };
 
   const onUrlEncoded = (url: string) => {

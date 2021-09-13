@@ -8,6 +8,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { Sceleton } from "@client/modules/shared/components/sceleton/Sceleton";
 import { ListProductItemSkeleton } from "../components/lists/ListProductItemSkeleton";
+import {UserPrivateVariantsEnum} from "@client/modules/account/ts/consts/user-private-variants.enum";
 
 export const ListsPage = () => {
   const { id }: { id: string } = useParams();
@@ -42,6 +43,7 @@ export const ListsPage = () => {
             listId={list.product_list_id}
             shippingList={!!id}
             label={list.name}
+            edit={UserPrivateVariantsEnum.EDIT === }
           />
           <ListProductItems path={history.location} info={list} />
         </React.Fragment>

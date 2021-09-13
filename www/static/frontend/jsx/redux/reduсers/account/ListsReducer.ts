@@ -21,6 +21,11 @@ const accountListReducer = (
         ...state,
         listLoading: true,
       };
+    case "ACCEPT_INVITE":
+      return {
+        ...state,
+        listLoading: true,
+      };
     case "REORDER_LIST":
       return {
         ...state,

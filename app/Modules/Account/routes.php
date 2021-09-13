@@ -33,15 +33,21 @@ return [
         'name' => 'transactions'
     ],
     [
+        'route' => '/your-lists/invite/{*:code}/{*:tag}',
+        'target' => [AccountController::class, 'listInvite'],
+        'name' => 'list-invite'
+    ],
+    [
+        'route' => '/your-lists/{*:id}',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'your-lists'
+    ],
+    [
         'route' => '/your-lists',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'your-lists-shipping'
     ],
-    [
-        'route' => '/your-lists/{i:id}',
-        'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'your-lists'
-    ],
+
 
 
     [
@@ -115,11 +121,7 @@ return [
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'
     ],
-    [
-        'route' => '/your-lists/invite/{*:slug}',
-        'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'list-invite'
-    ],
+
 
     //api
     [
