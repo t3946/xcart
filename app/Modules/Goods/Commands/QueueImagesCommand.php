@@ -49,7 +49,9 @@ class QueueImagesCommand extends Command
                         }
                     }
 
-                    if ($data['images']) {
+                    if ($data['images'] &&
+                        $found_images //TODO убрать после первого прогона
+                    ) {
                         //delete not existed images from product
                         /** @var ProductImagesModel $product_image */
                         $filter = ProductImagesModel::objects()->filter(
