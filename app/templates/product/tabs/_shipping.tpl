@@ -47,7 +47,7 @@
             <div class="content">
                 <div class="row">
                     <div class="columns small-12">
-                        {t 'This product is shipped from our warehouse in'} {$warehouse->m_city}, {if $config.show_full_state_country === 'Y'}{$warehouse->state_model} {else} {$warehouse->m_state} {/if}, {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                        {t 'This product is shipped from our warehouse in'} {$warehouse->m_city}, {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state} {/if}, {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
                     </div>
                 </div>
             </div>
