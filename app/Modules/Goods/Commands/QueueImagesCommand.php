@@ -62,21 +62,7 @@ class QueueImagesCommand extends Command
                         }
 
                         foreach ($filter as $product_image) {
-                            $image = $product_image->image;
                             $product_image->delete();
-                            if (!$image->products->count()) {
-
-                                ProductImageModel::objects()->delete(['image_id' => $image->pk]);
-
-                                echo "Delete product images \n";
-                                echo "==============Queue data=============\n";
-                                print_r($data);
-                                echo "==============Deleted image data=============\n";
-                                print_r($image->getAttributes());
-                                echo "==============action=============\n";
-                                print_r($action);
-                                echo "==============End=============\n";
-                            }
                         }
                     }
                 } catch (Throwable $exception) {
