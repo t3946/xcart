@@ -27,7 +27,7 @@ class QueueImagesCommand extends Command
 
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             if ($product = ProductModel::objects()->get(['productcode' => $data['product_code']])) {
-                $found_images = $to_create = [];
+                $found_images = [];
                 try {
                     foreach ($data['images'] as $key => $image_link) {
                         $link_hash = md5($image_link);
@@ -45,13 +45,12 @@ class QueueImagesCommand extends Command
                                 'image_link' => $image_link,
                                 'action' => 'create'
                             ];
-                            $to_create[] = $action;
+                            print_r($action);
+                            Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                         }
                     }
 
-                    if ($data['images'] &&
-                        $found_images //TODO убрать после первого прогона
-                    ) {
+                    if ($data['images']) {
                         //delete not existed images from product
                         /** @var ProductImagesModel $product_image */
                         $filter = ProductImagesModel::objects()->filter(
@@ -66,17 +65,6 @@ class QueueImagesCommand extends Command
                             $image = $product_image->image;
                             $product_image->delete();
                             if (!$image->products->count()) {
-                                if ($image->path->getValue()) {
-                                    //delete image from s3 cloud
-                                    $action = [
-                                        'image_path' => $image->path->getValue(),
-                                        'action' => 'delete'
-                                    ];
-                                    Xcart::app()->queue->send(
-                                        'images_action',
-                                        json_encode($action, JSON_THROW_ON_ERROR)
-                                    );
-                                }
 
                                 ProductImageModel::objects()->delete(['image_id' => $image->pk]);
 
@@ -91,14 +79,6 @@ class QueueImagesCommand extends Command
                             }
                         }
                     }
-
-                    if ($to_create) {
-                        foreach ($to_create as $action) {
-                            print_r($action);
-                            Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
-                        }
-                    }
-
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
                 }
