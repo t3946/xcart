@@ -3,6 +3,7 @@
 
 namespace Modules\Goods\Commands;
 
+use Modules\Goods\Models\ProductImageLinkModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductImagesModel;
 use Modules\Goods\Models\ProductModel;
@@ -31,7 +32,8 @@ class QueueImagesCommand extends Command
                     foreach ($data['images'] as $key => $image_link) {
                         $link_hash = md5($image_link);
 
-                        if (!$model = ProductImageModel::objects()->get(['link' => $link_hash])) {
+                        /** @var ProductImageLinkModel $link */
+                        if (!$link = ProductImageLinkModel::objects()->get(['hash' => $link_hash])) {
                             //create image
                             $action = [
                                 'product_id' => $product->pk,
@@ -43,7 +45,7 @@ class QueueImagesCommand extends Command
                             Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                             print_r($action);
                         } else {
-                            $found_images[] = $model->pk;
+                            $found_images[] = $link->image_id;
                         }
                     }
 
