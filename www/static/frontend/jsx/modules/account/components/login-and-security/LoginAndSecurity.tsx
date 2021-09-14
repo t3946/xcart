@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
@@ -89,9 +89,9 @@ const LoginAndSecurity = (): any => {
 
     for (const listItem of listItems) {
       items.push(
-        <li className="login-and-security-settings-item">
-          <div className="d-flex align-items-center justify-content-between">
-            <div>
+        <li className="login-and-security-settings-item login-and-security-settings_item">
+          <div className="login-and-security-settings-item-container">
+            <div className={"login-and-security-settings-item-text"}>
               <b className="settings-item-title">{listItem.title}:</b>
               <br />
               <span
@@ -104,19 +104,12 @@ const LoginAndSecurity = (): any => {
               </span>
             </div>
 
-            <NavLink
-              to={listItem.route}
-              exact={true}
-              className="common-link login-and-security_submit-button d-inline-block text-decoration-none"
+            <button
+              onClick={() => history.push(listItem.route)}
+              className="form-button form-button__outline login-and-security-edit-button d-block d-md-inline-block mt-12 mt-md-0"
             >
-              <button
-                className={
-                  "form-button form-button__outline login-and-security-edit-button"
-                }
-              >
-                edit
-              </button>
-            </NavLink>
+              edit
+            </button>
           </div>
         </li>
       );
@@ -137,7 +130,7 @@ const LoginAndSecurity = (): any => {
           />
         }
         header={"Login & security"}
-        bodyClasses={"content-panel p-0"}
+        bodyClasses={"content-panel login-and-security-content-panel p-0"}
         footer={
           <button
             className={

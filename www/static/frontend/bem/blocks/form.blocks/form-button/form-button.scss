@@ -16,6 +16,7 @@
     cursor: pointer;
     user-select: none;
     padding: 0 rem-calc(20);
+    text-align: center;
 
     @include breakpoint(md up) {
         height: rem-calc(48);

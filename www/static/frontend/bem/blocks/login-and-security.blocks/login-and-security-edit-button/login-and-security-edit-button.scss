@@ -4,6 +4,7 @@
 
   @include breakpoint(md up) {
     width: rem-calc(180);
+    flex-shrink: 0;
   }
 
   @include breakpoint(lg up) {

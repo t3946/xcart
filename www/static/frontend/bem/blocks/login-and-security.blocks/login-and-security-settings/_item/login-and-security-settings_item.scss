@@ -1,0 +1,11 @@
+.login-and-security-settings_item{
+  margin: 0 0 rem-calc(14) 0;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}
