@@ -31,7 +31,10 @@ class ProductImageLinkModel extends Model
                 'link' => ['image_id' => 'image_id']
             ],
             'url' => CharField::class,
-            'created_at' => DateTimeField::class
+            'created_at' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+            ]
         ];
     }
 }
