@@ -52,7 +52,10 @@ class DistributorController extends BackendController
                         'isGoodTimeToSendEmail' => $dx->isGoodTimeToSendEmail(),
                         'normalizedPhone' => $dx->getPhoneNormalized(),
                         'lastOrderHistoryLink' => $dx->getAdminOrdersUrl(6),
-                        'distributorsLink' => '/admin/manufacturers.php?word=num',
+                        'distributorsLink' => Xcart::app()->router->url('admin:list', [
+                            'module' => 'Distributor',
+                            'admin' => 'DistributorAdmin'
+                        ]),
                         'currentSectionKey' => (int)$section,
                     ],
 
