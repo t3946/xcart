@@ -241,6 +241,10 @@ class XcartSession extends Session
         return $this->model;
     }
 
+    public function setUserId($user_id) {
+        $this->model->setAttribute('user_id', $user_id);
+    }
+
     private function genSessId()
     {
         do {

@@ -5,6 +5,7 @@ namespace Modules\User\Models;
 use Modules\User\UserModule;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
@@ -71,6 +72,10 @@ class SessionDataModel extends Model
                 'modelClass' => SurfMetaModel::class,
                 'link' => ['sessid' => 'sessid']
             ],
+
+            'user_id' => [
+                'class' => BigIntField::class,
+            ]
         ];
     }
 
