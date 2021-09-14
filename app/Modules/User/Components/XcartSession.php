@@ -225,6 +225,21 @@ class XcartSession extends Session
         return $this->session_key;
     }
 
+    public function getId()
+    {
+        return ($this->model) ? $this->model->sessid : null;
+    }
+
+    public function getIsActive()
+    {
+        return $this->getId() ? true : false;
+    }
+
+    public function getStorage()
+    {
+        $this->open();
+        return $this->model;
+    }
 
     private function genSessId()
     {
@@ -273,22 +288,6 @@ class XcartSession extends Session
     public function count()
     {
         return count($this->data);
-    }
-
-    public function getId()
-    {
-        return ($this->model) ? $this->model->sessid : null;
-    }
-
-    public function getIsActive()
-    {
-        return $this->getId() ? true : false;
-    }
-
-    public function getStorage()
-    {
-        $this->open();
-        return $this->model;
     }
 
     public function gc($limit = 1)
