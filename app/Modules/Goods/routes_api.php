@@ -90,6 +90,11 @@ return [
         'target' => [ApiProductController::class, 'actionProductGroup'],
         'name' => 'groupProductApi',
     ],
+    [
+        'route' => 'product/update_image/{i:id}/',
+        'target' => [ApiProductController::class, 'actionUpdateImages'],
+        'name' => 'updateImages',
+    ],
 
     /** SEARCH ROUTES */
     [
