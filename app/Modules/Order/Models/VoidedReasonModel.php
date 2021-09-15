@@ -5,14 +5,14 @@ namespace Modules\Order\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\IntField;
-use Xcart\App\Orm\Model;
+use Xcart\App\Orm\TreeModel;
 
 /**
  * @property int $reason_id
  * @property string $name
  * @property int $pos
  */
-class OrderVoidedReasonModel extends Model
+class VoidedReasonModel extends TreeModel
 {
     public static function tableName()
     {
@@ -21,7 +21,7 @@ class OrderVoidedReasonModel extends Model
 
     public static function getFields()
     {
-        return [
+        return  array_merge([
             'reason_id' => AutoField::class,
             'name' => [
                 'class' => CharField::class,
@@ -31,7 +31,7 @@ class OrderVoidedReasonModel extends Model
                 'class' => IntField::class,
                 'default' => 100000,
             ],
-        ];
+        ], parent::getFields());
     }
 
     public function __toString(): string
