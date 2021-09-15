@@ -88,6 +88,11 @@ class QueueProcessCommand extends Command
                         echo "Empty site for group product\n";
                         return;
                     }
+                    if (!$data['child_products']) {
+                        echo "Empty children field for group product\n";
+                        return;
+                    }
+
                     $group_code = self::getGroupProductCode($data);
                     /** @var ProductModel $group_product */
                     [$group_product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $group_code]);
