@@ -4,8 +4,9 @@ use Xcart\App\Main\Xcart;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
-//x_load('backoffice','category','image');
-//x_load('files');
+$siteModule = Xcart::app()->getModule('Sites');
+
+$current_storefront = $siteModule->getSelectedSite()->storefrontid;
 
 #
 # Functions definition
@@ -326,6 +327,9 @@ function func_get_category_data($cat)
     $to_search .= ", $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime";
 
 
+    $siteModule = Xcart::app()->getModule('Sites');
+
+    $current_storefront = $siteModule->getSelectedSite()->storefrontid;
 
     $sf_condition = "AND $sql_tbl[categories].storefrontid=$current_storefront";
 
