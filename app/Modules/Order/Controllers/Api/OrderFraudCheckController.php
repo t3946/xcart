@@ -33,7 +33,8 @@ class OrderFraudCheckController extends Controller
             'status' => false
         ];
         if (!($count_frauds && $count_fa_frauds)) {
-            return $this->jsonResponse($ar_result);
+            $this->jsonResponse($ar_result);
+            return;
         }
         $ar_settings = [];
         $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
@@ -465,13 +466,16 @@ HTML;
                 'order_id' => $order_model->orderid
             ])->limit(1)->get();
             if ($fraud_model instanceof OrderFraudFACheckModel) {
+                $value_text = '';
                 $value = $fraud_model->additional_info["value{$column->fraud_code}"];
                 if ($column->type === 'full_name') {
                     $value_str = $value['full_name'] ?? $value;
+                    $value_text = $value_str;
                     if (!empty($value['zip'])) {
                         $value_str .= " {$value['zip']}";
                     }
                 } else {
+                    $value_text = $value;
                     if ($value['state']) {
                         $value_str = FraudCheckFAHelper::getStringAddressByArray($value);
                         $value_str = str_replace(',', '', $value_str); // Обрезает у value лишние символы и превращает в google link
@@ -486,11 +490,12 @@ HTML;
                 }
 
                 array_push($ar_history[$column->type], [
-                    'value' => $value_str,
+                    'value' => $value_text,
                     'link' => !empty($link),
                     'columnName' => $column->fraud_name,
                     'description' => $column->description,
-                    'linkUrl' => $link
+                    'linkUrl' => $link,
+                    'type' => $column->type
                 ]);
             }
         }

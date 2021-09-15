@@ -43,7 +43,7 @@ class FraudCheckFAHelper
     /** Устанавливает значения адреса для shipping, billing адресов из мелиссы **/
     public function fetchMelissaAddressList(): void
     {
-        if ($this->compareShippingBillingAddress() > 0.65) {
+        if ($this->compareShippingBillingAddress() == 1) {
             // Если shipping и billing адреса примерно равны, то отправил 1 запрос вместо 2х
             $this->ob_melissa->setOneMelissaAddressForMany([
                 'address' => $this->order_model->b_address,

@@ -40,7 +40,14 @@ export interface FraudResultCheck {
 export interface ColumnLegendData {
   description: string;
   columnName: string;
-  value: string;
+  value:
+    | string
+    | {
+        state: string;
+        city: string;
+        zipcode: string;
+      };
   link: boolean;
   linkUrl: string;
+  type: string;
 }
