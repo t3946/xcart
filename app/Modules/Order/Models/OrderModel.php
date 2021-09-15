@@ -392,6 +392,16 @@ class OrderModel extends Model
             'overall_fraud_score_v2' => [
                 'class' => FloatField::class,
                 'default' => 0
+            ],
+            'base_fraud_answer' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderBaseFraudCheckModelV2::class,
+                'link' => ['orderid' => 'order_id']
+            ],
+            'fa_fraud_answer' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderFraudFACheckModel::class,
+                'link' => ['orderid' => 'order_id']
             ]
         ];
     }
