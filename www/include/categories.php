@@ -1,5 +1,7 @@
 <?php
 
+use Xcart\App\Main\Xcart;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 //x_load('backoffice','category','image');
@@ -73,8 +75,12 @@ function func_check_category_path($path) {
 #
 function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $max_depth = 0, $keyphrase = '')
 {
-    global $current_area, $sql_tbl, $shop_language, $active_modules, $config, $xcart_dir, $current_storefront;
+    global $current_area, $sql_tbl, $active_modules, $config;
     global $storefront_independant;
+
+    $siteModule = Xcart::app()->getModule('Sites');
+
+    $current_storefront = $siteModule->getSite()->storefrontid;
 
     $cat = intval($cat);
 
