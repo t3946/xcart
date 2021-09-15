@@ -1,11 +1,12 @@
 <?php
 
-namespace Modules\Goods\Forms;
+namespace Modules\Goods\Admin;
 
 
 use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Goods\Admin\ProductOptionsAdmin;
 use Modules\Goods\Admin\ProductOptionVariantsAdmin;
+use Modules\Goods\Forms\ProductImageForm;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductImagesModel;
@@ -16,34 +17,51 @@ use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\Model;
 
 class ProductImagesAdmin extends ListViewAdmin
 {
-    public $ownerField = 'product_id';
-    public function getFields()
+    public $ownerField = 'image_id';
+    public function getSuggestionColumns()
     {
         return  [
-
-            'path' => [
-                'class' => ImageField::class,
+            'is_active' => [
+                'class' => CharField::class
             ],
-/*            'variants' => [
-                'class' => ListViewField::class,
-                'adminClass' => ProductOptionVariantsAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl',
-                'defaultOrder' => 'position'
-            ],*/
+        ];
+    }
+
+    public function getOwnerModel() : ProductImagesModel
+    {
+        return new ProductImagesModel();
+    }
+
+    public function getListColumns()
+    {
+        return [
+            'image',
+            'hash',
+            'width',
+            'height',
         ];
     }
 
     public function getModel()
     {
-        return new ProductImagesModel();
+        return new ProductImageModel();
     }
 
     public function getForm()
     {
-        return ;
-        // TODO: Implement getForm() method.
+        return new ProductImageForm();
+    }
+    public function getItemProperty(Model $item, $property)
+    {
+        switch ($property)
+        {
+            case 'image':
+                return "<div style='text-align: center'><img src=\"{$item->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>";
+        }
+        return parent::getItemProperty($item, $property);
     }
 }

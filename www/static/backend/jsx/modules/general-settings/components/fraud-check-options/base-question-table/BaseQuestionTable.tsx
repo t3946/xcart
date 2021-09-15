@@ -39,7 +39,7 @@ export const BaseQuestionTable: React.FC = () => {
             <td>{question.auto}</td>
             <td>{question.weight}</td>
             <td>{question.type}</td>
-            <td>
+            <td style={{ cursor: "pointer" }}>
               <EditIcon onClick={() => onClickEditHandler(question)} />
             </td>
           </tr>

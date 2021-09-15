@@ -48,7 +48,6 @@ abstract class ListViewAdmin extends Admin
             $this->ownerPk = $model->{$this->ownerField};
         }
 
-
         if ($this->ownerPk) {
             $model->{$this->ownerField} = $this->ownerPk;
         }

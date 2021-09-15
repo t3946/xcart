@@ -23,7 +23,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
     dialog.set();
   };
   return (
-    <table border={1} className="table-fa-question">
+    <table border={1} className="table-question-fraud-check">
       <tr>
         <th className="table-header-code-text">code</th>
         {columns.map((column) => (

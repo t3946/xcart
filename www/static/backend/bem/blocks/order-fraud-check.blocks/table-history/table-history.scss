@@ -1,17 +1,25 @@
-.history-item-column{
+.history-item-column {
   display: flex;
-  width: 650px;
 }
-.column-item-history{
+
+.history-item-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column-item-history {
   width: 70px;
 }
-.link-google-info-history{
+
+.link-google-info-history {
   margin: 0 10px;
 }
-.history-column-info{
+
+.history-column-info {
   margin: 15px 0;
 }
-.description-item-history{
+
+.description-item-history {
   width: 250px;
   margin-left: 10px;
 }

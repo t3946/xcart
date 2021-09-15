@@ -4,6 +4,7 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\ProductImagesAdmin;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Editor\Fields\EditorField;
@@ -39,7 +40,6 @@ class ProductAdminForm extends ModelForm
         'filter_values',
         'images',
         'videos',
-        'detail_images'
     ];
 
     public function getFieldsets()
@@ -85,8 +85,8 @@ class ProductAdminForm extends ModelForm
                 'min_amount',
                 'mult_order_quantity'
             ],
-            'Product options' => [
-                'product_options'
+            'Images' => [
+                'detail_images'
             ],
             'Amazon options' => [
                 'amazon_enabled'
@@ -263,6 +263,11 @@ class ProductAdminForm extends ModelForm
                 'class' => CheckboxField::class,
                 'label' => 'Multiple order quantity'
             ],
+            'detail_images' => [
+                'class' => ListViewField::class,
+                'adminClass' => ProductImagesAdmin::class,
+                'listTemplate' => 'admin/list/_list.tpl',
+            ]
         ];
     }
 

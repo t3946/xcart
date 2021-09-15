@@ -33,9 +33,9 @@ export const FraudCheckOptions: React.FC<any> = () => {
             centered
             aria-label="simple tabs example"
           >
-            <Tab label="Check options settings" value="0" />
-            <Tab label="Table full name" value="1" />
-            <Tab label="Table address" value="2" />
+            <Tab label="FC options" value="0" />
+            <Tab label="FN CCM parameters" value="1" />
+            <Tab label="A CCM parameters" value="2" />
             <Tab label="Base question list" value="3" />
           </TabList>
         </AppBar>
@@ -50,7 +50,7 @@ export const FraudCheckOptions: React.FC<any> = () => {
             direction="row"
           >
             <Typography variant="h6" align="center">
-              Table full name fraud
+              FN CCM parameters
             </Typography>
             {fraudSettings.faQuestions.full_name && (
               <TableFraud
@@ -69,7 +69,7 @@ export const FraudCheckOptions: React.FC<any> = () => {
             direction="column"
           >
             <Typography variant="h6" align="center">
-              Table address fraud
+              A CCM parameters
             </Typography>
             {fraudSettings.faQuestions.address && (
               <TableFraud

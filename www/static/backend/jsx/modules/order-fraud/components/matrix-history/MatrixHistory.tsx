@@ -6,6 +6,7 @@ interface MatrixHistory {
   historyColumn: ColumnLegendData[];
 }
 export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
+  console.log(historyColumn);
   return (
     <div className="history-column-info">
       <Grid
@@ -23,12 +24,14 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
             >
               {columnData.columnName}
             </div>
-            <span className="description-item-history">
-              {columnData.description}
-            </span>
-            <span className="link-google-info-history">
-              <a href={columnData.linkUrl}>{columnData.value}</a>
-            </span>
+            <div className="history-item-info">
+              <span className="description-item-history">
+                {columnData.description}
+              </span>
+              <span className="link-google-info-history">
+                <a href={columnData.linkUrl}>{columnData.value}</a>
+              </span>
+            </div>
           </div>
         ))}
       </Grid>

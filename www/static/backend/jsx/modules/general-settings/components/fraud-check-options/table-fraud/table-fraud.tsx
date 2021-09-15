@@ -2,6 +2,7 @@ import React, { useState, Fragment } from "react";
 import { TableDataResponse } from "@admin/modules/general-settings/ts/types/fraud-check/question-data.type";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { DialogTableEdit } from "@admin/modules/general-settings/components/fraud-check-options/dialog-table-edit/DialogTableEdit";
+import { getHeaderClassByName } from "@admin/modules/order-fraud/utils/add-color-column";
 
 interface ITableFraud {
   columns: string[];
@@ -22,17 +23,25 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
   };
   return (
     <Fragment>
-      <table>
+      <table border={1} className="table-question-fraud-check">
         <tr>
           <th className="table-header-fraud-empty">code</th>
           {columns.map((column) => (
-            <th className="table-header-fraud">{column}</th>
+            <th
+              className={`table-header-fraud ${getHeaderClassByName(column)}`}
+            >
+              {column}
+            </th>
           ))}
         </tr>
         {columns.map((column) => {
           return (
             <tr>
-              <td className="table-header-fraud">{column}</td>
+              <td
+                className={`table-header-fraud ${getHeaderClassByName(column)}`}
+              >
+                {column}
+              </td>
               {columns.map((col) => {
                 if (col === column) {
                   return <td>&#10003;</td>;
@@ -43,8 +52,13 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
                 );
                 if (question) {
                   return (
-                    <td onDoubleClick={() => onClickChangeQuestion(question)}>
-                      {question.value}
+                    <td>
+                      <div
+                        className="question-matrix-detail-text"
+                        onClick={() => onClickChangeQuestion(question)}
+                      >
+                        {question.value}
+                      </div>
                     </td>
                   );
                 }

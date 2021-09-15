@@ -16,12 +16,16 @@
 }
 
 
-.answer-matrix-detail-text {
+.answer-matrix-detail-text,
+.question-matrix-detail-text{
   cursor: pointer;
   width: 32px;
   color: blue;
   border-bottom: 1px dotted;
   text-decoration: none;
+}
+.question-matrix-detail-text {
+  width: 20px !important;
 }
 
 .table-item-wrapper-red {
@@ -43,7 +47,7 @@
 .table-base-question{
   border: black;
 }
-.table-fa-question{
+.table-question-fraud-check{
   border: black;
 }
 .center-header-item{

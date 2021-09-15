@@ -8,6 +8,7 @@ use Modules\Core\Models\FraudCheckColumnModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Order\Helpers\BaseFraudCheckHelperV2;
+use Modules\Order\Helpers\FraudCheckFAHelper;
 use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderBaseFraudCheckModelV2;
@@ -18,6 +19,7 @@ use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class OrderFraudCheckController extends Controller
 {
@@ -222,48 +224,56 @@ class OrderFraudCheckController extends Controller
         $code_list = [$answer->question->f_fraud->fraud_code, $answer->question->t_fraud->fraud_code];
         foreach ($code_list as $code) {
             $template = [];
+            $value = 'N/A';
+            if (in_array($code, ['FN_CI', 'FN_SA', 'FN_BA', 'FN_CH', 'FN_T_SA', 'FN_T_BA', 'FN_O_SA', 'FN_O_BA', 'FN_TN', 'FN_EA'])) {
+                $value = $ar_info["value$code"]['full_name'] ?? $ar_info["value$code"];
+            } else {
+                if($ar_info["value$code"]['state']){
+                    $value = FraudCheckFAHelper::getStringAddressByArray($ar_info["value$code"]);
+                }
+            }
             switch ($code) {
                 case 'FN_CI':
-                    $template = ['{{contact_name}}' => $ar_info["value$code"]];
+                    $template = ['{{contact_name}}' => $value];
                     break;
                 case 'FN_SA':
-                    $template = ['{{shipping_name}}' => $ar_info["value$code"]];
+                    $template = ['{{shipping_name}}' => $value];
                     break;
                 case 'FN_BA':
-                    $template = ['{{billing_name}}' => $ar_info["value$code"]];
+                    $template = ['{{billing_name}}' => $value];
                     break;
                 case 'FN_CH':
-                    $template = ['{{card_owner_name}}' => $ar_info["value$code"]];
+                    $template = ['{{card_owner_name}}' => $value];
                     break;
                 case 'FN_T_SA':
                 case 'FN_T_BA':
-                    $template = ['{{tenant_name}}' => $ar_info["value$code"]];
+                    $template = ['{{tenant_name}}' => $value];
                     break;
                 case 'FN_O_SA':
                 case 'FN_O_BA':
-                    $template = ['{{owner_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{owner_name}}' => $value];
                     break;
                 case 'FN_TN':
-                    $template = ['{{telephone_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{telephone_name}}' => $value];
                     break;
                 case 'FN_EA':
-                    $template = ['{{email_name}}' => $ar_info["value{$code}"]];
+                    $template = ['{{email_name}}' => $value];
                     break;
                 case 'SA':
-                    $template = ['{{shipping_address}}' => $ar_info["value{$code}"]];
+                    $template = ['{{shipping_address}}' => $value];
                     break;
                 case 'BA':
-                    $template = ['{{billing_address}}' => $ar_info["value{$code}"]];
+                    $template = ['{{billing_address}}' => $value];
                     break;
                 case 'ORA_SA':
                 case 'ORA_BA':
-                    $template = ['{{owner_residence_address}}' => $ar_info["value{$code}"]];
+                    $template = ['{{owner_residence_address}}' => $value];
                     break;
                 case 'CSZ_TN':
-                    $template = ['{{telephone_address}}' => $ar_info["value{$code}"]];
+                    $template = ['{{telephone_address}}' => $value];
                     break;
                 case 'CSZ_IP':
-                    $template = ['{{ip_address}}' => $ar_info["value{$code}"]];
+                    $template = ['{{ip_address}}' => $value];
                     break;
             }
             $result = array_merge($result, $template);
@@ -421,7 +431,7 @@ HTML;
                 'overall_result' => $order_model->overall_fraud_score_v2,
                 'risk_score' => $order_model->overall_fraud_score_v2,
             ];
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $ar_result = ['status' => false, 'error' => $exception->getMessage()];
         } finally {
             $this->jsonResponse($ar_result);
@@ -433,7 +443,7 @@ HTML;
         $ar_result = ['status' => true];
         try {
             OrderModel::objects()->filter(['login_last_opened_or_saved' => Xcart::app()->user->login])->update(['time_last_opened_or_saved' => 0]);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $ar_result = ['status' => false, 'error' => $exception->getMessage()];
         } finally {
             $this->jsonResponse($ar_result);
@@ -446,22 +456,38 @@ HTML;
         /** @var FraudCheckColumnModel $column */
         foreach (FraudCheckColumnModel::objects()->all() as $column) {
             /** @var OrderFraudFACheckModel $fraud_model */
+
             $fraud_model = OrderFraudFACheckModel::objects()->filter([
-                'question__f_fraud_id' => $column->fraud_id,
+                new QOr([
+                    'question__f_fraud_id' => $column->fraud_id,
+                    'question__t_fraud_id' => $column->fraud_id
+                ]),
                 'order_id' => $order_model->orderid
             ])->limit(1)->get();
             if ($fraud_model instanceof OrderFraudFACheckModel) {
                 $value = $fraud_model->additional_info["value{$column->fraud_code}"];
-                // Обрезает у value лишние символы символы и превращает в google link
-                $ar_value = str_replace(',', '', $value);
-                $link = 'https://www.google.com/search?q=';
-                foreach (explode(' ', $ar_value) as $attr_value) {
-                    $link .= "{$attr_value}+";
+                if ($column->type === 'full_name') {
+                    $value_str = $value['full_name'] ?? $value;
+                    if (!empty($value['zip'])) {
+                        $value_str .= " {$value['zip']}";
+                    }
+                } else {
+                    if ($value['state']) {
+                        $value_str = FraudCheckFAHelper::getStringAddressByArray($value);
+                        $value_str = str_replace(',', '', $value_str); // Обрезает у value лишние символы и превращает в google link
+                    }
+                }
+                $link = '';
+                if ($value_str !== 'N/A') {
+                    $link = 'https://www.google.com/search?q=';
+                    foreach (explode(' ', $value_str) as $attr_value) {
+                        $link .= "{$attr_value}+";
+                    }
                 }
 
                 array_push($ar_history[$column->type], [
-                    'value' => $value,
-                    'link' => true,
+                    'value' => $value_str,
+                    'link' => !empty($link),
                     'columnName' => $column->fraud_name,
                     'description' => $column->description,
                     'linkUrl' => $link

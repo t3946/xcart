@@ -92,10 +92,13 @@ class FraudFAQuestionModel extends Model
             $compare_value = $this->getNameValueByMatrixCode($this->f_fraud->fraud_code, $order, $helper);
             switch ($this->t_fraud->fraud_code) {
                 case 'FN_BA':
-                    $result = $helper->scoreBaseName($this, [$compare_value, $order->b_firstname]);
+                    $result = $helper->scoreBaseName($this, [$compare_value, ['value' => $order->b_firstname, 'zipcode' => $order->b_zipcode]]);
                     break;
                 case 'FN_SA':
-                    $result = $helper->scoreBaseName($this, [$order->firstname, $order->s_firstname]);
+                    $result = $helper->scoreBaseName($this, [
+                        ['value' => $order->firstname],
+                        ['value' => $order->s_firstname, 'zipcode' => $order->s_zipcode]
+                    ]);
                     break;
                 case 'FN_CH':
                     $result = $helper->scoreCardHolder($this, $compare_value);
@@ -145,22 +148,44 @@ class FraudFAQuestionModel extends Model
     {
         switch ($fraud_code) {
             case 'FN_CI':
-                return $order->firstname;
+                return ['value' => $order->firstname];
             case 'FN_SA':
-                return $order->s_firstname ?? null;
+                return [
+                    'value' => $order->s_firstname ?? null,
+                    'zipcode' => $order->s_zipcode ?? null
+                ];
             case 'FN_CH':
             case 'FN_BA':
-                return $order->b_firstname ?? null;
+                return [
+                    'value' => $order->b_firstname ?? null,
+                    'zipcode' => $order->b_zipcode ?? null
+                ];
             case 'FN_T_SA':
-                return $helper->ob_melissa->melissa_address['shipping']['address']['NameFull'];
+                return [
+                    'value' => $helper->ob_melissa->melissa_address['shipping']['address']['NameFull'] ?? null,
+                    'zipcode' => $helper->ob_melissa->melissa_address['shipping']['address']['PostOfficeZip'] ?? null
+                ];
             case 'FN_O_SA':
-                return $helper->ob_melissa->melissa_address['shipping']['owner']['OwnerName1Full'];
+                $zip = trim($helper->ob_melissa->melissa_address['shipping']['owner']['OwnerZip']);
+                $zip = substr($zip, 0, 5);
+                return [
+                    'value' => $helper->ob_melissa->melissa_address['shipping']['owner']['OwnerName1Full'] ?? null,
+                    'zipcode' => $zip ?? null
+                ];
             case 'FN_T_BA':
-                return $helper->ob_melissa->melissa_address['billing']['address']['NameFull'];
+                return [
+                    'value' => $helper->ob_melissa->melissa_address['billing']['address']['NameFull'] ?? null,
+                    'zipcode' => $helper->ob_melissa->melissa_address['billing']['address']['PostOfficeZip'] ?? null
+                ];
             case 'FN_O_BA':
-                return $helper->ob_melissa->melissa_address['billing']['owner']['OwnerName1Full'];
+                $zip = trim($helper->ob_melissa->melissa_address['billing']['owner']['OwnerZip']);
+                $zip = substr($zip, 0, 5);
+                return [
+                    'value' => $helper->ob_melissa->melissa_address['billing']['owner']['OwnerName1Full'] ?? null,
+                    'zipcode' => $zip ?? null
+                ];
             case 'FN_TN':
-                return $helper->ob_melissa->phone_data['CallerID'] ?? null;
+                return ['value' => $helper->ob_melissa->phone_data['CallerID'] ?? null];
             case 'SA':
                 return [
                     'state' => $order->s_state,

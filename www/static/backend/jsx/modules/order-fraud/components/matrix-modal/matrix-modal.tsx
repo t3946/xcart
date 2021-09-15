@@ -17,15 +17,21 @@ export const MatrixModal: React.FC = () => {
               __html: template.get.template,
             }}
           />
-          <div>
-            Outcome: <b>{template.get?.outcome}</b>
-          </div>
-          <div>
-            Weight: <b>{template.get.question_weight}</b>
-          </div>
-          <div>
-            Fraud score subtotal: <b>{template.get.fraud_score}</b>
-          </div>
+          <table className="table-matrix-modal-info" border={1}>
+            <tr>
+              <th>Outcome</th>
+              <th>Weight</th>
+              <th>
+                Fraud score
+                <br /> subtotal
+              </th>
+            </tr>
+            <tr>
+              <td>{template.get?.outcome}</td>
+              <td>{template.get.question_weight}</td>
+              <td>{template.get.fraud_score}</td>
+            </tr>
+          </table>
         </DialogContentText>
       </DialogContent>
     </Dialog>

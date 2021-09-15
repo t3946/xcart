@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import { Form, Row } from "react-bootstrap";
 import { SelectFraudStatus } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/select-fraud-status";
 import { InputFraudField } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/input-fraud-field";
@@ -42,8 +42,9 @@ export const CheckSettingsForm: React.FC<any> = () => {
       {settings && (
         <Fragment>
           <Form className="form__check_settings">
+            <Typography variant="h5">Fraud Check thresholds</Typography>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Domains of free email providers
               </Form.Label>
               <InputFraudField
@@ -55,7 +56,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Risk score threshold for `Clear` status:
               </Form.Label>
               <InputFraudField
@@ -67,7 +68,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Below Risk score threshold status:
               </Form.Label>
               <SelectFraudStatus
@@ -80,7 +81,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Under review users:
               </Form.Label>
               <UsersFraudSelect
@@ -90,7 +91,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Effective FC threshold for `Clear` status:
               </Form.Label>
               <InputFraudField
@@ -102,7 +103,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Threshold status:
               </Form.Label>
               <SelectFraudStatus
@@ -112,7 +113,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Below threshold status:
               </Form.Label>
               <SelectFraudStatus
@@ -124,8 +125,9 @@ export const CheckSettingsForm: React.FC<any> = () => {
                 list={settings.settings.status}
               />
             </Form.Group>
+            <Typography variant="h5">Fraud Check exclusions</Typography>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Google address search exclusions:
               </Form.Label>
               <InputFraudField
@@ -137,7 +139,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Google phone search exclusions:
               </Form.Label>
               <InputFraudField
@@ -149,7 +151,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>
-              <Form.Label column sm={2}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
                 Google email search exclusions:
               </Form.Label>
               <InputFraudField
