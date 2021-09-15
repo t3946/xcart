@@ -2387,6 +2387,79 @@ function func_get_order_manufacturers($orderid)
     return $mnfs;
 }
 
+function func_get_storefront_info($sf_id, $type = 'ID', $full = false)
+{
+    global $sql_tbl, $config;
+
+    x_load('files', 'image');
+
+    $sf_info = [];
+
+    if ($type == 'ID') {
+
+        $sf_id = intval($sf_id);
+
+        if ($sf_id == 0) {
+            $sf_info = [
+                'storefrontid' => 0,
+                'status'       => ($config['General']['shop_closed'] == 'Y') ? 'D' : 'E',
+                'prefix'       => defined('MAIN_SF_PREFIX') ? MAIN_SF_PREFIX: "",
+                'top_banner'   => 'default',
+                'domain'       => MAIN_SF_DOMAIN,
+            ];
+        }
+        else {
+            if ($sf_id > 0) {
+                $sf_info = func_query_first('SELECT s.storefrontid, s.status, s.domain, c.value AS prefix FROM ' . $sql_tbl['storefronts'] . ' AS s'
+                                            . ' LEFT JOIN ' . $sql_tbl['storefronts_config'] . ' AS c ON s.storefrontid=c.storefrontid'
+                                            . ' WHERE s.storefrontid=' . $sf_id . ' AND c.name="opt_order_prefix"');
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    else {
+        $sf_info = func_query_first('SELECT storefrontid, status, prefix FROM ' . $sql_tbl['storefronts'] . ' WHERE domain = "' . $sf_id . '"');
+    }
+
+    if (isset($sf_info['storefrontid']) /* && !empty($sf_info['storefrontid'])*/) {
+        $tmp = func_image_properties('S', $sf_info['storefrontid']);
+
+        $sf_info['is_image'] = (!empty($tmp) && is_array($tmp)) ? true : false;
+        if ($sf_info['is_image']) {
+            $sf_info['image']               = $tmp;
+            $sf_info['image']['image_path'] = func_get_image_url($sf_info['storefrontid'], 'S', $sf_info['image']['image_path']);
+        }
+
+        $tmp2 = func_image_properties('F', $sf_info['storefrontid']);
+
+        $sf_info['is_image_favicon'] = (!empty($tmp2) && is_array($tmp2)) ? true : false;
+        if ($sf_info['is_image_favicon']) {
+            $sf_info['image_favicon']               = $tmp2;
+            $sf_info['image_favicon']['image_path'] = func_get_image_url($sf_info['storefrontid'], 'F', $sf_info['image_favicon']['image_path']);
+        }
+    }
+
+    if ($full) {
+        if ($sf_id == 0) {
+            $sf_info['config'] = func_get_default_config();
+        }
+        else {
+            $sf_config = func_query_hash('SELECT name, value, category FROM ' . $sql_tbl['storefronts_config'] . ' WHERE storefrontid=' . $sf_id . ' AND type != "separator"', 'category', true, false);
+            if (is_array($sf_config) && !empty($sf_config)) {
+                foreach ($sf_config as $c => $vs) {
+                    foreach ($vs as $v) {
+                        $sf_info['config'][$c][$v['name']] = $v['value'];
+                    }
+                }
+            }
+        }
+    }
+
+    return $sf_info;
+}
+
 #
 # This function change order status in orders table
 #
