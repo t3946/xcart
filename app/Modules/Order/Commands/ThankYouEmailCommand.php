@@ -28,8 +28,7 @@ class ThankYouEmailCommand extends Command
         if ($storefrontsModels = SiteModel::objects()->all()) {
             foreach ($storefrontsModels as $storefrontModel) {
                 $defaultDays = GlobalConfigModel::objects()->get(['name' => 'thank_you_days']);
-                $configDays = SiteConfigModel::objects()->get(['name' => 'thank_you_days', 'storefrontid' => $storefrontModel->storefrontid]);
-                $thank_you_days = abs(empty($configDays) ? (int)$defaultDays->value : (int)$configDays->value);
+                $thank_you_days = (int)$defaultDays->value;
                 $days_to_check = 60 * 60 * $thank_you_days;
                 $diff_time = time() - $days_to_check;
                 $dateTime = new DateTime();
@@ -72,8 +71,10 @@ class ThankYouEmailCommand extends Command
                         }
 
                         $from = $configFrom ? $configFrom->value : $defaultFrom->value;
-                        $message = SnippetHelper::render($configMessage ? $configMessage->value : $defaultMessage->value, ['order' => $orderModel]);
-                        $subject = SnippetHelper::render($configSubject ? $configSubject->value : $defaultSubject->value, ['order' => $orderModel]);
+
+                        $site = $orderModel->site;
+                        $message = SnippetHelper::render($configMessage ? $configMessage->value : $defaultMessage->value, ['order' => $orderModel, 'site' => $site]);
+                        $subject = SnippetHelper::render($configSubject ? $configSubject->value : $defaultSubject->value, ['order' => $orderModel, 'site' => $site]);
 
                         if (!empty($defaultSubject->value) && !empty($defaultMessage->value)) {
                             try {
