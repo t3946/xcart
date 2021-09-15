@@ -297,6 +297,25 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
     return array("all_categories" => $all_categories, "categories" => $categories, "subcategories" => $subcategories);
 }
 
+function func_get_http_location_sf($sfid)
+{
+    global $sql_tbl;
+
+    $sfid = intval($sfid);
+
+    if ($sfid != 0) {
+        $sf_domain = func_query_first_cell('SELECT domain FROM ' . $sql_tbl['storefronts'] . ' WHERE storefrontid = ' . $sfid);
+        if (!empty($sf_domain)) {
+            return $sf_domain;
+        }
+    }
+    else {
+        return MAIN_SF_DOMAIN;
+    }
+
+    return false;
+}
+
 #
 # This function gathering the current category data
 #
@@ -321,11 +340,6 @@ function func_get_category_data($cat)
         $to_search .= ",/*IF(($sql_tbl[categories_lng].category IS NOT NULL AND $sql_tbl[categories_lng].category != ''), $sql_tbl[categories_lng].category,*/ ( $sql_tbl[categories].category) as category,/* IF(($sql_tbl[categories_lng].description IS NOT NULL AND $sql_tbl[categories_lng].description != ''), $sql_tbl[categories_lng].description,*/ ( $sql_tbl[categories].description) as description, $sql_tbl[categories].category as category_name_orig";
         $search_condition = "AND $sql_tbl[categories].avail='Y' /*i AND ($sql_tbl[category_memberships].membershipid = '" . $user_account["membershipid"] . "' OR $sql_tbl[category_memberships].membershipid IS NULL)*/ AND $sql_tbl[categories].storefrontid = " . $current_storefront;
     }
-
-
-    $join_tbl .= " LEFT JOIN $sql_tbl[clean_urls] ON resource_type = 'C' AND resource_id = '$cat'";
-    $to_search .= ", $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime";
-
 
     $siteModule = Xcart::app()->getModule('Sites');
 

@@ -225,24 +225,16 @@ if ($REQUEST_METHOD == "POST") {
                 'meta_descr' => $meta_descr,
                 'meta_keywords' => $meta_keywords,
                 'avail' => $avail,
-                'order_by' => $order_by,
-                'is_bold' => $is_bold,
-                'prevent_index_products' => $prevent_index_products,
-                'prevent_index_category_page' => $prevent_index_category_page,
+                'order_by' => $order_by ?: 0,
+                'is_bold' => $is_bold ?: false,
+                'prevent_index_products' => $prevent_index_products ?? 'N',
+                'prevent_index_category_page' => $prevent_index_category_page ?? 'N',
 				'google_product_category' => $google_product_category,
-				'pc_ready_to_classify' => $pc_ready_to_classify,
+				'pc_ready_to_classify' => $pc_ready_to_classify ?? 'N',
 				'title_tag' => $title_tag,
 				'SEO_category_name' => $SEO_category_name,
 				'SEO_h2' => $SEO_h2,
             ]);
-
-        // Autogenerate clean URL.
-        $clean_url = func_clean_url_autogenerate('C', $cat, array('category' => $category_name));
-        $clean_url_save_in_history = false;
-        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$cat'");
-        func_clean_url_add($clean_url, 'C', $cat);
-
-
 
 		#
 		# Icon processing
