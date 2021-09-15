@@ -37,7 +37,6 @@
 require "./auth.php";
 require $xcart_dir."/include/security.php";
 
-x_load('category');
 
 $location[] = array(func_get_langvar_by_name("lbl_categories_management"), "categories.php");
 

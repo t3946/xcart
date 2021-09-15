@@ -80,7 +80,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
 
     $siteModule = Xcart::app()->getModule('Sites');
 
-    $current_storefront = $siteModule->getSite()->storefrontid;
+    $current_storefront = $siteModule->getSelectedSite()->storefrontid;
 
     $cat = intval($cat);
 
@@ -90,9 +90,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
 
     $search_condition = array();
 
-    if (!empty($active_modules['Multiple_Storefronts'])) {
-        $search_condition[] = "$sql_tbl[categories].storefrontid = $current_storefront";
-    }
+    $search_condition[] = "$sql_tbl[categories].storefrontid = $current_storefront";
 
     if (empty($keyphrase)) {
         if ($flag == "root") {
@@ -195,7 +193,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
 
     if ($flag == "all" || is_null($flag)) {
         if (!empty($main_orderbys)) {
-            $current_storefront =  Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
+
             $main_orderbys = func_query_hash("SELECT categoryid, order_by FROM $sql_tbl[categories] WHERE categoryid IN ('" . join("','", $main_orderbys) . "') and storefrontid = " . $current_storefront, "categoryid", false, true);
         }
     }
