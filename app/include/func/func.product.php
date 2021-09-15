@@ -74,7 +74,7 @@ function func_delete_product($productid, $update_categories=true, $delete_all=fa
 		db_query("DELETE FROM $sql_tbl[product_memberships]");
 		db_query("DELETE FROM $sql_tbl[product_files]");
 		db_query("DELETE FROM $sql_tbl[products_sf]");
-        if (!empty($active_modules['Multiple_Storefronts']) && !empty($active_modules['Brands'])) {
+        if (!empty($active_modules['Brands'])) {
 		    db_query("DELETE FROM $sql_tbl[brands_sf]");
         }
 

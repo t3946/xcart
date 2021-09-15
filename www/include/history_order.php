@@ -149,7 +149,7 @@ if ($mode == "invoice" or $mode == "label") {
 
 		if ($mode == "invoice") {
 			if ($current_area == "A" || ($current_area == "P" && !empty($active_modules["Simple_Mode"])))
-                if (!empty($active_modules['Multiple_Storefronts']) && is_numeric($order['storefrontid'])) {
+                if (is_numeric($order['storefrontid'])) {
 
                     // If there is a redirect to another domain on checkout
                     $sf_info = func_get_storefront_info($order['storefrontid'], 'ID', true);

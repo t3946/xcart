@@ -172,12 +172,15 @@ if ($REQUEST_METHOD == "POST") {
 
 			$sf_error = false;
 
-			if (!empty($active_modules['Multiple_Storefronts'])) {
-				$query['storefrontid'] = $current_storefront;
-				if ($parent != 0 && func_get_category_sf($parent) != $current_storefront) {
-					$sf_error = true;
-				}
+            $siteModule = Xcart\App\Main\Xcart::app()->getModule('Sites');
+
+            $current_storefront = $siteModule->getSelectedSite()->storefrontid;
+
+			$query['storefrontid'] = $current_storefront;
+			if ($parent != 0 && func_get_category_sf($parent) != $current_storefront) {
+				$sf_error = true;
 			}
+
 
 			if (!$sf_error) {
 				$model = new \Modules\Goods\Models\CategoryModel($query);
@@ -299,12 +302,12 @@ if ($REQUEST_METHOD == "POST") {
 
 		$sf_error = false;
 			
-		if (!empty($active_modules['Multiple_Storefronts'])) {
-			$parent_sf = func_get_category_sf($cat_location);
-			if ($cat_location > 0 && ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront)) {
-				$sf_error = true;
-			}
+
+		$parent_sf = func_get_category_sf($cat_location);
+		if ($cat_location > 0 && ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront)) {
+			$sf_error = true;
 		}
+
 
         if (!$sf_error) {
             /** @var \Modules\Goods\Models\CategoryModel $category_model */
@@ -325,7 +328,7 @@ if ($REQUEST_METHOD == "POST") {
 				foreach ($additional_cat_location as $k=>$v) {
 					$additional_cat_location[$k] = intval($v);
 					
-					if (!empty($active_modules['Multiple_Storefronts']) && !empty($additional_cat_location[$k])) {
+					if (!empty($additional_cat_location[$k])) {
 						$add_parent_sf = func_get_category_sf($additional_cat_location[$k]);
 						if ($add_parent_sf != func_get_category_sf($cat) || $add_parent_sf != $current_storefront) {
 							$sf_error = true;

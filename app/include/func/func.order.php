@@ -419,12 +419,12 @@ function func_order_data($orderid)
         $fields .= ", $sql_tbl[download_keys].download_key, $sql_tbl[download_keys].expires";
     }
 
-    if (!empty($active_modules['Multiple_Storefronts'])) {
+
         $fields .= ', c.storefrontid';
         $join .= ' LEFT JOIN ' . $sql_tbl['products_categories'] . ' as pc ON pc.productid='
                  . $sql_tbl['products'] . '.productid AND pc.main = "Y"'
                  . ' LEFT JOIN ' . $sql_tbl['categories'] . ' as c ON c.categoryid = pc.categoryid';
-    }
+
 
     $products = func_query("SELECT $sql_tbl[order_details].itemid, $sql_tbl[products].*, $sql_tbl[order_details].*, IF($sql_tbl[products].productid IS NULL, 'Y', '') as is_deleted, IF($sql_tbl[order_details].product = '', $sql_tbl[products].product, $sql_tbl[order_details].product) as product $fields FROM $sql_tbl[order_details] LEFT JOIN $sql_tbl[products] ON $sql_tbl[order_details].productid = $sql_tbl[products].productid $join WHERE $sql_tbl[order_details].orderid='$orderid'");
 
@@ -1075,7 +1075,7 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
         $mes .= "STEP B " . date("H:i:s") . "\n";
 
-        if (!empty($active_modules['Multiple_Storefronts']) && isset($cart['source_sf']) && !empty($cart['source_sf'])) {
+        if ( isset($cart['source_sf']) && !empty($cart['source_sf'])) {
             // If there is a redirect to another domain on checkout
             $sf_info      = func_get_storefront_info($cart['source_sf'], 'ID', true);
             $order_prefix = $sf_info['prefix'];
@@ -1148,14 +1148,14 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             'tax_info_taxed_shipping'                  => $_extra["tax_info"]['taxed_shipping'],
         ];
 
-        if (!empty($active_modules['Multiple_Storefronts'])) {
+
             if (isset($cart['source_sf']) && !empty($cart['source_sf'])) {
                 $insert_data['storefrontid'] = $cart['source_sf'];
             }
             else {
                 $insert_data['storefrontid'] = $current_storefront;
             }
-        }
+
 
         if (!empty($extra['additional_fields'])) {
             foreach ($extra['additional_fields'] as $aAddFiled) {
@@ -2424,7 +2424,7 @@ function func_change_order_status($orderids, $status, $advinfo = "", $manufactur
 
         $order = $order_data["order"];
 
-        if (!empty($active_modules['Multiple_Storefronts']) && !empty($order['storefrontid'])) {
+        if (!empty($order['storefrontid'])) {
             $sf_info = func_get_storefront_info($order['storefrontid'], 'ID', true);
             if (is_array($sf_info) && !empty($sf_info)) {
                 $mail_smarty->assign('sf_info', $sf_info);

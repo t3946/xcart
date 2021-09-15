@@ -154,7 +154,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
     if (defined('NEED_PRODUCT_CATEGORIES')) {
         global $productid;
 
-        if (!empty($active_modules['Multiple_Storefronts']) && $storefront_independant != 'Y') {
+        if ($storefront_independant != 'Y') {
             $_categories = db_query("SELECT $to_search, $sql_tbl[products_categories].productid, $sql_tbl[products_categories].main FROM $sql_tbl[categories] $join_tbl LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid AND $sql_tbl[products_categories].productid='$productid' AND $sql_tbl[products_categories].main != 'Y' WHERE $sql_tbl[categories].storefrontid = $current_storefront GROUP BY $sql_tbl[categories].categoryid");
         }
         else {
@@ -211,11 +211,9 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
             'avail'
         );
 
-        if (!empty($active_modules['Multiple_Storefronts'])) {
-            $sf_condition = ' AND sfid = "' . $current_storefront . '"';
-        } else {
-            $sf_condition = '';
-        }
+
+        $sf_condition = ' AND sfid = "' . $current_storefront . '"';
+
 
         $seed_categories = func_query_hash('SELECT ' . implode(', ', $fields)
             . ' FROM ' . $sql_tbl['seed_categories']
@@ -328,11 +326,9 @@ function func_get_category_data($cat)
     $to_search .= ", $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime";
 
 
-    if (!empty($active_modules['Multiple_Storefronts'])) {
-        $sf_condition = "AND $sql_tbl[categories].storefrontid=$current_storefront";
-    } else {
-        $sf_condition = '';
-    }
+
+    $sf_condition = "AND $sql_tbl[categories].storefrontid=$current_storefront";
+
 
     $category = func_query_first("SELECT $sql_tbl[categories].* $to_search FROM $sql_tbl[categories] $join_tbl WHERE $sql_tbl[categories].categoryid='$cat' $sf_condition $search_condition GROUP BY $sql_tbl[categories].categoryid LIMIT 1");
 
@@ -440,12 +436,7 @@ function func_get_category_data($cat)
         $category['customer_url'] = ($HTTPS) ? 'https://' : 'http://';
         $category["main_order_by"] = func_query_first_cell("SELECT order_by FROM $sql_tbl[categories] WHERE categoryid='$cpath' and storefrontid = '$current_storefront'");
 
-        if (!empty($active_modules['Multiple_Storefronts'])) {
-            $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/category/' . $cat."/";
-        }
-        else {
-            $category['customer_url'] .= $xcart_catalogs['customer'] . '/category/' . $cat."/";
-        }
+        $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/category/' . $cat."/";
 
         return $category;
     }
@@ -571,11 +562,9 @@ if ($cat == 0 && empty($keyphrase)) {
 	$subcategories = $categories;
 }
 
-if (!empty($active_modules['Multiple_Storefronts'])) {
-    $sf_condition = 'AND subcat.storefrontid = ' . $current_storefront;
-} else {
-    $sf_condition = '';
-}
+
+$sf_condition = 'AND subcat.storefrontid = ' . $current_storefront;
+
 
 if (!empty($subcategories)) {
 
