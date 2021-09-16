@@ -89,10 +89,12 @@ class FraudCheckFAHelper
     {
         if (!is_null($this->order_model->extra_model)) {
             $ip = $this->order_model->extra_model->getIP();
-            $this->ob_melissa->setMelissaIpInfo($ip);
-        } else {
-            $this->ob_melissa->ip_data = null;
+            if (!is_null($ip)) {
+                $this->ob_melissa->setMelissaIpInfo($ip);
+                return;
+            }
         }
+        $this->ob_melissa->ip_data = null;
     }
 
     /* Address check */
@@ -234,6 +236,9 @@ class FraudCheckFAHelper
      */
     public function compareAddress(array $compare_address = [], array $addressData = []): float
     {
+        if ($this->isEmptyAddress($compare_address) || $this->isEmptyAddress($addressData)) {
+            return 0;
+        }
         $compare_coef = 0;
         foreach ($addressData as $attr => $value) {
             if (strtoupper($value) === strtoupper($compare_address[$attr])) {
@@ -243,6 +248,17 @@ class FraudCheckFAHelper
             }
         }
         return round($compare_coef / count($addressData), 2);
+    }
+
+    public function isEmptyAddress(array $address): bool
+    {
+        $coef_empty = 0;
+        foreach ($address as $attr) {
+            if (empty($attr)) {
+                $coef_empty++;
+            }
+        }
+        return boolval($coef_empty / count($address) === 1);
     }
 
     /* Full name check */
@@ -283,8 +299,13 @@ class FraudCheckFAHelper
 
     public function comparePhoneCaller($full_name): bool
     {
-        if (!is_null($this->ob_melissa->phone_data)) {
-            return $this->compareClientName($full_name, $this->ob_melissa->phone_data['CallerID']);
+        $phone_data = $this->ob_melissa->phone_data;
+        if (!empty($phone_data)) {
+            if (!empty(trim($phone_data['CallerID']))) {
+                $phone_reverse = array_reverse(explode(' ', trim($this->ob_melissa->phone_data['CallerID'])));
+                $phone = implode(' ', $phone_reverse);
+                return $this->compareClientName($full_name, $phone);
+            }
         }
         return false;
     }
@@ -410,6 +431,12 @@ class FraudCheckFAHelper
         ];
     }
 
+    /** Вывод данных в поле additional_info для проверок адреса
+     * @param FraudFAQuestionModel $question_model - модель вопроса, чтобы определить что с чем сравнивается
+     * @param array $f_value
+     * @param array $t_value
+     * @return array[]|string[]
+     */
     private function getInfoAddress(FraudFAQuestionModel $question_model, array $f_value, array $t_value): array
     {
         return [
@@ -422,6 +449,11 @@ class FraudCheckFAHelper
         ];
     }
 
+    /** Вывод массива пустых значений в поле additional info
+     * @param FraudFAQuestionModel $question_model - модель вопроса, чтобы узнать что с чем сравнивается.
+     * @param array|null $value - значение для f_fraud question
+     * @return array
+     */
     private function getNullDataInfo(FraudFAQuestionModel $question_model, array $value = null): array
     {
         return [
