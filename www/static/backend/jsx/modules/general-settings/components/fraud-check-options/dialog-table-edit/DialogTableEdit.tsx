@@ -29,7 +29,6 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   const dispatch = useDispatch();
   const { showSnackbar } = useContext(SnackbarContext);
   const saveChangeQuestion = () => {
-    console.log(form.get);
     switch (type) {
       case "faQuestions":
         dispatch(changeFraudFAQuestionData(form.get));
@@ -65,7 +64,7 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
               >
-                <Form.Label>Email address</Form.Label>
+                <Form.Label>Weight</Form.Label>
                 <Form.Control
                   value={form.get.weight}
                   type="text"
