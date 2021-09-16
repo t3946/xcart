@@ -1255,7 +1255,7 @@ function check_r_fields() {
                             {/if}
                         </div>
                         {if !$v.voided_reason_id}
-                            <textarea name="groups[{$m_id}][voided_reason]" style="width: 100%;" placeholder="Why didn't we save the order?"></textarea>
+                            <textarea name="groups[{$m_id}][voided_reason]" style="width: 100%;" placeholder="Provide additional details (if required)"></textarea>
                             <button type="submit" onclick="
                                 if ($(this).siblings('.void_autorization_reasons').find('select').val() == 0) return false;
                                 $('#send_email1').val('Y');
