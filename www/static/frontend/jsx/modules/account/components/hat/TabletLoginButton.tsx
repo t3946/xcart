@@ -7,6 +7,7 @@ import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-action
 import { StoreDto } from "@s3stores-mail/ts/types";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
 
 const TabletLoginButton: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -79,7 +80,9 @@ const TabletLoginButton: React.FC<any> = () => {
       onClick={(e) => e.stopPropagation()}
     >
       <Dropdown.Toggle id="dropdown-basic" as={CustomToggle} />
-      <Dropdown.Menu as={CustomMenu} />
+      <TransitionFade show={isTabletMenuVisible}>
+        <Dropdown.Menu as={CustomMenu} />
+      </TransitionFade>
     </Dropdown>
   );
 };
