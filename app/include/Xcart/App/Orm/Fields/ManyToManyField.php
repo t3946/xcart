@@ -390,7 +390,7 @@ class ManyToManyField extends RelatedField
         $manager->clean();
 
         foreach ($value as $linkModel) {
-            if (!$linkModel) {
+            if ($linkModel === '') {
                 continue;
             }
             if (

@@ -16,6 +16,8 @@ class PBXController extends Controller
         $session = $this->getCallSession();
         $now = new \DateTime();
 
+        Xcart::app()->queue->send('calls', json_encode($_REQUEST));
+
         if ($_GET){
             $string = "";
             foreach ($_GET as $k => $v){

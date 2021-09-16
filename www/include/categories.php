@@ -1,9 +1,12 @@
 <?php
 
+use Xcart\App\Main\Xcart;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
-//x_load('backoffice','category','image');
-//x_load('files');
+$siteModule = Xcart::app()->getModule('Sites');
+
+$current_storefront = $siteModule->getSelectedSite()->storefrontid;
 
 #
 # Functions definition
@@ -73,8 +76,12 @@ function func_check_category_path($path) {
 #
 function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $max_depth = 0, $keyphrase = '')
 {
-    global $current_area, $sql_tbl, $shop_language, $active_modules, $config, $xcart_dir, $current_storefront;
+    global $current_area, $sql_tbl, $active_modules, $config;
     global $storefront_independant;
+
+    $siteModule = Xcart::app()->getModule('Sites');
+
+    $current_storefront = $siteModule->getSelectedSite()->storefrontid;
 
     $cat = intval($cat);
 
@@ -84,9 +91,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
 
     $search_condition = array();
 
-    if (!empty($active_modules['Multiple_Storefronts'])) {
-        $search_condition[] = "$sql_tbl[categories].storefrontid = $current_storefront";
-    }
+    $search_condition[] = "$sql_tbl[categories].storefrontid = $current_storefront";
 
     if (empty($keyphrase)) {
         if ($flag == "root") {
@@ -150,7 +155,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
     if (defined('NEED_PRODUCT_CATEGORIES')) {
         global $productid;
 
-        if (!empty($active_modules['Multiple_Storefronts']) && $storefront_independant != 'Y') {
+        if ($storefront_independant != 'Y') {
             $_categories = db_query("SELECT $to_search, $sql_tbl[products_categories].productid, $sql_tbl[products_categories].main FROM $sql_tbl[categories] $join_tbl LEFT JOIN $sql_tbl[products_categories] ON $sql_tbl[categories].categoryid=$sql_tbl[products_categories].categoryid AND $sql_tbl[products_categories].productid='$productid' AND $sql_tbl[products_categories].main != 'Y' WHERE $sql_tbl[categories].storefrontid = $current_storefront GROUP BY $sql_tbl[categories].categoryid");
         }
         else {
@@ -189,7 +194,7 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
 
     if ($flag == "all" || is_null($flag)) {
         if (!empty($main_orderbys)) {
-            $current_storefront =  Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
+
             $main_orderbys = func_query_hash("SELECT categoryid, order_by FROM $sql_tbl[categories] WHERE categoryid IN ('" . join("','", $main_orderbys) . "') and storefrontid = " . $current_storefront, "categoryid", false, true);
         }
     }
@@ -207,11 +212,9 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
             'avail'
         );
 
-        if (!empty($active_modules['Multiple_Storefronts'])) {
-            $sf_condition = ' AND sfid = "' . $current_storefront . '"';
-        } else {
-            $sf_condition = '';
-        }
+
+        $sf_condition = ' AND sfid = "' . $current_storefront . '"';
+
 
         $seed_categories = func_query_hash('SELECT ' . implode(', ', $fields)
             . ' FROM ' . $sql_tbl['seed_categories']
@@ -294,6 +297,25 @@ function func_get_categories_list($cat = 0, $short_list = true, $flag = null, $m
     return array("all_categories" => $all_categories, "categories" => $categories, "subcategories" => $subcategories);
 }
 
+function func_get_http_location_sf($sfid)
+{
+    global $sql_tbl;
+
+    $sfid = intval($sfid);
+
+    if ($sfid != 0) {
+        $sf_domain = func_query_first_cell('SELECT domain FROM ' . $sql_tbl['storefronts'] . ' WHERE storefrontid = ' . $sfid);
+        if (!empty($sf_domain)) {
+            return $sf_domain;
+        }
+    }
+    else {
+        return MAIN_SF_DOMAIN;
+    }
+
+    return false;
+}
+
 #
 # This function gathering the current category data
 #
@@ -319,16 +341,12 @@ function func_get_category_data($cat)
         $search_condition = "AND $sql_tbl[categories].avail='Y' /*i AND ($sql_tbl[category_memberships].membershipid = '" . $user_account["membershipid"] . "' OR $sql_tbl[category_memberships].membershipid IS NULL)*/ AND $sql_tbl[categories].storefrontid = " . $current_storefront;
     }
 
+    $siteModule = Xcart::app()->getModule('Sites');
 
-    $join_tbl .= " LEFT JOIN $sql_tbl[clean_urls] ON resource_type = 'C' AND resource_id = '$cat'";
-    $to_search .= ", $sql_tbl[clean_urls].clean_url, $sql_tbl[clean_urls].mtime";
+    $current_storefront = $siteModule->getSelectedSite()->storefrontid;
 
+    $sf_condition = "AND $sql_tbl[categories].storefrontid=$current_storefront";
 
-    if (!empty($active_modules['Multiple_Storefronts'])) {
-        $sf_condition = "AND $sql_tbl[categories].storefrontid=$current_storefront";
-    } else {
-        $sf_condition = '';
-    }
 
     $category = func_query_first("SELECT $sql_tbl[categories].* $to_search FROM $sql_tbl[categories] $join_tbl WHERE $sql_tbl[categories].categoryid='$cat' $sf_condition $search_condition GROUP BY $sql_tbl[categories].categoryid LIMIT 1");
 
@@ -436,12 +454,7 @@ function func_get_category_data($cat)
         $category['customer_url'] = ($HTTPS) ? 'https://' : 'http://';
         $category["main_order_by"] = func_query_first_cell("SELECT order_by FROM $sql_tbl[categories] WHERE categoryid='$cpath' and storefrontid = '$current_storefront'");
 
-        if (!empty($active_modules['Multiple_Storefronts'])) {
-            $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/category/' . $cat."/";
-        }
-        else {
-            $category['customer_url'] .= $xcart_catalogs['customer'] . '/category/' . $cat."/";
-        }
+        $category['customer_url'] .= func_get_http_location_sf($current_storefront) . '/category/' . $cat."/";
 
         return $category;
     }
@@ -567,11 +580,9 @@ if ($cat == 0 && empty($keyphrase)) {
 	$subcategories = $categories;
 }
 
-if (!empty($active_modules['Multiple_Storefronts'])) {
-    $sf_condition = 'AND subcat.storefrontid = ' . $current_storefront;
-} else {
-    $sf_condition = '';
-}
+
+$sf_condition = 'AND subcat.storefrontid = ' . $current_storefront;
+
 
 if (!empty($subcategories)) {
 

@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers\Api;
 
+use Modules\Goods\Models\ProductImageModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\GeoIp\Helpers\GeoIpHelper;
@@ -174,6 +175,28 @@ class ApiProductController extends AbstractCatalogController
                 ]
             );
         }
+    }
+
+    public function actionUpdateImages(int $id): void
+    {
+        $product = ProductModel::objects()->get(['productid' => $id]);
+        if (!$product) {
+            echo 'Product not found';
+            return;
+        }
+        /** @var ProductImageModel $image */
+        foreach ($product->detail_images as $image) {
+            if ($link = $image->links->limit(1)->order(['-created_at'])->get()) {
+                $action = [
+                    'action' => 'update',
+                    'image_id' => $image->pk,
+                    'image_path' => $image->path->getValue(),
+                    'image_link' => $link->url
+                ];
+                Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
+            }
+        }
+        echo 'Images has been updated';
     }
 
 }

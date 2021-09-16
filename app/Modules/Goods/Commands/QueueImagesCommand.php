@@ -3,6 +3,7 @@
 
 namespace Modules\Goods\Commands;
 
+use Modules\Goods\Models\ProductImageLinkModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductImagesModel;
 use Modules\Goods\Models\ProductModel;
@@ -31,7 +32,11 @@ class QueueImagesCommand extends Command
                     foreach ($data['images'] as $key => $image_link) {
                         $link_hash = md5($image_link);
 
-                        if (!$model = ProductImageModel::objects()->get(['link' => $link_hash])) {
+                        /** @var ProductImageLinkModel $link */
+                        if ($link = ProductImageLinkModel::objects()->get(['hash' => $link_hash])) {
+                            $found_images[] = $link->image_id;
+                            QueueImagesActiveCommand::addProductImage($product, $link->image, ($key + 1) * 10);
+                        } else {
                             //create image
                             $action = [
                                 'product_id' => $product->pk,
@@ -40,10 +45,8 @@ class QueueImagesCommand extends Command
                                 'image_link' => $image_link,
                                 'action' => 'create'
                             ];
-                            Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                             print_r($action);
-                        } else {
-                            $found_images[] = $model->pk;
+                            Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
                         }
                     }
 
@@ -59,32 +62,7 @@ class QueueImagesCommand extends Command
                         }
 
                         foreach ($filter as $product_image) {
-                            $image = $product_image->image;
                             $product_image->delete();
-                            if (!$image->products->count()) {
-                                if ($image->path->getValue()) {
-                                    //delete image from s3 cloud
-                                    $action = [
-                                        'image_path' => $image->path->getValue(),
-                                        'action' => 'delete'
-                                    ];
-                                    Xcart::app()->queue->send(
-                                        'images_action',
-                                        json_encode($action, JSON_THROW_ON_ERROR)
-                                    );
-                                }
-
-                                ProductImageModel::objects()->delete(['image_id' => $image->pk]);
-
-                                echo "Delete product images \n";
-                                echo "==============Queue data=============\n";
-                                print_r($data);
-                                echo "==============Deleted image data=============\n";
-                                print_r($image->getAttributes());
-                                echo "==============action=============\n";
-                                print_r($action);
-                                echo "==============End=============\n";
-                            }
                         }
                     }
                 } catch (Throwable $exception) {
@@ -95,13 +73,4 @@ class QueueImagesCommand extends Command
         $message->ack();
     }
 
-    private static function saveImages($product, $images): void
-    {
-        try {
-            $product->detail_images = $images;
-            $product->save();
-        } catch (Throwable $exception) {
-            echo "{$exception->getCode()} {$exception->getMessage()}\n";
-        }
-    }
 }

@@ -8,6 +8,10 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string $status
+ * @property int $site_id
+ */
 class VrsHelperSitesModel extends Model
 {
     public static function tableName()

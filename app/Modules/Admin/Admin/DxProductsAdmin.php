@@ -62,8 +62,6 @@ class DxProductsAdmin extends ProductAdmin
         parent::renderInternal($view, $params);
     }
 
-
-
     public function getItemProperty(Model $item, $property)
     {
         /** @var ProductModel $item */
@@ -75,6 +73,13 @@ class DxProductsAdmin extends ProductAdmin
         if ($property === 'mpn') {
             return "<a href={$item->getDistributorUrl()} target='_blank'>{$item->getMpn()}</a>";
         }
+
+        if ($property === 'product') {
+            $len = mb_strlen($item->$property);
+            $name = ($len > 40) ? mb_substr($item->$property, 0, 40) . '...' : $item->$property;
+            return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$name}</a>";
+        }
+
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';
         }

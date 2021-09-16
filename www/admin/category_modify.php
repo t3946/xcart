@@ -172,12 +172,15 @@ if ($REQUEST_METHOD == "POST") {
 
 			$sf_error = false;
 
-			if (!empty($active_modules['Multiple_Storefronts'])) {
-				$query['storefrontid'] = $current_storefront;
-				if ($parent != 0 && func_get_category_sf($parent) != $current_storefront) {
-					$sf_error = true;
-				}
+            $siteModule = Xcart\App\Main\Xcart::app()->getModule('Sites');
+
+            $current_storefront = $siteModule->getSelectedSite()->storefrontid;
+
+			$query['storefrontid'] = $current_storefront;
+			if ($parent != 0 && func_get_category_sf($parent) != $current_storefront) {
+				$sf_error = true;
 			}
+
 
 			if (!$sf_error) {
 				$model = new \Modules\Goods\Models\CategoryModel($query);
@@ -222,24 +225,16 @@ if ($REQUEST_METHOD == "POST") {
                 'meta_descr' => $meta_descr,
                 'meta_keywords' => $meta_keywords,
                 'avail' => $avail,
-                'order_by' => $order_by,
-                'is_bold' => $is_bold,
-                'prevent_index_products' => $prevent_index_products,
-                'prevent_index_category_page' => $prevent_index_category_page,
+                'order_by' => $order_by ?: 0,
+                'is_bold' => $is_bold ?: false,
+                'prevent_index_products' => $prevent_index_products ?? 'N',
+                'prevent_index_category_page' => $prevent_index_category_page ?? 'N',
 				'google_product_category' => $google_product_category,
-				'pc_ready_to_classify' => $pc_ready_to_classify,
+				'pc_ready_to_classify' => $pc_ready_to_classify ?? 'N',
 				'title_tag' => $title_tag,
 				'SEO_category_name' => $SEO_category_name,
 				'SEO_h2' => $SEO_h2,
             ]);
-
-        // Autogenerate clean URL.
-        $clean_url = func_clean_url_autogenerate('C', $cat, array('category' => $category_name));
-        $clean_url_save_in_history = false;
-        db_query("DELETE FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$cat'");
-        func_clean_url_add($clean_url, 'C', $cat);
-
-
 
 		#
 		# Icon processing
@@ -299,12 +294,12 @@ if ($REQUEST_METHOD == "POST") {
 
 		$sf_error = false;
 			
-		if (!empty($active_modules['Multiple_Storefronts'])) {
-			$parent_sf = func_get_category_sf($cat_location);
-			if ($cat_location > 0 && ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront)) {
-				$sf_error = true;
-			}
+
+		$parent_sf = func_get_category_sf($cat_location);
+		if ($cat_location > 0 && ($parent_sf != func_get_category_sf($cat) || $parent_sf != $current_storefront)) {
+			$sf_error = true;
 		}
+
 
         if (!$sf_error) {
             /** @var \Modules\Goods\Models\CategoryModel $category_model */
@@ -325,7 +320,7 @@ if ($REQUEST_METHOD == "POST") {
 				foreach ($additional_cat_location as $k=>$v) {
 					$additional_cat_location[$k] = intval($v);
 					
-					if (!empty($active_modules['Multiple_Storefronts']) && !empty($additional_cat_location[$k])) {
+					if (!empty($additional_cat_location[$k])) {
 						$add_parent_sf = func_get_category_sf($additional_cat_location[$k]);
 						if ($add_parent_sf != func_get_category_sf($cat) || $add_parent_sf != $current_storefront) {
 							$sf_error = true;

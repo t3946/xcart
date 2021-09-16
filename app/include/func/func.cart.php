@@ -772,11 +772,9 @@ function func_calculate_discounts($membershipid, $products, $discount_coupon = "
 	#
 	$provider_condition = ($single_mode ? "" : "AND provider='$provider'");
 
-	if (!empty($active_modules['Multiple_Storefronts'])) {
-		$sf_condition = "AND $sql_tbl[discounts].storefrontid=$current_storefront";
-	} else {
-		$sf_condition = '';
-	}
+
+	$sf_condition = "AND $sql_tbl[discounts].storefrontid=$current_storefront";
+
 
 	#
 	# Search for subtotal to apply the global discounts

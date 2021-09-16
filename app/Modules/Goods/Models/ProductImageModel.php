@@ -7,15 +7,18 @@ namespace Modules\Goods\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 /**
  * @property int image_id
  * @property ImageField path
  * @property string hash
+ * @property ProductImageLinkModel[]|Manager $links
  */
 class ProductImageModel extends Model
 {
@@ -45,15 +48,15 @@ class ProductImageModel extends Model
                 'adapterName' => 's3',
                 'uploadTo' => "images/{$path}",
                 'sizes' => [
-                    'thumb' => [
+                    self::IMAGE_SIZE_THUMB => [
                         174,
                         'method' => 'adaptiveResize'
                     ],
-                    'preview' => [
+                    self::IMAGE_SIZE_PREVIEW => [
                         520,
                         'method' => 'adaptiveResize'
                     ],
-                    'detail' => [
+                    self::IMAGE_SIZE_DETAIL => [
                         800,
                         'method' => 'adaptiveResize'
                     ]
@@ -65,12 +68,6 @@ class ProductImageModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'default' => null
-            ],
-            'link' => [
-                'class' => CharField::class,
-            ],
-            'link_uri' => [
-                'class' => CharField::class,
             ],
             'width' => [
                 'class' => IntField::class,
@@ -92,6 +89,11 @@ class ProductImageModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => ProductModel::class,
                 'through' => ProductImagesModel::class,
+            ],
+            'links' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductImageLinkModel::class,
+                'link' => ['image_id' => 'image_id']
             ]
         ];
     }

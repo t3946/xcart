@@ -17,14 +17,15 @@ use Xcart\App\Orm\Model;
 
 class ProductAdmin extends Admin
 {
+    public $listItemActionsTemplate = 'admin/list/custom_item_actions.tpl';
 
-	/**
-	 * @return ModelForm
-	 */
-	public function getForm()
-	{
-		return new ProductAdminForm();
-	}
+    /**
+     * @return ModelForm
+     */
+    public function getForm()
+    {
+        return new ProductAdminForm();
+    }
 
 	public function getModel()
 	{
@@ -80,13 +81,14 @@ class ProductAdmin extends Admin
 		return 'Products';
 	}
 
-	public function getListItemActions()
-	{
-		return [
-			'update',
-			'view',
-		];
-	}
+    public function getListItemActions()
+    {
+        return [
+            'update',
+            'view',
+            'image'
+        ];
+    }
 
 	public function getItemProperty(Model $item, $property)
 	{
