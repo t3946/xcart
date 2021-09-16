@@ -13,7 +13,15 @@ const ShadowPanel = (): any => {
     HideAllMenu(dispatch);
   }
 
-  document.body.style.overflowY = isVisible ? "hidden" : "";
+  const topHeader = document.getElementById("top-header");
+
+  if (isVisible) {
+    document.body.style.overflowY = "hidden";
+    topHeader && topHeader.classList.add("header__shadow-panel-visible");
+  } else {
+    document.body.style.overflowY = "";
+    topHeader && topHeader.classList.remove("header__shadow-panel-visible");
+  }
 
   return (
     <div>
