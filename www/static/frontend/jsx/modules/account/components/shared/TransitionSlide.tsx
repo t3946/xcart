@@ -9,7 +9,7 @@ interface PropsInterface {
   containerClasses?: string;
 }
 
-const SlideTransition: React.FC<PropsInterface> = function (
+const TransitionSlide: React.FC<PropsInterface> = function (
   props: PropsInterface
 ) {
   const { show, containerClasses } = props;
@@ -59,4 +59,4 @@ const SlideTransition: React.FC<PropsInterface> = function (
   );
 };
 
-export default SlideTransition;
+export default TransitionSlide;

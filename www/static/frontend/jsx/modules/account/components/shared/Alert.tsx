@@ -1,4 +1,4 @@
-import SlideTransition from "@client/modules/account/components/shared/SlideTransition";
+import TransitionSlide from "@client/modules/account/components/shared/TransitionSlide";
 import classnames from "classnames";
 import { Alert as BAlert } from "react-bootstrap";
 import React from "react";
@@ -56,11 +56,11 @@ const Alert: React.FC<PropsInterface> = function (props: PropsInterface) {
   }
 
   return (
-    <SlideTransition show={show} containerClasses={classes.container}>
+    <TransitionSlide show={show} containerClasses={classes.container}>
       <BAlert variant={variant} className={classnames(classes.alert)}>
         {contentTemplate()}
       </BAlert>
-    </SlideTransition>
+    </TransitionSlide>
   );
 };
 

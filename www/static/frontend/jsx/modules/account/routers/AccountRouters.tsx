@@ -17,7 +17,7 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import classNames from "classnames";
+import classnames from "classnames";
 import useBreakpoint from "../hooks/useBreakpoint";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
@@ -58,21 +58,22 @@ export const AccountRouters = (): any => {
 
   dispatch(setBreadcrumbsAddresses(staticRoutes));
 
-  const leftColumnClasses = [
-    "col account-page-left-column d-none",
-    {
-      "d-lg-block": user !== null,
-    },
-  ];
-
-  const rightColumnClasses = [
-    "col",
-    {
-      "account-page-right-column": user !== null,
-      "d-flex": user === null,
-      "justify-content-center": user === null,
-    },
-  ];
+  const classes = {
+    leftColumnClasses: [
+      "col account-page-left-column d-none",
+      {
+        "d-lg-block": user !== null,
+      },
+    ],
+    rightColumnClasses: [
+      "col",
+      {
+        "account-page-right-column": user !== null,
+        "d-flex": user === null,
+        "justify-content-center": user === null,
+      },
+    ],
+  };
 
   return (
     <Provider store={accountStore as any}>
@@ -91,11 +92,11 @@ export const AccountRouters = (): any => {
             {user && <BreadCrumbs />}
 
             <div className="row mt-lg-20">
-              <div className={classNames(leftColumnClasses)}>
+              <div className={classnames(classes.leftColumnClasses)}>
                 {isList ? <ListsSidebarMenu /> : <SideBarMenu />}
               </div>
 
-              <div className={classNames(rightColumnClasses)}>
+              <div className={classnames(classes.rightColumnClasses)}>
                 <Switch>
                   <Route
                     exact
@@ -216,10 +217,11 @@ export const AccountRouters = (): any => {
                     component={TSVRecovery}
                   />
 
-
                   <Route
                     exact
-                    path={route("account:two-step-verification-recovery-password-assistance")}
+                    path={route(
+                      "account:two-step-verification-recovery-password-assistance"
+                    )}
                     component={PasswordAssistance}
                   />
                 </Switch>

@@ -13,10 +13,14 @@ const ShadowPanel = (): any => {
     HideAllMenu(dispatch);
   }
 
+  document.body.style.overflowY = isVisible ? "hidden" : "";
+
   return (
-    <TransitionFade show={isVisible}>
-      <div className={"shadow-panel"} onClick={clickHandler} />
-    </TransitionFade>
+    <div>
+      <TransitionFade show={isVisible}>
+        <div className={"shadow-panel"} onClick={clickHandler} />
+      </TransitionFade>
+    </div>
   );
 };
 

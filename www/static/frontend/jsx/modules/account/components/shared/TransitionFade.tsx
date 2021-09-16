@@ -28,16 +28,19 @@ const TransitionFade: React.FC<PropsInterface> = function (
 
   return (
     <Transition in={show} timeout={durationMs}>
-      {(state) => (
-        <div
-          style={{
-            ...defaultStyle,
-            ...transitionStyles[state],
-          }}
-        >
-          {props.children}
-        </div>
-      )}
+      {(state) => {
+        return (
+          <div
+            style={{
+              ...defaultStyle,
+              ...transitionStyles[state],
+            }}
+            className={"bd-filter"}
+          >
+            {props.children}
+          </div>
+        );
+      }}
     </Transition>
   );
 };
