@@ -2996,6 +2996,7 @@ $smarty->assign("location", $location);
 $smarty->assign('authorise_url', Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
 $smarty->assign('manual_url', Xcart::app()->router->url('order:manual_transaction', ['order_id' => $orderid]));
 $smarty->assign('order_store', new \Modules\Order\Stores\OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
+$smarty->assign('voided_reasons', \Modules\Order\Helpers\OrderHelper::getVoidedReasons());
 
 @include $xcart_dir . "/modules/gold_display.php";
 func_display("admin/home.tpl", $smarty);

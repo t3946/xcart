@@ -1029,8 +1029,8 @@ function check_r_fields() {
                                                     func_check_cb_statuses();
                                                     const void_order_message = $('#void_order_message_{/literal}{$m_id}{literal}');
                                                     $(this).val() === 'A'
-                                                        ? void_order_message.show().find('textarea').prop('required', true)
-                                                        : void_order_message.hide().find('textarea').prop('required', false);
+                                                        ? void_order_message.show().find('select').prop('required', true)
+                                                        : void_order_message.hide().find('select').prop('required', false);
                                                 });
                                             });
                                             {/literal}
@@ -1232,18 +1232,36 @@ function check_r_fields() {
                     {/if}
                 {/if}
 
-                <tr id="void_order_message_{$m_id}"
-                    style='background-color: #F4CCCC; {if $v.cb_status !== 'A'} display: none; {/if}'>
-                    <td>
-                        <div>
+                <tr id="void_order_message_{$m_id}" style='background-color: #F4CCCC; {if $v.cb_status !== 'A'} display: none; {/if}'>
+                    <td colspan="4">
+                        <div class="void_autorization_reasons">
                             <b>Authorization voided reason:</b>
-                            {if $v.voided_reason}
+                            {if !$v.voided_reason_id}
+                            <div style="margin-bottom: 5px;">
+                                <select name="groups[{$m_id}][voided_reason_id]">
+                                    <option value="0">Please select voided reason</option>
+                                {foreach from=$voided_reasons item=voided_values key=voided_category}
+                                    <optgroup label="{$voided_category}">
+                                        {foreach from=$voided_values item=voided_name key=voided_id}
+                                            <option value="{$voided_id}">{$voided_name}</option>
+                                        {/foreach}
+                                    </optgroup>
+                                {/foreach}
+                                </select>
+                            </div>
+                            {else}
+                                {$oOrderGroup->voided_reason_model} <br/>
                                 {$v.voided_reason}
                             {/if}
                         </div>
-                        {if !$v.voided_reason}
+                        {if !$v.voided_reason_id}
                             <textarea name="groups[{$m_id}][voided_reason]" style="width: 100%;" placeholder="Why didn't we save the order?"></textarea>
-                            <button type="submit" onclick="$('#send_email1').val('Y');this.form.submit();">Void authorization</button>
+                            <button type="submit" onclick="
+                                if ($(this).siblings('.void_autorization_reasons').find('select').val() == 0) return false;
+                                $('#send_email1').val('Y');
+                                this.form.submit();">
+                                Void authorization
+                            </button>
                         {/if}
                     </td>
                 </tr>

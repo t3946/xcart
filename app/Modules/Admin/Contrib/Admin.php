@@ -574,25 +574,13 @@ abstract class Admin
      */
     public function fixSort($qs)
     {
-        if ($this->sort && $this->autoFixSort && $this->getCanSort($qs)) {
+        if (($sort = $this->sort) && $this->autoFixSort) {
             $newQs = clone($qs);
-            $raw = $newQs->group([$this->sort])->having(new Expression('c > 1'))->valuesList([$this->sort, 'c' => new Count('*')]);
-            if ($raw) {
-                $newQs = clone($qs);
-                $connection = $newQs->getConnection();
-                $connection->query('SET @position = 0;');
-
-                $model = $this->getModel();
-                $newQs->order([$this->sort, "-{$model::getPrimaryKeyName()}"]);
-
-                $qb = $newQs->getQueryBuilder();
-                $qb->setAlias(null);
-                $sql = strtr('{update}{where}{order}', [
-                    '{update}' => $qb->getAdapter()->sqlUpdate($model::tableName(), [$this->sort => new Expression("@position := (@position + 10)")]),
-                    '{where}' => $qb->buildWhere(),
-                    '{order}' => $qb->buildOrder()
-                ]);
-                $connection->query($sql);
+            $newQs->order([$this->sort]);
+            $order = 0;
+            foreach ($newQs->all() as $model) {
+                $model->$sort = $order+=10;
+                $model->save();
             }
         }
         return $qs;
@@ -757,7 +745,6 @@ abstract class Admin
 
         $qs = $this->handleSearch($qs, $search);
         $qs = $this->applyOrder($qs);
-        $qs = $this->fixSort($qs);
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,

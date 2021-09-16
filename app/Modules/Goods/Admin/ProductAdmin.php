@@ -10,6 +10,7 @@ use Modules\Cart\Models\CouponKitModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Forms\ProductAdminForm;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
@@ -92,20 +93,27 @@ class ProductAdmin extends Admin
 
     public function getItemProperty(Model $item, $property)
     {
-        /** @var ProductModel $image */
+        /** @var ProductModel $item */
         if ($property === 'image') {
             return ($image = $item->getMainImage())
-                ? "<div style='text-align: center'><img src=\"/{$image->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>"
+                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)}\" width='60' /></div>"
                 : '';
         }
-        if ($property === 'product') {
-            return "<a target='_blank' href='{$item->getAbsoluteUrl()}'>{$item->getFrontendName()}</a>";
+        if ($property === 'mpn') {
+            return "<a href={$item->getDistributorUrl()} target='_blank'>{$item->getMpn()}</a>";
         }
+
+        if ($property === 'product') {
+            $len = mb_strlen($item->$property);
+            $name = ($len > 30) ? mb_substr($item->$property, 0, 30) . '...' : $item->$property;
+            return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$name}</a>";
+        }
+
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';
         }
         if ($property === 'add_date') {
-            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
+            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y');
         }
 
         return parent::getItemProperty($item, $property);
