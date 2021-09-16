@@ -1,0 +1,8 @@
+.mobile-alert-close {
+  width: rem-calc(24);
+  color: #c4c4c4;
+
+  &:active {
+    color: #9b9b9b;
+  }
+}

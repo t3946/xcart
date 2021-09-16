@@ -81,11 +81,11 @@ const SideBarMenu = () => {
       {user && (
         <button
           className={
-            "form-button form-button__outline logout-button pt-2.5 pb-2.5 mt-4 rounded-0 w-100"
+            "sidebar-menu-container sidebar-menu__top-level-item text-start w-100 sidebar-menu-container__logout"
           }
           onClick={logout}
         >
-          log out
+          Log out
         </button>
       )}
     </div>

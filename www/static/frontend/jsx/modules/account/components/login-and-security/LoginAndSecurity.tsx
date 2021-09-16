@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
@@ -9,9 +9,16 @@ import Alert from "@client/modules/account/components/shared/Alert";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { setAlertAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import {
+  setIsVisibleAction as showMobileAlertAction,
+  setMobileAlertAction,
+} from "@client/jsx/redux/actions/account-actions/MobileMenuActions";
+import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 const LoginAndSecurity = (): any => {
   const dispatch = useDispatch();
+  const breakpoint = useBreakpoint();
   const history = useHistory();
   const user = useSelector((e: StoreDto) => e.user);
   const countries = useSelector((e: AccountStore) => e.countries);
@@ -65,12 +72,22 @@ const LoginAndSecurity = (): any => {
   ];
 
   if (alert) {
-    setTimeout(() => {
-      setShow(false);
-      setTimeout(() => {
+    breakpoint({
+      xs: function () {
         dispatch(setAlertAction(null));
-      }, 500);
-    }, ALERT_SHOW_TIME_MS);
+        dispatch(setMobileAlertAction(alert));
+        dispatch(showMobileAlertAction(true));
+        dispatch(setVisibleShadowPanelAction(true));
+      },
+      md: function () {
+        setTimeout(() => {
+          setShow(false);
+          setTimeout(() => {
+            dispatch(setAlertAction(null));
+          }, 500);
+        }, ALERT_SHOW_TIME_MS);
+      },
+    });
   }
 
   function formatPhoneNumber() {
@@ -118,17 +135,34 @@ const LoginAndSecurity = (): any => {
     return items;
   }
 
-  return (
-    <>
-      <InnerPage
-        beforePage={
+  React.useEffect(() => {
+    return () => {
+      dispatch(setAlertAction(null));
+    };
+  });
+
+  function beforePage(): any {
+    return breakpoint({
+      md: function () {
+        return (
           <Alert
             show={show}
             variant={alert?.variant}
             message={alert?.message}
-            classes={{ container: "pt-20 pt-lg-0 pb-5" }}
+            classes={{
+              container: "pt-20 pb-5 pt-lg-0",
+              alert: "account-inner-page_alert",
+            }}
           />
-        }
+        );
+      },
+    });
+  }
+
+  return (
+    <>
+      <InnerPage
+        beforePage={beforePage()}
         header={"Login & security"}
         bodyClasses={"content-panel login-and-security-content-panel p-0"}
         footer={

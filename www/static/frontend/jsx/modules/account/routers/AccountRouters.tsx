@@ -40,6 +40,7 @@ import TSVDisable from "@client/modules/account/components/login-and-security/TS
 import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
 import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
 import PasswordAssistance from "@client/modules/account/components/password-assistance/PasswordAssistance";
+import AlertMobile from "@client/modules/account/components/shared/AlertMobile";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -75,15 +76,16 @@ export const AccountRouters = (): any => {
 
   return (
     <Provider store={accountStore as any}>
+      <ShadowPanel />
       <Snackbar>
         <BrowserRouter>
           <DepartmentsMenuMobile
             classes={{ container: "hat-navigation_departments-menu-mobile" }}
           />
-          <ShadowPanel />
           <HatNavigation />
           <HatSearchLine />
           <MobileMenu />
+          <AlertMobile />
 
           <div className={"container"}>
             {user && <BreadCrumbs />}

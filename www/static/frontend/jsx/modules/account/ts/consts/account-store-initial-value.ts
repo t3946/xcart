@@ -34,6 +34,11 @@ export const accountLoginAndSecurityValue = {
   alert: null,
 };
 
+export const accountMobileAlert = {
+  alert: null,
+  isVisible: false,
+};
+
 export const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -42,11 +47,11 @@ export const accountStoreInitialValue = {
   mobileMenu: accountMenuInitialValue,
   lists: accountListsInitialValue,
   loginAndSecurity: accountLoginAndSecurityValue,
+  mobileAlert: accountMobileAlert,
 };
 
 export const shadowPanelInitialValue = {
   isVisible: false,
-  subscribers: {},
 };
 
 export const countries = appData.countries || [];
