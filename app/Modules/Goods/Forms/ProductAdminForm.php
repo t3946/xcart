@@ -88,6 +88,9 @@ class ProductAdminForm extends ModelForm
             'Images' => [
                 'detail_images'
             ],
+            'Product options' => [
+                'product_options'
+            ],
             'Amazon options' => [
                 'amazon_enabled'
             ],
@@ -267,6 +270,7 @@ class ProductAdminForm extends ModelForm
                 'class' => ListViewField::class,
                 'adminClass' => ProductImagesAdmin::class,
                 'listTemplate' => 'admin/list/_list.tpl',
+                'defaultOrder' => ['products_images__order_by']
             ]
         ];
     }

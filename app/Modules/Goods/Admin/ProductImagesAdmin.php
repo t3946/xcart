@@ -10,6 +10,7 @@ use Modules\Goods\Forms\ProductImageForm;
 use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductImagesModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
@@ -21,7 +22,12 @@ use Xcart\App\Orm\Model;
 
 class ProductImagesAdmin extends ListViewAdmin
 {
+    public $ownerModel = ProductModel::class;
+    public string $owner_model_field = 'detail_images';
     public $ownerField = 'image_id';
+    public string $related_field = 'image_id';
+    public string $through_field = 'product_id';
+
     public function getSuggestionColumns()
     {
         return  [
@@ -29,11 +35,6 @@ class ProductImagesAdmin extends ListViewAdmin
                 'class' => CharField::class
             ],
         ];
-    }
-
-    public function getOwnerModel() : ProductImagesModel
-    {
-        return new ProductImagesModel();
     }
 
     public function getListColumns()
@@ -60,7 +61,7 @@ class ProductImagesAdmin extends ListViewAdmin
         switch ($property)
         {
             case 'image':
-                return "<div style='text-align: center'><img src=\"{$item->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>";
+                return "<div style='text-align: center'><img src=\"{$item->getCdnURL('preview')}\" title=\"{$item}\" width='60' /></div>";
         }
         return parent::getItemProperty($item, $property);
     }

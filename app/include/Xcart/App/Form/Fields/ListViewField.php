@@ -2,7 +2,9 @@
 namespace Xcart\App\Form\Fields;
 
 use Modules\Admin\Contrib\ListViewAdmin;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 class ListViewField extends Field
@@ -76,11 +78,11 @@ class ListViewField extends Field
         if ($model->getIsNewRecord()) {
             return $this->innerRender($this->emptyTemplate, []);
         }
-
+        $name_owner = $this->getName();
         /** @var ListViewAdmin $admin */
         $admin = new $this->adminClass();
         $admin->ownerPk = $this->getForm()->getInstance()->pk;
-        $admin->ownerField = $this->getName();
+        $admin->ownerField = $name_owner;
         $qs = $admin->getQuerySet();
         $qs = $admin->applyOrder($qs);
         $qs = $admin->fixSort($qs);

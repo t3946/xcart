@@ -13,7 +13,5 @@ class EditorField extends TextAreaField
     public function init()
     {
         parent::init();
-
-        AssetsLibrary::addAsset(['type' => 'js', 'position' => 'head'], '<script src="/static/backend/dist/raw/editor/tinymce.min.js"></script>');
     }
 }
