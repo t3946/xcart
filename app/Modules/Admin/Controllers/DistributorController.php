@@ -133,7 +133,13 @@ class DistributorController extends BackendController
         }
 
         //хлебные крошки
-        Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'),  '/admin/manufacturers.php?&word=num');
+        Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Distributors'),
+            Xcart::app()->router->url('admin:list', [
+                'module' => 'Distributor',
+                'admin' => 'DistributorAdmin'
+            ])
+        );
+
         if (!$dx) {
             Xcart::app()->breadcrumbs->add($pageTitle = AdminModule::t('Add Distributor'));
         } else {

@@ -48,6 +48,8 @@ class QueueDiscontinueCommand extends Command
 
             echo "Discontinued {$data['dx_code']}: $dis_count products\n";
 
+            print_r($data);
+
             $message->ack();
         }
     }
