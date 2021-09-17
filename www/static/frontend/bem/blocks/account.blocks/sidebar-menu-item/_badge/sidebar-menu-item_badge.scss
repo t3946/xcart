@@ -1,0 +1,12 @@
+.sidebar-menu-item_badge {
+  position: absolute;
+  right: rem-calc(16);
+
+  @include breakpoint(md up) {
+    right: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    right: rem-calc(16);
+  }
+}

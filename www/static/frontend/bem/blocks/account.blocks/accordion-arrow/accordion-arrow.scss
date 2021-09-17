@@ -1,0 +1,16 @@
+.accordion-arrow{
+  width: rem-calc(12);
+  height: rem-calc(7);
+  transition: all .2s ease-out;
+  color: #000000;
+
+  @include breakpoint(md up) {
+    width: rem-calc(20);
+    height: rem-calc(12);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(12);
+    height: rem-calc(7);
+  }
+}

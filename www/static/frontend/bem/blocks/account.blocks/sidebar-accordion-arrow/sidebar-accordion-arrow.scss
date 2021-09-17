@@ -1,0 +1,7 @@
+.sidebar-accordion-arrow {
+  color: #051b28;
+
+  @include breakpoint(md up) {
+    width: rem-calc(20);
+  }
+}

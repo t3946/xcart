@@ -27,7 +27,7 @@ interface ActionsInterface {
  * @param actions actions for breakpoints
  */
 function executeBreakpoint(actions: ActionsInterface): any {
-  const breakpointsOrder = ["xxl", "xl", "lg", "md", "sm"];
+  const breakpointsOrder = ["xxl", "xl", "lg", "md", "sm"].reverse();
   const breakpointsFlags = getBreakpointsFlags(window.innerWidth);
   let action = null;
 

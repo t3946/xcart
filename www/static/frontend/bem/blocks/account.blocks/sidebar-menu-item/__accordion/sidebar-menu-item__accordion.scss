@@ -1,0 +1,23 @@
+.sidebar-menu-item__accordion {
+  color: #7b7a7a;
+  font-size: rem-calc(18);
+  background-color: #ffffff;
+  height: rem-calc(35);
+
+  &:hover {
+    background-color: #ffffff;
+  }
+
+  &:hover, &:focus {
+    color: #000000;
+  }
+
+  @include breakpoint(md up) {
+    height: rem-calc(50);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+    height: rem-calc(35);
+  }
+}

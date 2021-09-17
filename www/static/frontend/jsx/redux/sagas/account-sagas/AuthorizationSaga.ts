@@ -2,6 +2,7 @@ import { takeLatest } from "redux-saga/effects";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
+import { route } from "@client/jsx/utils/AppData";
 
 const api = new ApiService();
 
@@ -12,7 +13,7 @@ function* register(action: AnyAction) {
   };
 
   yield api
-    .post<any>(`/account/api/authorization/register`, JSON.stringify(postData))
+    .post(`/account/api/authorization/register`, JSON.stringify(postData))
     .then((res) => {
       res.errors ? error(res.errors) : success(res);
 
@@ -29,7 +30,7 @@ function* login(action: AnyAction) {
     LoginForm: form,
   });
 
-  yield api.post<any>(`/account/api/authorization/login`, data).then((res) => {
+  yield api.post(`/account/api/authorization/login`, data).then((res) => {
     res.errors ? error(res.errors) : success(res);
 
     complete();
@@ -46,7 +47,7 @@ function* checkUserLogin(action: AnyAction) {
   });
 
   yield api
-    .post<any>(appData.routes["account:authorization_api:check-login"], data)
+    .post(route("account:authorization_api:check-login"), data)
     .then((res) => {
       res.errors ? error(res.errors) : success(res);
 
@@ -59,12 +60,10 @@ function* checkUserLogin(action: AnyAction) {
 function* logout(action: AnyAction) {
   const { callback } = action.payload;
 
-  yield api
-    .get<any>(appData.routes["account:authorization_api:logout"])
-    .then((response) => {
-      callback();
-      return response;
-    });
+  yield api.get(route("account:authorization_api:logout")).then((response) => {
+    callback();
+    return response;
+  });
 }
 
 function* authorizationActionWatcher(): SagaIterator {
