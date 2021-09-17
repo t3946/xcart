@@ -30,7 +30,7 @@ export default class SliderProducts extends Component {
   }
 
   loadNewItems() {
-    const url = "/api" + this.props.url + "?page=" + this.paginationPage;
+    const url = this.props.url + "?page=" + this.paginationPage;
 
     fetch(url, {
       headers: {

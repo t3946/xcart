@@ -32,11 +32,11 @@
 
     </div>
 
-    <div class="row">
+    {*<div class="row">
         <div class="small-12 column slider-related">
-            {set $link}{url 'catalog:related' id=$productid}{/set}
+            {set $link}{url 'api:relatedApi' id=$productid}{/set}
             {set $lbl}{t 'Similar products'}{/set}
             {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
-    </div>
+    </div>*}
 {/block}

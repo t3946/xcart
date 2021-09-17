@@ -61,6 +61,11 @@ return [
         'name' => 'newApi'
     ],
     [
+        'route' => 'category/viewed-{i:id}',
+        'target' => [ApiCategoriesController::class, 'actionSliderViewed'],
+        'name' => 'viewedApiProduct'
+    ],
+    [
         'route' => 'category/viewed',
         'target' => [ApiCategoriesController::class, 'actionSliderViewed'],
         'name' => 'viewedApi'
