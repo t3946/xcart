@@ -1,0 +1,24 @@
+.share-list-people-container{
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:last-child{
+    margin-bottom: 0;
+  }
+}
+
+.share-list-people-email{
+  color: #C4C4C4;
+}
+
+.share-list-people-left-side-container{
+  width: 60%;
+}
+
+.share-list-account-role{
+  color: #787878;
+  font-style: italic;
+  margin-right: 10px;
+}

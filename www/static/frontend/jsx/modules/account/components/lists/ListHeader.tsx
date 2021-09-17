@@ -6,12 +6,16 @@ import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snack
 import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { ShareListDialog } from "@client/modules/account/components/lists/ShareListDialog";
+import { ManageList } from "@client/modules/account/components/lists/ManageList";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { ShareList } from "@client/modules/account/components/lists/ShareList";
 
 interface ListHeaderProps {
   label: string;
   shippingList: boolean;
   listId: string;
   edit: boolean;
+  info: any;
 }
 
 export const ListHeader: React.FC<ListHeaderProps> = ({
@@ -19,10 +23,13 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   shippingList,
   listId,
   edit,
+  info,
 }) => {
   const dispatch = useDispatch();
 
   const shareDialog = useDialog();
+
+  const manageListDialog = useDialog();
 
   const history = useHistory();
 
@@ -48,7 +55,12 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         <div className="list-header-actions">
           {edit && (
             <React.Fragment>
-              <div className="list-header-action-item blue">Manage List</div>
+              <div
+                onClick={manageListDialog.handleClickOpen}
+                className="list-header-action-item blue"
+              >
+                Manage List
+              </div>
               {shippingList && (
                 <div
                   onClick={handleDeleteList}
@@ -64,7 +76,6 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
       {edit && (
         <div className="list-header-shared-block">
           <ShareIcon className="list-header-share-btn blue" />
-
           <div
             className="list-header-share-text blue"
             onClick={shareDialog.handleClickOpen}
@@ -77,6 +88,13 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         open={shareDialog.open}
         handleClose={shareDialog.handleClose}
       />
+      <BootstrapDialogHOC
+        show={manageListDialog.open}
+        title={"Manage list"}
+        onClose={manageListDialog.handleClose}
+      >
+        <ManageList info={info} onCancelClick={manageListDialog.handleClose} />
+      </BootstrapDialogHOC>
     </div>
   );
 };

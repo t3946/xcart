@@ -16,11 +16,13 @@ interface FormInputPropsDto {
     group?: string | string[] | null;
     label?: string | string[] | null;
     input?: string | string[] | null;
+    textArea?: string | string[] | null;
   };
   value: any;
   touched?: boolean | FormikTouched<any> | FormikTouched<any>[];
-  handleBlur?: FocusEventHandler<HTMLInputElement>;
+  handleBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   mask?: string;
+  inputType?: string;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -36,6 +38,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   touched,
   handleBlur,
   mask,
+  inputType = "input",
 }) => {
   const error = errorMessage && touched;
   return (
@@ -58,28 +61,44 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
           </label>
         )}
         <div className={classnames(classes?.input)}>
-          <InputMask
-            mask={mask}
-            value={value}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          >
-            {(inputProps) => (
-              <input
-                onBlur={handleBlur}
-                placeholder={placeholder}
-                className={classnames(
-                  "form-input",
-                  `${error && "form-input-error"}`
-                )}
-                name={name}
-                id={id}
-                type={type ? type : "text"}
-                onChange={handleChange}
-                value={value}
-              />
-            )}
-          </InputMask>
+          {inputType === "input" ? (
+            <InputMask
+              mask={mask}
+              value={value}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            >
+              {(inputProps) => (
+                <input
+                  onBlur={handleBlur}
+                  placeholder={placeholder}
+                  className={classnames(
+                    "form-input",
+                    `${error && "form-input-error"}`
+                  )}
+                  name={name}
+                  id={id}
+                  type={type ? type : "text"}
+                  onChange={handleChange}
+                  value={value}
+                />
+              )}
+            </InputMask>
+          ) : (
+            <textarea
+              onBlur={handleBlur}
+              placeholder={placeholder}
+              className={classnames(
+                "form-input",
+                `${error && "form-input-error"}`,
+                classes.textArea
+              )}
+              name={name}
+              id={id}
+              onChange={handleChange}
+              value={value}
+            />
+          )}
         </div>
       </Grid>
       <div className="error-message-input-container">

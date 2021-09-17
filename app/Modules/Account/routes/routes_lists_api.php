@@ -38,4 +38,30 @@ return [
         'target' => [AccountListsApi::class, 'acceptInvitation'],
         'name' => 'accept-invite'
     ],
+    [
+        'route' => '/edit-user-rights',
+        'target' => [AccountListsApi::class, 'editUsersInList'],
+        'name' => 'edit-rights'
+    ],
+    [
+        'route' => '/add-product-on-list',
+        'target' => [AccountListsApi::class, 'addProductOnList'],
+        'name' => 'add-product'
+    ],
+    [
+        'route' => '/edit-name-in-idea',
+        'target' => [AccountListsApi::class, 'editIdeaName'],
+        'name' => 'edit-idea-name'
+    ],
+    [
+        'route' => '/edit-comment',
+        'target' => [AccountListsApi::class, 'editComment'],
+        'name' => 'edit-comment'
+    ],
+    [
+        'route' => '/manage-list',
+        'target' => [AccountListsApi::class, 'manageList'],
+        'name' => 'manage-list'
+    ],
+
 ];

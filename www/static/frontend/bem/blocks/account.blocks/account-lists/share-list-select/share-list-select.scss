@@ -1,0 +1,138 @@
+.share-list-select{
+  width: 40% !important;
+  margin-bottom: 0 !important;
+}
+
+.share-list-select-head {
+  color: #000000;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 35px 0 22px;
+  border-radius: 5px;
+  position: relative;
+  transition: .2s all;
+  width: fit-content;
+
+  &:after {
+    width: rem-calc(12);
+    height: rem-calc(8);
+    background: url("/static/frontend/images/icons/account/arrow-down__black.svg") no-repeat center / cover;
+    position: absolute;
+    right: rem-calc(12);
+    bottom: 50%;
+    transform: translateY(50%);
+    content: '';
+    display: block;
+    transition: .2s ease-in;
+  }
+
+  &:hover{
+  background-color: #EAEAEA;
+  }
+
+  @include breakpoint(md up) {
+    height: rem-calc(42);
+    line-height: rem-calc(42);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(34);
+    line-height: rem-calc(34);
+  }
+}
+
+.open{
+  .share-list-select-head::after {
+    transform: translateY(50%) rotate(180deg);
+  }
+  .share-list-select-list{
+    display: block;
+  }
+}
+
+.share-list-select-wrapper{
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  width: 100%;
+}
+
+.share-list-select-list {
+  display: none;
+  border-radius: 5px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #fff;
+  max-height: 205px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  color: #424348;
+  overscroll-behavior: contain;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+
+  top: rem-calc(37);
+
+  @include breakpoint(md up) {
+    top: rem-calc(41);
+  }
+
+  @include breakpoint(lg up) {
+    top: rem-calc(33);
+  }
+}
+
+.share-list-select-list::-webkit-scrollbar {
+  width: 7px;
+  background-color: #F8F9FA;
+  padding: 5px;
+}
+
+.share-list-select-list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #D9D9D9;
+}
+
+.share-list-select-item {
+  position: relative;
+  padding: rem-calc(11) rem-calc(83) rem-calc(11) rem-calc(53);
+  cursor: pointer;
+  list-style-type: none;
+  font-size: rem-calc(16);
+  overflow: hidden;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.share-list-select-item-selected{
+  &:after {
+    width: rem-calc(12);
+    height: rem-calc(8);
+    background: url("/static/frontend/images/icons/account/check-mark.svg") no-repeat center / cover;
+    position: absolute;
+    left: rem-calc(22);
+    bottom: 50%;
+    transform: translateY(50%);
+    content: '';
+    display: block;
+    transition: .2s ease-in;
+  }
+}
+
+.share-list-remove-user{
+  padding: 13px 20px;
+  border-top: 1px solid #DFDFDF;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+

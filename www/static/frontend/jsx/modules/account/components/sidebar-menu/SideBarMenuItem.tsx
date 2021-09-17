@@ -1,9 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
-import { useDispatch } from "react-redux";
-
 interface sideBarMenuItemProps {
   to: string;
   label: string;

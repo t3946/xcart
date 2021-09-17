@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { userClearAction } from "../../../../redux/actions/account-actions/UserActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { setIsList } from "../../../../redux/actions/account-actions/MainActions";
 
 const SideBarMenu = () => {
   const dispatch = useDispatch();
@@ -27,7 +26,6 @@ const SideBarMenu = () => {
     {
       to: "/account/your-lists",
       label: "Your lists",
-      onClick: () => dispatch(setIsList(true)),
     },
     { to: "/account/addresses", label: "Addresses" },
     {
@@ -64,7 +62,6 @@ const SideBarMenu = () => {
               to={e.to}
               label={e.label}
               className={"sidebar-menu__top-level-item"}
-              onClick={e.onClick}
             />
           );
         }

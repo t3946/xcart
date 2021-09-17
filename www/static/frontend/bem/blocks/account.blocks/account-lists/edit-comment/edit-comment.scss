@@ -1,0 +1,48 @@
+.edit-comment-img-block{
+  margin-left: rem-calc(20);
+  text-align: right;
+  padding-top: rem-calc(25);
+}
+
+.text-area-input-container{
+  width: 100%;
+}
+
+.text-area-group{
+  width: 73%;
+}
+
+.edit-comment-text-area-input{
+  resize: none;
+  min-height: rem-calc(135);
+}
+
+
+.edit-comment-img{
+  margin-bottom: rem-calc(11);
+}
+
+.edit-comment-name{
+  font-size: rem-calc(14);
+  font-weight: 700;
+}
+
+.top-content{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: rem-calc(15);
+}
+
+.edit-comment-inputs-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.edit-comment-input-text-field-container{
+  width: rem-calc(90);
+}
+
+.edit-comment-select-field-container{
+  width: rem-calc(150) !important;
+}

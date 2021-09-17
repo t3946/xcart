@@ -2,6 +2,7 @@ import { AnyAction } from "redux";
 import { AccountListsStore } from "@client/modules/account/ts/types/account-store.type";
 import { accountListsInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
 import { AccountListProductActionEnum } from "@client/modules/account/ts/types/account-list-product-action";
+import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
 
 const accountListReducer = (
   state: AccountListsStore = accountListsInitialValue,
@@ -21,10 +22,65 @@ const accountListReducer = (
         ...state,
         listLoading: true,
       };
+    case "ADD_PRODUCT_ON_LIST":
+      return {
+        ...state,
+        listLoading: true,
+      };
     case "ACCEPT_INVITE":
       return {
         ...state,
         listLoading: true,
+      };
+    case "EDIT_IDEA_NAME":
+      return {
+        ...state,
+        listLoading: true,
+      };
+    case "EDIT_COMMENT_IN_PRODUCT":
+      return {
+        ...state,
+        listLoading: true,
+      };
+    case "MANAGE_LIST":
+      return {
+        ...state,
+        listLoading: true,
+      };
+    case "EDIT_USER_RIGHTS":
+      if (action.actionType === UserRightsActionsEnum.DELETE) {
+        return {
+          ...state,
+          lists: state.lists.map((e) => {
+            if (e.product_list_id === action.listId) {
+              return {
+                ...e,
+                users: e.users.filter((user) => user.user_id !== action.userId),
+              };
+            }
+            return e;
+          }),
+        };
+      }
+      return {
+        ...state,
+        lists: state.lists.map((e) => {
+          if (e.product_list_id === action.listId) {
+            return {
+              ...e,
+              users: e.users.map((user) => {
+                if (user.user_id === action.userId) {
+                  return {
+                    ...user,
+                    role: action.actionType,
+                  };
+                }
+                return user;
+              }),
+            };
+          }
+          return e;
+        }),
       };
     case "REORDER_LIST":
       return {
@@ -52,7 +108,8 @@ const accountListReducer = (
                     ...product,
                     typeAction: {
                       type: AccountListProductActionEnum.DELETE,
-                      productName: product.product.product,
+                      productName:
+                        product.product.product | product.product.name,
                     },
                   };
                 }

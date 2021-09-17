@@ -27,6 +27,7 @@ export const ListsSidebarMenu = () => {
   const backOnAccount = () => {
     history.push("/account/");
   };
+
   return (
     <div>
       <Button

@@ -1,4 +1,11 @@
 import { ShowSharedStatusEnum } from "@client/modules/account/ts/types/show-shared-status.enum";
+import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
+import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
+import { EditCommentRequestData } from "@client/modules/account/ts/types/edit-comment-request-data";
+import {
+  ManageListFormData,
+  ManageListRequestData,
+} from "@client/modules/account/ts/types/manage-list-form.types";
 
 export const getLists = (): any => ({
   type: "GET_LISTS",
@@ -9,7 +16,10 @@ export const setLists = (lists): any => ({
   lists,
 });
 
-export const createList = (name: string, callback: () => void): any => ({
+export const createList = (
+  name: string,
+  callback: (hash: string) => void
+): any => ({
   type: "CREATE_LIST",
   name,
   callback,
@@ -72,9 +82,74 @@ export const encryptUrl = (
 
 export const acceptInvite = (
   listId: ShowSharedStatusEnum,
+  role: UserPrivateVariantsEnum,
   callback: () => void
 ): any => ({
   type: "ACCEPT_INVITE",
   listId,
+  role,
+  callback,
+});
+
+export const editUserRights = (
+  listId: string,
+  userId: string,
+  actionType: UserRightsActionsEnum,
+  callback?: () => void
+): any => ({
+  type: "EDIT_USER_RIGHTS",
+  listId,
+  userId,
+  actionType,
+  callback,
+});
+
+export const addProduct = (
+  listId: string,
+  productId?: string,
+  name?: string,
+  callback?: (idea) => void
+): any => ({
+  type: "ADD_PRODUCT_ON_LIST",
+  listId,
+  productId,
+  name,
+  callback,
+});
+
+export const editIdeaName = (
+  listId: string,
+  productId: string,
+  name: string,
+  callback: () => void
+): any => ({
+  type: "EDIT_IDEA_NAME",
+  listId,
+  productId,
+  name,
+  callback,
+});
+
+export const editCommentInProduct = (
+  listId: string,
+  productId: string,
+  data: EditCommentRequestData,
+  callback: () => void
+): any => ({
+  type: "EDIT_COMMENT_IN_PRODUCT",
+  listId,
+  productId,
+  data,
+  callback,
+});
+
+export const manageList = (
+  listId: string,
+  data: ManageListRequestData,
+  callback: () => void
+): any => ({
+  type: "MANAGE_LIST",
+  listId,
+  data,
   callback,
 });

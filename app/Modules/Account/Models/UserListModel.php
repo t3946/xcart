@@ -35,9 +35,11 @@ class UserListModel extends Model
             ],
             'role' => [
                 'class' => CharField::class,
+                'default' =>'owner'
             ],
             'list_type' => [
                 'class' => CharField::class,
+                'default' =>'private'
             ],
         ];
     }

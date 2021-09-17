@@ -3,6 +3,8 @@ import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { AnyAction } from "redux";
+import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
+import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 
 const api = new ApiService();
 
@@ -10,7 +12,7 @@ const getUser = () => {
   return accountStore.getState().user;
 };
 
-function* getLists(action: AnyAction): Generator {
+function* getLists(): Generator {
   const result: any = yield api
     .post<any>(`/account/api/lists/get-lists`, getUser().id)
     .then((response) => response);
@@ -37,11 +39,11 @@ function* createList(action: AnyAction): Generator {
     lists: accountStore.getState().lists.lists.concat(result),
   });
 
-  yield action.callback();
+  yield action.callback(result.cache_url);
 }
 
 function* reorderList(action: AnyAction): Generator {
-  const result: any = yield api
+  yield api
     .post<any>(
       `/account/api/lists/reorder-products`,
       JSON.stringify(
@@ -54,7 +56,7 @@ function* reorderList(action: AnyAction): Generator {
 }
 
 function* deleteList(action: AnyAction): Generator {
-  const result: any = yield api
+  yield api
     .post<any>(`/account/api/lists/delete-list`, action.listId)
     .then((response) => response);
 
@@ -100,13 +102,111 @@ function* acceptInvite(action: AnyAction): Generator {
   yield api
     .post<any>(
       `/account/api/lists/accept-invite`,
-      JSON.stringify({ list_id: action.listId })
+      JSON.stringify({ list_id: action.listId, role: action.role })
     )
     .then((response) => response);
 
   yield put({
     type: "GET_LISTS",
   });
+
+  yield action.callback();
+}
+
+function* editUserRights(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/edit-user-rights`,
+      JSON.stringify({
+        list_id: action.listId,
+        user: action.userId,
+        actionType: action.actionType,
+      })
+    )
+    .then((response) => response);
+}
+
+function* addProductOnList(action: AnyAction): Generator {
+  const product = yield api
+    .post<any>(
+      `/account/api/lists/add-product-on-list`,
+      JSON.stringify({
+        listId: action.listId,
+        productId: action?.productId,
+        name: action.name,
+      })
+    )
+    .then((response) => response);
+
+  yield action?.callback(product);
+}
+
+function* editIdeaName(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/edit-name-in-idea`,
+      JSON.stringify({
+        productId: action.productId,
+        name: action.name,
+      })
+    )
+    .then((response) => response);
+
+  yield put({
+    type: "SET_LISTS",
+    lists: editNameOnList(
+      accountStore.getState().lists.lists,
+      action.listId,
+      action.productId,
+      action.name
+    ),
+  });
+
+  yield action.callback();
+}
+
+function* editCommentInProduct(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/edit-comment`,
+      JSON.stringify({
+        productId: action.productId,
+        listId: action.listId,
+        data: action.data,
+      })
+    )
+    .then((response) => response);
+
+  yield put({
+    type: "SET_LISTS",
+    lists: EditCommentDataOnProduct(
+      accountStore.getState().lists.lists,
+      action.listId,
+      action.productId,
+      action.data
+    ),
+  });
+}
+function* manageList(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/manage-list`,
+      JSON.stringify({
+        listId: action.listId,
+        data: action.data,
+      })
+    )
+    .then((response) => response);
+
+  // yield put({
+  //   type: "SET_LISTS",
+  //   lists: EditCommentDataOnProduct(
+  //     accountStore.getState().lists.lists,
+  //     action.listId,
+  //     action.productId,
+  //     action.data
+  //   ),
+  // });
 
   yield action.callback();
 }
@@ -119,4 +219,9 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("MOVE_PRODUCT", moveProduct);
   yield takeLatest("ENCRYPT_URL", encryptUrl);
   yield takeLatest("ACCEPT_INVITE", acceptInvite);
+  yield takeLatest("EDIT_USER_RIGHTS", editUserRights);
+  yield takeLatest("ADD_PRODUCT_ON_LIST", addProductOnList);
+  yield takeLatest("EDIT_IDEA_NAME", editIdeaName);
+  yield takeLatest("EDIT_COMMENT_IN_PRODUCT", editCommentInProduct);
+  yield takeLatest("MANAGE_LIST", manageList);
 }

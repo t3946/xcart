@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { NoItemsBlock } from "@client/modules/account/components/lists/NoItemsBlock";
 import { ListProductItem } from "@client/modules/account/components/lists/ListProductItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import {
   deleteProduct,
+  moveProduct,
   reorderList,
   setLists,
 } from "../../../../redux/actions/account-actions/ListsActions";
@@ -13,10 +14,13 @@ import { AccountListProductActionEnum } from "@client/modules/account/ts/types/a
 import { MovedProductPlaceholder } from "@client/modules/account/components/lists/MovedProductPlaceholder";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { DeleteProductPlaceholder } from "@client/modules/account/components/lists/DeleteProductPlaceholder";
+import { ListProductIdeaItem } from "@client/modules/account/components/lists/ListProductIdeaItem";
 
-export const ListProductItems = ({ info, path }) => {
+export const ListProductItems = ({ info, path, edit }) => {
   useEffect(() => {
-    deleteProductsWithTypeAction();
+    return () => {
+      deleteProductsWithTypeAction();
+    };
   }, [path]);
 
   const dispatch = useDispatch();
@@ -63,6 +67,12 @@ export const ListProductItems = ({ info, path }) => {
       )
     );
   };
+
+  const onMoveClick = (value, listId, product) => {
+    setTimeout(() => {
+      dispatch(moveProduct(listId, value, product));
+    }, 0);
+  };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -103,18 +113,55 @@ export const ListProductItems = ({ info, path }) => {
                               />
                             );
                           }
-
                           default: {
-                            return (
-                              <ListProductItem
-                                deleteItem={() => deleteItem(e.product_id)}
-                                index={index}
-                                drag={{ ...provided.dragHandleProps }}
-                                info={e}
-                                reorderProductList={reorderProductList}
-                                listId={info.product_list_id}
-                              />
-                            );
+                            switch (e.product_type) {
+                              case "product":
+                                return (
+                                  <React.Fragment>
+                                    <ListProductItem
+                                      deleteItem={() =>
+                                        deleteItem(e.product_id)
+                                      }
+                                      index={index}
+                                      drag={{ ...provided.dragHandleProps }}
+                                      info={e}
+                                      reorderProductList={reorderProductList}
+                                      listId={info.product_list_id}
+                                      edit={edit}
+                                      onMoveClick={(value) =>
+                                        onMoveClick(
+                                          value,
+                                          info.product_list_id,
+                                          e
+                                        )
+                                      }
+                                    />
+                                  </React.Fragment>
+                                );
+                              case "idea":
+                                return (
+                                  <React.Fragment>
+                                    <ListProductIdeaItem
+                                      deleteItem={() =>
+                                        deleteItem(e.product_id)
+                                      }
+                                      index={index}
+                                      drag={{ ...provided.dragHandleProps }}
+                                      info={e}
+                                      reorderProductList={reorderProductList}
+                                      listId={info.product_list_id}
+                                      edit={edit}
+                                      onMoveClick={(value) =>
+                                        onMoveClick(
+                                          value,
+                                          info.product_list_id,
+                                          e
+                                        )
+                                      }
+                                    />
+                                  </React.Fragment>
+                                );
+                            }
                           }
                         }
                       })()}

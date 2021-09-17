@@ -4,8 +4,8 @@
 namespace Modules\Account\Models;
 
 
-use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -23,11 +23,8 @@ class ListItemsModel extends Model
             'list_items_id' => [
                 'class' => AutoField::class,
             ],
-            'product' => [
-                'field' => 'product_id',
-                'class' => ForeignField::class,
-                'modelClass' => ProductModel::class,
-                'link' => ['product_id' => 'productid'],
+            'product_id' => [
+                'class' => CharField::class,
             ],
             'list' => [
                 'field' => 'product_list_id',
@@ -37,6 +34,22 @@ class ListItemsModel extends Model
             ],
             'order_by' => [
                 'class' => IntField::class,
+                'default' => 999999,
+            ],
+            'product_type' => [
+                'class' => CharField::class,
+            ],
+            'comment' => [
+                'class' => CharField::class,
+            ],
+            'priority' => [
+                'class' => CharField::class,
+            ],
+            'needs' => [
+                'class' => CharField::class,
+            ],
+            'has' => [
+                'class' => CharField::class,
             ],
         ];
     }

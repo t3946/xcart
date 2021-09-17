@@ -1,5 +1,5 @@
 export enum ShowSharedStatusEnum {
   NONE = "none",
-  VIEW_EDIT = "view_edit",
+  VIEW_EDIT = "edit",
   VIEW = "view",
 }

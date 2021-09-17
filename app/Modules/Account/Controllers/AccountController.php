@@ -12,6 +12,7 @@ use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
@@ -167,21 +168,26 @@ class AccountController extends FrontendController
             $this->redirect('account:login', [], 301);
             $this->actionIndex();
         }
+        
+        [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag));
 
-        [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag)) ;
+        $invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash]);
 
-        $list_id = ProductListsModel::objects()->get(['cache_url' => $listHash])->product_list_id;
+        $invited_user_name = UserModel::objects()->get(['user_id' => $user_id])->name;
 
-        if(UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $list_id])->user_id){
+        if(UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $invite_list->product_list_id])->user_id){
             $this->redirect('/account/your-lists/' . $listHash, [], 301);
         }
 
         StorageHelper::push([
             "userId" => $user_id,
+            'userName' =>$invited_user_name,
             "type" => $type,
-            "listId" => $list_id,
+            "inviteList" => $invite_list->getAttributes(),
         ], null, 'invite_data');
 
         $this->actionIndex();
     }
+
+
 }

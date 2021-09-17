@@ -19,7 +19,6 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
   const dispatch = useDispatch();
 
   const encodeUrl = (type: ShowSharedStatusEnum) => {
-    console.log(id);
     dispatch(encryptUrl(type, id, onUrlEncoded));
   };
 
@@ -48,7 +47,7 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
     <div>
       <ShareListInviteSection onCopyLinkFunc={encodeUrl} />
       <hr className="share-list-center-line" />
-      <ShareListManagePeople />
+      <ShareListManagePeople closeDialog={onClose} id={id} />
     </div>
   );
 };

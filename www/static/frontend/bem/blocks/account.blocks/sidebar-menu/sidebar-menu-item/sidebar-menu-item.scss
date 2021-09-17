@@ -1,5 +1,6 @@
 .sidebar-menu-container {
-  height: rem-calc(45);
+  height: auto;
+  min-height: rem-calc(45);
   background-color: #f4f4f4;
   font-size: rem-calc(18);
   display: flex;

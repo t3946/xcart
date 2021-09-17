@@ -15,8 +15,6 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import { useBreakPoint } from "../hooks/useBreakPoint";
-import classNames from "classnames";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -49,7 +47,6 @@ export const AccountRouters = (): any => {
   const user = useSelector((e: AccountStore) => e.user);
 
   useEffect(() => {
-    useBreakPoint();
     dispatch(getTerritory());
 
     if (accountStore.getState().user) {
@@ -225,31 +222,28 @@ export const AccountRouters = (): any => {
                   )}
                 />
                 <Route
-                    exact
-                    path={route(
-                        "account:two-step-verification-settings-disable"
-                    )}
-                    component={TSVDisable}
+                  exact
+                  path={route("account:two-step-verification-settings-disable")}
+                  component={TSVDisable}
                 />
                 <Route
-                    exact
-                    path={route(
-                        "account:two-step-verification-settings-preferred-method"
-                    )}
-                    component={TSVChangePreferredMethod}
+                  exact
+                  path={route(
+                    "account:two-step-verification-settings-preferred-method"
+                  )}
+                  component={TSVChangePreferredMethod}
                 />
-
                 <Route
-                    exact
-                    path={route("account:two-step-verification-recovery")}
-                    component={TSVRecovery}
+                  exact
+                  path={route("account:two-step-verification-recovery")}
+                  component={TSVRecovery}
                 />
-
-
                 <Route
-                    exact
-                    path={route("account:two-step-verification-recovery-password-assistance")}
-                    component={PasswordAssistance}
+                  exact
+                  path={route(
+                    "account:two-step-verification-recovery-password-assistance"
+                  )}
+                  component={PasswordAssistance}
                 />
               </Switch>
             </div>
