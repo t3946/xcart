@@ -8,11 +8,13 @@ import { userClearAction } from "@client/jsx/redux/actions/account-actions/UserA
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { setIsList } from "@client/jsx/redux/actions/account-actions/MainActions";
 import { route } from "@client/jsx/utils/AppData";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 const SideBarMenu: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector((e: StoreDto) => e.user);
+  const breakpoint = useBreakpoint();
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {
@@ -56,6 +58,27 @@ const SideBarMenu: React.FC = () => {
     );
   }
 
+  function logoutButtonTemplate(): any {
+    if (!user) {
+      return;
+    }
+
+    return breakpoint({
+      xs: (
+        <button
+          className={
+            "sidebar-menu-item sidebar-menu_top-level-item text-start w-100 sidebar-menu-item__logout"
+          }
+          onClick={logout}
+        >
+          Log out
+        </button>
+      ),
+
+      lg: null,
+    });
+  }
+
   return (
     <div className="sidebar-menu-wrapper">
       {menuItems.map((value: Record<any, any>) => {
@@ -80,17 +103,7 @@ const SideBarMenu: React.FC = () => {
           />
         );
       })}
-
-      {user && (
-        <button
-          className={
-            "sidebar-menu-item sidebar-menu_top-level-item text-start w-100 sidebar-menu-item__logout"
-          }
-          onClick={logout}
-        >
-          Log out
-        </button>
-      )}
+      {logoutButtonTemplate()}
     </div>
   );
 };

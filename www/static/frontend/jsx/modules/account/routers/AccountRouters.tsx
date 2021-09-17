@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { AddAddressDialog } from "../components/addresses/AddAddressDialog";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
 import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
@@ -75,6 +75,23 @@ export const AccountRouters = (): any => {
     ],
   };
 
+  function leftColumnTemplate() {
+    if (isList) {
+      return <ListsSidebarMenu />;
+    } else {
+      return (
+        <>
+          <SideBarMenu />
+          <div className={"leave-feedback text-center mt-12"}>
+            <Link to={"/account"} className="common-link">
+              Leave feedback
+            </Link>
+          </div>
+        </>
+      );
+    }
+  }
+
   return (
     <Provider store={accountStore as any}>
       <ShadowPanel />
@@ -93,7 +110,7 @@ export const AccountRouters = (): any => {
 
             <div className="row mt-lg-20">
               <div className={classnames(classes.leftColumnClasses)}>
-                {isList ? <ListsSidebarMenu /> : <SideBarMenu />}
+                {leftColumnTemplate()}
               </div>
 
               <div className={classnames(classes.rightColumnClasses)}>

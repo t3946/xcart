@@ -29,15 +29,18 @@ interface ActionsInterface {
 function executeBreakpoint(actions: ActionsInterface): any {
   const breakpointsOrder = ["xxl", "xl", "lg", "md", "sm"].reverse();
   const breakpointsFlags = getBreakpointsFlags(window.innerWidth);
-  let action = null;
+  let action;
 
   for (const breakpointName of breakpointsOrder) {
-    if (breakpointsFlags[breakpointName] && actions[breakpointName]) {
+    if (
+      breakpointsFlags[breakpointName] &&
+      actions[breakpointName] !== undefined
+    ) {
       action = actions[breakpointName];
     }
   }
 
-  if (action === null) {
+  if (action === undefined) {
     action = actions["xs"];
   }
 
