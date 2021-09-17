@@ -68,6 +68,11 @@ class QueueImagesCommand extends Command
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
                 }
+            } else {
+                echo "nack\n";
+                print_r($data);
+                $message->nack();
+                return;
             }
         }
         $message->ack();
