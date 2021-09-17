@@ -3,7 +3,7 @@
   right: rem-calc(16);
 
   @include breakpoint(md up) {
-    right: rem-calc(18);
+    right: rem-calc(22);
   }
 
   @include breakpoint(lg up) {

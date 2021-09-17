@@ -3,6 +3,14 @@
   right: rem-calc(20);
   top: 50%;
   transform: translate(0, rem-calc(-3));
+
+  @include breakpoint(md up) {
+    right: rem-calc(24);
+  }
+
+  @include breakpoint(lg up) {
+    right: rem-calc(20);
+  }
 }
 
 .sidebar-accordion-arrow__open {
