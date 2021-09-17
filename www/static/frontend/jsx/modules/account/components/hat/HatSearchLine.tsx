@@ -1,8 +1,8 @@
 import React from "react";
 import { Provider } from "react-redux";
-import MiniCartItems from "../../../../components/MiniCart";
-import MiniCartInfo from "../../../../modules/mini-cart/components/info";
-import storeCart from "../../../../redux/stores/StoreCart";
+import MiniCartItems from "@client/jsx/components/MiniCart";
+import MiniCartInfo from "@client/jsx/modules/mini-cart/components/info";
+import storeCart from "@client/jsx/redux/stores/StoreCart";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import { AccountStore } from "@client/modules/account/ts/types/account-store.typ
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import { route } from "@client/jsx/utils/AppData";
 
 const HatSearchLine = (): any => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const HatSearchLine = (): any => {
 
         <MiniCartInfo
           quantity={appData.Cart.quantity}
-          url={appData.routes["cart:list"]}
+          url={route("cart:list")}
         />
       </div>
     );
@@ -47,9 +48,9 @@ const HatSearchLine = (): any => {
 
   function searchTemplate() {
     return (
-      <div className="search-form-container">
+      <div className="search-form-container flex-grow-1">
         <form
-          action={appData.routes["catalog:search"]}
+          action={routes("catalog:search")}
           method="get"
           itemProp="potentialAction"
           itemScope
@@ -62,13 +63,13 @@ const HatSearchLine = (): any => {
             placeholder={appData.config.cidev_header_code}
             value={appData.params.get.q}
             itemProp="query-input"
-            data-suggestion-url={appData.routes["catalog:search:suggestion"]}
+            data-suggestion-url={route("catalog:search:suggestion")}
             autoComplete="off"
           />
 
           <meta
             itemProp="target"
-            content={appData.routes["catalog:search"] + "?q={query}"}
+            content={route("catalog:search") + "?q={query}"}
           />
 
           <button className="button-search show-for-large" />
@@ -149,16 +150,14 @@ const HatSearchLine = (): any => {
                 </div>
               </div>
 
-              <div className="col account-page-right-column">
+              <div className="col account-page-right-column d-flex">
                 {searchTemplate()}
-              </div>
 
-              <div className="col-lg-2 show-for-large hat-login-button-column">
-                {accountButton()}
-              </div>
+                <div className="show-for-large hat-login-button-column">
+                  {accountButton()}
+                </div>
 
-              <div className="col-lg-2 show-for-large">
-                {miniCartTemplate()}
+                <div className="show-for-large">{miniCartTemplate()}</div>
               </div>
             </div>
           </div>
