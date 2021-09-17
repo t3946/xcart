@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-import SidebarMenu from "../sidebar-menu/SideBarMenu";
-import { NavLink } from "react-router-dom";
-import { hideAllMenu } from "../../../../redux/actions/account-actions/MenuActions";
+import SidebarMenu from "@client/jsx/modules/account/components/sidebar-menu/SideBarMenu";
+import { Link } from "react-router-dom";
+import { hideAllMenu } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 
@@ -14,6 +14,46 @@ const MobileMenu: React.FC<any> = () => {
     (e: any) => e.mobileMenu.isMobileMenuVisible
   );
 
+  function signInButtonTemplate() {
+    if (user) {
+      return (
+        <Link
+          to={route("account:dashboard")}
+          className="common-link text-decoration-none ms-3 mobile-menu-user-name"
+          onClick={() => dispatch(hideAllMenu())}
+        >
+          <b>{user.name}</b>
+        </Link>
+      );
+    }
+
+    return (
+      <Link
+        to={route("account:login")}
+        className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4 mobile-menu-login-button"
+        onClick={() => dispatch(hideAllMenu())}
+      >
+        sign in
+      </Link>
+    );
+  }
+
+  function userAvatarTemplate() {
+    if (user && user.avatar_image) {
+      return (
+        <img src={user.avatar_image} className={"mobile-menu-avatar"} alt="" />
+      );
+    }
+
+    return (
+      <i
+        className={
+          "mobile-menu-sign-in-icon navigation-login-button__not-logged common-icon"
+        }
+      />
+    );
+  }
+
   const classes = {
     menu: [
       "account-hat-dropdown-menu__mobile account-hat_mobile-menu",
@@ -21,33 +61,13 @@ const MobileMenu: React.FC<any> = () => {
         "d-none": !mobileMenuIsVisible,
       },
     ],
+    loginButton: [
+      "mobile-menu-sign-in d-flex align-items-center",
+      {
+        "mobile-menu-sign-in__unauthorised": !user,
+      },
+    ],
   };
-
-  function signInButton() {
-    if (user) {
-      return (
-        <NavLink
-          to={route("account:dashboard")}
-          className="common-link text-decoration-none"
-          exact={true}
-          onClick={() => dispatch(hideAllMenu())}
-        >
-          <b>{user.name}</b>
-        </NavLink>
-      );
-    }
-
-    return (
-      <NavLink
-        to={route("account:login")}
-        className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4"
-        exact={true}
-        onClick={() => dispatch(hideAllMenu())}
-      >
-        sign in
-      </NavLink>
-    );
-  }
 
   return (
     <React.Fragment>
@@ -55,18 +75,10 @@ const MobileMenu: React.FC<any> = () => {
         className={classNames(classes.menu)}
         onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className={
-            "mobile-menu-sign-in d-flex align-items-center justify-content-between"
-          }
-        >
-          <i
-            className={
-              "mobile-menu-sign-in-icon navigation-login-button__not-logged common-icon"
-            }
-          />
+        <div className={classNames(classes.loginButton)}>
+          {userAvatarTemplate()}
 
-          {signInButton()}
+          {signInButtonTemplate()}
         </div>
         <SidebarMenu />
       </div>
