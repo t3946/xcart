@@ -33,7 +33,7 @@ class QueueImagesCommand extends Command
                         $link_hash = md5($image_link);
 
                         /** @var ProductImageLinkModel $link */
-                        if ($link = ProductImageLinkModel::objects()->get(['hash' => $link_hash])) {
+                        if ($link = ProductImageLinkModel::objects()->limit(1)->get(['hash' => $link_hash])) {
                             $found_images[] = $link->image_id;
                             QueueImagesActiveCommand::addProductImage($product, $link->image, ($key + 1) * 10);
                         } else {
