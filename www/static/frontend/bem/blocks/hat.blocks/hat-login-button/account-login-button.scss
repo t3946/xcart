@@ -9,6 +9,8 @@
     font-weight: 700;
     transition: all 0.15s ease-out;
     text-decoration: none;
+    padding: 0 rem-calc(26);
+    width: rem-calc(180);
 
     &:hover, {
         background: #0f75b0;

@@ -120,17 +120,15 @@
                                             {/if}
                                         </div>
 
-                                        <div class="columns small-12 large-5">
+                                        <div class="large-9 columns flex-container align-middle">
                                             {insert "_parts/_search.tpl"}
+                                            <div class="show-for-large search-line_old-buttons flex-container">
+                                                <a href="{$.app->router->url('account:login')}" class="hat-login-button">log in</a>
+
+                                                {include "_parts/_cart.tpl"}
+                                            </div>
                                         </div>
 
-                                        <div class="show-for-large col hat-login-button-column large-2">
-                                            <a href="{$.app->router->url('account:login')}" class="hat-login-button">log in</a>
-                                        </div>
-
-                                        <div class="columns large-2 show-for-large">
-                                            {include "_parts/_cart.tpl"}
-                                        </div>
                                     </div>
                                 </div>
 

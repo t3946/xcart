@@ -82,12 +82,12 @@ class AccountController extends FrontendController
             "checkoutUrl" => OrderHelper::getCheckoutUrl(),
         ], null, 'Cart');
 
-        $config = GlobalConfigModel::objects();
+        $config = $site->getConfig();
 
         StorageHelper::push([
-            "cidev_top_header_code" => $config->get(['name' => 'cidev_top_header_code'])->value,
-            "cidev_header_code" => $config->get(['name' => 'cidev_header_code'])->value,
-            "companyName" => $config->get(['name' => 'company_name'])->value,
+            "cidev_top_header_code" => $config['cidev_top_header_code'],
+            "cidev_header_code" => $config['cidev_header_code'],
+            "companyName" => $config['company_name'],
         ], null, 'config');
 
         StorageHelper::push([

@@ -1,0 +1,13 @@
+.input-search {
+  height: rem-calc(36);
+  width: 100%;
+  padding: 0 rem-calc(30) 0 rem-calc(10);
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(84) 0 rem-calc(26);
+  }
+
+  &::placeholder {
+    font-style: italic;
+  }
+}

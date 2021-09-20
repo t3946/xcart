@@ -4,7 +4,7 @@ import MiniCartItems from "@client/jsx/components/MiniCart";
 import MiniCartInfo from "@client/jsx/modules/mini-cart/components/info";
 import storeCart from "@client/jsx/redux/stores/StoreCart";
 import classnames from "classnames";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import DepartmentsMenu from "./DepartmentsMenu";
@@ -20,6 +20,7 @@ const HatSearchLine = (): any => {
   const isVisibleDepartmentsMenu = useSelector(
     (e: AccountStore) => e.departmentsMenuDesktop.isVisible
   );
+  const maxUsernameLength = 10;
 
   function miniCartTemplate() {
     const labels = {
@@ -48,9 +49,9 @@ const HatSearchLine = (): any => {
 
   function searchTemplate() {
     return (
-      <div className="search-form-container flex-grow-1">
+      <div className="search-form-container flex-grow-1 ">
         <form
-          action={routes("catalog:search")}
+          action={route("catalog:search")}
           method="get"
           itemProp="potentialAction"
           itemScope
@@ -59,7 +60,7 @@ const HatSearchLine = (): any => {
           <input
             type="text"
             name="q"
-            className="search"
+            className="input-search"
             placeholder={appData.config.cidev_header_code}
             value={appData.params.get.q}
             itemProp="query-input"
@@ -87,20 +88,27 @@ const HatSearchLine = (): any => {
   function accountButton() {
     if (!user) {
       return (
-        <NavLink to="/account/login" exact={true} className="hat-login-button">
+        <Link to="/account/login" className="hat-login-button">
           log in
-        </NavLink>
+        </Link>
       );
     }
 
+    function truncateUsername(username) {
+      if (username.length <= maxUsernameLength) {
+        return username;
+      } else {
+        return username.substr(0, maxUsernameLength - 1) + "…";
+      }
+    }
+
+    const username = truncateUsername(user.name);
+    const title = username === user.name ? "" : user.name;
+
     return (
-      <NavLink
-        to="/account/dashboard"
-        exact={true}
-        className="hat-login-button"
-      >
-        {user.name}
-      </NavLink>
+      <Link to="/account/dashboard" className="hat-login-button" title={title}>
+        {username}
+      </Link>
     );
   }
 
@@ -136,7 +144,7 @@ const HatSearchLine = (): any => {
 
           <div className="container">
             <div className="row">
-              <div className="account-page-left-column account-page-left-column__departments-menu col pe-0">
+              <div className="account-page-left-column col pe-0 d-none d-lg-block">
                 <div className="category-menu-container">
                   <div
                     className={classnames("category-menu category-menu__new", {
@@ -150,14 +158,14 @@ const HatSearchLine = (): any => {
                 </div>
               </div>
 
-              <div className="col account-page-right-column d-flex">
+              <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
                 {searchTemplate()}
 
-                <div className="show-for-large hat-login-button-column">
-                  {accountButton()}
-                </div>
+                <div className={"d-none d-lg-flex search-line_buttons"}>
+                  <div className="">{accountButton()}</div>
 
-                <div className="show-for-large">{miniCartTemplate()}</div>
+                  <div className="ms-12">{miniCartTemplate()}</div>
+                </div>
               </div>
             </div>
           </div>
