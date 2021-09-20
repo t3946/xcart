@@ -13,6 +13,7 @@ import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/acti
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import { route } from "@client/jsx/utils/AppData";
+import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 
 const HatSearchLine = (): any => {
   const dispatch = useDispatch();
@@ -57,29 +58,31 @@ const HatSearchLine = (): any => {
           itemScope
           itemType="http://schema.org/SearchAction"
         >
-          <input
-            type="text"
-            name="q"
-            className="input-search"
-            placeholder={appData.config.cidev_header_code}
-            value={appData.params.get.q}
-            itemProp="query-input"
-            data-suggestion-url={route("catalog:search:suggestion")}
-            autoComplete="off"
-          />
+          <div className={"pos-relative"}>
+            <input
+              type="text"
+              name="q"
+              className="input-search"
+              placeholder={appData.config.cidev_header_code}
+              value={appData.params.get.q}
+              itemProp="query-input"
+              data-suggestion-url={route("catalog:search:suggestion")}
+              autoComplete="off"
+            />
 
-          <meta
-            itemProp="target"
-            content={route("catalog:search") + "?q={query}"}
-          />
+            <meta
+              itemProp="target"
+              content={route("catalog:search") + "?q={query}"}
+            />
+
+            <a
+              className={classnames("button-clear", {
+                active: appData.params.get.q,
+              })}
+            />
+          </div>
 
           <button className="button-search show-for-large" />
-
-          <a
-            className={classnames("button-clear", {
-              active: appData.params.get.q,
-            })}
-          />
         </form>
       </div>
     );
@@ -127,6 +130,12 @@ const HatSearchLine = (): any => {
     dispatch(setVisibleShadowPanelAction(false));
     dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
   }
+
+  React.useEffect(() => {
+    new SearchSuggestion(".input-search", {
+      container: "search-form-container_suggestion",
+    });
+  });
 
   return (
     <div className="sticky-menu-container">

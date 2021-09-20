@@ -1,7 +1,8 @@
-import { h, render, Component } from "preact";
+import { Component } from "preact";
 import SuggestionsListForPhrase from "./SuggestionsListForPhrase";
 import SuggestionsListForProduct from "./SuggestionsListForProduct";
 import SuggestionsListForCategory from "./SuggestionsListForCategory";
+import classnames from "classnames";
 
 export default class SuggestionsListForAll extends Component {
   constructor(props) {
@@ -58,7 +59,7 @@ export default class SuggestionsListForAll extends Component {
 
   render(props, state) {
     return (
-      <div className="found">
+      <div className={classnames("found", props.classes?.container)}>
         {this.renderPhrase(props)}
         {this.renderCategory(props)}
         {this.renderProduct(props)}

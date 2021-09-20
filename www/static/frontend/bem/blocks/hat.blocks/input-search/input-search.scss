@@ -1,10 +1,12 @@
 .input-search {
-  height: rem-calc(36);
+  height: rem-calc(44);
   width: 100%;
   padding: 0 rem-calc(30) 0 rem-calc(10);
+  border: none;
 
   @include breakpoint(lg up) {
-    padding: 0 rem-calc(84) 0 rem-calc(26);
+    padding: 0 rem-calc(84) 0 rem-calc(16);
+    height: rem-calc(36);
   }
 
   &::placeholder {

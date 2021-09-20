@@ -4,13 +4,21 @@ import SuggestionsListForAll from "./SuggestionsListForAll";
 import { checkOff, action } from "../redux/reduсers/appHeadReduсer";
 
 export default class SearchSuggestion {
-  constructor(elements = ".search-form-container .search") {
+  private classes: any;
+
+  constructor(
+    elements = ".search-form-container .search",
+    classes?: {
+      container?: any;
+    }
+  ) {
     this.elements = {};
     this.suggestions = "";
     this.suggestionNumber = 0;
     this.timer = null;
     this.timeout = 400;
     this.suggestionsCreated = false;
+    this.classes = classes;
 
     this.init(elements);
   }
@@ -37,7 +45,7 @@ export default class SearchSuggestion {
     //this.storeSearchShow();
 
     $(document).on("click.close_search_suggestion", (event) => {
-      let target = $(event.target);
+      const target = $(event.target);
       if (
         !target.hasClass("search-form-container") &&
         target.parents(".search-form-container").length <= 0
@@ -72,7 +80,7 @@ export default class SearchSuggestion {
     }
 
     this.suggestionNumber++;
-    let currentNumber = this.suggestionNumber;
+    const currentNumber = this.suggestionNumber;
 
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
@@ -110,12 +118,17 @@ export default class SearchSuggestion {
       return;
     }
 
+    const classes = {
+      container: this.classes?.container,
+    };
+
     //suggestion-container
     render(
       <SuggestionsListForAll
         suggestions={data}
         search={search}
         parent={this.elements["parent"][0]}
+        classes={classes}
       />,
       this.elements["container"][0],
       this.elements["container"][0].firstChild
@@ -126,7 +139,7 @@ export default class SearchSuggestion {
 
   _bind() {
     this.unsubscribe = storeApp.subscribe(() => {
-      let state = storeApp.getState();
+      const state = storeApp.getState();
 
       if (state.frontend) {
         if (state.frontend.header.active == "search") {
@@ -144,7 +157,7 @@ export default class SearchSuggestion {
     this.elements["parent"][0].addEventListener(
       "components.search-suggestions-list.click",
       (e) => {
-        let detail = e.detail.item.replace(/[^a-zA-Z\- ]/g, "");
+        const detail = e.detail.item.replace(/[^a-zA-Z\- ]/g, "");
 
         this.elements["search"].val(detail);
         this.elements["parent"].submit();
@@ -154,8 +167,8 @@ export default class SearchSuggestion {
     );
 
     this.elements["search"].on("keyup", (e) => {
-      let $target = this.elements["search"];
-      let value = $target.val();
+      const $target = this.elements["search"];
+      const value = $target.val();
 
       if (value) {
         this.elements["clear"].addClass("active");
@@ -167,7 +180,7 @@ export default class SearchSuggestion {
     });
 
     this.elements["search"].on("click", (e) => {
-      let value = e.target.value.trim();
+      const value = e.target.value.trim();
       if (this.checkValue(value)) {
         if (this.suggestionsCreated) {
           this.show();
