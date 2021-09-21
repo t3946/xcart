@@ -39,10 +39,43 @@
   align-items: flex-start;
 }
 
+
+
 .edit-comment-input-text-field-container{
   width: rem-calc(90);
 }
 
 .edit-comment-select-field-container{
   width: rem-calc(150) !important;
+}
+
+.edit-idea-info-btns{
+  display: flex;
+  width: 30%;
+}
+
+.edit-idea-text-inputs{
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .edit-idea-info-btns{
+    display: block !important;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .edit-idea-text-inputs{
+    width: 100%;
+  }
+
+  .edit-comment-inputs-container{
+    flex-direction: column-reverse;
+  }
+
+  .edit-comment-input-text-field-container, .edit-comment-select-field-container{
+    width: 100% !important;
+  }
 }

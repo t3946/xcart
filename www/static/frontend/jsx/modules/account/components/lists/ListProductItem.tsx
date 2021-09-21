@@ -24,52 +24,60 @@ export const ListProductItem = ({
   const editCommentDialog = useDialog();
   return (
     <div className="product-list-item-container">
-      {edit ? (
-        <ListItemMovableArea
-          onUpClick={() => reorderProductList(index, index - 1)}
-          onDownClick={() => reorderProductList(index, index + 1)}
-          drag={drag}
-        />
-      ) : (
-        <div className="product-list-item-movable-area-placeholder" />
-      )}
+      <div className="movable-area">
+        {edit ? (
+          <ListItemMovableArea
+            onUpClick={() => reorderProductList(index, index - 1)}
+            onDownClick={() => reorderProductList(index, index + 1)}
+            drag={drag}
+          />
+        ) : (
+          <div className="product-list-item-movable-area-placeholder" />
+        )}
+      </div>
 
-      <img className="product-list-item-image product-image" src={info.image} />
-      <div className="product-list-item-info">
-        <div className="product-list-item-name">{info.product.product}</div>
-        <Tooltip
-          target={
-            <div className="tooltip-rating-stars-target">
-              <ProductStarsRating rating={3} />
-            </div>
-          }
-          content={
-            <div className="rating-stars-tooltip">
-              <TooltipRatingContent />
-            </div>
-          }
+      <div className="product-list-item-info-content">
+        <img
+          className="product-list-item-image product-image"
+          src={info.image}
         />
-        <div className="product-list-item-price">
-          ${info.product.cost_to_us}
+        <div className="product-list-item-info">
+          <div className="product-list-item-name">{info.product.product}</div>
+          <Tooltip
+            target={
+              <div className="tooltip-rating-stars-target">
+                <ProductStarsRating rating={3} />
+              </div>
+            }
+            content={
+              <div className="rating-stars-tooltip">
+                <TooltipRatingContent />
+              </div>
+            }
+          />
+          <div className="product-list-item-price">
+            ${info.product.cost_to_us}
+          </div>
+          {edit &&
+            (info.comment ? (
+              <ListProductItemComment
+                info={info}
+                onEditCommentClick={editCommentDialog.handleClickOpen}
+              />
+            ) : (
+              <div
+                onClick={editCommentDialog.handleClickOpen}
+                className="add-comment-text"
+              >
+                Add comment, quantity & priority
+              </div>
+            ))}
         </div>
-        {edit &&
-          (info.comment ? (
-            <ListProductItemComment
-              info={info}
-              onEditCommentClick={editCommentDialog.handleClickOpen}
-            />
-          ) : (
-            <div
-              onClick={editCommentDialog.handleClickOpen}
-              className="add-comment-text"
-            >
-              Add comment, quantity & priority
-            </div>
-          ))}
       </div>
       <ListProductItemBtns
         btnLabel={"Add in cart"}
         edit={edit}
+        id={info.product_id}
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
       />

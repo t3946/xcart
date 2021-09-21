@@ -27,3 +27,20 @@
 .select-address-on-manage-list{
   margin: 20px 0!important;
 }
+
+.manage-list-btns{
+  display: flex;
+  width: 30%;
+  margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+  .manage-list-btns{
+    display: block;
+    width: 100%;
+  }
+
+  .list-input-manage-list{
+    width: 100% !important;
+  }
+}

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
-import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
@@ -16,8 +15,6 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import classnames from "classnames";
-import useBreakpoint from "../hooks/useBreakpoint";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -76,23 +73,6 @@ export const AccountRouters = (): any => {
       },
     ],
   };
-
-  function leftColumnTemplate() {
-    if (isList) {
-      return <ListsSidebarMenu />;
-    } else {
-      return (
-        <>
-          <SideBarMenu />
-          <div className={"leave-feedback text-center mt-12"}>
-            <Link to={"/account"} className="common-link">
-              Leave feedback
-            </Link>
-          </div>
-        </>
-      );
-    }
-  }
 
   return (
     <Provider store={accountStore as any}>

@@ -229,7 +229,7 @@ function* deleteProduct(action: AnyAction): Generator {
 
 function* undoDeleteProduct(action: AnyAction): Generator {
   yield api
-    .post<any>(
+    .post<number>(
       `/account/api/lists/undo-delete-product`,
       JSON.stringify({
         product: action.product,

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { FormCheckBox } from "@client/modules/account/components/shared/FormCheckBox";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
@@ -15,6 +15,7 @@ import { manageList } from "@client/jsx/redux/actions/account-actions/ListsActio
 import { convertManageListFormDataToRequest } from "@client/modules/account/utils/convert-manage-list-form-data-to-request";
 import { ManageListFormData } from "@client/modules/account/ts/types/manage-list-form.types";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const ManageList = ({ info, onCancelClick }) => {
   const monthItems = fillingMassForMonths();
@@ -125,7 +126,12 @@ export const ManageList = ({ info, onCancelClick }) => {
           value={formik.values.email}
           label={"Email"}
         />
-        <div className="d-flex justify-content-between align-center">
+        <Grid
+          container
+          justifyContent="space-between"
+          className="d-flex justify-content-between align-center"
+          alignItems="center"
+        >
           <label className={classnames("form-input-label")}>Birthday</label>
           <div className="d-flex justify-content-between list-input-manage-list">
             <FormSelect
@@ -153,7 +159,7 @@ export const ManageList = ({ info, onCancelClick }) => {
               }}
             />
           </div>
-        </div>
+        </Grid>
         <FormSelect
           items={getValuesForSelect(
             accountStore.getState().addresses.addressesList,
@@ -192,22 +198,12 @@ export const ManageList = ({ info, onCancelClick }) => {
             />
           </div>
         </div>
-        <div className="edit-idea-btns">
-          <Button
-            type={"submit"}
-            disabled={loading}
-            className="account-submit-btn auto-width-button cancel-edit-card-btn"
-          >
-            Confirm
-          </Button>
-          <Button
-            disabled={loading}
-            onClick={onCancelClick}
-            className="account-submit-btn account-submit-btn-outline auto-width-button "
-          >
-            Cancel
-          </Button>
-        </div>
+        <SubmitCancelButtonsGroup
+          submitText="Confirm"
+          cancelText="Cancel"
+          onCancel={onCancelClick}
+          groupAdvancedClasses={"manage-list-btns"}
+        />
       </form>
     </div>
   );

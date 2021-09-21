@@ -13,6 +13,7 @@ interface ListProductItemBtnsProps {
   edit: boolean;
   btnLabel: string;
   mainBtnClasses?: string | string[];
+  id: string;
 }
 
 export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
@@ -21,6 +22,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   edit,
   btnLabel,
   mainBtnClasses,
+  id,
 }) => {
   const lists = useSelector((e: AccountStore) => e.lists.lists);
 
@@ -50,7 +52,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
             label={""}
             onClick={(value) => onMoveClick(value)}
             value={{ viewValue: "Move", value: undefined }}
-            id="form-select-list-product"
+            id={`form-select-list-product-${id}`}
             classes={{
               group: "list-product-item-btns-move",
               selectHeader: "product-list-item-move-select",

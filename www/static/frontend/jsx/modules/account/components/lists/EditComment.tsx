@@ -8,6 +8,7 @@ import { AccountStore } from "@client/modules/account/ts/types/account-store.typ
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { priorityProductSelectValuesConst } from "@client/modules/account/ts/consts/priority-product-select-values.const";
 import { editCommentInProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
   const dispatch = useDispatch();
@@ -88,52 +89,44 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
               group: ["edit-comment-select-field-container"],
             }}
           />
-          <FormInput
-            name={"needs"}
-            classes={{
-              input: ["list-input-edit-idea", "full-width"],
-              group: ["edit-comment-input-text-field-container"],
-            }}
-            handleChange={formik.handleChange}
-            errorMessage={formik.errors.needs}
-            handleBlur={formik.handleBlur}
-            touched={formik.touched.needs}
-            label={"Needs"}
-            value={formik.values.needs}
-            type={"number"}
-          />
-          <FormInput
-            name={"has"}
-            classes={{
-              input: ["list-input-edit-idea", "full-width"],
-              group: ["edit-comment-input-text-field-container"],
-            }}
-            handleChange={formik.handleChange}
-            errorMessage={formik.errors.has}
-            handleBlur={formik.handleBlur}
-            touched={formik.touched.has}
-            label={"Has"}
-            value={formik.values.has}
-            type={"number"}
-          />
+          <div className="edit-idea-text-inputs">
+            <FormInput
+              name={"needs"}
+              classes={{
+                input: ["list-input-edit-idea", "full-width"],
+                group: ["edit-comment-input-text-field-container"],
+              }}
+              handleChange={formik.handleChange}
+              errorMessage={formik.errors.needs}
+              handleBlur={formik.handleBlur}
+              touched={formik.touched.needs}
+              label={"Needs"}
+              value={formik.values.needs}
+              type={"number"}
+            />
+            <FormInput
+              name={"has"}
+              classes={{
+                input: ["list-input-edit-idea", "full-width"],
+                group: ["edit-comment-input-text-field-container"],
+              }}
+              handleChange={formik.handleChange}
+              errorMessage={formik.errors.has}
+              handleBlur={formik.handleBlur}
+              touched={formik.touched.has}
+              label={"Has"}
+              value={formik.values.has}
+              type={"number"}
+            />
+          </div>
         </div>
-
-        <div className="edit-idea-btns">
-          <Button
-            type={"submit"}
-            disabled={isLoading}
-            className="account-submit-btn auto-width-button cancel-edit-card-btn"
-          >
-            Confirm
-          </Button>
-          <Button
-            onClick={onCloseClick}
-            disabled={isLoading}
-            className="account-submit-btn account-submit-btn-outline auto-width-button "
-          >
-            Cancel
-          </Button>
-        </div>
+        <SubmitCancelButtonsGroup
+          submitText="Confirm"
+          cancelText="Cancel"
+          onCancel={onCloseClick}
+          disabled={isLoading}
+          groupAdvancedClasses={"edit-idea-info-btns"}
+        />
       </form>
     </div>
   );

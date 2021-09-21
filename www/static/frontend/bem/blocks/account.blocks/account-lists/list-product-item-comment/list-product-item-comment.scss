@@ -2,7 +2,6 @@
   padding: 10px 20px 15px;
   border-radius: 5px;
   background-color: #FFF8E2;
-  margin-right: 50px;
   margin-top: 12px;
   position: relative;
 
@@ -39,5 +38,13 @@
 
 .list-product-items-comment-params{
   display: flex;
+  flex-wrap: wrap;
   margin-bottom: 15px;
 }
+
+@media (max-width: 768px) {
+  .list-product-item-comment-container::before{
+    display: none;
+  }
+}
+

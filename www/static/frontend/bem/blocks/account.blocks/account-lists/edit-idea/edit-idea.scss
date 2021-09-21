@@ -6,3 +6,44 @@
   margin-bottom: 0;
   margin-right: 10px;
 }
+
+.edit-idea-form{
+  display: flex;
+}
+
+.edit-idea-text-container{
+  display: flex;
+  align-items: center;
+}
+
+.edit-idea-ellipsis{
+  margin-top: 10px;
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .edit-idea-form{
+    flex-direction: column !important;
+    align-items: baseline !important;
+  }
+
+  .list-input-edit-idea{
+    margin-right: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .add-comment-text{
+    display: none;
+  }
+
+  .edit-idea-text-container{
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .edit-idea-ellipsis{
+    display: block;
+  }
+}

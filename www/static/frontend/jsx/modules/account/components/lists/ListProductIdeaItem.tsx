@@ -21,45 +21,49 @@ export const ListProductIdeaItem = ({
 
   return (
     <div className="product-list-item-container product-list-item-idea-container">
-      {edit ? (
-        <ListItemMovableArea
-          onUpClick={() => reorderProductList(index, index - 1)}
-          onDownClick={() => reorderProductList(index, index + 1)}
-          drag={drag}
-        />
-      ) : (
-        <div className="product-list-item-movable-area-placeholder" />
-      )}
-
-      <img
-        className="product-image product-list-item-image"
-        src={"/static/frontend/images/icons/account/idea-logo.svg"}
-      />
-      <div className="product-list-item-info">
-        <EditIdea listId={listId} info={info} />
-
-        {edit &&
-          (info.comment ? (
-            <ListProductItemComment
-              info={info}
-              onEditCommentClick={editCommentDialog.handleClickOpen}
-            />
-          ) : (
-            <div
-              onClick={editCommentDialog.handleClickOpen}
-              className="add-comment-text"
-            >
-              Add comment, quantity & priority
-            </div>
-          ))}
+      <div className="movable-area">
+        {edit ? (
+          <ListItemMovableArea
+            onUpClick={() => reorderProductList(index, index - 1)}
+            onDownClick={() => reorderProductList(index, index + 1)}
+            drag={drag}
+          />
+        ) : (
+          <div className="product-list-item-movable-area-placeholder" />
+        )}
       </div>
 
+      <div className="product-list-item-info-content">
+        <img
+          className="product-image product-list-item-image"
+          src={"/static/frontend/images/icons/account/idea-logo.svg"}
+        />
+        <div className="product-list-item-info">
+          <EditIdea listId={listId} info={info} />
+
+          {edit &&
+            (info.comment ? (
+              <ListProductItemComment
+                info={info}
+                onEditCommentClick={editCommentDialog.handleClickOpen}
+              />
+            ) : (
+              <div
+                onClick={editCommentDialog.handleClickOpen}
+                className="add-comment-text"
+              >
+                Add comment, quantity & priority
+              </div>
+            ))}
+        </div>
+      </div>
       <ListProductItemBtns
         btnLabel={"search"}
         mainBtnClasses={"account-submit-btn-outline"}
         edit={edit}
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
+        id={info.product_id}
       />
       <BootstrapDialogHOC
         show={editCommentDialog.open}

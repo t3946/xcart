@@ -41,7 +41,7 @@ export const EditIdea = ({ info, listId }) => {
     <div>
       {isEdit ? (
         <form
-          className={"d-flex"}
+          className={"edit-idea-form"}
           onSubmit={formik.handleSubmit}
           encType="multipart/form-data"
         >
@@ -74,11 +74,15 @@ export const EditIdea = ({ info, listId }) => {
           </div>
         </form>
       ) : (
-        <div className="d-flex align-items-center">
+        <div className="edit-idea-text-container">
           <div className="product-list-idea-name">{info.product.name}</div>
           <span onClick={() => onSetEdit()} className="add-comment-text">
             Edit idea
           </span>
+          <img
+            className="edit-idea-ellipsis"
+            src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+          />
         </div>
       )}
     </div>
