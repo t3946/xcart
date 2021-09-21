@@ -7,6 +7,7 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
@@ -71,6 +72,8 @@ class AccountController extends FrontendController
         }
 
         $site = Xcart::app()->getModule('Sites')->getSite();
+
+        StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
 
         StorageHelper::push([
             "code" => strtolower($site->code),
