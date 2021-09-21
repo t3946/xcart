@@ -124,6 +124,7 @@ $(function () {
   }
 
   const cruds = appData().app.cruds;
+  console.log(cruds);
 
   if (cruds) {
     for (const id in cruds) {
