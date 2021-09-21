@@ -396,6 +396,8 @@ class ProductModel extends Model implements ICartItem
 			'free_ship_text' => [
 				'class' => CharField::class,
 				'verboseName' => 'Free shipping text',
+                'null' => false,
+                'default' => ''
 			],
             'weight' => [
                 'class' => DecimalField::class,
@@ -496,7 +498,7 @@ class ProductModel extends Model implements ICartItem
             'markets_disabled' => [
                 'class' => HasManyField::class,
                 'modelClass' => ExternalMarketplaceDisabledModel::class,
-                'link' =gi> ['productid' => 'resource_id'],
+                'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P']
             ],
             'last_modify_user' => [
@@ -504,7 +506,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ForeignField::class,
                 'modelClass' => UserModel::class,
                 'link' => ['last_modify_id' => 'id'],
-            ]
+            ],
         ];
     }
 

@@ -6,6 +6,7 @@ namespace Modules\Admin\Admin;
 
 use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Admin\Forms\Dx\DistributorTaxEditForm;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorTaxModel;
 use Modules\Sites\Models\TaxModel;
 use Xcart\App\Orm\Model;
@@ -18,9 +19,9 @@ class DxTaxesAdmin extends ListViewAdmin
     {
         return [
             'tax_name',
-            'is_vat',
+/*            'is_vat',
             'tax_rate',
-            'zone'
+            'zone'*/
         ];
     }
 
@@ -58,7 +59,7 @@ class DxTaxesAdmin extends ListViewAdmin
             'tax_name' => [
                 'title' => 'Tax name',
             ],
-            'is_vat' => [
+/*            'is_vat' => [
                 'title' => 'Tax type',
             ],
             'tax_rate' => [
@@ -66,7 +67,7 @@ class DxTaxesAdmin extends ListViewAdmin
             ],
             'zone' => [
                 'title' => 'Shipping zones where tax is charged',
-            ],
+            ],*/
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace Modules\Goods\Forms;
 
 
+use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Admin\FilesProductAdmin;
 use Modules\Goods\Admin\ProductImagesAdmin;
@@ -44,13 +45,14 @@ class ProductAdminForm extends ModelForm
         'images',
         'videos',
         'last_verify_date',
+        'last_modify_user'
     ];
 
     public function getFieldsets()
     {
         return [
             'Operator and product availability' => [
-                'last_modify_user',
+                'user_modify',
                 'forsale',
                 'lock_forsale',
                 'eta_date_mm_dd_yyyy',
@@ -97,7 +99,6 @@ class ProductAdminForm extends ModelForm
                 'shipping_freight',
                 'free_ship_zone',
 				'free_ship_text',
-                'lead_time_message',
             ],
             'Inventory' => [
                 'r_avail',
@@ -130,10 +131,21 @@ class ProductAdminForm extends ModelForm
         $distributor = $product->distributor;
         $category = $product->getMainCategory();
         $user = $product->last_modify_user ?? Xcart::app()->user;
+        $modify_time = (new \DateTime())->setTimestamp($product->mod_date)->format('d M Y H:s');
         return [
-			'weight' => [
-				'class' => CharField::class
-			],
+            'weight' => [
+                'class' => CharField::class,
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extend' => 'weight_lock',
+            ],
+            'weight_lock' => [
+                'class' => CheckboxField::class,
+                'label' => '',
+                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extends' => 'Locked by Product Manager',
+            ],
 			'dim_x' => [
 				'class' => CharField::class
 			],
@@ -171,9 +183,7 @@ class ProductAdminForm extends ModelForm
 					'style' => 'width: 100%'
 				]
 			],
-			'free_ship_text' => [
-				'class' => CharField::class
-			],
+			'free_ship_text' => CharField::class,
             'productcode' => [
                 'class' => CharField::class,
                 'required' => true,
@@ -358,14 +368,14 @@ class ProductAdminForm extends ModelForm
                 'listTemplate' => 'admin/list/_list.tpl',
                 'defaultOrder' => ['orderby'],
             ],
-			'user_added' => [
+			'user_modify' => [
 				'class' => CharField::class,
 				'html' => [
 					'style' => 'border: none; width: 300px',
 					'readonly' => true,
 				],
 				'label' => 'Added by',
-//				'value' => "$user->login ($user->firstname)",
+				'value' => "($user->login) on {$modify_time}",
 			],
         ];
     }
@@ -388,6 +398,10 @@ class ProductAdminForm extends ModelForm
             'url' => $this->getInstance()->getProductURLOnDistributorWebSite(),
             'anchor' => "Product on distributor's website: {$this->getInstance()->getMpn()}"
         ]];
+    }
+    public function beforeInstanceSave($instance)
+    {
+        $instance->last_modify_id = Xcart::app()->user->pk;
     }
 
 

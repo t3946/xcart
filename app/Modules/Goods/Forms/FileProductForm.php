@@ -35,8 +35,8 @@ class FileProductForm extends ModelForm
                 'class' => Select2Field::class,
                 'inline_editor' => true,
                 'choices' => [
-                    'N',
-                    'Y',
+                    'N' => 'No',
+                    'Y' => 'Yes',
                 ],
                 'html' => [
                     'style' => 'width: 70px'
