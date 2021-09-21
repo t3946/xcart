@@ -5,21 +5,14 @@ namespace Modules\Distributor\Controllers\Api;
 
 
 use Cron\CronExpression;
-use DateInterval;
-use DateTime;
-use Modules\Core\Helpers\Cache;
 use Modules\Core\Helpers\CoreHelper;
-use Modules\Distributor\Helpers\SchedulerHelper;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Main\Xcart;
 
 class ApiDxController extends Controller
 {
-    private const FEEDS_START_TIME = '00:00';
-    private const TIME_FRAME_SEC = 32400;
 
     public function getDxInfo($code, $sfId = null): void
     {
@@ -63,93 +56,4 @@ class ApiDxController extends Controller
         }
     }
 
-    public function schedule(): void
-    {
-        $nextRunning = [];
-
-        foreach (SupplierFeedModel::objects()->filter(['schedule__isnull' => false, 'enabled' => 'Y']) as $feed) {
-            $schedule = trim($feed->run_force ? "* * * * *" : $feed->schedule);
-            if (CronExpression::isValidExpression($schedule) &&
-                CronExpression::factory($schedule)->isDue()) {
-                $nextRunning[] = $feed;
-                $feed->run_force = false;
-                $feed->save();
-            }
-        }
-        if ($nextRunning) {
-            $nextRunning = array_map(static function ($feed) {
-                $dx = $feed->distributor;
-                $code = str_replace('-', '_', $dx->code);
-                return $dx->feeds->count() === 1 ? $code : "{$code}__{$feed->storefront_id}";
-            }, $nextRunning);
-            $this->jsonResponse($nextRunning);
-        }
-    }
-
-    private static function getCode($feed)
-    {
-        $dx = $feed->distributor;
-        $code = str_replace('-', '_', $dx->code);
-        return $dx->feeds->count() === 1 ? $code : "{$code}__{$feed->storefront_id}";
-    }
-
-    public function scheduleDynamic(): void
-    {
-        [$h, $m] = explode(':', self::FEEDS_START_TIME);
-        $now = new DateTime();
-        $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
-        $start->setTime($h, $m);
-        if ($now->getTimestamp() >= $start->getTimestamp()) {
-            $offset = (int)(($now->getTimestamp() - $start->getTimestamp()) / 60);
-            if ($offset >= 0) {
-                $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])
-                    ->order(['-process_time'])
-                    ->cache($start->add(new DateInterval('P1D'))->getTimestamp() - $now->getTimestamp())
-                    ->all();
-
-                $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
-
-                $runForces = SupplierFeedModel::objects()->filter(['enabled' => 'Y', 'run_force' => true])->all();
-
-                $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
-                $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
-
-                $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
-                $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
-                $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
-                    $feed->run_force = false;
-                    $feed->save();
-                    return self::getCode($feed);
-                }, $runForces));
-                $this->jsonResponse($nextRunning);
-            }
-        }
-    }
-
-    public function scheduleDynamic2(): void
-    {
-        $feeds = SupplierFeedModel::objects()->filter(['enabled' => 'Y'])->order(['-process_time'])->all();
-        $times = array_map(static fn($f) => (int)$f->process_time, $feeds);
-        $runForces = array_filter($feeds, static fn($f) => $f->run_force === true);
-
-        $schedule = SchedulerHelper::algorithm(self::TIME_FRAME_SEC, $times);
-        $schedule = array_map(static fn($sh) => (int)($sh / 60), $schedule);
-
-        [$h, $m] = explode(':', self::FEEDS_START_TIME);
-
-        $now = new DateTime();
-        $start = (int)$now->format('H') < (int)$h ? new DateTime('yesterday') : new DateTime();
-        $start->setTime($h, $m);
-        $offset = (int)(($now->getTimestamp() - $start->getTimestamp()) / 60);
-        if ($offset >= 0) {
-            $idsToLaunch = array_keys(array_filter($schedule, static fn($o) => $o === $offset));
-            $nextRunning = array_map(static fn($id) => self::getCode($feeds[$id]), $idsToLaunch);
-            $nextRunning = array_merge($nextRunning, array_map(static function ($feed) {
-                $feed->run_force = false;
-                $feed->save();
-                return self::getCode($feed);
-            }, $runForces));
-            $this->jsonResponse($nextRunning);
-        }
-    }
 }
