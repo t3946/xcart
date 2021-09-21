@@ -3,6 +3,8 @@
 namespace Xcart\App\Form\Fields;
 
 use Closure;
+use Modules\Admin\Contrib\Admin;
+use Modules\Admin\Contrib\ListViewAdmin;
 use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -210,6 +212,16 @@ class DropDownField extends Field
                 $selected = array_filter($selected, static fn($s) => $s !== '');
             }
             $this->_attributes['multiple'] = 'multiple';
+        }
+        if (strpos($this->getName(), '__') !== false) {
+            $ar_name = explode('__', $this->getName());
+            $child_model = $this->getForm()->getInstance();
+            $admin = $this->getForm()->admin;
+            if ($admin instanceof ListViewAdmin) {
+                $field_parent = $admin->through_field;
+                $parent_model = $child_model->{$ar_name[0]}->get([$field_parent => $admin->ownerPk]);
+                $selected = [intval($parent_model->{$ar_name[1]})];
+            }
         }
 
         $this->_selected = $this->selected ?: $selected;

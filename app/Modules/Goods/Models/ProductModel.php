@@ -5,6 +5,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Goods\Helpers\ProductHelper;
+use Modules\User\Models\UserModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -90,6 +91,7 @@ use Xcart\Product;
  * @property string group_mask
  * @property int group_root
  * @property ProductImageModel[]|\Xcart\App\Orm\Manager detail_images
+ * @property UserModel last_modify_user
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -462,6 +464,12 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P']
             ],
+            'last_modify_user' => [
+                'field' => 'last_modify_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['last_modify_id' => 'id'],
+            ]
         ];
     }
 

@@ -39,7 +39,7 @@ trait ValidateObject
 
         // Fill cleaned data from form
         foreach ($fields as $name => $field) {
-            $this->cleanedData[$name] = $field->getValue();
+                $this->cleanedData[$name] = $field->getValue();
         }
 
         if ($isModelForm) {
@@ -50,13 +50,15 @@ trait ValidateObject
 
         foreach ($fields as $name => $field) {
             // If field is valid, trying to run clean<Fieldname> method in current form
-            if ($field->isValid()) {
-                if (method_exists($this, 'clean' . ucfirst($name))) {
-                    $value = call_user_func([$this, 'clean' . ucfirst($name)], $this->cleanedData[$name]);
-                    $this->cleanedData[$name] = $value;
-                    $field->setValue($value);
+/*            if (!$field->lonelySave) {*/
+                if ($field->isValid()) {
+                    if (method_exists($this, 'clean' . ucfirst($name))) {
+                        $value = call_user_func([$this, 'clean' . ucfirst($name)], $this->cleanedData[$name]);
+                        $this->cleanedData[$name] = $value;
+                        $field->setValue($value);
+                    }
                 }
-            }
+/*            }*/
 
 
             if ($field->hasErrors() !== false) {

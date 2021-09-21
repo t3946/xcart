@@ -7,6 +7,7 @@ namespace Modules\Distributor\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class DistributorTabModel extends Model
@@ -34,6 +35,9 @@ class DistributorTabModel extends Model
                 'class' => CharField::class,
                 'verboseName' => 'Tab body'
             ],
+            'position' => [
+                'class' => IntField::class,
+            ]
         ];
     }
 

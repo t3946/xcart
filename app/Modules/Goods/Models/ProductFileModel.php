@@ -5,8 +5,19 @@ namespace Modules\Goods\Models;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\FileField;
+use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property int fileid
+ * @property int filesize
+ * @property int date,
+ * @property string avail
+ * @property int orderby
+ */
 class ProductFileModel extends Model
 {
     use AutoMetaTrait;
@@ -20,7 +31,31 @@ class ProductFileModel extends Model
     {
         return [
             'fileid' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
+            ],
+            'filename' => [
+                'class' => FileField::class,
+                'adapterName' => 's3',
+                'uploadTo' => "files",
+                'maxSize' => '35M',
+                'null' => false,
+                'default' => '',
+            ],
+            'filesize' => [
+                'class' => IntField::class,
+                'default' => '',
+            ],
+            'date' => [
+                'class' => UnixTimestampField::class,
+                'default' => '',
+            ],
+            'avail' => [
+                'class' => CharField::class,
+                'default' => 'Y'
+            ],
+            'orderby' => [
+                'class' => CharField::class,
+                'default' => 1000000
             ]
         ];
     }

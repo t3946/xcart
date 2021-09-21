@@ -26,6 +26,7 @@ abstract class NestedAdmin extends Admin
 
     protected $instance = null;
 
+    public bool $autoFixSort = true;
     public $nestedColumn = '(string)';
     public $sortingColumn = ['root', 'lft'];
     public $nestedExcluded = ['root', 'lft', 'rgt', 'level'];
@@ -116,6 +117,7 @@ abstract class NestedAdmin extends Admin
     {
         $this->parent_pk = $pk;
         $this->update(null, $pk);
+        $this->fixSort($this->getQuerySet());
     }
 
     public function getParentAllUrl()

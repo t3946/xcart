@@ -10,7 +10,6 @@ use Modules\Order\Models\VoidedReasonModel;
 
 class VoidedReasonAdmin extends NestedAdmin
 {
-
     public ?string $sort = 'pos';
 
     public function getListColumns()

@@ -62,32 +62,4 @@ class DxProductsAdmin extends ProductAdmin
         parent::renderInternal($view, $params);
     }
 
-    public function getItemProperty(Model $item, $property)
-    {
-        /** @var ProductModel $item */
-        if ($property === 'image') {
-            return ($image = $item->getMainImage())
-                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)}\" width='60' /></div>"
-                : '';
-        }
-        if ($property === 'mpn') {
-            return "<a href={$item->getDistributorUrl()} target='_blank'>{$item->getMpn()}</a>";
-        }
-
-        if ($property === 'product') {
-            $len = mb_strlen($item->$property);
-            $name = ($len > 40) ? mb_substr($item->$property, 0, 40) . '...' : $item->$property;
-            return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$name}</a>";
-        }
-
-        if ($property === 'forsale') {
-            return $item->forsale === 'Y' ? 'Active' : 'Inactive';
-        }
-        if ($property === 'add_date') {
-            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y');
-        }
-
-        return parent::getItemProperty($item, $property);
-    }
-
 }

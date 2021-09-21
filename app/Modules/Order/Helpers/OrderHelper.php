@@ -3,6 +3,7 @@
 namespace Modules\Order\Helpers;
 
 use DateTime;
+use Modules\Order\Models\VoidedReasonModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAnd;
 use Xcart\App\QueryBuilder\Q\QAndNot;
@@ -673,5 +674,17 @@ HTML;
             ? 'checkout:checkoutOnePage'
             : 'checkout:shipping';
         return Xcart::app()->router->url($router);
+    }
+
+    public function getVoidedReasons(): array
+    {
+        foreach (VoidedReasonModel::objects()->order(['root', 'level', 'pos']) as $reason) {
+            if ((int)$reason->level !== 1) {
+                $list[$level][$reason->pk] = $reason->name;
+            } else {
+                $level = $reason->name;
+            }
+        }
+        return $list ?? [];
     }
 }

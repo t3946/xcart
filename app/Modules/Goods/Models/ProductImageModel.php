@@ -40,13 +40,12 @@ class ProductImageModel extends Model
 
     public static function getFields()
     {
-        $path = self::getDxCode();
         return [
             'image_id' => AutoField::class,
             'path' => [
                 'class' => ImageField::class,
                 'adapterName' => 's3',
-                'uploadTo' => "images/{$path}",
+                'uploadTo' => "images/fake",
                 'sizes' => [
                     self::IMAGE_SIZE_THUMB => [
                         174,
@@ -117,9 +116,5 @@ class ProductImageModel extends Model
         $idx = $this->pk % 4;
 
         return self::CDN_DOMAIN[$idx] . $filename;
-    }
-    private static function getDxCode()
-    {
-        return 'ACR99';
     }
 }

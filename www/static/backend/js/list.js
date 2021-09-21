@@ -172,6 +172,9 @@ $(function () {
             return ui;
           },
           update: function (event, ui) {
+            const table = event.target.closest("table");
+            const ownerPk = $(table).data("owner-pk") || null;
+
             var $to = $(ui.item),
               $prev = $to.prev(),
               $next = $to.next();
@@ -184,13 +187,14 @@ $(function () {
               pk_list,
               $to.data("id"),
               $prev.data("id"),
-              $next.data("id")
+              $next.data("id"),
+              ownerPk
             );
           },
         });
       }
     },
-    setSort: function (pk_list, to, prev, next) {
+    setSort: function (pk_list, to, prev, next, ownerPk) {
       var me = this;
       $.ajax({
         url: me.options.sortUrl,
@@ -200,6 +204,7 @@ $(function () {
           action: "sort",
           pk_list: pk_list,
           to: to,
+          ownerPk,
           prev: prev,
           next: next,
         },
@@ -237,6 +242,7 @@ $(function () {
 
   $.fn.adminList = function (options) {
     var item = $.extend(true, {}, list);
+    console.log(item);
     item.setListBlock(this);
     this.data("object", item);
     item.init(options);

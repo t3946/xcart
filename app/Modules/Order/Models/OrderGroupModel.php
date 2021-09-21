@@ -141,6 +141,14 @@ class OrderGroupModel extends Model
                 'link' => ['acc_paymentid' => 'paymentid'],
                 'null' => false,
             ],
+            'voided_reason_model' => [
+                'field' => 'voided_reason_id',
+                'class' => ForeignField::class,
+                'modelClass' => VoidedReasonModel::class,
+                'link' => ['voided_reason_id' => 'reason_id'],
+                'null' => true,
+                'default' => null
+            ],
             'detail_models' => [
                 'class' => HasManyField::class,
                 'modelClass' => OrderDetailModel::class,

@@ -412,7 +412,7 @@ class AdminHelper
     {
         $data = [
             'manualString' => OrderSearchStore::CONST_MANUAL_STRING,
-            'flash' => Xcart::app()->flash->getMessages(),
+            'flash' => Xcart::app()->flash->read(),
             'tinymce' => [
                 "editorIndex" => Xcart::app()->router->url('editor:index'),
                 "editorChanged" => Xcart::app()->router->url('editor:changed'),

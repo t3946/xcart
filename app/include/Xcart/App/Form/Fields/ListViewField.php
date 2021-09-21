@@ -1,6 +1,7 @@
 <?php
 namespace Xcart\App\Form\Fields;
 
+use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Contrib\ListViewAdmin;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
@@ -22,6 +23,7 @@ class ListViewField extends Field
 
     /** @var \Modules\Admin\Contrib\Admin|null  */
     public $adminClass = null;
+    public ?Admin $admin = null;
 
     public $defaultOrder = [];
 
@@ -51,6 +53,14 @@ class ListViewField extends Field
      */
     public function getValue()
     {
+        /** @var Model $model */
+        $model =  $this->getForm()->getInstance();
+        $field = $model->getField($this->getName());
+        if ($field instanceof ManyToManyField)
+        {
+            $model_field = $model->{$this->getName()};
+            return $model_field;
+        }
         return null;
     }
 
@@ -83,6 +93,7 @@ class ListViewField extends Field
         $admin = new $this->adminClass();
         $admin->ownerPk = $this->getForm()->getInstance()->pk;
         $admin->ownerField = $name_owner;
+        $this->admin = $admin;
         $qs = $admin->getQuerySet();
         $qs = $admin->applyOrder($qs);
         $qs = $admin->fixSort($qs);

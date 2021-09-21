@@ -10,9 +10,11 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Forms\ProductFilterForm;
 use Modules\Goods\Forms\ProductAdminForm;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
 class ProductAdmin extends Admin
@@ -90,22 +92,29 @@ class ProductAdmin extends Admin
         ];
     }
 
-	public function getItemProperty(Model $item, $property)
-	{
-		/** @var ProductModel $image */
+    public function getItemProperty(Model $item, $property)
+    {
+        /** @var ProductModel $item */
         if ($property === 'image') {
             return ($image = $item->getMainImage())
-                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(174)}\" title=\"{$item}\" width='60' /></div>"
+                ? "<div style='text-align: center'><img src=\"{$image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)}\" width='60' /></div>"
                 : '';
         }
-		if ($property === 'product') {
-			return "<a target='_blank' href='{$item->getAbsoluteUrl()}'>{$item->getFrontendName()}</a>";
-		}
+        if ($property === 'mpn') {
+            return "<a href={$item->getDistributorUrl()} target='_blank'>{$item->getMpn()}</a>";
+        }
+
+        if ($property === 'product') {
+            $len = mb_strlen($item->$property);
+            $name = ($len > 30) ? mb_substr($item->$property, 0, 30) . '...' : $item->$property;
+            return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$name}</a>";
+        }
+
         if ($property === 'forsale') {
             return $item->forsale === 'Y' ? 'Active' : 'Inactive';
         }
         if ($property === 'add_date') {
-            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y H:i:s');
+            return (new DateTime())->setTimestamp($item->add_date)->format('d-M-Y');
         }
 
 		return parent::getItemProperty($item, $property);
@@ -135,4 +144,59 @@ class ProductAdmin extends Admin
 		}
 		return $qs;
 	}
+	public function update($pk = null, $parent_id = null)
+    {
+        /** @var \Xcart\App\Orm\TreeModel $model */
+        $new = false;
+        if (is_null($pk)) {
+            $new = true;
+            $model = $this->newModel();
+            $form = $this->getForm();
+
+            if ($parent_id) {
+                $model->parent_id = $parent_id;
+            }
+        } else {
+            $model = $this->getModelOr404($pk);
+            $form = $this->getUpdateForm();
+        }
+
+        if (isset($model->parent_id)) {
+            $this->parent_pk = $model->parent_id;
+        }
+
+        $this->model = $model;
+        $form->setInstance($model);
+
+        if ((string)$model) {
+            $bread = $new ? sprintf("Adding a new %s", strtolower($model)) : (string)$model;
+            $this->setBreadcrumbs($bread);
+        }
+
+        $request = Xcart::app()->request;
+        if ($request->getIsGet()) {
+            $form->populate($_GET, $_FILES);
+        }
+        if ($request->getIsPost()) {
+            $form_data = [$form::classNameShort() => $_POST[$form::classNameShort()], 'save' => $_POST['save']];
+            if ($form->populate($form_data, $_FILES)) {
+                if ($form->save()) {
+                    if ($request->getIsAjax()) {
+                        $this->jsonResponse(['status' => 'success', 'close' => true]);
+                        return;
+                    }
+                    Xcart::app()->flash->success('Changes have been successfully applied.');
+
+                    $this->redirectAfterSave($model, $_POST['save'] ?? 'save');
+
+                }
+            }
+        }
+        $template = $new ? $this->createTemplate : $this->updateTemplate;
+        $this->renderInternal($template, [
+            'form' => $form,
+            'model' => $model,
+            'new' => $new
+        ]);
+    }
 }

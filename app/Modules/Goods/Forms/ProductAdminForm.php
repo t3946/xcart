@@ -4,7 +4,9 @@ namespace Modules\Goods\Forms;
 
 
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Goods\Admin\FilesProductAdmin;
 use Modules\Goods\Admin\ProductImagesAdmin;
+use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Editor\Fields\EditorField;
@@ -40,12 +42,14 @@ class ProductAdminForm extends ModelForm
         'filter_values',
         'images',
         'videos',
+        'last_verify_date',
     ];
 
     public function getFieldsets()
     {
         return [
             'Operator and product availability' => [
+                'last_modify_user',
                 'forsale',
                 'lock_forsale',
                 'eta_date_mm_dd_yyyy',
@@ -76,8 +80,16 @@ class ProductAdminForm extends ModelForm
             'Pricing' => [
                 'list_price',
                 'cost_to_us',
+                'product_price_multiplier',
                 'new_map_price',
                 'map_price'
+            ],
+            'Shipping' => [
+                'weight',
+                'shipping_freight',
+                'free_ship_zone',
+                'lead_time_message',
+                'free_ship_text'
             ],
             'Inventory' => [
                 'r_avail',
@@ -87,6 +99,9 @@ class ProductAdminForm extends ModelForm
             ],
             'Images' => [
                 'detail_images'
+            ],
+            'Product files' => [
+              'files'
             ],
             'Product options' => [
                 'product_options'
@@ -100,13 +115,22 @@ class ProductAdminForm extends ModelForm
 
     public function getFields()
     {
+
         /** @var ProductModel $product */
         $product = $this->getInstance();
         $brand = $product->brand;
         $distributor = $product->distributor;
         $category = $product->getMainCategory();
-
+        $user = $product->last_modify_user ?? Xcart::app()->user;
         return [
+            'weight' => [
+                'class' => CharField::class,
+                'label' => 'Product weight (lbs)'
+            ],
+            'shipping_freight' => [
+              'class' => CharField::class,
+              'label' => 'Shipping freight (US$)'
+            ],
             'productcode' => [
                 'class' => CharField::class,
                 'required' => true,
@@ -120,6 +144,10 @@ class ProductAdminForm extends ModelForm
                 'class' => CharField::class,
                 'required' => true,
                 'label' => 'Product name'
+            ],
+            'product_price_multiplier' => [
+                'class' => CharField::class,
+                'label' => 'Price multiplier'
             ],
             'fulldescr' => [
                 'class' => EditorField::class,
@@ -180,6 +208,13 @@ class ProductAdminForm extends ModelForm
             ],
             'eta_date_mm_dd_yyyy' => [
                 'class' => UnixDateField::class,
+                'html' => [
+                    'class' => "datepicker-here big",
+                    'data-language' => "en",
+                    'data-clear-button' => "1",
+                    'data-date-format' => 'yyyy-mm-dd',
+                    'autocomplete' => 'off'
+                ],
             ],
             'distributor' => [
                 'class' => Select2Field::class,
@@ -270,7 +305,23 @@ class ProductAdminForm extends ModelForm
                 'class' => ListViewField::class,
                 'adminClass' => ProductImagesAdmin::class,
                 'listTemplate' => 'admin/list/_list.tpl',
-                'defaultOrder' => ['products_images__order_by']
+                'defaultOrder' => ['products_images__order_by'],
+                'label' => 'Detail images',
+                'lonelySave' => true,
+            ],
+            'files' => [
+                'class' => ListViewField::class,
+                'adminClass' => FilesProductAdmin::class,
+                'listTemplate' => 'admin/list/_list.tpl',
+                'defaultOrder' => ['orderby'],
+            ],
+            'last_modify_user' => [
+                'class' => CharField::class,
+                'html' => [
+                    'style' => 'border: none; width: 300px',
+                    'readonly' => true,
+                ],
+                'value' => "234",
             ]
         ];
     }

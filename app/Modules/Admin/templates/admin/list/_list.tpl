@@ -12,132 +12,137 @@
     {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
-            <table data-list-table {if $admin->sort}data-sorting{/if} style="white-space: nowrap; border-collapse: collapse;">
+            {*            {dd(property_exists($admin, 'ownerPk'))}*}
+            <table data-list-table
+                   {if property_exists($admin, 'ownerPk')}data-owner-pk={$admin->ownerPk} {/if} {if $admin->sort}data-sorting{/if}
+                   style="white-space: nowrap; border-collapse: collapse;">
                 <thead>
-                    {var $cols = 0}
+                {var $cols = 0}
 
-                    <tr class="list-head">
-                        {*<th class="checker full">
-                            <input type="checkbox" id="{$id}-check-all" data-checkall-list>
-                            <label for="{$id}-check-all" class="alone"></label>
-                            {var $cols = $cols+1}
-                        </th>*}
+                <tr class="list-head">
+                    {*<th class="checker full">
+                        <input type="checkbox" id="{$id}-check-all" data-checkall-list>
+                        <label for="{$id}-check-all" class="alone"></label>
+                        {var $cols = $cols+1}
+                    </th>*}
 
-                        {if $admin->sort}
-                            <th class="sort full" data-sort-column>
+                    {if $admin->sort}
+                        <th class="sort full" data-sort-column>
                                 <span class="title">
                                      <i class="icon-double_triangle"></i>
                                 </span>
 
-                                {var $cols = $cols+1}
-                            </th>
-                        {/if}
+                            {var $cols = $cols+1}
+                        </th>
+                    {/if}
 
-                        {if $isNested }
-                            <th class="nested full" data-nested-column>
+                    {if $isNested }
+                        <th class="nested full" data-nested-column>
                                 <span class="title">
                                      <i class="fa fa-folder"></i>
                                 </span>
 
-                                {var $cols = $cols+1}
-                            </th>
-                        {/if}
+                            {var $cols = $cols+1}
+                        </th>
+                    {/if}
 
-                        {foreach $columns['enabled'] as $column}
-                            {var $config = $columns['config'][$column]}
-                            <th class="col full" {($config['th'] ?: [])|http_build_query:':'}>
-                                {include 'admin/list/_th.tpl'}
-                                {var $cols = $cols+1}
-                            </th>
-                        {/foreach}
-                        {if $admin->getListItemActions()}
-                            <th class="actions col full">
-                                {var $cols = $cols+1}
-                                {foreach $admin->getListItemActions() as $action last=$last}
-                                    {if $action === 'update'}
-                                        {set $action = 'edit'}
-                                    {/if}
-                                    <span class="title">{$action} {if !$last}/{/if}</span>
-                                {/foreach}
-                            </th>
-                        {/if}
+                    {foreach $columns['enabled'] as $column}
+                        {var $config = $columns['config'][$column]}
+                        <th class="col full" {($config['th'] ?: [])|http_build_query:':'}>
+                            {include 'admin/list/_th.tpl'}
+                            {var $cols = $cols+1}
+                        </th>
+                    {/foreach}
+                    {if $admin->getListItemActions()}
+                        <th class="actions col full">
+                            {var $cols = $cols+1}
+                            {foreach $admin->getListItemActions() as $action last=$last}
+                                {if $action === 'update'}
+                                    {set $action = 'edit'}
+                                {/if}
+                                <span class="title">{$action} {if !$last}/{/if}</span>
+                            {/foreach}
+                        </th>
+                    {/if}
 
-                    </tr>
+                </tr>
                 </thead>
                 <tbody>
-                    {foreach $objects as $item}
-                        {var $pk = $item->pk}
-                        {include $admin->listRowTemplate}
+                {foreach $objects as $item}
+                    {var $pk = $item->pk}
+                    {include $admin->listRowTemplate}
                     {foreachelse}
-                        <tr class="empty">
-                            <td colspan="{$cols}" class="text-center">
-                                No data found
-                            </td>
-                        </tr>
-                    {/foreach}
+                    <tr class="empty">
+                        <td colspan="{$cols}" class="text-center">
+                            No data found
+                        </td>
+                    </tr>
+                {/foreach}
                 </tbody>
             </table>
             {if $pagination || $actions}
-            <div class="list-footer clearfix">
-                {if $pagination}
-                    <div class="list-footer-block v-align right total">
-                        <div>
-                            Total: {$pagination->getTotal()}
+                <div class="list-footer clearfix">
+                    {if $pagination}
+                        <div class="list-footer-block v-align right total">
+                            <div>
+                                Total: {$pagination->getTotal()}
+                            </div>
                         </div>
-                    </div>
-                {/if}
-                {if $actions}
-                <div class="list-footer-block v-align left group">
-                    <div>
-                        <div class="checker-wrapper">
-                            {if "add" in $actions}
-                                <div class="top-buttons-block left">
-                                    <a href="{$admin->getCreateUrl()}" class="{if $admin->isAjaxCreate()}ajax {/if}button round upper pad" target="_blank">
+                    {/if}
+                    {if $actions}
+                        <div class="list-footer-block v-align left group">
+                            <div>
+                                <div class="checker-wrapper">
+                                    {if "add" in $actions}
+                                        <div class="top-buttons-block left">
+                                            <a href="{$admin->getCreateUrl()}"
+                                               class="{if $admin->isAjaxCreate()}ajax {/if}button round upper pad"
+                                               target="_blank">
                                     <span class="text">
                                         Add
                                     </span>
-                                        <i class="icon-plus"></i>
-                                    </a>
+                                                <i class="icon-plus"></i>
+                                            </a>
+                                        </div>
+                                    {/if}
                                 </div>
-                            {/if}
+
+                                {if ("update" in $actions) || ("remove" in $actions)}
+                                    <div class="group-buttons">
+                                        {if ("update" in $actions)}
+                                            <a href="#" class="group-button" data-group-update>
+                                                <i class="icon-edit"></i>
+                                            </a>
+                                        {/if}
+
+                                        {if ("remove" in $actions)}
+                                            <a href="#" class="group-button" data-group-remove>
+                                                <i class="icon-delete_in_table"></i>
+                                            </a>
+                                        {/if}
+                                    </div>
+                                {/if}
+
+                                {var $dropdown = $admin->getListDropDownGroupActions()}
+                                {if $dropdown}
+                                    <div class="dropdown-block">
+                                        <select name="" id="" data-group-action>
+                                            <option value="" selected disabled>Select action</option>
+                                            {foreach $dropdown as $key => $item}
+                                                <option value="{$key}">
+                                                    {$item['title']}
+                                                </option>
+                                            {/foreach}
+                                        </select>
+                                        <button class="button" data-group-submit>
+                                            <i class="icon-check_mark"></i>
+                                        </button>
+                                    </div>
+                                {/if}
+                            </div>
                         </div>
-
-                        {if ("update" in $actions) || ("remove" in $actions)}
-                            <div class="group-buttons">
-                                {if ("update" in $actions)}
-                                    <a href="#" class="group-button" data-group-update>
-                                        <i class="icon-edit"></i>
-                                    </a>
-                                {/if}
-
-                                {if ("remove" in $actions)}
-                                    <a href="#" class="group-button" data-group-remove>
-                                        <i class="icon-delete_in_table"></i>
-                                    </a>
-                                {/if}
-                            </div>
-                        {/if}
-
-                        {var $dropdown = $admin->getListDropDownGroupActions()}
-                        {if $dropdown}
-                            <div class="dropdown-block">
-                                <select name="" id="" data-group-action>
-                                    <option value="" selected disabled>Select action</option>
-                                    {foreach $dropdown as $key => $item}
-                                        <option value="{$key}">
-                                            {$item['title']}
-                                        </option>
-                                    {/foreach}
-                                </select>
-                                <button class="button" data-group-submit>
-                                    <i class="icon-check_mark"></i>
-                                </button>
-                            </div>
-                        {/if}
-                    </div>
+                    {/if}
                 </div>
-                {/if}
-            </div>
             {/if}
 
             {if $pagination}
@@ -150,12 +155,12 @@
 </div>
 
 {set $crud_data = [
-    "id" => $id,
-    "links" => [
-        "url" => $.request->getUrl(),
-        "groupActionUrl" => $admin->getGroupActionUrl(),
-        "sortUrl" => $admin->getSortUrl(),
-        "columnsUrl" => $admin->getColumnsUrl(),
-    ]
+"id" => $id,
+"links" => [
+"url" => $.request->getUrl(),
+"groupActionUrl" => $admin->getGroupActionUrl(),
+"sortUrl" => $admin->getSortUrl(),
+"columnsUrl" => $admin->getColumnsUrl(),
+]
 ]}
 {store data=$crud_data key=$id ctx="app/cruds"}

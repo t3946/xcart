@@ -622,6 +622,7 @@ if ($REQUEST_METHOD === 'POST')
                     in_array($groups[$k_cart_tmp]['cb_status'], ['D', 'A'], true)) {
                     $make_paypal_void = true;
                     if (isset($orderGroupModel)) {
+                        $orderGroupModel->voided_reason_id = $groups[$k_cart_tmp]['voided_reason_id'];
                         $orderGroupModel->voided_reason = $groups[$k_cart_tmp]['voided_reason'];
                         $orderGroupModel->save();
                     }

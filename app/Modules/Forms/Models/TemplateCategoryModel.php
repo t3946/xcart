@@ -27,7 +27,7 @@ class TemplateCategoryModel extends TreeModel
             ],
             'pos' => [
                 'class' => IntField::class,
-                'default' => 0,
+                'default' => 10000,
             ],
         ], parent::getFields());
     }

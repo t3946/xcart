@@ -467,16 +467,14 @@ abstract class Admin
                     } else {
                         $qs->filter([$key => $value]);
                     }
-                }
-                elseif ($model_field instanceof TreeForeignField) {
+                } elseif ($model_field instanceof TreeForeignField) {
                     [$lft, $rgt, $root] = $model_field->getRelatedModel()::objects()->filter(['pk' => $value])->valuesList(['lft', 'rgt', 'root'], true);
                     $qs->filter([
                         "{$model_field->getName()}__lft__gte" => $lft,
                         "{$model_field->getName()}__rgt__lte" => $rgt,
                         "{$model_field->getName()}__root" => $root,
                     ]);
-                }
-                elseif ($model_field instanceof ForeignField) {
+                } elseif ($model_field instanceof ForeignField) {
                     $key = "{$model_field->getName()}__{$model_field->getTo()}";
                     if (is_array($value)) {
                         if ($value = array_filter($value)) {
@@ -485,20 +483,18 @@ abstract class Admin
                     } else {
                         $qs->filter([$key => $value]);
                     }
-                }
-                elseif ($model_field instanceof DateField) {
+                } elseif ($model_field instanceof DateField) {
                     $ar_time = explode('-', $value);
                     $ar_time = array_map(function ($a) {
                         $date_time = \DateTime::createFromFormat('m/d/Y', trim($a));
-                        $date_time->setTime(0,0,0);
+                        $date_time->setTime(0, 0, 0);
                         return $date_time;
                     }, $ar_time);
                     $qs->filter(["{$key}__gte" => $ar_time[0]]);
-                    if(isset($ar_time[1])) {
+                    if (isset($ar_time[1])) {
                         $qs->filter(["{$key}__lte" => $ar_time[1]]);
                     }
-                }
-                elseif (is_array($value)) {
+                } elseif (is_array($value)) {
                     $qs->filter(["{$key}__in" => $value]);
                 } else {
                     $qs->filter([$key => $value]);
@@ -574,25 +570,24 @@ abstract class Admin
      */
     public function fixSort($qs)
     {
-        if ($this->sort && $this->autoFixSort && $this->getCanSort($qs)) {
+        if (($sort = $this->sort) && $this->autoFixSort) {
             $newQs = clone($qs);
-            $raw = $newQs->group([$this->sort])->having(new Expression('c > 1'))->valuesList([$this->sort, 'c' => new Count('*')]);
-            if ($raw) {
-                $newQs = clone($qs);
-                $connection = $newQs->getConnection();
-                $connection->query('SET @position = 0;');
-
-                $model = $this->getModel();
-                $newQs->order([$this->sort, "-{$model::getPrimaryKeyName()}"]);
-
-                $qb = $newQs->getQueryBuilder();
-                $qb->setAlias(null);
-                $sql = strtr('{update}{where}{order}', [
-                    '{update}' => $qb->getAdapter()->sqlUpdate($model::tableName(), [$this->sort => new Expression("@position := (@position + 10)")]),
-                    '{where}' => $qb->buildWhere(),
-                    '{order}' => $qb->buildOrder()
-                ]);
-                $connection->query($sql);
+            $newQs->order([$this->sort]);
+            $order = 0;
+            foreach ($newQs->all() as $model) {
+                if (strpos($sort, '__') !== false) {
+                    $ar_sort = explode('__', $sort);
+                    if ($model->hasField($ar_sort[0])) {
+                        $related_model = $model->{$ar_sort[0]}->get([$this->through_field => $this->ownerPk]);
+                        if ($related_model) {
+                            $related_model->{$ar_sort[1]} = $order += 10;
+                            $related_model->save();
+                        }
+                    }
+                } else {
+                    $model->$sort = $order += 10;
+                    $model->save();
+                }
             }
         }
         return $qs;
@@ -729,12 +724,20 @@ abstract class Admin
     public function getItemProperty(Model $item, $property)
     {
         $value = $item;
-        if ($form = $this->getForm())
-        {
+        if ($form = $this->getForm()) {
             $form->setInstance($item);
-            if ($field = $form->getField($property))
-            {
+            if ($field = $form->getField($property)) {
                 if ($field instanceof DropDownField && $field->inline_editor) {
+//                    if (strpos($property, '__') !== false) {
+//                        $ar_property = explode('__', $property);
+//                        if ($item->hasField($ar_property[0])) {
+//                            /** @var Model $parent_model */
+//                            $parent_model = $item->{$ar_property[0]}->get([$this->through_field => $this->ownerPk]);
+//                            if ($parent_model->hasField($ar_property[1])) {
+//                                return $parent_model->{$ar_property[1]}->renderInput();
+//                            }
+//                        }
+//                    }
                     return $field->renderInput();
                 }
             }
@@ -757,7 +760,6 @@ abstract class Admin
 
         $qs = $this->handleSearch($qs, $search);
         $qs = $this->applyOrder($qs);
-        $qs = $this->fixSort($qs);
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
@@ -958,11 +960,38 @@ abstract class Admin
 
         $sort = $this->sort ?? 'position';
         $qs = $this->getQuerySet();
-        $positions = $qs->filter(['pk__in' => $pkList])->valuesList([$sort], true);
+        $model = $qs->getModel();
+        if (strpos($sort, '__') !== false) {
+            $list = $qs->filter(['pk__in' => $pkList]);
+            $positions = [];
+            $ar_sort = explode('__', $sort);
+            foreach ($list as $model) {
+                $main_model = $model->{$ar_sort[0]}->get([$this->through_field => $_POST['ownerPk']]);
+                if ($main_model) {
+                    array_push($positions, $main_model->{$ar_sort[1]});
+                }
+            }
+            asort($positions);
+            $result = array_combine($pkList, $positions);
+            foreach ($result as $pk => $value) {
+                foreach ($model::objects()->filter(['pk' => $pk]) as $child_model) {
+                    $parent_model = $child_model->{$ar_sort[0]}->get([$this->through_field => $_POST['ownerPk']]);
+                    if ($parent_model) {
+                        $parent_model->{$ar_sort[1]} = $value;
+                        $parent_model->save();
+                    }
+                }
+            }
+            $this->jsonResponse([
+                'success' => true
+            ]);
+            return;
+        } else {
+            $positions = $qs->filter(['pk__in' => $pkList])->valuesList([$sort], true);
+        }
         asort($positions);
         $result = array_combine($pkList, $positions);
 
-        $model = $qs->getModel();
         foreach ($result as $pk => $position) {
             $model::objects()->filter(['pk' => $pk])->update([$sort => $position]);
         }

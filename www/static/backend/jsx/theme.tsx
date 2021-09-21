@@ -39,7 +39,6 @@ $(function () {
   const flashMessages = appData().app.flash;
 
   window["flashStack"] = [];
-
   for (const flashMessage of flashMessages) {
     //TODO: тут могут быть данные в json
     window["flashStack"].push(flashMessage);
@@ -354,12 +353,14 @@ $(function () {
   $(document).on("change", ".list-update-block .updates-admin", (event) => {
     const ob = event.target.closest("tr");
     const name: string = event.target.name.toString();
+    const table = event.target.closest("table");
+    const ownerPk = $(table).data("owner-pk");
     const id = ob.dataset.pk;
     const newValue = event.target.value;
     const form = $(event.target).data("form");
-
-    const formData = { id: id, [name]: newValue, form: form };
-    const list = $(".list-block").data("object");
+    const listItem = event.target.closest(".list-block");
+    const formData = { id: id, [name]: newValue, form: form, ownerPk };
+    const list = $(listItem).data("object");
     list.setLoading();
 
     $.post("/admin/field/update", formData, (data) => {
@@ -610,6 +611,9 @@ $(function () {
     const trigger = data.trigger ? data.trigger : null;
     const text = data.text ? data.text : null;
     const title = data.title ? data.title : null;
+    const table = e.target.closest("table");
+    const ownerPk = $(table).data("owner-pk");
+    const dataForm = { ownerPk: ownerPk ?? null };
 
     cuteAlert({
       type: "question",
@@ -621,6 +625,7 @@ $(function () {
       if (e == "confirm") {
         $.ajax({
           url: url,
+          data: dataForm,
           type: type,
           dataType: "json",
           success: (data) => {

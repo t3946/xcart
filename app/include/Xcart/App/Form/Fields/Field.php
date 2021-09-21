@@ -35,6 +35,8 @@ abstract class Field implements IValidateField
      * @var string
      */
     public $successClass = 'success';
+    // если не требуется сохранять в родительской форме
+    public $lonelySave = false;
     public $inlineClass = 'updates-admin';
     public $select2FieldClass = 'select2-field';
     /**
