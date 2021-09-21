@@ -13,7 +13,7 @@ export const loginAction = (payload: any): any => ({
   payload,
 });
 
-export const logoutAction = (payload: any): any => ({
+export const logoutAction = (payload): any => ({
   type: "ACCOUNT_LOGOUT",
   payload,
 });

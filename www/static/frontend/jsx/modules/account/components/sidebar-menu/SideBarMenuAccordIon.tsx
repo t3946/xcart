@@ -2,7 +2,10 @@ import React from "react";
 import { SidebarItem } from "@client/modules/account/ts/types/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
 import { useAccordion } from "../../hooks/useAccordion";
-import classNames from "classnames";
+import classnames from "classnames";
+import ArrowIconTablet from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
+import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface sideBarMenuItemPropsDto extends SidebarItem {
   routerItems: SidebarItem[];
@@ -11,44 +14,67 @@ interface sideBarMenuItemPropsDto extends SidebarItem {
   };
 }
 
-export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = ({
-  to,
-  label,
-  routerItems,
-  classes,
-}) => {
+export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
+  props: Record<any, any>
+) => {
+  const { to, label, routerItems } = props;
   const accordion = useAccordion();
-  const handlerClasses = [
-    "sidebar-menu-container accordion",
-    { "sidebar-menu-accordion-open": accordion.open },
-    classes.handlerClass,
-  ];
+  const breakpoint = useBreakpoint();
+
+  const classes = {
+    handlerClasses: [
+      "sidebar-menu-item accordion",
+      { "sidebar-menu-item__opened-accordion": accordion.open },
+      props.classes.handlerClass,
+    ],
+    iconClasses: [
+      "accordion-arrow arrow-rotatable sidebar-menu-item_accordion-arrow",
+      {
+        "sidebar-accordion-arrow__open": accordion.open,
+      },
+    ],
+  };
+
+  function iconTemplate(): any {
+    return breakpoint({
+      xs: (
+        <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />
+      ),
+      md: <ArrowIconTablet className={classnames(classes.iconClasses)} />,
+      lg: (
+        <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />
+      ),
+    });
+  }
 
   return (
     <React.Fragment>
       <div
         onClick={accordion.onItemClick}
-        className={classNames(handlerClasses)}
+        className={classnames(classes.handlerClasses)}
       >
         <div>{label}</div>
-        <div
-          className={`accordion-arrow arrow-rotatable ${
-            accordion.open && "arrow-rotatable__rotated"
-          }`}
-        />
+        {iconTemplate()}
       </div>
+
       <div
         ref={accordion.ref}
         style={{
           height: accordion.height,
         }}
-        className="sidebar-menu-accordion-content"
+        className={"overflow-hidden common-transition"}
       >
-        {routerItems.map((e) => {
-          return (
-            <SideBarMenuAccordIonItem to={`${to}/${e.to}`} label={e.label} />
-          );
-        })}
+        <div className="sidebar-menu-accordion-content">
+          {routerItems.map((e) => {
+            return (
+              <SideBarMenuAccordIonItem
+                to={`${to}/${e.to}`}
+                label={e.label}
+                badge={e.badge}
+              />
+            );
+          })}
+        </div>
       </div>
     </React.Fragment>
   );

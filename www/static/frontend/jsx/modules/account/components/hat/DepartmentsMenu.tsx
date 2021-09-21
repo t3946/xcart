@@ -166,7 +166,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="row me-0">
-          <div className="account-page-left-column account-page-left-column__departments-menu col pe-0">
+          <div className="account-page-left-column col pe-0">
             <div
               className="category-menu-list"
               onMouseOver={() => {

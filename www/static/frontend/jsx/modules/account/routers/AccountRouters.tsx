@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
+import { AddressDialogHOC } from "../hoc/AddressDialogHOC";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
@@ -15,6 +16,8 @@ import HatSearchLine from "../components/hat/HatSearchLine";
 import MobileMenu from "../components/hat/MobileMenu";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
+import classnames from "classnames";
+import useBreakpoint from "../hooks/useBreakpoint";
 import PublicProfile from "../components/public-profile/PublicProfile";
 import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "../ts/consts/breadcrumbs";
@@ -41,6 +44,7 @@ import TSVDisable from "@client/modules/account/components/login-and-security/TS
 import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
 import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
 import PasswordAssistance from "@client/modules/account/components/password-assistance/PasswordAssistance";
+import AlertMobile from "@client/modules/account/components/shared/AlertMobile";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -56,8 +60,43 @@ export const AccountRouters = (): any => {
 
   dispatch(setBreadcrumbsAddresses(staticRoutes));
 
+  const classes = {
+    leftColumnClasses: [
+      "col account-page-left-column d-none",
+      {
+        "d-lg-block": user !== null,
+      },
+    ],
+    rightColumnClasses: [
+      "col",
+      {
+        "account-page-right-column": user !== null,
+        "d-flex": user === null,
+        "justify-content-center": user === null,
+      },
+    ],
+  };
+
+  function leftColumnTemplate() {
+    if (isList) {
+      return <ListsSidebarMenu />;
+    } else {
+      return (
+        <>
+          <SideBarMenu />
+          <div className={"leave-feedback text-center mt-12"}>
+            <Link to={"/account"} className="common-link">
+              Leave feedback
+            </Link>
+          </div>
+        </>
+      );
+    }
+  }
+
   return (
     <Provider store={accountStore as any}>
+      <ShadowPanel />
       <Snackbar>
         <BrowserRouter>
           <DepartmentsMenuMobile
@@ -67,6 +106,7 @@ export const AccountRouters = (): any => {
           <HatNavigation />
           <HatSearchLine />
           <MobileMenu />
+          <AlertMobile />
 
           <div className={"container"}>
             {user && <BreadCrumbs />}

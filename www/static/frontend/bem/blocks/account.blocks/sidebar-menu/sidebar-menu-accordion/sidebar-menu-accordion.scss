@@ -1,54 +1,23 @@
-.sidebar-menu-accordion{
-  &-content{
-    -webkit-transition: .3s all;
-    transition: .3s all;
-    overflow: hidden;
+.sidebar-menu-accordion-content {
+  padding: rem-calc(3) 0 rem-calc(8);
+
+  @include breakpoint(md up) {
+    padding: 0;
   }
 
-  &-open{
-    font-weight: 700 !important;
-    background-color: white !important;
-    border-bottom: 1px solid #C4C4C4 !important;
-
-  }
-
-  &-item{
-    background-color: #FFFFFF !important;
-    color: #a7a7a7 !important;
-    text-decoration: none !important;
-
-    &:hover{
-      background-color: #e2e2e2 !important;
-       color: black !important;
-    }
-
-    &:focus{
-      color: black !important;
-    }
+  @include breakpoint(lg up) {
+    padding: rem-calc(3) 0 rem-calc(10);
   }
 }
 
-
-.accordion{
+.accordion {
   justify-content: space-between;
-  border-bottom: 1px solid #F4F4F4;
 }
 
-.accordion-arrow{
-  width: 12px;
-  height: 7px;
-  background: url("/static/frontend/images/icons/account/arrow-1.svg") no-repeat center / cover;
-  transition: .2s all;
-}
-
-.accordion-arrow-open{
+.accordion-arrow-open {
   transform: rotate(180deg);
 }
 
-.accordion-active{
-  color: black !important;
-}
-
-.accordion-content-close{
+.accordion-content-close {
   height: 0;
 }

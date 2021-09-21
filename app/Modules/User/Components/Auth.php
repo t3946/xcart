@@ -164,6 +164,7 @@ class Auth implements AuthInterface
 
         Xcart::app()->request->session->add($this->authSessionName, $id);
         Xcart::app()->request->session->add('login',  $login);
+        Xcart::app()->request->session->setUserId((int)$id);
     }
 
     public function getSession()

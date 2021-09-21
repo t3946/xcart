@@ -1,0 +1,11 @@
+.alert-icon {
+  width: rem-calc(26);
+
+  @include breakpoint(md up) {
+    width: rem-calc(21);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(26);
+  }
+}

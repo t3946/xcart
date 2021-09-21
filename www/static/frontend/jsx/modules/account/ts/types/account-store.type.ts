@@ -1,6 +1,7 @@
 import { AddressItemDto } from "./address-item.type";
 import { SelectValue } from "./select-value.type";
 import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
+import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/alert";
 
 export interface AccountStore {
   addresses: AccountAddressesStore;
@@ -20,6 +21,9 @@ export interface AccountStore {
   departmentsMenuDesktop: {
     isVisible: boolean;
   };
+  countries: any;
+  loginAndSecurity: AccountLoginAndSecurityStore;
+  mobileAlert: AccountMobileAlertStore;
 }
 
 export interface AccountAddressesStore {
@@ -46,4 +50,19 @@ export interface AccountPaymentsStore {
   submitFormData?: SubmitFormDataDto | null;
   submitCardFormLoading?: boolean;
   transactions: any;
+}
+
+export interface AccountLoginAndSecurityStore {
+  alert: {
+    variant: AlertVariants;
+    message: string;
+  };
+}
+
+export interface AccountMobileAlertStore {
+  isVisible: boolean;
+  alert: {
+    variant: AlertVariants;
+    message: string;
+  };
 }

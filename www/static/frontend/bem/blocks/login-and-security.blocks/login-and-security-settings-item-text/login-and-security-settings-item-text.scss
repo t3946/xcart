@@ -1,0 +1,9 @@
+.login-and-security-settings-item-text {
+  font-size: rem-calc(16);
+  line-height: rem-calc(25);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+    line-height: rem-calc(25);
+  }
+}

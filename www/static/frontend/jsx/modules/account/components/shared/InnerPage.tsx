@@ -2,30 +2,33 @@ import React, { ReactNode } from "react";
 import classnames from "classnames";
 
 interface PropsInterface {
+  beforePage: React.ReactElement;
+
   header?: ReactNode;
-  hat?: ReactNode;
-  body?: ReactNode;
-  footer?: ReactNode;
   headerClasses?: any;
+
+  hat?: ReactNode;
   hatClasses?: any;
+
+  body?: ReactNode;
   bodyClasses?: any;
+
+  footer?: ReactNode;
   footerClasses?: any;
+
   children?: any;
 }
 
 const InnerPage: React.FC<PropsInterface> = function (props: PropsInterface) {
   function headerTemplate() {
-    let headerClasses;
-
-    if (props.headerClasses) {
-      headerClasses = props.headerClasses;
-    } else {
-      headerClasses = "mb-0";
-    }
-
     if (props.header) {
       return (
-        <h1 className={classnames("account-page-header", headerClasses)}>
+        <h1
+          className={classnames(
+            "account-page-header mb-0",
+            props.headerClasses
+          )}
+        >
           {props.header}
         </h1>
       );
@@ -34,6 +37,8 @@ const InnerPage: React.FC<PropsInterface> = function (props: PropsInterface) {
 
   return (
     <div className="account-inner-page">
+      {props.beforePage}
+
       <div className={classnames("account-page-hat", props.hatClasses)}>
         {headerTemplate()}
         {props.hat}

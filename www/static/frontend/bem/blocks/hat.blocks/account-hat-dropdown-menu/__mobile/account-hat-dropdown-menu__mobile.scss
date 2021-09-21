@@ -3,4 +3,7 @@
     border: none;
     background: #ffffff;
     width: rem-calc(250);
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
 }

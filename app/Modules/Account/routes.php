@@ -47,6 +47,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'your-lists-shipping'
     ],
+    [
+        'route' => '/orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'orders'
+    ],
 
 
 

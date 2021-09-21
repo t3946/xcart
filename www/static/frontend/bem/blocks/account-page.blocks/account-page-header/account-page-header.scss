@@ -1,8 +1,8 @@
 .account-page-header {
   text-align: center;
-  text-transform: capitalize;
   font-weight: bold;
   font-size: rem-calc(22);
+  line-height: 1;
 
   @include breakpoint(md up) {
     font-size: rem-calc(30);
@@ -10,7 +10,6 @@
 
   @include breakpoint(lg up) {
     text-align: left;
-    font-weight: normal;
-    font-size: rem-calc(29);
+    font-size: rem-calc(24);
   }
 }

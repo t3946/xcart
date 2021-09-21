@@ -1,0 +1,10 @@
+.mobile-alert-close {
+  width: rem-calc(24);
+  padding: rem-calc(10);
+  color: #c4c4c4;
+  box-sizing: content-box;
+
+  &:active {
+    color: #9b9b9b;
+  }
+}

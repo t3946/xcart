@@ -1,7 +1,13 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import classnames from "classnames";
 
-const ModalTimes = (props: Record<any, any>): any => {
+interface PropsInterface {
+  className?: any;
+}
+
+const ModalTimes: React.FC<PropsInterface> = (
+  props: PropsInterface
+): ReactElement => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,10 @@
 @import "../all_pages/page_width";
 
 header {
-  border-bottom: 1px solid #cdcdcd;
+  border-bottom: 1px solid;
+  border-bottom-color: #cdcdcd;
+
+  transition: border-bottom-color 300ms ease-out;
 
   .logo_menu {
     height: rem-calc(53);
@@ -190,7 +193,10 @@ header {
       text-align: center;
     }
   }
+}
 
+.header__shadow-panel-visible {
+  border-bottom-color: #ffffff;
 }
 
 #top-header-menu{
@@ -202,7 +208,7 @@ header {
     position:fixed;
   }
 }
-#top-header{
+#top-header {
   overflow: hidden;
 
   @include breakpoint(sm){
@@ -212,6 +218,7 @@ header {
     border: none;
   }
 }
+
 .header-fixed {
   position:fixed;
   z-index: 1499;

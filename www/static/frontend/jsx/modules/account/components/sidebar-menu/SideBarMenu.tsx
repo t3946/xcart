@@ -1,31 +1,35 @@
 import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
-import { logoutAction } from "../../../../redux/actions/account-actions/AutorizationActions";
+import { logoutAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { userClearAction } from "../../../../redux/actions/account-actions/UserActions";
+import { userClearAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import { route } from "@client/jsx/utils/AppData";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
-const SideBarMenu = () => {
+const SideBarMenu: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector((e: StoreDto) => e.user);
+  const breakpoint = useBreakpoint();
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {
-      to: "/account/orders",
+      to: "",
       label: "Orders",
       routerItems: [
-        { to: "my-orders", label: "My orders" },
-        { to: "buy-again", label: "Buy again" },
-        { to: "open-orders", label: "Open orders" },
-        { to: "cancelled-orders", label: "Cancelled orders" },
+        { to: route("account:orders"), label: "Decisions required", badge: 2 },
+        { to: route("account:orders"), label: "Open orders" },
+        { to: route("account:orders"), label: "Cancelled orders" },
+        { to: route("account:orders"), label: "Completed orders" },
+        { to: route("account:orders"), label: "Buy again" },
       ],
     },
     {
       to: "/account/your-lists",
-      label: "Your lists",
+      label: "Shopping Lists",
     },
     { to: "/account/addresses", label: "Addresses" },
     {
@@ -44,7 +48,6 @@ const SideBarMenu = () => {
   function logout() {
     dispatch(
       logoutAction({
-        form: { login: "vendor@s3stores.com", password: "123qwe" },
         callback: function () {
           dispatch(userClearAction());
           history.push("/account/login");
@@ -53,38 +56,52 @@ const SideBarMenu = () => {
     );
   }
 
-  return (
-    <div className="sidebar-menu-wrapper">
-      {menuItems.map((e) => {
-        if (!e.routerItems) {
-          return (
-            <SideBarMenuItem
-              to={e.to}
-              label={e.label}
-              className={"sidebar-menu__top-level-item"}
-            />
-          );
-        }
-        return (
-          <SideBarMenuAccordion
-            to={e.to}
-            label={e.label}
-            routerItems={e.routerItems}
-            classes={{ handlerClass: "sidebar-menu__top-level-item" }}
-          />
-        );
-      })}
+  function logoutButtonTemplate(): any {
+    if (!user) {
+      return;
+    }
 
-      {user && (
+    return breakpoint({
+      xs: (
         <button
           className={
-            "form-button form-button__outline logout-button pt-2.5 pb-2.5 mt-4 rounded-0 w-100"
+            "sidebar-menu-item sidebar-menu_top-level-item text-start w-100 sidebar-menu-item__logout"
           }
           onClick={logout}
         >
-          log out
+          Log out
         </button>
-      )}
+      ),
+
+      lg: null,
+    });
+  }
+
+  return (
+    <div className="sidebar-menu-wrapper">
+      {menuItems.map((value: Record<any, any>) => {
+        if (!value.routerItems) {
+          return (
+            <SideBarMenuItem
+              to={value.to}
+              label={value.label}
+              badge={value.badge}
+              className={"sidebar-menu_top-level-item"}
+              onClick={value.onClick}
+            />
+          );
+        }
+
+        return (
+          <SideBarMenuAccordion
+            to={value.to}
+            label={value.label}
+            routerItems={value.routerItems}
+            classes={{ handlerClass: "sidebar-menu_top-level-item" }}
+          />
+        );
+      })}
+      {logoutButtonTemplate()}
     </div>
   );
 };

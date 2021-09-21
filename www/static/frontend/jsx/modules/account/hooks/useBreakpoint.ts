@@ -6,7 +6,7 @@ function resizeHandler() {
   accountStore.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
 }
 
-export default function useBreakpoint(): any {
+export default function useBreakpoint(): (actions: ActionsInterface) => void {
   window.removeEventListener("resize", resizeHandler);
   window.addEventListener("resize", resizeHandler);
 
@@ -27,16 +27,24 @@ interface ActionsInterface {
  * @param actions actions for breakpoints
  */
 function executeBreakpoint(actions: ActionsInterface): any {
-  const breakpointsOrder = ["xxl", "xl", "lg", "md", "sm"];
+  const breakpointsOrder = ["xxl", "xl", "lg", "md", "sm"].reverse();
   const breakpointsFlags = getBreakpointsFlags(window.innerWidth);
+  let action;
 
   for (const breakpointName of breakpointsOrder) {
-    if (breakpointsFlags[breakpointName] && actions[breakpointName]) {
-      return actions[breakpointName];
+    if (
+      breakpointsFlags[breakpointName] &&
+      actions[breakpointName] !== undefined
+    ) {
+      action = actions[breakpointName];
     }
   }
 
-  return actions["xs"];
+  if (action === undefined) {
+    action = actions["xs"];
+  }
+
+  return typeof action === "function" ? action() : action;
 }
 
 function getBreakpointsFlags(resolution: number): any {
