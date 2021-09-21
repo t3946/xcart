@@ -8,7 +8,7 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { ShareListDialog } from "@client/modules/account/components/lists/ShareListDialog";
 import { ManageList } from "@client/modules/account/components/lists/ManageList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { ShareList } from "@client/modules/account/components/lists/ShareList";
+import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
 
 interface ListHeaderProps {
   label: string;
@@ -30,6 +30,8 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   const shareDialog = useDialog();
 
   const manageListDialog = useDialog();
+
+  const deleteListDialog = useDialog();
 
   const history = useHistory();
 
@@ -63,7 +65,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
               </div>
               {shippingList && (
                 <div
-                  onClick={handleDeleteList}
+                  onClick={deleteListDialog.handleClickOpen}
                   className="list-header-action-item red"
                 >
                   Delete List
@@ -94,6 +96,16 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         onClose={manageListDialog.handleClose}
       >
         <ManageList info={info} onCancelClick={manageListDialog.handleClose} />
+      </BootstrapDialogHOC>
+      <BootstrapDialogHOC
+        show={deleteListDialog.open}
+        title={"Confirm delete list"}
+        onClose={deleteListDialog.handleClose}
+      >
+        <DeleteList
+          confirmDelete={handleDeleteList}
+          onCancelClick={deleteListDialog.handleClose}
+        />
       </BootstrapDialogHOC>
     </div>
   );

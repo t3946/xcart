@@ -1,8 +1,5 @@
 import React from "react";
 import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
-import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
-import { ProductStarsRating } from "@client/modules/account/components/shared/ProductStarsRating";
-import { TooltipRatingContent } from "@client/modules/account/components/lists/TooltipRatingContent";
 import { ListProductItemBtns } from "@client/modules/account/components/lists/ListProductItemBtns";
 import { EditIdea } from "@client/modules/account/components/lists/EditIdea";
 import { ListProductItemComment } from "@client/modules/account/components/lists/ListProductItemComment";

@@ -63,5 +63,15 @@ return [
         'target' => [AccountListsApi::class, 'manageList'],
         'name' => 'manage-list'
     ],
+    [
+        'route' => '/delete-product',
+        'target' => [AccountListsApi::class, 'deleteProduct'],
+        'name' => 'delete-products'
+    ],
+    [
+        'route' => '/undo-delete-product',
+        'target' => [AccountListsApi::class, 'undoDeleteProduct'],
+        'name' => 'undo-delete-products'
+    ],
 
 ];

@@ -48,10 +48,10 @@ export const ManageList = ({ info, onCancelClick }) => {
         viewValue: "None",
       },
       month: info.birthday
-        ? monthItems[new Date(info.birthday).getMonth() - 1]
+        ? monthItems[new Date(Number(info.birthday)).getMonth() - 1]
         : monthItems[0],
       day: info.birthday
-        ? dayItems[new Date(info.birthday).getMonth() - 1]
+        ? dayItems[new Date(Number(info.birthday)).getDate()]
         : dayItems[0],
     },
     validationSchema: Yup.object().shape({
@@ -64,8 +64,6 @@ export const ManageList = ({ info, onCancelClick }) => {
     }),
     onSubmit: handleSubmit,
   });
-
-  console.log(new Date(info.birthday).getMonth());
 
   return (
     <div>
@@ -169,6 +167,7 @@ export const ManageList = ({ info, onCancelClick }) => {
           id="form-select-list-manage-addresses"
           classes={{
             input: ["list-input-manage-list"],
+            group: ["select-address-on-manage-list"],
           }}
         />
         <div className={"d-flex justify-content-end manage-list-checkbox"}>

@@ -5,6 +5,9 @@ import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { AnyAction } from "redux";
 import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
+import { ManageListRequestData } from "@client/modules/account/ts/types/manage-list-form.types";
+import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
+import { GetListAndProductIndexes } from "@client/modules/account/utils/edit-store-funcs/lists/get-product";
 
 const api = new ApiService();
 
@@ -186,6 +189,8 @@ function* editCommentInProduct(action: AnyAction): Generator {
       action.data
     ),
   });
+
+  yield action.callback();
 }
 function* manageList(action: AnyAction): Generator {
   yield api
@@ -198,17 +203,39 @@ function* manageList(action: AnyAction): Generator {
     )
     .then((response) => response);
 
-  // yield put({
-  //   type: "SET_LISTS",
-  //   lists: EditCommentDataOnProduct(
-  //     accountStore.getState().lists.lists,
-  //     action.listId,
-  //     action.productId,
-  //     action.data
-  //   ),
-  // });
+  yield put({
+    type: "SET_LISTS",
+    lists: accountStore
+      .getState()
+      .lists.lists.map((e) =>
+        e.product_list_id === action.listId ? { ...e, ...action.data } : e
+      ),
+  });
 
   yield action.callback();
+}
+
+function* deleteProduct(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/delete-product`,
+      JSON.stringify({
+        listId: action.product_list_id,
+        product: action.list_items_id,
+      })
+    )
+    .then((response) => response);
+}
+
+function* undoDeleteProduct(action: AnyAction): Generator {
+  yield api
+    .post<any>(
+      `/account/api/lists/undo-delete-product`,
+      JSON.stringify({
+        product: action.product,
+      })
+    )
+    .then((response) => response);
 }
 
 export function* listsActionWatcher(): SagaIterator {
@@ -224,4 +251,6 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("EDIT_IDEA_NAME", editIdeaName);
   yield takeLatest("EDIT_COMMENT_IN_PRODUCT", editCommentInProduct);
   yield takeLatest("MANAGE_LIST", manageList);
+  yield takeLatest("DELETE_PRODUCT", deleteProduct);
+  yield takeLatest("UNDO_DELETE_PRODUCT", undoDeleteProduct);
 }

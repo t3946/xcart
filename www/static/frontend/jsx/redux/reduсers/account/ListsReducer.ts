@@ -12,6 +12,7 @@ const accountListReducer = (
     case "GET_LISTS":
       return { ...state };
     case "SET_LISTS":
+      console.log(action.lists);
       return {
         ...state,
         lists: action.lists,
@@ -109,7 +110,7 @@ const accountListReducer = (
                     typeAction: {
                       type: AccountListProductActionEnum.DELETE,
                       productName:
-                        product.product.product | product.product.name,
+                        product?.product?.product || product?.product?.name,
                     },
                   };
                 }

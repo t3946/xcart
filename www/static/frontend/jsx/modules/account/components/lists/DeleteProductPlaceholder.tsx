@@ -4,13 +4,14 @@ import { undoDeleteProduct } from "@client/jsx/redux/actions/account-actions/Lis
 
 export const DeleteProductPlaceholder = ({
   name,
+  product,
   list_items_id,
   product_list_id,
 }) => {
   const dispatch = useDispatch();
 
   const undoDelete = () => {
-    dispatch(undoDeleteProduct(product_list_id, list_items_id));
+    dispatch(undoDeleteProduct(product_list_id, list_items_id, product));
   };
   return (
     <div className="deleted-product-container">

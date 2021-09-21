@@ -252,6 +252,35 @@ class AccountListsApi extends FrontendController
 
         $this->jsonResponse(['success']);
     }
+
+    public function deleteProduct()
+    {
+        [$list_id, $product_id] = array_values(json_decode(file_get_contents('php://input'),true));
+
+        $product = ListItemsModel::objects()->get(['product_list_id' => $list_id, 'product_id' => $product_id]);
+
+        if($product->product_type === 'idea')
+        {
+            ListIdeaModel::objects()->delete(['product_id' => $product_id]);
+        }
+
+        ListItemsModel::objects()->delete(['product_list_id' => $list_id, 'product_id' => $product_id]);
+
+        $this->jsonResponse(['success']);
+    }
+
+    public function undoDeleteProduct()
+    {
+        [$product] = array_values(json_decode(file_get_contents('php://input'),true));
+
+        if($product['product_type'] === 'idea')
+        {
+            ListIdeaModel::objects()->create($product['product']);
+        }
+        ListItemsModel::objects()->create($product);
+
+        $this->jsonResponse(['success']);
+    }
 }
 
 

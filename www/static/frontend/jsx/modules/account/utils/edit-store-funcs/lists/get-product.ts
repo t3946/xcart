@@ -3,7 +3,7 @@ import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-valu
 export function GetListAndProductIndexes(
   items,
   listId: string,
-  productId: string
+  productId?: string
 ): IndexesValues {
   const editListIndex = items.findIndex(
     (e: any) => e.product_list_id === listId

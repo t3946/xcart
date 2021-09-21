@@ -26,9 +26,11 @@ export const ListProductItems = ({ info, path, edit }) => {
   const dispatch = useDispatch();
 
   const deleteProductsWithTypeAction = () => {
+    const lists = accountStore.getState().lists.lists;
+
     dispatch(
       setLists(
-        accountStore.getState().lists.lists.map((e) => {
+        lists.map((e) => {
           return {
             ...e,
             products: e.products?.filter((e) => {
@@ -102,6 +104,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                                 product_list_id={info.product_list_id}
                                 list_items_id={e.product_id}
                                 name={e.typeAction.productName}
+                                product={e}
                               />
                             );
                           }
