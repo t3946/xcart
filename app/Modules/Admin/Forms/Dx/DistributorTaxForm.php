@@ -6,6 +6,7 @@ namespace Modules\Admin\Forms\Dx;
 
 use Modules\Admin\Admin\DxTabsAdmin;
 use Modules\Admin\Admin\DxTaxesAdmin;
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Form\Fields\ListViewField;
 
 class DistributorTaxForm extends DistributorForm

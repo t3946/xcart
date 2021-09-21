@@ -19,9 +19,9 @@ class DxTaxesAdmin extends ListViewAdmin
     {
         return [
             'tax_name',
-/*            'is_vat',
+            'is_vat',
             'tax_rate',
-            'zone'*/
+            'zone'
         ];
     }
 
