@@ -118,10 +118,10 @@ class PromoController extends AbstractCatalogController
         }
     }
 
-    public function actionViewed(): void
+    public function actionViewed($id = null): void
     {
         /** @var ProductModel[] $products */
-        $products = SliderDataHelper::getSliderData('recently_viewed_products');
+        $products = SliderDataHelper::getSliderData('recently_viewed_products', $id);
 
         if ($products) {
             $this->renderSliderData($products, 'catalog/parts/_minimal_view_item.tpl');

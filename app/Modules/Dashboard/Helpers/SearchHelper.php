@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Dashboard\Helpers;
 
+use Modules\Order\Helpers\OrderHelper;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -61,6 +62,7 @@ class SearchHelper
                 'po_statuses'          => POPipeline::getPOStatuses(),
                 'features'             => OrderSearchStore::getFeatures(),
                 'sources'              => OrderSearchStore::getSources(),
+                'voided_reasons'       => OrderHelper::getVoidedReasons(),
                 'question_statuses'    => OrderSearchStore::getQuestionStatuses(),
                 'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
                 'reconciliation_status'=> OrderSearchStore::getReconciliationStatuses(),

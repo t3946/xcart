@@ -4,6 +4,7 @@
 namespace Modules\Goods\Commands;
 
 
+use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\SupplierFeedHelper;
 use Modules\Goods\Models\ProductModel;
@@ -36,17 +37,26 @@ class QueueProcessCommand extends Command
 
     public function consume(AMQPMessage $message): void
     {
-        /** @var ProductModel $product  */
-        /** @var ProductModel $group_product  */
+        /** @var ProductModel $product */
+        /** @var ProductModel $group_product */
         /** @var SiteModel $site */
 
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
-
             try {
                 $data = array_filter($data, static fn($v) => $v !== null);
 
                 if ($data['storefront'] !== null) {
                     $site = SiteModel::objects()->get(['storefrontid' => $data['storefront']]);
+                }
+
+                /** @var SupplierFeedModel $feed */
+                $feed = SupplierFeedModel::objects()->get(
+                    ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
+                );
+                if (!$feed || !$feed->enabled) {
+                    echo "Feed is not active\n";
+                    print_r($data);
+                    return;
                 }
 
                 if (!$data['is_group']) {
@@ -82,7 +92,7 @@ class QueueProcessCommand extends Command
                         print(($is_new ? 'Adding' : '') . "$product->productcode\n");
                         print_r($changed);
                     }
-                } elseif ($data['is_group']) {
+                } else {
                     //Group product process
                     if (!$site) {
                         echo "Empty site for group product\n";
@@ -115,7 +125,7 @@ class QueueProcessCommand extends Command
                         //Child product process
                         $child_code = $child['productcode'];
                         if (!$child_code) {
-                            echo "Empty child productcode of {$group_code} group, skip product\n";
+                            echo "Empty child productcode of $group_code group, skip product\n";
                             continue;
                         }
                         [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $child_code]);
@@ -144,8 +154,7 @@ class QueueProcessCommand extends Command
                 }
             } catch (Throwable $exception) {
                 Xcart::app()->logger->error($exception->getMessage(), [], 'feed');
-            }
-            finally {
+            } finally {
                 $message->ack();
             }
         }

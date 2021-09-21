@@ -153,7 +153,7 @@
                         {block "after-content"}
                             <div class="row">
                                 <div class="small-12 column slider-viewed">
-                                    {set $link}{url 'catalog:viewed'}{/set}
+                                    {set $link}{url 'api:viewedApi'}{/set}
                                     {set $lbl}{t 'Your recently viewed items'}{/set}
                                     {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
                                 </div>

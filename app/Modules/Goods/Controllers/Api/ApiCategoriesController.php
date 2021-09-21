@@ -84,13 +84,16 @@ class ApiCategoriesController extends AbstractCatalogController
         }
     }
 
-    public function actionSliderViewed(): void
+    public function actionSliderViewed($id = null): void
     {
         if ($meta_id = SurfMetaModel::getInstance()->id) {
             $qs = parent::getQS()
                 ->distinct()
                 ->filter(['surf_path__meta_id' => $meta_id])
                 ->order(['-surf_path__position']);
+            if ($id) {
+                $qs->exclude(['productid' => $id]);
+            }
 
             $this->jsonResponse($this->getPaginatedProducts($qs));
         }

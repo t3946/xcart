@@ -485,19 +485,24 @@ class ProductHelper
     public static function setProductBrand(ProductModel $model, $value, SiteModel $site): void
     {
         $value = trim($value);
-        if ($value && !$brand = BrandModel::objects()->limit(1)->get([
-            'brand' => $value,
-        ])) {
-            $brand = new BrandModel(
+
+        if (!$value) {
+            $model->brandid = null;
+            return;
+        }
+
+        [$brand, $is_new] = BrandModel::objects()->getOrNew(['brand' => $value]);
+
+        if ($is_new) {
+            $brand->setAttributes(
                 [
-                    'brand' => $value,
                     'orderby' => 10,
                     'prevent_search_indexing_of_all_brand_products' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
                     'prevent_search_indexing_brand_page' => $model->prevent_search_indexing_this_product_page === 'Y' ? 'Y' : 'N',
-                ]
-            );
-            $brand->save();
+                ]);
         }
+
+        $brand->save();
 
         BrandStorefrontModel::objects()->getOrCreate(
             [
@@ -509,9 +514,10 @@ class ProductHelper
         if ($brand->parent_brand_id) {
             $brand = $brand->parent;
         }
+
         $model->brand = $brand;
 
-        if ($model && $model->forsale === 'Y') {
+        if ($model->forsale === 'Y') {
             $model->forsale = $brand->avail;
         }
     }

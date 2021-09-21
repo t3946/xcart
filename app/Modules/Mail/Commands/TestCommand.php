@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Mail\Commands;
 
 
@@ -10,19 +11,20 @@ class TestCommand extends Command
 {
     public function handle($arguments = [])
     {
-        try {
-            $res = Xcart::app()->mail->template(
-                'team@s3stores.com',
-                'Test sending email',
-                'mail/log_template.tpl',
-                ['message' => "Email test: PASS"]
-            );
+        foreach (ProductModel::without_group()->filter(['sites__storefrontid' => 0, 'forsale' => 'Y', 'manufacturerid' => 523]) as $product) {
+            foreach ($product->detail_images as $image) {
+                $url = $image->links->limit(1)->get()->url;
+                if ($url) {
+                    $action = [
+                        'action' => 'update',
+                        'image_id' => $image->pk,
+                        'image_path' => $image->path->getValue(),
+                        'image_link' => $url
+                ];
+                    Xcart::app()->queue->send('images_action', json_encode($action));
+                }
+            }
         }
-        catch (\Exception $e) {
-            d($e);
-        }
-
-        dd($res);
     }
 
     public function exception($arguments = [])

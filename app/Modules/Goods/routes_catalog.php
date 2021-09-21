@@ -62,21 +62,6 @@ return [
         'name' => 'new'
     ],
     [
-        'route' => '/category/viewed',
-        'target' => [PromoController::class, 'actionViewed'],
-        'name' => 'viewed'
-    ],
-    [
-        'route' => '/category/also-bound-{i:id}',
-        'target' => [PromoController::class, 'actionAlsoBought'],
-        'name' => 'also_bound'
-    ],
-    [
-        'route' => '/category/related-{i:id}',
-        'target' => [PromoController::class, 'actionRelatedProducts'],
-        'name' => 'related'
-    ],
-    [
         'route' => '/category/brands',
         'target' => [PromoController::class, 'actionBrands'],
         'name' => 'brands'

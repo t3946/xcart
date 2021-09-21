@@ -87,25 +87,28 @@
     <div class="row">
         <div class="small-12 column slider-products slider-featured-product">
             {set $link}{url 'catalog:featured'}{/set}
+            {set $datalink}{url 'api:featuredApi'}{/set}
             {set $title}{t 'Featured products'}{/set}
-            {include 'slider/base_product_slider.tpl' title=$title link=$link}
+            {include 'slider/base_product_slider.tpl' title=$title link=$link data_link=$datalink}
         </div>
     </div>
 
     <div class="row">
         <div class="small-12 column slider-products slider-bestsellers">
             {set $link}{url 'catalog:bestsellers'}{/set}
+            {set $datalink}{url 'api:bestsellersApi'}{/set}
             {set $title}{t "Bestsellers"}{/set}
-            {include 'slider/base_product_slider.tpl' title=$title link=$link data_link=$link}
+            {include 'slider/base_product_slider.tpl' title=$title link=$link data_link=$datalink}
         </div>
     </div>
 
     <div class="row">
         <div class="small-12 column slider-products slider-new">
             {set $link}{url 'catalog:new'}{/set}
+            {set $datalink}{url 'api:newApi'}{/set}
             {if $category_new}
                 {set $title}{t "What's new"}{/set}
-                {include 'slider/base_product_slider.tpl' title=$title link=$category_new->getAbsoluteUrl() data_link=$link}
+                {include 'slider/base_product_slider.tpl' title=$title link=$category_new->getAbsoluteUrl() data_link=$datalink}
             {/if}
         </div>
     </div>

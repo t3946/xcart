@@ -25,6 +25,7 @@ use Xcart\App\Orm\Model;
  * @property mixed feed_file_name
  * @property DistributorModel distributor
  * @property int last_update_time
+ * @property bool $enabled
  */
 class SupplierFeedModel extends Model
 {

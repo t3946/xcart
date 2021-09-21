@@ -33,7 +33,7 @@ class QueueImagesCommand extends Command
                         $link_hash = md5($image_link);
 
                         /** @var ProductImageLinkModel $link */
-                        if ($link = ProductImageLinkModel::objects()->get(['hash' => $link_hash])) {
+                        if ($link = ProductImageLinkModel::objects()->limit(1)->get(['hash' => $link_hash])) {
                             $found_images[] = $link->image_id;
                             QueueImagesActiveCommand::addProductImage($product, $link->image, ($key + 1) * 10);
                         } else {
@@ -68,6 +68,11 @@ class QueueImagesCommand extends Command
                 } catch (Throwable $exception) {
                     echo "$product->productcode: {$exception->getMessage()}\n";
                 }
+            } else {
+                echo "nack\n";
+                print_r($data);
+                $message->nack();
+                return;
             }
         }
         $message->ack();
