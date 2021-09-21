@@ -51,7 +51,7 @@ class QueueProcessCommand extends Command
 
                 /** @var SupplierFeedModel $feed */
                 $feed = SupplierFeedModel::objects()->get(
-                    ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['manufacturerid']]
+                    ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
                 );
                 if (!$feed || !$feed->enabled) {
                     echo "Feed is not active\n";
