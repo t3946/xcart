@@ -365,19 +365,19 @@ class OrderSearchStore extends BaseStore
 
                 $this->where[] = new QOr(['reconciliations.action' => 'R', 'reconciliations.action__isnull' => true]);
 
-                if ( $data['order']['reconciliation_status'] == 'F') {
+                if ( $data['order']['reconciliation_status'] === 'F') {
                     $this->having[] = new QAnd(new Expression('rcount = icount'));
                     $this->having[] = new QAnd(new Expression('rcount > 0'));
                 }
-                elseif ($data['order']['reconciliation_status'] == 'FP') {
+                elseif ($data['order']['reconciliation_status'] === 'FP') {
                     $this->having[] = new QAnd(new Expression('rcount <= icount'));
                     $this->having[] = new QAnd(new Expression('rcount > 0'));
                 }
-                elseif ($data['order']['reconciliation_status'] == 'P') {
+                elseif ($data['order']['reconciliation_status'] === 'P') {
                     $this->having[] = new QAnd(new Expression('rcount < icount'));
                     $this->having[] = new QAnd(new Expression('rcount > 0'));
                 }
-                elseif ($data['order']['reconciliation_status'] == 'N') {
+                elseif ($data['order']['reconciliation_status'] === 'N') {
                     $this->having[] = new QAnd(new Expression('rcount = 0'));
                     $this->having[] = new QAnd(new Expression('icount > 0'));
                 }
@@ -388,15 +388,15 @@ class OrderSearchStore extends BaseStore
                 $qs->join('left join', 'xcart_order_group_invoices', ['orderid' => 'invoice.orderid', 'group.manufacturerid' => 'invoice.manufacturerid'], 'invoice');
                 $qs->addSelect(['*', new Count('invoice.orderid', 'icount'), new Count('group.orderid', 'gcount') ]);
 
-                if ($data['order']['all_dx'] == 'Y') { // Присутствует во всех группах
+                if ($data['order']['all_dx'] === 'Y') { // Присутствует во всех группах
                     $this->having['gcount__gte'] = 1;
                     $this->having[] = new QAnd(new Expression('gcount <= icount'));
                 }
-                elseif($data['order']['all_dx'] == 'AN') { // Отсутствует во всех группах
+                elseif($data['order']['all_dx'] === 'AN') { // Отсутствует во всех группах
                     $this->having['icount'] = 0;
                     $this->having['gcount__gt'] = 0;
                 }
-                elseif($data['order']['all_dx'] == 'NA') { // Отсутствует в одной или всех группах
+                elseif($data['order']['all_dx'] === 'NA') { // Отсутствует в одной или всех группах
                     $this->having['icount__gte'] = 0;
                     $this->having[] = new QAnd(new Expression('gcount > icount'));
                 }
@@ -407,12 +407,12 @@ class OrderSearchStore extends BaseStore
 
             if (!empty($data['order']['has_memo'])) {
                 $qs->join('left join', 'xcart_order_group_memos', ['orderid' => 'l_memo.orderid'], 'l_memo');
-                $this->where['l_memo.orderid__isnull'] = ($data['order']['has_dx'] == 'N');
+                $this->where['l_memo.orderid__isnull'] = ($data['order']['has_dx'] === 'N');
             }
 
             if (!empty($data['order']['has_icx'])) {
                 $qs->join('left join', 'xcart_order_cx_invoices', ['orderid' => 'l_icx.orderid'], 'l_icx');
-                $this->where['l_icx.orderid__isnull'] = ($data['order']['has_icx'] == 'N');
+                $this->where['l_icx.orderid__isnull'] = ($data['order']['has_icx'] === 'N');
             }
 
             if (!empty($data['order']['po'])) {
@@ -422,6 +422,11 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['amazonorderid' => $data['order']['amazon_order']], 'order.amazon_order');
             }
 
+        }
+
+        if (!empty($data["voided_reasons"])) {
+            $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+            $this->getQ(['group.voided_reason_id__in' => $data["voided_reasons"]], 'group.voided_reasons');
         }
 
         if (!empty($data["features"])) {

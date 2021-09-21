@@ -764,6 +764,30 @@
                 </div>
             </div>
         </li>
+        <li>
+            <div class="row">
+                <div class="columns large-4">
+                    <label for="o_voided_reasons">Authorization voided reason:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <select name="search[voided_reasons][]" id="o_voided_reasons" class="big select2-field" multiple>
+                        {foreach $voided_reasons as $voided_category => $voided_values}
+                            <optgroup label="{$voided_category}">
+                                {foreach $voided_values as $voided_id => $voided_name}
+                                    <option {if $form_data.voided_reasons && $voided_id in list $form_data.voided_reasons}selected{/if} value="{$voided_id}">{$voided_name}</option>
+                                {/foreach}
+                            </optgroup>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-3 not">
+                    <input type="checkbox" value="1" name="search[not][voided_reasons]" id="nf" {if $form_data.not.voided_reasons}checked{/if}>
+                    <label for="nf">Invert selection</label>
+                </div>
+            </div>
+        </li>
 
         {if !$report_mode}
         {include "dashboard/parts/_order_sales_channel.tpl"}
