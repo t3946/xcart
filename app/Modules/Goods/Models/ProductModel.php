@@ -149,6 +149,18 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['ASIN' => 'ASIN'],
                 'sqlType' => Types::STRING,
             ],
+			'dim_x' => [
+				'class' => CharField::class,
+				'verboseName' => 'Product dimension x'
+			],
+			'dim_y' => [
+				'class' => CharField::class,
+				'verboseName' => 'Product dimension y'
+			],
+			'dim_z' => [
+				'class' => CharField::class,
+				'verboseName' => 'Product dimension z'
+			],
 
             'sites' => [
                 'class' => ManyToManyField::class,
@@ -375,11 +387,21 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0.01,
+				'verboseName' => 'Shipping freight (US$)',
             ],
+			'free_ship_zone' => [
+				'class' => IntField::class,
+				'verboseName' => 'Free shipping for destination',
+			],
+			'free_ship_text' => [
+				'class' => CharField::class,
+				'verboseName' => 'Free shipping text',
+			],
             'weight' => [
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
+				'verboseName' => 'Product weight (lbs)',
             ],
             'list_price' => [
                 'class' => DecimalField::class,
@@ -400,7 +422,20 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
+				'verboseName' => 'Shipping weight (lbs)'
             ],
+			'shipping_dim_x' => [
+				'class' => CharField::class,
+				'verboseName' => 'Shipping dimension x'
+			],
+			'shipping_dim_y' => [
+				'class' => CharField::class,
+				'verboseName' => 'Shipping dimension y'
+			],
+			'shipping_dim_z' => [
+				'class' => CharField::class,
+				'verboseName' => 'Shipping dimension z'
+			],
             'brand_normalized' => [
                 'class' => BooleanField::class,
                 'null' => false,
@@ -461,7 +496,7 @@ class ProductModel extends Model implements ICartItem
             'markets_disabled' => [
                 'class' => HasManyField::class,
                 'modelClass' => ExternalMarketplaceDisabledModel::class,
-                'link' => ['productid' => 'resource_id'],
+                'link' =gi> ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P']
             ],
             'last_modify_user' => [

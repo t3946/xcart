@@ -6,6 +6,7 @@ namespace Modules\Goods\Forms;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Admin\FilesProductAdmin;
 use Modules\Goods\Admin\ProductImagesAdmin;
+use Modules\Shipping\Models\ZoneModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -86,10 +87,17 @@ class ProductAdminForm extends ModelForm
             ],
             'Shipping' => [
                 'weight',
+				'dim_x',
+				'dim_y',
+				'dim_z',
+				'shipping_weight',
+				'shipping_dim_x',
+				'shipping_dim_y',
+				'shipping_dim_z',
                 'shipping_freight',
                 'free_ship_zone',
+				'free_ship_text',
                 'lead_time_message',
-                'free_ship_text'
             ],
             'Inventory' => [
                 'r_avail',
@@ -123,14 +131,49 @@ class ProductAdminForm extends ModelForm
         $category = $product->getMainCategory();
         $user = $product->last_modify_user ?? Xcart::app()->user;
         return [
-            'weight' => [
-                'class' => CharField::class,
-                'label' => 'Product weight (lbs)'
-            ],
-            'shipping_freight' => [
-              'class' => CharField::class,
-              'label' => 'Shipping freight (US$)'
-            ],
+			'weight' => [
+				'class' => CharField::class
+			],
+			'dim_x' => [
+				'class' => CharField::class
+			],
+			'dim_y' => [
+				'class' => CharField::class
+			],
+			'dim_z' => [
+				'class' => CharField::class,
+			],
+			'shipping_weight' => [
+				'class' => CharField::class
+			],
+			'shipping_dim_x' => [
+				'class' => CharField::class
+			],
+			'shipping_dim_y' => [
+				'class' => CharField::class
+			],
+			'shipping_dim_z' => [
+				'class' => CharField::class
+			],
+			'shipping_freight' => [
+				'class' => CharField::class
+			],
+			'free_ship_zone' => [
+				'class' => Select2Field::class,
+				'choices' => function (): array {
+        			$result = [-1 => 'No free shipping'];
+					foreach (ZoneModel::objects()->all() as $zone) {
+						$result[$zone->zoneid] = $zone->zone_name;
+					}
+					return $result ?? [];
+				},
+				'html' => [
+					'style' => 'width: 100%'
+				]
+			],
+			'free_ship_text' => [
+				'class' => CharField::class
+			],
             'productcode' => [
                 'class' => CharField::class,
                 'required' => true,
@@ -315,14 +358,15 @@ class ProductAdminForm extends ModelForm
                 'listTemplate' => 'admin/list/_list.tpl',
                 'defaultOrder' => ['orderby'],
             ],
-            'last_modify_user' => [
-                'class' => CharField::class,
-                'html' => [
-                    'style' => 'border: none; width: 300px',
-                    'readonly' => true,
-                ],
-                'value' => "234",
-            ]
+			'user_added' => [
+				'class' => CharField::class,
+				'html' => [
+					'style' => 'border: none; width: 300px',
+					'readonly' => true,
+				],
+				'label' => 'Added by',
+//				'value' => "$user->login ($user->firstname)",
+			],
         ];
     }
 
