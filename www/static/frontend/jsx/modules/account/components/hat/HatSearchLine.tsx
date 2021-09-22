@@ -11,6 +11,7 @@ import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-a
 import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
+import HoverIntent from "react-hoverintent";
 
 const HatSearchLine = (): any => {
   const dispatch = useDispatch();
@@ -19,6 +20,8 @@ const HatSearchLine = (): any => {
     (e: AccountStore) => e.departmentsMenuDesktop.isVisible
   );
   const maxUsernameLength = 10;
+  const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
+    React.useState(false);
 
   function searchTemplate() {
     return (
@@ -101,6 +104,7 @@ const HatSearchLine = (): any => {
     HideAllMenu(dispatch);
     dispatch(setVisibleShadowPanelAction(false));
     dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
+    setDepartmentsMenuButtonHover(false);
   }
 
   React.useEffect(() => {
@@ -120,24 +124,41 @@ const HatSearchLine = (): any => {
           <DepartmentsMenu
             className={"search-line_departments-menu"}
             isVisible={isVisibleDepartmentsMenu}
+            buttonHover={departmentsMenuButtonHover}
             closeMenu={closeDepartmentsMenu}
           />
 
           <div className="container">
             <div className="row">
-              <div className="account-page-left-column col pe-0 d-none d-lg-block">
-                <div className="category-menu-container">
-                  <div
-                    className={classnames("category-menu category-menu__new", {
-                      "is-active": isVisibleDepartmentsMenu,
-                    })}
-                    onClick={toggleDepartmentsMenu}
-                  >
-                    <span className="menu-icon" />
-                    <span className="category-menu-title">Departments</span>
+              <HoverIntent
+                onMouseOver={() => {
+                  setDepartmentsMenuButtonHover(true);
+                  openDepartmentsMenu();
+                }}
+                onMouseOut={() => {
+                  setDepartmentsMenuButtonHover(false);
+                }}
+                sensitivity={10}
+                interval={250}
+                timeout={250}
+              >
+                <div className="account-page-left-column col pe-0 d-none d-lg-block">
+                  <div className="category-menu-container">
+                    <div
+                      className={classnames(
+                        "category-menu category-menu__new",
+                        {
+                          "is-active": isVisibleDepartmentsMenu,
+                        }
+                      )}
+                      onClick={toggleDepartmentsMenu}
+                    >
+                      <span className="menu-icon" />
+                      <span className="category-menu-title">Departments</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </HoverIntent>
 
               <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
                 {searchTemplate()}
@@ -157,4 +178,5 @@ const HatSearchLine = (): any => {
     </div>
   );
 };
+
 export default HatSearchLine;

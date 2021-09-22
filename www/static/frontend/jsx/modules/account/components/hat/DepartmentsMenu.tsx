@@ -9,7 +9,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   const containerClasses = [
     props.className,
     "departments-menu",
-    props.isVisible ? "d-block" : "d-none",
+    props.isVisible || props.buttonHover ? "d-block" : "d-none",
   ];
   const [selectedCategory, setSelectedCategory] = React.useState(null);
   const [isMouseOverMenuItem, setIsMouseOverMenuItem] = React.useState(false);
@@ -24,17 +24,19 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   if (
     !isMouseOverMenuItem &&
     !isMouseOverCategoryDetails &&
+    !props.buttonHover &&
     !closeTimeout &&
     props.isVisible
   ) {
     setCloseTimeOut(
       setTimeout(() => {
         setSelectedCategory(null);
+        setCloseTimeOut(null);
         props.closeMenu();
       }, 1000)
     );
   } else if (
-    (isMouseOverMenuItem || isMouseOverCategoryDetails) &&
+    (isMouseOverMenuItem || isMouseOverCategoryDetails || props.buttonHover) &&
     closeTimeout
   ) {
     clearTimeout(closeTimeout);
@@ -201,7 +203,9 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
             <div
               className={classnames([
                 "account-page-right-column bg-white h-100 category-detailed pt-2 pb-4 position-relative",
-                (isMouseOverMenuItem || isMouseOverCategoryDetails) &&
+                (isMouseOverMenuItem ||
+                  isMouseOverCategoryDetails ||
+                  props.buttonHover) &&
                 selectedCategory
                   ? "d-block"
                   : "d-none",
