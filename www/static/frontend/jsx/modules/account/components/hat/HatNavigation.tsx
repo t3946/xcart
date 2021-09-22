@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
+  const cart = useSelector((e: AccountStore) => e.cart);
 
   const isVisibleMenu = useSelector(
     (e: AccountStore) => e.departmentsMenuMobile.isVisible
@@ -118,7 +119,7 @@ const HatNavigation = (): any => {
                       >
                         <span className="count">
                           <span className="mc_count">
-                            {appData.Cart.quantity}
+                            {cart.quantity}
                           </span>
                         </span>
                       </a>

@@ -84,7 +84,7 @@ class AccountController extends FrontendController
         StorageHelper::push([
             "quantity" => Xcart::app()->cart->getQuantity(),
             "checkoutUrl" => OrderHelper::getCheckoutUrl(),
-        ], null, 'Cart');
+        ], null, 'cart');
 
         $config = $site->getConfig();
 

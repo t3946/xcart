@@ -20,7 +20,6 @@ import "./_binds/sticky_header";
 import "./_binds/response_status_278";
 import "./_binds/endless_pagination";
 import "./_binds/click_mmodal";
-import "./_binds/minicart";
 import "./_binds/shadow";
 import "./_binds/productSlider";
 import "./_binds/pages/category";

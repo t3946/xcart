@@ -24,6 +24,10 @@ export interface AccountStore {
   countries: any;
   loginAndSecurity: AccountLoginAndSecurityStore;
   mobileAlert: AccountMobileAlertStore;
+  cart: {
+    quantity: number;
+    checkoutUrl: string;
+  };
 }
 
 export interface AccountAddressesStore {

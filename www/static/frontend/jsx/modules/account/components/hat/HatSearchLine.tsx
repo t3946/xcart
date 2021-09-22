@@ -1,8 +1,4 @@
 import React from "react";
-import { Provider } from "react-redux";
-import MiniCartItems from "@client/jsx/components/MiniCart";
-import MiniCartInfo from "@client/jsx/modules/mini-cart/components/info";
-import storeCart from "@client/jsx/redux/stores/StoreCart";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,6 +10,7 @@ import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
+import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 
 const HatSearchLine = (): any => {
   const dispatch = useDispatch();
@@ -23,31 +20,6 @@ const HatSearchLine = (): any => {
   );
   const maxUsernameLength = 10;
 
-  function miniCartTemplate() {
-    const labels = {
-      lng_checkout: "Checkout",
-      lng_remove: "Remove",
-      lng_img: "Image not available",
-    };
-
-    return (
-      <div className="minicart mini-cart-container">
-        <Provider store={storeCart}>
-          <MiniCartItems
-            store={storeCart}
-            labels={labels}
-            checkoutUrl={appData.Cart.checkoutUrl}
-          />
-        </Provider>
-
-        <MiniCartInfo
-          quantity={appData.Cart.quantity}
-          url={route("cart:list")}
-        />
-      </div>
-    );
-  }
-
   function searchTemplate() {
     return (
       <div className="search-form-container flex-grow-1 ">
@@ -56,7 +28,7 @@ const HatSearchLine = (): any => {
           method="get"
           itemProp="potentialAction"
           itemScope
-          itemType="http://schema.org/SearchAction"
+          itemType="https://schema.org/SearchAction"
         >
           <div className={"pos-relative"}>
             <input
@@ -173,7 +145,9 @@ const HatSearchLine = (): any => {
                 <div className={"d-none d-lg-flex search-line_buttons"}>
                   <div className="">{accountButton()}</div>
 
-                  <div className="ms-12">{miniCartTemplate()}</div>
+                  <div className="ms-12">
+                    <MiniCart />
+                  </div>
                 </div>
               </div>
             </div>
