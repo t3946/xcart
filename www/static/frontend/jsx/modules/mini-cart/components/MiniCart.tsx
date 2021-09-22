@@ -7,16 +7,13 @@ import { AccountStore } from "@client/modules/account/ts/types/account-store.typ
 import HoverIntent from "react-hoverintent";
 import { setCartQuantityAction } from "@client/jsx/redux/actions/CartActions";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
+import hideAllMenu from "@client/jsx/modules/account/utils/hide-all-menu";
 
 const MiniCart: React.FC = () => {
   const cart = useSelector((e: AccountStore) => e.cart);
   const [isEnter, setIsEnter] = React.useState(false);
   const dispatch = useDispatch();
-  const classes = {
-    miniCartItems: {
-      items: { "d-none": isEnter === false || cart.quantity === 0 },
-    },
-  };
 
   function cartCountChanged(e) {
     dispatch(setCartQuantityAction(e.detail.quantity));
@@ -31,6 +28,7 @@ const MiniCart: React.FC = () => {
   });
 
   function showMiniCart() {
+    hideAllMenu(dispatch);
     setIsEnter(true);
     dispatch(setVisibleShadowPanelAction(true));
   }
@@ -50,11 +48,9 @@ const MiniCart: React.FC = () => {
     >
       <div className={"mini-cart-container"}>
         <Provider store={storeCart}>
-          <MiniCartItems
-            store={storeCart}
-            checkoutUrl={cart.checkoutUrl}
-            classes={classes.miniCartItems}
-          />
+          <TransitionFade show={isEnter && cart.quantity > 0}>
+            <MiniCartItems store={storeCart} checkoutUrl={cart.checkoutUrl} />
+          </TransitionFade>
         </Provider>
 
         <MiniCartInfo />

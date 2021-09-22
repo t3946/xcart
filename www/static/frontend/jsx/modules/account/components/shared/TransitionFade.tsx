@@ -18,7 +18,6 @@ const TransitionFade: React.FC<PropsInterface> = function (
     transition: `all ${durationMs}ms ease-out`,
     opacity: 0,
     display: "none",
-    position: "absolute",
     ...styles,
   };
 

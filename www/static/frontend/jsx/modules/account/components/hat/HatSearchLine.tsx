@@ -90,10 +90,6 @@ const HatSearchLine = (): any => {
     );
   }
 
-  function toggleDepartmentsMenu() {
-    isVisibleDepartmentsMenu ? closeDepartmentsMenu() : openDepartmentsMenu();
-  }
-
   function openDepartmentsMenu() {
     HideAllMenu(dispatch);
     dispatch(setVisibleShadowPanelAction(true));
@@ -151,7 +147,6 @@ const HatSearchLine = (): any => {
                           "is-active": isVisibleDepartmentsMenu,
                         }
                       )}
-                      onClick={toggleDepartmentsMenu}
                     >
                       <span className="menu-icon" />
                       <span className="category-menu-title">Departments</span>

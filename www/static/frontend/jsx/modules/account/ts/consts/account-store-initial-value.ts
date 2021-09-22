@@ -59,6 +59,10 @@ export const TSV = appData?.tsv || null;
 
 export const cartInitialValue = appData.cart;
 
+export const miniCartInitialValue = {
+  isVisible: false,
+};
+
 const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -69,6 +73,7 @@ const accountStoreInitialValue = {
   loginAndSecurity: accountLoginAndSecurityValue,
   mobileAlert: accountMobileAlert,
   cart: cartInitialValue,
+  miniCart: miniCartInitialValue,
 };
 
 export default accountStoreInitialValue;

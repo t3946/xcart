@@ -3,14 +3,11 @@ import { useSelector } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
 import classnames from "classnames";
 import { StoreDto } from "@s3stores-mail/ts/types";
+import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
-  const containerClasses = [
-    props.className,
-    "departments-menu",
-    props.isVisible || props.buttonHover ? "d-block" : "d-none",
-  ];
+  const containerClasses = [props.className, "departments-menu"];
   const [selectedCategory, setSelectedCategory] = React.useState(null);
   const [isMouseOverMenuItem, setIsMouseOverMenuItem] = React.useState(false);
   const [isMouseOverCategoryDetails, setIsMouseOverCategoryDetails] =
@@ -166,62 +163,64 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   }
 
   return (
-    <div className={classnames(containerClasses)} onClick={props.closeMenu}>
-      <section
-        className="category-menu-list-container container"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="row me-0">
-          <div className="account-page-left-column col pe-0">
+    <TransitionFade show={props.isVisible}>
+      <div className={classnames(containerClasses)} onClick={props.closeMenu}>
+        <section
+          className="category-menu-list-container container"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="row me-0">
+            <div className="account-page-left-column col pe-0">
+              <div
+                className="category-menu-list"
+                onMouseOver={() => {
+                  setIsMouseOverMenuItem(true);
+                }}
+                onMouseLeave={() => {
+                  setIsMouseOverMenuItem(false);
+                }}
+              >
+                <ul className="no-bullet list-unstyled m-0">
+                  {topLevelMenuTemplate()}
+                </ul>
+
+                <div className="view-all-container">
+                  <a href={route("catalog:list")} className="view-all">
+                    View all departments
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <div
-              className="category-menu-list"
-              onMouseOver={() => {
-                setIsMouseOverMenuItem(true);
-              }}
-              onMouseLeave={() => {
-                setIsMouseOverMenuItem(false);
+              className="p-0 col"
+              onMouseOver={() => setIsMouseOverCategoryDetails(true)}
+              onMouseLeave={() => setIsMouseOverCategoryDetails(false)}
+              onClick={() => {
+                if (selectedCategory === null) {
+                  props.closeMenu();
+                }
               }}
             >
-              <ul className="no-bullet list-unstyled m-0">
-                {topLevelMenuTemplate()}
-              </ul>
-
-              <div className="view-all-container">
-                <a href={route("catalog:list")} className="view-all">
-                  View all departments
-                </a>
+              <div
+                className={classnames([
+                  "account-page-right-column bg-white h-100 category-detailed pt-2 pb-4 position-relative",
+                  (isMouseOverMenuItem ||
+                    isMouseOverCategoryDetails ||
+                    props.buttonHover) &&
+                  selectedCategory
+                    ? "d-block"
+                    : "d-none",
+                ])}
+              >
+                {groupsTemplate()}
+                {categoryLinkTemplate()}
               </div>
             </div>
           </div>
-
-          <div
-            className="p-0 col"
-            onMouseOver={() => setIsMouseOverCategoryDetails(true)}
-            onMouseLeave={() => setIsMouseOverCategoryDetails(false)}
-            onClick={() => {
-              if (selectedCategory === null) {
-                props.closeMenu();
-              }
-            }}
-          >
-            <div
-              className={classnames([
-                "account-page-right-column bg-white h-100 category-detailed pt-2 pb-4 position-relative",
-                (isMouseOverMenuItem ||
-                  isMouseOverCategoryDetails ||
-                  props.buttonHover) &&
-                selectedCategory
-                  ? "d-block"
-                  : "d-none",
-              ])}
-            >
-              {groupsTemplate()}
-              {categoryLinkTemplate()}
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
+    </TransitionFade>
   );
 };
 

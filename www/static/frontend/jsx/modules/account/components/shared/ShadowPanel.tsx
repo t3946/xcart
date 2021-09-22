@@ -24,6 +24,7 @@ const ShadowPanel = (): any => {
   }
 
   const transitionFadeStyles = {
+    position: "absolute",
     left: 0,
     top: 0,
     width: "100%",
