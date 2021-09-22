@@ -5,18 +5,21 @@ interface PropsInterface {
   show: boolean;
   durationMs?: number;
   children: React.ReactElement;
+  styles?: Record<any, any>;
 }
 
 const TransitionFade: React.FC<PropsInterface> = function (
   props: PropsInterface
 ) {
-  const { show } = props;
+  const { show, styles } = props;
   const defaultDurationMs = 300;
   const durationMs = props.durationMs || defaultDurationMs;
   const defaultStyle = {
     transition: `all ${durationMs}ms ease-out`,
     opacity: 0,
     display: "none",
+    position: "absolute",
+    ...styles,
   };
 
   const transitionStyles = {
