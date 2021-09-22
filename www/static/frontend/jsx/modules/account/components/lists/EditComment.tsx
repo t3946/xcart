@@ -94,7 +94,10 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
               name={"needs"}
               classes={{
                 input: ["list-input-edit-idea", "full-width"],
-                group: ["edit-comment-input-text-field-container"],
+                group: [
+                  "edit-comment-input-text-field-container",
+                  "edit-comment-input-text-field-needs-container",
+                ],
               }}
               handleChange={formik.handleChange}
               errorMessage={formik.errors.needs}

@@ -9,6 +9,8 @@ import { ShareListDialog } from "@client/modules/account/components/lists/ShareL
 import { ManageList } from "@client/modules/account/components/lists/ManageList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
+import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
+import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
 
 interface ListHeaderProps {
   label: string;
@@ -33,6 +35,8 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
 
   const deleteListDialog = useDialog();
 
+  const mobileMenuDialog = useDialog();
+
   const history = useHistory();
 
   const { showSnackbar } = useContext(SnackbarContext);
@@ -41,6 +45,22 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
     history.push("/account/your-lists");
     dispatch(deleteList(listId, onRequestEnd));
   };
+
+  const mobileDialogItems: MobileMenuForListItem[] = [
+    {
+      label: "Manage list",
+      onClick: () =>
+        history.push(`/account/your-lists/manage-list/${info.cache_url}`),
+    },
+    {
+      label: "Share list with others",
+      onClick: () =>
+        history.push(`/account/your-lists/${info.cache_url}/share-list`),
+    },
+    {
+      label: "Delete list",
+    },
+  ];
 
   const onRequestEnd = () => {
     showSnackbar({
@@ -54,6 +74,11 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
     <div className="list-header-container">
       <div className="list-header-left-side">
         <div className="list-header-name">{label}</div>
+        <img
+          onClick={mobileMenuDialog.handleClickOpen}
+          className="list-header-ellipsis"
+          src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+        />
         <div className="list-header-actions">
           {edit && (
             <React.Fragment>
@@ -107,6 +132,11 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
           onCancelClick={deleteListDialog.handleClose}
         />
       </BootstrapDialogHOC>
+      <MobileMenuForList
+        items={mobileDialogItems}
+        dialogOpen={mobileMenuDialog.open}
+        dialogOnClose={mobileMenuDialog.handleClose}
+      />
     </div>
   );
 };

@@ -42,6 +42,9 @@ import TSVChangePreferredMethod from "@client/modules/account/components/login-a
 import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
 import PasswordAssistance from "@client/modules/account/components/password-assistance/PasswordAssistance";
 import AlertMobile from "@client/modules/account/components/shared/AlertMobile";
+import { EditInfoInListProductPage } from "@client/modules/account/pages/EditInfoInListProductPage";
+import { ManageListPage } from "@client/modules/account/pages/ManageListPage";
+import { ShareListPage } from "@client/modules/account/pages/ShareListPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -147,6 +150,38 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
+                  path="/account/your-lists/edit-list-product-info/:listId/:productId"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <EditInfoInListProductPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/manage-list/:listHash"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <ManageListPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/:id/share-list"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <ShareListPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/invite/:encryptUrl/:tag"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <InvitationPage />
+                  )}
+                />
+                <Route
+                  exact
                   path="/account/your-lists/:id"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
@@ -162,14 +197,6 @@ export const AccountRouters = (): any => {
                   )}
                 />
                 http://localhost/account/your-lists/invite/dfjU7G93+2udow==
-                <Route
-                  exact
-                  path="/account/your-lists/invite/:encryptUrl/:tag"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <InvitationPage />
-                  )}
-                />
                 <Route
                   exact
                   path={route("account:login")}

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editIdeaName } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
-export const EditIdea = ({ info, listId }) => {
+export const EditIdea = ({ info, listId, openMenuDialog }) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const isLoading = useSelector((e: AccountStore) => e.lists.listLoading);
@@ -80,6 +80,7 @@ export const EditIdea = ({ info, listId }) => {
             Edit idea
           </span>
           <img
+            onClick={openMenuDialog}
             className="edit-idea-ellipsis"
             src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
           />

@@ -49,3 +49,36 @@
 .blue{
   color: #055A93;
 }
+
+.list-header-ellipsis{
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .list-header-shared-block{
+    display: none;
+  }
+
+  .list-header-actions{
+    display: none;
+  }
+
+  .list-header-left-side{
+    width: 100%;
+    justify-content: center
+  }
+
+  .list-header-container{
+    margin-top: 20px;
+  }
+
+  .list-header-name{
+    margin-right: 0;
+  }
+
+  .list-header-ellipsis{
+    display: block;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+}

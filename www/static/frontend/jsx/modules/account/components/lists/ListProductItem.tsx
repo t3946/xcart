@@ -4,8 +4,6 @@ import { ProductStarsRating } from "@client/modules/account/components/shared/Pr
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
 import { TooltipRatingContent } from "./TooltipRatingContent";
 import { ListProductItemBtns } from "./ListProductItemBtns";
-import { useDispatch } from "react-redux";
-import { moveProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { ListProductItemComment } from "@client/modules/account/components/lists/ListProductItemComment";
 import { EditComment } from "@client/modules/account/components/lists/EditComment";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
@@ -22,6 +20,7 @@ export const ListProductItem = ({
   onMoveClick,
 }) => {
   const editCommentDialog = useDialog();
+
   return (
     <div className="product-list-item-container">
       <div className="movable-area">
@@ -81,6 +80,7 @@ export const ListProductItem = ({
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
       />
+
       <BootstrapDialogHOC
         show={editCommentDialog.open}
         title={"Edit comment, quantity & priority"}

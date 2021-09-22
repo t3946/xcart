@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button, Grid } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { FormCheckBox } from "@client/modules/account/components/shared/FormCheckBox";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
@@ -203,6 +203,7 @@ export const ManageList = ({ info, onCancelClick }) => {
           cancelText="Cancel"
           onCancel={onCancelClick}
           groupAdvancedClasses={"manage-list-btns"}
+          disabled={loading}
         />
       </form>
     </div>

@@ -39,8 +39,6 @@
   align-items: flex-start;
 }
 
-
-
 .edit-comment-input-text-field-container{
   width: rem-calc(90);
 }
@@ -64,7 +62,11 @@
   .edit-idea-info-btns{
     display: block !important;
     width: 100%;
-    margin-top: 20px;
+    margin-top: rem-calc(20);
+  }
+
+  .top-content{
+    flex-direction: column-reverse;
   }
 
   .edit-idea-text-inputs{
@@ -77,5 +79,23 @@
 
   .edit-comment-input-text-field-container, .edit-comment-select-field-container{
     width: 100% !important;
+  }
+
+  .text-area-group{
+    width: 100%;
+  }
+
+  .edit-comment-img-block{
+    margin-left: 0;
+    display: flex;
+  }
+
+  .edit-comment-name{
+    font-size: rem-calc(16);
+    margin-left: 15px;
+  }
+
+  .edit-comment-input-text-field-needs-container{
+    margin-right: rem-calc(20);
   }
 }

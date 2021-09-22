@@ -20,3 +20,19 @@
   margin-bottom: 10px;
   text-align: right;
 }
+
+@media (max-width: 768px) {
+  .list-product-item-btns-container{
+  display: none;
+  }
+
+  .product-list-item-btns-container{
+    width: 100%;
+  }
+
+  .list-product-item-btns-text{
+    text-align: left;
+    margin-left: 90px;
+    margin-top: 10px;
+  }
+}

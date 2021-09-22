@@ -6,6 +6,9 @@ import { ListProductItemComment } from "@client/modules/account/components/lists
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import { EditComment } from "@client/modules/account/components/lists/EditComment";
 import { useDialog } from "../../hooks/useDialog";
+import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
+import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
+import { useHistory } from "react-router-dom";
 
 export const ListProductIdeaItem = ({
   info,
@@ -18,6 +21,32 @@ export const ListProductIdeaItem = ({
   onMoveClick,
 }) => {
   const editCommentDialog = useDialog();
+
+  const mobileMenuDialog = useDialog();
+
+  const history = useHistory();
+
+  const mobileDialogItems: MobileMenuForListItem[] = [
+    {
+      image: "/static/frontend/images/icons/account/idea-logo.svg",
+      label: info.product.name,
+    },
+    {
+      label: "Add comment, quantity & priority",
+      onClick: () => {
+        history.push(
+          `/account/your-lists/edit-list-product-info/${listId}/${info.product_id}`
+        );
+      },
+    },
+    {
+      label: "Move",
+    },
+    {
+      label: "Delete",
+      onClick: deleteItem,
+    },
+  ];
 
   return (
     <div className="product-list-item-container product-list-item-idea-container">
@@ -39,7 +68,11 @@ export const ListProductIdeaItem = ({
           src={"/static/frontend/images/icons/account/idea-logo.svg"}
         />
         <div className="product-list-item-info">
-          <EditIdea listId={listId} info={info} />
+          <EditIdea
+            openMenuDialog={mobileMenuDialog.handleClickOpen}
+            listId={listId}
+            info={info}
+          />
 
           {edit &&
             (info.comment ? (
@@ -64,6 +97,11 @@ export const ListProductIdeaItem = ({
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
         id={info.product_id}
+      />
+      <MobileMenuForList
+        items={mobileDialogItems}
+        dialogOpen={mobileMenuDialog.open}
+        dialogOnClose={mobileMenuDialog.handleClose}
       />
       <BootstrapDialogHOC
         show={editCommentDialog.open}
