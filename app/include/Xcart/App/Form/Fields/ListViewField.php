@@ -15,7 +15,8 @@ class ListViewField extends Field
      * @var string
      */
     public $inputTemplate = null;
-    public $listTemplate = 'forms/field/list_view/list.tpl';
+/*    public $listTemplate = 'forms/field/list_view/list.tpl';*/ // ошибка выдавал, решили заменить
+    public $listTemplate = 'admin/list/_list.tpl';
     public $rowTemplate = 'forms/field/list_view/row.tpl';
     public $emptyTemplate = 'forms/field/list_view/empty.tpl';
     public $fieldType = 'list_view';

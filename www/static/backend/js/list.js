@@ -242,7 +242,6 @@ $(function () {
 
   $.fn.adminList = function (options) {
     var item = $.extend(true, {}, list);
-    console.log(item);
     item.setListBlock(this);
     this.data("object", item);
     item.init(options);

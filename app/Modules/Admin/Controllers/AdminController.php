@@ -47,6 +47,11 @@ class AdminController extends BackendController
         $admin = $this->getAdmin($module, $admin);
         $admin->update($pk);
     }
+    public function updateOwned($module, $admin, $pk, $owner)
+    {
+        $admin = $this->getAdmin($module, $admin);
+        $admin->update($pk, $owner);
+    }
 
     public function update_section($module, $admin, $pk, $section = null)
     {

@@ -59,7 +59,7 @@ class DxTaxesAdmin extends ListViewAdmin
             'tax_name' => [
                 'title' => 'Tax name',
             ],
-/*            'is_vat' => [
+            'is_vat' => [
                 'title' => 'Tax type',
             ],
             'tax_rate' => [
@@ -67,7 +67,7 @@ class DxTaxesAdmin extends ListViewAdmin
             ],
             'zone' => [
                 'title' => 'Shipping zones where tax is charged',
-            ],*/
+            ],
         ];
     }
 

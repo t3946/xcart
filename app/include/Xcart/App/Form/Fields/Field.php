@@ -138,11 +138,12 @@ abstract class Field implements IValidateField
     public string $longHintClass = '';
     public string $errorClass = 'form-field-error form-field__error';
     public string $errorTextClass = 'form-field-error-text';
-
+    public string $extendedBeforeText = '';
     /**
      * @var string
      */
     public $inputTemplate = 'forms/field/default/input.tpl';
+    public string $extendedInputTemplate = '';
 
     /**
      * @var string
@@ -688,5 +689,16 @@ abstract class Field implements IValidateField
     public function getHtmlPrefix()
     {
         return rtrim(str_replace(['][', '[]', '[', ']'], '_', $this->getPrefix()), '_') . '_';
+    }
+    public function renderExtendInput()
+    {
+        return $this->innerRender($this->extendedInputTemplate, [
+            'field' => $this,
+            'html' => $this->buildAttributesInput(),
+            'id' => $this->getHtmlId(),
+            'value' => $this->getRenderValue(),
+            'name' => $this->getHtmlName(),
+            'type' => $this->getType(),
+        ]);
     }
 }

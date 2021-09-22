@@ -67,10 +67,9 @@ return [
         'target' => [AdminController::class, 'columns'],
         'name' => 'columns'
     ],
-
     [
         'route' => '/update/{:module}/{:admin}/{:pk}/owner/{:owner}',
-        'target' => [AdminController::class, 'update'],
+        'target' => [AdminController::class, 'updateOwned'],
         'name' => 'update_owned'
     ],
     [

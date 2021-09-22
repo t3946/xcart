@@ -212,6 +212,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ManyToManyField::class,
                 'modelClass' => FilterValueModel::class,
                 'through' => FilterProductModel::class,
+                'verboseName' => 'Product attributes'
             ],
             'detail_images' => [
                 'class' => ManyToManyField::class,
@@ -456,6 +457,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false,
+                'verboseName' => 'Locked by Product Manager'
             ],
             'shipping_weight_lock' => [
                 'class' => BooleanCharField::class,

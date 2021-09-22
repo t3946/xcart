@@ -100,10 +100,7 @@ abstract class ListViewAdmin extends Admin
         $model = $this->getModelOr404($pk);
         $this->instance = $model;
         $form = $this->getUpdateForm();
-        $this->ownerPk = $model->{$this->ownerField};
-        if ($this->ownerPk) {
-            $model->{$this->ownerField} = $this->ownerPk;
-        }
+        $this->ownerPk = $owner_id ?? $model->{$this->ownerField};
 
         $form->setInstance($model);
         $request = Xcart::app()->request;
@@ -179,9 +176,6 @@ abstract class ListViewAdmin extends Admin
                 $owner_column_name = $owner_field->getModelColumn();
                 $owner_model = new $owner_field->through();
                 $owner_model->$owner_column_name = $this->ownerPk;
-                /*                if (!empty($owner_model->getField('order_by'))) {
-                                    $owner_model->order_by = $owner_field->through::objects()->filter([$owner_column_name => $this->ownerPk])->max('order_by') + 10;
-                                }*/
                 $this->manyToMany = true;
                 $this->ownerModel = $owner_model;
                 $this->related_field = $owner_field->getRelatedModelColumn();

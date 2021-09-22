@@ -46,7 +46,7 @@
 
                     {foreach $columns['enabled'] as $column}
                         {var $config = $columns['config'][$column]}
-                        <th class="col full" {$config['th']|http_build_query:':'}>
+                        <th class="col full" {if $config['th']}{$config['th']|http_build_query:':'}{/if}>
                             {include 'admin/list/_th.tpl'}
                             {var $cols = $cols+1}
                         </th>
@@ -160,5 +160,6 @@
     ]
 ]}
 <script>
+    console.log('ADD', window.appData);
     window.appData['app']['cruds']["{$id}"] = {json_encode($crud_data, true)};
 </script>

@@ -18,8 +18,8 @@ class FilterProductModel extends Model
         return [
             'filter_val' => [
                 'field' => 'fv_id',
-                'class' => ForeignField::className(),
-                'modelClass' => FilterValueModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => FilterValueModel::class,
                 'link' => ['fv_id' => 'fv_id'],
                 'null' => false,
                 'default' => 0,
@@ -27,15 +27,15 @@ class FilterProductModel extends Model
             ],
             'product' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'null' => false,
                 'default' => 0,
                 'primary' => true
             ],
             'is_feed' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],

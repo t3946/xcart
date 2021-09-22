@@ -6,6 +6,7 @@ namespace Modules\Goods\Forms;
 use Modules\Core\Models\LanguageModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Admin\FilesProductAdmin;
+use Modules\Goods\Admin\FilterProductAdmin;
 use Modules\Goods\Admin\ProductImagesAdmin;
 use Modules\Shipping\Models\ZoneModel;
 use Xcart\App\Main\Xcart;
@@ -41,7 +42,6 @@ class ProductAdminForm extends ModelForm
         'order_details',
         'surf_path',
         'sf_moves',
-        'filter_values',
         'images',
         'videos',
         'last_verify_date',
@@ -89,16 +89,16 @@ class ProductAdminForm extends ModelForm
             ],
             'Shipping' => [
                 'weight',
-				'dim_x',
-				'dim_y',
-				'dim_z',
-				'shipping_weight',
-				'shipping_dim_x',
-				'shipping_dim_y',
-				'shipping_dim_z',
+                'dim_x',
+                'dim_y',
+                'dim_z',
+                'shipping_weight',
+                'shipping_dim_x',
+                'shipping_dim_y',
+                'shipping_dim_z',
                 'shipping_freight',
                 'free_ship_zone',
-				'free_ship_text',
+                'free_ship_text',
             ],
             'Inventory' => [
                 'r_avail',
@@ -110,10 +110,13 @@ class ProductAdminForm extends ModelForm
                 'detail_images'
             ],
             'Product files' => [
-              'files'
+                'files'
             ],
             'Product options' => [
                 'product_options'
+            ],
+            'Product attributes' => [
+                'filter_values'
             ],
             'Amazon options' => [
                 'amazon_enabled'
@@ -124,7 +127,6 @@ class ProductAdminForm extends ModelForm
 
     public function getFields()
     {
-
         /** @var ProductModel $product */
         $product = $this->getInstance();
         $brand = $product->brand;
@@ -135,55 +137,85 @@ class ProductAdminForm extends ModelForm
         return [
             'weight' => [
                 'class' => CharField::class,
-                'inputTemplate' => 'admin/distributor/form/input.tpl',
+                'inputTemplate' => 'admin/extended_input.tpl',
                 'html' => ['style' => 'width:50px;'],
                 'extend' => 'weight_lock',
             ],
             'weight_lock' => [
                 'class' => CheckboxField::class,
-                'label' => '',
-                'inputTemplate' => 'admin/distributor/form/input.tpl',
-                'html' => ['style' => 'width:50px;'],
-                'extends' => 'Locked by Product Manager',
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extendedBeforeText' => 'Locked by Product Manager',
+                'extendedInputTemplate' => 'forms/field/checkbox/input.tpl'
             ],
-			'dim_x' => [
-				'class' => CharField::class
-			],
-			'dim_y' => [
-				'class' => CharField::class
-			],
-			'dim_z' => [
-				'class' => CharField::class,
-			],
-			'shipping_weight' => [
-				'class' => CharField::class
-			],
-			'shipping_dim_x' => [
-				'class' => CharField::class
-			],
-			'shipping_dim_y' => [
-				'class' => CharField::class
-			],
-			'shipping_dim_z' => [
-				'class' => CharField::class
-			],
-			'shipping_freight' => [
-				'class' => CharField::class
-			],
-			'free_ship_zone' => [
-				'class' => Select2Field::class,
-				'choices' => function (): array {
-        			$result = [-1 => 'No free shipping'];
-					foreach (ZoneModel::objects()->all() as $zone) {
-						$result[$zone->zoneid] = $zone->zone_name;
-					}
-					return $result ?? [];
-				},
-				'html' => [
-					'style' => 'width: 100%'
-				]
-			],
-			'free_ship_text' => CharField::class,
+            'dim_x' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width: 50px']
+            ],
+            'dim_y' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width: 50px'],
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extend' => 'dim_lock',
+            ],
+            'dim_lock' => [
+                'class' => CheckboxField::class,
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extendedBeforeText' => 'Locked by Product Manager',
+                'extendedInputTemplate' => 'forms/field/checkbox/input.tpl'
+            ],
+            'dim_z' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width: 50px']
+            ],
+            'shipping_weight' => [
+                'class' => CharField::class,
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'html' => ['style' => 'width:50px;'],
+                'extend' => 'shipping_weight_lock',
+            ],
+            'shipping_weight_lock' => [
+                'class' => CheckboxField::class,
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extendedBeforeText' => 'Locked by Product Manager',
+                'extendedInputTemplate' => 'forms/field/checkbox/input.tpl'
+            ],
+            'shipping_dim_x' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width: 50px']
+            ],
+            'shipping_dim_y' => [
+                'class' => CharField::class,
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'html' => ['style' => 'width: 50px'],
+                'extend' => 'shipping_dim_lock',
+            ],
+            'shipping_dim_lock' => [
+                'class' => CheckboxField::class,
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extendedBeforeText' => 'Locked by Product Manager',
+                'extendedInputTemplate' => 'forms/field/checkbox/input.tpl'
+            ],
+            'shipping_dim_z' => [
+                'class' => CharField::class,
+                'html' => ['style' => 'width: 50px']
+            ],
+            'shipping_freight' => [
+                'class' => CharField::class
+            ],
+            'free_ship_zone' => [
+                'class' => Select2Field::class,
+                'choices' => function (): array {
+                    $result = [-1 => 'No free shipping'];
+                    foreach (ZoneModel::objects()->all() as $zone) {
+                        $result[$zone->zoneid] = $zone->zone_name;
+                    }
+                    return $result ?? [];
+                },
+                'html' => [
+                    'style' => 'width: 100%'
+                ]
+            ],
+            'free_ship_text' => CharField::class,
             'productcode' => [
                 'class' => CharField::class,
                 'required' => true,
@@ -236,8 +268,11 @@ class ProductAdminForm extends ModelForm
             'product_options' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionsAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl',
                 'defaultOrder' => 'position'
+            ],
+            'filter_values' => [
+                'class' => ListViewField::class,
+                'adminClass' => FilterProductAdmin::class,
             ],
             'amazon_enabled' => [
                 'class' => CheckboxField::class,
@@ -266,8 +301,17 @@ class ProductAdminForm extends ModelForm
                     'data-language' => "en",
                     'data-clear-button' => "1",
                     'data-date-format' => 'yyyy-mm-dd',
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
+                    'style' => 'width: 250px;'
                 ],
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extend' => 'eta_date_lock',
+            ],
+            'eta_date_lock' => [
+                'class' => CheckboxField::class,
+                'inputTemplate' => 'admin/extended_input.tpl',
+                'extendedBeforeText' => 'Lock until ETA date',
+                'extendedInputTemplate' => 'forms/field/checkbox/input.tpl'
             ],
             'distributor' => [
                 'class' => Select2Field::class,
@@ -357,26 +401,23 @@ class ProductAdminForm extends ModelForm
             'detail_images' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductImagesAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl',
                 'defaultOrder' => ['products_images__order_by'],
                 'label' => 'Detail images',
-                'lonelySave' => true,
             ],
             'files' => [
                 'class' => ListViewField::class,
                 'adminClass' => FilesProductAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl',
                 'defaultOrder' => ['orderby'],
             ],
-			'user_modify' => [
-				'class' => CharField::class,
-				'html' => [
-					'style' => 'border: none; width: 300px',
-					'readonly' => true,
-				],
-				'label' => 'Added by',
-				'value' => "($user->login) on {$modify_time}",
-			],
+            'user_modify' => [
+                'class' => CharField::class,
+                'html' => [
+                    'style' => 'border: none; width: 300px',
+                    'readonly' => true,
+                ],
+                'label' => 'Added by',
+                'value' => "($user->login) on {$modify_time}",
+            ],
         ];
     }
 
@@ -399,10 +440,9 @@ class ProductAdminForm extends ModelForm
             'anchor' => "Product on distributor's website: {$this->getInstance()->getMpn()}"
         ]];
     }
+
     public function beforeInstanceSave($instance)
     {
         $instance->last_modify_id = Xcart::app()->user->pk;
     }
-
-
 }
