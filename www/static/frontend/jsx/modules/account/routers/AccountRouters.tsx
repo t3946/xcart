@@ -108,7 +108,7 @@ export const AccountRouters = (): any => {
           <div className={"container"}>
             {user && <BreadCrumbs />}
 
-            <div className="row mt-lg-20">
+            <div className="row">
               <div className={classnames(classes.leftColumnClasses)}>
                 {leftColumnTemplate()}
               </div>
