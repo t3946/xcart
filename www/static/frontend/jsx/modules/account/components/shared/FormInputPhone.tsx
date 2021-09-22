@@ -96,7 +96,7 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
   }
 
   return (
-    <RBForm.Group controlId={name} className={"row"}>
+    <div className={"form-group row"}>
       <div className={"col-12 col-md-6 col-lg-4 label-column"}>
         <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
           {label}
@@ -120,59 +120,65 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
           </div>
 
           <div className={classnames(classes.inputPhoneColumn)}>
-            <InputMask
-              mask={phoneMask}
-              value={values[name]}
-              onChange={handleChange}
-            >
-              {() => (
-                <input
-                  placeholder="(___) ___-____"
-                  className={classnames("form-input", {
-                    "form-input-error": !!errors[name],
-                  })}
-                  name={name}
-                  id={name}
-                  type="text"
-                  onChange={handleChange}
-                  value={values[name]}
-                />
-              )}
-            </InputMask>
+            <RBForm.Group controlId={name}>
+              <InputMask
+                mask={phoneMask}
+                value={values[name]}
+                onChange={handleChange}
+              >
+                {() => (
+                  <input
+                    placeholder="(___) ___-____"
+                    className={classnames("form-input", {
+                      "form-input-error": !!errors[name],
+                    })}
+                    name={name}
+                    id={name}
+                    type="text"
+                    onChange={handleChange}
+                    value={values[name]}
+                  />
+                )}
+              </InputMask>
 
-            <RBForm.Control.Feedback type="invalid">
-              {errors[name]}
-            </RBForm.Control.Feedback>
+              <RBForm.Control.Feedback type="invalid">
+                {errors[name]}
+              </RBForm.Control.Feedback>
+            </RBForm.Group>
           </div>
 
           <div className={classnames(classes.inputPhoneExt)}>
-            <RBForm.Label className={"form-input-label mb-0 me-2 fw-normal"}>
-              {breakpoint({
-                xs: "X",
-                md: "ext",
-              })}
-            </RBForm.Label>
+            <RBForm.Group controlId={phoneExtFieldName}>
+              <RBForm.Label className={"form-input-label mb-0 me-2 fw-normal"}>
+                {breakpoint({
+                  xs: "X",
+                  md: "ext",
+                })}
+              </RBForm.Label>
 
-            <RBForm.Control
-              type="text"
-              name={phoneExtFieldName}
-              value={values[phoneExtFieldName]}
-              onChange={handleChange}
-              className={"form-input"}
-              isInvalid={
-                !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
-              }
-              isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
-              autoComplete={"off"}
-            />
+              <RBForm.Control
+                type="text"
+                name={phoneExtFieldName}
+                value={values[phoneExtFieldName]}
+                onChange={handleChange}
+                className={"form-input"}
+                isInvalid={
+                  !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
+                }
+                isValid={
+                  touched[phoneExtFieldName] && !errors[phoneExtFieldName]
+                }
+                autoComplete={"off"}
+              />
 
-            <RBForm.Control.Feedback type="invalid">
-              {errors[phoneExtFieldName]}
-            </RBForm.Control.Feedback>
+              <RBForm.Control.Feedback type="invalid">
+                {errors[phoneExtFieldName]}
+              </RBForm.Control.Feedback>
+            </RBForm.Group>
           </div>
         </div>
       </div>
-    </RBForm.Group>
+    </div>
   );
 };
 
