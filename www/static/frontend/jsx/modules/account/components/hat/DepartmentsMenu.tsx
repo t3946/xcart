@@ -43,6 +43,10 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     setCloseTimeOut(null);
   }
 
+  if (props.isVisible === false && selectedCategory !== null) {
+    setSelectedCategory(null);
+  }
+
   React.useEffect(function () {
     return () => {
       clearTimeout(closeTimeout);
