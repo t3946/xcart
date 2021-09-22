@@ -1,11 +1,15 @@
+{set $brand = $model->brand}
+{set $param_list = $model->getParamList()}
+{set $files = $model->files->all()}
+{set $is_option = $brand || $param_list || $files || $model->upc}
 <div class="row">
+    {if $is_option}
     <div class="column small-12 large-5 block">
 
         <div class="options">
             <div class="h2 title">{t 'Options'}</div>
             <div class="content">
 
-                {set $brand = $model->brand}
                 {if $brand}
                     {set $lbl}{t 'Brand'}{/set}
                     {include 'product/tabs/__option.tpl'
@@ -14,7 +18,7 @@
                     }
                 {/if}
 
-                {foreach $model->getParamList() as $item}
+                {foreach $param_list as $item}
                     {include 'product/tabs/__option.tpl'
                         title=$item.name
                         value=', '|implode:$item.values
@@ -29,7 +33,6 @@
                     }
                 {/if}
 
-                {set $files = $model->files->all()}
                 {if $files}
                     {foreach $files as $file}
                         {if $file->isFileExists()}
@@ -45,7 +48,8 @@
         </div>
 
     </div>
-    <div class="column small-12 large-7 block">
+    {/if}
+    <div class="column small-12 large-{$is_option ? 7 : 12} block">
 
         <div class="description">
             <div class="h2 title">{t 'Description'}</div>

@@ -238,7 +238,7 @@
                      data-hide-sort="true"
                      data-pager='{str_replace("'", '&#39;', json_encode($pager_data))}'
                      data-catalog-url="{$pager->createView()->getUrl(1)}"
-                     data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
+                     data-checkout-url="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}"
                      data-mode="group-product"
                      class="column groupped-products"
                      id="products">
