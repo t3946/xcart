@@ -99,7 +99,7 @@ class ApiCategoriesController extends AbstractCatalogController
         }
     }
 
-    public function getQS($data)
+    public function getQS($data = null)
     {
         return parent::getQS($data)
             ->filter(
