@@ -1,8 +1,4 @@
 import React from "react";
-import { Provider } from "react-redux";
-import MiniCartItems from "@client/jsx/components/MiniCart";
-import MiniCartInfo from "@client/jsx/modules/mini-cart/components/info";
-import storeCart from "@client/jsx/redux/stores/StoreCart";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,6 +10,8 @@ import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
+import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
+import HoverIntent from "react-hoverintent";
 
 const HatSearchLine = (): any => {
   const dispatch = useDispatch();
@@ -22,31 +20,8 @@ const HatSearchLine = (): any => {
     (e: AccountStore) => e.departmentsMenuDesktop.isVisible
   );
   const maxUsernameLength = 10;
-
-  function miniCartTemplate() {
-    const labels = {
-      lng_checkout: "Checkout",
-      lng_remove: "Remove",
-      lng_img: "Image not available",
-    };
-
-    return (
-      <div className="minicart mini-cart-container">
-        <Provider store={storeCart}>
-          <MiniCartItems
-            store={storeCart}
-            labels={labels}
-            checkoutUrl={appData.Cart.checkoutUrl}
-          />
-        </Provider>
-
-        <MiniCartInfo
-          quantity={appData.Cart.quantity}
-          url={route("cart:list")}
-        />
-      </div>
-    );
-  }
+  const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
+    React.useState(false);
 
   function searchTemplate() {
     return (
@@ -56,7 +31,7 @@ const HatSearchLine = (): any => {
           method="get"
           itemProp="potentialAction"
           itemScope
-          itemType="http://schema.org/SearchAction"
+          itemType="https://schema.org/SearchAction"
         >
           <div className={"pos-relative"}>
             <input
@@ -115,10 +90,6 @@ const HatSearchLine = (): any => {
     );
   }
 
-  function toggleDepartmentsMenu() {
-    isVisibleDepartmentsMenu ? closeDepartmentsMenu() : openDepartmentsMenu();
-  }
-
   function openDepartmentsMenu() {
     HideAllMenu(dispatch);
     dispatch(setVisibleShadowPanelAction(true));
@@ -129,6 +100,7 @@ const HatSearchLine = (): any => {
     HideAllMenu(dispatch);
     dispatch(setVisibleShadowPanelAction(false));
     dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
+    setDepartmentsMenuButtonHover(false);
   }
 
   React.useEffect(() => {
@@ -148,24 +120,40 @@ const HatSearchLine = (): any => {
           <DepartmentsMenu
             className={"search-line_departments-menu"}
             isVisible={isVisibleDepartmentsMenu}
+            buttonHover={departmentsMenuButtonHover}
             closeMenu={closeDepartmentsMenu}
           />
 
           <div className="container">
             <div className="row">
-              <div className="account-page-left-column col pe-0 d-none d-lg-block">
-                <div className="category-menu-container">
-                  <div
-                    className={classnames("category-menu category-menu__new", {
-                      "is-active": isVisibleDepartmentsMenu,
-                    })}
-                    onClick={toggleDepartmentsMenu}
-                  >
-                    <span className="menu-icon" />
-                    <span className="category-menu-title">Departments</span>
+              <HoverIntent
+                onMouseOver={() => {
+                  setDepartmentsMenuButtonHover(true);
+                  openDepartmentsMenu();
+                }}
+                onMouseOut={() => {
+                  setDepartmentsMenuButtonHover(false);
+                }}
+                sensitivity={10}
+                interval={250}
+                timeout={250}
+              >
+                <div className="account-page-left-column col pe-0 d-none d-lg-block">
+                  <div className="category-menu-container">
+                    <div
+                      className={classnames(
+                        "category-menu category-menu__new",
+                        {
+                          "is-active": isVisibleDepartmentsMenu,
+                        }
+                      )}
+                    >
+                      <span className="menu-icon" />
+                      <span className="category-menu-title">Departments</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </HoverIntent>
 
               <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
                 {searchTemplate()}
@@ -173,7 +161,9 @@ const HatSearchLine = (): any => {
                 <div className={"d-none d-lg-flex search-line_buttons"}>
                   <div className="">{accountButton()}</div>
 
-                  <div className="ms-12">{miniCartTemplate()}</div>
+                  <div className="ms-12">
+                    <MiniCart />
+                  </div>
                 </div>
               </div>
             </div>
@@ -183,4 +173,5 @@ const HatSearchLine = (): any => {
     </div>
   );
 };
+
 export default HatSearchLine;

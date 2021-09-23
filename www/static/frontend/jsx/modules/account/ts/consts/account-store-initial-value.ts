@@ -39,17 +39,6 @@ export const accountMobileAlert = {
   isVisible: false,
 };
 
-export const accountStoreInitialValue = {
-  main: accountMainStoreInitialValue,
-  addresses: accountAddressesInitialValue,
-  user: accountUserInitialValue,
-  payments: accountPaymentsStoreInitialValue,
-  mobileMenu: accountMenuInitialValue,
-  lists: accountListsInitialValue,
-  loginAndSecurity: accountLoginAndSecurityValue,
-  mobileAlert: accountMobileAlert,
-};
-
 export const shadowPanelInitialValue = {
   isVisible: false,
 };
@@ -67,3 +56,24 @@ export const departmentsMenuDesktop = {
 };
 
 export const TSV = appData?.tsv || null;
+
+export const cartInitialValue = appData.cart;
+
+export const miniCartInitialValue = {
+  isVisible: false,
+};
+
+const accountStoreInitialValue = {
+  main: accountMainStoreInitialValue,
+  addresses: accountAddressesInitialValue,
+  user: accountUserInitialValue,
+  payments: accountPaymentsStoreInitialValue,
+  mobileMenu: accountMenuInitialValue,
+  lists: accountListsInitialValue,
+  loginAndSecurity: accountLoginAndSecurityValue,
+  mobileAlert: accountMobileAlert,
+  cart: cartInitialValue,
+  miniCart: miniCartInitialValue,
+};
+
+export default accountStoreInitialValue;

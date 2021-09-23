@@ -318,6 +318,7 @@ $search_input_large_height: rem-calc(36);
     height: rem-calc(50);
     text-align: center;
     cursor: pointer;
+    transition: all 300ms ease-out;
 
     @include active-triangle(6px, 6px, $white, true, $dark_blue, is-active);
 

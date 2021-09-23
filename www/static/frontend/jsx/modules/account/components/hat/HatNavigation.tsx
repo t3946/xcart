@@ -6,9 +6,11 @@ import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actio
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { Link } from "react-router-dom";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
+  const cart = useSelector((e: AccountStore) => e.cart);
 
   const isVisibleMenu = useSelector(
     (e: AccountStore) => e.departmentsMenuMobile.isVisible
@@ -21,12 +23,36 @@ const HatNavigation = (): any => {
     dispatch(setVisibleShadowPanelAction(!isVisibleMenu));
   }
 
+  function mainMenuTemplate() {
+    const items = [];
+    const menu = appData.mainMenu;
+
+    for (let i = 0; i < menu.length; i++) {
+      const item = menu[i];
+
+      items.push(
+        <li className="main-menu_item">
+          <Link to={item.url} className={"main-menu-link"}>{item.name}</Link>
+        </li>
+      );
+    }
+    return (
+      <ul className="list-unstyled m-0 d-flex justify-content-between flex-grow-1">
+        {items}
+      </ul>
+    );
+  }
+
   return (
     <div id="top-header-content">
       <div id="top-header-menu">
         <TopLine />
 
-        <header id="top-header" itemScope itemType="http://schema.org/WPHeader">
+        <header
+          id="top-header"
+          itemScope
+          itemType="https://schema.org/WPHeader"
+        >
           <div
             dangerouslySetInnerHTML={{
               __html: appData.templates.renderStaticNotifications,
@@ -61,13 +87,8 @@ const HatNavigation = (): any => {
                 </div>
 
                 <div className="col-lg-9 d-lg-flex d-none justify-content-end">
-                  <div className="main-menu-wrap">
-                    <ul
-                      className="main-menu no-bullet show-for-medium"
-                      dangerouslySetInnerHTML={{
-                        __html: appData.templates.mainMenu,
-                      }}
-                    ></ul>
+                  <div className="main-menu-wrapper d-flex align-items-center justify-content-end">
+                    {mainMenuTemplate()}
                   </div>
                 </div>
 
@@ -98,7 +119,7 @@ const HatNavigation = (): any => {
                       >
                         <span className="count">
                           <span className="mc_count">
-                            {appData.Cart.quantity}
+                            {cart.quantity}
                           </span>
                         </span>
                       </a>

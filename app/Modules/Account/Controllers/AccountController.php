@@ -10,6 +10,7 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
+use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
@@ -69,11 +70,14 @@ class AccountController extends FrontendController
     public function actionIndex()
     {
         $user = Xcart::app()->auth->getUser(true);
+
         if (!$user->getIsGuest()) {
             StorageHelper::push($user->toArray(), null, 'user');
         }
 
         $site = Xcart::app()->getModule('Sites')->getSite();
+
+        StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
 
         StorageHelper::push([
             "code" => strtolower($site->code),
@@ -84,7 +88,7 @@ class AccountController extends FrontendController
         StorageHelper::push([
             "quantity" => Xcart::app()->cart->getQuantity(),
             "checkoutUrl" => OrderHelper::getCheckoutUrl(),
-        ], null, 'Cart');
+        ], null, 'cart');
 
         $config = $site->getConfig();
 
@@ -112,7 +116,6 @@ class AccountController extends FrontendController
         $this->generateQrCode();
 
         AdminHelper::routesData();
-
 
         $this->display('account/base.tpl');
     }

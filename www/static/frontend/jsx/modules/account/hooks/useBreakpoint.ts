@@ -6,7 +6,7 @@ function resizeHandler() {
   accountStore.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
 }
 
-export default function useBreakpoint(): (actions: ActionsInterface) => void {
+export default function useBreakpoint(): (actions: ActionsInterface) => any {
   window.removeEventListener("resize", resizeHandler);
   window.addEventListener("resize", resizeHandler);
 

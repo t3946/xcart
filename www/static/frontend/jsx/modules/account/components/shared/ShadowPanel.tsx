@@ -23,12 +23,19 @@ const ShadowPanel = (): any => {
     topHeader && topHeader.classList.remove("header__shadow-panel-visible");
   }
 
+  const transitionFadeStyles = {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: 2,
+  };
+
   return (
-    <div>
-      <TransitionFade show={isVisible}>
-        <div className={"shadow-panel"} onClick={clickHandler} />
-      </TransitionFade>
-    </div>
+    <TransitionFade show={isVisible} styles={transitionFadeStyles}>
+      <div className={"shadow-panel"} onClick={clickHandler} />
+    </TransitionFade>
   );
 };
 

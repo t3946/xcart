@@ -1,8 +1,9 @@
-import { h, Component, render } from "preact";
+import { Component } from "preact";
 import map from "lodash/map";
 import Price from "@/components/product/card/components/Price";
+import classnames from "classnames";
 
-class MiniCart extends Component {
+class MiniCartItems extends Component {
   constructor(props, state) {
     super(props, state);
     this.changes = {};
@@ -68,7 +69,7 @@ class MiniCart extends Component {
 
     return (
       <div className="not-avail">
-        <span className="text">{props.labels.img}</span>
+        <span className="text">Image not available</span>
       </div>
     );
   }
@@ -141,7 +142,7 @@ class MiniCart extends Component {
               onClick={(e) => {
                 this.handleRemove(e, key, item);
               }}
-              title={props.labels.lng_remove}
+              title={"Remove"}
             ></a>
           </div>
         </div>
@@ -153,7 +154,7 @@ class MiniCart extends Component {
 
   render(props, state) {
     return (
-      <div className="minicart-items">
+      <div className={classnames("minicart-items", props.classes?.items)}>
         <div
           className="product-list"
           ref={(product_list) => {
@@ -162,12 +163,13 @@ class MiniCart extends Component {
         >
           {this.renderProducts(props, state)}
         </div>
+
         <div className="buttons">
           <a
             href={props.checkoutUrl}
             className="button yellow waves waves-orange"
           >
-            {props.labels.lng_checkout}
+            {"Checkout"}
           </a>
         </div>
       </div>
@@ -175,4 +177,4 @@ class MiniCart extends Component {
   }
 }
 
-export default MiniCart;
+export default MiniCartItems;

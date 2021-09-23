@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, createStore, Store } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
-import { accountStoreInitialValue } from "../../modules/account/ts/consts/account-store-initial-value";
+import accountStoreInitialValue from "../../modules/account/ts/consts/account-store-initial-value";
 import { AccountStore } from "../../modules/account/ts/types/account-store.type";
 import accountRootSaga from "../sagas/account-sagas/MainSaga";
 import accountMainReducer from "../reduсers/account/MainReduсer";
@@ -18,6 +18,8 @@ import DepartmentsMenuMobileReducer from "@client/jsx/redux/reduсers/account/De
 import DepartmentsMenuDesktopReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuDesktopReducer";
 import LoginAndSecurityReducer from "@client/jsx/redux/reduсers/account/LoginAndSecurityReducer";
 import MobileAlertReducer from "@client/jsx/redux/reduсers/account/MobileAlertReducer";
+import CartReducer from "@client/jsx/redux/reduсers/CartReducer";
+import MiniCartReducer from "@client/jsx/redux/reduсers/MiniCartReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -37,6 +39,8 @@ export const accountStore: Store<AccountStore> = createStore(
     departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
     loginAndSecurity: LoginAndSecurityReducer,
     mobileAlert: MobileAlertReducer,
+    cart: CartReducer,
+    miniCart: MiniCartReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))
