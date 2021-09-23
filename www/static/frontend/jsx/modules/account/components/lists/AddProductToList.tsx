@@ -3,9 +3,13 @@ import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/
 
 interface AddProductToListProps {
   info: any;
+  onCancelClick: () => void;
 }
 
-export const AddProductToList: React.FC<AddProductToListProps> = ({ info }) => {
+export const AddProductToList: React.FC<AddProductToListProps> = ({
+  info,
+  onCancelClick,
+}) => {
   return (
     <div>
       <div className="add-product-to-list-label-container d-flex">
@@ -27,9 +31,7 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({ info }) => {
         cancelText="View Your List"
         cancelAdvancedClasses="add-product-to-list-btn"
         submitAdvancedClasses="add-product-to-list-btn"
-        onCancel={() => {
-          console.log(1);
-        }}
+        onCancel={onCancelClick}
         groupAdvancedClasses={"add-product-to-list-btns"}
         onConfirm={null}
       />

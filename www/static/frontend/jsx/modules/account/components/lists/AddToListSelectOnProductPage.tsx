@@ -154,7 +154,10 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
           title={"Add to list"}
           onClose={addProductDialog.handleClose}
         >
-          <AddProductToList info={selectedList} />
+          <AddProductToList
+            onCancelClick={addProductDialog.handleClose}
+            info={selectedList}
+          />
         </BootstrapDialogHOC>
       </Grid>
     );
