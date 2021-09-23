@@ -93,7 +93,7 @@ export const AccountRouters = (): any => {
   }
 
   return (
-    <Provider store={accountStore as any}>
+    <>
       <ShadowPanel />
       <Snackbar>
         <BrowserRouter>
@@ -247,6 +247,6 @@ export const AccountRouters = (): any => {
           </div>
         </BrowserRouter>
       </Snackbar>
-    </Provider>
+    </>
   );
 };

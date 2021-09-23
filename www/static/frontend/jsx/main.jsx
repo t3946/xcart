@@ -4,6 +4,7 @@ import "@/js/main";
 import "preact/debug";
 import "./_head.jsx";
 import "./_binds/pages/account";
+import "./_binds/TopHeaderContentBind";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";

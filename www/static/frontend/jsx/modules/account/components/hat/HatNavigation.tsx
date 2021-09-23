@@ -132,6 +132,11 @@ const HatNavigation = (): any => {
           </div>
         </header>
       </div>
+<<<<<<< Updated upstream
+=======
+
+      <div className="shadow" />
+>>>>>>> Stashed changes
     </div>
   );
 };
