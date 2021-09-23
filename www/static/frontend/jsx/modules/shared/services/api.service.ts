@@ -15,24 +15,24 @@ export class ApiService {
     return response.json();
   }
 
-  async post(url: string, data: BodyInit): Promise<any> {
+  async post(
+    url: string,
+    data: BodyInit,
+    headers: Record<any, any> = {
+      "Content-Type": "application/json",
+    }
+  ): Promise<any> {
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
       credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       redirect: "follow",
       referrerPolicy: "no-referrer",
       body: data,
     });
 
-    try {
-      return response.json();
-    } catch (e) {
-      return null;
-    }
+    return response.json();
   }
 }
