@@ -15,6 +15,7 @@ interface PropsInterfaced {
   groupAdvancedClasses?: any;
 
   onCancel?: () => void;
+  onConfirm?: () => void;
 }
 
 const SubmitCancelButtonsGroup: React.FC<PropsInterfaced> = function ({
@@ -28,6 +29,7 @@ const SubmitCancelButtonsGroup: React.FC<PropsInterfaced> = function ({
   buttonAdvancedClasses,
   groupAdvancedClasses,
   onCancel,
+  onConfirm,
 }) {
   const classes = {
     submitButton: ["form-button", submitAdvancedClasses, buttonAdvancedClasses],
@@ -58,6 +60,7 @@ const SubmitCancelButtonsGroup: React.FC<PropsInterfaced> = function ({
         className={classnames(classes.submitButton)}
         type={"submit"}
         disabled={submitDisabled}
+        onClick={onConfirm}
       >
         {submitText || "submit"}
       </button>

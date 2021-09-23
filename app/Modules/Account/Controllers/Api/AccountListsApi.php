@@ -203,6 +203,7 @@ class AccountListsApi extends FrontendController
             ListItemsModel::objects()->create(['product_id' => $response_data['productId'],
                 'product_list_id' => $response_data['listId'], 'product_type' => 'product']);
             $this->jsonResponse(['product added successfully']);
+            return;
         }
         $idea_model = new ListIdeaModel(['name' => $response_data['name']]);
         $idea_model->save();

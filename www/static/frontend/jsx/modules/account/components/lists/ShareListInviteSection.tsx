@@ -18,7 +18,7 @@ export const ShareListInviteSection = ({ onCopyLinkFunc }) => {
         id={"radio-item-view"}
         viewValue={
           <div>
-            <b>Viewer</b>
+            <div className="share-list-radio-title">Viewer</div>
             <div className="share-list-radio-subtitle">
               Anyone with a link can view your list without making edits
             </div>
@@ -36,7 +36,7 @@ export const ShareListInviteSection = ({ onCopyLinkFunc }) => {
         id={"radio-item-edit"}
         viewValue={
           <div>
-            <b>Edit</b>
+            <div className="share-list-radio-title">Editor</div>
             <div className="share-list-radio-subtitle">
               Invited people can add or remove items from your list
             </div>

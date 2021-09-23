@@ -1,7 +1,6 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
-import { ManageList } from "@client/modules/account/components/lists/ManageList";
 import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
 
 interface ManageListPageURLParams {
@@ -13,9 +12,13 @@ export const DeleteListPage: React.FC = () => {
 
   const history = useHistory();
 
-  const list = accountStore
-    .getState()
-    .lists.lists.find((e) => e.cache_url === params.listHash);
+  const lists = accountStore.getState().lists.lists;
+
+  if (!lists) {
+    history.push("/account/your-lists/");
+  }
+
+  const list = lists.find((e) => e.cache_url === params.listHash);
 
   const onCancelClick = () => {
     history.push(`/account/your-lists/${list.cache_url}`);
@@ -25,7 +28,7 @@ export const DeleteListPage: React.FC = () => {
 
   return (
     <div>
-      <div className="page-label">Manage list</div>
+      <div className="page-label">Delete list</div>
       <DeleteList info={list} onCancelClick={onCancelClick} />
     </div>
   );

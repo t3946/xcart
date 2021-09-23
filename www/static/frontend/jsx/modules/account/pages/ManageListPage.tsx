@@ -12,9 +12,14 @@ export const ManageListPage: React.FC = () => {
 
   const history = useHistory();
 
-  const list = accountStore
-    .getState()
-    .lists.lists.find((e) => e.cache_url === params.listHash);
+  const lists = accountStore.getState().lists.lists;
+
+  if (!lists) {
+    history.push(`/account/your-lists/${params.listHash}`);
+    return;
+  }
+
+  const list = lists.find((e) => e.cache_url === params.listHash);
 
   const onCancelClick = () => {
     history.push(`/account/your-lists/${list.cache_url}`);

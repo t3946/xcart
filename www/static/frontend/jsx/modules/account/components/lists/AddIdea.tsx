@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button } from "@material-ui/core";
 import {
   addProduct,
   setLists,
@@ -11,17 +10,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const AddIdea = ({ onCancelBtnClick, listHash }) => {
   const dispatch = useDispatch();
+
+  const { showSnackbar } = useContext(SnackbarContext);
+
   const listId = accountStore
     .getState()
     .lists.lists.find((e) => e.cache_url === listHash).product_list_id;
+
   const handleSubmit = () => {
     dispatch(addProduct(listId, null, formik.values.name, onAddingEnd));
   };
-
-  const { showSnackbar } = useContext(SnackbarContext);
 
   const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
 
@@ -69,23 +71,14 @@ export const AddIdea = ({ onCancelBtnClick, listHash }) => {
           touched={formik.touched.name}
           value={formik.values.name}
         />
-
         <p>Save an idea. Shop for it later.</p>
-        <div className="list-dialog-btns">
-          <Button
-            disabled={listLoading}
-            type={"submit"}
-            className="account-submit-btn auto-width-button cancel-edit-card-btn"
-          >
-            Confirm
-          </Button>
-          <Button
-            disabled={listLoading}
-            className="account-submit-btn account-submit-btn-outline auto-width-button "
-          >
-            Cancel
-          </Button>
-        </div>
+        <SubmitCancelButtonsGroup
+          submitText="Confirm"
+          cancelText="Cancel"
+          onCancel={onCancelBtnClick}
+          groupAdvancedClasses={"manage-list-btns"}
+          disabled={listLoading}
+        />
       </form>
     </div>
   );

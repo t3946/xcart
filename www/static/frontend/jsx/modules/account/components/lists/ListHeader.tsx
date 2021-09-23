@@ -27,8 +27,6 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   edit,
   info,
 }) => {
-  const dispatch = useDispatch();
-
   const shareDialog = useDialog();
 
   const manageListDialog = useDialog();
@@ -39,18 +37,16 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
 
   const history = useHistory();
 
-  const { showSnackbar } = useContext(SnackbarContext);
-
-  const handleDeleteList = () => {
-    history.push("/account/your-lists");
-    dispatch(deleteList(listId, onRequestEnd));
-  };
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
       onClick: () =>
         history.push(`/account/your-lists/manage-list/${info.cache_url}`),
+    },
+    {
+      label: "Add idea",
+      onClick: () =>
+        history.push(`/account/your-lists/add-idea/${info.cache_url}`),
     },
     {
       label: "Share list with others",
@@ -59,16 +55,10 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
     },
     {
       label: "Delete list",
+      onClick: () =>
+        history.push(`/account/your-lists/${info.cache_url}/delete-list`),
     },
   ];
-
-  const onRequestEnd = () => {
-    showSnackbar({
-      header: "Success",
-      message: `${label} list deleted successfully`,
-      theme: "success",
-    });
-  };
 
   return (
     <div className="list-header-container">
@@ -127,10 +117,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         title={"Confirm delete list"}
         onClose={deleteListDialog.handleClose}
       >
-        <DeleteList
-          confirmDelete={handleDeleteList}
-          onCancelClick={deleteListDialog.handleClose}
-        />
+        <DeleteList info={info} onCancelClick={deleteListDialog.handleClose} />
       </BootstrapDialogHOC>
       <MobileMenuForList
         items={mobileDialogItems}

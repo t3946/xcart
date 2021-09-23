@@ -1,5 +1,11 @@
-export function getValuesForSelect(mass, value, viewValue) {
-  return mass.map((e) => {
+import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+
+export function getValuesForSelect<A, T>(
+  mass,
+  value,
+  viewValue
+): SelectValue<A, T>[] {
+  return mass?.map((e) => {
     return {
       value: e[value],
       viewValue: e[viewValue],

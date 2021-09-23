@@ -45,6 +45,9 @@ import AlertMobile from "@client/modules/account/components/shared/AlertMobile";
 import { EditInfoInListProductPage } from "@client/modules/account/pages/EditInfoInListProductPage";
 import { ManageListPage } from "@client/modules/account/pages/ManageListPage";
 import { ShareListPage } from "@client/modules/account/pages/ShareListPage";
+import { DeleteListPage } from "@client/modules/account/pages/DeleteListPage";
+import { AddListPage } from "@client/modules/account/pages/AddListPage";
+import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -150,7 +153,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path="/account/your-lists/edit-list-product-info/:listId/:productId"
+                  path="/account/your-lists/edit-list-product-info/:listHash/:productId"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
                     <EditInfoInListProductPage />
@@ -170,6 +173,30 @@ export const AccountRouters = (): any => {
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
                     <ShareListPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/:listHash/delete-list"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <DeleteListPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/add-list"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <AddListPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/add-idea/:listHash"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <AddIdeaPage />
                   )}
                 />
                 <Route

@@ -5,9 +5,10 @@
     color: #000000;
     position: relative;
 
-    @include breakpoint(md up) {
+    @include breakpoint(xs up) {
         font-size: rem-calc(18);
         line-height: rem-calc(25);
+        margin-bottom: rem-calc(10);
     }
 
     @include breakpoint(lg up) {

@@ -184,3 +184,6 @@
 
     </div>
 {/block}
+{block "noindex"}
+    <link rel="stylesheet" href="/static/frontend/dist/css/bootstrap.min.css#{mt_rand(0, 1000)}">
+{/block}

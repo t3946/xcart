@@ -5,6 +5,7 @@ import { acceptInvite } from "@client/jsx/redux/actions/account-actions/ListsAct
 import { useHistory } from "react-router";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { viewUserListRight } from "@client/modules/account/utils/view-user-list-right";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const InvitationPage = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,10 @@ export const InvitationPage = () => {
 
   const editProfile = () => {
     history.push("/account/public-profile");
+  };
+
+  const onCancelClick = () => {
+    history.push("/account/");
   };
 
   const user = useSelector((e: AccountStore) => e.user);
@@ -48,7 +53,7 @@ export const InvitationPage = () => {
         <b>{viewUserListRight(appDataWindow.appData.invite_data.type)}</b>
       </div>
       <div className="page-invitation-user-profile-container">
-        <div className="d-flex align-content-center">
+        <div className="page-invitation-user-profile">
           <img
             src="/static/frontend/images/pages/account/default-avatar.svg"
             className="page-invitation-user-profile-avatar"
@@ -65,22 +70,15 @@ export const InvitationPage = () => {
           EDIT
         </Button>
       </div>
-      <div className="page-invitation-btns">
-        <Button
-          onClick={onAcceptClick}
-          disabled={loading}
-          className="account-submit-btn auto-width-button accept-list-btn"
-        >
-          accept and join the list
-        </Button>
-        <Button
-          disabled={loading}
-          onClick={editProfile}
-          className="account-submit-btn account-submit-btn-outline auto-width-button"
-        >
-          Cancel
-        </Button>
-      </div>
+      <SubmitCancelButtonsGroup
+        submitText="accept and join the list"
+        cancelText="Cancel"
+        onCancel={onCancelClick}
+        groupAdvancedClasses={["accept-invite-btn-group"]}
+        cancelAdvancedClasses={"accept-invite-btn-group-cancel"}
+        onConfirm={onAcceptClick}
+        disabled={loading}
+      />
     </div>
   );
 };

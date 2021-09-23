@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { useHistory } from "react-router";
+import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 interface CreateNewListProps {
   onCancelBtnClick: () => void;
@@ -76,21 +77,29 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
             </div>
           }
         />
-        <div className="list-dialog-btns">
-          <Button
-            disabled={listLoading}
-            type={"submit"}
-            className="account-submit-btn auto-width-button cancel-edit-card-btn"
-          >
-            Confirm
-          </Button>
-          <Button
-            disabled={listLoading}
-            className="account-submit-btn account-submit-btn-outline auto-width-button "
-          >
-            Cancel
-          </Button>
-        </div>
+        {/*<div className="list-dialog-btns">*/}
+        {/*  <Button*/}
+        {/*    disabled={listLoading}*/}
+        {/*    type={"submit"}*/}
+        {/*    className="account-submit-btn auto-width-button cancel-edit-card-btn"*/}
+        {/*  >*/}
+        {/*    Confirm*/}
+        {/*  </Button>*/}
+        {/*  <Button*/}
+        {/*    onClick={onCancelBtnClick}*/}
+        {/*    disabled={listLoading}*/}
+        {/*    className="account-submit-btn account-submit-btn-outline auto-width-button "*/}
+        {/*  >*/}
+        {/*    Cancel*/}
+        {/*  </Button>*/}
+        {/*</div>*/}
+        <SubmitCancelButtonsGroup
+          submitText="Confirm"
+          cancelText="Cancel"
+          onCancel={onCancelBtnClick}
+          groupAdvancedClasses={"manage-list-btns"}
+          disabled={listLoading}
+        />
       </form>
     </div>
   );

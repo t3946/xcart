@@ -5,7 +5,7 @@ import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 
 interface EditInfoInListProductPageURLParams {
   productId: string;
-  listId: string;
+  listHash: string;
 }
 
 export const EditInfoInListProductPage: React.FC = () => {
@@ -13,9 +13,13 @@ export const EditInfoInListProductPage: React.FC = () => {
 
   const history = useHistory();
 
-  const list = accountStore
-    .getState()
-    .lists.lists.find((e) => e.product_list_id === params.listId);
+  const lists = accountStore.getState().lists.lists;
+
+  if (!lists) {
+    history.push(`/account/your-lists/${params.listHash}`);
+  }
+
+  const list = lists.find((e) => e.cache_url === params.listHash);
 
   const product = list.products.find(
     (product) => product.product_id === params.productId
@@ -31,7 +35,7 @@ export const EditInfoInListProductPage: React.FC = () => {
       <EditComment
         info={product}
         productId={params.productId}
-        listId={params.listId}
+        listId={list.product_list_id}
         onCloseClick={onCloseClick}
       />
     </div>

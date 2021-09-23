@@ -17,7 +17,7 @@ const getUser = () => {
 
 function* getLists(): Generator {
   const result: any = yield api
-    .post<any>(`/account/api/lists/get-lists`, getUser().id)
+    .get<any>(`/account/api/lists/get-lists`)
     .then((response) => response);
 
   yield put({

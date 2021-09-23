@@ -15,7 +15,7 @@ export const ListProductIdeaItem = ({
   drag,
   reorderProductList,
   index,
-  listId,
+  listInfo,
   deleteItem,
   edit,
   onMoveClick,
@@ -35,7 +35,7 @@ export const ListProductIdeaItem = ({
       label: "Add comment, quantity & priority",
       onClick: () => {
         history.push(
-          `/account/your-lists/edit-list-product-info/${listId}/${info.product_id}`
+          `/account/your-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
         );
       },
     },
@@ -70,7 +70,7 @@ export const ListProductIdeaItem = ({
         <div className="product-list-item-info">
           <EditIdea
             openMenuDialog={mobileMenuDialog.handleClickOpen}
-            listId={listId}
+            listId={listInfo.product_list_id}
             info={info}
           />
 
@@ -110,7 +110,7 @@ export const ListProductIdeaItem = ({
       >
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
-          listId={listId}
+          listId={listInfo.product_list_id}
           productId={info.product_id}
           info={info}
         />

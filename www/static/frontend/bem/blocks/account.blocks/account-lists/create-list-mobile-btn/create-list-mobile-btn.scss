@@ -1,0 +1,20 @@
+.create-list-btn-container-mobile{
+  justify-content: center !important;
+  box-shadow: 0px 0px rem-calc(4) rgba(0, 0, 0, 0.25);
+  border-radius: rem-calc(4);
+  background-color: #FFFFFF;
+  margin-bottom: rem-calc(20);
+  align-items: center;
+  width: 100%;
+  display: flex;
+  padding: rem-calc(18) rem-calc(25);
+  cursor: pointer;
+  transition: .2s ease-out;
+}
+
+.create-list-label-mobile{
+  font-size: rem-calc(22);
+  font-weight: 700;
+  color:   #055A93;
+  margin-left: rem-calc(20);
+}

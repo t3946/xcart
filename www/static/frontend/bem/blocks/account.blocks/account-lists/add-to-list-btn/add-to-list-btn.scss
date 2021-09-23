@@ -1,0 +1,89 @@
+.add-to-list-header{
+  padding: 13px 0 13px 13px;
+  border-radius: 4px;
+  border: 2px solid #FFB400;
+  background: #FFFFFF;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:after{
+    right: rem-calc(18);
+  }
+}
+
+.add-to-list-label{
+  font-size: 18px;
+  font-weight: 700;
+  width: inherit;
+  display: flex;
+  justify-content: center;
+}
+
+.product-page-add-to-list-btn{
+  width: 50%;
+  margin-left: 10px;
+}
+
+.add-to-list-arrow-block{
+  width: 63px;
+  height: 46px;
+  border-left: 2px solid #ffb400;
+  background-color: #FFF1CF;
+}
+
+.add-to-list-select-item{
+  display: flex;
+  align-items: center;
+  transition: .3s all;
+  padding: 5px 20px;
+  height: 100% !important;
+}
+
+.add-to-list-select-list{
+  top: rem-calc(47) !important;
+  z-index: -1;
+  max-height: 320px;
+  overflow-y: hidden !important;
+}
+
+.add-to-list-select-list::-webkit-scrollbar {
+  width: 7px;
+  background-color: #F8F9FA;
+  padding: 5px;
+}
+
+.add-to-list-select-list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #D9D9D9;
+}
+
+.form-select-item-label{
+  font-size: 16px;
+}
+
+.form-select-item-img{
+  width: 44px;
+  height: 44px;
+  margin-right: 30px;
+}
+
+.add-to-list-create-list{
+  justify-content: center !important;
+  border: 0 !important;
+  margin-top: 0 !important;
+  border-top: 1px solid #c4c4c4 !important;
+  display: none;
+}
+
+.add-to-list-select-list-items{
+  max-height: 270px;
+  overflow-y: auto;
+  scrollbar-color: dark;
+  scrollbar-width: thin;
+}
+
+.add-to-list-create-list-cross{
+  margin-right: 28px;
+}

@@ -35,3 +35,49 @@
   margin-top: 25px;
   margin-left: 30px;
 }
+
+.accept-invite-btn-group{
+  display: flex;
+  width: 50%;
+  margin-top: 25px;
+}
+
+.accept-invite-btn-group-cancel{
+  width: fit-content !important;
+}
+
+.page-invitation-user-profile{
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 1400px) {
+  .accept-invite-btn-group{
+    width: 65%;
+  }
+}
+
+@media (max-width: 768px) {
+  .accept-invite-btn-group{
+    display: block;
+    width: 100%;
+  }
+
+  .accept-invite-btn-group-cancel{
+    width: 100% !important;
+  }
+
+  .page-invitation-user-profile-container{
+    flex-direction: column;
+  }
+
+  .page-invitation-user-profile{
+    flex-direction: column;
+  }
+
+  .page-invitation-user-profile-avatar{
+    margin-right: 0;
+    width: 52px;
+    height: 52px;
+  }
+}

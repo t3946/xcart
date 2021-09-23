@@ -152,7 +152,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                                       drag={{ ...provided.dragHandleProps }}
                                       info={e}
                                       reorderProductList={reorderProductList}
-                                      listId={info.product_list_id}
+                                      listInfo={info}
                                       edit={edit}
                                       onMoveClick={(value) =>
                                         onMoveClick(
@@ -173,7 +173,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                 </Draggable>
               ))
             ) : (
-              <NoItemsBlock />
+              <NoItemsBlock listInfo={info} />
             )}
             {provided.placeholder}
           </div>

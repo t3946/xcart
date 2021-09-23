@@ -9,7 +9,7 @@
 
 .share-variants-label{
   color: #055A93;
-cursor: pointer;
+  cursor: pointer;
 
   &:hover{
     text-decoration: underline;
@@ -38,6 +38,10 @@ cursor: pointer;
   color: #787878;
 }
 
+.share-list-radio-title{
+  font-weight: 700;
+}
+
 .share-list-center-line{
   color: #C4C4C4;
   margin: 16px 0;
@@ -50,4 +54,21 @@ cursor: pointer;
 .share-variants-logo-container{
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .share-list-radio{
+    margin-bottom: rem-calc(-1);
+    border: rem-calc(1) solid #C4C4C4;
+    padding: rem-calc(15) rem-calc(10);
+  }
+
+  .share-variants-container{
+    margin-top: rem-calc(20);
+  }
+
+  .share-list-radio-title{
+    font-weight: 400;
+    margin-bottom: rem-calc(5);
+  }
 }

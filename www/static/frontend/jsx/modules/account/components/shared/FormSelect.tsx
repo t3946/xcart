@@ -52,7 +52,7 @@ export const FormSelect = ({
           id={id}
           className={classnames(classes?.selectHeader, "form-select-head")}
         >
-          {selectedItem.previewValue || selectedItem.viewValue}
+          {selectedItem?.previewValue || selectedItem?.viewValue}
         </div>
         {open && (
           <ul className={classnames("form-select-list", classes?.selectList)}>
