@@ -50,7 +50,7 @@
                      data-sorting-options='{str_replace("'", '&#39;', json_encode($sort_arr))}'
                      data-current-sorting-key="{$sort}"
                      data-hide-sort="{$hide_sort}"
-                     data-checkout-url="{Modules\Order\Helpers\OrderHelper::getCheckoutUrl()}"
+                     data-checkout-url="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}"
                      data-search-text="{$q|escape}"
                 >
                     {*скелеты*}

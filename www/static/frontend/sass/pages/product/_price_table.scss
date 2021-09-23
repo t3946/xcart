@@ -90,6 +90,7 @@
         }
 
         @include bem_modifier(down) {
+          padding-bottom: 10px;
           display: flex;
           flex-direction: column;
           border: none;
@@ -274,15 +275,15 @@
 }
 
 .product-quantity-extended-price {
-    font-size: rem-calc(22);
-    line-height: rem-calc(22);
-    display: flex;
-    justify-content: center;
+  font-size: rem-calc(22);
+  line-height: rem-calc(22);
+  display: flex;
+  justify-content: center;
 
-    @include breakpoint(sm down) {
-      font-size: rem-calc(20);
-      line-height: rem-calc(20);
-    }
+  @include breakpoint(sm down) {
+    font-size: rem-calc(20);
+    line-height: rem-calc(20);
+  }
 }
 
 .discount-percent {
