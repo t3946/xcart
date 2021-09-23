@@ -97,20 +97,16 @@ import _ from "lodash";
       e.preventDefault();
 
       let params = getValues(e);
+      const isAdd = !!params.$this.closest(".quantity-group-btn_inc").length;
+      const step = params.$input.attr("step");
 
       // do inc
-      if (
-        params.$this.closest(".quantity-group-btn_inc").length &&
-        params.val < params.max
-      ) {
-        params.val += parseInt(params.$input.attr("step"));
+      if (isAdd && params.val < params.max) {
+        params.val += parseInt(step - (params.val % step));
       }
       // do dec
-      else if (
-        params.$this.closest(".quantity-group-btn_dec").length &&
-        params.val > params.min
-      ) {
-        params.val -= parseInt(params.$input.attr("step"));
+      else if (!isAdd && params.val > params.min) {
+        params.val -= parseInt(params.val % step);
       }
       // do nothing
       else {
