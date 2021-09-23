@@ -63,6 +63,10 @@ export const miniCartInitialValue = {
   isVisible: false,
 };
 
+export const publicProfileInitialValue = {
+  alert: null,
+};
+
 const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -74,6 +78,7 @@ const accountStoreInitialValue = {
   mobileAlert: accountMobileAlert,
   cart: cartInitialValue,
   miniCart: miniCartInitialValue,
+  publicProfile: publicProfileInitialValue,
 };
 
 export default accountStoreInitialValue;
