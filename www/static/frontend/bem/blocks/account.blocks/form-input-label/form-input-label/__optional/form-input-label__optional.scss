@@ -5,5 +5,9 @@
         font-size: rem-calc(12);
         font-weight: normal;
         text-transform: none;
+
+        @include breakpoint(md up) {
+            font-size: rem-calc(14);
+        }
     }
 }

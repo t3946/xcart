@@ -162,7 +162,7 @@ const PublicProfile = (): any => {
                         }
                       >
                         This is required but can be different to the name
-                        associated with your account {user.name}
+                        associated with your account ({user.name})
                       </RBForm.Text>
                     </div>
 
@@ -185,7 +185,7 @@ const PublicProfile = (): any => {
 
                   <RBForm.Group
                     controlId="PublicProfileFormLocation"
-                    className={"row mt-20 mt-md-12 mt-lg-10"}
+                    className={"row mt-20 mt-md-4 mt-lg-10"}
                   >
                     <div className="col-12 col-md-6 col-lg-6 text-md-end text-lg-start">
                       <RBForm.Label
@@ -216,7 +216,7 @@ const PublicProfile = (): any => {
 
                   <RBForm.Group
                     controlId="avatar_image"
-                    className="mb-3 mt-md-4 row"
+                    className="mt-md-4 row"
                   >
                     <div className="d-block d-md-none d-lg-flex col-12 col-lg-6 align-items-center">
                       <RBForm.Label
@@ -310,7 +310,7 @@ const PublicProfile = (): any => {
               </div>
 
               <div className="account-page-footer">
-                <div className="text-md-center text-lg-start d-md-flex">
+                <div className="justify-content-center text-lg-start d-md-flex">
                   <button
                     type="submit"
                     className="form-button public-profile-footer-button mb-14 mb-md-0"
