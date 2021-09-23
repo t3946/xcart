@@ -24,12 +24,12 @@ const PublicProfile = (): any => {
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
     "/static/frontend/images/pages/account/default-avatar.svg";
-  const [removeAvatar, setRemoveAvatar] = React.useState(false);
+  const [isRemoveAvatar, setIsRemoveAvatar] = React.useState(false);
 
   const initialValues = {
     publicName: user.public_name,
     location: user.location,
-    avatar_image: null,
+    avatar_image: "",
   };
 
   const validationSchema = yup.object().shape({
@@ -60,6 +60,7 @@ const PublicProfile = (): any => {
   });
 
   const inputFileRef = React.useRef<HTMLInputElement>();
+  const imageRef = React.useRef<HTMLImageElement>();
 
   function submit(values, actions) {
     const formData = new FormData();
@@ -67,7 +68,7 @@ const PublicProfile = (): any => {
 
     formData.append("PublicProfileForm[public_name]", values.publicName);
     formData.append("PublicProfileForm[location]", values.location);
-    formData.append("remove_avatar", removeAvatar.toString());
+    formData.append("remove_avatar", isRemoveAvatar.toString());
 
     if (fileInput.files[0]) {
       formData.append("PublicProfileForm[avatar_image]", fileInput.files[0]);
@@ -96,38 +97,73 @@ const PublicProfile = (): any => {
     );
   }
 
-  function showSelectedImage() {
-    const img = document.getElementsByClassName(
-      "public-profile-avatar-image"
-    )[0];
-    const avatar_image: Record<any, any> =
-      document.getElementById("avatar_image");
-    const file = avatar_image.files[0];
-
-    setRemoveAvatar(false);
-
-    img.setAttribute("src", URL.createObjectURL(file));
-  }
-
-  function avatarImageUrl(): string {
-    if (removeAvatar === true) {
+  /**
+   * get current selected image url
+   */
+  function getAvatarUrl(values): string {
+    if (isRemoveAvatar === true) {
       return DEFAULT_AVATAR_IMAGE;
     }
 
-    return user.avatar_image || DEFAULT_AVATAR_IMAGE;
+    return values.avatar_image || user.avatar_image || DEFAULT_AVATAR_IMAGE;
   }
 
   return (
-    <InnerPage
-      header={"Public Profile"}
-      bodyClasses={"p-0"}
-    >
+    <InnerPage header={"Public Profile"} bodyClasses={"p-0"}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {function ({ isSubmitting, values, errors, touched, handleChange }) {
+        {function ({
+          isSubmitting,
+          values,
+          errors,
+          touched,
+          handleChange,
+          setValues,
+        }) {
+          function removeAvatarButtonTemplate() {
+            return (
+              <div
+                className={classnames(classes.removeAvatarButton)}
+                onClick={() => {
+                  setIsRemoveAvatar(true);
+                  setValues({ avatar_image: "" });
+                }}
+              >
+                <TimesLightIcon className="remove-avatar-icon" />
+              </div>
+            );
+          }
+
+          function avatarInputChangeHandler(e) {
+            handleChange(e);
+
+            const file = inputFileRef.current.files[0];
+            const fr = new FileReader();
+
+            fr.onload = () => {
+              if (typeof fr.result === "string") {
+                imageRef.current.src = fr.result;
+                setIsRemoveAvatar(false);
+              }
+            };
+
+            fr.readAsDataURL(file);
+          }
+
+          const classes = {
+            removeAvatarButton: [
+              "public-profile_remove-avatar position-absolute",
+              {
+                "d-none":
+                  isRemoveAvatar ||
+                  (user.avatar_image === "" && values.avatar_image === null),
+              },
+            ],
+          };
+
           return (
             <Form>
               <div className="content-panel">
@@ -231,24 +267,14 @@ const PublicProfile = (): any => {
                     <div className="mb-md-3 col-12 col-lg-6">
                       <div className="d-flex justify-content-center justify-content-lg-start">
                         <div className="position-relative">
-                          <div
-                            className={
-                              "public-profile_remove-avatar position-absolute"
-                            }
-                            onClick={() => setRemoveAvatar(true)}
-                          >
-                            <TimesLightIcon className="remove-avatar-icon" />
-                          </div>
+                          {removeAvatarButtonTemplate()}
 
                           <RBForm.Control
                             type="file"
                             className="d-none"
                             accept="image/*"
                             ref={inputFileRef}
-                            onChange={(e) => {
-                              handleChange(e);
-                              showSelectedImage();
-                            }}
+                            onChange={avatarInputChangeHandler}
                             isInvalid={
                               !!touched.avatar_image && !!errors.avatar_image
                             }
@@ -263,19 +289,13 @@ const PublicProfile = (): any => {
                               inputFileRef.current.click();
                             }}
                           >
-                            <div
-                              className={
-                                "public-profile_remove-avatar position-absolute"
-                              }
-                              onClick={() => setRemoveAvatar(true)}
-                            >
-                              <TimesLightIcon className="remove-avatar-icon" />
-                            </div>
+                            {removeAvatarButtonTemplate()}
 
                             <img
                               className="public-profile-avatar-image"
-                              src={avatarImageUrl()}
+                              src={getAvatarUrl(values)}
                               alt="avatar"
+                              ref={imageRef}
                             />
 
                             <div className="add-avatar-button public-profile-avatar_button">
@@ -287,7 +307,7 @@ const PublicProfile = (): any => {
 
                       <RBForm.Control.Feedback
                         type="invalid"
-                        className={classnames("text-md-center", {
+                        className={classnames("text-center text-lg-start", {
                           "d-block":
                             !!errors.avatar_image && touched.avatar_image,
                         })}

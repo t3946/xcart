@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import classnames from "classnames";
 
 interface PropsInterface {
-  beforePage: React.ReactElement;
+  beforePage?: React.ReactElement;
 
   header?: ReactNode;
   headerClasses?: any;
