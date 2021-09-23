@@ -185,6 +185,7 @@ class ApiCategoriesController extends AbstractCatalogController
         foreach ($products as $product) {
             //get images
             $images = [];
+
             if ($product->isGroupRoot()) {
                 /** @var ProductModel[] $children */
                 $children = $product->getFrontendChilds()->limit(4)->all();
@@ -207,8 +208,8 @@ class ApiCategoriesController extends AbstractCatalogController
                     }
                 }
             } else {
-                if (!empty($product->group_root) && $this->is_slider) {
-                    $product = ProductModel::objects()->get(['pk' => $product->group_root]);
+                if ($product->isGroupChild() && $this->is_slider) {
+                    $product = $product->parent;
                 }
                 $imageModel = $product->getImages()[0];
 
