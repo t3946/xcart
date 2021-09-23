@@ -10,6 +10,9 @@ import { savePublicProfileAction } from "@client/jsx/redux/actions/account-actio
 import classnames from "classnames";
 import TimesLightIcon from "@client/jsx/components/icons/font-awesome/times/TimesLightIcon";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import Alert from "@client/modules/account/components/shared/Alert";
+import { setAlertAction } from "@client/jsx/redux/actions/account-actions/ProfileActions";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const PublicProfile = (): any => {
   const dispatch = useDispatch();
@@ -20,6 +23,8 @@ const PublicProfile = (): any => {
     history.push(route("account:login"));
   }
 
+  const [show, setShow] = React.useState(alert !== null);
+  const alertShowTimeMs = 3000;
   const FILE_SIZE_B = 100 * 1024;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
@@ -61,6 +66,7 @@ const PublicProfile = (): any => {
 
   const inputFileRef = React.useRef<HTMLInputElement>();
   const imageRef = React.useRef<HTMLImageElement>();
+  const alert = useSelector((e: AccountStore) => e.publicProfile.alert);
 
   function submit(values, actions) {
     const formData = new FormData();
@@ -78,7 +84,20 @@ const PublicProfile = (): any => {
       savePublicProfileAction({
         data: formData,
 
-        success(res) {},
+        success() {
+          dispatch(
+            setAlertAction({
+              variant: "success",
+              message: "Public profile was updated",
+            })
+          );
+          setTimeout(() => {
+            setShow(false);
+            setTimeout(() => {
+              dispatch(setAlertAction(null));
+            }, 500);
+          }, alertShowTimeMs);
+        },
 
         error(err) {
           const errors = {};
@@ -108,8 +127,26 @@ const PublicProfile = (): any => {
     return values.avatar_image || user.avatar_image || DEFAULT_AVATAR_IMAGE;
   }
 
+  function beforePageTemplate() {
+    if (!alert) {
+      return;
+    }
+
+    return (
+      <Alert
+        show={show}
+        variant={alert?.variant}
+        message={alert?.message}
+        classes={{
+          container: "pt-20 pb-5 pt-lg-0",
+          alert: "account-inner-page_alert",
+        }}
+      />
+    );
+  }
+
   return (
-    <InnerPage header={"Public Profile"} bodyClasses={"p-0"}>
+    <InnerPage header={"Public Profile"} bodyClasses={"p-0"} beforePage={beforePageTemplate()}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

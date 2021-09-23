@@ -28,6 +28,7 @@ export interface AccountStore {
     quantity: number;
     checkoutUrl: string;
   };
+  publicProfile: AccountPublicProfileStore;
 }
 
 export interface AccountAddressesStore {
@@ -68,4 +69,8 @@ export interface AccountMobileAlertStore {
     variant: AlertVariants;
     message: string;
   };
+}
+
+export interface AccountPublicProfileStore {
+  alert: Record<any, any>;
 }
