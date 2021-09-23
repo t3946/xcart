@@ -62,7 +62,7 @@ const HatNavigation = (): any => {
           <div className="logo_menu">
             <div className="container">
               <div className="row">
-                <div className="col-md-1 col-2 d-flex align-items-center d-lg-none">
+                <div className="col-md-1 col-auto d-flex align-items-center d-lg-none">
                   <a
                     href="#"
                     data-toggle="offCanvasLeft"
@@ -71,17 +71,18 @@ const HatNavigation = (): any => {
                   />
                 </div>
 
-                <div className="col-4 col-md-3 d-flex align-items-center">
+                <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
                   <a href="/">
                     <img
                       src={`/static/frontend/dist/images/logos/sites/${appData.site.code}/logo.svg`}
                       alt={appData.config.companyName}
-                      className="show-for-large logo-big"
+                      className="d-none d-lg-block hat-logo"
                     />
+
                     <img
                       src={`/static/frontend/dist/images/logos/sites/${appData.site.code}/logo-small.svg`}
                       alt={appData.config.companyName}
-                      className="show-for-small hide-for-large logo-small"
+                      className="d-block d-lg-none hat-logo"
                     />
                   </a>
                 </div>
@@ -92,7 +93,7 @@ const HatNavigation = (): any => {
                   </div>
                 </div>
 
-                <div className="col-lg-3 col-md-8 col-6 small-offset-0 medium-offset-0 mobile-header d-flex align-items-center justify-content-end d-lg-none">
+                <div className="col-lg-3 col-md-9 col small-offset-0 medium-offset-0 mobile-header d-flex align-items-center justify-content-end d-lg-none">
                   <div className="hat-icons-container d-flex w-100 align-items-center justify-content-end hat-navigation_items-wrapper">
                     <div className="hat-navigation-item-wrapper">
                       <a
@@ -112,7 +113,7 @@ const HatNavigation = (): any => {
                       <HatLoginButton />
                     </div>
 
-                    <div className="hat-navigation-item-wrapper">
+                    <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">
                       <a
                         href={appData.routes["cart:list"]}
                         className="mobile__cart middle-inline-block hat-navigation-item"
@@ -131,7 +132,6 @@ const HatNavigation = (): any => {
           </div>
         </header>
       </div>
-      <div className="shadow" />
     </div>
   );
 };
