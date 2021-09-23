@@ -35,12 +35,6 @@ class ApiAnalyticController extends Controller
                     $id = 1;
                 }
                 elseif (strpos($path, '/product/') !== false) {
-                    $product = ProductModel::objects()->get(['pk' => $id]);
-                    if ($product instanceof ProductModel) {
-                        if ($product->isGroupChild()) {
-                            $id = $product->group_root;
-                        }
-                    }
                     $type = SurfPathModel::GOAL_TYPE_PRODUCT;
                 }
                 elseif (strpos($path, '/category/') !== false) {
