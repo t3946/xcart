@@ -4,7 +4,6 @@ namespace Modules\Main\Controllers;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Meta\Types\MetaType;
-use Modules\Translate\Classes\I18nextManager;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
