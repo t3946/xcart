@@ -106,7 +106,11 @@ import _ from "lodash";
       }
       // do dec
       else if (!isAdd && params.val > params.min) {
-        params.val -= parseInt(params.val % step);
+        if (params.val % step === 0) {
+          params.val -= step;
+        } else {
+          params.val -= parseInt(params.val % step);
+        }
       }
       // do nothing
       else {
