@@ -40,8 +40,13 @@ const PublicProfile = (): any => {
     avatar_image: user.avatar_image,
   };
 
+  const nameRegex = /^[A-Za-z]+$/;
+
   const validationSchema = yup.object().shape({
-    publicName: yup.string().required("Public name is a required field"),
+    publicName: yup
+      .string()
+      .matches(nameRegex, "Only English letters")
+      .required("Public name is a required field"),
     location: yup.string().max(64, "Password must be at most 64 characters"),
     avatar_image: yup
       .mixed()
