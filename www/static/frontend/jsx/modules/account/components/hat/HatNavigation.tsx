@@ -59,7 +59,7 @@ const HatNavigation = (): any => {
             }}
           />
 
-          <div className="logo_menu">
+          <div className="logo_menu d-flex">
             <div className="container">
               <div className="row">
                 <div className="col-md-1 col-auto d-flex align-items-center d-lg-none">
