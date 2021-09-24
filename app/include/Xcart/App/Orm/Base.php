@@ -838,35 +838,18 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
         $this->related = [];
     }
 
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
-     */
-    public function serialize()
+    public function __serialize() : array
     {
-        return serialize(['attributes' => $this->getAttributes(), 'attributesNotField' => $this->attributesNotField]);
+        return ['attributes' => $this->getAttributes(), 'attributesNotField' => $this->attributesNotField];
     }
 
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @throws \Exception
-     * @since 5.1.0
-     */
-    public function unserialize($serialized)
+    public function __unserialize(array $serialized) : void
     {
-        $us = unserialize($serialized);
-        if ($us) {
+        if ($serialized) {
             $this->attributes = new AttributeCollection;
-            $this->setAttributes($us['attributes']);
+            $this->setAttributes($serialized['attributes']);
 
-            $this->attributesNotField = $us['attributesNotField'];
+            $this->attributesNotField = $serialized['attributesNotField'];
         }
     }
 

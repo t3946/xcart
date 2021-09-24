@@ -17,6 +17,7 @@ use Xcart\App\Main\Xcart;
 
 class ApiCategoriesController extends AbstractCatalogController
 {
+    public bool $is_slider = false;
     public function actionSliderBestsellers(): void
     {
         $qs = PromotionalProductsHelper::getBestsellersSQ();
@@ -94,6 +95,7 @@ class ApiCategoriesController extends AbstractCatalogController
             if ($id) {
                 $qs->exclude(['productid' => $id]);
             }
+            $this->is_slider = true;
 
             $this->jsonResponse($this->getPaginatedProducts($qs));
         }
@@ -206,6 +208,9 @@ class ApiCategoriesController extends AbstractCatalogController
                     }
                 }
             } else {
+                if ($product->isGroupChild() && $this->is_slider) {
+                    $product = $product->parent;
+                }
                 $imageModel = $product->getImages()[0];
 
                 if ($imageModel && $url = $imageModel->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
