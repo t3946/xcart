@@ -19,7 +19,7 @@ use Serializable;
  * @package Xcart\App\Orm
  * @method static Manager objects($instance = null)
  */
-abstract class Base implements ModelInterface, ArrayAccess, Serializable
+abstract class Base implements ModelInterface, ArrayAccess
 {
     use ClassNames;
     /**
