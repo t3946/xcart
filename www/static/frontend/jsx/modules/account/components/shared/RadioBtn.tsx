@@ -24,7 +24,6 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
   name,
   groupClasses,
 }) => {
-  console.log(radioValue);
   return (
     <Grid
       alignContent={"center"}

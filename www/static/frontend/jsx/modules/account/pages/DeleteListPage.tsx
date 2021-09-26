@@ -24,8 +24,6 @@ export const DeleteListPage: React.FC = () => {
     history.push(`/account/your-lists/${list.cache_url}`);
   };
 
-  console.log(list);
-
   return (
     <div>
       <div className="page-label">Delete list</div>

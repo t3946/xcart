@@ -48,6 +48,9 @@ import { ShareListPage } from "@client/modules/account/pages/ShareListPage";
 import { DeleteListPage } from "@client/modules/account/pages/DeleteListPage";
 import { AddListPage } from "@client/modules/account/pages/AddListPage";
 import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
+import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
+import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
+import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -185,10 +188,18 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path="/account/your-lists/add-list"
+                  path="/account/your-lists/add-list/:productId?"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
                     <AddListPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/move-product/:productId/:listId"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <MoveProductPage />
                   )}
                 />
                 <Route
@@ -217,13 +228,20 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
+                  path="/account/your-lists/add-product-to-list/:isAdded/:listId/:sku"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <AddProductToListPage />
+                  )}
+                />
+                <Route
+                  exact
                   path="/account/your-lists"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
                     <ListsPage />
                   )}
                 />
-                http://localhost/account/your-lists/invite/dfjU7G93+2udow==
                 <Route
                   exact
                   path={route("account:login")}

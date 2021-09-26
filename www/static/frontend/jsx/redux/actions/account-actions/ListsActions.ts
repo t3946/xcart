@@ -18,11 +18,13 @@ export const setLists = (lists): any => ({
 
 export const createList = (
   name: string,
-  callback: (hash: string) => void
+  callback: (hash: string) => void,
+  actionType: "list" | "product" | undefined
 ): any => ({
   type: "CREATE_LIST",
   name,
   callback,
+  actionType,
 });
 
 export const reorderList = (
@@ -36,7 +38,7 @@ export const reorderList = (
 
 export const moveProduct = (
   fromListId: string,
-  toListId: string,
+  toListId: { value: string },
   product: any
 ): any => ({
   type: "MOVE_PRODUCT",

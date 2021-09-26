@@ -12,6 +12,7 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
 import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface AddToListSelectOnProductPageProps {
   items: any;
@@ -24,12 +25,18 @@ interface AddToListSelectOnProductPageProps {
 }
 
 export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPageProps> =
-  ({ onClick, name, label = "", classes = undefined, id }) => {
+  ({ onClick, name, label = "", classes = undefined }) => {
     const lists = accountStore.getState().lists.lists;
+
+    const id = "1";
 
     const [open, setOpen] = useState(false);
 
     const [selectedList, setSelectedList] = useState(null);
+
+    const [isAlreadyInList, setIsAlreadyInList] = useState(false);
+
+    const breakpoint = useBreakpoint();
 
     const addProductDialog = useDialog();
 
@@ -37,16 +44,63 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
 
     const dispatch = useDispatch();
 
-    const addProductToList = (id: string) => {
+    const showAddProductContent = (listId) => {
+      breakpoint({
+        xs: () =>
+          window.location.assign(
+            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${window.appData.product_info.product.productcode}`
+          ),
+        sm: addProductDialog.handleClickOpen,
+      });
+    };
+
+    const createList = () => {
+      breakpoint({
+        xs: () =>
+          window.location.assign(
+            `/account/your-lists/add-list/${window.appData.product_info.product.productcode}`
+          ),
+        sm: createListDialog.handleClickOpen,
+      });
+    };
+
+    const addProductToList = (listId: string) => {
+      if (
+        lists
+          .find((e) => e.product_list_id === listId)
+          ?.products.find(
+            (e) =>
+              e.product_id === window.appData.product_info.product.productid
+          )
+      ) {
+        setIsAlreadyInList(true);
+        setSelectedList(lists.find((e) => e.product_list_id === listId));
+        showAddProductContent(listId);
+        return;
+      }
+      setIsAlreadyInList(false);
       dispatch(
         addProduct(
-          id,
+          listId,
           window.appData.product_info.product.productid,
           null,
-          addProductDialog.handleClickOpen
+          () => showAddProductContent(listId)
         )
       );
-      setSelectedList(lists.find((e) => e.product_list_id === id));
+      setSelectedList(lists.find((e) => e.product_list_id === listId));
+    };
+
+    const onCreateList = (listInfo) => {
+      setSelectedList(listInfo);
+      createListDialog.handleClose();
+      dispatch(
+        addProduct(
+          listInfo.product_list_id,
+          window.appData.product_info.product.productid,
+          null,
+          () => showAddProductContent(listInfo.product_list_id)
+        )
+      );
     };
 
     useEffect(() => {
@@ -123,7 +177,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
                       <img
                         className="form-select-item-img"
                         src={
-                          item.products[0]?.image ||
+                          item?.products[0]?.image ||
                           "/static/frontend/images/icons/account/idea-logo.svg"
                         }
                       />
@@ -134,7 +188,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
               </div>
 
               <div
-                onClick={createListDialog.handleClickOpen}
+                onClick={createList}
                 className="create-list-btn-container add-to-list-create-list"
               >
                 <div className="sidebar-list-cross add-to-list-create-list-cross">
@@ -148,6 +202,9 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
         <CreateNewListDialog
           open={createListDialog.open}
           handleClose={createListDialog.handleClose}
+          productId={window.appData.product_info.product.productid}
+          onProductAdded={onCreateList}
+          actionType={"product"}
         />
         <BootstrapDialogHOC
           show={addProductDialog.open}
@@ -156,7 +213,9 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
         >
           <AddProductToList
             onCancelClick={addProductDialog.handleClose}
+            onAdded={addProductDialog.handleClose}
             info={selectedList}
+            isAlreadyInList={isAlreadyInList}
           />
         </BootstrapDialogHOC>
       </Grid>

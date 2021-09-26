@@ -9,6 +9,7 @@ use Modules\Core\Helpers\CoreHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
+use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
@@ -50,7 +51,7 @@ class AccountController extends FrontendController
         ], null, 'tsv');
     }
 
-    private function getCountryPhoneCodes(): array
+    private static function getCountryPhoneCodes(): array
     {
         $codes = [];
 
@@ -67,7 +68,7 @@ class AccountController extends FrontendController
         return $codes;
     }
 
-    public function actionIndex()
+    public static function provideAccountData()
     {
         $user = Xcart::app()->auth->getUser(true);
 
@@ -111,11 +112,27 @@ class AccountController extends FrontendController
 
         StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
-        StorageHelper::push($this->getCountryPhoneCodes(), null, 'countries');
-
-        $this->generateQrCode();
+        StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
 
         AdminHelper::routesData();
+    }
+
+
+    public function actionProductIndex($sku)
+    {
+        $product =  ProductModel::objects()->filter(['productcode' => $sku])->get();
+        StorageHelper::push([
+            "product" => $product->getAttributes(),
+        ], null, 'product_info');
+
+        $this->actionIndex();
+    }
+
+    public function actionIndex()
+    {
+        self::provideAccountData();
+
+        $this->generateQrCode();
 
         $this->display('account/base.tpl');
     }

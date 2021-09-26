@@ -42,7 +42,7 @@ function* createList(action: AnyAction): Generator {
     lists: accountStore.getState().lists.lists.concat(result),
   });
 
-  yield action.callback(result.cache_url);
+  yield action.callback(result);
 }
 
 function* reorderList(action: AnyAction): Generator {

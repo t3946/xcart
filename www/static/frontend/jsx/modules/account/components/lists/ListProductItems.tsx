@@ -130,6 +130,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                                       info={e}
                                       reorderProductList={reorderProductList}
                                       listId={info.product_list_id}
+                                      listInfo={info}
                                       edit={edit}
                                       onMoveClick={(value) =>
                                         onMoveClick(

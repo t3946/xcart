@@ -41,6 +41,11 @@ export const ListProductIdeaItem = ({
     },
     {
       label: "Move",
+      onClick: () => {
+        history.push(
+          `/account/your-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
+        );
+      },
     },
     {
       label: "Delete",

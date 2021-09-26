@@ -68,6 +68,8 @@
   width: 100%;
 }
 
+
+
 @media (max-width: 1000px) {
   .product-list-item-info{
     width: 70%;
@@ -96,12 +98,22 @@
     display: none;
   }
 
+  .product-list-item-image{
+    margin-left: 0;
+    margin-right: 10px;
+  }
+
   .product-list-item-info{
     width: 100%;
   }
 
-  .product-list-item-image{
-    margin-left: 0;
-    margin-right: 10px;
+  .product-list-item-name{
+    width: 70%;
+  }
+
+  .product-list-item-info-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
   }
 }

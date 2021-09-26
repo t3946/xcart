@@ -5,6 +5,16 @@ use Modules\Account\Controllers\AccountController;
 return [
     //страницы
     [
+        'route' => '/your-lists/add-product-to-list/{*:is_already_in_list}/{*:list_id}/{*:sku}',
+        'target' => [AccountController::class, 'actionProductIndex'],
+        'name' => 'add-product',
+    ],
+    [
+        'route' => '/your-lists/add-list/{*:sku}',
+        'target' => [AccountController::class, 'actionProductIndex'],
+        'name' => 'add-list',
+    ],
+    [
         'route' => '/',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'index'

@@ -8,6 +8,9 @@ import { ListProductItemComment } from "@client/modules/account/components/lists
 import { EditComment } from "@client/modules/account/components/lists/EditComment";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
+import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
+import { useHistory } from "react-router-dom";
 
 export const ListProductItem = ({
   info,
@@ -18,8 +21,40 @@ export const ListProductItem = ({
   deleteItem,
   edit,
   onMoveClick,
+  listInfo,
 }) => {
   const editCommentDialog = useDialog();
+
+  const mobileMenuDialog = useDialog();
+
+  const history = useHistory();
+
+  const mobileDialogItems: MobileMenuForListItem[] = [
+    {
+      image: "/static/frontend/images/icons/account/idea-logo.svg",
+      label: info.product.name,
+    },
+    {
+      label: "Add comment, quantity & priority",
+      onClick: () => {
+        history.push(
+          `/account/your-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
+        );
+      },
+    },
+    {
+      label: "Move",
+      onClick: () => {
+        history.push(
+          `/account/your-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
+        );
+      },
+    },
+    {
+      label: "Delete",
+      onClick: deleteItem,
+    },
+  ];
 
   return (
     <div className="product-list-item-container">
@@ -41,7 +76,15 @@ export const ListProductItem = ({
           src={info.image}
         />
         <div className="product-list-item-info">
-          <div className="product-list-item-name">{info.product.product}</div>
+          <div className="product-list-item-info-container">
+            <div className="product-list-item-name">{info.product.product}</div>
+            <img
+              onClick={mobileMenuDialog.handleClickOpen}
+              className="edit-idea-ellipsis"
+              src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+            />
+          </div>
+
           <Tooltip
             target={
               <div className="tooltip-rating-stars-target">
@@ -93,6 +136,11 @@ export const ListProductItem = ({
           info={info}
         />
       </BootstrapDialogHOC>
+      <MobileMenuForList
+        items={mobileDialogItems}
+        dialogOpen={mobileMenuDialog.open}
+        dialogOnClose={mobileMenuDialog.handleClose}
+      />
     </div>
   );
 };

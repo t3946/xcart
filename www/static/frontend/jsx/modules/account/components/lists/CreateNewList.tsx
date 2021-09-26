@@ -13,10 +13,16 @@ import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/
 
 interface CreateNewListProps {
   onCancelBtnClick: () => void;
+  productId?: string;
+  onCreateList?: (listId) => void;
+  actionType?: "list" | "product";
 }
 
 export const CreateNewList: React.FC<CreateNewListProps> = ({
   onCancelBtnClick,
+  productId,
+  onCreateList,
+  actionType,
 }) => {
   const dispatch = useDispatch();
 
@@ -27,7 +33,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
 
   const handleSubmit = () => {
-    dispatch(createList(formik.values.name, onAddingEnd));
+    dispatch(createList(formik.values.name, onAddingEnd, actionType));
   };
 
   const formik = useFormik({
@@ -38,14 +44,17 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
     onSubmit: handleSubmit,
   });
 
-  const onAddingEnd = (hash: string) => {
-    onCancelBtnClick();
+  const onAddingEnd = (param: string) => {
+    if (productId) {
+      onCreateList(param);
+      return;
+    }
     showSnackbar({
       header: "Success",
       message: `${formik.values.name} list added successfully`,
       theme: "success",
     });
-    history.push(`/account/your-lists/${hash}`);
+    history.push(`/account/your-lists/${param}`);
   };
   return (
     <div>
@@ -77,22 +86,6 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
             </div>
           }
         />
-        {/*<div className="list-dialog-btns">*/}
-        {/*  <Button*/}
-        {/*    disabled={listLoading}*/}
-        {/*    type={"submit"}*/}
-        {/*    className="account-submit-btn auto-width-button cancel-edit-card-btn"*/}
-        {/*  >*/}
-        {/*    Confirm*/}
-        {/*  </Button>*/}
-        {/*  <Button*/}
-        {/*    onClick={onCancelBtnClick}*/}
-        {/*    disabled={listLoading}*/}
-        {/*    className="account-submit-btn account-submit-btn-outline auto-width-button "*/}
-        {/*  >*/}
-        {/*    Cancel*/}
-        {/*  </Button>*/}
-        {/*</div>*/}
         <SubmitCancelButtonsGroup
           submitText="Confirm"
           cancelText="Cancel"

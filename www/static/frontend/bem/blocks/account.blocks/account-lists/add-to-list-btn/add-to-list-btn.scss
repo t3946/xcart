@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 3;
 
   &:after{
     right: rem-calc(18);
@@ -43,7 +44,7 @@
 
 .add-to-list-select-list{
   top: rem-calc(47) !important;
-  z-index: -1;
+  z-index:2;
   max-height: 320px;
   overflow-y: hidden !important;
 }
@@ -86,4 +87,28 @@
 
 .add-to-list-create-list-cross{
   margin-right: 28px;
+}
+
+@media (max-width: 1000px) {
+  .product-page-add-to-list-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 15px;
+  }
+
+  .add-product{
+    flex-direction: column !important;
+  }
+
+  .add-to-cart-button_product{
+    width: 100% !important;
+  }
+
+  .add-to-list-label{
+    margin-left: 58px;
+  }
+
+  .add-to-list-arrow-block{
+    width: 58px;
+  }
 }

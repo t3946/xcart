@@ -79,6 +79,8 @@ class AccountListsApi extends FrontendController
 
         $response['users'] = $model->user_list_roles->all();
 
+        $response['products'] = [];
+
         foreach ( $response['users']  as $user_key => $user)
         {
             $response['users'][$user_key] = $user->getAttributes();
