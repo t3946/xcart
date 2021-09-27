@@ -12,7 +12,7 @@
                         <div id="header-target"></div>
                     {/block}
 
-                    <div class="before-content">
+                    <div class="before-content container">
                         {block "before-content"}
                             <div class="row">
                                 <div class="col-12">

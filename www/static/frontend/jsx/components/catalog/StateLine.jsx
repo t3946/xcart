@@ -112,12 +112,12 @@ export default class StateLine extends Component {
     return (
       <div className={classnames(stateLineClasses)} style="display:block">
         <div className="row">
-          <div className="columns large-3 show-for-large">
+          <div className="col-lg-3 d-none d-lg-block">
             <div className="page_count_wrap">
               {this.context.pager && <PageCount />}
             </div>
           </div>
-          <div className="columns small-12 large-9">
+          <div className="col-12 col-lg-9">
             <div className="actions">
               <div className="action_group">{this.sortingOptionsList()}</div>
 

@@ -4,7 +4,7 @@
         <div class="off-canvas-content" data-off-canvas-content>
             <div id="content-wrapper">
                 <div id="content">
-                    <div class="before-content">
+                    <div class="before-content container">
                         {block "before-content"}
                             <div class="row">
                                 <div class="col-12">
