@@ -1,15 +1,13 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
-
 {block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
 {block 'noindex'}<meta name="robots" content="noindex">{/block}
 
-
 {block "header"}
     <header class="cart-header" itemscope itemtype="http://schema.org/WPHeader">
-        <section class="logo_menu">
-            <div class="row align-justify">
-                <div class="columns shop-logo-block">
+        <section class="container">
+            <div class="logo_menu row d-flex">
+                <div class="col col-6 col-lg-4 shop-logo-block">
                     <a href="/">
                         <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
                              alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
@@ -19,21 +17,10 @@
                              class="show-for-small hide-for-large logo-small">
                     </a>
                 </div>
-                {*<div class="columns verified-secured-logo-block show-for-medium hide-for-large">
-                    <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
-                         alt="verified&secured"
-                         class="secured-logo-big">
-                </div>*}
-                <div class="columns s3-logo-block">
+                <div class="col col-6 col-lg-4 s3-logo-block">
                     <div class="s3-logo-big-link logo-link">
                         <div id="calculate-shipping-target" data-uri="{$uri}"></div>
                     </div>
-
-                    {*<a href="" class="secured-logo-big-link logo-link">
-                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/verified_secured_logo.svg"
-                             alt="verified&secured"
-                             class="show-for-large secured-logo-big">
-                    </a>*}
 
                     <div href="" class="s3-logo-small-link logo-link">
                         <img src="{$uri}/static/frontend/dist/images/logos/s3stores_logo.svg"
@@ -41,7 +28,7 @@
                              class="show-for-small hide-for-large s3-logo-small">
                     </div>
                 </div>
-                <div class="columns contacts-logo-block hide-for-small show-for-large">
+                <div class="col col-lg-4 contacts-logo-block d-none d-lg-block">
                     <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
                         <div class="text-order-online">
                             <span class="green-circle-icon"></span>
@@ -72,11 +59,12 @@
 
         {block "breadcrumbs"}
             {set $breadcrumbs = $.getCartBreadcrumbs}
-            {if $breadcrumbs}
-                <div class="row cart-steps-container">
 
+            {if $breadcrumbs}
+                <div class="container">
+                    <div class="row cart-steps-container">
                     {if !$breadcrumbs->isFirstStage()}
-                        <a class="columns shrink cart-steps-back hide-for-large"
+                        <a class="col shrink cart-steps-back d-lg-none"
                            href="{$breadcrumbs->getPrevStage().url}">
                             <span class="img">
                                 <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
@@ -85,8 +73,8 @@
                         </a>
                     {/if}
 
-                    <section class="cart-steps-section columns">
-                        <ul class="cart-steps-items no-bullet">
+                    <section class="cart-steps-section col">
+                        <ul class="cart-steps-items list-unstyled m-0">
                             {foreach $breadcrumbs as $key => $item}
                                 <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
                                     {if !$item.url || $breadcrumbs->getActive() == $key}
@@ -104,10 +92,9 @@
                         </ul>
                     </section>
                 </div>
+                </div>
             {/if}
         {/block}
-
-
     </header>
 {/block}
 
