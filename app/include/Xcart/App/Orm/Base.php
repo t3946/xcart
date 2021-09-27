@@ -838,18 +838,19 @@ abstract class Base implements ModelInterface, ArrayAccess
         $this->related = [];
     }
 
-    public function __serialize() : array
+    public function serialize()
     {
-        return ['attributes' => $this->getAttributes(), 'attributesNotField' => $this->attributesNotField];
+        return serialize(['attributes' => $this->getAttributes(), 'attributesNotField' => $this->attributesNotField]);
     }
 
-    public function __unserialize(array $serialized) : void
+    public function unserialize($serialized)
     {
-        if ($serialized) {
+        $us = unserialize($serialized);
+        if ($us) {
             $this->attributes = new AttributeCollection;
-            $this->setAttributes($serialized['attributes']);
+            $this->setAttributes($us['attributes']);
 
-            $this->attributesNotField = $serialized['attributesNotField'];
+            $this->attributesNotField = $us['attributesNotField'];
         }
     }
 
