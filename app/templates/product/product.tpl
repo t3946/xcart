@@ -43,11 +43,13 @@
 
 {block "before-content"}
     {if !$.request->getIsAjax()}
-    <div class="row">
-        <div class="columns large-12">
-            {insert "base/_breadcrumbs.tpl"}
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {insert "base/_breadcrumbs.tpl"}
+                </div>
+            </div>
         </div>
-    </div>
     {/if}
 {/block}
 

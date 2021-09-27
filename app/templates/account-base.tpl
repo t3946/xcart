@@ -7,7 +7,7 @@
                     <div class="before-content">
                         {block "before-content"}
                             <div class="row">
-                                <div class="columns large-12">
+                                <div class="col-12">
                                     {insert "base/_breadcrumbs.tpl"}
                                 </div>
                             </div>
