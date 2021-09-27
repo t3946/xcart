@@ -3,14 +3,14 @@
     <article class="pages page">
         <section class="heading">
             <div class="row">
-                <div class="column large-12">
+                <div class="col-12">
                     <h1>{$model->name}</h1>
                 </div>
             </div>
         </section>
         <section class="page-container">
             <div class="row">
-                <div class="column large-12">
+                <div class="col-12">
                     {raw html_entity_decode($model->content)}
                 </div>
             </div>

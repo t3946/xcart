@@ -12,7 +12,7 @@
         </section>
         <section class="page-container">
             <div class="row">
-                <div class="column large-12">
+                <div class="col-12">
                     <div class="large-2column">
                         {raw html_entity_decode($model->content)}
                         <div class="ro_email">
