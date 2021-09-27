@@ -10,7 +10,7 @@
                 </div>
             </div>
         </section>
-        <section class="page-container">
+        <section class="page-container 3">
             <div class="row">
                 <div class="col-12">
                     <div class="large-2column">
