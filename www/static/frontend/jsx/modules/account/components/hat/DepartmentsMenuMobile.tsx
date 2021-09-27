@@ -10,7 +10,7 @@ import PlusIcon from "@client/modules/icon/components/font-awesome/plus/Light";
 import MinusIcon from "@client/modules/icon/components/font-awesome/minus/Light";
 import ChevronRightIcon from "@client/modules/icon/components/font-awesome/chevron-right/Light";
 
-const DepartmentsMenuMobile = (props: Record<any, any>): any => {
+const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
   const departmentsMenu = useSelector(
     (e: StoreDto) => e.departmentsMenu.mobile
   );
@@ -20,7 +20,15 @@ const DepartmentsMenuMobile = (props: Record<any, any>): any => {
   );
 
   const classes = {
-    container: ["departments-menu-mobile", props.classes.container],
+    container: [
+      "departments-menu-mobile",
+      "hat-navigation_departments-menu-mobile",
+      "d-flex",
+      "flex-column",
+      {
+        "hat-navigation_departments-menu-mobile-visible": isVisibleMenu,
+      },
+    ],
   };
 
   const mainWrapper = document.getElementById("main_wrapper");
@@ -151,11 +159,7 @@ const DepartmentsMenuMobile = (props: Record<any, any>): any => {
   }
 
   return (
-    <div
-      className={classnames(classes.container, "d-flex flex-column", {
-        "hat-navigation_departments-menu-mobile-visible": isVisibleMenu,
-      })}
-    >
+    <div className={classnames(classes.container)}>
       <h3 className="departments-menu-mobile-hat m-0">Departments</h3>
 
       <Accordion className={"departments-menu-mobile-accordion overflow-auto"}>

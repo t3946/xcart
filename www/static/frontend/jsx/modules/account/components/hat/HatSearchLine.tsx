@@ -13,7 +13,14 @@ import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 
-const HatSearchLine = (): any => {
+interface PropsInterface {
+  isStatic?: boolean;
+}
+
+const HatSearchLine: React.FC<PropsInterface> = (
+  props: PropsInterface
+): any => {
+  const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const isVisibleDepartmentsMenu = useSelector(
@@ -65,11 +72,23 @@ const HatSearchLine = (): any => {
 
   function accountButton() {
     if (!user) {
-      return (
-        <Link to="/account/login" className="hat-login-button">
-          log in
-        </Link>
-      );
+      const path = route("account:login");
+      const className = "hat-login-button";
+      const text = "log in";
+
+      if (isStatic) {
+        return (
+          <a href={path} className={className}>
+            {text}
+          </a>
+        );
+      } else {
+        return (
+          <Link to={path} className={className}>
+            {text}
+          </Link>
+        );
+      }
     }
 
     function truncateUsername(username) {
@@ -82,12 +101,22 @@ const HatSearchLine = (): any => {
 
     const username = truncateUsername(user.name);
     const title = username === user.name ? "" : user.name;
+    const className = "hat-login-button";
+    const path = "/account/dashboard";
 
-    return (
-      <Link to="/account/dashboard" className="hat-login-button" title={title}>
-        {username}
-      </Link>
-    );
+    if (isStatic) {
+      return (
+        <a href={path} className={className} title={title}>
+          {username}
+        </a>
+      );
+    } else {
+      return (
+        <Link to={path} className={className} title={title}>
+          {username}
+        </Link>
+      );
+    }
   }
 
   function openDepartmentsMenu() {

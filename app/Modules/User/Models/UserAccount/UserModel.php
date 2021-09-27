@@ -19,7 +19,6 @@ use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 
 /**
  * @property string password
- * @property mixed login
  * @property string user_id
  * @property string name
  * @property string email

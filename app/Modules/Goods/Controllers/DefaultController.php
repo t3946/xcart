@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Account\Controllers\AccountController;
 use Modules\Goods\Forms\NotifyStockForm;
 use Modules\Goods\Forms\ProductQuestionForm;
 use Modules\Goods\Helpers\CreateProductPageFormHelper;
@@ -20,6 +21,7 @@ class DefaultController extends FrontendController
 {
     public function actionViewOld($id, $slug): void
     {
+//        AccountController::provideAccountData();
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
 

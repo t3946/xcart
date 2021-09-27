@@ -23,16 +23,28 @@ export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
     );
   }
 
+  // return (
+  //   <NavLink
+  //     to={to}
+  //     className="sidebar-menu-item sidebar-menu-item__accordion text-decoration-none"
+  //     activeClassName="sidebar-menu-item__accordion-current"
+  //     exact={true}
+  //     onClick={() => dispatch(hideAllMenu())}
+  //   >
+  //     {label}
+  //     {badgeTemplate()}
+  //   </NavLink>
+  // );
   return (
-    <NavLink
-      to={to}
+    <a
+      href={to}
       className="sidebar-menu-item sidebar-menu-item__accordion text-decoration-none"
-      activeClassName="sidebar-menu-item__accordion-current"
-      exact={true}
+      // activeClassName="sidebar-menu-item__accordion-current"
+      // exact={true}
       onClick={() => dispatch(hideAllMenu())}
     >
       {label}
       {badgeTemplate()}
-    </NavLink>
+    </a>
   );
 };

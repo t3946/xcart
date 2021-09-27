@@ -6,7 +6,6 @@ import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actio
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
-import { Link } from "react-router-dom";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
@@ -32,7 +31,9 @@ const HatNavigation = (): any => {
 
       items.push(
         <li className="main-menu_item">
-          <Link to={item.url} className={"main-menu-link"}>{item.name}</Link>
+          <a href={item.url} className={"main-menu-link"}>
+            {item.name}
+          </a>
         </li>
       );
     }
@@ -119,9 +120,7 @@ const HatNavigation = (): any => {
                         className="mobile__cart middle-inline-block hat-navigation-item"
                       >
                         <span className="count">
-                          <span className="mc_count">
-                            {cart.quantity}
-                          </span>
+                          <span className="mc_count">{cart.quantity}</span>
                         </span>
                       </a>
                     </div>

@@ -29,15 +29,14 @@ abstract class AbstractCatalogController extends FrontendController
 
     public function beforeAction($action, $params): void
     {
+        parent::beforeAction($action, $params);
+
         if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
             $this->getRequest()->session->add('category_sort', $_POST['sort']);
             echo 'OK';
             Xcart::app()->end();
         }
-
-//        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
     }
-
 
     /**
      * @param mixed $data

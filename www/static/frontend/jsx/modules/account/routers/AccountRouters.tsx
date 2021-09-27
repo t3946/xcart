@@ -97,11 +97,9 @@ export const AccountRouters = (): any => {
       <ShadowPanel />
       <Snackbar>
         <BrowserRouter>
-          <DepartmentsMenuMobile
-            classes={{ container: "hat-navigation_departments-menu-mobile" }}
-          />
+          <DepartmentsMenuMobile />
           <HatNavigation />
-          <HatSearchLine />
+          <HatSearchLine isStatic={true} />
           <MobileMenu />
           <AlertMobile />
 
