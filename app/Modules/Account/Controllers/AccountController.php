@@ -23,35 +23,7 @@ use Sonata\GoogleAuthenticator\GoogleQrUrl;
 
 class AccountController extends FrontendController
 {
-    private function generateQrCode()
-    {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            return;
-        }
-
-        $g = new GoogleAuthenticator();
-        $account_name = $user->getAttribute('email');
-        $secret = $user->getAttribute('tsv_secret');
-
-        if (!$secret) {
-            $secret = $g->generateSecret();
-            $user->setAttribute('tsv_secret', $secret);
-            $user->save();
-        }
-
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $issuer = $site->company_name;
-        $url = GoogleQrUrl::generate($account_name, $secret, $issuer);
-
-        StorageHelper::push([
-            "url" => $url,
-            "secret" => $secret,
-        ], null, 'tsv');
-    }
-
-    private static function getCountryPhoneCodes(): array
+        private static function getCountryPhoneCodes(): array
     {
         $codes = [];
 
@@ -133,6 +105,41 @@ class AccountController extends FrontendController
         self::provideAccountData();
 
         $this->generateQrCode();
+    }
+
+    private function generateQrCode()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            return;
+        }
+
+        $g = new GoogleAuthenticator();
+        $account_name = $user->getAttribute('email');
+        $secret = $user->getAttribute('tsv_secret');
+
+        if (!$secret) {
+            $secret = $g->generateSecret();
+            $user->setAttribute('tsv_secret', $secret);
+            $user->save();
+        }
+
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $issuer = $site->company_name;
+        $url = GoogleQrUrl::generate($account_name, $secret, $issuer);
+
+        StorageHelper::push([
+            "url" => $url,
+            "secret" => $secret,
+        ], null, 'tsv');
+    }
+
+    public function actionIndex()
+    {
+        self::provideAccountData();
+
+        $this->generateQrCode();
 
         $this->display('account/base.tpl');
     }
@@ -188,7 +195,7 @@ class AccountController extends FrontendController
             $this->redirect('account:login', [], 301);
             $this->actionIndex();
         }
-        
+
         [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag));
 
         $invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash]);

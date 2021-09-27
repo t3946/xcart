@@ -121,7 +121,9 @@ const HatNavigation = (): any => {
                         className="mobile__cart middle-inline-block hat-navigation-item"
                       >
                         <span className="count">
-                          <span className="mc_count">{cart.quantity}</span>
+                          <span className="mc_count">
+                            {cart.quantity}
+                          </span>
                         </span>
                       </a>
                     </div>
@@ -132,7 +134,6 @@ const HatNavigation = (): any => {
           </div>
         </header>
       </div>
-
       <div className="shadow" />
     </div>
   );
