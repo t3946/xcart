@@ -4,8 +4,8 @@
     <article class="pages page about-us">
         <section class="heading">
             <div class="row w1280">
-                <div class="columns large-12">
-                    <div class="head">
+                <div class="col-12">
+                    <div class="head container">
                         <div class="cont">
                             <div class="row align-center">
                                 <div class="col-12">
@@ -14,10 +14,10 @@
                             </div>
                             {set $mass = $helper->getClearContent($model->content)}
                             <div class="row">
-                                <div class="column small-12 medium-10">
+                                <div class="col-12 col-md-10">
                                     <div class="row">
-                                        <div class="desc-cont">
-                                            <div class="col-12">
+                                        <div class="col-12">
+                                            <div class="desc-cont">
                                                 <section class="desc">
                                                     Touche Airbrush is a new online store in the airbrush industry that has been specially created to sell only top-quality equipment and accessories from the most trusted brands in the US, Canada, and worldwide.
                                                 </section>
@@ -40,10 +40,10 @@
                     </div>
                 </div>
             </div>
-
         </section>
 
-        <div class="row w1280">
+        <div class="container">
+            <div class="row w1280">
             <div class="col-12">
                 <div class="content ">
                     <div class="">
@@ -89,10 +89,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
+        </div>
     </article>
 {/block}

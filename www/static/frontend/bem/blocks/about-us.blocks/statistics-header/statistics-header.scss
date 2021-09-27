@@ -1,0 +1,10 @@
+.statistics-header {
+  color: #9f9f9f;
+  font-weight: bold;
+  font-size: rem-calc(22);
+  max-width: rem-calc(750);
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(24);
+  }
+}
