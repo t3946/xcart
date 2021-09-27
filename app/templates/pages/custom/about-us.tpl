@@ -42,15 +42,6 @@
             </div>
 
         </section>
-        {*<div class="hide-for-medium">*}
-            {*<div class="row">*}
-                {*<div class="column large-12">*}
-                    {*<div class="photo-video">*}
-                        {*<img src="/static/frontend/dist/images/p/about-us/our_team.jpg" alt="our team">*}
-                    {*</div>*}
-                {*</div>*}
-            {*</div>*}
-        {*</div>*}
 
         <div class="row w1280">
             <div class="column large-12">
