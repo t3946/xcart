@@ -74,10 +74,7 @@ export default class SliderProducts extends Component {
     }
 
     if (this.state.items.length === 0) {
-      $(this.swiperRef.current)
-        .parents(".slider-block")
-        .find(".title_container")
-        .hide();
+      $(this.swiperRef.current).parents(".slider-block").hide();
     }
   }
 
