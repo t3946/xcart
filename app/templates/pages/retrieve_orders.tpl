@@ -2,15 +2,17 @@
 {block "content"}
     <article class="page_s_content">
         <section class="heading ro-header">
-            <div class="row">
-                <div class="column head sas-header ">
-                    <div class="hit-header">
-                        <img class="sas-lock" src="/static/frontend/images/pages/mail.png"><h1>{$model->name|replace:" ":"<br>"}</h1>
+            <div class="container">
+                <div class="row">
+                    <div class="column head sas-header">
+                        <div class="hit-header">
+                            <img class="sas-lock" src="/static/frontend/images/pages/mail.png"><h1>{$model->name|replace:" ":"<br>"}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="page-container 3">
+        <section class="page-container container">
             <div class="row">
                 <div class="col-12">
                     <div class="large-2column">
