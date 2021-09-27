@@ -4,13 +4,17 @@
         <div class="off-canvas-content" data-off-canvas-content>
             <div id="content-wrapper">
                 {block "header"}
-                    <div id="header-target"></div>
+                    <div id="header-target">
+                        <div class="container skeleton d-none d-lg-block">
+                            <div class="skeleton-box hat-skeleton"></div>
+                        </div>
+
+                        <div class="skeleton-box hat-skeleton d-lg-none"></div>
+                    </div>
                 {/block}
 
                 <div id="content">
-                    {block "search-menu"}
-                        <div id="header-target"></div>
-                    {/block}
+                    {block "search-menu"}{/block}
 
                     <div class="before-content container">
                         {block "before-content"}

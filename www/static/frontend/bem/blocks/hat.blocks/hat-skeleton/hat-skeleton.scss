@@ -1,0 +1,11 @@
+.hat-skeleton {
+  height: rem-calc(54);
+
+  @include breakpoint(md up) {
+    height: rem-calc(80);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(156);
+  }
+}
