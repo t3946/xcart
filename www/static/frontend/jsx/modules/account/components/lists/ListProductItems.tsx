@@ -15,6 +15,7 @@ import { MovedProductPlaceholder } from "@client/modules/account/components/list
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { DeleteProductPlaceholder } from "@client/modules/account/components/lists/DeleteProductPlaceholder";
 import { ListProductIdeaItem } from "@client/modules/account/components/lists/ListProductIdeaItem";
+import { ListItemTypeEnum } from "@client/modules/account/ts/consts/list-item-type.enum";
 
 export const ListProductItems = ({ info, path, edit }) => {
   useEffect(() => {
@@ -101,8 +102,8 @@ export const ListProductItems = ({ info, path, edit }) => {
                           case AccountListProductActionEnum.DELETE: {
                             return (
                               <DeleteProductPlaceholder
-                                product_list_id={info.product_list_id}
-                                list_items_id={e.product_id}
+                                productListId={info.product_list_id}
+                                listItemId={e.product_id}
                                 name={e.typeAction.productName}
                                 product={e}
                               />
@@ -119,7 +120,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                           }
                           default: {
                             switch (e.product_type) {
-                              case "product":
+                              case ListItemTypeEnum.PRODUCT:
                                 return (
                                   <React.Fragment>
                                     <ListProductItem
@@ -143,7 +144,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                                     />
                                   </React.Fragment>
                                 );
-                              case "idea":
+                              case ListItemTypeEnum.IDEA:
                                 return (
                                   <React.Fragment>
                                     <ListProductIdeaItem

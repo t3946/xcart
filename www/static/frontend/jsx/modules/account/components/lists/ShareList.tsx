@@ -6,6 +6,8 @@ import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snack
 import { ShareListInviteSection } from "@client/modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@client/modules/account/components/lists/ShareListManagePeople";
 import { useParams } from "react-router-dom";
+import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 interface ShareListProps {
   onClose: () => void;
@@ -15,6 +17,12 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
   const { id }: { id: string } = useParams();
+
+  let list: List | undefined;
+
+  if (!id) {
+    list = accountStore.getState().lists.lists[0];
+  }
 
   const dispatch = useDispatch();
 
@@ -47,7 +55,7 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
     <div>
       <ShareListInviteSection onCopyLinkFunc={encodeUrl} />
       <hr className="share-list-center-line" />
-      <ShareListManagePeople closeDialog={onClose} id={id} />
+      <ShareListManagePeople closeDialog={onClose} id={id || list.cache_url} />
     </div>
   );
 };

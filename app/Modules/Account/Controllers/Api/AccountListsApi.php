@@ -35,8 +35,12 @@ class AccountListsApi extends FrontendController
                 $items[$key]['products'][$product_key] = $product->getAttributes();
                 if($product->product_type === 'product')
                 {
-                    $items[$key]['products'][$product_key]['product'] = ProductModel::objects()->get(['productid' => $product->product_id])->getAttributes();
-                    $items[$key]['products'][$product_key]['image'] =  (string) ProductModel::objects()->get(['productid' => $product->product_id])->getMainImage();
+                    $items[$key]['products'][$product_key]['product'] = ProductModel::objects()->
+                    filter(['productid' => $product->product_id])->
+                    valuesList(['productid','productcode', "product", "cost_to_us"], false)[0];
+                    $items[$key]['products'][$product_key]['image'] =  (string) ProductModel::objects()->
+                    get(['productid' => $product->product_id])->
+                    getMainImage();
                 }
                 else
                 {
@@ -163,6 +167,12 @@ class AccountListsApi extends FrontendController
         [$list_id, $role] = array_values(json_decode(file_get_contents('php://input'),true));
 
         $user = Xcart::app()->auth->getUser(true);
+
+        $sharedModel =  UserListModel::objects()->get(['product_list_id' => $list_id]);
+
+        $sharedModel->list_type = "shared";
+
+        $sharedModel->save();
 
         UserListModel::objects()->create(['user_id' => $user->user_id, 'product_list_id' => $list_id, 'role' => $role]);
 

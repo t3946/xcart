@@ -8,8 +8,17 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
 import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
+import { ListProductUser } from "@client/modules/account/ts/types/list.type";
 
-export const ShareListManagePeopleItem = ({ userListInfo, onClick }) => {
+interface ShareListManagePeopleItem {
+  userListInfo: ListProductUser;
+  onClick: (UserRightsType: UserRightsActionsEnum, userId: string) => void;
+}
+
+export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
+  userListInfo,
+  onClick,
+}) => {
   const isYourAccount =
     userListInfo.user.user_id === accountStore.getState().user.id;
 
@@ -38,7 +47,7 @@ export const ShareListManagePeopleItem = ({ userListInfo, onClick }) => {
       label: (
         <div
           className={`share-list-mobile-menu-item ${
-            userListInfo.role === UserRightsActionsEnum.EDIT &&
+            userListInfo.role === UserPrivateVariantsEnum.EDIT &&
             "share-list-mobile-menu-item-selected"
           }`}
         >
@@ -54,7 +63,7 @@ export const ShareListManagePeopleItem = ({ userListInfo, onClick }) => {
       label: (
         <div
           className={`share-list-mobile-menu-item ${
-            userListInfo.role === UserRightsActionsEnum.VIEW &&
+            userListInfo.role === UserPrivateVariantsEnum.VIEW &&
             "share-list-mobile-menu-item-selected"
           }`}
         >

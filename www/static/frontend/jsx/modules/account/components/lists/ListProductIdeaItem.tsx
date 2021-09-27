@@ -9,8 +9,9 @@ import { useDialog } from "../../hooks/useDialog";
 import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
 import { useHistory } from "react-router-dom";
+import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
 
-export const ListProductIdeaItem = ({
+export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   info,
   drag,
   reorderProductList,

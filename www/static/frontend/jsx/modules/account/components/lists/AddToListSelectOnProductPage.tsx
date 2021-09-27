@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addProduct,
   getLists,
@@ -13,9 +13,10 @@ import { CreateNewListDialog } from "@client/modules/account/components/lists/Cr
 import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 interface AddToListSelectOnProductPageProps {
-  items: any;
+  items: List[];
   onClick: () => void;
   value: any;
   name: string;
@@ -213,7 +214,6 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
         >
           <AddProductToList
             onCancelClick={addProductDialog.handleClose}
-            onAdded={addProductDialog.handleClose}
             info={selectedList}
             isAlreadyInList={isAlreadyInList}
           />

@@ -1,7 +1,16 @@
 import React from "react";
 import { priorityProductSelectValuesConst } from "@client/modules/account/ts/consts/priority-product-select-values.const";
+import { ListItem } from "@client/modules/account/ts/types/list.type";
 
-export const ListProductItemComment = ({ info, onEditCommentClick }) => {
+interface ListProductItemCommentProps {
+  info: ListItem;
+  onEditCommentClick: () => void;
+}
+
+export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
+  info,
+  onEditCommentClick,
+}) => {
   const priority = priorityProductSelectValuesConst.find(
     (e) => e.value === info.priority
   ).viewValue;

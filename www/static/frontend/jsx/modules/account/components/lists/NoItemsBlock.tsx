@@ -2,8 +2,13 @@ import React from "react";
 import { Button } from "@material-ui/core";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { useHistory } from "react-router-dom";
+import { List } from "@client/modules/account/ts/types/list.type";
 
-export const NoItemsBlock = ({ listInfo }) => {
+interface NoItemsBlockProps {
+  listInfo: List;
+}
+
+export const NoItemsBlock: React.FC<NoItemsBlockProps> = ({ listInfo }) => {
   const breakPoint = useBreakpoint();
 
   const history = useHistory();

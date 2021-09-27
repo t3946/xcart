@@ -4,7 +4,7 @@ import classnames from "classnames";
 
 interface sideBarMenuItemProps {
   to: string;
-  label: string;
+  label: string | React.ReactNode;
   badge?: number | string;
   className?: any;
   onClick?: any;

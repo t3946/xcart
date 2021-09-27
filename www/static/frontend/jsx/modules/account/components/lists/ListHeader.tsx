@@ -1,9 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { ShareListDialog } from "@client/modules/account/components/lists/ShareListDialog";
 import { ManageList } from "@client/modules/account/components/lists/ManageList";
@@ -11,19 +8,18 @@ import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
 import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 interface ListHeaderProps {
   label: string;
   shippingList: boolean;
-  listId: string;
   edit: boolean;
-  info: any;
+  info: List;
 }
 
 export const ListHeader: React.FC<ListHeaderProps> = ({
   label,
   shippingList,
-  listId,
   edit,
   info,
 }) => {

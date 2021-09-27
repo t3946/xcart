@@ -5,18 +5,20 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { useHistory } from "react-router";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 export const AddNewPaymentMethod: React.FC = () => {
   const history = useHistory();
 
   const addDialog = useDialog();
 
+  const breakpoint = useBreakpoint();
+
   const addCard = () => {
-    if (accountStore.getState().main.breakpoint.is768) {
-      history.push("/account/payments/wallet/add");
-      return;
-    }
-    addDialog.handleClickOpen();
+    breakpoint({
+      xs: () => history.push("/account/payments/wallet/add"),
+      sm: addDialog.handleClickOpen,
+    });
   };
 
   return (

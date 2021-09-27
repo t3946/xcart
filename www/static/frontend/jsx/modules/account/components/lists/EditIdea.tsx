@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { useFormik } from "formik";
@@ -6,8 +6,19 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { editIdeaName } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { ListItem } from "@client/modules/account/ts/types/list.type";
 
-export const EditIdea = ({ info, listId, openMenuDialog }) => {
+interface EditIdeaProps {
+  info: ListItem;
+  listId: string;
+  openMenuDialog: () => void;
+}
+
+export const EditIdea: React.FC<EditIdeaProps> = ({
+  info,
+  listId,
+  openMenuDialog,
+}) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const isLoading = useSelector((e: AccountStore) => e.lists.listLoading);

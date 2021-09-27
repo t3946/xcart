@@ -1,7 +1,7 @@
 import React from "react";
 import { ProductStarsRating } from "../shared/ProductStarsRating";
 
-export const TooltipRatingContent = () => {
+export const TooltipRatingContent: React.FC = () => {
   return (
     <div className="tooltip-rating-content-container">
       <div className="tooltip-rating-content-top">

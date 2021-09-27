@@ -100,13 +100,6 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-    public function actionIndex()
-    {
-        self::provideAccountData();
-
-        $this->generateQrCode();
-    }
-
     private function generateQrCode()
     {
         $user = Xcart::app()->auth->getUser(true);

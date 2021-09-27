@@ -6,13 +6,14 @@ import { AccountStore } from "../../ts/types/account-store.type";
 import { changeDefaultCard } from "@client/jsx/redux/actions/account-actions/PaymentsActions";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { useHistory } from "react-router";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface CardsListProps {
   cards: CardItemDto[];
 }
 
 export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
-  const breakPoint = useSelector((e: any) => e.main.breakpoint);
+  const breakpoint = useBreakpoint();
 
   const submitCardFormLoading = useSelector(
     (e: AccountStore) => e.payments.submitCardFormLoading
@@ -30,14 +31,14 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
   };
 
   const openCardDialog = (cardInfo: CardItemDto, dialog, path) => {
-    if (breakPoint.is768) {
-      history.push({
-        pathname: path,
-        state: { cardInfo: cardInfo },
-      });
-      return;
-    }
-    dialog.handleClickOpen();
+    breakpoint({
+      xs: () =>
+        history.push({
+          pathname: path,
+          state: { cardInfo: cardInfo },
+        }),
+      sm: dialog.handleClickOpen,
+    });
   };
   return (
     <div className="wallet-cards-list-container">
@@ -47,7 +48,6 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
             <CardItem
               changeDefault={changeDefault}
               openCardDialog={openCardDialog}
-              breakPoint={breakPoint}
               cardInfo={e}
             />
           </LoadingContainer>

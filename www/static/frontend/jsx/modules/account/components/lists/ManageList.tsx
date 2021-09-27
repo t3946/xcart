@@ -16,8 +16,17 @@ import { convertManageListFormDataToRequest } from "@client/modules/account/util
 import { ManageListFormData } from "@client/modules/account/ts/types/manage-list-form.types";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+import { List } from "@client/modules/account/ts/types/list.type";
 
-export const ManageList = ({ info, onCancelClick }) => {
+interface ManageListProps {
+  info: List;
+  onCancelClick: () => void;
+}
+
+export const ManageList: React.FC<ManageListProps> = ({
+  info,
+  onCancelClick,
+}) => {
   const monthItems = fillingMassForMonths();
 
   const dispatch = useDispatch();

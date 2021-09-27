@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button } from "@material-ui/core";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
 import { createList } from "../../../../redux/actions/account-actions/ListsActions";
@@ -44,7 +43,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
     onSubmit: handleSubmit,
   });
 
-  const onAddingEnd = (param: string) => {
+  const onAddingEnd = (param: any) => {
     if (productId) {
       onCreateList(param);
       return;
@@ -54,7 +53,8 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
       message: `${formik.values.name} list added successfully`,
       theme: "success",
     });
-    history.push(`/account/your-lists/${param}`);
+    onCancelBtnClick();
+    history.push(`/account/your-lists/${param.cache_url}`);
   };
   return (
     <div>

@@ -1,6 +1,5 @@
 {
   "compileOnSave": true,
-
   "compilerOptions": {
     "target": "es5",
     "lib": ["es2019", "dom"],
@@ -41,5 +40,5 @@
       ],
     },
     "jsx": "react"
-  }
+  },
 }

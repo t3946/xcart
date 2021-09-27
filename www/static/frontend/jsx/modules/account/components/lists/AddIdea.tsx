@@ -12,7 +12,15 @@ import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snack
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
-export const AddIdea = ({ onCancelBtnClick, listHash }) => {
+interface AddIdeaProps {
+  onCancelBtnClick: () => void;
+  listHash: string;
+}
+
+export const AddIdea: React.FC<AddIdeaProps> = ({
+  onCancelBtnClick,
+  listHash,
+}) => {
   const dispatch = useDispatch();
 
   const { showSnackbar } = useContext(SnackbarContext);

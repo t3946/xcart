@@ -1,9 +1,9 @@
 import React from "react";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
-import { Redirect, useHistory } from "react-router-dom";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 interface AddProductToListProps {
-  info: any;
+  info: List;
   onCancelClick: () => void;
   isAlreadyInList: boolean;
 }

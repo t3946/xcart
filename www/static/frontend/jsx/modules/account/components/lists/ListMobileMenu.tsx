@@ -1,8 +1,9 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 interface ListMobileMenuProps {
-  lists: any[];
+  lists: List[];
 }
 
 export const ListMobileMenu: React.FC<ListMobileMenuProps> = ({ lists }) => {

@@ -1,6 +1,16 @@
 import React from "react";
 
-export const ListItemMovableArea = ({ drag, onUpClick, onDownClick }) => {
+interface ListItemMovableAreaProps {
+  drag: any;
+  onUpClick: () => void;
+  onDownClick: () => void;
+}
+
+export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = ({
+  drag,
+  onUpClick,
+  onDownClick,
+}) => {
   return (
     <div {...drag} className="list-item-movable-area-container">
       <div className="list-item-movable-area-text" onClick={onUpClick}>

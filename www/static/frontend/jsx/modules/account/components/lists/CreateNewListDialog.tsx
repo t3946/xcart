@@ -2,12 +2,20 @@ import React from "react";
 import { CreateNewList } from "@client/modules/account/components/lists/CreateNewList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 
-export const CreateNewListDialog = ({
+interface CreateNewListDialogProps {
+  handleClose: () => void;
+  open: boolean;
+  productId?: string;
+  onProductAdded?: () => void;
+  actionType?: "product" | "list";
+}
+
+export const CreateNewListDialog: React.FC<CreateNewListDialogProps> = ({
   handleClose,
   open,
   productId,
   onProductAdded,
-  actionType = undefined,
+  actionType,
 }) => {
   return (
     <BootstrapDialogHOC

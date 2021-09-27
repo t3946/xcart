@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
 import { ShowSharedStatusEnum } from "@client/modules/account/ts/types/show-shared-status.enum";
 
-export const ShareListInviteSection = ({ onCopyLinkFunc }) => {
+interface ShareListInviteSection {
+  onCopyLinkFunc: (value: ShowSharedStatusEnum) => void;
+}
+
+export const ShareListInviteSection: React.FC<ShareListInviteSection> = ({
+  onCopyLinkFunc,
+}) => {
   const [showSharedStatus, setShowSharedStatus] = useState(
     ShowSharedStatusEnum.VIEW
   );

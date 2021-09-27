@@ -53,6 +53,7 @@ const accountListReducer = (
                 users: e.users.filter((user) => user.user_id !== action.userId),
               };
             }
+
             return e;
           }),
         };
@@ -99,12 +100,18 @@ const accountListReducer = (
               ...list,
               products: list.products.map((product) => {
                 if (product.product_id === action.list_items_id) {
+                  let productName;
+                  if ("product" in product.product) {
+                    productName = product?.product?.product;
+                  } else {
+                    productName = product?.product?.name;
+                  }
+
                   return {
                     ...product,
                     typeAction: {
                       type: AccountListProductActionEnum.DELETE,
-                      productName:
-                        product?.product?.product || product?.product?.name,
+                      productName,
                     },
                   };
                 }
@@ -151,14 +158,21 @@ const accountListReducer = (
                   const list = state.lists.find(
                     (e) => e.product_list_id === action.toListId.value
                   );
+                  let productName;
+
+                  if ("product" in product.product) {
+                    productName = product?.product?.product;
+                  } else {
+                    productName = product?.product?.name;
+                  }
+
                   return {
                     ...product,
                     typeAction: {
                       type: AccountListProductActionEnum.MOVE,
                       toListId: list.cache_url,
                       listName: list.name,
-                      productName:
-                        product?.product?.product || product?.product?.name,
+                      productName,
                     },
                   };
                 }

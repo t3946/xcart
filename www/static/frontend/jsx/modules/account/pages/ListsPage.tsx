@@ -33,7 +33,6 @@ export const ListsPage: React.FC = () => {
     return (
       <React.Fragment>
         <ListHeader
-          listId={list?.product_list_id}
           shippingList={!!id}
           label={list?.name}
           edit={edit}
@@ -51,8 +50,6 @@ export const ListsPage: React.FC = () => {
       setList(lists[0]);
     }
   }, [lists]);
-
-  console.log(breakpoints);
 
   return (
     <div>

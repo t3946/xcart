@@ -11,8 +11,10 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
 import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
 import { useHistory } from "react-router-dom";
+import { ListProductInfo } from "@client/modules/account/ts/types/list.type";
+import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
 
-export const ListProductItem = ({
+export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,
   drag,
   reorderProductList,
@@ -25,14 +27,20 @@ export const ListProductItem = ({
 }) => {
   const editCommentDialog = useDialog();
 
+  let product: ListProductInfo;
+
+  if ("product" in info.product) {
+    product = info.product;
+  }
+
   const mobileMenuDialog = useDialog();
 
   const history = useHistory();
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
-      image: "/static/frontend/images/icons/account/idea-logo.svg",
-      label: info.product.name,
+      image: info.image,
+      label: product.product,
     },
     {
       label: "Add comment, quantity & priority",
@@ -77,7 +85,7 @@ export const ListProductItem = ({
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
-            <div className="product-list-item-name">{info.product.product}</div>
+            <div className="product-list-item-name">{product.product}</div>
             <img
               onClick={mobileMenuDialog.handleClickOpen}
               className="edit-idea-ellipsis"
@@ -97,9 +105,7 @@ export const ListProductItem = ({
               </div>
             }
           />
-          <div className="product-list-item-price">
-            ${info.product.cost_to_us}
-          </div>
+          <div className="product-list-item-price">${product.cost_to_us}</div>
           {edit &&
             (info.comment ? (
               <ListProductItemComment
