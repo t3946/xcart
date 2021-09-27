@@ -16,9 +16,15 @@ export const DeleteProductPlaceholder = ({
   return (
     <div className="deleted-product-container">
       <div className="deleted-product-content">
-        <p>{name}</p>
+        <p className="delete-product-name">{name}</p>
         <div className="deleted-product-actions">
-          <div>Deleted</div>
+          <div className={"d-flex"}>
+            <img
+              src={"/static/frontend/images/icons/account/check-mark-red.svg"}
+            />
+            <div className="deleted-product-label">Deleted</div>
+          </div>
+
           <div onClick={undoDelete} className="list-name">
             Undo
           </div>

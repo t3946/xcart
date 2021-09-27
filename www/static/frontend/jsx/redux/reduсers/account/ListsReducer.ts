@@ -157,6 +157,8 @@ const accountListReducer = (
                       type: AccountListProductActionEnum.MOVE,
                       toListId: list.cache_url,
                       listName: list.name,
+                      productName:
+                        product?.product?.product || product?.product?.name,
                     },
                   };
                 }

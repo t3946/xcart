@@ -32,7 +32,9 @@ const HatNavigation = (): any => {
 
       items.push(
         <li className="main-menu_item">
-          <Link to={item.url} className={"main-menu-link"}>{item.name}</Link>
+          <Link to={item.url} className={"main-menu-link"}>
+            {item.name}
+          </Link>
         </li>
       );
     }
@@ -119,9 +121,7 @@ const HatNavigation = (): any => {
                         className="mobile__cart middle-inline-block hat-navigation-item"
                       >
                         <span className="count">
-                          <span className="mc_count">
-                            {cart.quantity}
-                          </span>
+                          <span className="mc_count">{cart.quantity}</span>
                         </span>
                       </a>
                     </div>
@@ -132,11 +132,8 @@ const HatNavigation = (): any => {
           </div>
         </header>
       </div>
-<<<<<<< Updated upstream
-=======
 
       <div className="shadow" />
->>>>>>> Stashed changes
     </div>
   );
 };

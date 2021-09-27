@@ -6,14 +6,10 @@
   animation-duration: 1s;
   animation-name: slideIn;
   position: relative;
-  height: 56px;
 }
 
 .moved-product-content{
   display: flex;
-  position: absolute;
-  top: 0;
-  bottom: 0;
   align-items: center;
 }
 
@@ -23,8 +19,10 @@
 }
 
 .moved-product-label{
-  margin-left: 200px;
   min-width: 70px;
+  margin-left: 10px;
+  color: #2A8C3E;
+
 }
 
 .list-name{
@@ -37,6 +35,10 @@
   }
 }
 
+.moved-product-name{
+  display: none;
+}
+
 @keyframes slideIn {
   from {
     width: 0;
@@ -44,5 +46,31 @@
 
   to {
     width: 100%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .moved-product-content{
+    margin-left: rem-calc(205);
+  }
+}
+
+@media (max-width: 768px) {
+  .moved-product-content{
+    margin-left: rem-calc(10);
+    margin-bottom: rem-calc(15);
+    justify-content: space-between;
+  }
+
+  .moved-product-name{
+    display: block;
+    font-size: rem-calc(16);
+    margin-left: rem-calc(10);
+    margin-bottom: rem-calc(15);
+    margin-top: rem-calc(15);
+  }
+  .list-name{
+    text-align: right;
+    margin-right: 10px;
   }
 }

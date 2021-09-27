@@ -113,6 +113,7 @@ export const ListProductItems = ({ info, path, edit }) => {
                               <MovedProductPlaceholder
                                 label={e.typeAction.listName}
                                 id={e.typeAction.toListId}
+                                productName={e.typeAction.productName}
                               />
                             );
                           }
