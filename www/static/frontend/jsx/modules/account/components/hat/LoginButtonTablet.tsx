@@ -9,7 +9,7 @@ import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
 
-const TabletLoginButton: React.FC<any> = () => {
+const LoginButtonTablet: React.FC<any> = () => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const text = user ? user.name : "log in";
@@ -87,4 +87,4 @@ const TabletLoginButton: React.FC<any> = () => {
   );
 };
 
-export default TabletLoginButton;
+export default LoginButtonTablet;

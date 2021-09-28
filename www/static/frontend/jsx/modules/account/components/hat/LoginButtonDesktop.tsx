@@ -15,7 +15,7 @@ interface PropsInterface {
   isStatic: boolean;
 }
 
-const DesktopLoginButton: React.FC<PropsInterface> = function (
+const LoginButtonDesktop: React.FC<PropsInterface> = function (
   props: PropsInterface
 ) {
   const maxUsernameLength = 10;
@@ -115,4 +115,4 @@ const DesktopLoginButton: React.FC<PropsInterface> = function (
   );
 };
 
-export default DesktopLoginButton;
+export default LoginButtonDesktop;

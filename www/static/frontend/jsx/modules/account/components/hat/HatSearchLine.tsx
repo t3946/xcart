@@ -11,7 +11,7 @@ import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
-import DesktopLoginButton from "@client/jsx/modules/account/components/hat/DesktopLoginButton";
+import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButtonDesktop";
 
 interface PropsInterface {
   isStatic?: boolean;
@@ -138,7 +138,7 @@ const HatSearchLine: React.FC<PropsInterface> = (
                 {searchTemplate()}
 
                 <div className={"d-none d-lg-flex search-line_buttons"}>
-                  <DesktopLoginButton isStatic={isStatic} />
+                  <LoginButtonDesktop isStatic={isStatic} />
 
                   <div className="ms-12">
                     <MiniCart />

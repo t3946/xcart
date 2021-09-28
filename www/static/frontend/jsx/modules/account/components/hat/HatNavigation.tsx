@@ -1,5 +1,5 @@
 import React from "react";
-import HatLoginButton from "./HatLoginButton";
+import LoginButton from "./LoginButton";
 import TopLine from "@client/modules/account/components/hat/TopLine";
 import { useDispatch, useSelector } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
@@ -111,7 +111,7 @@ const HatNavigation = (): any => {
                     </div>
 
                     <div className="hat-navigation-item-wrapper">
-                      <HatLoginButton />
+                      <LoginButton />
                     </div>
 
                     <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">

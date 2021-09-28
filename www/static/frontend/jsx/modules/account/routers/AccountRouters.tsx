@@ -14,7 +14,7 @@ import { AddAddressPage } from "../pages/AddAddressPage";
 import { getTerritory } from "../../../redux/actions/account-actions/MainActions";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
-import MobileMenu from "../components/hat/MobileMenu";
+import MenuMobile from "@client/jsx/modules/account/components/hat/MenuMobile";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import classnames from "classnames";
@@ -100,7 +100,7 @@ export const AccountRouters = (): any => {
           <DepartmentsMenuMobile />
           <HatNavigation />
           <HatSearchLine isStatic={true} />
-          <MobileMenu />
+          <MenuMobile />
           <AlertMobile />
 
           <div className={"container"}>
