@@ -1199,14 +1199,12 @@ class FraudCheckHelper
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
             if ($hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid])) {
                 switch ($hts = $hardResellModel->getHardToResellStatus()) {
+                    case ProductHardResellModel::HARD_TO_RESELL_NO:
                     case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN :
                         $hard[] = 'negative';
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_YES:
                         $hard[] = 'positive';
-                        break;
-                    case ProductHardResellModel::HARD_TO_RESELL_NO:
-                        $hard[] = 'negative';
                         break;
                 }
             }

@@ -676,7 +676,7 @@ HTML;
         return Xcart::app()->router->url($router);
     }
 
-    public function getVoidedReasons(): array
+    public static function getVoidedReasons(): array
     {
         foreach (VoidedReasonModel::objects()->order(['root', 'level', 'pos']) as $reason) {
             if ((int)$reason->level !== 1) {
