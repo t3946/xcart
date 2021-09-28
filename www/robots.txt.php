@@ -1,12 +1,11 @@
 <?php
 
-use Modules\Sites\Models\SiteConfigModel;
-use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 
-define("CIDEV_CRON_START", "CRON");
+require_once '../app/include/vendors/autoload.php';
+$config = include '../app/config/settings.php';
 
-include 'top.inc.php';
-include 'init.php';
+Xcart::init($config);
 
 if (defined('APP_LOCAL') && APP_LOCAL) {
     header("Content-type: text/plain");
@@ -14,17 +13,12 @@ if (defined('APP_LOCAL') && APP_LOCAL) {
 User-agent: *
 Disallow: /
 ECHO;
+    die();
 }
 
+$model = Xcart::app()->getModule('Sites')->getSite();
 
-
-$default_host = 'www.artistsupplysource.com';
-if (isset($_SERVER['HTTP_HOST'])) {
-    $host = $_SERVER['HTTP_HOST'];
-} else {
-    $host = $default_host;
-}
-if (!(SiteConfigModel::objects()->get(['site__domain' => $host , 'name' => 'shop_closed', 'value__isnt' => 'Y']))) {
+if (!$model || $model->shop_closed) {
     $text = <<<ROBOTS
 User-agent: *
 Disallow: /
@@ -35,16 +29,14 @@ ROBOTS;
     die();
 }
 
-if  ($host == 'www.artistsupplysource.com')
-{
+if ($model->code === 'AR') {
     $brush = '';
 } else {
     $brush = '
 Disallow: /brushes/';
 }
 
-if  ($host == 'www.justpokersupplies.com')
-{
+if ($model->code === 'JP') {
     $allow_ads_bot = '
 User-agent: AdsBot-Google
 Disallow:
@@ -120,4 +112,4 @@ Host: %s
 ROBOTS;
 
 header("Content-type: text/plain");
-printf($text, $brush, $host, $brush, $host, $host);
+printf($text, $brush, $model->domain, $brush, $model->domain, $model->domain);
