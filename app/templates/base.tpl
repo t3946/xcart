@@ -1,6 +1,6 @@
 {extends "wrapper.tpl"}
 {block "wrapper"}
-    <div id="main_wrapper" class="off-canvas-wrapper">
+    <div id="main_wrapper" class="off-canvas-wrapper account-main-wrapper account_main-wrapper">
         <div class="off-canvas-content" data-off-canvas-content>
             <div id="content-wrapper">
                 {block "header"}
