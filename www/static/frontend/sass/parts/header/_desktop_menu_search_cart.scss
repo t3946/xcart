@@ -557,15 +557,10 @@ $search_input_large_height: rem-calc(36);
     background: {
       color: $dark_yellow;
     }
-    @media (max-width: 1024px) {
-      width: 145px;
-      position: relative;
-      right: 14px;
-    }
   ;
 
     .cart_info {
-/*      @include active-triangle(5px, 5px);*/
+      //@include active-triangle(5px, 5px);
 
       display: block;
       color: $black;

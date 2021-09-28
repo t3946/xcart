@@ -1,7 +1,7 @@
 import classnames from "classnames";
+import Image from "./components/Image";
 import { createRef } from "preact";
 import CatalogContext from "@/components/catalog/CatalogContext";
-import { ImageCard } from "./components/ImageCard";
 
 /**
  * abstract component for product cart in sliders and catalog
@@ -72,7 +72,7 @@ export default class Product extends Component {
         itemType="http://schema.org/Product"
         itemProp="itemListElement"
       >
-        <ImageCard {...imageProp} />
+        <Image {...imageProp} />
 
         <div className={classnames(cardInfoClasses)}>{this.mainInfo}</div>
 

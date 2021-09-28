@@ -18,6 +18,7 @@
 
   &.enabled {
     .cart_info {
+      @include active-triangle(6px, 6px);
 
       .text {
         &:after {

@@ -1,25 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import t from "../../../i18n";
 import MiniCartInfoDto from "@modules/mini-cart/ts/types/MiniCartInfoDto";
-import { convertCartNumber } from "../../../utils/convertCartNumber";
 
-export const Info: React.FC<MiniCartInfoDto> = (props: MiniCartInfoDto) => {
+const Info: React.FC<MiniCartInfoDto> = (props: MiniCartInfoDto) => {
   return (
     <a className="cart_info" href={props.url}>
-      <div className="header-info-cart">
-        <span className="logo-image">
-          <span className="left-logo-cart" />
-          <span className="center-logo-cart">
-            <span className="count-text-cart" id="desktop-cart-quantity">
-              {convertCartNumber(Number(199000))}
-            </span>
-          </span>
-          <span className="right-logo-cart" />
+      <span className="count">
+        <span id="desktop-cart-quantity" className="mc_count">
+          {props.quantity}
         </span>
-        <span className="title-cart-header">
-          <span className="text">{t("Cart")}</span>
-        </span>
-      </div>
+      </span>
+      <span className="text">{t("Cart")}</span>
     </a>
   );
 };
+
+export default Info;
