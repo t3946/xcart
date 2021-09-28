@@ -1,6 +1,5 @@
 import React from "react";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import DepartmentsMenu from "./DepartmentsMenu";
@@ -12,6 +11,7 @@ import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
+import DesktopLoginButton from "@client/jsx/modules/account/components/hat/DesktopLoginButton";
 
 interface PropsInterface {
   isStatic?: boolean;
@@ -26,7 +26,6 @@ const HatSearchLine: React.FC<PropsInterface> = (
   const isVisibleDepartmentsMenu = useSelector(
     (e: AccountStore) => e.departmentsMenuDesktop.isVisible
   );
-  const maxUsernameLength = 10;
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
 
@@ -68,55 +67,6 @@ const HatSearchLine: React.FC<PropsInterface> = (
         </form>
       </div>
     );
-  }
-
-  function accountButton() {
-    if (!user) {
-      const path = route("account:login");
-      const className = "hat-login-button";
-      const text = "log in";
-
-      if (isStatic) {
-        return (
-          <a href={path} className={className}>
-            {text}
-          </a>
-        );
-      } else {
-        return (
-          <Link to={path} className={className}>
-            {text}
-          </Link>
-        );
-      }
-    }
-
-    function truncateUsername(username) {
-      if (username.length <= maxUsernameLength) {
-        return username;
-      } else {
-        return username.substr(0, maxUsernameLength - 1) + "…";
-      }
-    }
-
-    const username = truncateUsername(user.name);
-    const title = username === user.name ? "" : user.name;
-    const className = "hat-login-button";
-    const path = "/account/dashboard";
-
-    if (isStatic) {
-      return (
-        <a href={path} className={className} title={title}>
-          {username}
-        </a>
-      );
-    } else {
-      return (
-        <Link to={path} className={className} title={title}>
-          {username}
-        </Link>
-      );
-    }
   }
 
   function openDepartmentsMenu() {
@@ -188,7 +138,7 @@ const HatSearchLine: React.FC<PropsInterface> = (
                 {searchTemplate()}
 
                 <div className={"d-none d-lg-flex search-line_buttons"}>
-                  <div className="">{accountButton()}</div>
+                  <DesktopLoginButton isStatic={isStatic} />
 
                   <div className="ms-12">
                     <MiniCart />
