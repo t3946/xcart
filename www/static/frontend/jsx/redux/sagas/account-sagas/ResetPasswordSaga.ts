@@ -6,11 +6,11 @@ import { route } from "@client/jsx/utils/AppData";
 
 const api = new ApiService();
 
-function* sendEmail(action: AnyAction) {
+function* sendOneTimePassword(action: AnyAction) {
   const { form, success, error, complete } = action.payload;
 
   yield api
-    .post<any>(route("account:api:send-email"), JSON.stringify(form))
+    .post<any>(route("account:api:send-one-time-password"), JSON.stringify(form))
     .then((res) => {
       res.errors ? error(res.errors) : success(res);
 
@@ -52,7 +52,7 @@ function* resetPassword(action: AnyAction) {
 }
 
 function* ResetPasswordSaga(): SagaIterator {
-  yield takeLatest("PA_SEND_EMAIL", sendEmail);
+  yield takeLatest("PA_SEND_ONE_TIME_PASSWORD", sendOneTimePassword);
   yield takeLatest("PA_VERIFY_ONE_TIME_PASSWORD", verifyOneTimePassword);
   yield takeLatest("PA_RESET_PASSWORD", resetPassword);
 }

@@ -52,10 +52,10 @@ class AccountAuthorizationApi extends FrontendController
             /**
              * @var UserModel $user
              */
-            $user = UserModel::objects()->filter(['email' => $attributes['login']])->get();
+            $user = UserModel::getUserByLogin($attributes['login']);
 
             if (!$user) {
-                $form->addError('login', 'User with that email or phone not found');
+                $form->addError('login', 'User with this email or phone not found');
                 $this->jsonResponse(["errors" => $form->getErrors()]);
                 return;
             }
@@ -103,8 +103,7 @@ class AccountAuthorizationApi extends FrontendController
     public function checkLogin()
     {
         $json = json_decode(file_get_contents('php://input'), true);
-        $login = $json['LoginForm']['login'];
-        $user = UserModel::objects()->filter(['email' => $login])->get();
+        $user = UserModel::getUserByLogin($json['LoginForm']['login']);
         $this->jsonResponse($user ? [] : ['errors' => ['login' => ['User not found']]]);
     }
 

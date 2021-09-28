@@ -18,7 +18,8 @@ use Modules\User\Models\UserAccount\UserModel;
 
 class AccountController extends FrontendController
 {
-    public static function provideAccountData() {
+    public static function provideAccountData()
+    {
         /**
          * @var $user UserModel
          */
@@ -29,7 +30,8 @@ class AccountController extends FrontendController
         }
 
         $site = Xcart::app()->getModule('Sites')->getSite();
-        StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
+
+            StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
 
         StorageHelper::push([
             "code" => strtolower($site->code),
@@ -115,8 +117,6 @@ class AccountController extends FrontendController
 
     public function actionIndex()
     {
-        self::provideAccountData();
-
         $this->generateQrCode();
 
         $this->display('account/base.tpl');

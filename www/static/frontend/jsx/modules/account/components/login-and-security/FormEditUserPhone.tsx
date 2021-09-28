@@ -47,7 +47,7 @@ const FormEditUserPhone = (props): any => {
     ).phone_code;
     const form = {
       phone_country_code: values.phoneCountryCode,
-      phone: `+${phoneCode}${values.phone}`,
+      phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
     };
 
     dispatch(

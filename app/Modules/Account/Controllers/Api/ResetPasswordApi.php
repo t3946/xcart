@@ -2,6 +2,7 @@
 
 namespace Modules\Account\Controllers\Api;
 
+use Aws\Sns\SnsClient;
 use Modules\Account\Models\OneTimePasswordModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
@@ -10,27 +11,25 @@ use Firebase\JWT\JWT;
 
 class ResetPasswordApi extends FrontendController
 {
-    public function sendEmail(): void
+    private static function getOneTimePassword(int $user_id): array
     {
-        $data = json_decode(file_get_contents('php://input'), true);
-        $user = UserModel::objects()->filter(['email' => $data['login']])->get();
-
-        if (!$user) {
-            $this->jsonResponse(['errors' => ['login' => ['User not found']]]);
-            return;
-        }
-
-        $user_id = $user->getAttribute('user_id');
-
         /**
          * @var OneTimePasswordModel $otp
          */
         [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
 
-        if (!$is_new && !$otp->isNew()) {
+        //regenerate obsolete otp
+        if (!$otp->isNew()) {
             $otp->delete();
             [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
         }
+
+        return [$otp, $is_new];
+    }
+
+    public function sendEmail($user): void
+    {
+        [$otp, $is_new] = self::getOneTimePassword($user->user_id);
 
         if ($is_new && REALLY_APP_LOCAL !== true) {
             Xcart::app()->mail->raw(
@@ -46,10 +45,60 @@ class ResetPasswordApi extends FrontendController
         $this->jsonResponse(['one_time_password' => $otp->toArray()]);
     }
 
+    private function sendSMS($user): void
+    {
+        [$otp, $is_new] = self::getOneTimePassword($user->user_id);
+
+        if ($is_new) {
+            $message = "Your reset password OTP: {$otp->one_time_password}. Don't pass this code third party.";
+
+            $params = [
+                'credentials' => Xcart::app()->globals['aws']['sns']['credentials'],
+                'region' => 'us-east-1',
+                'version' => 'latest'
+            ];
+
+            $sns = new SnsClient($params);
+
+            $args = [
+                "MessageAttributes" => [
+                    'AWS.SNS.SMS.SenderID' => [
+                        'DataType' => 'String',
+                        'StringValue' => 'S3Stores'
+                    ],
+                    'AWS.SNS.SMS.SMSType' => ['DataType' => 'String', 'StringValue' => 'Transactional']
+                ],
+                "PhoneNumber" => $user->phone,
+                "Message" => $message,
+            ];
+
+            $sns->publish($args);
+        }
+
+        $this->jsonResponse(['one_time_password' => $otp->toArray()]);
+    }
+
+    public function sendOneTimePassword(): void
+    {
+        $login = json_decode(file_get_contents('php://input'), true)['login'];
+        $user = UserModel::getUserByLogin($login);
+
+        if ($user === null) {
+            $this->jsonResponse(['errors' => ['login' => ['User not found']]]);
+            return;
+        }
+
+        if ($login === $user->email) {
+            $this->sendEmail($user);
+        } elseif ($login === $user->phone) {
+            $this->sendSMS($user);
+        }
+    }
+
     public function verifyOneTimePassword(): void
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $user = UserModel::objects()->get(['email' => $data['login']]);
+        $user = UserModel::getUserByLogin($data['login']);
         $user_id = $user->getAttribute('user_id');
 
         /**
@@ -57,9 +106,13 @@ class ResetPasswordApi extends FrontendController
          */
         $one_time_password = OneTimePasswordModel::objects()->get(['user_id' => $user_id]);
 
-        if ($one_time_password->isOutdated()) {
+        if ($one_time_password === null || $one_time_password->isOutdated()) {
             $this->jsonResponse(['errors' => ['otp' => 'outdated']]);
-            $one_time_password->delete();
+
+            if ($one_time_password) {
+                $one_time_password->delete();
+            }
+
             return;
         }
 
