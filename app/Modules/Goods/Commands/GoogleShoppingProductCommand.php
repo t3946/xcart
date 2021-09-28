@@ -41,8 +41,8 @@ class GoogleShoppingProductCommand extends Command
         /** @var SiteModel $site */
         foreach (SiteModel::objects()->filter(['marketplaces__marketplace_id' => 1])->order(['storefrontid']) as $site) {
 
-            func_backprocess_log('incremental product feed', $l = "Storefront: {$site->domain} Storefrontid: {$site->storefrontid}");
-            echo "{$l}\n";
+            func_backprocess_log('incremental product feed', $l = "Storefront: $site->domain Storefrontid: $site->storefrontid");
+            echo "$l\n";
 
             $config = $site->getConfig();
 
@@ -90,7 +90,6 @@ class GoogleShoppingProductCommand extends Command
 
                         $batch->setCondition('new');
                         $batch->setMpn($product->getMpn());
-                        $batch->setOnlineOnly(true);
                         $batch->setTargetCountry($marketplace->countries);
 
                         $currency = $dX->currency;
@@ -109,16 +108,16 @@ class GoogleShoppingProductCommand extends Command
                             $batch->setPrice($lPrice);
                         }
 
-                        $weight = new Google_Service_ShoppingContent_ProductShippingWeight;
+                        $weight = new Google_Service_ShoppingContent_ProductShippingWeight();
                         $weight->setValue($product->getShippingWeight());
                         $weight->setUnit('lb');
                         if ($weight->getValue() > 0) {
                             $batch->setShippingWeight($weight);
                         }
 
-                        $w = new Google_Service_ShoppingContent_ProductShippingDimension;
-                        $l = new Google_Service_ShoppingContent_ProductShippingDimension;
-                        $h = new Google_Service_ShoppingContent_ProductShippingDimension;
+                        $w = new Google_Service_ShoppingContent_ProductShippingDimension();
+                        $l = new Google_Service_ShoppingContent_ProductShippingDimension();
+                        $h = new Google_Service_ShoppingContent_ProductShippingDimension();
                         $w->setUnit('in');
                         $l->setUnit('in');
                         $h->setUnit('in');
@@ -162,7 +161,7 @@ class GoogleShoppingProductCommand extends Command
                                     }
                                     $rates[$state->stateid] = $state_shipping;
                                     $rate = reset($rates[$state->stateid]);
-                                    if ($rate && $sModel = $rate->shipping) {
+                                    if ($rate && $rate->shipping) {
                                         $shipping = new Google_Service_ShoppingContent_ProductShipping();
                                         $shipping->setCountry($state->country_code);
                                         $shipping->setRegion($state->code);
@@ -247,7 +246,7 @@ class GoogleShoppingProductCommand extends Command
                         }
                         if (($m_order_amount = $dX->getMinimalAmount()) && (float)$product->getFrontendPrice() < $m_order_amount) {
                             $m_order_amount = number_format($m_order_amount, 2);
-                            $batch->setShippingLabel("Minimum order value {$m_order_amount} {$price->getCurrency()}");
+                            $batch->setShippingLabel("Minimum order value $m_order_amount {$price->getCurrency()}");
                         }
 
                         $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
@@ -263,10 +262,11 @@ class GoogleShoppingProductCommand extends Command
 
                         $entry->setMethod($method);
                         if ($entry->getMethod() === 'delete') {
-                            $entry->setProductId("online:{$lang}:{$marketplace->countries}:{$product->productid}");
+                            $entry->setProductId("online:$lang:$marketplace->countries:$product->productid");
                         } else {
                             $entry->setProduct($batch);
                         }
+
                         $entry->setBatchId($product->productid);
                         $entry->setMerchantId($merchantId);
                         $entries[] = $entry;
@@ -285,14 +285,14 @@ class GoogleShoppingProductCommand extends Command
                     $log_text = '';
                     try {
                         func_backprocess_log('incremental product feed', $l = "GB: tried to submit {$batchReq->count()} items as product feed ($merchantId)");
-                        echo "{$l}\n";
+                        echo "$l\n";
 
                         $result = $oService->products->customBatch($batchReq);
 
                         /** @var Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry $entinty */
                         foreach ($result->getEntries() as $entinty) {
                             if ($errors = $entinty->getErrors()) {
-                                $log_text .= "Error process product {$entinty->batchId} :\n";
+                                $log_text .= "Error process product $entinty->batchId :\n";
                                 /** @var Google_Service_ShoppingContent_Error $error */
                                 foreach ($errors as $error) {
                                     $log_text .= "{$error->getMessage()}\n";
