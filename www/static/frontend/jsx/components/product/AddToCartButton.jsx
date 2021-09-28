@@ -158,6 +158,8 @@ export default class AddToCartButton extends Component {
       let opt = [];
       let values = $(form).serializeArray();
 
+      console.log(values);
+
       for (let oneValue of values) {
         let valueParts = oneValue.value.split("_");
         let identifiersParts = valueParts[0].split("-");

@@ -14,6 +14,7 @@ interface ListProductItemBtnsProps {
   btnLabel: string;
   mainBtnClasses?: string | string[];
   id: string;
+  onMainBtnClick: () => void;
 }
 
 export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
@@ -23,6 +24,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   btnLabel,
   mainBtnClasses,
   id,
+  onMainBtnClick,
 }) => {
   const lists = useSelector((e: AccountStore) => e.lists.lists);
 
@@ -34,6 +36,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
           "account-submit-btn  full-width-button",
           mainBtnClasses
         )}
+        onClick={onMainBtnClick}
       >
         {btnLabel}
       </Button>

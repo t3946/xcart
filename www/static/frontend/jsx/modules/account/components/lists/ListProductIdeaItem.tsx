@@ -78,6 +78,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
             openMenuDialog={mobileMenuDialog.handleClickOpen}
             listId={listInfo.product_list_id}
             info={info}
+            edit={edit}
           />
 
           {edit &&

@@ -12,12 +12,14 @@ interface EditIdeaProps {
   info: ListItem;
   listId: string;
   openMenuDialog: () => void;
+  edit: boolean;
 }
 
 export const EditIdea: React.FC<EditIdeaProps> = ({
   info,
   listId,
   openMenuDialog,
+  edit,
 }) => {
   const [isEdit, setIsEdit] = useState(false);
 
@@ -87,14 +89,18 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
       ) : (
         <div className="edit-idea-text-container">
           <div className="product-list-idea-name">{info.product.name}</div>
-          <span onClick={() => onSetEdit()} className="add-comment-text">
-            Edit idea
-          </span>
-          <img
-            onClick={openMenuDialog}
-            className="edit-idea-ellipsis"
-            src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
-          />
+          {edit && (
+            <React.Fragment>
+              <span onClick={() => onSetEdit()} className="add-comment-text">
+                Edit idea
+              </span>
+              <img
+                onClick={openMenuDialog}
+                className="edit-idea-ellipsis"
+                src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+              />
+            </React.Fragment>
+          )}
         </div>
       )}
     </div>

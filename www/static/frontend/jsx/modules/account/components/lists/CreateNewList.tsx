@@ -32,6 +32,10 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
 
   const handleSubmit = () => {
+    if (!formik.values.name.trim()) {
+      formik.setErrors({ name: "Required field" });
+      return;
+    }
     dispatch(createList(formik.values.name, onAddingEnd, actionType));
   };
 

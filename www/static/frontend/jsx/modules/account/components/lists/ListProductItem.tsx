@@ -13,6 +13,7 @@ import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMe
 import { useHistory } from "react-router-dom";
 import { ListProductInfo } from "@client/modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
+import { cartAdd } from "../../../../redux/reduсers/appCartReducer";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,
@@ -32,6 +33,14 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   if ("product" in info.product) {
     product = info.product;
   }
+
+  const data = [
+    {
+      id: info.product_id,
+      quantity: 1,
+      options: [],
+    },
+  ];
 
   const mobileMenuDialog = useDialog();
 
@@ -86,11 +95,13 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
             <div className="product-list-item-name">{product.product}</div>
-            <img
-              onClick={mobileMenuDialog.handleClickOpen}
-              className="edit-idea-ellipsis"
-              src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
-            />
+            {edit && (
+              <img
+                onClick={mobileMenuDialog.handleClickOpen}
+                className="edit-idea-ellipsis"
+                src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+              />
+            )}
           </div>
 
           <Tooltip
@@ -123,11 +134,16 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         </div>
       </div>
       <ListProductItemBtns
-        btnLabel={"Add in cart"}
+        btnLabel={"Add to cart"}
         edit={edit}
         id={info.product_id}
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
+        onMainBtnClick={() =>
+          cartAdd(data, () => {
+            console.log(1);
+          })
+        }
       />
 
       <BootstrapDialogHOC

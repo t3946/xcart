@@ -75,12 +75,12 @@ export const ListsPage: React.FC = () => {
         onClose={createIdeaDialog.handleClose}
       >
         <AddIdea
-          listHash={id}
+          listHash={id || list?.cache_url}
           onCancelBtnClick={createIdeaDialog.handleClose}
         />
       </BootstrapDialogHOC>
       {breakpoints({
-        xs: id && (
+        xs: (
           <Button
             onClick={createIdeaDialog.handleClickOpen}
             type={"submit"}

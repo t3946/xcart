@@ -30,6 +30,10 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
     .lists.lists.find((e) => e.cache_url === listHash).product_list_id;
 
   const handleSubmit = () => {
+    if (!formik.values.name.trim()) {
+      formik.setErrors({ name: "Required field" });
+      return;
+    }
     dispatch(addProduct(listId, null, formik.values.name, onAddingEnd));
   };
 

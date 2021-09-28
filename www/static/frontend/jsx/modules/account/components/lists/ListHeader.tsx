@@ -60,11 +60,14 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
     <div className="list-header-container">
       <div className="list-header-left-side">
         <div className="list-header-name">{label}</div>
-        <img
-          onClick={mobileMenuDialog.handleClickOpen}
-          className="list-header-ellipsis"
-          src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
-        />
+        {edit && (
+          <img
+            onClick={mobileMenuDialog.handleClickOpen}
+            className="list-header-ellipsis"
+            src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+          />
+        )}
+
         <div className="list-header-actions">
           {edit && (
             <React.Fragment>
