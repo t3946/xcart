@@ -1,5 +1,5 @@
 import React from "react";
-// import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import classnames from "classnames";
 
 interface sideBarMenuItemPropsDto {
@@ -29,33 +29,35 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemPropsDto> = ({
     );
   }
 
-  // return (
-  //   <NavLink
-  //     to={to}
-  //     exact={true}
-  //     activeClassName="active-route"
-  //     className={classnames(
-  //       "sidebar-menu-item text-decoration-none",
-  //       className
-  //     )}
-  //     onClick={onClick}
-  //   >
-  //     {label}
-  //     {badgeTemplate()}
-  //   </NavLink>
-  // );
-  return (
-    <a
-      href={to}
-      // activeClassName="active-route"
-      className={classnames(
-        "sidebar-menu-item text-decoration-none",
-        className
-      )}
-      onClick={onClick}
-    >
-      {label}
-      {badgeTemplate()}
-    </a>
-  );
+  if (document.location.pathname.indexOf("/account") !== -1) {
+    return (
+      <NavLink
+        to={to}
+        exact={true}
+        activeClassName="active-route"
+        className={classnames(
+          "sidebar-menu-item text-decoration-none",
+          className
+        )}
+        onClick={onClick}
+      >
+        {label}
+        {badgeTemplate()}
+      </NavLink>
+    );
+  } else {
+    return (
+      <a
+        href={to}
+        className={classnames(
+          "sidebar-menu-item text-decoration-none",
+          className
+        )}
+        onClick={onClick}
+      >
+        {label}
+        {badgeTemplate()}
+      </a>
+    );
+  }
 };
