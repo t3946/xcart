@@ -11,7 +11,7 @@ export const Info: React.FC<MiniCartInfoDto> = (props: MiniCartInfoDto) => {
           <span className="left-logo-cart" />
           <span className="center-logo-cart">
             <span className="count-text-cart" id="desktop-cart-quantity">
-              {convertCartNumber(Number(199000))}
+              {convertCartNumber(Number(props.quantity))}
             </span>
           </span>
           <span className="right-logo-cart" />

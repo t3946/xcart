@@ -119,7 +119,7 @@ import { convertCartNumber } from "../../utils/convertCartNumber";
 
         miniCartCounter.innerHTML = qtyNewNum;
 
-        $("#desktop-cart-quantity").html(convertCartNumber(199000));
+        $("#desktop-cart-quantity").html(convertCartNumber(qtyNewNum));
       }
     })
     // Раскрыть корзину в верхней части окна
