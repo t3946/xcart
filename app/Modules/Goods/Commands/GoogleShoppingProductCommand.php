@@ -226,7 +226,6 @@ class GoogleShoppingProductCommand extends Command
                         foreach ($ats as $a) {
                             $ca = new Google_Service_ShoppingContent_CustomAttribute();
                             $ca->setName($a['name']);
-                            $ca->setType($a['type']);
                             $ca->setValue($a['value']);
                             $attrs[] = $ca;
                         }

@@ -7,6 +7,7 @@ namespace Modules\Goods\Commands;
 use Exception;
 use Google_Client;
 use Google_Service_ShoppingContent;
+use Google_Service_ShoppingContent_CustomAttribute;
 use Google_Service_ShoppingContent_Error;
 use Google_Service_ShoppingContent_Price;
 use Google_Service_ShoppingContent_Product;
@@ -128,13 +129,12 @@ class GoogleShoppingInventoryCommand extends Command
                     $inventory->setPrice($lPrice);
                 }
 
-                if ($product->isOutOfStock()) {
-                    $availability = 'out of stock';
-                } else {
-                    $availability = 'in stock';
-                }
+                $inventory->setAvailability($product->isOutOfStock() ? 'out of stock' : 'in stock');
 
-                $inventory->setAvailability($availability);
+                $quantity = new Google_Service_ShoppingContent_CustomAttribute();
+                $quantity->setName('quantity');
+                $quantity->setValue($product->r_avail);
+                $inventory->setCustomAttributes([$quantity]);
 
                 $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
                 $entry->setProductId("online:$lang:$marketplace->countries:$product->productid");
