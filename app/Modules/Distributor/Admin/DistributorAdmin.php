@@ -12,6 +12,7 @@ use Xcart\App\Form\Form;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
+use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 
 class DistributorAdmin extends Admin
@@ -84,9 +85,9 @@ class DistributorAdmin extends Admin
                     )
                 );
             case 'products' :
-                return $item->products->count();
+                return $item->products->filter([new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])])->count();
             case 'active_products' :
-                return $item->products_active->count();
+                return $item->products_active->filter([new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])])->count();
             case 'feed' :
                 $i_count = $item->feed_I_E->count();
                 $p_count = $item->feed_P_E->count();
