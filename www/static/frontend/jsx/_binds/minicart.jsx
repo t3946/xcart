@@ -1,8 +1,8 @@
 import { Fragment, render } from "preact";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import MiniCartItems from "../components/MiniCart";
-import MiniCartInfo from "@/modules/mini-cart/components/info";
 import storeCart from "../stores/StoreCart";
+import { Info } from "../modules/mini-cart/components/info";
 
 let miniCart = document.querySelector(".mini-cart-container");
 
@@ -17,7 +17,7 @@ if (miniCart) {
         />
       </Provider>
 
-      <MiniCartInfo
+      <Info
         quantity={miniCart.dataset.quantity}
         url={miniCart.dataset.cartUrl}
       />

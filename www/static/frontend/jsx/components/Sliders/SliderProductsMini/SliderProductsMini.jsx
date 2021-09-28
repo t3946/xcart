@@ -3,6 +3,7 @@ import SwiperCore, { Lazy, Scrollbar } from "swiper";
 import Image from "./components/Image";
 import SliderProducts from "@/components/Sliders/SliderProducts/SliderProducts";
 import classnames from "classnames";
+import { ImageCard } from "../../product/card/components/ImageCard";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
@@ -66,7 +67,7 @@ export default class SliderProductsMini extends SliderProducts {
                 title={item.name}
                 className="products-slider-image-link"
               >
-                <Image {...item} />
+                <ImageCard {...item} />
               </a>
             </SwiperSlide>
           ))}
