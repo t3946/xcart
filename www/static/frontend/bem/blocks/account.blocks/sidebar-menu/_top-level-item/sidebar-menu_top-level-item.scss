@@ -1,6 +1,10 @@
 .sidebar-menu_top-level-item {
   margin: 0 0 rem-calc(2) 0;
 
+  &:last-child {
+    margin: 0;
+  }
+
   @include breakpoint(md up) {
     margin: 0;
   }

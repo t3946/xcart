@@ -2,14 +2,14 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import classNames from "classnames";
-import SidebarMenu from "@client/modules/account/components/sidebar-menu/SideBarMenu";
+import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 
 interface PropsInterface {
   isStatic: boolean;
@@ -60,11 +60,15 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
   const username = truncateUsername(user.name);
   const title = username === user.name ? "" : user.name;
   const className = "hat-login-button";
-  const path = "/account/dashboard";
 
   const isTabletMenuVisible = useSelector(
     (e: any) => e.mobileMenu.isTabletMenuVisible
   );
+
+  function logoutButtonClickHandler() {
+    HideAllMenu(dispatch);
+    dispatch(setVisibleShadowPanelAction(false));
+  }
 
   const CustomMenu = React.forwardRef(
     ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
@@ -77,7 +81,9 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
           )}
           aria-labelledby={labeledBy}
         >
-          <SidebarMenu />
+          <div className="sidebar-menu-wrapper">
+            <LogoutButton onClick={logoutButtonClickHandler} />
+          </div>
         </div>
       );
     }

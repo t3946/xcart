@@ -1,20 +1,17 @@
 import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
-import { logoutAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import { userClearAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import { setIsList } from "@client/jsx/redux/actions/account-actions/MainActions";
 import { route } from "@client/jsx/utils/AppData";
+import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const SideBarMenu: React.FC = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const user = useSelector((e: StoreDto) => e.user);
   const breakpoint = useBreakpoint();
+  const user = useSelector((e: AccountStore) => e.user);
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {
@@ -47,34 +44,13 @@ const SideBarMenu: React.FC = () => {
     { to: "/account/rewards", label: "Rewards" },
   ];
 
-  function logout() {
-    dispatch(
-      logoutAction({
-        callback: function () {
-          dispatch(userClearAction());
-          history.push("/account/login");
-        },
-      })
-    );
-  }
-
   function logoutButtonTemplate(): any {
     if (!user) {
       return;
     }
 
     return breakpoint({
-      xs: (
-        <button
-          className={
-            "sidebar-menu-item sidebar-menu_top-level-item text-start w-100 sidebar-menu-item__logout"
-          }
-          onClick={logout}
-        >
-          Log out
-        </button>
-      ),
-
+      xs: <LogoutButton />,
       lg: null,
     });
   }
@@ -103,6 +79,7 @@ const SideBarMenu: React.FC = () => {
           />
         );
       })}
+
       {logoutButtonTemplate()}
     </div>
   );
