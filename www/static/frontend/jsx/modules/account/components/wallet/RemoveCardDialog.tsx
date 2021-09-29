@@ -4,6 +4,7 @@ import { DialogHeader } from "../dialog/DialogHeader";
 import { RemoveCard } from "./RemoveCard";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 
 interface RemoveCardDialogProps {
   handleClose: () => void;
@@ -17,20 +18,7 @@ export const RemoveCardDialog: React.FC<RemoveCardDialogProps> = ({
   cardInfo,
 }) => {
   return (
-    <Dialog
-      className="email-send-dialog"
-      fullWidth={true}
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-      maxWidth="md"
-      PaperProps={{
-        style: {
-          borderRadius: 0,
-        },
-      }}
-    >
-      <DialogHeader label="Remove card" onClose={handleClose} />
+    <BootstrapDialogHOC onClose={handleClose} show={open} title={"Remove card"}>
       <WalletCardsDialogContext.Provider
         value={{
           handleClose,
@@ -38,6 +26,6 @@ export const RemoveCardDialog: React.FC<RemoveCardDialogProps> = ({
       >
         <RemoveCard cardInfo={cardInfo} />
       </WalletCardsDialogContext.Provider>
-    </Dialog>
+    </BootstrapDialogHOC>
   );
 };

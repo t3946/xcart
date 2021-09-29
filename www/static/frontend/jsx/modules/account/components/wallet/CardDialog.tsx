@@ -4,6 +4,7 @@ import { DialogHeader } from "../dialog/DialogHeader";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { CardAction } from "./CardAction";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 
 interface CardDialogProps {
   handleClose: () => void;
@@ -21,34 +22,21 @@ export const CardDialog: React.FC<CardDialogProps> = ({
   cardInfo,
 }) => {
   return (
-    <Dialog
-      className="email-send-dialog"
-      fullWidth={true}
+    <BootstrapDialogHOC
       onClose={handleClose}
-      maxWidth="md"
-      aria-labelledby="simple-dialog-title"
-      open={open}
-      PaperProps={{
-        style: {
-          borderRadius: 0,
-          overflowY: "initial",
-        },
-      }}
+      show={open}
+      title={`${
+        actionType === BillingAddressFormEnum.ADD_ADDRESS
+          ? "Add Card"
+          : "Edit Card"
+      }`}
     >
-      <DialogHeader
-        label={`${
-          actionType === BillingAddressFormEnum.ADD_ADDRESS
-            ? "Add Card"
-            : "Edit Card"
-        }`}
-        onClose={handleClose}
-      />
       <CardAction
         contentType={contentType}
         actionType={actionType}
         cardInfo={cardInfo}
         onDialogClose={handleClose}
       />
-    </Dialog>
+    </BootstrapDialogHOC>
   );
 };
