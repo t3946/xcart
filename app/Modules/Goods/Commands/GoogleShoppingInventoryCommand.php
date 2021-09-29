@@ -131,11 +131,6 @@ class GoogleShoppingInventoryCommand extends Command
 
                 $inventory->setAvailability($product->isOutOfStock() ? 'out of stock' : 'in stock');
 
-                $quantity = new Google_Service_ShoppingContent_CustomAttribute();
-                $quantity->setName('quantity');
-                $quantity->setValue($product->r_avail);
-                $inventory->setCustomAttributes([$quantity]);
-
                 $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
                 $entry->setProductId("online:$lang:$marketplace->countries:$product->productid");
                 $entry->setMethod('update');
