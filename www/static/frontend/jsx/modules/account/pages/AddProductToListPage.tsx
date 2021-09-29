@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getLists } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 interface AddProductToListPageURLParams {
   listId: string;
@@ -17,8 +18,6 @@ export const AddProductToListPage = () => {
 
   const list = lists?.find((e) => e.product_list_id === params.listId);
 
-  console.log(list);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,6 +28,10 @@ export const AddProductToListPage = () => {
 
   return (
     <div>
+      <MobileMenuBackBtn
+        redirectUrl={`/account/your-lists/${list.cache_url}`}
+        label={"back"}
+      />
       <div className="page-label">Add to list</div>
       {list && (
         <AddProductToList

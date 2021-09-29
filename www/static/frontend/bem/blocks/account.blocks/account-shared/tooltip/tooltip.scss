@@ -42,3 +42,9 @@
   margin-bottom: 1px;
   border-top-color: #c4c4c4;
 }
+
+@media(max-width: 768px) {
+  .tooltip-content{
+    display: none;
+  }
+}

@@ -2,10 +2,7 @@ import { ShowSharedStatusEnum } from "@client/modules/account/ts/types/show-shar
 import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
 import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
 import { EditCommentRequestData } from "@client/modules/account/ts/types/edit-comment-request-data";
-import {
-  ManageListFormData,
-  ManageListRequestData,
-} from "@client/modules/account/ts/types/manage-list-form.types";
+import { ManageListRequestData } from "@client/modules/account/ts/types/manage-list-form.types";
 
 export const getLists = (): any => ({
   type: "GET_LISTS",

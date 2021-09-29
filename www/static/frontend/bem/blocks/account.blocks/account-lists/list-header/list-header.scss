@@ -10,6 +10,11 @@
   display: flex;
 }
 
+.list-header-private-type-img{
+  margin-right: 10px;
+  display: none;
+}
+
 .list-header-action-item, .list-header-share-text{
   cursor: pointer;
 
@@ -80,5 +85,9 @@
     display: block;
     margin-left: 20px;
     cursor: pointer;
+  }
+
+  .list-header-private-type-img{
+    display: block;
   }
 }

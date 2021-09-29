@@ -13,7 +13,7 @@ import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 
-const HatSearchLine = (): any => {
+const HatSearchLine: React.FC = () => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const isVisibleDepartmentsMenu = useSelector(
@@ -56,7 +56,6 @@ const HatSearchLine = (): any => {
               })}
             />
           </div>
-
           <button className="button-search show-for-large" />
         </form>
       </div>

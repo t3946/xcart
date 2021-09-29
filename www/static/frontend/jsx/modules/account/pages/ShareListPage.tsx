@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { ShareList } from "@client/modules/account/components/lists/ShareList";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 interface ShareListPageURLParams {
   id: string;
@@ -10,9 +11,9 @@ interface ShareListPageURLParams {
 export const ShareListPage: React.FC = () => {
   const params = useParams<ShareListPageURLParams>();
 
-  const history = useHistory();
-
   const lists = accountStore.getState().lists.lists;
+
+  const history = useHistory();
 
   if (!lists) {
     history.push(`/account/your-lists/${params.id}`);
@@ -27,6 +28,10 @@ export const ShareListPage: React.FC = () => {
 
   return (
     <div>
+      <MobileMenuBackBtn
+        redirectUrl={`/account/your-lists/${list.cache_url}`}
+        label={"back"}
+      />
       <div className="page-label">Share list with others</div>
       <ShareList onClose={onCancelClick} />
     </div>

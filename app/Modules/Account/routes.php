@@ -43,7 +43,7 @@ return [
         'name' => 'transactions'
     ],
     [
-        'route' => '/your-lists/invite/{*:code}/{*:tag}',
+        'route' => '/your-lists/invite/{*:tag}/{*:code}',
         'target' => [AccountController::class, 'listInvite'],
         'name' => 'list-invite'
     ],

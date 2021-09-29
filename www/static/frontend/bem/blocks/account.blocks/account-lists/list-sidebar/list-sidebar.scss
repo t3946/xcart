@@ -10,7 +10,7 @@ justify-content: space-between;
 }
 
 .lists-sidebar-label{
-  padding: 20px 30px;
+  padding: 20px 15px;
   font-size: 24px;
   font-weight: 700;
 }
@@ -31,6 +31,16 @@ justify-content: space-between;
   }
 }
 
+.back-on-account-btn{
+  padding: 10px 5px;
+  border-radius: 4px;
+  width: 100%;
+  text-transform: uppercase;
+  font-weight: 700;
+  color:   #4A4949;
+  font-size: 16px;
+}
+
 .sidebar-list-cross{
   width: 23px;
 }
@@ -38,5 +48,4 @@ justify-content: space-between;
 .create-list-label{
   text-transform: uppercase;
   line-height: 27px;
-
 }

@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Model;
 
 class ListItemsModel extends Model
@@ -50,6 +51,9 @@ class ListItemsModel extends Model
             ],
             'has' => [
                 'class' => CharField::class,
+            ],
+            'add_date' => [
+                'class' => TimeStampField::class,
             ],
         ];
     }

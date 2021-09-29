@@ -31,16 +31,16 @@ export const ListsSidebarMenu: React.FC = () => {
 
   return (
     <div>
-      <Button
+      <button
         onClick={backOnAccount}
-        className="account-submit-btn account-submit-btn-outline back-account-btn"
+        className="form-button__outline back-on-account-btn"
       >
         <div className="back-account-btn-inner">
           <ArrowBackIcon />
           <div>Back on account</div>
         </div>
-      </Button>
-      <div className="lists-sidebar-label">Your Lists</div>
+      </button>
+      <div className="lists-sidebar-label">Shopping Lists</div>
       {lists?.map((e, index) => {
         return (
           <SideBarMenuItem

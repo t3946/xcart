@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
 import { ProductStarsRating } from "@client/modules/account/components/shared/ProductStarsRating";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import { ListProductInfo } from "@client/modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "../../../../redux/reduсers/appCartReducer";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,
@@ -45,6 +46,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   const mobileMenuDialog = useDialog();
 
   const history = useHistory();
+
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const viewProductPage = () => {
+    window.location.assign(`/product/${info.product_id}/`);
+  };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
@@ -94,7 +101,9 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
-            <div className="product-list-item-name">{product.product}</div>
+            <div onClick={viewProductPage} className="product-list-item-name">
+              {product.product}
+            </div>
             {edit && (
               <img
                 onClick={mobileMenuDialog.handleClickOpen}
@@ -140,10 +149,17 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
         onMainBtnClick={() =>
-          cartAdd(data, () => {
-            console.log(1);
-          })
+          cartAdd(
+            data,
+            showSnackbar({
+              header: "Success",
+              message: `${info.product.product} added to cart`,
+              theme: "success",
+            })
+          )
         }
+        time={info.add_date}
+        listId={info.list_items_id}
       />
 
       <BootstrapDialogHOC

@@ -180,9 +180,10 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-    public function listInvite(string $code, string $tag)
+    public function listInvite(string $tag, string $code)
     {
         $user = Xcart::app()->auth->getUser(true);
+
 
         if($user->getIsGuest()){
             $this->redirect('account:login', [], 301);
@@ -190,6 +191,7 @@ class AccountController extends FrontendController
         }
 
         [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag));
+
 
         $invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash]);
 

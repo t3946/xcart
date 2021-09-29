@@ -104,6 +104,11 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
         deleteItem={deleteItem}
         onMoveClick={onMoveClick}
         id={info.product_id}
+        time={info.add_date}
+        listId={listInfo.product_list_id}
+        onMainBtnClick={() =>
+          window.location.assign(`/search?q=${info.product.name}`)
+        }
       />
       <MobileMenuForList
         items={mobileDialogItems}

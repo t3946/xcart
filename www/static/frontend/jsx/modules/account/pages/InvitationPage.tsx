@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { viewUserListRight } from "@client/modules/account/utils/view-user-list-right";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 export const InvitationPage = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ export const InvitationPage = () => {
 
   return (
     <div>
+      <MobileMenuBackBtn redirectUrl={`/account`} label={"account"} />
       <div className="page-label">Collaboration invitation</div>
       <div className="page-invitation-subtitle">
         You have been invited to collaborate on "

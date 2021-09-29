@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 interface ManageListPageURLParams {
   listHash: string;
@@ -26,6 +27,10 @@ export const DeleteListPage: React.FC = () => {
 
   return (
     <div>
+      <MobileMenuBackBtn
+        redirectUrl={`/account/your-lists/${params.listHash}`}
+        label={"back"}
+      />
       <div className="page-label">Delete list</div>
       <DeleteList info={list} onCancelClick={onCancelClick} />
     </div>

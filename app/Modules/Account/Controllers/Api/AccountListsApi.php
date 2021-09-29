@@ -96,11 +96,11 @@ class AccountListsApi extends FrontendController
 
     public function reorderProducts()
     {
-        $order_id = json_decode(file_get_contents('php://input'),true);
+        [$order_id, $list_id] = array_values(json_decode(file_get_contents('php://input'),true));
 
         foreach ($order_id as $key => $value)
         {
-          $list_item =  ListItemsModel::objects()->get(['product_id' => $value]);
+          $list_item =  ListItemsModel::objects()->get(['product_id' => $value, 'product_list_id' => $list_id]);
 
           $list_item->order_by = $key;
 
@@ -212,9 +212,18 @@ class AccountListsApi extends FrontendController
         $response_data = json_decode(file_get_contents('php://input'),true);
 
         if($response_data['productId']){
-            ListItemsModel::objects()->create(['product_id' => $response_data['productId'],
+            $list_product_model = new ListItemsModel(['product_id' => $response_data['productId'],
                 'product_list_id' => $response_data['listId'], 'product_type' => 'product']);
-            $this->jsonResponse(['product added successfully']);
+           $list_product_model->save();
+           $product = $list_product_model->getAttributes();
+            $product['product']  = ProductModel::objects()->
+            filter(['productid' => $response_data['productId']])->
+            valuesList(['productid','productcode', "product", "cost_to_us"], false)[0];
+            $product['image'] =  (string) ProductModel::objects()->
+            get(['productid' => $response_data['productId']])->
+            getMainImage();
+
+            $this->jsonResponse($product);
             return;
         }
         $idea_model = new ListIdeaModel(['name' => $response_data['name']]);

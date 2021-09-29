@@ -212,7 +212,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path="/account/your-lists/invite/:encryptUrl/:tag"
+                  path="/account/your-lists/invite/*"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
                     <InvitationPage />

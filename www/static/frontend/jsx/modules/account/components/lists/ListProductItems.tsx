@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { NoItemsBlock } from "@client/modules/account/components/lists/NoItemsBlock";
 import { ListProductItem } from "@client/modules/account/components/lists/ListProductItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -16,6 +16,9 @@ import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { DeleteProductPlaceholder } from "@client/modules/account/components/lists/DeleteProductPlaceholder";
 import { ListProductIdeaItem } from "@client/modules/account/components/lists/ListProductIdeaItem";
 import { ListItemTypeEnum } from "@client/modules/account/ts/consts/list-item-type.enum";
+import { ListItem } from "@client/modules/account/ts/types/list.type";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
 
 export const ListProductItems = ({ info, path, edit }) => {
   useEffect(() => {
@@ -51,6 +54,8 @@ export const ListProductItems = ({ info, path, edit }) => {
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
 
+  const { showSnackbar } = useContext(SnackbarContext);
+
   const deleteItem = (id) => {
     dispatch(deleteProduct(info.product_list_id, id));
   };
@@ -71,7 +76,26 @@ export const ListProductItems = ({ info, path, edit }) => {
     );
   };
 
-  const onMoveClick = (value, listId, product) => {
+  const onMoveClick = (
+    value: SelectValue<string, string>,
+    listId: string,
+    product: ListItem
+  ) => {
+    const toList = accountStore
+      .getState()
+      .lists.lists.find((e) => e.product_list_id === value.value);
+
+    const productOnList = toList.products.find(
+      (e) => e.product_id === product.product_id
+    );
+    if (productOnList) {
+      showSnackbar({
+        header: "Error",
+        message: `This item already added to list`,
+        theme: "error",
+      });
+      return;
+    }
     setTimeout(() => {
       dispatch(moveProduct(listId, value, product));
     }, 0);

@@ -13,13 +13,14 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { ListMobileMenu } from "@client/modules/account/components/lists/ListMobileMenu";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 export const ListsPage: React.FC = () => {
   const { id }: { id: string } = useParams();
 
   const lists = useSelector((e: AccountStore) => e.lists.lists);
 
-  const [list, setList] = useState<any>(null);
+  const [list, setList] = useState<List | null>(null);
 
   const createIdeaDialog = useDialog();
 
@@ -53,7 +54,7 @@ export const ListsPage: React.FC = () => {
 
   return (
     <div>
-      {!!lists ? (
+      {!!list ? (
         breakpoints({
           xs: id ? viewLists() : <ListMobileMenu lists={lists} />,
           lg: viewLists(),

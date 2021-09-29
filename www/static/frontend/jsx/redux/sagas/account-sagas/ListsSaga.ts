@@ -49,11 +49,12 @@ function* reorderList(action: AnyAction): Generator {
   yield api
     .post<any>(
       `/account/api/lists/reorder-products`,
-      JSON.stringify(
-        action.listIds.map((e) => {
+      JSON.stringify({
+        productIds: action.listIds.map((e) => {
           return e.product_id;
-        })
-      )
+        }),
+        product_list_id: action.product_list_id,
+      })
     )
     .then((response) => response);
 }
@@ -97,7 +98,7 @@ function* encryptUrl(action: AnyAction): Generator {
     .then((response) => response);
 
   yield action.callback(
-    `http://localhost/account/your-lists/invite/${result.text}/${result.tag}`
+    `http://${window.location.hostname}/account/your-lists/invite/${result.tag}/${result.text}`
   );
 }
 
@@ -140,6 +141,19 @@ function* addProductOnList(action: AnyAction): Generator {
       })
     )
     .then((response) => response);
+
+  yield put({
+    type: "SET_LISTS",
+    lists: accountStore.getState().lists.lists.map((e) => {
+      if (e.product_list_id === action.listId) {
+        return {
+          ...e,
+          products: e.products.concat(product),
+        };
+      }
+      return e;
+    }),
+  });
 
   yield action?.callback(product);
 }

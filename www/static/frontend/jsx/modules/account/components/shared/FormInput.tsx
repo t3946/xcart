@@ -45,8 +45,8 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
     <div className={classnames("form-input-container", classes?.group)}>
       <Grid
         container
-        justifyContent={label ? "space-between" : "flex-end"}
         alignItems="center"
+        className={`form-input-${label ? "space-between" : "flex-end"}`}
       >
         {label && (
           <label

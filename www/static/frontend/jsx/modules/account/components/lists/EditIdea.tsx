@@ -62,6 +62,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
             name={"name"}
             classes={{
               input: ["list-input-edit-idea"],
+              group: ["edit-idea-form-input"],
             }}
             handleChange={formik.handleChange}
             errorMessage={formik.errors.name}
@@ -73,7 +74,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
             <Button
               type={"submit"}
               disabled={isLoading}
-              className="account-submit-btn auto-width-button cancel-edit-card-btn"
+              className="account-submit-btn auto-width-button confirm-edit-idea-btn"
             >
               Confirm
             </Button>

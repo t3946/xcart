@@ -39,6 +39,7 @@ export interface ListItem {
   product_list_id: string;
   product_type: ListItemTypeEnum;
   typeAction?: ListItemAction;
+  add_date: string;
 }
 
 export interface ListItemAction {

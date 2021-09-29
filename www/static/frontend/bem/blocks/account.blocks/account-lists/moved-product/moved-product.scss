@@ -41,6 +41,14 @@
   display: none;
 }
 
+.move-product-radio{
+  cursor: pointer !important;
+  transition: .2s all ease-out;
+  &:hover{
+    background-color: #b1b1b1 !important;
+  }
+}
+
 @keyframes slideIn {
   from {
     width: 0;
@@ -74,5 +82,6 @@
   .list-name{
     text-align: right;
     margin-right: 10px;
+    min-width: auto;
   }
 }

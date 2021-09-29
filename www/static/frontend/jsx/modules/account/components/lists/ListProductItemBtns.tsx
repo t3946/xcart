@@ -15,6 +15,8 @@ interface ListProductItemBtnsProps {
   mainBtnClasses?: string | string[];
   id: string;
   onMainBtnClick: () => void;
+  time: string;
+  listId: string;
 }
 
 export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
@@ -25,12 +27,21 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   mainBtnClasses,
   id,
   onMainBtnClick,
+  time,
+  listId,
 }) => {
   const lists = useSelector((e: AccountStore) => e.lists.lists);
 
   return (
     <div className={"product-list-item-btns-container"}>
-      <div className="list-product-item-btns-text">Item added May 10, 2021</div>
+      <div className="list-product-item-btns-text">
+        Item added{" "}
+        {new Date(time).toLocaleDateString("en-EN", {
+          month: "long",
+          day: "2-digit",
+          year: "numeric",
+        })}
+      </div>
       <Button
         className={classnames(
           "account-submit-btn  full-width-button",
@@ -45,6 +56,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
           <FormSelect
             items={lists
               .filter((e) => e.list_info.role !== UserPrivateVariantsEnum.VIEW)
+              .filter((e) => e.product_list_id !== listId)
               .map((e) => {
                 return {
                   viewValue: e.name,

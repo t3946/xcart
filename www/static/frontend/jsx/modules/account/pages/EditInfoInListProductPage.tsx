@@ -2,6 +2,7 @@ import React from "react";
 import { EditComment } from "@client/modules/account/components/lists/EditComment";
 import { useHistory, useParams } from "react-router-dom";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 interface EditInfoInListProductPageURLParams {
   productId: string;
@@ -31,6 +32,10 @@ export const EditInfoInListProductPage: React.FC = () => {
 
   return (
     <div>
+      <MobileMenuBackBtn
+        redirectUrl={`/account/your-lists/${params.listHash}`}
+        label={"back"}
+      />
       <div className="page-label">Edit comment, quantity & priority</div>
       <EditComment
         info={product}

@@ -28,7 +28,9 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
     <Grid
       alignContent={"center"}
       container
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
         onChange(radioValue);
       }}
       className={

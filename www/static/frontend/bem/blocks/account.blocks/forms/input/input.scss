@@ -16,6 +16,14 @@
  color: #f02a36;
 }
 
+.form-input-space-between{
+  justify-content: space-between !important;
+}
+
+.form-input-flex-end{
+  justify-content: flex-end !important;
+}
+
 .form-input-container{
   margin-bottom: rem-calc(20);
 }

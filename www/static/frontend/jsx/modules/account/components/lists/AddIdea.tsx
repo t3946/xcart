@@ -11,6 +11,7 @@ import { AccountStore } from "@client/modules/account/ts/types/account-store.typ
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+import { ListItem } from "@client/modules/account/ts/types/list.type";
 
 interface AddIdeaProps {
   onCancelBtnClick: () => void;
@@ -39,20 +40,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
 
   const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
 
-  const onAddingEnd = (idea: any) => {
-    dispatch(
-      setLists(
-        accountStore.getState().lists.lists.map((e) => {
-          if (e.product_list_id === listId) {
-            return {
-              ...e,
-              products: e.products.concat(idea),
-            };
-          }
-          return e;
-        })
-      )
-    );
+  const onAddingEnd = (idea: ListItem) => {
     onCancelBtnClick();
     showSnackbar({
       header: "Success",

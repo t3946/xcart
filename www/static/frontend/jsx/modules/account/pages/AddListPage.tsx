@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { CreateNewList } from "@client/modules/account/components/lists/CreateNewList";
 import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 interface AddListPageURLParams {
   productId: string;
@@ -39,6 +40,7 @@ export const AddListPage: React.FC = () => {
 
   return (
     <div>
+      <MobileMenuBackBtn redirectUrl={`/account/your-lists`} label={"back"} />
       <div className="page-label">Create list</div>
       <CreateNewList
         productId={window.appData.product_info.product.productid}

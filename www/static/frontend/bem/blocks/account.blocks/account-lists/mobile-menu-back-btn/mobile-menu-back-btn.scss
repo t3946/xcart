@@ -1,0 +1,25 @@
+.mobile-menu-back-btn-container{
+  background-color: #f4f4f4;
+  display: none;
+  padding: 5px 10px;
+  margin: 0 -10px;
+}
+
+.mobile-menu-back-btn{
+  padding: 11px 15px;
+  font-weight: 700;
+  font-size: rem-calc(13);
+  color: #4A4949;
+  text-transform: uppercase;
+}
+
+.mobile-menu-back-btn-icon{
+  margin-right: rem-calc(17);
+
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-back-btn-container{
+  display: block;
+  }
+}

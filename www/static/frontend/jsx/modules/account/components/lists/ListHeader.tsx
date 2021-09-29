@@ -23,6 +23,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   edit,
   info,
 }) => {
+  console.log(info);
   const shareDialog = useDialog();
 
   const manageListDialog = useDialog();
@@ -59,6 +60,10 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   return (
     <div className="list-header-container">
       <div className="list-header-left-side">
+        <img
+          className="list-header-private-type-img"
+          src={`/static/frontend/images/icons/account/list-${info.list_info.list_type}.svg`}
+        />
         <div className="list-header-name">{label}</div>
         {edit && (
           <img
