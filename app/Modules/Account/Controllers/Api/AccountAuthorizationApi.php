@@ -38,9 +38,11 @@ class AccountAuthorizationApi extends FrontendController
             $user = $form->getInstance();
             $user->register();
             $user = UserModel::objects()->filter(['email' => $user->email])->get();
-            $model = new ProductListsModel(['name' => 'Shipping list', 'user_id' =>  $user->user_id]);
+            $model = new ProductListsModel(['name' => 'Shipping list', 'user_id' =>  $user->user_id ]);
             $model->save();
-            UserListModel::objects()->create(['user_id' =>$user->user_id, 'product_list_id' => $model->product_list_id, 'cache_url' => md5($model->product_list_id + false)]);
+            $model->cache_url = md5($model->product_list_id + false);
+            $model->save();
+            UserListModel::objects()->create(['user_id' =>$user->user_id, 'product_list_id' => $model->product_list_id]);
             $user->authenticate();
             $this->jsonResponse($user->toArray());
         } else {

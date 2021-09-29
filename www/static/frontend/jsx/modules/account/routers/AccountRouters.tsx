@@ -51,6 +51,7 @@ import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
 import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
+import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -99,6 +100,14 @@ export const AccountRouters = (): any => {
 
             <div className="row mt-lg-20">
               <Switch>
+                <Route
+                  exact
+                  path="/account/"
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <DashboardPage />
+                  )}
+                />
                 <Route
                   exact
                   path="/account/addresses"
