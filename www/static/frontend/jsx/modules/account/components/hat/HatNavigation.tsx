@@ -1,12 +1,11 @@
 import React from "react";
-import HatLoginButton from "./HatLoginButton";
+import LoginButton from "./LoginButton";
 import TopLine from "@client/modules/account/components/hat/TopLine";
 import { useDispatch, useSelector } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
-import { Link } from "react-router-dom";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
@@ -32,9 +31,9 @@ const HatNavigation = (): any => {
 
       items.push(
         <li className="main-menu_item">
-          <Link to={item.url} className={"main-menu-link"}>
+          <a href={item.url} className={"main-menu-link"}>
             {item.name}
-          </Link>
+          </a>
         </li>
       );
     }
@@ -61,7 +60,7 @@ const HatNavigation = (): any => {
             }}
           />
 
-          <div className="logo_menu">
+          <div className="logo_menu d-flex">
             <div className="container">
               <div className="row">
                 <div className="col-md-1 col-auto d-flex align-items-center d-lg-none">
@@ -112,7 +111,7 @@ const HatNavigation = (): any => {
                     </div>
 
                     <div className="hat-navigation-item-wrapper">
-                      <HatLoginButton />
+                      <LoginButton />
                     </div>
 
                     <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">
@@ -121,9 +120,7 @@ const HatNavigation = (): any => {
                         className="mobile__cart middle-inline-block hat-navigation-item"
                       >
                         <span className="count">
-                          <span className="mc_count">
-                            {cart.quantity}
-                          </span>
+                          <span className="mc_count">{cart.quantity}</span>
                         </span>
                       </a>
                     </div>
@@ -134,7 +131,6 @@ const HatNavigation = (): any => {
           </div>
         </header>
       </div>
-      <div className="shadow" />
     </div>
   );
 };

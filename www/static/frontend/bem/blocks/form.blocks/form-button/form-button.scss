@@ -18,16 +18,6 @@
     padding: 0 rem-calc(20);
     text-align: center;
 
-    @include breakpoint(md up) {
-        height: rem-calc(48);
-        padding: 0 rem-calc(30);
-    }
-
-    @include breakpoint(lg up) {
-        height: rem-calc(36);
-        padding: 0 rem-calc(40);
-    }
-
     &:hover {
         color: #000000;
         text-decoration: none;
@@ -50,5 +40,15 @@
 
     &:disabled {
         opacity: 0.6;
+    }
+
+    @include breakpoint(md up) {
+        height: rem-calc(48);
+        padding: 0 rem-calc(30);
+    }
+
+    @include breakpoint(lg up) {
+        height: rem-calc(36);
+        padding: 0 rem-calc(40);
     }
 }

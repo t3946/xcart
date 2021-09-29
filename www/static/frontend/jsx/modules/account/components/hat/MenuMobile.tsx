@@ -7,7 +7,7 @@ import { hideAllMenu } from "@client/jsx/redux/actions/account-actions/MenuActio
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 
-const MobileMenu: React.FC<any> = () => {
+const MenuMobile: React.FC<any> = () => {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const mobileMenuIsVisible = useSelector(
@@ -86,4 +86,4 @@ const MobileMenu: React.FC<any> = () => {
   );
 };
 
-export default MobileMenu;
+export default MenuMobile;

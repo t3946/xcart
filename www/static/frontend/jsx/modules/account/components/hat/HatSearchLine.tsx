@@ -1,6 +1,5 @@
 import React from "react";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import DepartmentsMenu from "./DepartmentsMenu";
@@ -12,14 +11,20 @@ import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
+import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButtonDesktop";
 
-const HatSearchLine: React.FC = () => {
+interface PropsInterface {
+  isStatic?: boolean;
+}
+
+const HatSearchLine: React.FC<PropsInterface> = (
+  props: PropsInterface
+): any => {
+  const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
   const isVisibleDepartmentsMenu = useSelector(
     (e: AccountStore) => e.departmentsMenuDesktop.isVisible
   );
-  const maxUsernameLength = 10;
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
 
@@ -59,33 +64,6 @@ const HatSearchLine: React.FC = () => {
           <button className="button-search show-for-large" />
         </form>
       </div>
-    );
-  }
-
-  function accountButton() {
-    if (!user) {
-      return (
-        <Link to="/account/login" className="hat-login-button">
-          log in
-        </Link>
-      );
-    }
-
-    function truncateUsername(username) {
-      if (username.length <= maxUsernameLength) {
-        return username;
-      } else {
-        return username.substr(0, maxUsernameLength - 1) + "…";
-      }
-    }
-
-    const username = truncateUsername(user.name);
-    const title = username === user.name ? "" : user.name;
-
-    return (
-      <Link to="/account/dashboard" className="hat-login-button" title={title}>
-        {username}
-      </Link>
     );
   }
 
@@ -158,7 +136,7 @@ const HatSearchLine: React.FC = () => {
                 {searchTemplate()}
 
                 <div className={"d-none d-lg-flex search-line_buttons"}>
-                  <div className="">{accountButton()}</div>
+                  <LoginButtonDesktop isStatic={isStatic} />
 
                   <div className="ms-12">
                     <MiniCart />

@@ -13,6 +13,7 @@ import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import Alert from "@client/modules/account/components/shared/Alert";
 import { setAlertAction } from "@client/jsx/redux/actions/account-actions/ProfileActions";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 
 const PublicProfile = (): any => {
   const dispatch = useDispatch();
@@ -23,26 +24,35 @@ const PublicProfile = (): any => {
     history.push(route("account:login"));
   }
 
+  const alert = useSelector((e: AccountStore) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const alertShowTimeMs = 3000;
-  const FILE_SIZE_B = 100 * 1024;
+  const maxKB = 10;
+  const FILE_SIZE_B = maxKB * 1024;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
     "/static/frontend/images/pages/account/default-avatar.svg";
   const [isRemoveAvatar, setIsRemoveAvatar] = React.useState(false);
 
   const initialValues = {
-    publicName: user.public_name,
-    location: user.location,
-    avatar_image: "",
+    publicName: user.public_name || "",
+    location: user.location || "",
+    avatar_image: user.avatar_image,
   };
 
+  const nameRegex = /^[A-Za-z]+$/;
+
   const validationSchema = yup.object().shape({
-    publicName: yup.string().required("Public name is a required field"),
+    publicName: yup
+      .string()
+      .matches(nameRegex, "Only English letters")
+      .min(3, "Public name must be at least 3 characters")
+      .max(32, "Public name must be at most 32 characters")
+      .required("Public name is a required field"),
     location: yup.string().max(64, "Password must be at most 64 characters"),
     avatar_image: yup
       .mixed()
-      .test("fileSize", "Maximum uploaded file size: 100 KB", function () {
+      .test("fileSize", `Maximum uploaded file size: ${maxKB} KB`, function () {
         const fileInput: Record<any, any> =
           document.getElementById("avatar_image");
 
@@ -66,7 +76,6 @@ const PublicProfile = (): any => {
 
   const inputFileRef = React.useRef<HTMLInputElement>();
   const imageRef = React.useRef<HTMLImageElement>();
-  const alert = useSelector((e: AccountStore) => e.publicProfile.alert);
 
   function submit(values, actions) {
     const formData = new FormData();
@@ -84,13 +93,18 @@ const PublicProfile = (): any => {
       savePublicProfileAction({
         data: formData,
 
-        success() {
+        success(res) {
+          setShow(true);
+
+          dispatch(userSetAction({ ...user, avatar_image: res.avatarUrl }));
+
           dispatch(
             setAlertAction({
               variant: "success",
               message: "Public profile was updated",
             })
           );
+
           setTimeout(() => {
             setShow(false);
             setTimeout(() => {
@@ -146,7 +160,11 @@ const PublicProfile = (): any => {
   }
 
   return (
-    <InnerPage header={"Public Profile"} bodyClasses={"p-0"} beforePage={beforePageTemplate()}>
+    <InnerPage
+      header={"Public Profile"}
+      bodyClasses={"p-0"}
+      beforePage={beforePageTemplate()}
+    >
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -166,7 +184,8 @@ const PublicProfile = (): any => {
                 className={classnames(classes.removeAvatarButton)}
                 onClick={() => {
                   setIsRemoveAvatar(true);
-                  setValues({ avatar_image: "" });
+                  values.avatar_image = "";
+                  setValues(values);
                 }}
               >
                 <TimesLightIcon className="remove-avatar-icon" />
@@ -187,16 +206,16 @@ const PublicProfile = (): any => {
               }
             };
 
-            fr.readAsDataURL(file);
+            if (file) {
+              fr.readAsDataURL(file);
+            }
           }
 
           const classes = {
             removeAvatarButton: [
               "public-profile_remove-avatar position-absolute",
               {
-                "d-none":
-                  isRemoveAvatar ||
-                  (user.avatar_image === "" && values.avatar_image === null),
+                "d-none": getAvatarUrl(values) === DEFAULT_AVATAR_IMAGE,
               },
             ],
           };
@@ -312,12 +331,8 @@ const PublicProfile = (): any => {
                             accept="image/*"
                             ref={inputFileRef}
                             onChange={avatarInputChangeHandler}
-                            isInvalid={
-                              !!touched.avatar_image && !!errors.avatar_image
-                            }
-                            isValid={
-                              touched.avatar_image && !errors.avatar_image
-                            }
+                            isInvalid={!!errors.avatar_image}
+                            isValid={!errors.avatar_image}
                           />
 
                           <div
@@ -345,8 +360,7 @@ const PublicProfile = (): any => {
                       <RBForm.Control.Feedback
                         type="invalid"
                         className={classnames("text-center text-lg-start", {
-                          "d-block":
-                            !!errors.avatar_image && touched.avatar_image,
+                          "d-block": !!errors.avatar_image,
                         })}
                       >
                         {errors.avatar_image}

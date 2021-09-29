@@ -165,15 +165,7 @@
   }
 
   .cart-steps-container {
-
-    padding: 0 .625rem;
-
-    @include breakpoint(large){
-      padding: 0 1.25rem;
-    }
-
     .cart-steps-back {
-
       height: $cart-breadcrumbs-height;
       line-height: $cart-breadcrumbs-line-height;
       padding: 0 .5rem 0 rem-calc(5);
@@ -233,10 +225,9 @@
         vertical-align: middle;
       }
     }
-    .cart-steps-section {
 
+    .cart-steps-section {
       overflow: hidden;
-      padding: 0;
 
       ul {
         display: flex;

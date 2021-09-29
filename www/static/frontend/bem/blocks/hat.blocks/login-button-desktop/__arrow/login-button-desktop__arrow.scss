@@ -1,0 +1,17 @@
+.login-button-desktop__arrow {
+  position: absolute;
+  right: rem-calc(15);
+  top: 50%;
+  margin: rem-calc(-4) 0 0;
+}
+
+.login-button-desktop-arrow {
+  width: rem-calc(13);
+  height: rem-calc(7);
+  transition: all .2s ease-out;
+  transform: rotate(0deg);
+}
+
+.login-button-desktop-arrow__flip {
+  transform: rotate(180deg);
+}

@@ -139,7 +139,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
       <NavLink
         to="/account/register"
         exact={true}
-        className="form-button form-button__outline common-link"
+        className="form-button form-button__outline common-link p-0"
       >
         Create your account
       </NavLink>

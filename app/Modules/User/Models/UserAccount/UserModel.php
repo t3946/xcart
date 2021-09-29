@@ -19,10 +19,11 @@ use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
+use Xcart\App\Orm\ModelInterface;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 /**
  * @property string password
- * @property mixed login
  * @property string user_id
  * @property string name
  * @property string email
@@ -36,6 +37,15 @@ use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 class UserModel extends Model
 {
     const SALT = 'Alexander';
+
+    /**
+     * get user by login
+     * @param $login string email or phone
+     * @return ModelInterface
+    */
+    public static function getUserByLogin(string $login):? ModelInterface {
+        return self::objects()->get(new QOr(['email' => $login, 'phone' => $login]));
+    }
 
     public static function tableName()
     {

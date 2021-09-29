@@ -5,8 +5,8 @@ export const verifyOneTimePasswordAction = (
   payload,
 });
 
-export const sendEmailAction = (payload: Record<any, any>): any => ({
-  type: "PA_SEND_EMAIL",
+export const sendOneTimePasswordAction = (payload: Record<any, any>): any => ({
+  type: "PA_SEND_ONE_TIME_PASSWORD",
   payload,
 });
 

@@ -1,6 +1,6 @@
 <div class="file-manager" id="zone">
     <div class="row">
-        <div class="column large-12">
+        <div class="col-12">
             <div class="drop-info" id="select">
                 <p class="info">Перетащите файлы сюда или нажмите для загрузки</p>
                 <div class="progress">

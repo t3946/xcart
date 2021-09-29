@@ -48,6 +48,14 @@ return array_replace_recursive([
        'blowfish' => new \ctBlowfish(),
        'sql_tbl' => include __DIR__ . DS . "xcart_tables.php",
        'jwt_key' => 'secret-jwt-key',
+       'aws' => [
+           'sns' => [
+               'credentials' => [
+                   'key' => 'AKIA5YFRXSHY5WVBVKUT',
+                   'secret' => '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',
+               ],
+           ],
+       ],
    ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [

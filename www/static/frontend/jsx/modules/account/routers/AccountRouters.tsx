@@ -12,7 +12,7 @@ import { AddAddressPage } from "../pages/AddAddressPage";
 import { getTerritory } from "../../../redux/actions/account-actions/MainActions";
 import HatNavigation from "../components/hat/HatNavigation";
 import HatSearchLine from "../components/hat/HatSearchLine";
-import MobileMenu from "../components/hat/MobileMenu";
+import MenuMobile from "@client/jsx/modules/account/components/hat/MenuMobile";
 import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
 import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
 import PublicProfile from "../components/public-profile/PublicProfile";
@@ -88,13 +88,10 @@ export const AccountRouters = (): any => {
       <ShadowPanel />
       <Snackbar>
         <BrowserRouter>
-          <DepartmentsMenuMobile
-            classes={{ container: "hat-navigation_departments-menu-mobile" }}
-          />
-          <ShadowPanel />
+          <DepartmentsMenuMobile />
           <HatNavigation />
-          <HatSearchLine />
-          <MobileMenu />
+          <HatSearchLine isStatic={true} />
+          <MenuMobile />
           <AlertMobile />
 
           <div className={"container"}>

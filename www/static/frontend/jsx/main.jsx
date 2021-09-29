@@ -6,6 +6,7 @@ import "./_head.jsx";
 import "./_binds/pages/account";
 import "./_binds/pages/add-to-list";
 import "./_binds/TopHeaderContentBind";
+import "./_binds/header-target";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";

@@ -7,7 +7,7 @@
             {set $checked = $method->paymentid == $payment_method_field->value || count($payment_methods) === 1}
             <div class="payment-method-item {cycle ["payment-method-item_odd", ""]}" for="payment_{$method->paymentid}">
                 <div class="row">
-                    <div class="columns small-12 large-4">
+                    <div class="col-12 col-lg-4">
                         <div class="payment-method-name">
                             <input
                                 {if $checked}checked{/if}
@@ -21,7 +21,7 @@
                             <div class="common-radio-label payment-radio-label payment-method-title">{$method->payment_method}</div>
                         </div>
                     </div>
-                    <div class="payment-method-description columns small-12 large-8">
+                    <div class="payment-method-description col-12 col-lg-8">
                         <div class="payment-method-description-preview">{$method->payment_details}</div>
                         <div class="payment-method-description-long" {if $checked}style="display: block"{/if}>
                             {switch $method->paymentid}

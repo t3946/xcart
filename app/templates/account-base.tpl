@@ -4,10 +4,10 @@
         <div class="off-canvas-content" data-off-canvas-content>
             <div id="content-wrapper">
                 <div id="content">
-                    <div class="before-content">
+                    <div class="before-content container">
                         {block "before-content"}
                             <div class="row">
-                                <div class="columns large-12">
+                                <div class="col-12">
                                     {insert "base/_breadcrumbs.tpl"}
                                 </div>
                             </div>

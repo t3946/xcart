@@ -6,8 +6,6 @@ use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Modules\Core\Forms\FrontendModelForm;
 use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\EmailField;
-use Xcart\App\Validation\EmailValidator;
 use Xcart\App\Validation\MaxLengthValidator;
 use Xcart\App\Validation\MinLengthValidator;
 
@@ -18,11 +16,8 @@ class LoginForm extends FrontendModelForm
         return [
             // email or phone
             'login' => [
-                'class' => EmailField::class,
+                'class' => CharCleanField::class,
                 'required' => true,
-                'validators' => [
-                    new EmailValidator(),
-                ],
             ],
             'password' => [
                 'class' => CharCleanField::class,

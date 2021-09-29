@@ -20,7 +20,7 @@ const TransitionSlide: React.FC<PropsInterface> = function (
   }
 
   const alertContainer = React.useRef<HTMLDivElement>();
-  const [height, setHeight] = React.useState(133);
+  const [height, setHeight] = React.useState(null);
   const defaultStyle = {
     transition: `all ${duration}ms ease-out`,
     height: 0,
@@ -29,7 +29,7 @@ const TransitionSlide: React.FC<PropsInterface> = function (
   };
 
   const transitionStyles = {
-    entering: { height: 0, opacity: 0 },
+    entering: { height, opacity: 1 },
     entered: { height, opacity: 1 },
     exiting: { height: 0, opacity: 0 },
     exited: { height: 0, opacity: 0 },
@@ -43,24 +43,18 @@ const TransitionSlide: React.FC<PropsInterface> = function (
 
   return (
     <Transition in={show} timeout={duration}>
-      {(state) => {
-        console.log(state, {
-          ...defaultStyle,
-          ...transitionStyles[state],
-        });
-        return (
-          <div
-            style={{
-              ...defaultStyle,
-              ...transitionStyles[state],
-            }}
-          >
-            <div ref={alertContainer} className={classnames(containerClasses)}>
-              {props.children}
-            </div>
+      {(state) => (
+        <div
+          style={{
+            ...defaultStyle,
+            ...transitionStyles[state],
+          }}
+        >
+          <div ref={alertContainer} className={classnames(containerClasses)}>
+            {props.children}
           </div>
-        );
-      }}
+        </div>
+      )}
     </Transition>
   );
 };

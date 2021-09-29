@@ -4,7 +4,7 @@
             {foreach $messages as $item}
                 <li class="{$item['type']}">
                     <div class="row">
-                        <div class="column large-12">
+                        <div class="col-12">
                             <div class="message">
                                 {$item['message']}
                             </div>

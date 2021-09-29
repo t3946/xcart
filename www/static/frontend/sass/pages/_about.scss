@@ -8,21 +8,14 @@
     .heading {
       padding: 0;
       position: relative;
-      background: linear-gradient(to right, #51cee5, $white);
-      background: {
-        repeat: no-repeat;
-        position: center center;
-        image: url('../images/pages/about-us/top_small_bg.jpg');
-      };
-
-      @include breakpoint(sm down) {
-        background-size: cover;
-      }
+      background-image: url('../images/pages/about-us/top_small_bg.jpg'),  linear-gradient(to right, #51cee5, #ffffff);
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
 
       @include breakpoint(medium up) {
-        background-image: url('../images/pages/about-us/top_large_bg.jpg');
+        background-image: url('../images/pages/about-us/top_large_bg.jpg'),  linear-gradient(to right, #51cee5, #ffffff);
       }
-
 
       .head {
         color: $white;
@@ -57,11 +50,10 @@
 
         .desc-cont {
           width: 100%;
-          padding-bottom: .3em;
+          padding: rem-calc(10) rem-calc(5);
 
           @include breakpoint(sm up) {
-            padding-top: 1em;
-            padding-bottom: 1em;
+            padding: rem-calc(10) rem-calc(16);
           }
 
           @include breakpoint(medium up) {
@@ -78,10 +70,6 @@
 
           @include breakpoint(sm down) {
             margin-left: -5px;
-
-            .desc {
-              //padding-bottom: 1em;
-            }
           }
         }
 

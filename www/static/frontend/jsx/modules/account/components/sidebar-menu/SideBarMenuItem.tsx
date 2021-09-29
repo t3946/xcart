@@ -29,19 +29,35 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
     );
   }
 
-  return (
-    <NavLink
-      to={to}
-      exact={true}
-      activeClassName="active-route"
-      className={classnames(
-        "sidebar-menu-item text-decoration-none",
-        className
-      )}
-      onClick={onClick}
-    >
-      {label}
-      {badgeTemplate()}
-    </NavLink>
-  );
+  if (document.location.pathname.indexOf("/account") !== -1) {
+    return (
+      <NavLink
+        to={to}
+        exact={true}
+        activeClassName="active-route"
+        className={classnames(
+          "sidebar-menu-item text-decoration-none",
+          className
+        )}
+        onClick={onClick}
+      >
+        {label}
+        {badgeTemplate()}
+      </NavLink>
+    );
+  } else {
+    return (
+      <a
+        href={to}
+        className={classnames(
+          "sidebar-menu-item text-decoration-none",
+          className
+        )}
+        onClick={onClick}
+      >
+        {label}
+        {badgeTemplate()}
+      </a>
+    );
+  }
 };
