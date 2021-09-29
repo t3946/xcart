@@ -13,13 +13,7 @@ use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 class Facebook extends StoreFrontMarketPlace
 {
 
-    /**
-     * @param UpdatedProductModel $queue
-     * @param string $googleOneRow
-     * @param string $sExtraLog
-     * @return mixed
-     */
-    public function addProductToBatch($queue, $googleOneRow = '', $sExtraLog = 'N')
+    public function addProductToBatch(UpdatedProductModel $queue, string $googleOneRow = '', string $sExtraLog = 'N'): bool
     {
         $result = false;
         if ($this->checkMarketplaceRestrictions($queue)) {
@@ -50,12 +44,12 @@ class Facebook extends StoreFrontMarketPlace
         return $result;
     }
 
-    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
+    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N'): bool
     {
         // TODO: Implement submitInventoryBatch() method.
     }
 
-    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
+    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N'): bool
     {
         if ($products = $this->getProducts()) {
             $access_token = 'EAAWPV2YIh6YBAIOpS4H3B7dBwyyseh7mi7xYSkf0aYvmufu2jpE6GWAvEZCwetkoOweFsWOE6J6qdGsUF4OCVt6je8uiiZBZBsyapGOGXkMif0rZAbZCGvQhIBOvMT6Mr24brA6uBSjxzmIBhpC1lVcD29RPs5xGnTb1sjnbfNgZDZD';

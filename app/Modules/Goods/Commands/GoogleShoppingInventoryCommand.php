@@ -5,15 +5,13 @@ namespace Modules\Goods\Commands;
 
 
 use Exception;
-use Google_Client;
-use Google_Service_ShoppingContent;
-use Google_Service_ShoppingContent_CustomAttribute;
-use Google_Service_ShoppingContent_Error;
-use Google_Service_ShoppingContent_Price;
-use Google_Service_ShoppingContent_Product;
-use Google_Service_ShoppingContent_ProductsCustomBatchRequest;
-use Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry;
-use Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry;
+use Google\Client;
+use Google\Service\ShoppingContent;
+use Google\Service\ShoppingContent\Error;
+use Google\Service\ShoppingContent\Price;
+use Google\Service\ShoppingContent\Product;
+use Google\Service\ShoppingContent\ProductsCustomBatchRequest;
+use Google\Service\ShoppingContent\ProductsCustomBatchRequestEntry;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Xcart\App\QueryBuilder\Q\QOrNot;
@@ -50,13 +48,13 @@ class GoogleShoppingInventoryCommand extends Command
                 $entries = $this->getBatchProducts($up, $site);
 
                 if ($entries) {
-                    $client = new Google_Client(['verify' => false]);
+                    $client = new Client(['verify' => false]);
                     $client->setApplicationName('Google Feed');
                     $client->setAuthConfig(Paths::get('www') . '/include/system/gapi-3c467d1a8e76.json');
-                    $client->addScope(Google_Service_ShoppingContent::CONTENT);
-                    $oService = new Google_Service_ShoppingContent($client);
+                    $client->addScope(ShoppingContent::CONTENT);
+                    $oService = new ShoppingContent($client);
 
-                    $batchReq = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
+                    $batchReq = new ProductsCustomBatchRequest();
                     $batchReq->setEntries($entries);
                     $log_text = '';
                     try {
@@ -65,11 +63,10 @@ class GoogleShoppingInventoryCommand extends Command
 
                         $result = $oService->products->customBatch($batchReq);
 
-                        /** @var Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry $entity */
                         foreach ($result->getEntries() as $entity) {
                             if ($errors = $entity->getErrors()) {
                                 $log_text .= "Error process product $entity->batchId :\n";
-                                /** @var Google_Service_ShoppingContent_Error $error */
+                                /** @var Error $error */
                                 foreach ($errors as $error) {
                                     $log_text .= "{$error->getMessage()}\n";
                                 }
@@ -113,16 +110,16 @@ class GoogleShoppingInventoryCommand extends Command
                 $currency = $dX->currency;
                 $sprice = $product->getFrontendPrice($product->min_amount ?? 1) * ($product->min_amount ?? 1);
 
-                $price = new Google_Service_ShoppingContent_Price();
+                $price = new Price();
                 $price->setCurrency($currency->currency_code ?? 'USD');
                 $price->setValue($sprice);
 
-                $inventory = new Google_Service_ShoppingContent_Product();
+                $inventory = new Product();
                 $inventory->setPrice($price);
 
                 $listPrice = $product->list_price;
                 if ($sprice < $listPrice) {
-                    $lPrice = new Google_Service_ShoppingContent_Price();
+                    $lPrice = new Price();
                     $lPrice->setCurrency($currency->currency_code ?? 'USD');
                     $lPrice->setValue($listPrice);
                     $inventory->setSalePrice($price);
@@ -131,7 +128,7 @@ class GoogleShoppingInventoryCommand extends Command
 
                 $inventory->setAvailability($product->isOutOfStock() ? 'out of stock' : 'in stock');
 
-                $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
+                $entry = new ProductsCustomBatchRequestEntry();
                 $entry->setProductId("online:$lang:$marketplace->countries:$product->productid");
                 $entry->setMethod('update');
                 $entry->setProduct($inventory);

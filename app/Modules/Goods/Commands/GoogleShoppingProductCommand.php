@@ -5,18 +5,17 @@ namespace Modules\Goods\Commands;
 
 
 use Exception;
-use Google_Client;
-use Google_Service_ShoppingContent;
-use Google_Service_ShoppingContent_CustomAttribute;
-use Google_Service_ShoppingContent_Error;
-use Google_Service_ShoppingContent_Price;
-use Google_Service_ShoppingContent_Product;
-use Google_Service_ShoppingContent_ProductsCustomBatchRequest;
-use Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry;
-use Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry;
-use Google_Service_ShoppingContent_ProductShipping;
-use Google_Service_ShoppingContent_ProductShippingDimension;
-use Google_Service_ShoppingContent_ProductShippingWeight;
+use Google\Client;
+use Google\Service\ShoppingContent;
+use Google\Service\ShoppingContent\CustomAttribute;
+use Google\Service\ShoppingContent\Error;
+use Google\Service\ShoppingContent\Price;
+use Google\Service\ShoppingContent\Product;
+use Google\Service\ShoppingContent\ProductsCustomBatchRequest;
+use Google\Service\ShoppingContent\ProductsCustomBatchRequestEntry;
+use Google\Service\ShoppingContent\ProductShipping;
+use Google\Service\ShoppingContent\ProductShippingDimension;
+use Google\Service\ShoppingContent\ProductShippingWeight;
 use Modules\Goods\Models\ProductImageModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -69,7 +68,7 @@ class GoogleShoppingProductCommand extends Command
                         /** @var DistributorModel $dX */
                         $dX = $product->distributor;
 
-                        $batch = new Google_Service_ShoppingContent_Product();
+                        $batch = new Product();
                         $batch->setOfferId($product->productid);
                         $batch->setTitle($product->getFrontendName());
                         $batch->setDescription($product->getFrontendDescription());
@@ -94,30 +93,30 @@ class GoogleShoppingProductCommand extends Command
 
                         $currency = $dX->currency;
                         $sprice = $product->getFrontendPrice($product->min_amount ?? 1) * ($product->min_amount ?? 1);
-                        $price = new Google_Service_ShoppingContent_Price();
+                        $price = new Price();
                         $price->setCurrency($currency->currency_code ?? 'USD');
                         $price->setValue($sprice);
                         $batch->setPrice($price);
 
                         $listPrice = $product->list_price;
                         if ($sprice < $listPrice) {
-                            $lPrice = new Google_Service_ShoppingContent_Price();
+                            $lPrice = new Price();
                             $lPrice->setCurrency($currency->currency_code ?? 'USD');
                             $lPrice->setValue($listPrice);
                             $batch->setSalePrice($price);
                             $batch->setPrice($lPrice);
                         }
 
-                        $weight = new Google_Service_ShoppingContent_ProductShippingWeight();
+                        $weight = new ProductShippingWeight();
                         $weight->setValue($product->getShippingWeight());
                         $weight->setUnit('lb');
                         if ($weight->getValue() > 0) {
                             $batch->setShippingWeight($weight);
                         }
 
-                        $w = new Google_Service_ShoppingContent_ProductShippingDimension();
-                        $l = new Google_Service_ShoppingContent_ProductShippingDimension();
-                        $h = new Google_Service_ShoppingContent_ProductShippingDimension();
+                        $w = new ProductShippingDimension();
+                        $l = new ProductShippingDimension();
+                        $h = new ProductShippingDimension();
                         $w->setUnit('in');
                         $l->setUnit('in');
                         $h->setUnit('in');
@@ -162,11 +161,11 @@ class GoogleShoppingProductCommand extends Command
                                     $rates[$state->stateid] = $state_shipping;
                                     $rate = reset($rates[$state->stateid]);
                                     if ($rate && $rate->shipping) {
-                                        $shipping = new Google_Service_ShoppingContent_ProductShipping();
+                                        $shipping = new ProductShipping();
                                         $shipping->setCountry($state->country_code);
                                         $shipping->setRegion($state->code);
                                         $shipping->setService($rate->shipping->getFrontendName());
-                                        $price = new Google_Service_ShoppingContent_Price();
+                                        $price = new Price();
                                         $price->setCurrency($currency->currency_code ?? 'USD');
                                         $price->setValue($rate->getShippingCharge());
                                         $shipping->setPrice($price);
@@ -224,7 +223,7 @@ class GoogleShoppingProductCommand extends Command
                         ];
                         $attrs = [];
                         foreach ($ats as $a) {
-                            $ca = new Google_Service_ShoppingContent_CustomAttribute();
+                            $ca = new CustomAttribute();
                             $ca->setName($a['name']);
                             $ca->setValue($a['value']);
                             $attrs[] = $ca;
@@ -248,7 +247,7 @@ class GoogleShoppingProductCommand extends Command
                             $batch->setShippingLabel("Minimum order value $m_order_amount {$price->getCurrency()}");
                         }
 
-                        $entry = new Google_Service_ShoppingContent_ProductsCustomBatchRequestEntry();
+                        $entry = new ProductsCustomBatchRequestEntry();
 
                         if ($shippingValues &&
                             ProductHelper::isGoogleShoppingEnabled($product) &&
@@ -273,13 +272,13 @@ class GoogleShoppingProductCommand extends Command
                     $toDelete[] = $model->resourceid;
                 }
                 if ($entries) {
-                    $client = new Google_Client(['verify' => false]);
+                    $client = new Client(['verify' => false]);
                     $client->setApplicationName('Google Feed');
                     $client->setAuthConfig(Paths::get('www') . '/include/system/gapi-3c467d1a8e76.json');
-                    $client->addScope(Google_Service_ShoppingContent::CONTENT);
-                    $oService = new Google_Service_ShoppingContent($client);
+                    $client->addScope(ShoppingContent::CONTENT);
+                    $oService = new ShoppingContent($client);
 
-                    $batchReq = new Google_Service_ShoppingContent_ProductsCustomBatchRequest();
+                    $batchReq = new ProductsCustomBatchRequest();
                     $batchReq->setEntries($entries);
                     $log_text = '';
                     try {
@@ -288,11 +287,10 @@ class GoogleShoppingProductCommand extends Command
 
                         $result = $oService->products->customBatch($batchReq);
 
-                        /** @var Google_Service_ShoppingContent_ProductsCustomBatchResponseEntry $entinty */
                         foreach ($result->getEntries() as $entinty) {
                             if ($errors = $entinty->getErrors()) {
                                 $log_text .= "Error process product $entinty->batchId :\n";
-                                /** @var Google_Service_ShoppingContent_Error $error */
+                                /** @var Error $error */
                                 foreach ($errors as $error) {
                                     $log_text .= "{$error->getMessage()}\n";
                                 }

@@ -8,7 +8,7 @@ use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Bing extends StoreFrontMarketPlace
 {
-    public function addProductToBatch($queue, $googleOneRow = "", $sExtraLog = "N")
+    public function addProductToBatch(UpdatedProductModel $queue, string $googleOneRow = "", string $sExtraLog = "N"): bool
     {
         $result = false;
         $oProduct = $queue->product;
@@ -40,7 +40,7 @@ class Bing extends StoreFrontMarketPlace
         return $bResult;
     }
 
-    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
+    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N'): bool
     {
         $error = SubmitBingInventoryBatch($this->getInventory(), $this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
 
@@ -51,7 +51,7 @@ class Bing extends StoreFrontMarketPlace
         return true;
     }
 
-    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
+    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N'): bool
     {
         $error = SubmitBingProductsBatch($this->getProducts(), $this->getP0(), $this->getP1(), $this->getP2(), $this->getFTPLogin(), $this->getFTPPassword(), $this->getFTPPath(), $debug_mode);
 
