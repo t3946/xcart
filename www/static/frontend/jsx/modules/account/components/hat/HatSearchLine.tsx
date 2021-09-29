@@ -22,7 +22,6 @@ const HatSearchLine: React.FC<PropsInterface> = (
 ): any => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
   const isVisibleDepartmentsMenu = useSelector(
     (e: AccountStore) => e.departmentsMenuDesktop.isVisible
   );
