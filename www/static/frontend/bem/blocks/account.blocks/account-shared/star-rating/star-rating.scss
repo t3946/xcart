@@ -1,13 +1,3 @@
-.product-stars-rating-container{
-  display: flex
+.rating-stars-container {
+  width: rem-calc(110);
 }
-
-.product-stars-rating-star{
-  color: #FFB400;
-  margin-right: 5px;
-
-  &:last-child{
-    margin: 0;
-  }
-}
-
