@@ -193,4 +193,10 @@ return [
         'path' => 'Modules.Account.routes.routes_reset-password_api',
         'namespace' => 'api',
     ],
+
+    [
+        'route' => '/api/review',
+        'path' => 'Modules.Account.routes.routes_review_api',
+        'namespace' => 'api',
+    ],
 ];
