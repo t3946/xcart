@@ -61,10 +61,6 @@ export default class ProductImageSlider extends Component {
     document.removeEventListener("resize_monitor.media_change", this.onResize);
   }
 
-  componentDidMount() {
-    console.log(this.props);
-  }
-
   createNewState(state, info) {
     let showThumbs, newState;
 
@@ -491,7 +487,6 @@ export default class ProductImageSlider extends Component {
   }
 
   render() {
-    console.log(this.state.loading);
     if (this.state.loading) {
       return <div className="slider loading" />;
     }

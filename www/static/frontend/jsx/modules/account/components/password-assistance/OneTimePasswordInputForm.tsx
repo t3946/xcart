@@ -4,10 +4,12 @@ import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import ChevronDownLight from "@client/jsx/modules/icon/components/font-awesome/chevron-down/Light";
 import classnames from "classnames";
-import { verifyOneTimePasswordAction } from "@client/jsx/redux/actions/account-actions/ResetPasswordActions";
+import {
+  sendOneTimePasswordAction,
+  verifyOneTimePasswordAction,
+} from "@client/jsx/redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
 import ResendOtpButton from "@client/modules/account/components/password-assistance/ResendOtpButton";
-import { sendEmailAction } from "@client/jsx/redux/actions/account-actions/ResetPasswordActions";
 
 const OneTimePasswordInputForm: React.FC<any> = function (props) {
   const {
@@ -82,7 +84,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
 
   function sendOneTimePassword(complete) {
     dispatch(
-      sendEmailAction({
+      sendOneTimePasswordAction({
         form: {
           login,
         },
