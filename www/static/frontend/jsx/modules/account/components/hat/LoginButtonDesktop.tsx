@@ -2,14 +2,15 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
-import classNames from "classnames";
+import classnames from "classnames";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
+import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 
 interface PropsInterface {
   isStatic: boolean;
@@ -75,7 +76,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
       return (
         <div
           ref={ref}
-          className={classNames(
+          className={classnames(
             className,
             "account-hat-dropdown-menu col-12 p-0 rounded-0"
           )}
@@ -91,6 +92,14 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
 
   const CustomToggle = React.forwardRef((props, ref) => {
     const { onClick } = props;
+
+    const arrowClasses = [
+      "login-button-desktop__arrow login-button-desktop-arrow",
+      {
+        "login-button-desktop-arrow__flip": isTabletMenuVisible,
+      },
+    ];
+
     return (
       <span
         className={className}
@@ -101,6 +110,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
         }}
       >
         {username}
+        <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );
   });
