@@ -47,8 +47,6 @@ import ProductImageSlider from "../components/ProductImageSlider";
           }
         });
 
-        console.log(item);
-
         render(<ProductImageSlider items={items} />, item);
       }
     }
