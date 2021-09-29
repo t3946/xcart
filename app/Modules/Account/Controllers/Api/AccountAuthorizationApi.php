@@ -3,11 +3,14 @@
 namespace Modules\Account\Controllers\Api;
 
 use Modules\User\Models\FingerprintModel;
+use Modules\Account\Models\UserListModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Account\Forms\LoginForm;
 use Modules\Account\Forms\RegistrationForm;
+use Modules\Account\Models\ProductListsModel;
+
 
 class AccountAuthorizationApi extends FrontendController
 {
@@ -35,6 +38,9 @@ class AccountAuthorizationApi extends FrontendController
             $user = $form->getInstance();
             $user->register();
             $user = UserModel::objects()->filter(['email' => $user->email])->get();
+            $model = new ProductListsModel(['name' => 'Shipping list', 'user_id' =>  $user->user_id]);
+            $model->save();
+            UserListModel::objects()->create(['user_id' =>$user->user_id, 'product_list_id' => $model->product_list_id, 'cache_url' => md5($model->product_list_id + false)]);
             $user->authenticate();
             $this->jsonResponse($user->toArray());
         } else {

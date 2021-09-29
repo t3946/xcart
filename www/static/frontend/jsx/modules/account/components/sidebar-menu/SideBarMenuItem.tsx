@@ -2,15 +2,15 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import classnames from "classnames";
 
-interface sideBarMenuItemPropsDto {
+interface sideBarMenuItemProps {
   to: string;
-  label: string;
+  label: string | React.ReactNode;
   badge?: number | string;
   className?: any;
   onClick?: any;
 }
 
-export const SideBarMenuItem: React.FC<sideBarMenuItemPropsDto> = ({
+export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
   to,
   label,
   badge,

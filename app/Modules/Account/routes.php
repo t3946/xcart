@@ -5,6 +5,16 @@ use Modules\Account\Controllers\AccountController;
 return [
     //страницы
     [
+        'route' => '/your-lists/add-product-to-list/{*:is_already_in_list}/{*:list_id}/{*:sku}',
+        'target' => [AccountController::class, 'actionProductIndex'],
+        'name' => 'add-product',
+    ],
+    [
+        'route' => '/your-lists/add-list/{*:sku}',
+        'target' => [AccountController::class, 'actionProductIndex'],
+        'name' => 'add-list',
+    ],
+    [
         'route' => '/',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'index'
@@ -33,15 +43,27 @@ return [
         'name' => 'transactions'
     ],
     [
-        'route' => '/your-lists',
+        'route' => '/your-lists/invite/{*:tag}/{*:code}',
+        'target' => [AccountController::class, 'listInvite'],
+        'name' => 'list-invite'
+    ],
+    [
+        'route' => '/your-lists/{*:id}',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'your-lists'
+    ],
+    [
+        'route' => '/your-lists',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'your-lists-shipping'
     ],
     [
         'route' => '/orders',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'orders'
     ],
+
+
 
     [
         'route' => '/register',
@@ -138,6 +160,7 @@ return [
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'
     ],
+
 
     //api
     [

@@ -8,6 +8,8 @@ import { Form as RBForm } from "react-bootstrap";
 import { registerAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { route } from "@client/jsx/utils/AppData";
+import classNames from "classnames";
+import { noSidebarClasses } from "@client/modules/account/ts/consts/no-sidebar-classes";
 
 const RegisterForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);
@@ -65,7 +67,7 @@ const RegisterForm: React.FC<any> = () => {
   }
 
   return (
-    <div className="account-auth-form-container">
+    <div className={classNames(noSidebarClasses,"account-auth-form-container")}>
       <div className="account-auth-form account_auth-form">
 
         <Formik

@@ -1,26 +1,34 @@
 import React from "react";
-import { Dialog } from "@material-ui/core";
-import { DialogHeader } from "@client/modules/account/components/dialog/DialogHeader";
 import { CreateNewList } from "@client/modules/account/components/lists/CreateNewList";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 
-export const CreateNewListDialog = ({ handleClose, open }) => {
+interface CreateNewListDialogProps {
+  handleClose: () => void;
+  open: boolean;
+  productId?: string;
+  onProductAdded?: () => void;
+  actionType?: "product" | "list";
+}
+
+export const CreateNewListDialog: React.FC<CreateNewListDialogProps> = ({
+  handleClose,
+  open,
+  productId,
+  onProductAdded,
+  actionType,
+}) => {
   return (
-    <Dialog
-      className="email-send-dialog"
-      fullWidth={true}
+    <BootstrapDialogHOC
+      show={open}
+      title={"Create a new list"}
       onClose={handleClose}
-      maxWidth="sm"
-      aria-labelledby="simple-dialog-title"
-      open={open}
-      PaperProps={{
-        style: {
-          borderRadius: 0,
-          overflowY: "initial",
-        },
-      }}
     >
-      <DialogHeader label={`Create a new list`} onClose={handleClose} />
-      <CreateNewList onCancelBtnClick={handleClose} />
-    </Dialog>
+      <CreateNewList
+        productId={productId}
+        onCreateList={onProductAdded}
+        onCancelBtnClick={handleClose}
+        actionType={actionType}
+      />
+    </BootstrapDialogHOC>
   );
 };

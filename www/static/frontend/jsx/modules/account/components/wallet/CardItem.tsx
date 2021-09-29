@@ -9,10 +9,10 @@ import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 import { CardHeader } from "./CardHeader";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { Breakpoint } from "@client/modules/account/ts/types/breakpoint.type";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface CardItemProps {
   cardInfo: CardItemDto;
-  breakPoint: Breakpoint;
   changeDefault: (
     cardInfo: CardItemDto,
     e: React.MouseEvent<HTMLDivElement>
@@ -22,7 +22,6 @@ interface CardItemProps {
 
 export const CardItem: React.FC<CardItemProps> = ({
   cardInfo,
-  breakPoint,
   changeDefault,
   openCardDialog,
 }) => {
@@ -33,6 +32,8 @@ export const CardItem: React.FC<CardItemProps> = ({
   const editDialog = useDialog();
 
   const expires = new Date(Number(cardInfo.expires));
+
+  const breakpoint = useBreakpoint();
 
   return (
     <div className="wallet-card-container">
@@ -79,57 +80,60 @@ export const CardItem: React.FC<CardItemProps> = ({
               {cardInfo.address.phone_number}
             </div>
           </div>
-          {breakPoint.is768 ? (
-            <AddEditBtnsBlock
-              handleRemove={() =>
-                openCardDialog(
-                  cardInfo,
-                  removeDialog,
-                  "/account/payments/wallet/remove"
-                )
-              }
-              handleEdit={() =>
-                openCardDialog(
-                  cardInfo,
-                  editDialog,
-                  "/account/payments/wallet/edit"
-                )
-              }
-              defaultItem={cardInfo.is_default}
-              changeDefault={(e) => changeDefault(cardInfo, e)}
-            >
-              <div className={"wallet-header-default-block_is-default"}>
-                Default
-              </div>
-            </AddEditBtnsBlock>
-          ) : (
-            <div className="wallet-card-buttons">
-              <Button
-                className="account-submit-btn edit-card-btn"
-                onClick={() =>
-                  openCardDialog(
-                    cardInfo,
-                    editDialog,
-                    "/account/payments/wallet/edit"
-                  )
-                }
-              >
-                Edit
-              </Button>
-              <Button
-                onClick={() =>
+          {breakpoint({
+            xs: (
+              <AddEditBtnsBlock
+                handleRemove={() =>
                   openCardDialog(
                     cardInfo,
                     removeDialog,
                     "/account/payments/wallet/remove"
                   )
                 }
-                className="account-submit-btn account-submit-btn-outline"
+                handleEdit={() =>
+                  openCardDialog(
+                    cardInfo,
+                    editDialog,
+                    "/account/payments/wallet/edit"
+                  )
+                }
+                defaultItem={cardInfo.is_default}
+                changeDefault={(e) => changeDefault(cardInfo, e)}
               >
-                Remove
-              </Button>
-            </div>
-          )}
+                <div className={"wallet-header-default-block_is-default"}>
+                  Default
+                </div>
+              </AddEditBtnsBlock>
+            ),
+            sm: (
+              <div className="wallet-card-buttons">
+                <Button
+                  className="account-submit-btn edit-card-btn"
+                  onClick={() =>
+                    openCardDialog(
+                      cardInfo,
+                      editDialog,
+                      "/account/payments/wallet/edit"
+                    )
+                  }
+                >
+                  Edit
+                </Button>
+                <Button
+                  onClick={() =>
+                    openCardDialog(
+                      cardInfo,
+                      removeDialog,
+                      "/account/payments/wallet/remove"
+                    )
+                  }
+                  className="account-submit-btn account-submit-btn-outline"
+                >
+                  Remove
+                </Button>
+              </div>
+            ),
+          })}
         </div>
       </div>
       <CardDialog

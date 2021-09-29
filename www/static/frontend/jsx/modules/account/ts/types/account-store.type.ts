@@ -2,6 +2,7 @@ import { AddressItemDto } from "./address-item.type";
 import { SelectValue } from "./select-value.type";
 import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/alert";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 export interface AccountStore {
   addresses: AccountAddressesStore;
@@ -45,7 +46,8 @@ export interface AccountMainStore {
 }
 
 export interface AccountListsStore {
-  lists: any[];
+  lists: List[] | undefined;
+  listLoading?: boolean;
 }
 
 export interface AccountPaymentsStore {

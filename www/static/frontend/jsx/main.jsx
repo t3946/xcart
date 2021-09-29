@@ -4,6 +4,8 @@ import "@/js/main";
 import "preact/debug";
 import "./_head.jsx";
 import "./_binds/pages/account";
+import "./_binds/pages/add-to-list";
+import "./_binds/TopHeaderContentBind";
 import "./_binds/header-target";
 import "./_binds/pages/ProductReviewsBind";
 import "bootstrap/dist/js/bootstrap.bundle.js";

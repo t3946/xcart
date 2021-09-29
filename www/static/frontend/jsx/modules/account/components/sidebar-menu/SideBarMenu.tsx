@@ -2,7 +2,6 @@ import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsList } from "@client/jsx/redux/actions/account-actions/MainActions";
 import { route } from "@client/jsx/utils/AppData";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
@@ -28,7 +27,6 @@ const SideBarMenu: React.FC = () => {
     {
       to: "/account/your-lists",
       label: "Shopping Lists",
-      onClick: () => dispatch(setIsList(true)),
     },
     { to: "/account/addresses", label: "Addresses" },
     {

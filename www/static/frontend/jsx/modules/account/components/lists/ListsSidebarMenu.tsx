@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { SideBarMenuItem } from "@client/modules/account/components/sidebar-menu/SideBarMenuItem";
 import { getLists } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { ListsSidebarLabel } from "@client/modules/account/components/lists/ListsSidebarLabel";
 
-export const ListsSidebarMenu = () => {
+export const ListsSidebarMenu: React.FC = () => {
   const history = useHistory();
 
   const createListDialog = useDialog();
@@ -27,25 +28,30 @@ export const ListsSidebarMenu = () => {
   const backOnAccount = () => {
     history.push("/account/");
   };
+
   return (
     <div>
-      <Button
+      <button
         onClick={backOnAccount}
-        className="account-submit-btn account-submit-btn-outline back-account-btn"
+        className="form-button__outline back-on-account-btn"
       >
         <div className="back-account-btn-inner">
           <ArrowBackIcon />
           <div>Back on account</div>
         </div>
-      </Button>
-      <div className="lists-sidebar-label">Your Lists</div>
+      </button>
+      <div className="lists-sidebar-label">Shopping Lists</div>
       {lists?.map((e, index) => {
         return (
           <SideBarMenuItem
-            to={`/account/your-lists${!index ? "" : "/" + e.product_list_id}`}
-            label={e.name}
-            className={"sidebar-menu__top-level-item"}
-            onClick={e.onClick}
+            to={`/account/your-lists${!index ? "" : "/" + e.cache_url}`}
+            label={
+              <ListsSidebarLabel
+                label={e.name}
+                privateType={e.list_info.list_type}
+              />
+            }
+            className={"sidebar-menu-item__lists"}
           />
         );
       })}

@@ -14,6 +14,8 @@ import {
 import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "../../utils/detect-card-type";
+import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import { useHistory } from "react-router";
 
 export const AddCardForm: React.FC = () => {
   const monthsValues = fillMassToSelect(1, 12);
@@ -24,6 +26,8 @@ export const AddCardForm: React.FC = () => {
   );
 
   const context = useContext(WalletCardsDialogContext);
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -46,6 +50,15 @@ export const AddCardForm: React.FC = () => {
         },
       })
     );
+  };
+
+  const cardsHandleCancel = () => {
+    if (accountStore.getState().main.breakpoint.is768) {
+      history.push("/account/payments/wallet");
+      return;
+    }
+
+    context.handleClose();
   };
 
   return (
@@ -87,7 +100,11 @@ export const AddCardForm: React.FC = () => {
                 classes={{ input: "add-card-input" }}
                 handleBlur={handleBlur}
               />
-              <Grid container justify="space-between" alignContent="center">
+              <Grid
+                container
+                justifyContent="space-between"
+                alignContent="center"
+              >
                 <label className="form-input-label">Expiration date</label>
                 <div className="expirations-date-container add-card-input">
                   <FormSelect
@@ -114,7 +131,7 @@ export const AddCardForm: React.FC = () => {
               <Grid
                 className="add-address-checkbox"
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
               >
                 <div className="add-card-input">
                   <FormCheckBox
@@ -125,10 +142,10 @@ export const AddCardForm: React.FC = () => {
                   />
                 </div>
               </Grid>
-              <Grid container justify="flex-end">
+              <Grid container justifyContent="flex-end">
                 <div className="add-card-form-btns">
                   <Button
-                    onClick={() => context.handleClose()}
+                    onClick={cardsHandleCancel}
                     className="account-submit-btn account-submit-btn-outline auto-width-button cancel-btn"
                   >
                     Cancel

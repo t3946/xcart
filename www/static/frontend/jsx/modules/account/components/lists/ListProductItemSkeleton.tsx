@@ -1,13 +1,7 @@
 import React from "react";
-import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
-import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
-import { ProductStarsRating } from "@client/modules/account/components/shared/ProductStarsRating";
-import { TooltipRatingContent } from "@client/modules/account/components/lists/TooltipRatingContent";
-import { ListProductItemBtns } from "@client/modules/account/components/lists/ListProductItemBtns";
 import { Sceleton } from "@client/modules/shared/components/sceleton/Sceleton";
-import { Button } from "@material-ui/core";
 
-export const ListProductItemSkeleton = () => {
+export const ListProductItemSkeleton: React.FC = () => {
   return (
     <div className="product-list-item-container">
       <Sceleton height={112} maxWidth={112} />

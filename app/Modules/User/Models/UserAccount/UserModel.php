@@ -4,7 +4,9 @@ namespace Modules\User\Models\UserAccount;
 
 use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\CreditCardsModel;
+use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\TransactionsModel;
+use Modules\Account\Models\UserListModel;
 use Modules\User\Helpers\PasswordHelper;
 use Modules\User\Models\FingerprintModel;
 use Xcart\App\Main\Xcart;
@@ -13,6 +15,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
@@ -134,6 +137,11 @@ class UserModel extends Model
             'tsv_count' => [
                 'class' => IntField::class,
             ],
+            'lists' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ProductListsModel::class,
+                'through' => UserListModel::class
+            ]
         ];
     }
 

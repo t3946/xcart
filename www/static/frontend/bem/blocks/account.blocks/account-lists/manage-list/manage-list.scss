@@ -1,0 +1,46 @@
+.list-input-manage-list{
+  width: 65% !important;
+}
+
+.manage-list-checkbox{
+  margin-bottom: 12px;
+
+  &:last-child{
+    margin-bottom: 24px;
+  }
+}
+
+.manage-list-label{
+  font-size: 12px;
+  color: #959595;
+  margin-bottom: 20px;
+}
+
+.list-manage-select-day{
+  width: 35% !important;
+}
+
+.list-manage-select-month{
+  width: 60% !important;
+}
+
+.select-address-on-manage-list{
+  margin: 20px 0!important;
+}
+
+.manage-list-btns{
+  display: flex;
+  width: 30%;
+  margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+  .manage-list-btns{
+    display: block;
+    width: 100%;
+  }
+
+  .list-input-manage-list{
+    width: 100% !important;
+  }
+}

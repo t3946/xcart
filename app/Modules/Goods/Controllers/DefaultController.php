@@ -12,6 +12,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Goods\Models\ProductVideosModel;
 use Modules\Meta\Types\MetaType;
+use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -21,7 +22,8 @@ class DefaultController extends FrontendController
 {
     public function actionViewOld($id, $slug): void
     {
-//        AccountController::provideAccountData();
+        AccountController::provideAccountData();
+
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
 
@@ -181,6 +183,13 @@ class DefaultController extends FrontendController
         } else {
             $this->setCanonical($model);
         }
+
+        $product = $model->getAttributes();
+        $product['image'] = (string) $model->getMainImage();
+
+        StorageHelper::push([
+            "product" => $product,
+        ], null, 'product_info');
 
         $this->display('product/product.tpl', $params);
     }

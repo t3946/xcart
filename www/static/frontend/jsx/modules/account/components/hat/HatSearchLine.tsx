@@ -61,7 +61,6 @@ const HatSearchLine: React.FC<PropsInterface> = (
               })}
             />
           </div>
-
           <button className="button-search show-for-large" />
         </form>
       </div>

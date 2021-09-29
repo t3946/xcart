@@ -48,8 +48,11 @@ export const FormSelect = ({
           type="hidden"
           name={name}
         />
-        <div id={id} className="form-select-head">
-          {selectedItem.previewValue || selectedItem.viewValue}
+        <div
+          id={id}
+          className={classnames(classes?.selectHeader, "form-select-head")}
+        >
+          {selectedItem?.previewValue || selectedItem?.viewValue}
         </div>
         {open && (
           <ul className={classnames("form-select-list", classes?.selectList)}>

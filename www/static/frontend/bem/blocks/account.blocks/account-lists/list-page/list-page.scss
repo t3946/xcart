@@ -1,0 +1,12 @@
+.add-idea-btn{
+  margin-left: 25px !important;
+  width: 190px !important;
+  margin-top: 25px !important;
+  padding: 20px 0 !important;
+}
+
+@media (max-width: 768px) {
+  .add-idea-btn{
+    display: none !important;
+  }
+}

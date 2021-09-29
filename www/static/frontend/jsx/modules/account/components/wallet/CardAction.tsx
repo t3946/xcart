@@ -5,7 +5,6 @@ import { AddBillingAddressForm } from "./AddBillingAddressForm";
 import { BillingAddress } from "./BillingAddress";
 import { AddCardForm } from "./AddCardForm";
 import { EditCard } from "./EditCard";
-import { useSelector } from "react-redux";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
 interface CardActionProps {
@@ -25,13 +24,10 @@ export const CardAction: React.FC<CardActionProps> = ({
 
   const dialogClose = () => {
     onDialogClose();
-
     setTimeout(() => {
       setContent(contentType);
     }, 200);
   };
-
-  const breakPoint = useSelector((e: any) => e.main.breakPoint);
 
   const showContent = (type) => {
     switch (type) {
@@ -55,7 +51,6 @@ export const CardAction: React.FC<CardActionProps> = ({
         setContent,
         actionType,
         handleClose: dialogClose,
-        breakPoint,
       }}
     >
       {showContent(content)}

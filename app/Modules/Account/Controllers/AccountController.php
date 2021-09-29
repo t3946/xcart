@@ -2,27 +2,46 @@
 
 namespace Modules\Account\Controllers;
 
+use Modules\Account\Models\ProductListsModel;
+use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\AdminHelper;
+use Modules\Core\Helpers\CoreHelper;
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
+use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
-use Modules\User\Models\UserAccount\UserModel;
 
 class AccountController extends FrontendController
 {
+        private static function getCountryPhoneCodes(): array
+    {
+        $codes = [];
+
+        $countries = CountryModel::objects()->all();
+
+        foreach ($countries as $country) {
+            $codes[] = [
+                "name" => $country->name,
+                "code" => $country->code,
+                "phone_code" => $country->phone_code,
+            ];
+        }
+
+        return $codes;
+    }
+
     public static function provideAccountData()
     {
-        /**
-         * @var $user UserModel
-         */
         $user = Xcart::app()->auth->getUser(true);
 
         if (!$user->getIsGuest()) {
@@ -31,7 +50,7 @@ class AccountController extends FrontendController
 
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-            StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
+        StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
 
         StorageHelper::push([
             "code" => strtolower($site->code),
@@ -70,6 +89,17 @@ class AccountController extends FrontendController
         AdminHelper::routesData();
     }
 
+
+    public function actionProductIndex($sku)
+    {
+        $product =  ProductModel::objects()->filter(['productcode' => $sku])->get();
+        StorageHelper::push([
+            "product" => $product->getAttributes(),
+        ], null, 'product_info');
+
+        $this->actionIndex();
+    }
+
     private function generateQrCode()
     {
         $user = Xcart::app()->auth->getUser(true);
@@ -98,25 +128,10 @@ class AccountController extends FrontendController
         ], null, 'tsv');
     }
 
-    private static function getCountryPhoneCodes(): array
-    {
-        $codes = [];
-
-        $countries = CountryModel::objects()->all();
-
-        foreach ($countries as $country) {
-            $codes[] = [
-                "name" => $country->name,
-                "code" => $country->code,
-                "phone_code" => $country->phone_code,
-            ];
-        }
-
-        return $codes;
-    }
-
     public function actionIndex()
     {
+        self::provideAccountData();
+
         $this->generateQrCode();
 
         $this->display('account/base.tpl');
@@ -164,4 +179,37 @@ class AccountController extends FrontendController
     {
         $this->actionIndex();
     }
+
+    public function listInvite(string $tag, string $code)
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+
+        if($user->getIsGuest()){
+            $this->redirect('account:login', [], 301);
+            $this->actionIndex();
+        }
+
+        [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag));
+
+
+        $invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash]);
+
+        $invited_user_name = UserModel::objects()->get(['user_id' => $user_id])->name;
+
+        if(UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $invite_list->product_list_id])->user_id){
+            $this->redirect('/account/your-lists/' . $listHash, [], 301);
+        }
+
+        StorageHelper::push([
+            "userId" => $user_id,
+            'userName' =>$invited_user_name,
+            "type" => $type,
+            "inviteList" => $invite_list->getAttributes(),
+        ], null, 'invite_data');
+
+        $this->actionIndex();
+    }
+
+
 }

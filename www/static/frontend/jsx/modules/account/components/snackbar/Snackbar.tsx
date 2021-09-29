@@ -50,7 +50,7 @@ const Snackbar: React.FC = ({ children }) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <SnackbarContext.Provider
         value={{
           showSnackbar,
@@ -89,7 +89,7 @@ const Snackbar: React.FC = ({ children }) => {
           <p className={"account-alert-content m-0"}>{message}</p>
         </div>
       </UISnackbar>
-    </>
+    </React.Fragment>
   );
 };
 

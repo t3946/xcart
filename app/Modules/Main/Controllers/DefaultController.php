@@ -1,6 +1,8 @@
 <?php
+
 namespace Modules\Main\Controllers;
 
+use Modules\Account\Controllers\AccountController;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Meta\Types\MetaType;
@@ -13,6 +15,8 @@ class DefaultController extends FrontendController
 
     public function index()
     {
+        AccountController::provideAccountData();
+
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         $category_new = CategoryModel::objects()->filter(['category' => 'New Products', 'storefrontid' => $site->pk, 'level' => 1])->limit(1)->get();
@@ -22,6 +26,8 @@ class DefaultController extends FrontendController
         ]);
 
         $this->setCanonical('');
+
+
 
         $this->display('home.tpl', [
             'category_new' => $category_new,
