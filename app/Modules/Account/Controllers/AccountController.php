@@ -23,7 +23,7 @@ use Sonata\GoogleAuthenticator\GoogleQrUrl;
 
 class AccountController extends FrontendController
 {
-        private static function getCountryPhoneCodes(): array
+    private static function getCountryPhoneCodes(): array
     {
         $codes = [];
 
@@ -89,7 +89,6 @@ class AccountController extends FrontendController
         AdminHelper::routesData();
     }
 
-
     public function actionProductIndex($sku)
     {
         $product =  ProductModel::objects()->filter(['productcode' => $sku])->get();
@@ -130,8 +129,6 @@ class AccountController extends FrontendController
 
     public function actionIndex()
     {
-        self::provideAccountData();
-
         $this->generateQrCode();
 
         $this->display('account/base.tpl');
