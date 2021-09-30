@@ -4,8 +4,6 @@ import ProductReviews from "@client/jsx/modules/product/Components/ProductReview
 (function (): void {
   const target = document.getElementById("product-reviews-target");
 
-  console.log("ProductReviewsBind");
-
   if (!target) {
     return;
   }
