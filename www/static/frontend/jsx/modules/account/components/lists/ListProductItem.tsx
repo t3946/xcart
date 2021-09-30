@@ -116,7 +116,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           <Tooltip
             target={
               <div className="tooltip-rating-stars-target">
-                <ProductStarsRating rate={3} />
+                <ProductStarsRating rating={3} />
               </div>
             }
             content={

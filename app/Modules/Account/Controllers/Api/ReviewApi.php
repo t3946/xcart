@@ -61,12 +61,12 @@ class ReviewApi extends FrontendController
         for ($i = ReviewModel::MIN_RATING; $i <= ReviewModel::MAX_RATING; $i++) {
             $rate = [
                 'rating' => $i,
-                'ratings_number' => 0,
+                'ratingsNumber' => 0,
             ];
 
             for ($j = 0; $j < count($result); $j++) {
                 if ((int)$result[$j]->getFromQueryAttribute('rating') === $i) {
-                    $rate['ratings_number'] = (int)$result[$j]->getFromQueryAttribute('ratings_number');
+                    $rate['ratingsNumber'] = (int)$result[$j]->getFromQueryAttribute('ratings_number');
                     break;
                 }
             }
@@ -74,6 +74,10 @@ class ReviewApi extends FrontendController
             array_push($overall_rates, $rate);
         }
 
-        return ['overall' => $overall_rates];
+        return [
+            'overall' => $overall_rates,
+            'minRating' => ReviewModel::MIN_RATING,
+            'maxRating' => ReviewModel::MAX_RATING
+        ];
     }
 }

@@ -4,7 +4,7 @@ import StarStroked from "@client/jsx/modules/icon/components/account/rating/Star
 import classnames from "classnames";
 
 interface PropsInterface {
-  rate: number;
+  rating: number;
   classes?: {
     icon?: any;
     container?: any;
@@ -14,9 +14,9 @@ interface PropsInterface {
 export const ProductStarsRating: React.FC<PropsInterface> = (
   props: PropsInterface
 ) => {
-  const { rate } = props;
-  const maxRate = 5;
-  const stars = Array(maxRate).fill(null);
+  const { rating } = props;
+  const maxRating = 5;
+  const stars = Array(maxRating).fill(null);
   const classes = {
     container: [
       "rating-stars-container",
@@ -27,9 +27,9 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
     icon: [
       "rating-star",
       {
-        "rating-star__red": rate > 0 && rate <= 2,
-        "rating-star__yellow": rate === 0 || (rate > 2 && rate <= 3),
-        "rating-star__green": rate > 3,
+        "rating-star__red": rating > 0 && rating <= 2,
+        "rating-star__yellow": rating === 0 || (rating > 2 && rating <= 3),
+        "rating-star__green": rating > 3,
       },
       props.classes.icon,
     ],
@@ -38,7 +38,7 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
   return (
     <div className={classnames(classes.container)}>
       {stars.map((e, index) => {
-        if (index < rate) {
+        if (index < rating) {
           return <StarFilled className={classnames(classes.icon)} />;
         }
 
