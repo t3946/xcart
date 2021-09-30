@@ -66,7 +66,7 @@ class ReviewApi extends FrontendController
 
             for ($j = 0; $j < count($result); $j++) {
                 if ((int)$result[$j]->getFromQueryAttribute('rate') === $i) {
-                    $rate['rates_number'] = $result[$j]->getFromQueryAttribute('rates_number');
+                    $rate['rates_number'] = (int)$result[$j]->getFromQueryAttribute('rates_number');
                     break;
                 }
             }
