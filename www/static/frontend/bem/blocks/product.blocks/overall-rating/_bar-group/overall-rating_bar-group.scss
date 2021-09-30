@@ -1,0 +1,15 @@
+.overall-rating_bar-group {
+  margin: 0 0 rem-calc(10) 0;
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(11) 0;
+  }
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(4) 0;
+  }
+
+  &:last-child {
+    margin: 0;
+  }
+}

@@ -1,0 +1,13 @@
+.overall-rating-bar {
+  width: 100%;
+  height: rem-calc(22);
+  border: 1px solid #c4c4c4;
+
+  @include breakpoint(md up) {
+    height: rem-calc(37);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(22);
+  }
+}

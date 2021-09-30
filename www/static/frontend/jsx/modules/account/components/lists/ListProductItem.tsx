@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
 import ProductStarsRating from "@client/modules/account/components/shared/ProductStarsRating";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
-import { TooltipRatingContent } from "./TooltipRatingContent";
+import TooltipRatingContent from "@client/jsx/modules/account/components/lists/TooltipRatingContent";
 import { ListProductItemBtns } from "./ListProductItemBtns";
 import { ListProductItemComment } from "@client/modules/account/components/lists/ListProductItemComment";
 import { EditComment } from "@client/modules/account/components/lists/EditComment";
@@ -121,7 +121,11 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             }
             content={
               <div className="rating-stars-tooltip">
-                <TooltipRatingContent />
+                <TooltipRatingContent
+                  minRating={1}
+                  maxRating={5}
+                  ratings={[]}
+                />
               </div>
             }
           />
