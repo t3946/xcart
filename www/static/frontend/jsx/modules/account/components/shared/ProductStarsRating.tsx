@@ -22,7 +22,7 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
       "rating-stars-container",
       "d-flex ",
       "justify-content-between",
-      props.classes.container,
+      props.classes?.container,
     ],
     icon: [
       "rating-star",
@@ -31,7 +31,7 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
         "rating-star__yellow": rating === 0 || (rating > 2 && rating <= 3),
         "rating-star__green": rating > 3,
       },
-      props.classes.icon,
+      props.classes?.icon,
     ],
   };
 
