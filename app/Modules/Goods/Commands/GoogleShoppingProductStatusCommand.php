@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Commands;
 
+use Modules\Goods\Models\GoogleProductQualityIssueModel;
 use Modules\Goods\Models\GoogleProductsModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
@@ -21,6 +22,7 @@ class GoogleShoppingProductStatusCommand extends Command
         func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
         GoogleProductsModel::objects()->delete();
+        GoogleProductQualityIssueModel::objects()->delete();
 
         foreach (SiteModel::objects() as $site) {
             foreach (StoreFrontMarketPlace::getMarketPlacesByStoreFront($site->pk) as $oMarketPlace) {
