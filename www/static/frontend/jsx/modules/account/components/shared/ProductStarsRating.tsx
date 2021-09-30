@@ -47,3 +47,5 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
     </div>
   );
 };
+
+export default ProductStarsRating;

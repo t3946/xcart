@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
-import { ProductStarsRating } from "@client/modules/account/components/shared/ProductStarsRating";
+import ProductStarsRating from "@client/modules/account/components/shared/ProductStarsRating";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
 import { TooltipRatingContent } from "./TooltipRatingContent";
 import { ListProductItemBtns } from "./ListProductItemBtns";

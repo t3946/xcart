@@ -1,5 +1,10 @@
 import React from "react";
-import { ProductStarsRating } from "../shared/ProductStarsRating";
+import ProductStarsRating from "@client/modules/account/components/shared/ProductStarsRating";
+
+interface PropsInterface {
+  maxRating: number;
+  ratings: { rating: number; ratings_number: number }[];
+}
 
 export const TooltipRatingContent: React.FC = () => {
   return (
