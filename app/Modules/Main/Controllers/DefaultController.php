@@ -15,8 +15,6 @@ class DefaultController extends FrontendController
 
     public function index()
     {
-        AccountController::provideAccountData();
-
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         $category_new = CategoryModel::objects()->filter(['category' => 'New Products', 'storefrontid' => $site->pk, 'level' => 1])->limit(1)->get();

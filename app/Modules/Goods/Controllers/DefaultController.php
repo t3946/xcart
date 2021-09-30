@@ -22,8 +22,6 @@ class DefaultController extends FrontendController
 {
     public function actionViewOld($id, $slug): void
     {
-        AccountController::provideAccountData();
-
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
 
