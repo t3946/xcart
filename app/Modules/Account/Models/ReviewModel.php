@@ -11,6 +11,9 @@ use Xcart\App\Orm\Model;
 
 class ReviewModel extends Model
 {
+    public const MIN_RATE = 1;
+    public const MAX_RATE = 5;
+
     public static function tableName()
     {
         return 'product_reviews';
