@@ -222,4 +222,10 @@ return [
         'path' => 'Modules.Account.routes.routes_review_api',
         'namespace' => 'api',
     ],
+
+    [
+        'route' => '/api/ratings',
+        'path' => 'Modules.Account.routes.routes_ratings_api',
+        'namespace' => 'api',
+    ],
 ];
