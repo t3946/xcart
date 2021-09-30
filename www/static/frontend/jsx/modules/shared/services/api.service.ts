@@ -15,11 +15,13 @@ export class ApiService {
     return response.json();
   }
 
-  async post<T>( url: string,
-                 data: BodyInit,
-                 headers: Record<any, any> = {
-                   "Content-Type": "application/json",
-                 }): Promise<T> {
+  async post<T>(
+    url: string,
+    data: BodyInit,
+    headers: Record<any, any> = {
+      "Content-Type": "application/json",
+    }
+  ): Promise<T> {
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",
