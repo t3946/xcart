@@ -5,6 +5,10 @@ import classnames from "classnames";
 
 interface PropsInterface {
   rate: number;
+  classes?: {
+    icon?: any;
+    container?: any;
+  };
 }
 
 export const ProductStarsRating: React.FC<PropsInterface> = (
@@ -14,6 +18,12 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
   const maxRate = 5;
   const stars = Array(maxRate).fill(null);
   const classes = {
+    container: [
+      "rating-stars-container",
+      "d-flex ",
+      "justify-content-between",
+      props.classes.container,
+    ],
     icon: [
       "rating-star",
       {
@@ -21,11 +31,12 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
         "rating-star__yellow": rate === 0 || (rate > 2 && rate <= 3),
         "rating-star__green": rate > 3,
       },
+      props.classes.icon,
     ],
   };
 
   return (
-    <div className="rating-stars-container d-flex justify-content-between">
+    <div className={classnames(classes.container)}>
       {stars.map((e, index) => {
         if (index < rate) {
           return <StarFilled className={classnames(classes.icon)} />;
