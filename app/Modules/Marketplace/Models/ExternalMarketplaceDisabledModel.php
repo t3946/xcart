@@ -35,7 +35,10 @@ class ExternalMarketplaceDisabledModel extends Model
                 'class' => CharField::class,
                 'primary' => true,
             ],
-            'update_date' => DateTimeField::class
+            'update_date' => [
+                'class' => DateTimeField::class,
+                'autoNow' => true
+            ]
         ];
     }
 }

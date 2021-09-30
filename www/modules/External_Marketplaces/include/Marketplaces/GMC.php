@@ -160,7 +160,7 @@ class GMC extends StoreFrontMarketPlace
                     }
                 }
             } catch (Exception $e) {
-                func_backprocess_log('google_product_statuses', sprintf('Google_Service_Exception. %s', $e->getMessage()));
+                echo sprintf("%s \n", $e->getMessage());
             }
             $this->restoreQueue($aQueue, 1);
             $totalCounter++;
@@ -169,7 +169,7 @@ class GMC extends StoreFrontMarketPlace
                     $pageToken = $oResponse->getNextPageToken();
                 }
             } catch (Exception $e) {
-                func_backprocess_log('google_product_statuses', sprintf('Error Get Next Page Token. %s', $e->getMessage()));
+                echo "Error Get Next Page Token. %s \n", $e->getMessage();
                 $pageToken = false;
             }
 

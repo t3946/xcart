@@ -45,6 +45,6 @@ class GoogleShoppingProductStatusCommand extends Command
         $log_text = "Cron completed. Processing time: $str_time";
         func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
-        die("DONE!");
+        die("DONE!\n");
     }
 }
