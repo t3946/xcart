@@ -11,8 +11,8 @@ use Xcart\App\Orm\Model;
 
 class ReviewModel extends Model
 {
-    public const MIN_RATE = 1;
-    public const MAX_RATE = 5;
+    public const MIN_RATING = 1;
+    public const MAX_RATING = 5;
 
     public static function tableName()
     {
@@ -37,7 +37,7 @@ class ReviewModel extends Model
             'body' => [
                 'class' => CharField::class,
             ],
-            'overall_rate' => [
+            'overall_rating' => [
                 'class' => IntField::class,
             ],
             'location' => [

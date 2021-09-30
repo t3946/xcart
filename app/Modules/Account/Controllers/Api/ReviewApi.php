@@ -39,7 +39,7 @@ class ReviewApi extends FrontendController
         $this->jsonResponse(
             [
                 'reviews' => array_map(fn($review) => $review->toArray(), $reviews),
-                'rates' => $rates,
+                'ratings' => $rates,
             ]
         );
     }
@@ -48,25 +48,25 @@ class ReviewApi extends FrontendController
     {
         $result = ReviewModel::objects()
             ->select([
-                'rate' => 'overall_rate',
-                'rates_number' => new Expression("COUNT(product_review_id)")
+                'rating' => 'overall_rating',
+                'ratings_number' => new Expression("COUNT(product_review_id)")
             ])
             ->filter(['product_id' => $product_id])
-            ->group(['overall_rate'])
-            ->order('overall_rate')
+            ->group(['overall_rating'])
+            ->order('overall_rating')
             ->all();
 
         $overall_rates = [];
 
-        for ($i = ReviewModel::MIN_RATE; $i <= ReviewModel::MAX_RATE; $i++) {
+        for ($i = ReviewModel::MIN_RATING; $i <= ReviewModel::MAX_RATING; $i++) {
             $rate = [
-                'rate' => $i,
-                'rates_number' => 0,
+                'rating' => $i,
+                'ratings_number' => 0,
             ];
 
             for ($j = 0; $j < count($result); $j++) {
-                if ((int)$result[$j]->getFromQueryAttribute('rate') === $i) {
-                    $rate['rates_number'] = (int)$result[$j]->getFromQueryAttribute('rates_number');
+                if ((int)$result[$j]->getFromQueryAttribute('rating') === $i) {
+                    $rate['ratings_number'] = (int)$result[$j]->getFromQueryAttribute('ratings_number');
                     break;
                 }
             }
