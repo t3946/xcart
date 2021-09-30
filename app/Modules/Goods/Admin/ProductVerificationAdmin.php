@@ -79,7 +79,9 @@ class ProductVerificationAdmin extends Admin
                 );
                 return implode('<br/>', $links);
             case 'productcode':
-                return "<a target='_blank' href='{$item->getAdminUrl()}'>{$item->$property}</a>";
+                $len = mb_strlen($item->$property);
+                $name = ($len > 30) ? mb_substr($item->$property, 0, 30) . '...' : $item->$property;
+                return "<a target='_blank' href='{$item->getAdminUrl()}'>{$name}</a>";
             case 'product':
                 $len = mb_strlen($item->getFrontendName());
                 $name = ($len > 30) ? mb_substr($item->getFrontendName(), 0, 30) . '...' : $item->getFrontendName();
