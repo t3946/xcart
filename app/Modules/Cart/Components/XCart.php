@@ -2,8 +2,11 @@
 
 namespace Modules\Cart\Components;
 
+use Modules\Cart\CartModule;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Sites\Helpers\CurrentSiteHelper;
+use Xcart\App\Translate\Translate;
 
 class XCart extends Cart
 {
@@ -64,14 +67,18 @@ class XCart extends Cart
         if ($mids = array_keys($groups)) {
             /** @var DistributorModel[] $distrs */
             $distrs = [];
-            $dist_valid = [];
 
             foreach ( DistributorModel::objects()->all(['pk__in' => $mids]) as $model) {
                 $distrs[$model->pk] = $model;
             }
 
             foreach ($groups as $mid => $item) {
-                $dist_valid[$mid] = $distrs[$mid]->checkMinimalAmount($item['subtotal']);
+                if (!$distrs[$mid]->checkMinimalAmount($item['subtotal'])) {
+                    $min_summa = strip_tags(CurrentSiteHelper::formatCurrency($distrs[$mid]->getMinimalAmount()));
+                    $error_message = CartModule::t('The minimum order amount for this product line is') . ' '. $min_summa;
+                    \Xcart\App\Main\Xcart::app()->flash->info($error_message);
+                    return false;
+                }
                 foreach ($item['items'] as $product) {
                     if ($p_model = $product->_object->objects()->get(['pk' => $product->_object->pk])) {
                         if ($p_model->forsale === 'N') {
