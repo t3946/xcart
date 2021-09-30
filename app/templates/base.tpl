@@ -4,7 +4,6 @@
         <div class="off-canvas-content" data-off-canvas-content>
             <div id="content-wrapper">
                 {block "header"}
-                    <div id="top-header-content-container">1</div>
                     <div id="header-target">
                         <div class="container skeleton d-none d-lg-block">
                             <div class="skeleton-box hat-skeleton"></div>
