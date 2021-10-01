@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
-import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
+import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
 import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { useDispatch } from "react-redux";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 interface ManageListPageURLParams {
   listHash: string;
@@ -10,6 +13,9 @@ interface ManageListPageURLParams {
 
 export const DeleteListPage: React.FC = () => {
   const params = useParams<ManageListPageURLParams>();
+
+  const dispatch = useDispatch();
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const history = useHistory();
 
@@ -25,6 +31,19 @@ export const DeleteListPage: React.FC = () => {
     history.push(`/account/your-lists/${list.cache_url}`);
   };
 
+  const onRequestEnd = () => {
+    showSnackbar({
+      header: "Success",
+      message: `${list.name} list deleted successfully`,
+      theme: "success",
+    });
+  };
+
+  const handleDeleteList = () => {
+    history.push("/account/your-lists");
+    dispatch(deleteList(list.product_list_id, onRequestEnd));
+  };
+
   return (
     <div>
       <MobileMenuBackBtn
@@ -32,7 +51,11 @@ export const DeleteListPage: React.FC = () => {
         label={"back"}
       />
       <div className="page-label">Delete list</div>
-      <DeleteList info={list} onCancelClick={onCancelClick} />
+      <ConfirmDelete
+        onDeleteClick={handleDeleteList}
+        onCancelClick={onCancelClick}
+        deleteType="list"
+      />
     </div>
   );
 };
