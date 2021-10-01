@@ -1,12 +1,12 @@
 import React from "react";
 import { CardItem } from "./CardItem";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingContainer } from "../shared/LoadingContainer";
 import { AccountStore } from "../../ts/types/account-store.type";
 import { changeDefaultCard } from "@client/jsx/redux/actions/account-actions/PaymentsActions";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { useHistory } from "react-router";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { LoadingContainer } from "@client/modules/account/components/shared/LoadingContainer";
 
 interface CardsListProps {
   cards: CardItemDto[];
@@ -32,12 +32,12 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
 
   const openCardDialog = (cardInfo: CardItemDto, dialog, path) => {
     breakpoint({
-      xs: () =>
+      sm: () =>
         history.push({
           pathname: path,
           state: { cardInfo: cardInfo },
         }),
-      sm: dialog.handleClickOpen,
+      md: dialog.handleClickOpen,
     });
   };
   return (

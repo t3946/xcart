@@ -55,7 +55,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   ];
 
   return (
-    <div className="product-list-item-container product-list-item-idea-container">
+    <div className="product-list-item-container ">
       <div className="movable-area">
         {edit ? (
           <ListItemMovableArea

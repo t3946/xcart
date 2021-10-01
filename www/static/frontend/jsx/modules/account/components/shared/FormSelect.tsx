@@ -28,12 +28,11 @@ export const FormSelect = ({
   return (
     <Grid
       className={classnames(
-        `select select-send ${open && "open"}`,
+        `select select-send ${open && "open"} justify-content-between`,
         classes?.group
       )}
       container
       alignItems="center"
-      justifyContent="space-between"
     >
       {label && <label className="form-input-label">{label}</label>}
       <div

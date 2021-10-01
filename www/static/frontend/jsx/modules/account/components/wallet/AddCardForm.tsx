@@ -16,6 +16,7 @@ import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-act
 import { detectCardType } from "../../utils/detect-card-type";
 import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { useHistory } from "react-router";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 export const AddCardForm: React.FC = () => {
   const monthsValues = fillMassToSelect(1, 12);
@@ -30,6 +31,8 @@ export const AddCardForm: React.FC = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
+
+  const breakPoint = useBreakpoint();
 
   const handleSubmit = (values) => {
     context.setContent(BillingAddressFormEnum.LIST_ADDRESS);
@@ -53,12 +56,12 @@ export const AddCardForm: React.FC = () => {
   };
 
   const cardsHandleCancel = () => {
-    if (accountStore.getState().main.breakpoint.is768) {
-      history.push("/account/payments/wallet");
-      return;
-    }
-
-    context.handleClose();
+    breakPoint({
+      sm: () => {
+        history.push("/account/payments/wallet");
+      },
+      md: context.handleClose,
+    });
   };
 
   return (

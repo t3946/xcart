@@ -10,15 +10,38 @@
 
 .product-list-item-move-select{
   border-radius: 5px;
+  font-weight: 400 !important;
+  font-size: 14px!important;
+  text-transform: uppercase;
 }
 
 .product-list-item-delete-button{
   border-color: #c4c4c4 !important;
+  font-weight: 400 !important;
 }
 
 .list-product-item-btns-text{
   margin-bottom: 10px;
   text-align: right;
+}
+
+
+@media (max-width: 1050px) {
+  .list-product-item-btns-container{
+    flex-direction: column;
+  }
+
+  .product-list-item-delete-button{
+    width: 100% !important;
+  }
+
+  .product-list-item-move-select{
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 10px !important;
+    padding-left: 35px !important;
+    text-align: center !important;
+  }
 }
 
 @media (max-width: 768px) {

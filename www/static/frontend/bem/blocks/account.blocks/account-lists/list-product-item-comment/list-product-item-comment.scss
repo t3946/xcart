@@ -43,6 +43,13 @@
   margin-bottom: 15px;
 }
 
+.list-product-item-comment-delete{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
 @media (max-width: 768px) {
   .list-product-item-comment-container::before{
     display: none;

@@ -208,5 +208,4 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-
 }

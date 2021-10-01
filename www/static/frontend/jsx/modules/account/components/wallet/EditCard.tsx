@@ -10,12 +10,10 @@ import { convertDataToEditCardForm } from "../../utils/convert-data-to-edit-card
 import { useDispatch, useSelector } from "react-redux";
 import { editCard } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { accountStore } from "../../../../redux/stores/StoreAccount";
-import { useHistory } from "react-router";
 import { CardHeader } from "./CardHeader";
 import { editCardFormValidationSchema } from "../../ts/consts/add-card-form";
 import { AccountStore } from "../../ts/types/account-store.type";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { onCardActionsEnd } from "@client/modules/account/utils/on-card-actions-end";
 
 interface EditCardProps {
@@ -205,7 +203,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
 
       <div className="edit-card-btns">
         <Button
-          onClick={cardsHandleCancel}
+          onClick={() => onCardActionsEnd(context.handleClose)}
           type={"submit"}
           disabled={submitCardFormLoading}
           className="account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"

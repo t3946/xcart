@@ -49,10 +49,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
 
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const viewProductPage = () => {
-    window.location.assign(`/product/${info.product_id}/`);
-  };
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       image: info.image,
@@ -101,9 +97,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
-            <div onClick={viewProductPage} className="product-list-item-name">
+            <a
+              href={`/product/${info.product_id}/`}
+              className="product-list-item-name"
+            >
               {product.product}
-            </div>
+            </a>
             {edit && (
               <img
                 onClick={mobileMenuDialog.handleClickOpen}
@@ -159,7 +158,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           )
         }
         time={info.add_date}
-        listId={info.list_items_id}
+        listId={info.product_list_id}
       />
 
       <BootstrapDialogHOC

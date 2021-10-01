@@ -17,7 +17,7 @@ export const AddListPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const onCancelClick = () => {
-    if (params.productId) {
+    if (params?.productId) {
       window.history.go(-1);
       return;
     }
@@ -25,14 +25,18 @@ export const AddListPage: React.FC = () => {
   };
 
   const onCreateList = (list: any) => {
+    if (!params?.productId) {
+      history.push(`/account/your-lists/${list.cache_url}`);
+      return;
+    }
     dispatch(
       addProduct(
         list.product_list_id,
-        window.appData.product_info.product.productid,
+        window.appData?.product_info?.product?.productid,
         null,
         () =>
           window.location.assign(
-            `/account/your-lists/add-product-to-list/false/${list.product_list_id}/${window.appData.product_info.product.productcode}`
+            `/account/your-lists/add-product-to-list/false/${list.product_list_id}/${window.appData?.product_info?.product?.productcode}`
           )
       )
     );
@@ -43,7 +47,7 @@ export const AddListPage: React.FC = () => {
       <MobileMenuBackBtn redirectUrl={`/account/your-lists`} label={"back"} />
       <div className="page-label">Create list</div>
       <CreateNewList
-        productId={window.appData.product_info.product.productid}
+        productId={window.appData?.product_info?.product?.productid}
         onCancelBtnClick={onCancelClick}
         actionType={"product"}
         onCreateList={onCreateList}

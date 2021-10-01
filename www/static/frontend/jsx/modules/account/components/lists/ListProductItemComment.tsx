@@ -42,6 +42,30 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
       <div onClick={onEditCommentClick} className="add-comment-text">
         Edit comment, quantity & priority
       </div>
+      <div className="list-product-item-comment-delete">
+        <svg
+          width="26"
+          height="26"
+          viewBox="0 0 26 26"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M19.4998 6.5L6.49975 19.5"
+            stroke="#4A4949"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M6.50024 6.5L19.5002 19.5"
+            stroke="#4A4949"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
     </div>
   );
 };

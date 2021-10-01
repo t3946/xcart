@@ -18,6 +18,7 @@ export const EditInfoInListProductPage: React.FC = () => {
 
   if (!lists) {
     history.push(`/account/your-lists/${params.listHash}`);
+    return;
   }
 
   const list = lists.find((e) => e.cache_url === params.listHash);

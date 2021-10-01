@@ -16,8 +16,8 @@ export const AddNewPaymentMethod: React.FC = () => {
 
   const addCard = () => {
     breakpoint({
-      xs: () => history.push("/account/payments/wallet/add"),
-      sm: addDialog.handleClickOpen,
+      sm: () => history.push("/account/payments/wallet/add"),
+      md: addDialog.handleClickOpen,
     });
   };
 
