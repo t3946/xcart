@@ -11,7 +11,7 @@ interface PropsInterface {
   };
 }
 
-export const ProductStarsRating: React.FC<PropsInterface> = (
+export const RatingStars: React.FC<PropsInterface> = (
   props: PropsInterface
 ) => {
   const rating = Math.round(props.rating);
@@ -48,4 +48,4 @@ export const ProductStarsRating: React.FC<PropsInterface> = (
   );
 };
 
-export default ProductStarsRating;
+export default RatingStars;

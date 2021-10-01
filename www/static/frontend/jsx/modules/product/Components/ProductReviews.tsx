@@ -1,5 +1,5 @@
 import React from "react";
-import TooltipRatingContent from "@client/jsx/modules/account/components/lists/TooltipRatingContent";
+import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
 import { getProductsRatingsAction } from "@client/jsx/redux/actions/RatingsActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
@@ -35,7 +35,7 @@ const ProductReviews: React.FC = function () {
 
     return (
       <div className="overall-rating">
-        <TooltipRatingContent
+        <OverallRating
           minRating={ratings.minRating}
           maxRating={ratings.maxRating}
           ratings={ratings.overallRatings}
