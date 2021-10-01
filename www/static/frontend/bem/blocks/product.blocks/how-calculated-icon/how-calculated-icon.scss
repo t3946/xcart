@@ -1,0 +1,15 @@
+.how-calculated-icon {
+  width: rem-calc(9);
+  height: rem-calc(5);
+  font-size: rem-calc(16);
+  transform: rotate(0deg);
+  transition: all 0.2s ease;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+  }
+}

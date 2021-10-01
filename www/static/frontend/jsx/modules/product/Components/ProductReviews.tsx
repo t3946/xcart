@@ -3,9 +3,14 @@ import OverallRating from "@client/jsx/modules/shared/components/ratings/Overall
 import { getProductsRatingsAction } from "@client/jsx/redux/actions/RatingsActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import ArrowIconTablet from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
+import { Collapse } from "react-bootstrap";
+import classnames from "classnames";
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
+  const [isVisibleHowCalculated, setIsVisibleHowCalculated] =
+    React.useState(false);
   const classes = {
     overallRating: {
       rating: {
@@ -13,6 +18,12 @@ const ProductReviews: React.FC = function () {
         container: "review-overall-rating-container",
       },
     },
+    howCalculatedClasses: [
+      "how-calculated-icon",
+      {
+        "how-calculated-icon__flip": isVisibleHowCalculated,
+      },
+    ],
   };
 
   //current page product id
@@ -29,18 +40,38 @@ const ProductReviews: React.FC = function () {
   }
 
   function ratingTemplates() {
-    if (!ratings) {
-      return;
-    }
-
     return (
       <div className="overall-rating">
-        <OverallRating
-          minRating={ratings.minRating}
-          maxRating={ratings.maxRating}
-          ratings={ratings.overallRatings}
-          classes={classes.overallRating}
-        />
+        {ratings && (
+          <OverallRating
+            minRating={ratings.minRating}
+            maxRating={ratings.maxRating}
+            ratings={ratings.overallRatings}
+            classes={classes.overallRating}
+          />
+        )}
+
+        <div className="how-calculated product-reviews_how-calculated">
+          <div
+            className={"how-calculated-arm d-inline-block"}
+            onClick={() => setIsVisibleHowCalculated(!isVisibleHowCalculated)}
+          >
+            <ArrowIconTablet
+              className={classnames(classes.howCalculatedClasses)}
+            />{" "}
+            How are ratings calculated ?
+          </div>
+
+          <Collapse in={isVisibleHowCalculated}>
+            <p className={"how-calculated_text"}>
+              To calculate the overall star rating and percentage breakdown by
+              star, we don’t use a simple average. Instead, our system considers
+              things like how recent a review is and if the reviewer bought the
+              item on S3 stores. It also analyzes reviews to verify
+              trustworthiness.
+            </p>
+          </Collapse>
+        </div>
       </div>
     );
   }
