@@ -30,6 +30,7 @@ export interface AccountStore {
     checkoutUrl: string;
   };
   publicProfile: AccountPublicProfileStore;
+  productsRatings: any;
 }
 
 export interface AccountAddressesStore {

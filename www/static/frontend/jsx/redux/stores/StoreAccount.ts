@@ -21,6 +21,7 @@ import MobileAlertReducer from "@client/jsx/redux/reduсers/account/MobileAlertR
 import CartReducer from "@client/jsx/redux/reduсers/CartReducer";
 import MiniCartReducer from "@client/jsx/redux/reduсers/MiniCartReducer";
 import PublicProfileReducer from "@client/jsx/redux/reduсers/account/PublicProfileReducer";
+import RatingsReducer from "@client/jsx/redux/reduсers/RatingsReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -43,6 +44,7 @@ export const accountStore: Store<AccountStore> = createStore(
     cart: CartReducer,
     miniCart: MiniCartReducer,
     publicProfile: PublicProfileReducer,
+    productsRatings: RatingsReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

@@ -5,7 +5,7 @@ import classnames from "classnames";
 interface PropsInterface {
   minRating: number;
   maxRating: number;
-  ratings: { rating: number; ratings_number: number }[];
+  ratings: { rating: number; ratingsNumber: number }[];
   classes?: {
     overallRating?: any;
     rating?: {
@@ -18,12 +18,23 @@ interface PropsInterface {
 const TooltipRatingContent: React.FC<PropsInterface> = (
   props: PropsInterface
 ) => {
+  const { ratings, minRating, maxRating, classes } = props;
+
+  const totalRatingsNumber = ratings.reduce(
+    (pv, cv) => pv + cv.ratingsNumber,
+    0
+  );
+
+  const overallRating = countOverallRating();
+
   /**
    * @return number from 0 to max rating
    */
   function countOverallRating(): number {
-    console.log("countOverallRating", totalRatingsNumber);
-    const totalRating = ratings.reduce((pv, cv) => pv + cv.rating, 0);
+    const totalRating = ratings.reduce(
+      (pv, cv) => pv + cv.ratingsNumber * cv.rating,
+      0
+    );
     const maxTotalRating = maxRating * totalRatingsNumber;
 
     if (maxTotalRating === 0) {
@@ -33,19 +44,22 @@ const TooltipRatingContent: React.FC<PropsInterface> = (
     return (totalRating / maxTotalRating) * maxRating;
   }
 
-  const { ratings, minRating, maxRating, classes } = props;
-  const totalRatingsNumber = ratings.reduce(
-    (pv, cv) => pv + cv.ratings_number,
-    0
-  );
-  const overallRating = countOverallRating();
-
   function ratingBarsTemplate() {
     const bars = [];
 
     function getRatingsNumber(rate) {
+      for (let j = 0; j < ratings.length; j++) {
+        if (ratings[j].rating === rate) {
+          return ratings[j].ratingsNumber;
+        }
+      }
+
       return 0;
     }
+
+    const percents = [];
+    //concern about total percent count always equal 100
+    let fraction = 0;
 
     for (let rate = maxRating; rate >= minRating; rate--) {
       const ratingsNumber = getRatingsNumber(rate);
@@ -54,7 +68,24 @@ const TooltipRatingContent: React.FC<PropsInterface> = (
 
       if (totalRatingsNumber > 0) {
         percent = (ratingsNumber / totalRatingsNumber) * 100;
+        fraction += percent % 1;
       }
+
+      percents[rate] = Math.floor(percent);
+    }
+
+    fraction = Math.round(fraction);
+
+    //distribute left percents from fraction
+    for (let rate = maxRating; rate >= minRating; rate--) {
+      if (fraction > 0) {
+        percents[rate] += 1;
+        fraction -= 1;
+      }
+    }
+
+    for (let rate = maxRating; rate >= minRating; rate--) {
+      const percent = percents[rate];
 
       bars.push(
         <div className="d-flex justify-content-between align-items-center overall-rating_bar-group">
@@ -81,12 +112,15 @@ const TooltipRatingContent: React.FC<PropsInterface> = (
 
   return (
     <>
-      <div className={classnames("overall-rating", classes?.overallRating)}>
+      <div className={classnames(classes?.overallRating)}>
         <div className="d-flex justify-content-between">
-          <ProductStarsRating rating={2} classes={classes?.rating} />
+          <ProductStarsRating
+            rating={overallRating}
+            classes={classes?.rating}
+          />
 
           <div className="overall-rating-out-of-caption">
-            {`${overallRating} out of ${maxRating}`}
+            {`${overallRating.toFixed(1)} out of ${maxRating}`}
           </div>
         </div>
 

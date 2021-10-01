@@ -1,25 +1,25 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
+import { route } from "@client/jsx/utils/AppData";
 
 const api = new ApiService();
 
 function* getProductRatings(action): Generator {
-  const result: any = yield api
-    .post<any>(`/account/api/addresses/get-addresses`, action.userId)
-    .then((response) => response)
-    .catch((error) => console.log(error));
+  const { data } = action.payload;
 
-  try {
-    yield put({
-      type: "SET_ADDRESSES",
-      addresses: result,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  const ratings = yield api.post<any>(
+    route("account:api:get-product-ratings"),
+    JSON.stringify(data)
+  );
+
+  yield put({
+    type: "SAVE_PRODUCT_RATINGS",
+    productId: data.productId,
+    ratings,
+  });
 }
 
-export function* addressesActionWatcher(): SagaIterator {
+export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("GET_PRODUCT_RATINGS", getProductRatings);
 }

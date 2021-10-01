@@ -23,12 +23,10 @@ class RatingsApi extends FrontendController
                 'rating' => 'overall_rating',
                 'ratings_number' => new Expression("COUNT(product_review_id)")
             ])
-            ->filter(['product_id' => $this->data['product_id']])
+            ->filter(['product_id' => $this->data['productId']])
             ->group(['overall_rating'])
             ->order('overall_rating')
             ->all();
-
-        $overall_rates = [];
 
         for ($i = ReviewModel::MIN_RATING; $i <= ReviewModel::MAX_RATING; $i++) {
             $rate = [
@@ -43,11 +41,11 @@ class RatingsApi extends FrontendController
                 }
             }
 
-            array_push($overall_rates, $rate);
+            $overall_rates[] = $rate;
         }
 
         $this->jsonResponse([
-            'overallRatings' => $overall_rates,
+            'overallRatings' => $overall_rates ?? [],
             'minRating' => ReviewModel::MIN_RATING,
             'maxRating' => ReviewModel::MAX_RATING
         ]);

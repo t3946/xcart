@@ -1,7 +1,11 @@
 import React from "react";
 import TooltipRatingContent from "@client/jsx/modules/account/components/lists/TooltipRatingContent";
+import { getProductsRatingsAction } from "@client/jsx/redux/actions/RatingsActions";
+import { useDispatch, useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const ProductReviews: React.FC = function () {
+  const dispatch = useDispatch();
   const classes = {
     overallRating: {
       rating: {
@@ -10,6 +14,36 @@ const ProductReviews: React.FC = function () {
       },
     },
   };
+
+  //current page product id
+  const productId = parseInt(
+    document.location.pathname.match(/\/product\/(\d+)/)[1]
+  );
+
+  const ratings = useSelector((e: AccountStore) => e.productsRatings)[
+    productId
+  ];
+
+  if (!ratings) {
+    dispatch(getProductsRatingsAction({ data: { productId } }));
+  }
+
+  function ratingTemplates() {
+    if (!ratings) {
+      return;
+    }
+
+    return (
+      <div className="overall-rating">
+        <TooltipRatingContent
+          minRating={ratings.minRating}
+          maxRating={ratings.maxRating}
+          ratings={ratings.overallRatings}
+          classes={classes.overallRating}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={"product-reviews"}>
@@ -22,13 +56,12 @@ const ProductReviews: React.FC = function () {
           >
             Customer reviews
           </h3>
-          <h4 className={"product-reviews_overall-header mb-1 mb-md-14 mb-lg-16"}>Overall</h4>
-          <TooltipRatingContent
-            minRating={1}
-            maxRating={5}
-            ratings={[]}
-            classes={classes.overallRating}
-          />
+          <h4
+            className={"product-reviews_overall-header mb-1 mb-md-14 mb-lg-16"}
+          >
+            Overall
+          </h4>
+          {ratingTemplates()}
           <h4 className={"product-reviews-header mb-lg-3 mb-md-20"}>
             By feature
           </h4>

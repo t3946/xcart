@@ -67,6 +67,8 @@ export const publicProfileInitialValue = {
   alert: null,
 };
 
+export const productsRatingsInitialValue = {};
+
 const accountStoreInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -79,6 +81,7 @@ const accountStoreInitialValue = {
   cart: cartInitialValue,
   miniCart: miniCartInitialValue,
   publicProfile: publicProfileInitialValue,
+  productsRatings: productsRatingsInitialValue,
 };
 
 export default accountStoreInitialValue;

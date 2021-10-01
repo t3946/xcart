@@ -14,7 +14,7 @@ interface PropsInterface {
 export const ProductStarsRating: React.FC<PropsInterface> = (
   props: PropsInterface
 ) => {
-  const { rating } = props;
+  const rating = Math.round(props.rating);
   const maxRating = 5;
   const stars = Array(maxRating).fill(null);
   const classes = {
