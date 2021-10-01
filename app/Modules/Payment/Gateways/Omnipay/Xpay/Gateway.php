@@ -23,7 +23,7 @@ class Gateway extends AbstractGateway
 
     protected function getDefaultHttpClient()
     {
-        return new \Omnipay\Common\Http\Client(new Client(['verify' => false]));
+        return new \Omnipay\Common\Http\Client(new \Http\Adapter\Guzzle6\Client(new Client(['verify' => false])));
     }
 
     public function getName(): string
