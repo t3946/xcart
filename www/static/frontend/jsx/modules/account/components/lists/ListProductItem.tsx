@@ -129,6 +129,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             (info.comment ? (
               <ListProductItemComment
                 info={info}
+                listInfo={listInfo}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
               />
             ) : (

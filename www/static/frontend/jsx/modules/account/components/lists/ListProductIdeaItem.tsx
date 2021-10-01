@@ -54,6 +54,8 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
     },
   ];
 
+  console.log(info.comment);
+
   return (
     <div className="product-list-item-container ">
       <div className="movable-area">
@@ -86,6 +88,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
               <ListProductItemComment
                 info={info}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
+                listInfo={listInfo}
               />
             ) : (
               <div
