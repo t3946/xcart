@@ -42,14 +42,12 @@ const ProductReviews: React.FC = function () {
   function ratingTemplates() {
     return (
       <div className="overall-rating">
-        {ratings && (
-          <OverallRating
-            minRating={ratings.minRating}
-            maxRating={ratings.maxRating}
-            ratings={ratings.overallRatings}
-            classes={classes.overallRating}
-          />
-        )}
+        <OverallRating
+          minRating={ratings?.minRating}
+          maxRating={ratings?.maxRating}
+          ratings={ratings?.overallRatings}
+          classes={classes.overallRating}
+        />
 
         <div className="how-calculated product-reviews_how-calculated">
           <div

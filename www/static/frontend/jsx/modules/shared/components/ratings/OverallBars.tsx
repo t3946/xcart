@@ -6,9 +6,33 @@ interface PropsInterface {
   ratings: { rating: number; ratingsNumber: number }[];
 }
 
-const OverallBars: React.FC<PropsInterface> = function (props: PropsInterface) {
+const OverallBars: React.FC<PropsInterface> = function (
+  props: PropsInterface
+): any {
   const { ratings, maxRating, minRating } = props;
   const bars = [];
+
+  if (!ratings) {
+    for (let i = 0; i < 5; i++) {
+      bars.push(
+        <div className="skeleton-box d-flex justify-content-between align-items-center overall-rating_bar-group">
+          <div className={"overall-rating-bar-caption"}>0 Star</div>
+
+          <div className="overall-rating-bar overall-rating_bar">
+            <div
+              className="overall-rating-slider"
+              style={{
+                width: 0,
+              }}
+            />
+          </div>
+
+          <div className={"overall-rating-percent text-end "}>0%</div>
+        </div>
+      );
+    }
+    return bars;
+  }
 
   const totalRatingsNumber = ratings.reduce(
     (pv, cv) => pv + cv.ratingsNumber,

@@ -16,17 +16,37 @@ interface PropsInterface {
   };
 }
 
-const OverallRating: React.FC<PropsInterface> = (
-  props: PropsInterface
-) => {
-  const { ratings, maxRating, classes } = props;
+const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
+  const { ratings, maxRating } = props;
 
-  const totalRatingsNumber = ratings.reduce(
-    (pv, cv) => pv + cv.ratingsNumber,
-    0
-  );
+  const classes = {
+    overallRating: [props.classes.overallRating],
+    rating: props.classes.rating,
+    overallRatingStars: [
+      "d-flex",
+      "justify-content-between",
+      {
+        "skeleton-box": !ratings,
+      },
+    ],
+    overallRatingGlobal: [
+      "overall-rating-global-ratings",
+      "mt-2",
+      "d-none",
+      "d-lg-block",
+      {
+        "skeleton-box": !ratings,
+      },
+    ],
+  };
 
-  const overallRating = countOverallRating();
+  let totalRatingsNumber = 0;
+  let overallRating = 0;
+
+  if (ratings) {
+    totalRatingsNumber = ratings.reduce((pv, cv) => pv + cv.ratingsNumber, 0);
+    overallRating = countOverallRating();
+  }
 
   /**
    * @return number from 0 to max rating
@@ -47,7 +67,7 @@ const OverallRating: React.FC<PropsInterface> = (
 
   return (
     <div className={classnames(classes?.overallRating)}>
-      <div className="d-flex justify-content-between">
+      <div className={classnames(classes?.overallRatingStars)}>
         <RatingStars rating={overallRating} classes={classes?.rating} />
 
         <div className="overall-rating-out-of-caption">
@@ -56,7 +76,7 @@ const OverallRating: React.FC<PropsInterface> = (
       </div>
 
       <div
-        className={"overall-rating-global-ratings mt-2 d-none d-lg-block"}
+        className={classnames(classes.overallRatingGlobal)}
       >{`${totalRatingsNumber.toLocaleString()} global ratings`}</div>
 
       <div className="overall-rating_bars">
