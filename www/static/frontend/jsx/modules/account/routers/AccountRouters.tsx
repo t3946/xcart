@@ -52,6 +52,7 @@ import { AddProductToList } from "@client/modules/account/components/lists/AddPr
 import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
+import { DeleteProductPage } from "@client/modules/account/pages/DeleteProductPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -162,6 +163,14 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
+                  path="/account/your-lists/delete-product/:type/:listId/:productId/"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <DeleteProductPage />
+                  )}
+                />
+                <Route
+                  exact
                   path="/account/your-lists/edit-list-product-info/:listHash/:productId"
                   component={PageContainerHoc(
                     <ListsSidebarMenu />,
@@ -232,6 +241,7 @@ export const AccountRouters = (): any => {
                     <ListsPage />
                   )}
                 />
+
                 <Route
                   exact
                   path="/account/your-lists/add-product-to-list/:isAdded/:listId/:sku"

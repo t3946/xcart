@@ -14,6 +14,7 @@ import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { ListMobileMenu } from "@client/modules/account/components/lists/ListMobileMenu";
 import { List } from "@client/modules/account/ts/types/list.type";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 export const ListsPage: React.FC = () => {
   const { id }: { id: string } = useParams();
@@ -54,6 +55,12 @@ export const ListsPage: React.FC = () => {
 
   return (
     <div>
+      {id && (
+        <MobileMenuBackBtn
+          redirectUrl={`/account/your-lists/`}
+          label={"account"}
+        />
+      )}
       {!!list ? (
         breakpoints({
           xs: id ? viewLists() : <ListMobileMenu lists={lists} />,
