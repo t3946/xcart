@@ -34,7 +34,7 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
         info.product_id,
         {
           comment: null,
-          priority: PriorityProductEnum.LOW,
+          priority: null,
           has: null,
           needs: null,
         },
