@@ -39,41 +39,6 @@ const ProductReviews: React.FC = function () {
     dispatch(getProductsRatingsAction({ data: { productId } }));
   }
 
-  function ratingTemplates() {
-    return (
-      <div className="overall-rating">
-        <OverallRating
-          minRating={ratings?.minRating}
-          maxRating={ratings?.maxRating}
-          ratings={ratings?.overallRatings}
-          classes={classes.overallRating}
-        />
-
-        <div className="how-calculated product-reviews_how-calculated">
-          <div
-            className={"how-calculated-arm d-inline-block"}
-            onClick={() => setIsVisibleHowCalculated(!isVisibleHowCalculated)}
-          >
-            <ArrowIconTablet
-              className={classnames(classes.howCalculatedClasses)}
-            />{" "}
-            How are ratings calculated ?
-          </div>
-
-          <Collapse in={isVisibleHowCalculated}>
-            <p className={"how-calculated_text"}>
-              To calculate the overall star rating and percentage breakdown by
-              star, we don’t use a simple average. Instead, our system considers
-              things like how recent a review is and if the reviewer bought the
-              item on S3 stores. It also analyzes reviews to verify
-              trustworthiness.
-            </p>
-          </Collapse>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={"product-reviews"}>
       <div className="row m-0">
@@ -85,15 +50,50 @@ const ProductReviews: React.FC = function () {
           >
             Customer reviews
           </h3>
+
           <h4
             className={"product-reviews_overall-header mb-1 mb-md-14 mb-lg-16"}
           >
             Overall
           </h4>
-          {ratingTemplates()}
+
+          <div className="overall-rating">
+            <OverallRating
+              minRating={ratings?.minRating}
+              maxRating={ratings?.maxRating}
+              ratings={ratings?.overallRatings}
+              classes={classes.overallRating}
+            />
+
+            <div className="how-calculated product-reviews_how-calculated">
+              <div
+                className={"how-calculated-arm d-inline-block"}
+                onClick={() => setIsVisibleHowCalculated(!isVisibleHowCalculated)}
+              >
+                <ArrowIconTablet
+                  className={classnames(classes.howCalculatedClasses)}
+                />{" "}
+                How are ratings calculated ?
+              </div>
+
+              <Collapse in={isVisibleHowCalculated}>
+                <p className={"how-calculated_text"}>
+                  To calculate the overall star rating and percentage breakdown by
+                  star, we don’t use a simple average. Instead, our system considers
+                  things like how recent a review is and if the reviewer bought the
+                  item on S3 stores. It also analyzes reviews to verify
+                  trustworthiness.
+                </p>
+              </Collapse>
+            </div>
+          </div>
+
+          <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
+
           <h4 className={"product-reviews-header mb-lg-3 mb-md-20"}>
             By feature
           </h4>
+
           <h4 className={"product-reviews-header mb-lg-3 mb-md-20"}>
             Review this product
           </h4>

@@ -1,0 +1,7 @@
+.reviews-divider_theme_dark {
+  border-bottom: 1px solid #c4c4c4;
+
+  @include breakpoint(lg up) {
+    border-bottom: 1px solid #e1e1e1;
+  }
+}

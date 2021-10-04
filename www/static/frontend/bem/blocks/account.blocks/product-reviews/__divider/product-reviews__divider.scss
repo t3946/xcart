@@ -1,0 +1,11 @@
+.product-reviews__divider {
+  margin: rem-calc(23) rem-calc(-20) rem-calc(22);
+
+  @include breakpoint(md up) {
+    margin: rem-calc(27) rem-calc(-28) rem-calc(26);
+  }
+
+  @include breakpoint(lg up) {
+    margin: rem-calc(31) 0 rem-calc(19);
+  }
+}
