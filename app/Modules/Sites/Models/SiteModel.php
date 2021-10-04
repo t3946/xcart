@@ -33,6 +33,8 @@ use Xcart\App\Orm\Model;
  * @property Manager|TaxModel[] taxes
  * @property CurrencyModel currency
  * @property CategoryModel base_category
+ * @property string $domain
+ * @property LanguageModel $lang
  */
 class SiteModel extends Model
 {

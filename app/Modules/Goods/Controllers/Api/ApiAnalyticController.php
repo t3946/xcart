@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers\Api;
 
 
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\Controller\Controller;

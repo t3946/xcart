@@ -11,7 +11,7 @@ use Xcart\External_Marketplaces\StoreFrontMarketPlace;
 
 class Amazon extends StoreFrontMarketPlace
 {
-    public function addProductToBatch($queue, $googleOneRow = '', $sExtraLog = "N")
+    public function addProductToBatch(UpdatedProductModel $queue, string $googleOneRow = '', string $sExtraLog = "N"): bool
     {
         if ($this->checkMarketplaceRestrictions($queue)) {
             if ($queue->type == "2" || $queue->type === "1,2" || $queue->type == "1") {
@@ -26,7 +26,7 @@ class Amazon extends StoreFrontMarketPlace
         return $result;
     }
 
-    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N')
+    public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N'): bool
     {
 
         return true;
@@ -146,7 +146,7 @@ class Amazon extends StoreFrontMarketPlace
         return $this->submitFeed($feed, MwsFeedAndReportClientPack::FEED_TYPE_PAI_INVENTORY);
     }
 
-    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N')
+    public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N'): bool
     {
         return true;
     }

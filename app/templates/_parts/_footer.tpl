@@ -110,7 +110,7 @@
                             <div class="footer-info-block-title">{t 'Payment Methods'}</div>
 
                             <ul class="footer-payment-methods footer_payment-methods no-bullet menu-list">
-                                {set $payment_methods = $site->payment_methods->filter(['is_active' => 1])->order(['position'])->all()}
+                                {set $payment_methods = $site.payment_methods->filter(['is_active' => 1])->order(['position'])->all()}
                                 {if !$payment_methods }
                                     {set $payment_methods = $.call.Modules.Sites.Models.PaymentMethodModel::active()}
                                 {/if}

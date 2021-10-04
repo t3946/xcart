@@ -31,9 +31,9 @@ abstract class StoreFrontMarketPlace extends Data
      * @param string $sExtraLog
      * @return mixed
      */
-    abstract public function addProductToBatch($queue, $googleOneRow = '', $sExtraLog = 'N');
-    abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N');
-    abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N');
+    abstract public function addProductToBatch(UpdatedProductModel $queue, string $googleOneRow = '', string $sExtraLog = 'N');
+    abstract public function submitInventoryBatch($debug_mode = 'N', $extra_log = 'N'): bool;
+    abstract public function submitProductsBatch($debug_mode = 'N', $extra_log = 'N'): bool;
 
     public function checkMarketplaceRestrictions($queue): bool
     {

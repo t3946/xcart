@@ -114,7 +114,6 @@ abstract class BaseCartController extends FrontendController
         }
 
         $cart = $this->getCart();
-        $cart->isValid();
         $cart->forceFetch = true;
 
         $this->display($this->listTemplate, [

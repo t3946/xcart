@@ -2,11 +2,14 @@
 
 namespace Omnipay\Xpay;
 
+use GuzzleHttp\Client;
 use Modules\Order\Models\OrderModel;
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Common\Http\ClientInterface;
 use Omnipay\Xpay\Message\CheckCartRequest;
 use Omnipay\Xpay\Message\DetailInfoRequest;
 use Omnipay\Xpay\Message\SaleRequest;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
@@ -17,6 +20,11 @@ use Omnipay\Xpay\Message\SaleRequest;
  */
 class Gateway extends AbstractGateway
 {
+
+    protected function getDefaultHttpClient()
+    {
+        return new \Omnipay\Common\Http\Client(new \Http\Adapter\Guzzle6\Client(new Client(['verify' => false])));
+    }
 
     public function getName(): string
     {
