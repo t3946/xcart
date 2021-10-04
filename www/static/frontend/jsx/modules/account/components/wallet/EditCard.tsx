@@ -15,6 +15,8 @@ import { editCardFormValidationSchema } from "../../ts/consts/add-card-form";
 import { AccountStore } from "../../ts/types/account-store.type";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { onCardActionsEnd } from "@client/modules/account/utils/on-card-actions-end";
+import { useHistory } from "react-router-dom";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface EditCardProps {
   cardInfo: CardItemDto;
@@ -67,6 +69,9 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
     return card;
   };
 
+  const history = useHistory();
+  const breakpoint = useBreakpoint();
+
   const cardInformation = getCardAddressInfo(cardInfo);
 
   const onSubmit = (values, errors) => {
@@ -89,10 +94,17 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
           },
           userId: accountStore.getState().user.id,
         },
-        () => onCardActionsEnd(context.handleClose)
+        onCardActionsEnd
       )
     );
   };
+
+  function onCardActionsEnd(): void {
+    breakpoint({
+      xs: () => history.push("/account/payments/wallet"),
+      md: context.handleClose,
+    });
+  }
 
   return (
     <div className="billing-address-container">

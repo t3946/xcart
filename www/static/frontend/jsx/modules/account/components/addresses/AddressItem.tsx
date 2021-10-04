@@ -23,14 +23,14 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   const changeDefault = () => {
     dispatch(
       changeDefaultAddress(
-        addressInfo.addresses_id,
+        addressInfo.address_id,
         accountStore.getState().user.id
       )
     );
   };
 
   const handleRemoveAddress = () => {
-    dispatch(removeAddress(addressInfo.addresses_id));
+    dispatch(removeAddress(addressInfo.address_id));
   };
 
   const editAddress = () => {

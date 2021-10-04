@@ -8,6 +8,7 @@ import { removeCard } from "../../../../redux/actions/account-actions/PaymentsAc
 import { CardHeader } from "./CardHeader";
 import { AccountStore } from "../../ts/types/account-store.type";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface RemoveCardProps {
   cardInfo: CardItemDto;
@@ -24,12 +25,13 @@ export const RemoveCard: React.FC<RemoveCardProps> = ({ cardInfo }) => {
     (e: AccountStore) => e.payments.submitCardFormLoading
   );
 
+  const breakpoint = useBreakpoint();
+
   const onRemoveEnd = () => {
-    if (accountStore.getState().main.breakpoint.is768) {
-      history.push("/account/payments/wallet");
-      return;
-    }
-    context.handleClose();
+    breakpoint({
+      xs: () => history.push("/account/payments/wallet"),
+      md: context.handleClose,
+    });
   };
 
   const handleSubmit = () => {
