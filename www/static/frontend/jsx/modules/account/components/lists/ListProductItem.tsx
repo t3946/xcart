@@ -102,8 +102,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     },
   ];
 
-  console.log(info.comment);
-
   return (
     <div className="product-list-item-container">
       <div className="movable-area">
