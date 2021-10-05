@@ -39,6 +39,8 @@ const ProductReviews: React.FC = function () {
     dispatch(getProductsRatingsAction({ data: { productId } }));
   }
 
+  console.log("ProductReviews", ratings);
+
   return (
     <div className={"product-reviews"}>
       <div className="row m-0">
@@ -59,16 +61,16 @@ const ProductReviews: React.FC = function () {
 
           <div className="overall-rating">
             <OverallRating
-              minRating={ratings?.minRating}
-              maxRating={ratings?.maxRating}
-              ratings={ratings?.overallRatings}
+              ratings={ratings?.overall}
               classes={classes.overallRating}
             />
 
             <div className="how-calculated product-reviews_how-calculated">
               <div
                 className={"how-calculated-arm d-inline-block"}
-                onClick={() => setIsVisibleHowCalculated(!isVisibleHowCalculated)}
+                onClick={() =>
+                  setIsVisibleHowCalculated(!isVisibleHowCalculated)
+                }
               >
                 <ArrowIconTablet
                   className={classnames(classes.howCalculatedClasses)}
@@ -78,11 +80,11 @@ const ProductReviews: React.FC = function () {
 
               <Collapse in={isVisibleHowCalculated}>
                 <p className={"how-calculated_text"}>
-                  To calculate the overall star rating and percentage breakdown by
-                  star, we don’t use a simple average. Instead, our system considers
-                  things like how recent a review is and if the reviewer bought the
-                  item on S3 stores. It also analyzes reviews to verify
-                  trustworthiness.
+                  To calculate the overall star rating and percentage breakdown
+                  by star, we don’t use a simple average. Instead, our system
+                  considers things like how recent a review is and if the
+                  reviewer bought the item on S3 stores. It also analyzes
+                  reviews to verify trustworthiness.
                 </p>
               </Collapse>
             </div>

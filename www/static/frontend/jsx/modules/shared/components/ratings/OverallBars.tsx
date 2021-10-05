@@ -1,19 +1,21 @@
 import React from "react";
 
 interface PropsInterface {
-  minRating: number;
-  maxRating: number;
-  ratings: { rating: number; ratingsNumber: number }[];
+  ratings: { rating: string; totalRates: string }[];
 }
 
 const OverallBars: React.FC<PropsInterface> = function (
   props: PropsInterface
 ): any {
-  const { ratings, maxRating, minRating } = props;
+  const { ratings } = props;
+  const minRating = 1;
+  const maxRating = 5;
   const bars = [];
 
+  console.log("OverallBars", ratings);
+
   if (!ratings) {
-    for (let i = 0; i < 5; i++) {
+    for (let i = minRating; i <= maxRating; i++) {
       bars.push(
         <div className="skeleton-box d-flex justify-content-between align-items-center overall-rating_bar-group">
           <div className={"overall-rating-bar-caption"}>0 Star</div>
@@ -35,14 +37,14 @@ const OverallBars: React.FC<PropsInterface> = function (
   }
 
   const totalRatingsNumber = ratings.reduce(
-    (pv, cv) => pv + cv.ratingsNumber,
+    (pv, cv) => pv + parseInt(cv.totalRates),
     0
   );
 
-  function getRatingsNumber(rate) {
+  function getRatingsNumber(rate): number {
     for (let j = 0; j < ratings.length; j++) {
-      if (ratings[j].rating === rate) {
-        return ratings[j].ratingsNumber;
+      if (parseInt(ratings[j].rating) === rate) {
+        return parseInt(ratings[j].totalRates);
       }
     }
 

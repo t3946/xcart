@@ -4,9 +4,7 @@ import classnames from "classnames";
 import OverallBars from "@client/jsx/modules/shared/components/ratings/OverallBars";
 
 interface PropsInterface {
-  minRating: number;
-  maxRating: number;
-  ratings: { rating: number; ratingsNumber: number }[];
+  ratings: any;
   classes?: {
     overallRating?: any;
     rating?: {
@@ -17,7 +15,8 @@ interface PropsInterface {
 }
 
 const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
-  const { ratings, maxRating } = props;
+  const { ratings } = props;
+  const maxRating = 5;
 
   const classes = {
     overallRating: [props.classes.overallRating],
@@ -44,25 +43,11 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
   let overallRating = 0;
 
   if (ratings) {
-    totalRatingsNumber = ratings.reduce((pv, cv) => pv + cv.ratingsNumber, 0);
-    overallRating = countOverallRating();
-  }
-
-  /**
-   * @return number from 0 to max rating
-   */
-  function countOverallRating(): number {
-    const totalRating = ratings.reduce(
-      (pv, cv) => pv + cv.ratingsNumber * cv.rating,
+    totalRatingsNumber = ratings.rates.reduce(
+      (pv, cv) => pv + parseInt(cv.totalRates),
       0
     );
-    const maxTotalRating = maxRating * totalRatingsNumber;
-
-    if (maxTotalRating === 0) {
-      return 0;
-    }
-
-    return (totalRating / maxTotalRating) * maxRating;
+    overallRating = parseFloat(ratings.total);
   }
 
   return (
@@ -80,7 +65,7 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
       >{`${totalRatingsNumber.toLocaleString()} global ratings`}</div>
 
       <div className="overall-rating_bars">
-        <OverallBars {...props} />
+        <OverallBars ratings={props.ratings?.rates} />
       </div>
     </div>
   );

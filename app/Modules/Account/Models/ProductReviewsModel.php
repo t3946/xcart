@@ -6,14 +6,11 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
-use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
-class ReviewModel extends Model
+class ProductReviewsModel extends Model
 {
-    public const MIN_RATING = 1;
-    public const MAX_RATING = 5;
-
     public static function tableName()
     {
         return 'product_reviews';
@@ -37,9 +34,6 @@ class ReviewModel extends Model
             'body' => [
                 'class' => CharField::class,
             ],
-            'overall_rating' => [
-                'class' => IntField::class,
-            ],
             'location' => [
                 'class' => CharField::class,
             ],
@@ -47,6 +41,13 @@ class ReviewModel extends Model
                 'class' => DateTimeField::class,
                 'autoNowAdd' => true,
             ],
+            'review' =>[
+                'field' => 'rating_id',
+                'class' => ForeignField::class,
+                'modelClass' => ReviewRatingsModel::class,
+                'link' => ['product_review_id' => 'review_id'],
+                'primary' => true,
+            ]
         ];
     }
 
