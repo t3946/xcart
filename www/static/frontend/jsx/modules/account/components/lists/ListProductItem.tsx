@@ -46,8 +46,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
 
   const [countProductsOnCart, setCountProductsOnCart] = useState(1);
 
-  const changeCount = (value) => {
-    if (!value) {
+  const changeCount = (value: number, isInputEnter?: boolean) => {
+    if (isInputEnter) {
+      setCountProductsOnCart(value);
+      return;
+    }
+    if (value <= 0) {
       return;
     }
     setCountProductsOnCart(value);
@@ -73,6 +77,13 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         ),
       md: deleteProductDialog.handleClickOpen,
     });
+  };
+
+  const onCountInputBlur = () => {
+    if (countProductsOnCart > 0) {
+      return;
+    }
+    setCountProductsOnCart(1);
   };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
@@ -153,7 +164,11 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           <div className="d-flex align-items-center">
             <div className="product-list-item-price">${product.cost_to_us}</div>
             <div className="multiplication-symbol">X</div>
-            <CountInput value={countProductsOnCart} onChange={changeCount} />
+            <CountInput
+              onBlur={onCountInputBlur}
+              value={countProductsOnCart}
+              onChange={changeCount}
+            />
           </div>
           {edit &&
             (info.comment ? (

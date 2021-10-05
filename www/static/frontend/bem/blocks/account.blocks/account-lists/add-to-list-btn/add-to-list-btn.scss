@@ -62,6 +62,8 @@
 
 .form-select-item-label{
   font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .form-select-item-img{
@@ -87,6 +89,12 @@
 
 .add-to-list-create-list-cross{
   margin-right: 28px;
+}
+
+@media (max-width: 1200px) {
+  .product-page-add-to-list-btn {
+    width: 80%;
+  }
 }
 
 @media (max-width: 1000px) {

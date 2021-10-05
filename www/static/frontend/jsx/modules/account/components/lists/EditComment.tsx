@@ -2,7 +2,6 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
@@ -34,7 +33,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
           (e) => e.value === info.priority
         ) || priorityProductSelectValuesConst[0],
       needs: info?.needs || 0,
-      has: info?.needs || 0,
+      has: info?.has || 0,
     },
     validationSchema: Yup.object().shape({
       comment: Yup.string()

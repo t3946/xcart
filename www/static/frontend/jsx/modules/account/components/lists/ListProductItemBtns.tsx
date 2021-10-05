@@ -34,14 +34,6 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
 
   return (
     <div className={"product-list-item-btns-container"}>
-      <div className="list-product-item-btns-text">
-        Item added{" "}
-        {new Date(time).toLocaleDateString("en-EN", {
-          month: "long",
-          day: "2-digit",
-          year: "numeric",
-        })}
-      </div>
       <Button
         className={classnames(
           "account-submit-btn  full-width-button",

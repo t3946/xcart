@@ -2,6 +2,11 @@
   margin-left: rem-calc(20);
   text-align: right;
   padding-top: rem-calc(25);
+  width: 50%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .text-area-input-container{
@@ -25,6 +30,7 @@
 .edit-comment-name{
   font-size: rem-calc(14);
   font-weight: 700;
+  word-break: break-word;
 }
 
 .top-content{

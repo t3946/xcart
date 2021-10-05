@@ -47,11 +47,12 @@
 
 @media (max-width: 768px) {
   .list-product-item-btns-container{
-  display: none;
+    display: none;
   }
 
   .product-list-item-btns-container{
     width: 100%;
+    margin-top: 15px;
   }
 
   .list-product-item-btns-text{

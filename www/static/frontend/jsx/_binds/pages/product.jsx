@@ -2,6 +2,8 @@ import documentReady from "../../utils/documentReady";
 
 import { render } from "preact";
 import Catalog from "@/components/catalog/Catalog";
+import { Provider } from "react-redux";
+import { accountStore } from "../../redux/stores/StoreAccount";
 
 (() => {
   let page = document.querySelector(".product-page");
@@ -109,16 +111,17 @@ import Catalog from "@/components/catalog/Catalog";
     const pager = JSON.parse(elem.dataset.pager);
 
     render(
-        <Catalog
-          sortingOptions={sortingOptions}
-          sortKey={elem.dataset.currentSortingKey}
-          hideSort={hideSort}
-          pager={pager}
-          catalogUrl={"/api" + elem.dataset.catalogUrl}
-          checkoutUrl={elem.dataset.checkoutUrl}
-          mode={elem.dataset.mode}
-          searchText=''
-        />,
+      <Catalog
+        sortingOptions={sortingOptions}
+        sortKey={elem.dataset.currentSortingKey}
+        hideSort={hideSort}
+        pager={pager}
+        catalogUrl={"/api" + elem.dataset.catalogUrl}
+        checkoutUrl={elem.dataset.checkoutUrl}
+        mode={elem.dataset.mode}
+        searchText=""
+      />,
+
       elem
     );
   }

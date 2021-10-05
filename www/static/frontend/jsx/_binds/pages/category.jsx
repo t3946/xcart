@@ -1,5 +1,7 @@
 import { render } from "preact";
 import Catalog from "@/components/catalog/Catalog";
+import { Provider } from "react-redux";
+import { accountStore } from "../../redux/stores/StoreAccount";
 
 export default (() => {
   // init catalog
@@ -14,14 +16,16 @@ export default (() => {
   const catalogUrl = "/api" + document.location.pathname;
 
   return render(
-    <Catalog
-      sortingOptions={sortingOptions}
-      sortKey={elem.dataset.currentSortingKey}
-      hideSort={hideSort}
-      catalogUrl={catalogUrl}
-      checkoutUrl={elem.dataset.checkoutUrl}
-      searchText={elem.dataset.searchText}
-    />,
+    <Provider store={accountStore}>
+      <Catalog
+        sortingOptions={sortingOptions}
+        sortKey={elem.dataset.currentSortingKey}
+        hideSort={hideSort}
+        catalogUrl={catalogUrl}
+        checkoutUrl={elem.dataset.checkoutUrl}
+        searchText={elem.dataset.searchText}
+      />
+    </Provider>,
     elem
   );
 })();

@@ -446,6 +446,8 @@ export default class Card extends Component {
         mainInfo={this.productContentBlock()}
         price={this.productPriceBlock()}
         classes={classes}
+        inList={props.inList}
+        onFlagClick={props.onFlagClick}
       />
     );
   }

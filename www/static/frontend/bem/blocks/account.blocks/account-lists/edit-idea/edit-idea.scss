@@ -61,6 +61,15 @@
   .edit-idea-form-input{
     margin-bottom: rem-calc(17) !important;
   }
+
+  .edit-idea-btns{
+    flex-direction: row;
+  }
+
+  .confirm-edit-idea-btn{
+    margin-bottom: 0 !important;
+    margin-right: 10px !important;
+  }
 }
 
 @media (max-width: 768px) {

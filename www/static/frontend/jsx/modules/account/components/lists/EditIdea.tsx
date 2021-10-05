@@ -51,7 +51,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
   };
 
   return (
-    <div>
+    <React.Fragment>
       {isEdit ? (
         <form
           className={"edit-idea-form"}
@@ -104,6 +104,6 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
           )}
         </div>
       )}
-    </div>
+    </React.Fragment>
   );
 };

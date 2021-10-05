@@ -4,6 +4,12 @@ import classnames from "classnames";
 import { CardSceletonBlock } from "../product/card/catalog/CardSceletonBlock";
 import { CardSceletonLine } from "../product/card/catalog/CardSceletonLine";
 import React from "react";
+import { accountStore } from "../../redux/stores/StoreAccount";
+import {
+  addProduct,
+  deleteProduct,
+  getLists,
+} from "../../redux/actions/account-actions/ListsActions";
 
 // сколько вывести скелетов, когда нет продуктов
 const skeletonsNumber = 12;
@@ -17,7 +23,18 @@ export default class ProductsList extends Component {
       nextPage: 1,
       sort: null,
       sortWasChanged: false,
+      lists: null,
     };
+
+    accountStore.subscribe(() => {
+      console.log(accountStore.getState());
+      this.setState({
+        ...this.state,
+        lists: accountStore
+          .getState()
+          .lists?.lists?.find((e, index) => index === 0),
+      });
+    });
 
     this.loadData();
   }
@@ -54,6 +71,8 @@ export default class ProductsList extends Component {
 
   loadData() {
     this.props.onBeginLoading(this.state.nextPage);
+
+    accountStore.dispatch(getLists());
 
     //end of pagination
     if (!this.props.catalogUrl) {
@@ -116,7 +135,7 @@ export default class ProductsList extends Component {
       );
   }
 
-  productItem(product, viewMode) {
+  productItem(product, viewMode, inList, onFlagClick) {
     const classes = {
       product: [`catalog-product__${viewMode}`, `catalog-product_${viewMode}`],
     };
@@ -124,10 +143,12 @@ export default class ProductsList extends Component {
     return (
       <React.Fragment>
         <Card
+          inList={inList}
           product={product}
           classes={classes}
           key={`product-card-${product.productid}`}
           searchText={this.props.searchText}
+          onFlagClick={onFlagClick}
         />
       </React.Fragment>
     );
@@ -142,6 +163,19 @@ export default class ProductsList extends Component {
     }
 
     return true;
+  }
+
+  onFlagClick(e, inList, productId) {
+    e.stopPropagation();
+    if (!inList) {
+      accountStore.dispatch(
+        addProduct(this.state.lists.product_list_id, productId, null, () => {})
+      );
+      return;
+    }
+    accountStore.dispatch(
+      deleteProduct(this.state.lists.product_list_id, productId, () => {})
+    );
   }
 
   render() {
@@ -167,7 +201,23 @@ export default class ProductsList extends Component {
             }
           }
 
-          return this.productItem(item, viewMode);
+          return this.productItem(
+            item,
+            viewMode,
+            (() => {
+              const product = this.state.lists?.products?.find(
+                (e) => e.product_id === item.productid
+              );
+              if (!product) {
+                return false;
+              }
+              if (product?.typeAction) {
+                return false;
+              }
+              return true;
+            })(),
+            (e, inList) => this.onFlagClick(e, inList, item.productid)
+          );
         })}
       </div>
     );

@@ -2,10 +2,15 @@ import React from "react";
 
 interface CountInputProps {
   value: number;
-  onChange: (value: number) => void;
+  onChange: (value: number, isInputEnter?: boolean) => void;
+  onBlur: () => void;
 }
 
-export const CountInput: React.FC<CountInputProps> = ({ value, onChange }) => {
+export const CountInput: React.FC<CountInputProps> = ({
+  value,
+  onChange,
+  onBlur,
+}) => {
   return (
     <div className="d-flex">
       <div
@@ -15,11 +20,11 @@ export const CountInput: React.FC<CountInputProps> = ({ value, onChange }) => {
         -
       </div>
       <input
-        disabled
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(Number(e.target.value), true)}
         value={value}
         type={"number"}
         className="count-input"
+        onBlur={onBlur}
       />
       <div
         onClick={() => onChange(value + 1)}

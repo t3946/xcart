@@ -5,6 +5,8 @@ import CatalogContext from "@/components/catalog/CatalogContext";
 import LoadMore from "@/components/catalog/LoadMore";
 import Storage from "@/utils/localStorage/storage";
 import $ from "jquery";
+import { Provider } from "react-redux";
+import { accountStore } from "../../redux/stores/StoreAccount";
 
 export default class Catalog extends Component {
   constructor(props) {
