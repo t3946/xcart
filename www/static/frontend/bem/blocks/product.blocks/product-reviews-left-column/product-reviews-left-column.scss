@@ -1,0 +1,15 @@
+.product-reviews-left-column {
+  background-color: #fffaee;
+  padding: rem-calc(20) rem-calc(20) rem-calc(26);
+
+  @include breakpoint(md up) {
+    padding: rem-calc(28) rem-calc(28) rem-calc(38);
+  }
+
+  @include breakpoint(lg up) {
+    background-color: transparent;
+    padding: 0 rem-calc(40) 0 0;
+    width: rem-calc(380);
+    max-width: rem-calc(380);
+  }
+}

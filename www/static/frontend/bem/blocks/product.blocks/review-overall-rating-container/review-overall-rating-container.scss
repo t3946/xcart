@@ -1,0 +1,11 @@
+.review-overall-rating-container {
+  width: rem-calc(130);
+
+  @include breakpoint(md up) {
+    width: rem-calc(200);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(110);
+  }
+}

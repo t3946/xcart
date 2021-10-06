@@ -1,0 +1,14 @@
+.review-overall-rating-star {
+  width: rem-calc(22);
+  height: rem-calc(20);
+
+  @include breakpoint(md up) {
+    width: rem-calc(34);
+    height: rem-calc(32);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(19);
+    height: rem-calc(17);
+  }
+}

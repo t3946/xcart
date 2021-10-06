@@ -77,6 +77,19 @@ const ProductReviews: React.FC = function () {
           </li>
         );
       }
+    } else {
+      //print skeleton
+      const skeletonRatingsNumber = 3;
+
+      for (let i = 0; i < skeletonRatingsNumber; i++) {
+        ratingElements.push(
+          <li
+            className={
+              "feature-rating-list__item d-flex align-items-center feature-rating-list-item_skeleton skeleton-box"
+            }
+          />
+        );
+      }
     }
 
     return (
@@ -90,7 +103,7 @@ const ProductReviews: React.FC = function () {
         <div className="col product-reviews-left-column">
           <h3
             className={
-              "product-reviews-header product-reviews-header__big product-reviews_column-header d-none d-lg-block"
+              "product-reviews-header product-reviews-header_big product-reviews_column-header d-none d-lg-block"
             }
           >
             Customer reviews
@@ -151,12 +164,22 @@ const ProductReviews: React.FC = function () {
           <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
             Review this product
           </h4>
+
+          <p className={"product-reviews__share-your-thoughts"}>
+            Share your thoughts with other customers
+          </p>
+
+          <div className="d-flex justify-content-center">
+            <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
+              write a customer review
+            </button>
+          </div>
         </div>
 
         <div className="col-12 col-lg product-reviews-right-column">
           <h3
             className={
-              "product-reviews-header product-reviews-header__big product-reviews_column-header mb-md-20"
+              "product-reviews-header product-reviews-header_big product-reviews_column-header mb-md-20"
             }
           >
             Top reviews from the United States

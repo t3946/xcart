@@ -6,6 +6,6 @@
   }
 
   @include breakpoint(lg up) {
-    margin: rem-calc(31) 0 rem-calc(19);
+    margin: rem-calc(31) rem-calc(-40) rem-calc(19) 0;
   }
 }

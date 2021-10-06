@@ -1,72 +1,12 @@
 .product-reviews {
+  font-size: rem-calc(16);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
   @include breakpoint(lg up) {
     padding: rem-calc(38);
-  }
-}
-
-.product-reviews-header__big {
-  @include breakpoint(lg up) {
-    font-size: rem-calc(24);
-  }
-}
-
-.product-reviews-left-column {
-  background-color: #fffaee;
-  padding: rem-calc(20) rem-calc(20) rem-calc(26);
-
-  @include breakpoint(md up) {
-    padding: rem-calc(28) rem-calc(28) rem-calc(38);
-  }
-
-  @include breakpoint(lg up) {
-    background-color: transparent;
-    padding: 0;
-    width: rem-calc(380);
-    max-width: rem-calc(380);
-  }
-}
-
-.product-reviews-right-column {
-  padding: rem-calc(26) rem-calc(20) rem-calc(89);
-
-  @include breakpoint(md up) {
-    padding: rem-calc(38) rem-calc(28) rem-calc(72);
-  }
-
-  @include breakpoint(lg up) {
-    padding: 0 0 0 rem-calc(140);
-  }
-}
-
-.product-reviews_column-header {
-  @include breakpoint(lg up) {
-    margin: 0 0 rem-calc(28) 0;
-  }
-}
-
-.review-overall-rating-star {
-  width: rem-calc(22);
-  height: rem-calc(20);
-
-  @include breakpoint(md up) {
-    width: rem-calc(34);
-    height: rem-calc(32);
-  }
-
-  @include breakpoint(lg up) {
-    width: rem-calc(19);
-    height: rem-calc(17);
-  }
-}
-
-.review-overall-rating-container {
-  width: rem-calc(130);
-
-  @include breakpoint(md up) {
-    width: rem-calc(200);
-  }
-
-  @include breakpoint(lg up) {
-    width: rem-calc(110);
+    font-size: rem-calc(16);
   }
 }

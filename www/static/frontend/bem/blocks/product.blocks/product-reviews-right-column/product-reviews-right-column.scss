@@ -1,0 +1,17 @@
+.product-reviews-right-column {
+  padding: rem-calc(26) rem-calc(20) rem-calc(89);
+
+  @include breakpoint(md up) {
+    padding: rem-calc(38) rem-calc(28) rem-calc(72);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 0 0 rem-calc(140);
+  }
+}
+
+.product-reviews_column-header {
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(28) 0;
+  }
+}
