@@ -1,11 +1,11 @@
 .overall-rating_bar {
-  margin: 0 rem-calc(14);
+  margin: 0 0 0 rem-calc(14);
 
   @include breakpoint(md up) {
-    margin: 0 rem-calc(44);
+    margin: 0 0 0 rem-calc(44);
   }
 
   @include breakpoint(lg up) {
-    margin: 0 rem-calc(28);
+    margin: 0 0 0 rem-calc(28);
   }
 }

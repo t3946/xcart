@@ -12,8 +12,6 @@ const OverallBars: React.FC<PropsInterface> = function (
   const maxRating = 5;
   const bars = [];
 
-  console.log("OverallBars", ratings);
-
   if (!ratings) {
     for (let i = minRating; i <= maxRating; i++) {
       bars.push(

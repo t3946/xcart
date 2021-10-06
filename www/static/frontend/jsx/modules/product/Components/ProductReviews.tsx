@@ -39,8 +39,6 @@ const ProductReviews: React.FC = function () {
     dispatch(getProductsRatingsAction({ data: { productId } }));
   }
 
-  console.log("ProductReviews", ratings);
-
   return (
     <div className={"product-reviews"}>
       <div className="row m-0">

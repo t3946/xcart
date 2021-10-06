@@ -25,7 +25,7 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
       "d-flex",
       "justify-content-between",
       {
-        "skeleton-box": !ratings,
+        "skeleton-box": ratings === undefined,
       },
     ],
     overallRatingGlobal: [
@@ -34,7 +34,7 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
       "d-none",
       "d-lg-block",
       {
-        "skeleton-box": !ratings,
+        "skeleton-box": ratings === undefined,
       },
     ],
   };
@@ -50,14 +50,29 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
     overallRating = parseFloat(ratings.total);
   }
 
+  let rates;
+
+  switch (props.ratings) {
+    case undefined:
+      rates = null;
+      break;
+    case null:
+      rates = [];
+      break;
+    default:
+      rates = props.ratings.rates;
+  }
+
   return (
     <div className={classnames(classes?.overallRating)}>
       <div className={classnames(classes?.overallRatingStars)}>
         <RatingStars rating={overallRating} classes={classes?.rating} />
 
-        <div className="overall-rating-out-of-caption">
-          {`${overallRating.toFixed(1)} out of ${maxRating}`}
-        </div>
+        {totalRatingsNumber > 0 && (
+          <div className="overall-rating-out-of-caption">
+            {`${overallRating.toFixed(1)} out of ${maxRating}`}
+          </div>
+        )}
       </div>
 
       <div
@@ -65,7 +80,7 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
       >{`${totalRatingsNumber.toLocaleString()} global ratings`}</div>
 
       <div className="overall-rating_bars">
-        <OverallBars ratings={props.ratings?.rates} />
+        <OverallBars ratings={rates} />
       </div>
     </div>
   );
