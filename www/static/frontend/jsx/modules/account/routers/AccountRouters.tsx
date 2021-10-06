@@ -103,7 +103,7 @@ export const AccountRouters = (): any => {
               <Switch>
                 <Route
                   exact
-                  path="/account/"
+                  path="/account"
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <DashboardPage />

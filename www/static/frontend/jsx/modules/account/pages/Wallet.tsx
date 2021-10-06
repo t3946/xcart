@@ -18,7 +18,9 @@ export const Wallet: React.FC = () => {
   return (
     <div className="wallet-container">
       <div className="page-label">Wallet</div>
-      <div className="wallet-label">Credit and debit cards</div>
+      {cards?.length > 0 && (
+        <div className="wallet-label">Credit and debit cards</div>
+      )}
       <CardsList cards={cards} />
       <div className="wallet-label">Add a new payment method</div>
       <AddNewPaymentMethod />

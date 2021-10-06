@@ -1,4 +1,4 @@
-import {route} from "@client/jsx/utils/AppData";
+import { route } from "@client/jsx/utils/AppData";
 
 const newWindow: any = window;
 const routes = newWindow.appData.routes || {};
@@ -7,6 +7,14 @@ export const staticRoutes = [
   {
     name: "Add",
     path: routes["account:addresses-add"],
+  },
+  {
+    name: "Edit",
+    path: routes["account:addresses-edit"],
+  },
+  {
+    name: "Shipping lists",
+    path: routes["account:your-lists"],
   },
 
   { name: "Account", path: routes["account:index"] },

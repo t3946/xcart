@@ -54,7 +54,7 @@ export const CardItem: React.FC<CardItemProps> = ({
             {cardInfo.is_default ? "Default" : "Set default"}
           </div>
           <div
-            className={`accordion-arrow ${
+            className={`accordion-arrow black-arrow ${
               accordion.open && "accordion-arrow-open"
             }`}
           />
@@ -80,7 +80,7 @@ export const CardItem: React.FC<CardItemProps> = ({
             </div>
           </div>
           {breakpoint({
-            sm: (
+            xs: (
               <AddEditBtnsBlock
                 handleRemove={() =>
                   openCardDialog(

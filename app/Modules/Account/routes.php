@@ -33,9 +33,25 @@ return [
     ],
 
     [
+        'route' => '/addresses/edit',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'addresses-edit'
+    ],
+
+    [
         'route' => '/payments/wallet',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'wallet'
+    ],
+    [
+        'route' => '/payments/wallet/add',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'wallet-add'
+    ],
+    [
+        'route' => '/payments/wallet/edit',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'wallet-edit'
     ],
     [
         'route' => '/payments/transactions',

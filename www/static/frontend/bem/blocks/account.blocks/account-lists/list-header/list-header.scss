@@ -59,6 +59,15 @@
   display: none;
 }
 
+@media (max-width: 1250px) {
+  .list-header-name{
+    max-width: 20%;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
 @media (max-width: 768px) {
   .list-header-shared-block{
     display: none;

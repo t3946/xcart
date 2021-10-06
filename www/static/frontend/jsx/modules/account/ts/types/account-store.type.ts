@@ -22,6 +22,7 @@ export interface AccountStore {
   departmentsMenuDesktop: {
     isVisible: boolean;
   };
+  breadcrumbs: Record<string, string>;
   countries: any;
   loginAndSecurity: AccountLoginAndSecurityStore;
   mobileAlert: AccountMobileAlertStore;

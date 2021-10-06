@@ -3,6 +3,7 @@ import { CardAction } from "../../account/components/wallet/CardAction";
 import { useLocation } from "react-router-dom";
 import { BillingAddressFormEnum } from "../ts/consts/billing-address-form-types";
 import { CardItemDto } from "../ts/types/wallet.type";
+import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
 interface LocationCardState {
   cardInfo: CardItemDto;
@@ -11,10 +12,16 @@ interface LocationCardState {
 export const EditCard: React.FC = () => {
   const location = useLocation<LocationCardState>();
   return (
-    <CardAction
-      contentType={BillingAddressFormEnum.EDIT}
-      actionType={BillingAddressFormEnum.EDIT}
-      cardInfo={location.state.cardInfo}
-    />
+    <React.Fragment>
+      <MobileMenuBackBtn
+        redirectUrl={`/account/payments/wallet/`}
+        label={"back"}
+      />
+      <CardAction
+        contentType={BillingAddressFormEnum.EDIT}
+        actionType={BillingAddressFormEnum.EDIT}
+        cardInfo={location.state.cardInfo}
+      />
+    </React.Fragment>
   );
 };

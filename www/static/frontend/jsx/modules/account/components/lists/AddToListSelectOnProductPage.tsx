@@ -51,7 +51,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
           window.location.assign(
             `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${window.appData.product_info.product.productcode}`
           ),
-        sm: addProductDialog.handleClickOpen,
+        md: addProductDialog.handleClickOpen,
       });
     };
 
@@ -61,7 +61,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
           window.location.assign(
             `/account/your-lists/add-list/${window.appData.product_info.product.productcode}`
           ),
-        sm: createListDialog.handleClickOpen,
+        md: createListDialog.handleClickOpen,
       });
     };
 
