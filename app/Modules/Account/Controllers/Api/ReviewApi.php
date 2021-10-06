@@ -57,13 +57,26 @@ class ReviewApi extends FrontendController
      */
     public function getProductReviews()
     {
-        $product_id = $this->data['product_id'];
-        $reviews = ProductReviewsModel::objects()->all(['product_id' => $product_id]);
-        $rates = $this->getProductRates($product_id);
+        $product_id = $this->data['productId'];
+
+        $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
+
+        $reviews = ProductReviewsModel::objects()
+            ->select(['*', 'overall_rating' => 'rating__rating'])
+            ->asArray()
+            ->limit(3)
+            ->order('created')
+            ->filter([
+                'product_id' => $product_id,
+                'user_id' => 49,
+                'rating__rating_id' => $overall_rating_id,
+            ])
+            ->all();
+
+
         $this->jsonResponse(
             [
-                'reviews' => array_map(fn($review) => $review->toArray(), $reviews),
-                'ratings' => $rates,
+                'reviews' => $reviews,
             ]
         );
     }
