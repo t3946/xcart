@@ -30,16 +30,16 @@ class RatingsApi extends FrontendController
             if ($rating_model['slug'] === 'overall') {
                 $rates = ProductReviewsModel::objects()
                     ->select([
-                        'review__rating_id',
-                        'review__rating',
+                        'rating__rating_id',
+                        'rating__rating',
                         'totalRates' => 'count(review_id)',
                     ])
                     ->filter([
                         'product_id' => $this->data['productId'],
-                        'review__rating_id' => $rating_model['rating_id'],
-                        'review__rating__isnull' => false,
+                        'rating__rating_id' => $rating_model['rating_id'],
+                        'rating__rating__isnull' => false,
                     ])
-                    ->group(['review__rating', 'review__rating_id'])
+                    ->group(['rating__rating', 'rating__rating_id'])
                     ->asArray()
                     ->all();
 

@@ -41,7 +41,7 @@ class ProductReviewsModel extends Model
                 'class' => DateTimeField::class,
                 'autoNowAdd' => true,
             ],
-            'review' =>[
+            'rating' =>[
                 'field' => 'rating_id',
                 'class' => ForeignField::class,
                 'modelClass' => ReviewRatingsModel::class,
