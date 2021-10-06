@@ -2,10 +2,6 @@
 
 namespace Modules\Account\Models;
 
-use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BigIntField;
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
