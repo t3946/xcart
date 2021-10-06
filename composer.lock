@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9029bb85b872c981c34b46a3f57460d7",
+    "content-hash": "c72af7390741c82b8af50ef4738b97a0",
     "packages": [
         {
             "name": "aftership/aftership-php-sdk",
@@ -163,16 +163,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.194.5",
+            "version": "3.195.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "33f755378debdbc7e010157811fc47aebf090c53"
+                "reference": "7df429b9cae05b52991ae266e0f7f6756a9e7b4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/33f755378debdbc7e010157811fc47aebf090c53",
-                "reference": "33f755378debdbc7e010157811fc47aebf090c53",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/7df429b9cae05b52991ae266e0f7f6756a9e7b4d",
+                "reference": "7df429b9cae05b52991ae266e0f7f6756a9e7b4d",
                 "shasum": ""
             },
             "require": {
@@ -248,9 +248,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.194.5"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.195.1"
             },
-            "time": "2021-09-24T18:25:24+00:00"
+            "time": "2021-09-28T18:16:45+00:00"
         },
         {
             "name": "calcinai/xero-php",
@@ -2508,26 +2508,26 @@
         },
         {
             "name": "league/flysystem-cached-adapter",
-            "version": "1.1.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-cached-adapter.git",
-                "reference": "d1925efb2207ac4be3ad0c40b8277175f99ffaff"
+                "reference": "7bb5cd9d996904cf43d7da8ba45a724ff8c7ef14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-cached-adapter/zipball/d1925efb2207ac4be3ad0c40b8277175f99ffaff",
-                "reference": "d1925efb2207ac4be3ad0c40b8277175f99ffaff",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-cached-adapter/zipball/7bb5cd9d996904cf43d7da8ba45a724ff8c7ef14",
+                "reference": "7bb5cd9d996904cf43d7da8ba45a724ff8c7ef14",
                 "shasum": ""
             },
             "require": {
-                "league/flysystem": "~1.0",
-                "psr/cache": "^1.0.0"
+                "league/flysystem": "~1.0"
             },
             "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "~1.0@dev",
                 "mockery/mockery": "~0.9",
-                "phpspec/phpspec": "^3.4",
-                "phpunit/phpunit": "^5.7",
+                "phpspec/phpspec": "~2.1",
+                "phpunit/phpunit": "~4.1",
                 "predis/predis": "~1.0",
                 "tedivm/stash": "~0.12"
             },
@@ -2555,7 +2555,7 @@
                 "issues": "https://github.com/thephpleague/flysystem-cached-adapter/issues",
                 "source": "https://github.com/thephpleague/flysystem-cached-adapter/tree/master"
             },
-            "time": "2020-07-25T15:56:04+00:00"
+            "time": "2015-07-09T21:00:39+00:00"
         },
         {
             "name": "league/flysystem-ziparchive",
@@ -4540,21 +4540,138 @@
             "time": "2021-08-16T04:24:45+00:00"
         },
         {
-            "name": "psr/cache",
-            "version": "1.0.1",
+            "name": "promphp/prometheus_client_php",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-fig/cache.git",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+                "url": "https://github.com/PromPHP/prometheus_client_php.git",
+                "reference": "6e30c28d19acb65e5d9a445c8c9bdb11b0d56c73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "url": "https://api.github.com/repos/PromPHP/prometheus_client_php/zipball/6e30c28d19acb65e5d9a445c8c9bdb11b0d56c73",
+                "reference": "6e30c28d19acb65e5d9a445c8c9bdb11b0d56c73",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "ext-json": "*",
+                "php": "^7.2|^8.0"
+            },
+            "replace": {
+                "endclothing/prometheus_client_php": "*",
+                "jimdo/prometheus_client_php": "*",
+                "lkaemmerling/prometheus_client_php": "*"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.50",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "phpstan/phpstan-strict-rules": "^0.12.5",
+                "phpunit/phpunit": "^8.4|^9.4",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symfony/polyfill-apcu": "^1.6"
+            },
+            "suggest": {
+                "ext-apc": "Required if using APCu.",
+                "ext-redis": "Required if using Redis.",
+                "promphp/prometheus_push_gateway_php": "An easy client for using Prometheus PushGateway.",
+                "symfony/polyfill-apcu": "Required if you use APCu on PHP8.0+"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Prometheus\\": "src/Prometheus/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Lukas Kämmerling",
+                    "email": "kontakt@lukas-kaemmerling.de"
+                }
+            ],
+            "description": "Prometheus instrumentation library for PHP applications.",
+            "support": {
+                "issues": "https://github.com/PromPHP/prometheus_client_php/issues",
+                "source": "https://github.com/PromPHP/prometheus_client_php/tree/v2.3.0"
+            },
+            "time": "2021-09-14T05:39:00+00:00"
+        },
+        {
+            "name": "promphp/prometheus_push_gateway_php",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PromPHP/prometheus_push_gateway_php.git",
+                "reference": "bb2ef227a906a9221bf66626b8efb711e6d62146"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PromPHP/prometheus_push_gateway_php/zipball/bb2ef227a906a9221bf66626b8efb711e6d62146",
+                "reference": "bb2ef227a906a9221bf66626b8efb711e6d62146",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "php": "^7.2|^8.0",
+                "promphp/prometheus_client_php": "^1.0|^2.0"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12.50",
+                "phpstan/phpstan-phpunit": "^0.12.16",
+                "phpstan/phpstan-strict-rules": "^0.12.5",
+                "phpunit/phpunit": "^8.4|^9.4",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrometheusPushGateway\\": "src/PrometheusPushGateway/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Lukas Kämmerling",
+                    "email": "kontakt@lukas-kaemmerling.de"
+                }
+            ],
+            "description": "Prometheus Push Gateway client for PHP applications.",
+            "support": {
+                "issues": "https://github.com/PromPHP/prometheus_push_gateway_php/issues",
+                "source": "https://github.com/PromPHP/prometheus_push_gateway_php/tree/v1.1.0"
+            },
+            "time": "2020-11-18T07:07:03+00:00"
+        },
+        {
+            "name": "psr/cache",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
             },
             "type": "library",
             "extra": {
@@ -4574,7 +4691,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for caching libraries",
@@ -4584,9 +4701,9 @@
                 "psr-6"
             ],
             "support": {
-                "source": "https://github.com/php-fig/cache/tree/master"
+                "source": "https://github.com/php-fig/cache/tree/2.0.0"
             },
-            "time": "2016-08-06T20:24:11+00:00"
+            "time": "2021-02-03T23:23:37+00:00"
         },
         {
             "name": "psr/http-message",
@@ -6052,7 +6169,7 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.4.30",
+            "version": "v4.4.32",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
@@ -6121,7 +6238,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v4.4.30"
+                "source": "https://github.com/symfony/translation/tree/v4.4.32"
             },
             "funding": [
                 {

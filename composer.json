@@ -43,6 +43,8 @@
         "pear/mail_mime": "^1.10",
         "php-amqplib/php-amqplib": "dev-master",
         "php-http/guzzle6-adapter": "^1.1",
+        "promphp/prometheus_client_php": "^2.3",
+        "promphp/prometheus_push_gateway_php": "^1.1",
         "smarty/smarty": "^3.1",
         "swiftmailer/swiftmailer": "^6",
         "symfony/http-foundation": "^2.8",

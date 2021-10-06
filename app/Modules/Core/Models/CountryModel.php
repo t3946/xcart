@@ -12,7 +12,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
-
+/** @property string code */
 class CountryModel extends Model
 {
     use AutoMetaTrait;
