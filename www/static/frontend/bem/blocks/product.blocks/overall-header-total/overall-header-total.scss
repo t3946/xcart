@@ -1,0 +1,9 @@
+.overall-header-total {
+  color: #565656;
+  font-size: rem-calc(14);
+  font-weight: normal;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+}

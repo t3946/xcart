@@ -1,0 +1,11 @@
+.feature-rating-value {
+  flex: 0 0 rem-calc(50);
+
+  @include breakpoint(md up) {
+    flex: 0 0 rem-calc(100);
+  }
+
+  @include breakpoint(lg up) {
+    flex: 0 0 rem-calc(50);
+  }
+}

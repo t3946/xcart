@@ -4,19 +4,6 @@
   }
 }
 
-.product-reviews-header {
-  font-weight: bold;
-  font-size: rem-calc(20);
-
-  @include breakpoint(md up) {
-    font-size: rem-calc(24);
-  }
-
-  @include breakpoint(lg up) {
-    font-size: rem-calc(20);
-  }
-}
-
 .product-reviews-header__big {
   @include breakpoint(lg up) {
     font-size: rem-calc(24);

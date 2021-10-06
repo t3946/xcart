@@ -6,6 +6,7 @@ import { AccountStore } from "@client/modules/account/ts/types/account-store.typ
 import ArrowIconTablet from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
+import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
@@ -35,8 +36,52 @@ const ProductReviews: React.FC = function () {
     productId
   ];
 
-  if (!ratings) {
+  let totalRatingsNumber = 0;
+
+  if (ratings) {
+    if (ratings.overall !== null) {
+      totalRatingsNumber = ratings.overall.rates.reduce(
+        (pv, cv) => pv + parseInt(cv.totalRates),
+        0
+      );
+    }
+  } else {
     dispatch(getProductsRatingsAction({ data: { productId } }));
+  }
+
+  function featureRatingsTemplate() {
+    const ratingElements = [];
+
+    if (ratings) {
+      for (let i = 0; i < ratings.features.length; i++) {
+        const { rating } = ratings.features[i];
+        const total = parseInt(ratings.features[i].total);
+
+        ratingElements.push(
+          <li className={"feature-rating-list__item d-flex align-items-center"}>
+            <span className={"feature-rating-name flex-grow-1"}>
+              {rating.name}
+            </span>
+
+            <RatingStars
+              classes={{
+                container: "flex-grow-0 feature-rating-stars",
+                icon: "feature-rating-star",
+              }}
+              rating={total}
+            />
+
+            <span className={"feature-rating-value text-end"}>
+              {total.toFixed(1)}
+            </span>
+          </li>
+        );
+      }
+    }
+
+    return (
+      <ul className={"product-rating list-unstyled m-0"}>{ratingElements}</ul>
+    );
   }
 
   return (
@@ -52,12 +97,17 @@ const ProductReviews: React.FC = function () {
           </h3>
 
           <h4
-            className={"product-reviews_overall-header mb-1 mb-md-14 mb-lg-16"}
+            className={
+              "product-reviews-header mb-2 mb-md-14 mb-lg-16 d-flex align-items-center justify-content-between"
+            }
           >
             Overall
+            <span className={"overall-header-total d-lg-none"}>
+              {totalRatingsNumber.toLocaleString()} Ratings
+            </span>
           </h4>
 
-          <div className="overall-rating">
+          <div className="product-rating">
             <OverallRating
               ratings={ratings?.overall}
               classes={classes.overallRating}
@@ -90,11 +140,15 @@ const ProductReviews: React.FC = function () {
 
           <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
 
-          <h4 className={"product-reviews-header mb-lg-3 mb-md-20"}>
+          <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
             By feature
           </h4>
 
-          <h4 className={"product-reviews-header mb-lg-3 mb-md-20"}>
+          {featureRatingsTemplate()}
+
+          <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
+
+          <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
             Review this product
           </h4>
         </div>
