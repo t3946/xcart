@@ -42,7 +42,7 @@ class ProductReviewsModel extends Model
                 'autoNowAdd' => true,
             ],
             'rating' =>[
-                'field' => 'rating_id',
+                'field' => 'product_review_id',
                 'class' => ForeignField::class,
                 'modelClass' => ReviewRatingsModel::class,
                 'link' => ['product_review_id' => 'review_id'],
