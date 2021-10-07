@@ -4,7 +4,7 @@ import { getProductsRatingsAction } from "@client/jsx/redux/actions/RatingsActio
 import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
-import ArrowIconTablet from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
+import ArrowIcon from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
@@ -21,9 +21,10 @@ const ProductReviews: React.FC = function () {
       },
     },
     howCalculatedClasses: [
-      "how-calculated-icon",
+      "spoiler-icon_arrow",
+      "me-1",
       {
-        "how-calculated-icon__flip": isVisibleHowCalculated,
+        "spoiler-icon_flip": isVisibleHowCalculated,
       },
     ],
   };
@@ -129,15 +130,17 @@ const ProductReviews: React.FC = function () {
 
             <div className="how-calculated product-reviews_how-calculated">
               <div
-                className={"how-calculated-arm d-inline-block"}
+                className={"common-link common-link_spoiler d-inline-block"}
                 onClick={() =>
                   setIsVisibleHowCalculated(!isVisibleHowCalculated)
                 }
               >
-                <ArrowIconTablet
-                  className={classnames(classes.howCalculatedClasses)}
-                />{" "}
-                How are ratings calculated ?
+                <div className="d-flex align-items-center">
+                  <ArrowIcon
+                    className={classnames(classes.howCalculatedClasses)}
+                  />{" "}
+                  How are ratings calculated ?
+                </div>
               </div>
 
               <Collapse in={isVisibleHowCalculated}>
