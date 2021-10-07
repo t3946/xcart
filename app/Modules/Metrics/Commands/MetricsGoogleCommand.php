@@ -2,6 +2,7 @@
 
 namespace Modules\Metrics\Commands;
 
+use Modules\Metrics\Helpers\GoogleAnalyticsMetrics;
 use Modules\Metrics\Helpers\MetricsDataHelper;
 use Xcart\App\Commands\Command;
 
@@ -11,65 +12,49 @@ class MetricsGoogleCommand extends Command
     // TODO: Implement handle() method.
     public function handle($arguments = [])
     {
-        $dateRange = new \Google_Service_AnalyticsReporting_DateRange();
-        $dateRange->setStartDate((new \DateTime('-1 days'))->format('Y-m-d'));
-        $dateRange->setEndDate((new \DateTime())->format('Y-m-d'));
-        $key = __DIR__ . "/keyAnalytics.json";
-        $client = new \Google_Client();
-        $client->setApplicationName("s3");
-        $client->setAuthConfig($key);
-        $client->setScopes(\Google_Service_Analytics::ANALYTICS_READONLY);
-        $analytics_reporting = new \Google_Service_AnalyticsReporting($client);
-//        $analytics = new \Google_Service_Analytics($client);
-//        $accounts = $analytics->management_accounts->listManagementAccounts();
-
-/*        $analytics = new \Google_Service_Analytics($client);*/
-
-        $metrics = new \Google_Service_AnalyticsReporting_Metric();
-        // выражение показателя (в данном случае простое имя ga:pageviews – количество просмотров)
-        $metrics->setExpression("ga:sessions");
-
-//        //Create the Dimensions object.
-//        $browser = new \Google_Service_AnalyticsReporting_Dimension();
-//        $browser->setName("ga:sessionCount");
-
-        // Create the ReportRequest object.
-        $request = new \Google_Service_AnalyticsReporting_ReportRequest();
-        $request->setViewId("76177945");
-        $request->setMetrics([$metrics]);
-        $request->setDateRanges($dateRange);
-//        $request->setDimensions([$browser]);
-//        $request->setMetrics(array($sessions));
-
-        $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
-        $body->setReportRequests([$request]);
-        $a = $analytics_reporting->reports->batchGet($body);
-        $this->printResults($a);
-    }
-
-    public function printResults($reports)
-    {
-        $results = '';
-        for ($reportIndex = 0; $reportIndex < count($reports); $reportIndex++) {
-            $report = $reports[$reportIndex];
-            $header = $report->getColumnHeader();
-            $dimensionHeaders = $header->getDimensions();
-            $metricHeaders = $header->getMetricHeader()->getMetricHeaderEntries();
-            $rows = $report->getData()->getRows();
-
-            for ($rowIndex = 0; $rowIndex < count($rows); $rowIndex++) {
-                $row = $rows[$rowIndex];
-                $dimensions = $row->getDimensions();
-                $metrics = $row->getMetrics();
-                foreach ($metrics as $metric) {
-                    $values = $metric->getValues();
-                    foreach ($values as $value) {
-                        $results .= MetricsDataHelper::convertToMetricsWithParams('google_analytics_session', $value, [
-                            'site' => ''
-                        ]);
-                    }
-                }
-            }
+        $str_result = '';
+        $google_analytics = new GoogleAnalyticsMetrics();
+        $str_result .= $google_analytics->getMetricsCountries('google_analytics_countries');
+        $str_result .= $google_analytics->getSingleMetrics('google_analytics_users', GoogleAnalyticsMetrics::METRICS_USERS);
+        $str_result .= $google_analytics->getSingleMetrics('google_analytics_session', GoogleAnalyticsMetrics::METRICS_SESSION);
+        $str_result .= $google_analytics->getSingleMetrics('google_analytics_session_bounce', GoogleAnalyticsMetrics::METRICS_SESSION_BOUNCE);
+        $str_result .= $google_analytics->getSingleMetrics('google_analytics_city', GoogleAnalyticsMetrics::METRICS_CITY);
+        if (!empty($str_result)) {
+            MetricsDataHelper::pushMetrics('google-analytics', "$str_result\n");
         }
+//        foreach (self::METRICS_INFO as $name_metrics => $attr_metrics) {
+//            if (count($accounts->getItems()) > 0) {
+//                $items = $accounts->getItems();
+//                $firstAccountId = $items[0]->getId();
+//
+//                $properties = $analytics->management_webproperties->listManagementWebproperties($firstAccountId);
+//                foreach ($properties as $property) {
+//                    $request = new \Google_Service_AnalyticsReporting_ReportRequest();
+//                    if (!empty($attr_metrics['metrics'])) {
+//                        $metrics = new \Google_Service_AnalyticsReporting_Metric();
+//                        $metrics->setExpression($attr_metrics['metrics']);
+//                        $request->setMetrics([$metrics]);
+//                    }
+//                    if (!empty($attr_metrics['dimensions'])) {
+//                        $dimension = new \Google_Service_AnalyticsReporting_Dimension();
+//                        $dimension->setName($attr_metrics['dimensions']);
+//                        $request->setDimensions([$dimension]);
+//                    }
+//                    $name = $property->name;
+//                    $request->setViewId($property->defaultProfileId);
+//                    $request->setDateRanges($dateRange);
+//
+//                    $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
+//                    $body->setReportRequests([$request]);
+//                    $data = $analytics_reporting->reports->batchGet($body);
+//                    $value = $this->getValue($data);
+//                    if (!empty($value)) {
+//                        $str_result .= MetricsDataHelper::convertToMetricsWithParams($name_metrics, $value, [
+//                            'site' => $name
+//                        ]);
+//                    }
+//                }
+//            }
+//        }
     }
 }
