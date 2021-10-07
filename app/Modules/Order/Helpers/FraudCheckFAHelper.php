@@ -189,8 +189,8 @@ class FraudCheckFAHelper
                 'city' => $this->ob_melissa->phone_data['City'],
                 'zipcode' => $this->ob_melissa->phone_data['PostalCode']
             ];
-            $info = $this->getInfoAddress($fraud, $address_compare, $phone_address);
             if (!is_null($address_compare)) {
+                $info = $this->getInfoAddress($fraud, $address_compare, $phone_address);
                 $outcome = $this->compareAddress($address_compare, $phone_address);
                 if ($outcome) {
                     $result = 'positive';
@@ -216,8 +216,8 @@ class FraudCheckFAHelper
                 'city' => $this->ob_melissa->ip_data['City'],
                 'zipcode' => $this->ob_melissa->ip_data['PostalCode']
             ];
-            $info = $this->getInfoAddress($fraud, $address_compare, $email_address);
-            if (!is_null($address_compare)) {
+            if ($address_compare) {
+                $info = $this->getInfoAddress($fraud, $address_compare, $email_address);
                 $outcome = $this->compareAddress($address_compare, $email_address);
                 if ($outcome) {
                     $result = 'positive';
@@ -325,7 +325,7 @@ class FraudCheckFAHelper
 
     }
 
-    public function scoreCardHolder(FraudFAQuestionModel $fraud, ?array $compare_name)
+    public function scoreCardHolder(FraudFAQuestionModel $fraud, ?array $compare_name): array
     {
         $result = 'negative';
         $outcome = 0;
