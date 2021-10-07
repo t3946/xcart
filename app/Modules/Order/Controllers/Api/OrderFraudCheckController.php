@@ -218,7 +218,7 @@ class OrderFraudCheckController extends Controller
         return $ar_answer;
     }
 
-    private function getTemplateData(OrderFraudFACheckModel $answer)
+    private function getTemplateData(OrderFraudFACheckModel $answer): array
     {
         $ar_info = $answer->additional_info;
         $result = [];
@@ -226,11 +226,13 @@ class OrderFraudCheckController extends Controller
         foreach ($code_list as $code) {
             $template = [];
             $value = 'N/A';
-            if (in_array($code, ['FN_CI', 'FN_SA', 'FN_BA', 'FN_CH', 'FN_T_SA', 'FN_T_BA', 'FN_O_SA', 'FN_O_BA', 'FN_TN', 'FN_EA'])) {
+            if ($answer->question->type === 'full_name') {
                 $value = $ar_info["value$code"]['full_name'] ?? $ar_info["value$code"];
             } else {
-                if($ar_info["value$code"]['state']){
+                if (isset($ar_info["value$code"]['state'])) {
                     $value = FraudCheckFAHelper::getStringAddressByArray($ar_info["value$code"]);
+                } else {
+                    $value = $ar_info["value$code"];
                 }
             }
             switch ($code) {
@@ -476,13 +478,13 @@ HTML;
                     }
                 } else {
                     $value_text = $value;
-                    if ($value['state']) {
+                    if (isset($value['state'])) {
                         $value_str = FraudCheckFAHelper::getStringAddressByArray($value);
                         $value_str = str_replace(',', '', $value_str); // Обрезает у value лишние символы и превращает в google link
                     }
                 }
                 $link = '';
-                if ($value_str !== 'N/A') {
+                if (isset($value_str) && $value_str !== 'N/A') {
                     $link = 'https://www.google.com/search?q=';
                     foreach (explode(' ', $value_str) as $attr_value) {
                         $link .= "{$attr_value}+";

@@ -43,14 +43,12 @@ class GoogleShoppingProductCommand extends Command
             func_backprocess_log('incremental product feed', $l = "Storefront: $site->domain Storefrontid: $site->storefrontid");
             echo "$l\n";
 
-            $config = $site->getConfig();
-
             if (!$site->marketplaces) {
                 continue;
             }
             $marketplace = $site->marketplaces->filter(['marketplace_id' => 1])->limit(1)->get();
             $merchantId = $marketplace->P1;
-            $lang = $config['Preferred_language'] ?? 'en';
+            $lang = $site->lang->lang_code ?? 'en';
             $i = 0;
 
             /** @var UpdatedProductModel[] $up */
@@ -236,8 +234,13 @@ class GoogleShoppingProductCommand extends Command
                         if ($product->upc) {
                             $batch->setGtin($product->upc);
                         }
-                        if (($images = $product->getImages()) && $image_model = reset($images)) {
-                            $batch->setImageLink($image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL));
+                        if ($image_model = $product->getMainImage()) {
+                            $image_url = $image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL);
+                            //TODO remove after image updated
+                            if ($site->pk == '83') {
+                                $image_url .= '?origin=google';
+                            }
+                            $batch->setImageLink($image_url);
                         }
                         if ($product->mult_order_quantity && $product->min_amount > 1) {
                             $batch->setMultipack($product->min_amount);
