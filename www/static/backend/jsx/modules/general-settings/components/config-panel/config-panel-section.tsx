@@ -27,7 +27,7 @@ export const ConfigPanelSection: React.FC<IConfigPanelSection> = ({
           return (
             <div className="section-item-block">
               {!item.isNew ? (
-                <a href={`/admin/${item.link}`} className="section-item-link">
+                <a href={`${item.link}`} className="section-item-link">
                   {item.lang}
                 </a>
               ) : (
