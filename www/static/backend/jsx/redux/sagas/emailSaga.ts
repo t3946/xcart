@@ -4,6 +4,7 @@ import { emailStore } from "@redux/stores";
 import { editCheckedInEmailItems } from "@s3stores-mail/utils";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
+
 const api = new ApiService();
 
 function* getPage(action: AnyAction): Generator {
@@ -24,6 +25,7 @@ function* getPage(action: AnyAction): Generator {
     ),
     itemsCount: json.meta.total,
     user: json.userInfo,
+    labelList: json.labelList,
   });
 }
 
@@ -36,6 +38,49 @@ function* getEmailInfo(action: AnyAction): Generator {
     type: "SET_EMAIL_INFO",
     emailInfo: info,
   });
+}
+
+function* removeEmailLabel(action: AnyAction): Generator {
+  const info: any = yield api
+    .post<any>(
+      `/admin/forms/api/mail/remove-label`,
+      JSON.stringify({
+        messageId: action.messageId,
+        labelId: action.labelId,
+      })
+    )
+    .then((response) => response);
+}
+
+function* createMailLabel(action: AnyAction): Generator {
+  const labelInfo: any = yield api
+    .post<any>(
+      `/admin/forms/api/mail/create-label`,
+      JSON.stringify({
+        messageId: action.messageId,
+        name: action.nameLabel,
+        color: action.color,
+      })
+    )
+    .then((response) => response);
+  yield put({
+    type: "CREATE_MAIL_LABEL",
+    parentMessageId: action.parentMessageId,
+    messageId: action.messageId,
+    labelInfo: labelInfo,
+  });
+}
+
+function* addLabelEMail(action: AnyAction): Generator {
+  const info: any = yield api
+    .post<any>(
+      `/admin/forms/api/add-label-email`,
+      JSON.stringify({
+        messageId: action.messageId,
+        labelId: action.labelId,
+      })
+    )
+    .then((response) => response);
 }
 
 function* getTemplates(): Generator {
@@ -108,11 +153,10 @@ function* setViewed(action: AnyAction): Generator {
     });
   }
 }
+
 function* sendEmail(action: AnyAction): Generator {
-  console.log(action.email);
   try {
     const formData = new FormData();
-
     Object.entries(action.email).forEach(([key, value]: any) => {
       if (Array.isArray(value)) {
         value.forEach((e) => {
@@ -129,6 +173,29 @@ function* sendEmail(action: AnyAction): Generator {
     yield api.post(`/admin/forms/api/send-email`, formData);
   } catch (e) {}
 }
+function* getChildList(action: AnyAction): Generator {
+  if (action.error) {
+    return;
+  }
+  const thread: any = yield api
+    .get<any>(`/admin/forms/api/email/children/${action.id}`)
+    .then((response) => response);
+
+  yield put({
+    type: "SET_EMAIL_CHILDREN",
+    messageId: action.id,
+    thread,
+  });
+}
+function* editFavoriteEmail(action: AnyAction): Generator {
+  const data = yield api.post(
+    `/admin/forms/api/edit-favorite`,
+    JSON.stringify({
+      itemsId: [action.messageId],
+      value: action.value,
+    })
+  );
+}
 
 function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_PAGE", getPage);
@@ -138,6 +205,11 @@ function* actionWatcher(): SagaIterator {
   yield takeLatest("GET_TEMPLATES", getTemplates);
   yield takeLatest("SEND_EMAIL", sendEmail);
   yield takeLatest("GET_EMAIL_INFO", getEmailInfo);
+  yield takeLatest("CREATE_LABEL", createMailLabel);
+  yield takeLatest("REMOVE_LABEL", removeEmailLabel);
+  yield takeLatest("ADD_LABEL_MAIL", addLabelEMail);
+  yield takeLatest("GET_CHILD_LIST", getChildList);
+  yield takeLatest("EDIT_FAVORITE_EMAIL", editFavoriteEmail);
 }
 
 export default function* rootSaga(): Generator {

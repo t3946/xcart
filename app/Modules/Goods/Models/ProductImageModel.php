@@ -45,7 +45,7 @@ class ProductImageModel extends Model
             'path' => [
                 'class' => ImageField::class,
                 'adapterName' => 's3',
-                'uploadTo' => 'images/%Y-%m-%d',
+                'uploadTo' => "images/fake",
                 'sizes' => [
                     self::IMAGE_SIZE_THUMB => [
                         174,
@@ -93,13 +93,18 @@ class ProductImageModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => ProductImageLinkModel::class,
                 'link' => ['image_id' => 'image_id']
+            ],
+            'products_images' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductImagesModel::class,
+                'link' => ['image_id' => 'image_id']
             ]
         ];
     }
 
     public function __toString()
     {
-        return $this->getCdnURL(self::IMAGE_SIZE_DETAIL);
+        return $this->pk ? $this->getCdnURL(self::IMAGE_SIZE_DETAIL) : '';
     }
 
     public function getCdnURL(string $size = ''): string

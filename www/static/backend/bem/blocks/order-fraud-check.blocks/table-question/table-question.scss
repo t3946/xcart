@@ -1,0 +1,52 @@
+.table-head__fraud-check-question {
+  background-color: #eaeaea;
+  text-align: center;
+}
+
+.table-item-positive__fraud-check-question {
+  background-color: #D9EAD3;
+  color: black;
+  font-size: 13px;
+}
+
+.table-item-negative__fraud-check-question {
+  background-color: #F4CCCC;
+  color: black;
+  font-size: 13px;
+}
+
+
+.answer-matrix-detail-text,
+.question-matrix-detail-text{
+  cursor: pointer;
+  width: 32px;
+  color: blue;
+  border-bottom: 1px dotted;
+  text-decoration: none;
+}
+.question-matrix-detail-text {
+  width: 20px !important;
+}
+
+.table-item-wrapper-red {
+  background-color: #f4cccc;
+}
+
+.table-item-wrapper-blue {
+  background-color: #cfe2f3;
+}
+
+.table-item-wrapper-green {
+  background-color: #d9ead3;
+}
+.question-code-header-item{
+  max-width: 190px;
+  min-width: 190px;
+  word-wrap: break-word;
+}
+.table-question-fraud-check{
+  border: black;
+}
+.center-header-item{
+  text-align: center;
+}

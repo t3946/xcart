@@ -4,6 +4,7 @@ namespace Xcart\App\Orm\Fields;
 
 use League\Flysystem\File;
 use Imagine\Image\ImageInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Exceptions\Exception;
 use Xcart\App\Exceptions\UnknownMethodException;
 use Xcart\App\Exceptions\UnknownPropertyException;
@@ -330,6 +331,10 @@ class ImageField extends FileField
     public function getImageSizes(): array
     {
         if (!$this->_original) {
+            $info_size = getimagesizefromstring($this->content);
+            if (!empty($info_size)) {
+                return [$info_size[0], $info_size[1]];
+            }
             return [];
         }
         $size = $this->_original->getSize();

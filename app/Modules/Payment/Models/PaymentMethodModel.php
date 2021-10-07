@@ -14,6 +14,7 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property int paymentid
+ * @property ProcessorModel frontend_processor
  */
 class PaymentMethodModel extends Model
 {

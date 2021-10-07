@@ -11,9 +11,24 @@ return [
         'name' => 'dx_schedule'
     ],
     [
+        'route' => 'dx/price/save',
+        'target' => [ApiDxController::class, 'savePriceListFile'],
+        'name' => 'save_price'
+    ],
+    [
         'route' => 'dx/scheduletest',
         'target' => [ApiDxController::class, 'scheduleDynamic2'],
         'name' => 'dx_schedule_test'
+    ],
+    [
+        'route' => 'dx/column/get/{:dx}',
+        'target' => [ApiDxController::class, 'getColumnByDx'],
+        'name' => 'dx_column'
+    ],
+    [
+        'route' => 'dx/products-price/save',
+        'target' => [ApiDxController::class, 'updateProductsFromPriceList'],
+        'name' => 'save_products_price'
     ],
     [
         'route' => 'dx/{slug:code}/{i:sfId}',

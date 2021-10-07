@@ -1,0 +1,58 @@
+.section-item-block {
+  color: #494949;
+  line-height: 1.25rem;
+  font-size: 0.8125rem;
+  text-align: left;
+  width: 100%;
+}
+
+.section-item-link {
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: #000000;
+    text-decoration: underline;
+  }
+}
+
+.section-config-block {
+  padding: 0 25px;
+  width: 300px;
+}
+
+.up-config-panel {
+  background-color: #ffebb2;
+  height: 2.5rem;
+  padding: 0 1.5625rem;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  flex-wrap: wrap;
+  justify-content: center;
+  display: flex;
+}
+
+.icon-config-collapse-block {
+  right: 0px;
+  position: absolute;
+}
+
+.config-header-title {
+  font-size: 1.25rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.select__module_container {
+  padding: 25px 10px;
+}
+
+.panel-module-block {
+  background-color: #ffebb2;
+  width: 100%;
+  padding: 0 1.5625rem;
+}
+.form__check_settings{
+  width: 100%;
+}

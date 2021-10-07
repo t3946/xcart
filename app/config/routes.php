@@ -18,6 +18,10 @@ return array_merge($admin_routes, [
         'route' => '',
         'path' => 'Modules.Distributor.routes',
     ],
+	[
+		'route' => '',
+		'path' => 'Modules.Core.routes',
+	],
     [
         'route' => '/product',
         'path' => 'Modules.Landing.routes',

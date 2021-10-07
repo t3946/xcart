@@ -4,6 +4,7 @@ use Modules\Order\Controllers\Admin\OrderRelatedMessagesController;
 use Modules\Order\Controllers\Api\ActivityController;
 use Modules\Order\Controllers\Api\ExportController;
 use Modules\Order\Controllers\Api\ReconciliationController;
+use Modules\Order\Controllers\FraudCheckController;
 
 return [
     [
@@ -76,4 +77,9 @@ return [
         'target' => [ExportController::class, 'export'],
         'name' => 'api:export'
     ],
+    [
+        'route' => '/fraud_check_v2/{:order_id}',
+        'target' => [FraudCheckController::class, 'index'],
+        'name' => 'order_test'
+    ]
 ];

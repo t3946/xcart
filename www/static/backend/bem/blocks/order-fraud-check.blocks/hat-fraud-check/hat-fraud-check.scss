@@ -1,0 +1,36 @@
+.hat-fraud-order {
+  justify-content: center;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.title-parent-order_fraud {
+  margin: 20px 0;
+}
+
+.title-fraud {
+  font-weight: bold;
+  font-size: 18px;
+
+  .title-fraud {
+    font-weight: 400;
+  }
+}
+
+.locked-order-wrapper {
+  background-color: #D9EAD3;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  box-shadow: 0px 10px 19px 0px rgba(34, 60, 80, 0.13);
+
+  .locked-order {
+    font-size: 13px;
+  }
+  .button__unlock-order{
+    margin-left: 5px;
+  }
+}

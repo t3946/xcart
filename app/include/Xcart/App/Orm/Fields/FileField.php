@@ -58,6 +58,8 @@ class FileField extends CharField
 
     public $adapterName;
 
+    public string $content = '';
+
     /**
      * @var string
      */
@@ -312,14 +314,14 @@ class FileField extends CharField
             return false;
         }
 
-        $contents = file_get_contents($file->getRealPath());
+        $this->content = file_get_contents($file->getRealPath());
 
         $path = $this->getNameHasher()->resolveUploadPath(
             $this->getFilesystem(),
             $this->getUploadTo(),
             $file->getClientOriginalName()
         );
-        if (!$this->getFilesystem()->write($path, $contents)) {
+        if (!$this->getFilesystem()->write($path, $this->content)) {
             throw new Exception('Failed to save file');
         }
         elseif ($this->getOldValue()) {

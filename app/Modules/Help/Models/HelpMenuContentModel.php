@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Help\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
@@ -14,38 +15,39 @@ class HelpMenuContentModel extends Model
         return 'xcart_help_menu_content';
     }
 
-     public static function getFields()
-        {
-            return [
-                'item_content_id' => [
-                    'class' => AutoField::class,
+    public static function getFields()
+    {
+        return [
+            'item_content_id' => [
+                'class' => AutoField::class,
+            ],
+            'form_type' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+                'choices' => [
+                    'question' => 'Question'
                 ],
-                'form_type' => [
-                    'class' => CharField::class,
-                    'null' => true,
-                     'default' => null,
-                    'choices' => [
-                        'question' => 'Question'
-                    ]
-                ],
-                'answer' => [
-                    'class' => CharField::class,
-                    'null' => false,
-                ],
-                'question' => [
-                    'class' => CharField::class,
-                    'null' => false,
-                ],
-              'order_by' => [
-                        'class' => IntField::class,
-                        'default' => 0
-                    ],
-                 'menu' => [
-                   'field' => 'menu_id',
-                   'class' => ForeignField::class,
-                   'modelClass' => HelpListModel::class,
-                   'link' => ['menu_id' => 'menu_id'],
-                ],
-            ];
-        }
+                'verboseName' => 'Form type'
+            ],
+            'answer' => [
+                'class' => CharField::class,
+                'null' => false,
+            ],
+            'question' => [
+                'class' => CharField::class,
+                'null' => false,
+            ],
+            'order_by' => [
+                'class' => IntField::class,
+                'default' => 0
+            ],
+            'menu' => [
+                'field' => 'menu_id',
+                'class' => ForeignField::class,
+                'modelClass' => HelpListModel::class,
+                'link' => ['menu_id' => 'menu_id'],
+            ],
+        ];
+    }
 }

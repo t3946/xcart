@@ -5,17 +5,27 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  ListItemText,
   TextField,
 } from "@material-ui/core";
+import Input from "@material-ui/core/Input";
 import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { initialValues } from "@s3stores-mail/ts/consts";
+import { initialValues, selectStyles } from "@s3stores-mail/ts/consts";
 import { EmailDatePicker } from "@s3stores-mail/components/smart/email-date-picker/EmailDatePicker";
 import { EmailSearchDialogContext } from "@s3stores-mail/contexts/email-search-dialog-context/EmailSearchDialog.context";
 import { makeStyles } from "@material-ui/core/styles";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Chip from "@material-ui/core/Chip";
+import { name } from "i18next-intervalplural-postprocessor";
 
 export const EmailSearchForm: React.FC<any> = () => {
   const formValues = useSelector((state: StoreDto) => state.searchOptions);
+  const labelList = useSelector((state: StoreDto) => state.labelsList);
+  const classes = selectStyles();
 
   const { editSearchValues } = useContext(EmailSearchDialogContext);
 
@@ -25,6 +35,10 @@ export const EmailSearchForm: React.FC<any> = () => {
     },
     label: {
       transform: "translate(14px, 16px) scale(1)",
+    },
+    chips: {
+      display: "flex",
+      flexWrap: "wrap",
     },
   });
   return (
@@ -89,6 +103,56 @@ export const EmailSearchForm: React.FC<any> = () => {
                 },
               }}
             />
+            <FormControl
+              fullWidth
+              variant="outlined"
+              className={`${classes.formControl} email-search-input`}
+            >
+              <InputLabel id="demo-mutiple-checkbox-label">Label</InputLabel>
+              <Select
+                labelId="demo-mutiple-checkbox-label"
+                id="demo-mutiple-checkbox"
+                name="label"
+                multiple
+                value={values.label || []}
+                onChange={(evt) => {
+                  setFieldValue("label", evt.target.value);
+                }}
+                input={<Input />}
+                renderValue={(selected) => {
+                  return selected
+                    .map((select) => {
+                      const label = labelList.find(
+                        (lbl) => lbl.label_id === select
+                      );
+                      if (label) {
+                        return label.name;
+                      }
+                      return select;
+                    })
+                    .join(", ");
+                }}
+              >
+                {labelList.map((label) => (
+                  <MenuItem key={label.id} value={label.label_id}>
+                    <Checkbox
+                      checked={
+                        values.label && values.label.includes(label.label_id)
+                      }
+                    />
+                    <div
+                      className="email-search-label-options"
+                      style={{
+                        backgroundColor: label.background_color,
+                        color: label.color,
+                      }}
+                    >
+                      {label.name}
+                    </div>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <Grid alignItems="center" container justify="space-between">
               <Grid xs={5}>
                 <EmailDatePicker

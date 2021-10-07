@@ -6,6 +6,5 @@
 
 {block 'main_block'}
     <div class="email-dashboard">
-        123231123
     </div>
 {/block}

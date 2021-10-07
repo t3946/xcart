@@ -2,7 +2,6 @@
 
 <script rel="flash">
     window['flashStack'] = [];
-
     {foreach $messages as $item}
         window['flashStack'].push({ 'message': {$item['message']|json_encode}, 'type': {$item['type']|json_encode}, 'time': {$item['time']|json_encode} });
     {/foreach}

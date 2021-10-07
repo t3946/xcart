@@ -17,11 +17,12 @@
                 {var $cols = 0}
 
                 <tr class="list-head">
-                    {*<th class="checker full">
+{*<th class="checker full">
                         <input type="checkbox" id="{$id}-check-all" data-checkall-list>
                         <label for="{$id}-check-all" class="alone"></label>
                         {var $cols = $cols+1}
                     </th>*}
+
 
                     {if $admin->sort}
                         <th class="sort full" data-sort-column>
@@ -45,7 +46,7 @@
 
                     {foreach $columns['enabled'] as $column}
                         {var $config = $columns['config'][$column]}
-                        <th class="col full" {$config['th']|http_build_query:':'}>
+                        <th class="col full" {if $config['th']}{$config['th']|http_build_query:':'}{/if}>
                             {include 'admin/list/_th.tpl'}
                             {var $cols = $cols+1}
                         </th>
@@ -158,4 +159,7 @@
         "columnsUrl" => $admin->getColumnsUrl(),
     ]
 ]}
-{store data=$crud_data key=$id ctx="app/cruds"}
+<script>
+    console.log('ADD', window.appData);
+    window.appData['app']['cruds']["{$id}"] = {json_encode($crud_data, true)};
+</script>

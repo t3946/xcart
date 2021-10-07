@@ -1,8 +1,11 @@
 <?php
 namespace Xcart\App\Form\Fields;
 
+use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Contrib\ListViewAdmin;
+use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\RelatedField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 class ListViewField extends Field
@@ -12,7 +15,8 @@ class ListViewField extends Field
      * @var string
      */
     public $inputTemplate = null;
-    public $listTemplate = 'forms/field/list_view/list.tpl';
+/*    public $listTemplate = 'forms/field/list_view/list.tpl';*/ // ошибка выдавал, решили заменить
+    public $listTemplate = 'admin/list/_list.tpl';
     public $rowTemplate = 'forms/field/list_view/row.tpl';
     public $emptyTemplate = 'forms/field/list_view/empty.tpl';
     public $fieldType = 'list_view';
@@ -20,6 +24,7 @@ class ListViewField extends Field
 
     /** @var \Modules\Admin\Contrib\Admin|null  */
     public $adminClass = null;
+    public ?Admin $admin = null;
 
     public $defaultOrder = [];
 
@@ -49,6 +54,14 @@ class ListViewField extends Field
      */
     public function getValue()
     {
+        /** @var Model $model */
+        $model =  $this->getForm()->getInstance();
+        $field = $model->getField($this->getName());
+        if ($field instanceof ManyToManyField)
+        {
+            $model_field = $model->{$this->getName()};
+            return $model_field;
+        }
         return null;
     }
 
@@ -61,7 +74,9 @@ class ListViewField extends Field
         if ($field instanceof RelatedField) {
             /** @var  RelatedField $field */
             $manager = $field->getManager();
-
+            if (!$model->pk) {
+                return [];
+            }
             return $manager->order($this->defaultOrder)->all();
         }
         return [];
@@ -74,12 +89,14 @@ class ListViewField extends Field
         if ($model->getIsNewRecord()) {
             return $this->innerRender($this->emptyTemplate, []);
         }
-
+        $name_owner = $this->getName();
         /** @var ListViewAdmin $admin */
         $admin = new $this->adminClass();
         $admin->ownerPk = $this->getForm()->getInstance()->pk;
-        $admin->ownerField = $this->getName();
+        $admin->ownerField = $name_owner;
+        $this->admin = $admin;
         $qs = $admin->getQuerySet();
+        $qs = $admin->applyOrder($qs);
         $qs = $admin->fixSort($qs);
 
         return $this->innerRender($this->listTemplate, [

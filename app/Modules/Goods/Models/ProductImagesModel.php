@@ -41,7 +41,10 @@ class ProductImagesModel extends Model
                 'class' => BooleanField::class,
                 'default' => true,
             ],
-            'order_by' => IntField::class,
+            'order_by' => [
+                'class' => IntField::class,
+                'default' => 100000
+            ],
 
         ];
     }

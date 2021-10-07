@@ -14,9 +14,10 @@ export const Email: React.FC = () => {
   const searchParams = useSelector((e: StoreDto) => e.searchOptions);
 
   const emailPage = useSelector((e: StoreDto) => e.page);
+  const listItems = useSelector((e: StoreDto) => e.items);
 
   useEffect(() => {
-    if (Number(page) === emailPage) {
+    if (Number(page) === emailPage && listItems.length > 1) {
       return;
     }
 

@@ -15,11 +15,16 @@ export const IncomingFileItem: React.FC<any> = ({ incomingFile }) => {
         style={{
           textDecoration: "none",
         }}
-        href={`/${incomingFile.attachment}`}
+        href={`https://i1.s3stores.com/${incomingFile.attachment}`}
       >
         <div>
           <div className="incoming-file-img">
-            {file.image && <img className="items-img" src={`  /${file.src}`} />}
+            {file.image && (
+              <img
+                className="items-img"
+                src={`https://i1.s3stores.com/${file.src}`}
+              />
+            )}
             {!file.image && (
               <div className="file-icon-wrap">
                 <img src={file?.icon} />
@@ -40,7 +45,10 @@ export const IncomingFileItem: React.FC<any> = ({ incomingFile }) => {
         <div className="hover-items">
           {file.image && (
             <div className="hover-items-img-wrap">
-              <img className="items-img img-hover" src={`  /${file.src}`} />
+              <img
+                className="items-img img-hover"
+                src={`https://i1.s3stores.com/${file.src}`}
+              />
             </div>
           )}
           <div className="hover-items-icon-background" />

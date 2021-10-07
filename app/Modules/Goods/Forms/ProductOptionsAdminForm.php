@@ -19,22 +19,24 @@ class ProductOptionsAdminForm extends ModelForm
 
     public function getFields()
     {
-        return  [
+        $field_list = [
 
             'option' => [
                 'class' => DropDownField::class,
-//                'ajaxUrl' => (new ProductOptionsAdmin)->getSuggestionUrl('option'),
                 'html' => [
-//                    'disabled' => 'disabled',
+                    'disabled' => 'disabled',
                 ],
             ],
             'variants' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionVariantsAdmin::class,
-                'listTemplate' => 'admin/list/_list.tpl',
                 'defaultOrder' => 'position'
             ],
         ];
+        if ($this->getInstance()->getIsNewRecord()) {
+            unset($field_list['option']['html']['disabled']);
+        }
+        return $field_list;
     }
 
     public function getModel()

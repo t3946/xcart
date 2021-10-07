@@ -5,6 +5,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Goods\Helpers\ProductHelper;
+use Modules\User\Models\UserModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -90,6 +91,7 @@ use Xcart\Product;
  * @property string group_mask
  * @property int group_root
  * @property ProductImageModel[]|\Xcart\App\Orm\Manager detail_images
+ * @property UserModel last_modify_user
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -137,6 +139,9 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ProductCategoriesModel::class,
                 'link' => ['productid' => 'productid'],
             ],
+            'forsale' => [
+                'class' => CharField::class,
+            ],
 
             'amazon_offer_model' => [
                 'class' => HasToOneField::class,
@@ -144,6 +149,18 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['ASIN' => 'ASIN'],
                 'sqlType' => Types::STRING,
             ],
+			'dim_x' => [
+				'class' => CharField::class,
+				'verboseName' => 'Product dimension x'
+			],
+			'dim_y' => [
+				'class' => CharField::class,
+				'verboseName' => 'Product dimension y'
+			],
+			'dim_z' => [
+				'class' => CharField::class,
+				'verboseName' => 'Product dimension z'
+			],
 
             'sites' => [
                 'class' => ManyToManyField::class,
@@ -195,6 +212,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ManyToManyField::class,
                 'modelClass' => FilterValueModel::class,
                 'through' => FilterProductModel::class,
+                'verboseName' => 'Product attributes'
             ],
             'detail_images' => [
                 'class' => ManyToManyField::class,
@@ -301,6 +319,7 @@ class ProductModel extends Model implements ICartItem
             ],
             'eta_date_mm_dd_yyyy' => [
                 'class' => UnixTimestampField::class,
+				'verboseName' => 'ETA date (mm/dd/yyyy)',
             ],
             'category_main' => [
                 'class' => HasManyField::class,
@@ -357,7 +376,8 @@ class ProductModel extends Model implements ICartItem
             'product_options' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductOptionModel::class,
-                'link' => ['productid' => 'product_id']
+                'link' => ['productid' => 'product_id'],
+				'verboseName' => 'Product options',
             ],
             'cost_to_us' => [
                 'class' => DecimalField::class,
@@ -368,11 +388,23 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0.01,
+				'verboseName' => 'Shipping freight (US$)',
             ],
+			'free_ship_zone' => [
+				'class' => IntField::class,
+				'verboseName' => 'Free shipping for destination',
+			],
+			'free_ship_text' => [
+				'class' => CharField::class,
+				'verboseName' => 'Free shipping text',
+                'null' => false,
+                'default' => ''
+			],
             'weight' => [
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
+				'verboseName' => 'Product weight (lbs)',
             ],
             'list_price' => [
                 'class' => DecimalField::class,
@@ -393,7 +425,20 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
+				'verboseName' => 'Shipping weight (lbs)'
             ],
+			'shipping_dim_x' => [
+				'class' => CharField::class,
+				'verboseName' => 'Shipping dimension x'
+			],
+			'shipping_dim_y' => [
+				'class' => CharField::class,
+				'verboseName' => 'Shipping dimension y'
+			],
+			'shipping_dim_z' => [
+				'class' => CharField::class,
+				'verboseName' => 'Shipping dimension z'
+			],
             'brand_normalized' => [
                 'class' => BooleanField::class,
                 'null' => false,
@@ -412,6 +457,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false,
+                'verboseName' => 'Locked by Product Manager'
             ],
             'shipping_weight_lock' => [
                 'class' => BooleanCharField::class,
@@ -456,6 +502,12 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => ExternalMarketplaceDisabledModel::class,
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P']
+            ],
+            'last_modify_user' => [
+                'field' => 'last_modify_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['last_modify_id' => 'id'],
             ],
         ];
     }
@@ -645,9 +697,12 @@ class ProductModel extends Model implements ICartItem
 
     public function getMainCategory(int $site_id = null):?CategoryModel
     {
+        if (!$this->pk) {
+            return null;
+        }
         $params  = [
             'products__through__main' => 'Y',
-            'products__through__productid' => $this->productid,
+            'products__through__productid' => $this->pk,
         ];
 
         if ($site_id) {

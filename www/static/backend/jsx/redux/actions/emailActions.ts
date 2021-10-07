@@ -15,7 +15,8 @@ import {
   SendDataDto,
 } from "@s3stores-mail/ts/types";
 import { SelectItemDto } from "@s3stores-mail/ts/types/select-item.type";
-import { EmailDto } from "../../modules/s3stores-mail/ts/types/email.type";
+import { ColorCreateLabel } from "@s3stores-mail/ts/types/label";
+import { EmailDto } from "@s3stores-mail/ts/types/email.type";
 
 export const getPage = (
   page: number,
@@ -67,16 +68,24 @@ export const editCheckedItems = (
 
 export const editFavorites = (
   id: string[],
-  value: boolean
+  value: boolean,
+  parentMessageId?: string,
+  messageId?: string
 ): ActionEditFavorites => ({
   type: "EDIT_FAVORITES",
   favoriteItems: id,
   value,
+  parentMessageId,
+  messageId,
 });
 
-export const editActions = (id: string[]): ActionEditActions => ({
+export const editActions = (
+  id: string[],
+  parentMessageId?: string
+): ActionEditActions => ({
   type: "EDIT_ACTIONS",
   actionItems: id,
+  parentMessageId,
 });
 
 export const addFile = (item: File): ActionAddFileDto => ({
@@ -97,10 +106,15 @@ export const setLoading = (): ActionDto => ({
   type: "SET_LOADING",
 });
 
-export const setViewed = (id: string[], value: boolean): ActionSetViewed => ({
+export const setViewed = (
+  id: string[],
+  value: boolean,
+  parentMessageId?: string
+): ActionSetViewed => ({
   type: "SET_VIEWED",
   emailId: id,
   value,
+  parentMessageId,
 });
 
 export const getTemplates = (): ActionDto => ({
@@ -137,8 +151,43 @@ export const getEmailInfo = (id: string): any => ({
   type: "GET_EMAIL_INFO",
   id,
 });
-
+export const createLabel = (
+  parentMessageId: string,
+  messageId: string,
+  nameLabel: string,
+  color: ColorCreateLabel
+): any => ({
+  type: "CREATE_LABEL",
+  parentMessageId,
+  messageId,
+  nameLabel,
+  color,
+});
+export const addLabelEmail = (
+  parentMessageId: string,
+  messageId: string,
+  labelId: string
+): any => ({
+  type: "ADD_LABEL_MAIL",
+  parentMessageId,
+  messageId,
+  labelId,
+});
+export const removeLabelEmail = (
+  parentMessageId: string,
+  messageId: string,
+  labelId: string
+): any => ({
+  type: "REMOVE_LABEL",
+  messageId,
+  labelId,
+  parentMessageId,
+});
 export const setEmailInfo = (emailInfo: EmailDto): any => ({
   type: "SET_EMAIL_INFO",
   emailInfo,
+});
+export const getChildEmailList = (id: string): any => ({
+  type: "GET_CHILD_LIST",
+  id,
 });

@@ -43,6 +43,7 @@
         "pear/mail_mime": "^1.10",
         "php-amqplib/php-amqplib": "dev-master",
         "php-http/guzzle6-adapter": "^1.1",
+        "phpoffice/phpspreadsheet": "^1.18",
         "smarty/smarty": "^3.1",
         "swiftmailer/swiftmailer": "^6",
         "symfony/http-foundation": "^2.8",

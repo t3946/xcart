@@ -9,9 +9,11 @@ use Doctrine\DBAL\Types\Types;
 use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
-use Modules\Order\Helpers\FraudCheckHelper;
+use Modules\Order\Helpers\FraudCheckFAHelper;
+use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
@@ -67,6 +69,8 @@ use Xcart\Order;
  * @property string orig_po
  * @property string po_number
  * @property string firstname
+ * @property string login_last_opened_or_saved
+ * @property string|int time_last_opened_or_saved
  * @property int storefrontid
  * @property mixed transactions
  * @property mixed b_company
@@ -89,11 +93,16 @@ use Xcart\Order;
  * @property StateModel billing_state
  * @property StateModel shipping_state
  * @property SiteModel site
+ * @property string order_prefix
  * @property mixed|Field|FileField|ModelFieldInterface currency
  * @property mixed|Field|FileField|ModelFieldInterface payment_method_model
  * @property mixed|Field|FileField|ModelFieldInterface overall_fraud_score
  * @property mixed|Field|FileField|ModelFieldInterface bare_fraud_score
  * @property mixed|Field|FileField|ModelFieldInterface dc_status
+ * @property FraudStatusModel fraud_status_model
+ * @property string fraud_status
+ * @property float|string bare_fraud_score_v2
+ * @property float|string overall_fraud_score_v2
  */
 class OrderModel extends Model
 {
@@ -376,6 +385,24 @@ class OrderModel extends Model
                 'class' => FloatField::class,
                 'default' => 0
             ],
+            'bare_fraud_score_v2' => [
+                'class' => FloatField::class,
+                'default' => 0,
+            ],
+            'overall_fraud_score_v2' => [
+                'class' => FloatField::class,
+                'default' => 0
+            ],
+            'base_fraud_answer' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderBaseFraudCheckModelV2::class,
+                'link' => ['orderid' => 'order_id']
+            ],
+            'fa_fraud_answer' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderFraudFACheckModel::class,
+                'link' => ['orderid' => 'order_id']
+            ]
         ];
     }
 
@@ -608,7 +635,7 @@ class OrderModel extends Model
 
     public function getRiskScore(): float
     {
-        return FraudCheckHelper::getRiskScore($this->total, $this->bare_fraud_score, $this->overall_fraud_score);
+        return $this->overall_fraud_score;
     }
 
     public function getTrackingNumbers(): array
@@ -671,5 +698,76 @@ class OrderModel extends Model
             }
         }
         return $res;
+    }
+
+    public function getGoogleShippingAddress(): string
+    {
+        $result_address = '';
+        if ($address = $this->getAddressInfo()) {
+            foreach ($address as $key => $a) {
+                $addr = $a['address'][0] . (!empty($a['address'][1]) ? " {$a['address'][1]}" : '') . " {$a['city']} {$a['state']} {$a['zipcode']}";
+                $addr = str_replace([' ', '#', '&'], ['+', '', 'and'], $addr);
+                if ($key) {
+                    $result_address = $addr;
+                }
+            }
+        }
+        return $result_address;
+    }
+
+    public function getFirstTransaction()
+    {
+        if ($log = $this->transactions_log->limit(1)->order(['date'])->get()) {
+            return $log->transaction;
+        }
+        return $this->transactions->limit(1)->order(['-date'])->get();
+    }
+
+    public function orderFraudCheck()
+    {
+        $overall_score = $bare_score = 0;
+        /** @var BaseFraudCheckModelV2 $fraud */
+        foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
+            [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
+            if (!is_null($fraud_result)) {
+                [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
+                    'order_id' => $this->orderid,
+                    'question_id' => $fraud->question_id
+                ], [
+                    'manual_action' => $manual_action,
+                    'fraud_score' => $fraud_score,
+                    'fraud_result' => $fraud_result,
+                    'additional_info' => $additional_info
+                ]);
+                $overall_score += (float)$orderFraud->fraud_score;
+                if ($fraud->question_code !== 'CHECK_TOTAL') {
+                    $bare_score += (float)$orderFraud->fraud_score;
+                }
+                $orderFraud->save();
+            }
+        }
+
+        $fa_heler = new FraudCheckFAHelper($this);
+        $fa_heler->fetchBaseDataOrder();
+        /** @var FraudFAQuestionModel $fraud_fa */
+        foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
+            [$fraud_result, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, true, $fa_heler);
+            /** @var OrderFraudFACheckModel $order_fraud_fa */
+            [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
+                'order_id' => $this->orderid,
+                'question_id' => $fraud_fa->question_id
+            ], [
+                'fraud_result' => $fraud_result,
+                'fraud_score' => $fraud_score,
+                'additional_info' => $info ?? null,
+                'outcome' => $outcome ?? 0.00
+            ]);
+            $overall_score += (float)$order_fraud_fa->fraud_score;
+            $bare_score += (float)$order_fraud_fa->fraud_score;
+            $order_fraud_fa->save();
+        }
+        $this->overall_fraud_score_v2 = $overall_score;
+        $this->bare_fraud_score_v2 = $bare_score;
+        $this->save();
     }
 }

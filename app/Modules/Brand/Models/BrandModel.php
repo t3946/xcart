@@ -30,6 +30,7 @@ use Xcart\App\Traits\SlugifyTrait;
 
 /**
  * @property mixed brandid
+ * @property string brand
  */
 class BrandModel extends Model
 {
@@ -276,6 +277,10 @@ class BrandModel extends Model
         ])->cache(Cache::CACHE_DAY);
 
         return $qs->order(['brand'])->all();
+    }
+    public function __toString()
+    {
+        return $this->brand;
     }
 
     /**

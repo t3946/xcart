@@ -44,13 +44,17 @@ export interface ActionDeleteFileDto extends ActionDto {
 export interface ActionEditFavorites extends ActionDto {
   favoriteItems: string[];
   value: boolean;
+  parentMessageId?: string;
+  messageId?: string;
 }
 
 export interface ActionEditActions extends ActionDto {
   actionItems: string[];
+  parentMessageId?: string;
 }
 
 export interface ActionSetViewed extends ActionDto {
   emailId: string[];
   value: boolean;
+  parentMessageId?: string;
 }

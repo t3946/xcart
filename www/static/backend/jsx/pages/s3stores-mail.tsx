@@ -3,7 +3,7 @@ import React from "react";
 import { emailStore } from "@redux/stores";
 import { Provider } from "react-redux";
 import { MailRouters } from "@s3stores-mail/routers";
-import { EmailSnackbar } from "@s3stores-mail/containers/email-snackbar/EmailSnackbar";
+import { SnackBar } from "@admin/modules/shared/components/snack-bar/SnackBar";
 import { BrowserRouter } from "react-router-dom";
 import { EmailRouterContext } from "../modules/s3stores-mail/contexts/email-router-context/EmailRouter.context";
 
@@ -24,11 +24,11 @@ import { EmailRouterContext } from "../modules/s3stores-mail/contexts/email-rout
           infoRouter,
         }}
       >
-        <EmailSnackbar>
+        <SnackBar>
           <BrowserRouter>
             <MailRouters />
           </BrowserRouter>
-        </EmailSnackbar>
+        </SnackBar>
       </EmailRouterContext.Provider>
     </Provider>,
     elem[0]

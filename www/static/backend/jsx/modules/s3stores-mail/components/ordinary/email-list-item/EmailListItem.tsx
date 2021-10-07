@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Checkbox, Grid, Paper } from "@material-ui/core";
 import CallMadeIcon from "@material-ui/icons/CallMade";
 import { FavoriteButton } from "@s3stores-mail/components/simple";
 import { ReadedSwitch } from "@s3stores-mail/components/simple";
 import moment from "moment";
 import CallReceivedIcon from "@material-ui/icons/CallReceived";
+import { EmailListLabels } from "@s3stores-mail/components/ordinary/email-list-labels/email-list-labels";
 
 interface EmailListItemDto {
   name: string;
@@ -43,56 +44,54 @@ const List: React.FC<any> = ({
       square={true}
       className={`list-item-wrap ${theme}`}
     >
-      <Grid zeroMinWidth alignItems="center" container>
-        <Checkbox
-          checked={checked}
-          onClick={editChecked}
-          className="checkbox"
-          color="default"
-        />
-        <FavoriteButton
-          editFavorite={editFavorite}
-          favorite={itemData.favorite}
-        />
-        <Grid xs={3}>
-          <div className="faxage-text">
-            <span>
-              {itemData.type === "inbox"
-                ? itemData.from_address
-                : itemData.to_address}
-            </span>
-          </div>
-        </Grid>
-        <Grid
-          container
-          justify="flex-start"
-          xs={itemData.contains_action ? 3 : 5}
+      <div className="email-item-block">
+        <div>
+          <Checkbox
+            checked={checked}
+            onClick={editChecked}
+            className="checkbox"
+            color="default"
+          />
+          <FavoriteButton
+            editFavorite={editFavorite}
+            favorite={itemData.favorite}
+          />
+        </div>
+        <div className="faxage-text">
+          <span>
+            {itemData.type === "inbox"
+              ? itemData.from_address
+              : itemData.to_address}
+          </span>
+        </div>
+        <div
+          className="subject-email-block"
+          style={{
+            maxWidth: itemData.contains_action ? 415 : 610,
+            minWidth: itemData.contains_action ? 415 : 610,
+          }}
         >
-          <div className="text-name">
-            <span>{itemData.subject}</span>
-          </div>
-        </Grid>
-        <Grid
-          justify={"center"}
-          container
-          xs={itemData.contains_action ? 3 : 1}
-        >
-          {itemData.contains_action && (
+          <EmailListLabels labels={itemData.labels} />
+          <span className="text-name">{itemData.subject}</span>
+        </div>
+        {itemData.contains_action && (
+          <div className="reader-email-item">
             <ReadedSwitch
               actionName={itemData.action?.name}
               editAction={editAction}
               readed={itemData.action.action}
             />
-          )}
-        </Grid>
-
+          </div>
+        )}
+      </div>
+      <div className="email-info-item">
         <div className="date">
           <span>{moment(itemData.date).format("D MMM")}</span>
         </div>
         <div className={`message-type-wrap icon-${theme}`}>
           {editEmailListItemIcon(itemData.type)}
         </div>
-      </Grid>
+      </div>
     </Paper>
   );
 };

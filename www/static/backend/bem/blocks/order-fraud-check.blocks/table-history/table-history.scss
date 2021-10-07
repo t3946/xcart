@@ -1,0 +1,36 @@
+.history-item-column {
+  display: flex;
+}
+
+.history-item-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column-item-history {
+  width: 70px;
+}
+
+.link-google-info-history {
+  margin: 0 10px;
+}
+
+.history-column-info {
+  margin: 15px 0;
+}
+
+.description-item-history {
+  width: 250px;
+  margin-left: 10px;
+}
+.matrix-legend-address-value{
+  display: flex;
+}
+.legend-city-info{
+  max-width: 150px;
+  min-width: 150px;
+}
+.legend-state-info{
+  max-width: 85px;
+  min-width: 85px;
+}

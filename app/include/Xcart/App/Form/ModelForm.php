@@ -3,6 +3,7 @@
 namespace Xcart\App\Form;
 
 use Exception;
+use Modules\Admin\Contrib\Admin;
 use Xcart\App\Form\Fields\DeleteInlineField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Helpers\Creator;
@@ -29,6 +30,7 @@ class ModelForm extends MixinBaseForm
      * @var Model
      */
     private $_model;
+    public ?Admin $admin = null;
 
     protected static array $sections = [];
 
@@ -239,14 +241,37 @@ class ModelForm extends MixinBaseForm
         return $saved && $inlineSaved;
     }
 
+    /**
+     * @param $instance
+     * @return bool - true если метод требуется выполнить, false если нет
+     */
     public function afterInstanceSave($instance)
     {
+    }
 
+    /** Проверяет, требуется ли выполнить before/after save(поскольку иногда может быть требуется inline editor save)
+     * @return bool
+     */
+    public function checkNeedExecuteAfterOrBefore() : bool
+    {
+        $ar_post = $_POST[self::classNameShort()];
+        foreach ($ar_post as $property_name => $value) {
+            if ($this->getField($property_name)->inline_editor) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function beforeInstanceSave($instance)
     {
+    }
 
+    /** Срабатывает при редактировании inline поля
+     * @param $instance
+     */
+    public function beforeInstanceInlineEditorSave($instance)
+    {
     }
 
     /**

@@ -16,13 +16,28 @@ class HelpForm extends ModelForm
         return new HelpListModel();
     }
 
+    public function getFieldsets()
+    {
+        return [[
+            'icon',
+            'active_icon',
+            'title',
+            'menu_items',
+        ]];
+    }
+
     public function getFields()
     {
         return [
-          'menu_items' => [
-               'class' => ListViewField::class,
-               'adminClass' => HelpItemsAdmin::class,
-               ]
+            'menu_items' => [
+                'class' => ListViewField::class,
+                'adminClass' => HelpItemsAdmin::class,
+                'defaultOrder' => 'order_by'
+            ]
         ];
+    }
+    public function getName()
+    {
+        return '';
     }
 }

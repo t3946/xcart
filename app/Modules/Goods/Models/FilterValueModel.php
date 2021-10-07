@@ -18,30 +18,31 @@ class FilterValueModel extends Model
     {
         return [
             'fv_id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'filter' => [
                 'field' => 'f_id',
-                'class' => ForeignField::className(),
-                'modelClass' => FilterModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => FilterModel::class,
                 'link' => ['f_id' => 'f_id'],
                 'null' => false,
                 'default' => 0
             ],
             'fv_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
-                'default' => ''
+                'default' => '',
+                'verboseName' => 'Value'
             ],
             'fv_order_by' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 10
             ],
             'fv_active' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'Y'
             ],

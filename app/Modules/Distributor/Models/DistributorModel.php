@@ -593,6 +593,10 @@ class DistributorModel extends Model
                 'modelClass' => DistributorTaxModel::class,
                 'link' => ['manufacturerid' => 'distributor_id']
             ],
+            'expertise' => [
+                'class' => BooleanField::class,
+                'default' => false
+            ]
         ];
     }
 

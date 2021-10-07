@@ -6,12 +6,12 @@ namespace Modules\Admin\Forms\Dx;
 
 use Modules\Admin\Admin\DxTabsAdmin;
 use Modules\Admin\Admin\DxTaxesAdmin;
+use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Form\Fields\ListViewField;
 
 class DistributorTaxForm extends DistributorForm
 {
     public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
-
     public function getFieldsets()
     {
         return [[

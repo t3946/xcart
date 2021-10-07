@@ -2,6 +2,7 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 
 export const initialValues: StoreDto = {
   items: [],
+  labelsList: [],
   itemsCount: undefined,
   searchOptions: {
     from: "",
@@ -10,6 +11,7 @@ export const initialValues: StoreDto = {
     dateAfter: null,
     dateBefore: null,
     hasAttachment: false,
+    label: null,
     distributorId: undefined,
   },
   emailInfo: {
@@ -48,15 +50,17 @@ export const initialValues: StoreDto = {
     files: [],
     to: [],
     subject: "",
+    threadId: null,
   },
   checkedItems: [],
   checkedItemsOptions: {
     prevValue: "0",
   },
   user: {},
-  page: 0,
+  page: 1,
   loading: false,
   moreViewed: false,
   moreFavorites: false,
   templates: [],
+  children: [],
 };

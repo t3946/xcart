@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 
 use Modules\Core\Models\TelephoneAreaModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Sites\Models\SiteModel;
@@ -195,7 +196,7 @@ HTML;
             $orders_full_names = "{$order->s_firstname}<br />{$order->b_firstname}<br />{$order->firstname}";
             $orders_company_names = "{$order->s_company}<br />{$order->b_company}";
 
-            if ($aProductLinks = FraudCheckHelper::getProductList($order)) {
+            if ($aProductLinks = BaseFraudCheckHelperV2::getProductList($order)) {
                 $links_to_ordered_products = implode('<br>', $aProductLinks);
             }
 

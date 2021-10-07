@@ -17,8 +17,8 @@ class EmailAttachmentModel extends Model
             'attachment_content' => [
                 'field' => 'attachment',
                 'class' => FileField::class,
-                'adapterName' => 'www',
-                'uploadTo' => 'files/email/attachments/%Y%m',
+                'adapterName' => 's3',
+                'uploadTo' => 'emails/attachments/%Y%m',
                 'maxSize' => '100M',
                 'null' => true,
                 'default' => null,
@@ -39,11 +39,5 @@ class EmailAttachmentModel extends Model
                 'null' => true,
             ],
         ];
-    }
-
-    public function __toString()
-    {
-        $res = $this->email_body->get();
-        return (string) ($res->read() ?: '');
     }
 }

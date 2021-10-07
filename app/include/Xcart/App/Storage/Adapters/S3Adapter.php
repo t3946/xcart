@@ -9,4 +9,8 @@ class S3Adapter extends AwsS3Adapter
     {
         parent::__construct($config['client'], $config['bucket']);
     }
+    public function getUrl($value)
+    {
+        return "https://i1.s3stores.com/{$value}";
+    }
 }

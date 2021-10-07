@@ -1,0 +1,25 @@
+.title-wrapper__fraud-check-question {
+  background-color: #ffebb2;
+  width: 100%;
+  padding: 7px 5px;
+
+  .title__fraud-check-question {
+    font-size: 18px;
+    color: black;
+  }
+}
+.table-wrapper__fraud-check-question{
+  width: 95%;
+  margin-top: 20px;
+  table {
+    border: black;
+    width: 100%;
+  }
+}
+.fraud-check-button-appply{
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+.fraud-info-status-block{
+  margin-bottom: 15px;
+}

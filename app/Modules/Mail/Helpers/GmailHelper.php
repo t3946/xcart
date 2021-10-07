@@ -11,6 +11,7 @@ use Google_Service_Gmail;
 use Google_Service_Gmail_Label;
 use Google_Service_Gmail_Message;
 use Google_Service_Gmail_ModifyMessageRequest;
+use Modules\Forms\Models\EmailModel;
 use Modules\Forms\Models\LabelModel;
 use Throwable;
 use Xcart\App\Helpers\Paths;
@@ -46,11 +47,17 @@ class GmailHelper
     {
         $pageToken = NULL;
         $messages = [];
+        /** @var EmailModel $before_model */
+        $before_model = EmailModel::objects()->order(['-date'])->limit(1)->get();
         $opt_param = ['maxResults' => 500, 'includeSpamTrash' => true];
+        if ($before_model) {
+            $after_time = strtotime($before_model->date);
+            $opt_param['q'] = "after:$after_time";
+        }
         do {
             try {
                 if ($pageToken) {
-                    $opt_param =  array_merge($opt_param, ['pageToken' => $pageToken]);
+                    $opt_param = array_merge($opt_param, ['pageToken' => $pageToken]);
                 }
                 $messagesResponse = $service->users_messages->listUsersMessages($userId, $opt_param);
                 $pageToken = null;
@@ -156,8 +163,10 @@ class GmailHelper
                     break;
                 }
             }
+            return $FOUND_BODY;
+        } else {
+            return nl2br($FOUND_BODY);
         }
-        return $FOUND_BODY;
     }
 
     public static function getHeader($headers, $name)
@@ -229,8 +238,7 @@ class GmailHelper
         try {
             $gmail_label = $service->users_labels->create($userId, $label);
             $result = $gmail_label->getId();
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $result = '';
         }
         return $result ?? '';

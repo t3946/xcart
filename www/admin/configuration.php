@@ -74,8 +74,8 @@ if (!in_array($option, $options)) {
 	$option = "General";
 }
 
-require $xcart_dir."/include/countries.php";
-require $xcart_dir."/include/states.php";
+//require $xcart_dir."/include/countries.php";
+//require $xcart_dir."/include/states.php";
 #
 # Update configuration variables
 # these variables are for internal use in PHP scripts
