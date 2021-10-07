@@ -27,7 +27,6 @@ export default class ProductsList extends Component {
     };
 
     accountStore.subscribe(() => {
-      console.log(accountStore.getState());
       this.setState({
         ...this.state,
         lists: accountStore

@@ -1,0 +1,20 @@
+.order-item-header-container{
+  padding: 15px 24px;
+  background-color: #F4F4F4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left,.header-right{
+  display: flex;
+  align-items: center;
+}
+
+.header-right{
+  justify-content: space-between;
+}
+
+.order-item-header-grand-total{
+  color: #83132B;
+}

@@ -1,14 +1,13 @@
 import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const SideBarMenu: React.FC = () => {
-  const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
   const user = useSelector((e: AccountStore) => e.user);
   const menuItems = [
@@ -17,10 +16,10 @@ const SideBarMenu: React.FC = () => {
       to: "",
       label: "Orders",
       routerItems: [
-        { to: route("account:orders"), label: "Decisions required", badge: 2 },
-        { to: route("account:orders"), label: "Open orders" },
-        { to: route("account:orders"), label: "Cancelled orders" },
-        { to: route("account:orders"), label: "Completed orders" },
+        { to: "account/orders", label: "Decisions required", badge: 2 },
+        { to: "account/orders/open-orders", label: "Open orders" },
+        { to: "account/orders/canceled-orders", label: "Cancelled orders" },
+        { to: "account/orders/completed-orders", label: "Completed orders" },
         { to: route("account:orders"), label: "Buy again" },
       ],
     },

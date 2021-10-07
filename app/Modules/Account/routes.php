@@ -78,6 +78,21 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'orders'
     ],
+    [
+        'route' => '/orders/open-orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'open-orders'
+    ],
+    [
+        'route' => '/orders/canceled-orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'canceled-orders'
+    ],
+    [
+        'route' => '/orders/completed-orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'completed-orders'
+    ],
 
 
 
@@ -236,6 +251,11 @@ return [
     [
         'route' => '/api/review',
         'path' => 'Modules.Account.routes.routes_review_api',
+        'namespace' => 'api',
+    ],
+    [
+        'route' => '/api/orders',
+        'path' => 'Modules.Account.routes.routes_orders_api',
         'namespace' => 'api',
     ],
 ];

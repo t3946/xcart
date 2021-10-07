@@ -5,6 +5,7 @@
 .list-input-edit-idea{
   margin-bottom: 0;
   margin-right: 10px;
+  width: 100%;
 }
 
 .edit-idea-form{
@@ -12,6 +13,7 @@
 }
 
 .edit-idea-form-input{
+  width: 100%;
   margin-bottom: rem-calc(18) !important;
 }
 
@@ -37,7 +39,7 @@
   }
 
   .edit-idea-form-input{
-    margin-bottom: rem-calc(25) !important;
+    margin-bottom: rem-calc(14) !important;
   }
 
   .list-input-edit-idea{
@@ -57,9 +59,9 @@
 
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .edit-idea-form-input{
-    margin-bottom: rem-calc(17) !important;
+    margin-bottom: rem-calc(12) !important;
   }
 
   .edit-idea-btns{

@@ -1,0 +1,19 @@
+.order-item-body-container{
+  display: flex;
+  justify-content: space-between;
+  padding: rem-calc(25) rem-calc(25) rem-calc(50);
+}
+
+.order-item-body-title{
+  font-size: rem-calc(18);
+  text-transform: uppercase;
+  margin-bottom: 25px;
+}
+
+.order-item-body-left-side{
+  width: 60%;
+}
+
+.order-item-body-right-side{
+  width: 35%;
+}

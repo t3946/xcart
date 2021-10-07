@@ -44,7 +44,7 @@
 
 .add-to-list-select-list{
   top: rem-calc(47) !important;
-  z-index:2;
+  z-index:4;
   max-height: 320px;
   overflow-y: hidden !important;
 }
@@ -112,9 +112,6 @@
     width: 100% !important;
   }
 
-  .add-to-list-label{
-    margin-left: 58px;
-  }
 
   .add-to-list-arrow-block{
     width: 58px;

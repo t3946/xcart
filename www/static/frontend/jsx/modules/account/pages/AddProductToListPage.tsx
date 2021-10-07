@@ -16,6 +16,8 @@ export const AddProductToListPage = () => {
 
   const lists = useSelector((e: AccountStore) => e.lists.lists);
 
+  console.log(lists);
+
   const list = lists?.find((e) => e.product_list_id === params.listId);
 
   const dispatch = useDispatch();
@@ -28,17 +30,20 @@ export const AddProductToListPage = () => {
 
   return (
     <div>
-      <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${list.cache_url}`}
-        label={"back"}
-      />
-      <div className="page-label">Add to list</div>
       {list && (
-        <AddProductToList
-          onCancelClick={() => window.location.assign("/")}
-          isAlreadyInList={params.isAdded === "true"}
-          info={list}
-        />
+        <React.Fragment>
+          <MobileMenuBackBtn
+            redirectUrl={`/account/your-lists/${list?.cache_url}`}
+            label={"back"}
+          />
+          <div className="page-label">Add to list</div>
+          <AddProductToList
+            onCancelClick={() => window.location.assign("/")}
+            isAlreadyInList={params.isAdded === "true"}
+            info={list}
+            product={undefined}
+          />
+        </React.Fragment>
       )}
     </div>
   );

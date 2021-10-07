@@ -23,11 +23,14 @@ interface AddToListSelectOnProductPageProps {
   label: string;
   classes: any;
   id: string;
+  product?: any;
 }
 
 export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPageProps> =
-  ({ onClick, name, label = "", classes = undefined }) => {
+  ({ onClick, name, label = "", classes = undefined, product }) => {
     const lists = accountStore.getState().lists.lists;
+
+    const productInfo = window.appData?.productInfo?.product || product;
 
     const id = "1";
 
@@ -49,7 +52,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       breakpoint({
         xs: () =>
           window.location.assign(
-            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${window.appData.product_info.product.productcode}`
+            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${productInfo.productcode}`
           ),
         md: addProductDialog.handleClickOpen,
       });
@@ -59,7 +62,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       breakpoint({
         xs: () =>
           window.location.assign(
-            `/account/your-lists/add-list/${window.appData.product_info.product.productcode}`
+            `/account/your-lists/add-list/${productInfo.productcode}`
           ),
         md: createListDialog.handleClickOpen,
       });
@@ -69,10 +72,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       if (
         lists
           .find((e) => e.product_list_id === listId)
-          ?.products.find(
-            (e) =>
-              e.product_id === window.appData.product_info.product.productid
-          )
+          ?.products.find((e) => e.product_id === productInfo.productid)
       ) {
         setIsAlreadyInList(true);
         setSelectedList(lists.find((e) => e.product_list_id === listId));
@@ -81,11 +81,8 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       }
       setIsAlreadyInList(false);
       dispatch(
-        addProduct(
-          listId,
-          window.appData.product_info.product.productid,
-          null,
-          () => showAddProductContent(listId)
+        addProduct(listId, productInfo.productid, null, () =>
+          showAddProductContent(listId)
         )
       );
       setSelectedList(lists.find((e) => e.product_list_id === listId));
@@ -95,11 +92,8 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       setSelectedList(listInfo);
       createListDialog.handleClose();
       dispatch(
-        addProduct(
-          listInfo.product_list_id,
-          window.appData.product_info.product.productid,
-          null,
-          () => showAddProductContent(listInfo.product_list_id)
+        addProduct(listInfo.product_list_id, productInfo.productid, null, () =>
+          showAddProductContent(listInfo.product_list_id)
         )
       );
     };
@@ -203,7 +197,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
         <CreateNewListDialog
           open={createListDialog.open}
           handleClose={createListDialog.handleClose}
-          productId={window.appData.product_info.product.productid}
+          productId={productInfo.productid}
           onProductAdded={onCreateList}
           actionType={"product"}
         />
@@ -215,6 +209,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
           <AddProductToList
             onCancelClick={addProductDialog.handleClose}
             info={selectedList}
+            product={productInfo}
             isAlreadyInList={isAlreadyInList}
           />
         </BootstrapDialogHOC>

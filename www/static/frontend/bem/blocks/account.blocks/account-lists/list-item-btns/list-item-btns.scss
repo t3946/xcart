@@ -27,6 +27,10 @@
   text-align: right;
 }
 
+.add-to-list-on-product-list{
+  margin-top: 15px;
+}
+
 
 @media (max-width: 1050px) {
   .list-product-item-btns-container{
@@ -35,6 +39,10 @@
 
   .product-list-item-delete-button{
     width: 100% !important;
+  }
+
+  .product-list-item-btns-container{
+    min-width: 170px;
   }
 
   .product-list-item-move-select{

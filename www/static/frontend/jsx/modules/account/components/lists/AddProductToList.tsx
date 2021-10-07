@@ -6,16 +6,20 @@ interface AddProductToListProps {
   info: List;
   onCancelClick: () => void;
   isAlreadyInList: boolean;
+  product: any;
 }
 
 export const AddProductToList: React.FC<AddProductToListProps> = ({
   info,
   onCancelClick,
   isAlreadyInList,
+  product,
 }) => {
   const viewYourList = () => {
     window.location.assign(`/account/your-lists/${info.cache_url}`);
   };
+
+  const productInfo = product || window.appData?.productInfo?.product;
 
   const text = isAlreadyInList ? "This item was already in" : "1 item added to";
   return (
@@ -28,11 +32,11 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
       </div>
       <div className="add-product-to-list-content">
         <img
-          src={window.appData.product_info.product.image}
+          src={productInfo?.image}
           className="add-product-to-list-content-img"
         />
         <div className="add-product-to-list-content-text">
-          {window.appData.product_info.product.product}
+          {productInfo?.product}
         </div>
       </div>
       <SubmitCancelButtonsGroup

@@ -177,7 +177,7 @@ export const ManageList: React.FC<ManageListProps> = ({
           )}
           name={"shippingAddress"}
           label={"Shipping Address"}
-          onClick={(value) => formik.setFieldValue("Shipping Address", value)}
+          onClick={(value) => formik.setFieldValue("shippingAddress", value)}
           value={formik.values.shippingAddress}
           id="form-select-list-manage-addresses"
           classes={{

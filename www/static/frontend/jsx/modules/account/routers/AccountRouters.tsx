@@ -48,11 +48,13 @@ import { ShareListPage } from "@client/modules/account/pages/ShareListPage";
 import { DeleteListPage } from "@client/modules/account/pages/DeleteListPage";
 import { AddListPage } from "@client/modules/account/pages/AddListPage";
 import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
-import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
 import { DeleteProductPage } from "@client/modules/account/pages/DeleteProductPage";
+import { OpenOrdersPage } from "@client/modules/account/pages/OpenOrdersPage";
+import { CanceledOrdersPage } from "@client/modules/account/pages/CanceledOrdersPage";
+import { CompletedOrdersPage } from "@client/modules/account/pages/CompletedOrdersPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -352,6 +354,38 @@ export const AccountRouters = (): any => {
                     "account:two-step-verification-recovery-password-assistance"
                   )}
                   component={PasswordAssistance}
+                />
+                <Route
+                  exact
+                  path={route("account:orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <div>1233213123123312</div>
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:open-orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OpenOrdersPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:canceled-orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <CanceledOrdersPage />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:completed-orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <CompletedOrdersPage />
+                  )}
                 />
               </Switch>
             </div>
