@@ -30,7 +30,7 @@ use Xcart\App\Traits\SlugifyTrait;
 
 /**
  * @property mixed brandid
- * @property string brand
+ * @property ?string brand
  */
 class BrandModel extends Model
 {
@@ -280,7 +280,7 @@ class BrandModel extends Model
     }
     public function __toString()
     {
-        return $this->brand;
+        return $this->brand ?? '';
     }
 
     /**
