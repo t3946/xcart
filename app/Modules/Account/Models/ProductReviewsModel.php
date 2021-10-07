@@ -2,6 +2,7 @@
 
 namespace Modules\Account\Models;
 
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\CharField;
@@ -47,7 +48,14 @@ class ProductReviewsModel extends Model
                 'modelClass' => ReviewRatingsModel::class,
                 'link' => ['product_review_id' => 'review_id'],
                 'primary' => true,
-            ]
+            ],
+            'user' =>[
+                'field' => 'user_id',
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
+                'link' => ['user_id' => 'user_id'],
+                'primary' => true,
+            ],
         ];
     }
 

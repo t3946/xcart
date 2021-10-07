@@ -117,7 +117,12 @@ class ReviewsApi extends FrontendController
 
         //select reviews and their overall rating
         return ProductReviewsModel::objects()
-            ->select(['*', 'overall_rating' => 'rating__rating'])
+            ->select([
+                '*',
+                'overall_rating' => 'rating__rating',
+                'user_public_name' => 'user__public_name',
+                'user_avatar' => 'user__avatar_image',
+            ])
             ->asArray()
             ->limit(3)
             ->order('created')
