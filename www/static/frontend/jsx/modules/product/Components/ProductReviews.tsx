@@ -1,6 +1,7 @@
 import React from "react";
 import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
 import { getProductsRatingsAction } from "@client/jsx/redux/actions/RatingsActions";
+import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import ArrowIconTablet from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
@@ -46,7 +47,7 @@ const ProductReviews: React.FC = function () {
       );
     }
   } else {
-    dispatch(getProductsRatingsAction({ data: { productId } }));
+    dispatch(getRatingsAndReviewsAction({ data: { productId } }));
   }
 
   function featureRatingsTemplate() {

@@ -31,6 +31,7 @@ export interface AccountStore {
   };
   publicProfile: AccountPublicProfileStore;
   productsRatings: any;
+  productsReviews: any;
 }
 
 export interface AccountAddressesStore {
