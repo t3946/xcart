@@ -396,6 +396,7 @@ class ProductModel extends Model implements ICartItem
 			'free_ship_zone' => [
 				'class' => IntField::class,
 				'verboseName' => 'Free shipping for destination',
+                'default' => -1
 			],
 			'free_ship_text' => [
 				'class' => CharField::class,
