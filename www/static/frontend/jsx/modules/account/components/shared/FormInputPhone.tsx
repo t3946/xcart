@@ -63,7 +63,7 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
   /**
    * Get countries list for select input
    */
-  function getSelectItems() {
+  function getSelectItems(): any {
     const codes = [];
 
     for (const country of countries) {

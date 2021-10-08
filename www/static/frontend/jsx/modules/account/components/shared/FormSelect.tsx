@@ -3,7 +3,21 @@ import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 
-export const FormSelect = ({
+interface PropsInterface {
+  items: {
+    viewValue: string;
+    previewValue: string;
+    value: string;
+  }[];
+  onClick: any;
+  value: any;
+  name: any;
+  label?: any;
+  classes?: any;
+  id?: any;
+}
+
+export const FormSelect: React.FC<PropsInterface> = ({
   items,
   onClick,
   value,
@@ -11,7 +25,7 @@ export const FormSelect = ({
   label = "",
   classes = undefined,
   id = undefined,
-}) => {
+}: PropsInterface) => {
   const selectedItem = value;
   const [open, setOpen] = useState(false);
 
