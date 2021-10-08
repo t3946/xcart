@@ -43,16 +43,16 @@ class QueueProcessCommand extends Command
 
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             try {
+                $feed =  null;
                 $data = array_filter($data, static fn($v) => $v !== null);
 
                 if ($data['storefront'] !== null) {
                     $site = SiteModel::objects()->get(['storefrontid' => $data['storefront']]);
+                    /** @var SupplierFeedModel $feed */
+                    $feed = SupplierFeedModel::objects()->get(
+                        ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
+                    );
                 }
-
-                /** @var SupplierFeedModel $feed */
-                $feed = SupplierFeedModel::objects()->get(
-                    ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
-                );
 
                 $data['source'] ??= 'feed';
 
