@@ -73,7 +73,7 @@ class QueueProcessCommand extends Command
                         echo "Empty site for product {$data['productcode']}\n";
                         return;
                     }
-                    if ($product->hash_product !== $data['hash_product']) {
+                    if ($data['source'] === 'manual' || $product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
                         if ($data['eta_date_mm_dd_yyyy']) {
                             $product->eta_date_mm_dd_yyyy = strtotime($data['eta_date_mm_dd_yyyy']);
