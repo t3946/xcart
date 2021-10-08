@@ -90,6 +90,25 @@
           }
         }
 
+        .description {
+          .content {
+            table {
+              border-collapse: collapse;
+              width: 100%;
+
+              th, td {
+                text-align: center;
+                border: 1px solid $grey_e1;
+                border-collapse: collapse;
+                padding: rem-calc(5);
+
+                p {
+                  margin: 0;
+                }
+              }
+            }
+          }
+        }
       }
     }
 
