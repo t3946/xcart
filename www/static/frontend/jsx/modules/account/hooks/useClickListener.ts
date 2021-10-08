@@ -4,14 +4,15 @@ interface ClickListenerData {
 }
 
 function useCLickListener(
-  func: (arg: boolean) => void,
+  callback: (arg: boolean) => void,
   id?: string
 ): ClickListenerData {
   const handleFunction = (e) => {
     if (e.target.id === id) {
       return;
     }
-    func(false);
+
+    callback(false);
   };
 
   const startListen = () => {
