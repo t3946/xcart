@@ -150,16 +150,19 @@ class ProductModel extends Model implements ICartItem
                 'sqlType' => Types::STRING,
             ],
 			'dim_x' => [
-				'class' => CharField::class,
-				'verboseName' => 'Product dimension x'
+				'class' => DecimalField::class,
+				'verboseName' => 'Product dimension x',
+                'default' => 0
 			],
 			'dim_y' => [
-				'class' => CharField::class,
-				'verboseName' => 'Product dimension y'
+				'class' => DecimalField::class,
+				'verboseName' => 'Product dimension y',
+                'default' => 0
 			],
 			'dim_z' => [
-				'class' => CharField::class,
-				'verboseName' => 'Product dimension z'
+				'class' => DecimalField::class,
+				'verboseName' => 'Product dimension z',
+                'default' => 0
 			],
 
             'sites' => [
@@ -428,16 +431,19 @@ class ProductModel extends Model implements ICartItem
 				'verboseName' => 'Shipping weight (lbs)'
             ],
 			'shipping_dim_x' => [
-				'class' => CharField::class,
-				'verboseName' => 'Shipping dimension x'
+				'class' => DecimalField::class,
+				'verboseName' => 'Shipping dimension x',
+                'default' => 0,
 			],
 			'shipping_dim_y' => [
-				'class' => CharField::class,
-				'verboseName' => 'Shipping dimension y'
+				'class' => DecimalField::class,
+				'verboseName' => 'Shipping dimension y',
+                'default' => 0,
 			],
 			'shipping_dim_z' => [
-				'class' => CharField::class,
-				'verboseName' => 'Shipping dimension z'
+				'class' => DecimalField::class,
+				'verboseName' => 'Shipping dimension z',
+                'default' => 0,
 			],
             'brand_normalized' => [
                 'class' => BooleanField::class,

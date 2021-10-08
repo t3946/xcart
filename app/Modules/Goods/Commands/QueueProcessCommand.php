@@ -86,7 +86,10 @@ class QueueProcessCommand extends Command
                                 $product->setMainCategory($site->base_category);
                             }
                         }
-                        $product->group_root = null;
+                        if ($data['source'] !== 'manual') {
+                            $product->group_root = null;
+                        }
+
                         $changed = SupplierFeedHelper::getChanged($product);
                         $product->save();
                         ProductHelper::setProductAttributes($product, $data['attributes'] ?? [], $site);
