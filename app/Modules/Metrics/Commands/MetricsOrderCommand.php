@@ -23,36 +23,34 @@ class MetricsOrderCommand extends Command
         $ar_metrics = [];
         $str_result = '';
         $start_date = (new DateTime('-90 days'))->setTime(0, 0);
-        $site_result = '';
-        /** @var SiteModel $site */
-        foreach (SiteModel::objects()->all() as $site) {
-            $site_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
-               'code' => $site->code,
-               'name' => (string)$site
-            ]);
-        }
-//        $payment_methods = '';
-//        /** @var PaymentMethodModel $process */
-//        foreach (PaymentMethodModel::objects()->all() as $process) {
-//            $payment_methods .= MetricsDataHelper::convertToMetricsWithParams('payments', '1', [
-//                'name' => (string)$process
+//        $data_result = '';
+//        /** @var SiteModel $site */
+//        foreach (SiteModel::objects()->all() as $site) {
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
+//               'code' => $site->code,
 //            ]);
 //        }
-        $distributors_result = '';
-        /** @var DistributorModel $distributor */
-        foreach (DistributorModel::objects()->all() as $distributor) {
-            $distributors_result .= MetricsDataHelper::convertToMetricsWithParams('distributors', '1', [
-                'code' => $distributor->code,
-            ]);
-        }
-        $countries_result = '';
-        /** @var CountryModel $county */
-        foreach (CountryModel::objects()->filter(['active' => 'Y']) as $county) {
-            $countries_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
-                'code' => $county->code,
-            ]);
-        }
-        MetricsDataHelper::pushMetrics('sites-list', "$site_result\n");
+////        /** @var PaymentMethodModel $process */
+////        foreach (PaymentMethodModel::objects()->all() as $process) {
+////            $name = str_replace('/', '', (string)$process);
+////            $data_result .= MetricsDataHelper::convertToMetricsWithParams('payments', '1', [
+////                'name' => $name
+////            ]);
+////        }
+//        /** @var DistributorModel $distributor */
+//        foreach (DistributorModel::objects()->all() as $distributor) {
+//            $name_distributor = trim(preg_replace('~\(.+\)~s', '', (string)$distributor), '.');
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('distributors', '1', [
+//                'name' => $name_distributor,
+//            ]);
+//        }
+//        /** @var CountryModel $country */
+//        foreach (CountryModel::objects()->filter(['active' => 'Y']) as $country) {
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
+//                'name' => (string)$country,
+//            ]);
+//        }
+//        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
 
         $time = [
             '1' => new \DateTime('-1 days'),
@@ -72,7 +70,7 @@ class MetricsOrderCommand extends Command
                             'site' => $site->code,
                             'status' => $group_model->cb_status,
                             'zip_code' => $order->b_zipcode,
-                            'country' => $order->b_country,
+                            'country' => (string)$order->billing_country,
                             'sum' => $group_model->total_gross,
                             'payment_process' => (string)$order->payment_method,
                         ];

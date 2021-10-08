@@ -67,6 +67,7 @@ use Xcart\Order;
  * @property string orig_po
  * @property string po_number
  * @property string firstname
+ * @property CountryModel billing_country
  * @property int storefrontid
  * @property mixed transactions
  * @property mixed b_company

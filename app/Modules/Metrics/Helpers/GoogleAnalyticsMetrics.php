@@ -11,6 +11,10 @@ class GoogleAnalyticsMetrics
     public const METRICS_USERS = 'ga:newUsers';
     public const METRICS_SESSION_BOUNCE = 'ga:bounceRate';
     public const METRICS_CITY = 'ga:city';
+    public const METRICS_LATITUDE = 'ga:latitude';
+    public const METRICS_LONGITUDE = 'ga:longitude';
+    public const METRICS_SOURCE = 'ga:source';
+    public const METRICS_REFERRAL = 'ga:referralPath';
 
     private \Google_Client $client;
     private \Google_Service_AnalyticsReporting $service_reporting;
@@ -43,16 +47,16 @@ class GoogleAnalyticsMetrics
         }
     }
 
-    public function getMetricsCountries(string $name_metrics): string
+    public function getMultiMetrics(string $name_metrics, string $google_code_metrics, string $name_field): string
     {
         $str_result = '';
-        $reports = $this->getMetrics(self::METRICS_COUNTRY, true);
+        $reports = $this->getMetrics($google_code_metrics, true);
         foreach ($reports as $site => $report) {
             $ar_value = $this->getReportValue($report, true);
             foreach ($ar_value as $value) {
                 $str_result .= MetricsDataHelper::convertToMetricsWithParams($name_metrics, $value['value'], [
                     'site' => $site,
-                    'country' => $value['name']
+                    $name_field => $value['dimension'][$google_code_metrics]
                 ]);
             }
         }
@@ -121,7 +125,7 @@ class GoogleAnalyticsMetrics
                         if (!$is_multi) {
                             return $value;
                         }
-                        $ar_result[] = ['name' => $dimensions[0], 'value' => $value];
+                        $ar_result[] = ['dimension' => array_combine($dimensionHeaders, $dimensions), 'value' => $value];
 
                     }
                 }
