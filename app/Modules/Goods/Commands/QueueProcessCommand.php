@@ -53,7 +53,10 @@ class QueueProcessCommand extends Command
                 $feed = SupplierFeedModel::objects()->get(
                     ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
                 );
-                if (!$feed || !$feed->enabled) {
+
+                $data['source'] ??= 'feed';
+
+                if ($data['source'] !== 'manual' && (!$feed || !$feed->enabled)) {
                     echo "Feed is not active\n";
                     print_r($data);
                     return;
@@ -61,8 +64,7 @@ class QueueProcessCommand extends Command
 
                 if (!$data['is_group']) {
                     //Simple product process
-                    $product_code = $data['productcode'];
-                    if (!$product_code) {
+                    if (!$product_code = $data['productcode']) {
                         echo "Empty productcode, skip product\n";
                         return;
                     }

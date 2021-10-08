@@ -112,6 +112,7 @@ class SaveFilePrice
         }
         if (!empty($ar_field)) {
             $ar_field['hash_product'] = md5(json_encode($ar_field, JSON_THROW_ON_ERROR));
+            $ar_field['source'] = 'manual';
             Xcart::app()->queue->send('products', json_encode($ar_field, JSON_THROW_ON_ERROR));
             $this->count_update++;
         }
