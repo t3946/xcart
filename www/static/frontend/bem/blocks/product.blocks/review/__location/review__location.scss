@@ -1,0 +1,11 @@
+.review__location {
+  margin: rem-calc(8) 0 rem-calc(8) 0;
+
+  @include breakpoint(md up) {
+    margin: rem-calc(13) 0 rem-calc(12) 0;
+  }
+
+  @include breakpoint(md up) {
+    margin: rem-calc(10) 0 rem-calc(20) 0;
+  }
+}

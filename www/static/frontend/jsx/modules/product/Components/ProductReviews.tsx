@@ -1,6 +1,5 @@
 import React from "react";
 import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
-import { getProductsRatingsAction } from "@client/jsx/redux/actions/RatingsActions";
 import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
@@ -8,6 +7,7 @@ import ArrowIcon from "@client/modules/icon/components/account/chevron-down/Acco
 import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
+import Review from "@client/modules/product/Components/Review";
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
@@ -35,6 +35,9 @@ const ProductReviews: React.FC = function () {
   );
 
   const ratings = useSelector((e: AccountStore) => e.productsRatings)[
+    productId
+  ];
+  const reviews = useSelector((e: AccountStore) => e.productsReviews)[
     productId
   ];
 
@@ -97,6 +100,20 @@ const ProductReviews: React.FC = function () {
     return (
       <ul className={"product-rating list-unstyled m-0"}>{ratingElements}</ul>
     );
+  }
+
+  function reviewsTemplate() {
+    const reviewsTemplates = [];
+
+    if (!reviews) {
+      return reviewsTemplates;
+    }
+
+    for (const review of reviews) {
+      reviewsTemplates.push(<Review {...review} />);
+    }
+
+    return reviewsTemplates;
   }
 
   return (
@@ -188,6 +205,14 @@ const ProductReviews: React.FC = function () {
           >
             Top reviews from the United States
           </h3>
+
+          {reviewsTemplate()}
+
+          <div className="product-reviews__see-more-reviews">
+            <button className={"form-button form-button__outline"}>
+              See more reviews
+            </button>
+          </div>
         </div>
       </div>
     </div>

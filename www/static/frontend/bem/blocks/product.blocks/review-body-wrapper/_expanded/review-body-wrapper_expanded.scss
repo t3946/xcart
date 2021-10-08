@@ -1,0 +1,7 @@
+.review-body-wrapper_expanded {
+  max-height: initial;
+
+  &:after {
+    content: none;
+  }
+}

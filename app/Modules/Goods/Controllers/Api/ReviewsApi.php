@@ -9,6 +9,7 @@ use Modules\Account\Models\TotalProductRatingsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class ReviewsApi extends FrontendController
 {
@@ -125,11 +126,11 @@ class ReviewsApi extends FrontendController
             ])
             ->asArray()
             ->limit(3)
-            ->order('created')
             ->filter([
                 'product_id' => $product_id,
-                'rating__rating_id' => $overall_rating_id,
+                new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
             ])
+            ->order(['-product_review_id'])
             ->all();
     }
 
