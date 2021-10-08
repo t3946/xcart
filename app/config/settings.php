@@ -165,15 +165,15 @@ return array_replace_recursive([
                ],
                'google' => [
                    'class' => LocalGoogleAdapter::class,
-                   'service' =>  (function () {
+                   'service' =>  (static function () {
                        $client = new Google_Client();
-                       $client->setClientId('319702114697-87o15ol5ev7pcnn7eenfj9md4slgbttp.apps.googleusercontent.com');
-                       $client->setClientSecret('BBRU6N-2616AvusKPBzGIinR');
-                       $client->refreshToken('1//043_LueXtXhggCgYIARAAGAQSNwF-L9IrB_8s78Mu6fq3tyeYJtayH07_V0healVBWy-4MZbeqzyqaXAqiJ7SikC9VzKCMOPJNsQ');
+                       $client->setClientId('476035507554-q89jo4gbnjjocuc7hg0ds79mooi0r23b.apps.googleusercontent.com');
+                       $client->setClientSecret('wuJVAJpW5MGYL61YNCDIZjAl');
+                       $client->refreshToken('1/qc43GNFqjXRLwCYUxgN5a3NE7pkmKyCIFb59h5hPuGU');
                        $client->setApplicationName('Test');
                        return new Google_Service_Drive($client);
                    })(),
-                   'root_folder' => '1m0heCJuDhMuBlzfY-vKWKIi58Xa98U2r'
+                   'root_folder' => '1GnC0ylYOOxticsnJg_XOtDZShwDTYgak'
                ]
            ],
        ],
