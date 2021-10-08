@@ -76,10 +76,10 @@ class DxPriceFileAdmin extends Admin
         ]);
     }
 
-    public function info($pk, $dx)
+/*    public function info($pk, $dx)
     {
         $this->ownerPk = $dx;
         parent::info($pk);
-    }
+    }*/
 
 }

@@ -95,6 +95,8 @@ class DistributorController extends BackendController
             exit;
         } elseif ($section == 15) {
             $admin = new DxPriceFileAdmin();
+            $admin->all($dx->pk);
+            exit;
         }elseif ($section == 52) {
             $admin = new DxProductsAdmin();
             $admin->dxModel = $dx;
