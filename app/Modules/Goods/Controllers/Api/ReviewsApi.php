@@ -7,6 +7,7 @@ use Modules\Account\Models\RatingsModel;
 use Modules\Account\Models\ReviewRatingsModel;
 use Modules\Account\Models\TotalProductRatingsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
+use Modules\Goods\Models\TotalProductReviewsModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -14,6 +15,10 @@ use Xcart\App\QueryBuilder\Q\QOr;
 class ReviewsApi extends FrontendController
 {
     private $data;
+    private const SORT_TOP = 'top';
+    private const SORT_HAS_ATTACHMENTS = 'has-attachments';
+    private const SORT_MOST_RECENT = 'most-recent';
+    private const SORT_DEFAULT = self::SORT_TOP;
 
     public function __construct($request)
     {
@@ -113,8 +118,23 @@ class ReviewsApi extends FrontendController
     public function getReviews()
     {
         $product_id = $this->data['productId'];
+        $sort = $this->data['sort'];
+        $offset = $this->data['offset'];
 
         $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
+
+//        $query_filter = ;
+        $query_manager = ProductReviewsModel::objects()
+            ->select([
+                '*',
+                'overall_rating' => 'rating__rating',
+                'user_public_name' => 'user__public_name',
+                'user_avatar' => 'user__avatar_image',
+            ])
+            ->filter([
+                'product_id' => $product_id,
+                new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
+            ]);
 
         //select reviews and their overall rating
         return ProductReviewsModel::objects()
@@ -126,6 +146,7 @@ class ReviewsApi extends FrontendController
             ])
             ->asArray()
             ->limit(3)
+            ->offset(3)
             ->filter([
                 'product_id' => $product_id,
                 new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
@@ -139,11 +160,32 @@ class ReviewsApi extends FrontendController
         $this->jsonResponse($this->getReviews());
     }
 
+    private function getTotalReviews()
+    {
+        $product_id = $this->data['productId'];
+        return TotalProductReviewsModel::objects()->asArray()->get(['product_id' => $product_id])['total'];
+    }
+
     public function getReviewsAndRatingsAction()
     {
         $this->jsonResponse([
             'ratings' => $this->getRatings(),
             'reviews' => $this->getReviews(),
+            'totalReviews' => $this->getTotalReviews(),
+            'reviewsOrders' => [
+                [
+                    "name" => "Top reviews",
+                    "value" => self::SORT_TOP,
+                ],
+                [
+                    "name" => "Reviews with images",
+                    "value" => self::SORT_HAS_ATTACHMENTS,
+                ],
+                [
+                    "name" => "Most recent",
+                    "value" => self::SORT_MOST_RECENT,
+                ],
+            ],
         ]);
     }
 }
