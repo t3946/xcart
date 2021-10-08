@@ -92,7 +92,9 @@ class QueueProcessCommand extends Command
 
                         $changed = SupplierFeedHelper::getChanged($product);
                         $product->save();
-                        ProductHelper::setProductAttributes($product, $data['attributes'] ?? [], $site);
+                        if ($data['attributes'] && $site) {
+                            ProductHelper::setProductAttributes($product, $data['attributes'], $site);
+                        }
                         SupplierFeedHelper::feedFiles($product, $data);
                         SupplierFeedHelper::getVideos($product);
                         print(($is_new ? 'Adding' : '') . "$product->productcode\n");
