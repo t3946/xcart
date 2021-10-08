@@ -7,7 +7,7 @@ interface PropsInterface {
   items: {
     viewValue: string;
     previewValue: string;
-    value: string;
+    value: any;
   }[];
   onClick: any;
   value: any;
