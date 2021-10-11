@@ -31,7 +31,7 @@ class AssetsLibrary extends TemplateLibrary
      * @name add_asset_block
      * @return void
      */
-    public static function addAsset(array $params = [], $data = '')
+    public static function addAsset(array $params = [], string $data = '')
     {
         $data = trim($data);
         $position = 'footer';
