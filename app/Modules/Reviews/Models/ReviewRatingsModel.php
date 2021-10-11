@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Account\Models;
+namespace Modules\Reviews\Models;
 
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;

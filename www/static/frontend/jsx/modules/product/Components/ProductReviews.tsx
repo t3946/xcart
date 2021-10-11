@@ -7,7 +7,7 @@ import ArrowIcon from "@client/modules/icon/components/account/chevron-down/Acco
 import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
-import Review from "@client/modules/product/Components/Review";
+import Reviews from "@client/modules/product/Components/Reviews";
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
@@ -35,9 +35,6 @@ const ProductReviews: React.FC = function () {
   );
 
   const ratings = useSelector((e: AccountStore) => e.productsRatings)[
-    productId
-  ];
-  const reviews = useSelector((e: AccountStore) => e.productsReviews)[
     productId
   ];
 
@@ -100,20 +97,6 @@ const ProductReviews: React.FC = function () {
     return (
       <ul className={"product-rating list-unstyled m-0"}>{ratingElements}</ul>
     );
-  }
-
-  function reviewsTemplate() {
-    const reviewsTemplates = [];
-
-    if (!reviews) {
-      return reviewsTemplates;
-    }
-
-    for (const review of reviews) {
-      reviewsTemplates.push(<Review {...review} />);
-    }
-
-    return reviewsTemplates;
   }
 
   return (
@@ -198,21 +181,7 @@ const ProductReviews: React.FC = function () {
         </div>
 
         <div className="col-12 col-lg product-reviews-right-column">
-          <h3
-            className={
-              "product-reviews-header product-reviews-header_big product-reviews_column-header mb-md-20"
-            }
-          >
-            Top reviews from the United States
-          </h3>
-
-          {reviewsTemplate()}
-
-          <div className="product-reviews__see-more-reviews">
-            <button className={"form-button form-button__outline"}>
-              See more reviews
-            </button>
-          </div>
+          <Reviews productId={productId} />
         </div>
       </div>
     </div>

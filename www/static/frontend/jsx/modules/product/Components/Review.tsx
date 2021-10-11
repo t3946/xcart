@@ -78,6 +78,8 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
       reviewBody: [
         "review-body-wrapper",
         {
+          "review-body-wrapper_long":
+            bodyHeight > bodyHeightWhenTurned && !isFullBodyExpanded,
           "review-body-wrapper_expanded": isFullBodyExpanded,
         },
       ],

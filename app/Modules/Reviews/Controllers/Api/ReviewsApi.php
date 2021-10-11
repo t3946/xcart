@@ -1,15 +1,18 @@
 <?php
 
-namespace Modules\Goods\Controllers\Api;
+namespace Modules\Reviews\Controllers\Api;
 
-use Modules\Account\Models\ProductReviewsModel;
-use Modules\Account\Models\RatingsModel;
-use Modules\Account\Models\ReviewRatingsModel;
-use Modules\Account\Models\TotalProductRatingsModel;
+use Modules\Reviews\Models\ProductReviewsModel;
+use Modules\Reviews\Models\RatingsModel;
+use Modules\Reviews\Models\ReviewRatingsModel;
+use Modules\Reviews\Models\TotalProductRatingsModel;
+use Modules\Reviews\Models\HelpfulReviewsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\TotalProductReviewsModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Aggregation\Count;
+use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 
 class ReviewsApi extends FrontendController
@@ -58,7 +61,7 @@ class ReviewsApi extends FrontendController
                         'rating__rating_id' => $rating_model['rating_id'],
                         'rating__rating__isnull' => false,
                     ])
-                    ->group(['rating__rating', 'rating__rating_id'])
+                    ->group(['rating__rating', 'rating__rating_id', 'user_id'])
                     ->asArray()
                     ->all();
 
@@ -113,46 +116,49 @@ class ReviewsApi extends FrontendController
     }
 
     /**
-     * get all reviews for product by product id
+     * get reviews for product by product id with sorting
      */
-    public function getReviews()
+    public function getReviews(): array
     {
         $product_id = $this->data['productId'];
-        $sort = $this->data['sort'];
-        $offset = $this->data['offset'];
-
+        $sort = $this->data['sort'] || self::SORT_DEFAULT;
+        $offset = $this->data['offset'] ?: 0;
+        $limit = $this->data['limit'] ?: 10;
         $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
 
-//        $query_filter = ;
-        $query_manager = ProductReviewsModel::objects()
+        $query_set = ProductReviewsModel::objects()
             ->select([
                 '*',
-                'overall_rating' => 'rating__rating',
-                'user_public_name' => 'user__public_name',
-                'user_avatar' => 'user__avatar_image',
-            ])
-            ->filter([
-                'product_id' => $product_id,
-                new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
-            ]);
-
-        //select reviews and their overall rating
-        return ProductReviewsModel::objects()
-            ->select([
-                '*',
+                'helpful__user_id',
+                new Count('helpful__user_id', 'helpful_count'),
                 'overall_rating' => 'rating__rating',
                 'user_public_name' => 'user__public_name',
                 'user_avatar' => 'user__avatar_image',
             ])
             ->asArray()
-            ->limit(3)
-            ->offset(3)
+            ->limit($limit)
+            ->offset($offset)
             ->filter([
                 'product_id' => $product_id,
                 new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
-            ])
-            ->order(['-product_review_id'])
-            ->all();
+            ]);
+
+        switch ($sort) {
+            case self::SORT_TOP:
+                $qs = ProductReviewsModel::objects()->getQuerySet();
+                $group = (new Expression("IFNULL({$qs->getTableAlias()}.product_review_id,UUID())"))->toSql();
+                $query_set->group([$group]);
+                break;
+
+            case self::SORT_HAS_ATTACHMENTS:
+                break;
+
+            case self::SORT_MOST_RECENT:
+                $query_set = $query_set->order(['-product_review_id']);
+                break;
+        }
+
+        return $query_set->all();
     }
 
     public function getReviewsAction()
@@ -187,5 +193,29 @@ class ReviewsApi extends FrontendController
                 ],
             ],
         ]);
+    }
+
+    public function markHelpfulAction()
+    {
+        $user = $this->getUser();
+
+        (new HelpfulReviewsModel([
+            'review_id' => $this->data['reviewId'],
+            'user_id' => $user->user_id,
+        ]))->save();
+
+        $this->jsonResponse(["result" => "ok"]);
+    }
+
+    public function unmarkHelpfulAction()
+    {
+        $user = $this->getUser();
+
+        HelpfulReviewsModel::objects()->delete([
+            'review_id' => $this->data['reviewId'],
+            'user_id' => (int)$user->user_id,
+        ]);
+
+        $this->jsonResponse(["result" => "ok"]);
     }
 }
