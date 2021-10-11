@@ -76,7 +76,7 @@ class MailHandler extends MonologMailHandler
         }
     }
 
-    protected function format($title, $value)
+    protected function format($title, $value = '')
     {
         $post_val = !strstr($value, "\n")?'':"\n-";
         return sprintf("**%1$15s**: %2\$s \n", strtoupper($title), $value . $post_val);
