@@ -504,20 +504,17 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['productid' => 'resource_id'],
                 'extra' => ['resource_type' => 'P']
             ],
-<<<<<<< HEAD
             'last_modify_user' => [
                 'field' => 'last_modify_id',
                 'class' => ForeignField::class,
                 'modelClass' => UserModel::class,
                 'link' => ['last_modify_id' => 'id'],
             ],
-=======
             'google_ads' => [
                 'class' => HasToOneField::class,
                 'modelClass' => GoogleProductsModel::class,
                 'link' => ['productid' => 'product_id']
             ]
->>>>>>> 0f569c122fb91b25083ec18139e02308f154cc04
         ];
     }
 

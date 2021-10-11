@@ -231,8 +231,6 @@ $publication_statuses = array(
 
 $smarty->assign('publication_statuses', $publication_statuses);
 
-<<<<<<< HEAD
-###   
     $all_storefronts = $storefronts ?? [];
     $site_0 = \Modules\Sites\Models\SiteModel::objects()->get(['storefrontid' => 0]);
     $storefronts_0[0] = $site_0->getAttributes();
@@ -242,8 +240,6 @@ $smarty->assign('publication_statuses', $publication_statuses);
 //func_print_r($all_storefronts);
 ###
 
-=======
->>>>>>> 0f569c122fb91b25083ec18139e02308f154cc04
 $invoice_memo_statuses = [
 	'N' => 'Not received',
 	'A' => 'Added',
