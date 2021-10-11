@@ -21,7 +21,7 @@ class AssetsLibrary extends TemplateLibrary
      * @name asset
      * @return void
      */
-    public static function aliasAddAsset(array $params = [], $data)
+    public static function aliasAddAsset(array $params = [], string $data = '')
     {
         self::addAsset($params, $data);
     }
