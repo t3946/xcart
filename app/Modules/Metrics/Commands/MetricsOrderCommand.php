@@ -23,34 +23,36 @@ class MetricsOrderCommand extends Command
         $ar_metrics = [];
         $str_result = '';
         $start_date = (new DateTime('-90 days'))->setTime(0, 0);
-//        $data_result = '';
-//        /** @var SiteModel $site */
-//        foreach (SiteModel::objects()->all() as $site) {
-//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
-//               'code' => $site->code,
-//            ]);
-//        }
-////        /** @var PaymentMethodModel $process */
-////        foreach (PaymentMethodModel::objects()->all() as $process) {
-////            $name = str_replace('/', '', (string)$process);
-////            $data_result .= MetricsDataHelper::convertToMetricsWithParams('payments', '1', [
-////                'name' => $name
-////            ]);
-////        }
-//        /** @var DistributorModel $distributor */
-//        foreach (DistributorModel::objects()->all() as $distributor) {
-//            $name_distributor = trim(preg_replace('~\(.+\)~s', '', (string)$distributor), '.');
-//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('distributors', '1', [
-//                'name' => $name_distributor,
-//            ]);
-//        }
-//        /** @var CountryModel $country */
-//        foreach (CountryModel::objects()->filter(['active' => 'Y']) as $country) {
-//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
-//                'name' => (string)$country,
-//            ]);
-//        }
-//        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
+        $data_result = '';
+        /** @var SiteModel $site */
+        foreach (SiteModel::objects()->all() as $site) {
+            $data_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
+               'name' => (string)$site,
+            ]);
+        }
+        /** @var PaymentMethodModel $process */
+        foreach (PaymentMethodModel::objects()->all() as $process) {
+            $name = (string)$process;
+            $data_result .= MetricsDataHelper::convertToMetricsWithParams('payments', '1', [
+                'name' => "$process [$process->pk]"
+            ]);
+        }
+        /** @var DistributorModel $distributor */
+        foreach (DistributorModel::objects()->all() as $distributor) {
+            $name = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$distributor);
+            $name = "[$distributor->code] $name";
+            $data_result .= MetricsDataHelper::convertToMetricsWithParams('distributors', '1', [
+                'name' => $name
+            ]);
+        }
+        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
+        /** @var CountryModel $country */
+        foreach (CountryModel::objects()->filter(['active' => 'Y']) as $country) {
+            $data_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
+                'name' => (string)$country,
+            ]);
+        }
+        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
 
         $time = [
             '1' => new \DateTime('-1 days'),
@@ -61,18 +63,22 @@ class MetricsOrderCommand extends Command
         /** @var OrderModel $order */
         foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()]) as $order) {
             $site = $order->site;
+            $name_process = (string)$order->payment_method;
+            $name_process = "$name_process [{$order->payment_method->pk}]";
             foreach ($order->groups as $group_model) {
+                $name_dx = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$group_model->manufacturer);
+                $name_dx = "[{$group_model->manufacturer->code}] $name_dx";
                 foreach ($time as $period => $date_time) {
                     if ($order->date > $date_time->getTimestamp()) {
                         $ar_metrics[$period][] = [
                             'order_id' => $order->pk,
-                            'dx_code' => $group_model->manufacturer->code,
-                            'site' => $site->code,
+                            'dx_name' => $name_dx,
+                            'site' => (string)$site,
                             'status' => $group_model->cb_status,
                             'zip_code' => $order->b_zipcode,
                             'country' => (string)$order->billing_country,
                             'sum' => $group_model->total_gross,
-                            'payment_process' => (string)$order->payment_method,
+                            'payment_process' => $name_process,
                         ];
                     }
                 }

@@ -15,6 +15,8 @@ class GoogleAnalyticsMetrics
     public const METRICS_LONGITUDE = 'ga:longitude';
     public const METRICS_SOURCE = 'ga:source';
     public const METRICS_REFERRAL = 'ga:referralPath';
+    public const METRICS_SOURCE_AND_MEDIUM = 'ga:sourceMedium';
+    public const METRICS_CAMPAIGN = 'ga:campaign';
 
     private \Google_Client $client;
     private \Google_Service_AnalyticsReporting $service_reporting;
@@ -85,7 +87,7 @@ class GoogleAnalyticsMetrics
         $ar_metrics = [];
         $dateRange = new \Google_Service_AnalyticsReporting_DateRange();
         $dateRange->setStartDate((new \DateTime('-1 days'))->format('Y-m-d'));
-        $dateRange->setEndDate((new \DateTime())->format('Y-m-d'));
+        $dateRange->setEndDate((new \DateTime('-1 days'))->format('Y-m-d'));
 
         foreach ($this->sites as $site) {
             $request = new \Google_Service_AnalyticsReporting_ReportRequest();
@@ -133,5 +135,27 @@ class GoogleAnalyticsMetrics
         }
         return $ar_result;
     }
+/*    public function test()
+    {
+        $ar_metrics = [];
+        $dateRange = new \Google_Service_AnalyticsReporting_DateRange();
+        $dateRange->setStartDate((new \DateTime('-1 days'))->format('Y-m-d'));
+        $dateRange->setEndDate((new \DateTime('-1 days'))->format('Y-m-d'));
+
+        foreach ($this->sites as $site) {
+            $request = new \Google_Service_AnalyticsReporting_ReportRequest();
+            $dimension = new \Google_Service_AnalyticsReporting_Dimension();
+            $dimension->setName('userGender');
+            $request->setDimensions([$dimension]);
+            $request->setViewId($site['id']);
+            $request->setDateRanges($dateRange);
+
+            $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
+            $body->setReportRequests([$request]);
+            $ar_result = $this->service_reporting->reports->batchGet($body);
+            $res = $this->getReportValue($ar_result);
+        }
+        return $ar_metrics;
+    }*/
 
 }
