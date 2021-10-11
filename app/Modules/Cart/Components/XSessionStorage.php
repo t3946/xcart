@@ -30,9 +30,9 @@ class XSessionStorage extends AbstractStorage
 
     /**
      * @param $key
-     * @return mixed
+     * @return \Modules\Cart\Components\CartItem
      */
-    public function get($key)
+    public function get($key) :? CartItem
     {
         if ($this->has($key)) {
             return $this->data[$key];
@@ -44,7 +44,7 @@ class XSessionStorage extends AbstractStorage
      * @param $key
      * @return bool
      */
-    public function remove($key)
+    public function remove($key) : bool
     {
         if (parent::remove($key))
         {
@@ -57,9 +57,9 @@ class XSessionStorage extends AbstractStorage
     /**
      * @param $key
      * @param $value
-     * @return $this
+     * @return AbstractStorage
      */
-    public function add($key, $value)
+    public function add($key, $value) : AbstractStorage
     {
         parent::add($key, $value);
         $this->sync();
@@ -68,7 +68,7 @@ class XSessionStorage extends AbstractStorage
     /**
      * @return $this
      */
-    public function clear()
+    public function clear(): self
     {
         parent::clear();
         $this->sync();
