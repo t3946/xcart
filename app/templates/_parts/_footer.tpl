@@ -110,7 +110,7 @@
                             <div class="footer-info-block-title">{t 'Payment Methods'}</div>
 
                             <ul class="footer-payment-methods footer_payment-methods no-bullet menu-list">
-                                {set $payment_methods = $site->payment_methods->filter(['is_active' => 1])->order(['position'])->all()}
+                                {set $payment_methods = $site.payment_methods->filter(['is_active' => 1])->order(['position'])->all()}
                                 {if !$payment_methods }
                                     {set $payment_methods = $.call.Modules.Sites.Models.PaymentMethodModel::active()}
                                 {/if}
@@ -190,7 +190,7 @@
     <div class="footer-menu">
         <div class="row">
             <div class="column small-12 medium-8 copyright small-order-2 medium-order-1">
-                {t 'Copyright ©'} {$config.start_year}-{date_add()|date:"Y"} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
+                {t 'Copyright ©'} {$site.start_year}-{date('Y')} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
             </div>
             <div class="column small-12 medium-4 footer-right-column small-order-1 medium-order-2 footer-copyright-links-column">
                 <ul class="no-bullet">

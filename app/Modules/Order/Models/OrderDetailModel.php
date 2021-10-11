@@ -16,6 +16,8 @@ use Xcart\OrderDetail;
 
 /**
  * @property int order_group_id
+ * @property float price
+ * @property int amount
  */
 class OrderDetailModel  extends Model
 {

@@ -12,6 +12,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
+<<<<<<< HEAD
 
 /**
  * Class CountryModel
@@ -19,6 +20,11 @@ use Xcart\App\Orm\Model;
  * @property string code
  * @property string name
  * @property string active
+=======
+/**
+ * @property string name
+ * @property string code
+>>>>>>> 0f569c122fb91b25083ec18139e02308f154cc04
  */
 class CountryModel extends Model
 {
