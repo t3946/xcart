@@ -4,6 +4,7 @@ import { userClearAction } from "@client/jsx/redux/actions/account-actions/UserA
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
+import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 
 interface PropsInterface {
   onClick?: () => void;
@@ -16,6 +17,8 @@ const LogoutButton: React.FC<PropsInterface> = function (
   const dispatch = useDispatch();
 
   function logout() {
+    HideAllMenu(dispatch);
+
     dispatch(
       logoutAction({
         callback() {
