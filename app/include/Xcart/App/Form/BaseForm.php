@@ -30,7 +30,7 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
     /**
      * @var array
      */
-    public $templates = [
+    public array $templates = [
         'default' => 'forms/default.tpl',
         'block' => 'core/form/block.tpl',
         'table' => 'core/form/table.tpl',

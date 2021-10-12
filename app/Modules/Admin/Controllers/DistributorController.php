@@ -18,6 +18,7 @@ use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Admin\ProductAdmin;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\User\Models\RoleModel;
 use Throwable;
 use Xcart\App\Exceptions\Exception;
 use Xcart\App\Main\Xcart;
@@ -80,6 +81,8 @@ class DistributorController extends BackendController
             }
         }
 
+
+
         /** @var DistributorForm $form */
         if ($section == 3) {
             $admin = new DxContactsAdmin();
@@ -111,6 +114,11 @@ class DistributorController extends BackendController
 
         //сохранение формы
         if (Xcart::app()->request->getIsPost()) {
+
+            if ($user->hasRole(RoleModel::ROLE_FEED_QUALITY_SLUG)) {
+                Xcart::app()->request->redirect('/admin/error_message.php?access_denied&id=25');
+            }
+
             $form->populate(Xcart::app()->request->post, $_FILES);
             if (!$dx) {
                 if (!DistributorModel::objects()->filter(['code' => $form->code->getValue()])->count()) {

@@ -76,7 +76,7 @@ class CartModule extends Module
 
     public static function getAdminMenu(): array
     {
-        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+        if (Xcart::app()->user->hasRoles(['vrs','vrv', 'fqa'])) {
             return [];
         }
 

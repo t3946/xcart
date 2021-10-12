@@ -13,14 +13,17 @@ class FormsModule extends Module
     public static function getAdminMenu()
     {
         $menu = [];
-        $menu[] =  [
-            'name' => 'Inbox/Sorting dashboard',
-            'route' => Xcart::app()->router->url('forms:page', ['page' => 1])
-        ];
+        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+            $menu[] =  [
+                'name' => 'Inbox/Sorting dashboard',
+                'route' => Xcart::app()->router->url('forms:page', ['page' => 1])
+            ];
+        }
+
         $adminClasses = static::getAdminClasses();
         foreach ($adminClasses as $adminClass) {
             if (is_a($adminClass, Admin::className(), true) && $adminClass::$public) {
-                if (!Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+                if (!Xcart::app()->user->hasRoles(['vrs','vrv','fqa'])) {
                     $menu[] = [
                         'adminClassName' => $adminClass::className(),
                         'adminClassNameShort' => $adminClass::classNameShort(),

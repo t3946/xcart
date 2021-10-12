@@ -70,7 +70,7 @@ class DashboardModule extends Module
 
     public static function getAdminMenu()
     {
-        if (Xcart::app()->user->hasRoles(['vrs','vrv'])) {
+        if (Xcart::app()->user->hasRoles(['vrs','vrv', 'fqa'])) {
             return [];
         }
 
