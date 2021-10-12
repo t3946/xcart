@@ -80,7 +80,7 @@ use Xcart\Product;
  * @property mixed ASIN
  * @property mixed mult_order_quantity
  * @property mixed min_amount
- * @property mixed brand
+ * @property BrandModel|null brand
  * @property mixed r_avail
  * @property mixed list_price
  * @property mixed verification_statusid
@@ -90,6 +90,7 @@ use Xcart\Product;
  * @property ProductModel parent
  * @property string group_mask
  * @property int group_root
+ * @property GoogleProductsModel google_ads
  * @property ProductImageModel[]|\Xcart\App\Orm\Manager detail_images
  * @property UserModel last_modify_user
  *
@@ -516,6 +517,11 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => UserModel::class,
                 'link' => ['last_modify_id' => 'id'],
             ],
+            'google_ads' => [
+                'class' => HasToOneField::class,
+                'modelClass' => GoogleProductsModel::class,
+                'link' => ['productid' => 'product_id']
+            ]
         ];
     }
 

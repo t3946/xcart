@@ -8,8 +8,15 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property ProductModel product
+ * @property string shopping_status
+ */
 class GoogleProductsModel extends Model
 {
+    public const SHOPPING_STATUS_APPROVED = 'approved';
+    public const SHOPPING_STATUS_DISAPPROVED = 'disapproved';
+
     public static function tableName()
     {
         return 'google_products';

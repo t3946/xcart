@@ -15,6 +15,7 @@ use Xcart\App\Orm\Model;
 /**
  * @property int paymentid
  * @property ProcessorModel frontend_processor
+ * @property string payment_method
  */
 class PaymentMethodModel extends Model
 {
@@ -66,7 +67,7 @@ class PaymentMethodModel extends Model
 
     public function __toString()
     {
-        return (string) $this->payment_method;
+        return (string)$this->payment_method;
     }
 
 }

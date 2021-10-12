@@ -21,7 +21,7 @@ class AssetsLibrary extends TemplateLibrary
      * @name asset
      * @return void
      */
-    public static function aliasAddAsset(array $params = [], $data)
+    public static function aliasAddAsset(array $params = [], string $data = '')
     {
         self::addAsset($params, $data);
     }
@@ -31,7 +31,7 @@ class AssetsLibrary extends TemplateLibrary
      * @name add_asset_block
      * @return void
      */
-    public static function addAsset(array $params = [], $data)
+    public static function addAsset(array $params = [], string $data = '')
     {
         $data = trim($data);
         $position = 'footer';

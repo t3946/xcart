@@ -71,6 +71,7 @@ use Xcart\Order;
  * @property string firstname
  * @property string login_last_opened_or_saved
  * @property string|int time_last_opened_or_saved
+ * @property CountryModel billing_country
  * @property int storefrontid
  * @property mixed transactions
  * @property mixed b_company

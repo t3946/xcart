@@ -27,7 +27,7 @@ class MailHandler extends MonologMailHandler
 
             $msg .= $this->format('Site', $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']);
             $msg .= $this->format('Remote IP', $_SERVER['REMOTE_ADDR']);
-            $msg .= $this->format('Logged as', $login);
+            $msg .= $this->format('Logged as', $login ?? '');
 
             $msg .= "\n";
         }
@@ -76,7 +76,7 @@ class MailHandler extends MonologMailHandler
         }
     }
 
-    protected function format($title, $value)
+    protected function format($title, $value = '')
     {
         $post_val = !strstr($value, "\n")?'':"\n-";
         return sprintf("**%1$15s**: %2\$s \n", strtoupper($title), $value . $post_val);
