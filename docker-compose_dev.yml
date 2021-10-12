@@ -86,6 +86,7 @@ services:
     volumes:
       - ./docker/redis/data:/data
     restart: always
+    privileged: true
 
   node:
     container_name: node
