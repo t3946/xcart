@@ -311,13 +311,18 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['tag']) || $this->checkNot('order.tag')) {
-                $qs->join('left join', 'xcart_orders_additional_tags', ['orderid' => 'tagl.orderid'], 'tagl');
-
-                $val = ($data['order']['tag']) ?: [''];
-
-                $this->where[] = $this->checkNot('order.tag')
-                    ? new QOr([new QAndNot(['tagl.status_id__in' => $val]), ['tagl.status_id__isnull' => true]])
-                    : new QAnd(['tagl.status_id__in' => $val]);
+                if ($data['order']['tag']) {
+                    $val = $data['order']['tag'];
+                    if ($this->checkNot('order.tag')) {
+                        if ($val) {
+                            $val_str = implode(',', $val);
+                            $this->where[] = new Expression("NOT EXISTS (select 1 from xcart_orders_additional_tags tagl WHERE `xcart_orders_1`.`orderid`= tagl.orderid AND tagl.status_id IN ('$val_str'))");
+                        }
+                    } else {
+                        $qs->join('left join', 'xcart_orders_additional_tags', ['orderid' => 'tagl.orderid'], 'tagl');
+                        $this->where[] = new QAnd(['tagl.status_id__in' => $val]);
+                    }
+                }
             }
 
             if (!empty($data['order']['distributor']) || $this->checkNot('order.distributor')) {
