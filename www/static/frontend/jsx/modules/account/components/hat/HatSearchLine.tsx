@@ -1,7 +1,6 @@
 import React from "react";
 import classnames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import DepartmentsMenu from "./DepartmentsMenu";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
@@ -30,7 +29,7 @@ const HatSearchLine: React.FC<PropsInterface> = (
 
   function searchTemplate() {
     return (
-      <div className="search-form-container flex-grow-1 ">
+      <div className="search-form-container flex-grow-1">
         <form
           action={route("catalog:search")}
           method="get"
