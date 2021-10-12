@@ -55,13 +55,13 @@ class MetricsOrderCommand extends Command
         MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
 
         $time = [
-            '1' => new \DateTime('-1 days'),
-            '7' => new \DateTime('-7 days'),
-            '30' => new \DateTime('-30 days'),
-            '90' => new \DateTime('-90 days')
+            'Last 24 hours' => new \DateTime('-1 days'),
+            'Last 7 days' => new \DateTime('-7 days'),
+            'Last 30 days' => new \DateTime('-30 days'),
+            'Last 90 days' => new \DateTime('-90 days')
         ];
         /** @var OrderModel $order */
-        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()])->limit(4000) as $order) {
+        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()]) as $order) {
             $site = $order->site;
             $name_process = (string)$order->payment_method;
             $name_process = "$name_process [{$order->payment_method->pk}]";
