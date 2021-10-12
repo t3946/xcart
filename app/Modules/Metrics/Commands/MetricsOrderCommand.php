@@ -45,7 +45,7 @@ class MetricsOrderCommand extends Command
                 'name' => $name
             ]);
         }
-        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
+
         /** @var CountryModel $country */
         foreach (CountryModel::objects()->filter(['active' => 'Y']) as $country) {
             $data_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
@@ -61,7 +61,7 @@ class MetricsOrderCommand extends Command
             '90' => new \DateTime('-90 days')
         ];
         /** @var OrderModel $order */
-        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()]) as $order) {
+        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()])->limit(4000) as $order) {
             $site = $order->site;
             $name_process = (string)$order->payment_method;
             $name_process = "$name_process [{$order->payment_method->pk}]";
@@ -94,33 +94,5 @@ class MetricsOrderCommand extends Command
             }
         }
         $result = MetricsDataHelper::pushMetrics('order-info', "$str_result\n");
-//        foreach (OrderModel::objects()->limit(1000)->order(['-date']) as $order) {
-//            try {
-//
-//                $count_items = 0;
-//                /** @var OrderDetailModel $detail_model */
-//                foreach ($order->detail_models as $detail_model) {
-//                    $count_items += $detail_model->amount;
-//                }
-//                $str_result .= MetricsDataHelper::convertToMetricsWithParams('orders_products', $count_items, [
-//                    'order_id' => $order->pk,
-//                ]);
-//
-//                $str_result .= MetricsDataHelper::convertToMetricsWithParams('orders_sum', $order->total, [
-//                    'order_id' => $order->pk,
-//                ]);
-//
-//                $str_result .= MetricsDataHelper::convertToMetricsWithParams('orders', '1', [
-//                    'status' => $order->cb_status,
-//                    'zip_code' => $order->b_zipcode,
-//                    'country' => $order->b_country,
-//                    'site' => $order->site->code,
-//                    'order_id' => $order->pk,
-//                    'payment_process' => (string)$order->payment_method,
-//                ]);
-//            } catch (\Throwable $exception) {
-//                echo $exception->getMessage();
-//            }
-//        }
     }
 }
