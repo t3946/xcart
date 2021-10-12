@@ -10,6 +10,7 @@
   opacity: 0.5;
   transition: opacity 0.1s linear;
   text-align: right;
+  background: rgba(0, 255, 0, 0);
 
   &:hover {
     opacity: 1;

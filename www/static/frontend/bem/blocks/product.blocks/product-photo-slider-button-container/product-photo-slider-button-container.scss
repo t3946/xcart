@@ -1,0 +1,11 @@
+.product-photo-slider-button-container {
+  @media (min-width: rem-calc(840)) {
+    top: rem-calc(60);
+    height: calc(100% - 60px);
+  }
+
+  @include breakpoint(xl up) {
+    top: rem-calc(0);
+    height: 100%;
+  }
+}

@@ -1,4 +1,4 @@
-import {h, render} from "preact";
+import { h, render } from "preact";
 import PhotoSwipe from "../../libs/photoswipe/dist/photoswipe";
 import PhotoSwipeUI_Default from "../../libs/photoswipe/dist/photoswipe-ui-default";
 
@@ -43,7 +43,6 @@ const cont = new (class PhotoSwipeContainer {
     );
     this.pswp = pswp;
 
-    let offset = 0;
     const $left = $(".photoswipe-left-arrow");
     const $right = $(".photoswipe-right-arrow");
 
@@ -61,11 +60,14 @@ const cont = new (class PhotoSwipeContainer {
         $zoomScale = parseFloat(style.match(/scale\((\d+(.\d+)?)\)/)[1]);
       }
 
-      const $visibleWidth = $imgWidth * $zoomScale;
+      const visibleWidth = $imgWidth * $zoomScale;
+      const offset = Math.ceil(visibleWidth / 2) + 50;
 
-      offset = Math.ceil($visibleWidth / 2) + 50;
-      $left.css("paddingRight", offset);
-      $right.css("paddingLeft", offset);
+      $left
+        .css("paddingRight", offset);
+
+      $right
+        .css("paddingLeft", offset);
     }
 
     $(".photoswipe-close-button").click(function () {
@@ -221,8 +223,9 @@ const cont = new (class PhotoSwipeContainer {
                 <div className="pswp__share-tooltip"></div>
               </div>
 
-              <div className="photoswipe-left-arrow">
-                <button className="pswp__button pswp__button--arrow--left photoswipe-navigate-button"/>
+              <div className="photoswipe-left-arrow product-photo-slider-button-container">
+                <button className="pswp__button--arrow--left photoswipe-navigate-button product-photo-slider-button product-photo-slider-button_left" />
+
                 <img
                   className="photoswipe-navigate-button-icon"
                   src="/static/frontend/dist/images/photoswipe/arrow.svg"
@@ -230,8 +233,9 @@ const cont = new (class PhotoSwipeContainer {
                 />
               </div>
 
-              <div className="photoswipe-right-arrow">
-                <button className="pswp__button pswp__button--arrow--right photoswipe-navigate-button"/>
+              <div className="photoswipe-right-arrow product-photo-slider-button-container">
+                <button className="pswp__button--arrow--right photoswipe-navigate-button product-photo-slider-button product-photo-slider-button_right" />
+
                 <img
                   className="photoswipe-navigate-button-icon"
                   src="/static/frontend/dist/images/photoswipe/arrow.svg"

@@ -1,3 +1,15 @@
-<svg width="93" height="362" viewBox="0 0 93 362" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M84 4L4 182.5L88.5 357.5" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<svg
+   width="93"
+   height="362"
+   viewBox="0 0 93 362"
+   fill="none"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg">
+  <path
+     d="M 88.871557,3.8148653 6.6146864,181.28615 88.88897,357.34351"
+     stroke="white"
+     stroke-width="8"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path49" />
 </svg>

@@ -4,6 +4,8 @@ import classnames from "classnames";
 import MarkAsHelpful from "@client/modules/product/Components/Review/MarkAsHelpful";
 import HelpfulCount from "@client/modules/product/Components/Review/HelpfulCount";
 import Body from "@client/modules/product/Components/Review/Body";
+import { useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 interface PropsInterface {
   product_review_id: string;
@@ -51,6 +53,21 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
     return "from the Earth";
   }
 
+  function markAsHelpfulTemplate() {
+    const user = useSelector((e: AccountStore) => e.user);
+
+    if (!user) {
+      return;
+    }
+
+    return (
+      <MarkAsHelpful
+        isHelpful={props.markedHelpful}
+        reviewId={parseInt(props.product_review_id)}
+      />
+    );
+  }
+
   return (
     <div className={"reviews__review review"}>
       <div>
@@ -82,10 +99,7 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
       <div>
         <HelpfulCount count={helpful_count} />
 
-        <MarkAsHelpful
-          isHelpful={props.markedHelpful}
-          reviewId={parseInt(props.product_review_id)}
-        />
+        {markAsHelpfulTemplate()}
       </div>
 
       <div className="review__divider reviews-divider reviews-divider" />
