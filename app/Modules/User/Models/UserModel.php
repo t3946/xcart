@@ -155,7 +155,7 @@ class UserModel extends Model
     public function hasRoles($roles): bool
     {
         if ($role = $this->role) {
-            return $role->getObjects()->filter(['slug__in' => $roles])->count() > 0;
+            return $role->getObjects()->filter(['slug__in' => $roles, 'pk' => $role->pk])->count() > 0;
         }
         return false;
     }

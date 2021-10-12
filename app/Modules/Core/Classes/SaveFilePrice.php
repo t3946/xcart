@@ -4,8 +4,10 @@
 namespace Modules\Core\Classes;
 
 
+use JsonException;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 
 class SaveFilePrice
@@ -26,7 +28,8 @@ class SaveFilePrice
     }
 
     /** Send data about full query save price from RabbitMQ
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws JsonException
+     * @throws UnknownPropertyException
      */
     public function sendStats(): void
     {
@@ -40,7 +43,7 @@ class SaveFilePrice
             'feed_source_date' => date('Y-m-d H:i:s'),
             'storefront' => $site->pk
         ];
-        Xcart::app()->queue->send('products_active_test', json_encode($ar_active));
+        Xcart::app()->queue->send('products_active_test', json_encode($ar_active, JSON_THROW_ON_ERROR));
     }
 
     /** Collect data
@@ -54,8 +57,8 @@ class SaveFilePrice
                 $value = array_column($ar_save[$table_index], $key);
                 if ($field === 'images') {
                     $this->count_image_field++;
-                    $this->ar_update_field[$table_index]["{$field}_{$this->count_image_field}"] = $value;
-                    $this->fields_image[$table_index][] = "{$field}_{$this->count_image_field}";
+                    $this->ar_update_field[$table_index]["{$field}_$this->count_image_field"] = $value;
+                    $this->fields_image[$table_index][] = "{$field}_$this->count_image_field";
                 } else {
                     $this->ar_update_field[$table_index][$field] = $value;
                 }
@@ -68,30 +71,37 @@ class SaveFilePrice
         $time_start = time();
         foreach ($this->ar_update_field as $table_index => $ar_fields) {
             foreach ($ar_fields[$this->search_by[$table_index]] as $key => $code) {
-                $search_value = "{$this->dx_code}-{$code}";
+                $search_value = "$this->dx_code-$code";
                 if ($this->search_by[$table_index] !== 'productcode') {
                     $search_value = $code;
                 }
                 $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
                 if ($product instanceof ProductModel) {
                     $this->sendProductData($product, $table_index, $key);
-                    $this->success_productcode[] = "{$this->dx_code}-{$code}";
+                    $this->success_productcode[] = "$this->dx_code-$code";
                 }
             }
         }
         $this->time_exec = time() - $time_start;
     }
 
-    private function sendProductData(ProductModel $product_model, int $t_index, int $num_row)
+    private function sendProductData(ProductModel $product_model, int $t_index, int $num_row): void
     {
         $ar_field = [];
         foreach ($this->ar_update_field[$t_index] as $field => $item) {
             switch ($field) {
                 case 'productcode':
-                    $ar_field[$field] = "{$this->dx_code}-{$item[$num_row]}";
+                    $ar_field[$field] = "$this->dx_code-$item[$num_row]";
+                    break;
+                case 'cost_to_us':
+                case 'list_price':
+                case 'new_map_price':
+                    if (!in_array($field, $this->fields_image[$t_index], true)) {
+                        $ar_field[$field] = str_replace(['$', ','],'', $item[$num_row]);
+                    }
                     break;
                 default:
-                    if (!in_array($field, $this->fields_image[$t_index])) {
+                    if (!in_array($field, $this->fields_image[$t_index], true)) {
                         $ar_field[$field] = $item[$num_row];
                     }
                     break;
@@ -102,7 +112,8 @@ class SaveFilePrice
         }
         if (!empty($ar_field)) {
             $ar_field['hash_product'] = md5(json_encode($ar_field, JSON_THROW_ON_ERROR));
-            Xcart::app()->queue->send('products_test', json_encode($ar_field));
+            $ar_field['source'] = 'manual';
+            Xcart::app()->queue->send('products', json_encode($ar_field, JSON_THROW_ON_ERROR));
             $this->count_update++;
         }
     }
@@ -111,8 +122,9 @@ class SaveFilePrice
      * @param ProductModel $productModel
      * @param int $table_index - number table from excel table
      * @param int $num_row
+     * @throws JsonException
      */
-    private function sendImageData(ProductModel $productModel, int $table_index, int $num_row)
+    private function sendImageData(ProductModel $productModel, int $table_index, int $num_row): void
     {
         $ar_images = [];
         foreach ($this->fields_image[$table_index] as $field) {
@@ -121,6 +133,6 @@ class SaveFilePrice
         $ar_images_rabbit['images'] = $ar_images;
         $ar_images_rabbit['product_code'] = $productModel->productcode;
 
-        Xcart::app()->queue->send('images_test', json_encode($ar_images_rabbit));
+        Xcart::app()->queue->send('images_test', json_encode($ar_images_rabbit, JSON_THROW_ON_ERROR));
     }
 }

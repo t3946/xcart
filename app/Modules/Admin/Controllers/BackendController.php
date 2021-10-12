@@ -25,6 +25,10 @@ class BackendController extends Controller
         elseif (!($user->getIsSuperuser() || $user->getIsStaff())) {
             $this->error(403);
         }
+
+        if (($role = $user->role) && !$role->canRequest(Xcart::app()->request)) {
+            $this->getRequest()->redirect('/admin/error_message.php?access_denied&id=25');
+        }
     }
 
     public function renderInSmarty($view, array $params = [])

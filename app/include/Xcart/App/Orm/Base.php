@@ -19,7 +19,7 @@ use Serializable;
  * @package Xcart\App\Orm
  * @method static Manager objects($instance = null)
  */
-abstract class Base implements ModelInterface, ArrayAccess
+abstract class Base implements ModelInterface, ArrayAccess, Serializable
 {
     use ClassNames;
     /**
@@ -838,11 +838,27 @@ abstract class Base implements ModelInterface, ArrayAccess
         $this->related = [];
     }
 
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
     public function serialize()
     {
         return serialize(['attributes' => $this->getAttributes(), 'attributesNotField' => $this->attributesNotField]);
     }
 
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @throws \Exception
+     * @since 5.1.0
+     */
     public function unserialize($serialized)
     {
         $us = unserialize($serialized);

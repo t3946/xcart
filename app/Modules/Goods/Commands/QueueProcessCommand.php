@@ -43,17 +43,20 @@ class QueueProcessCommand extends Command
 
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             try {
+                $feed =  null;
                 $data = array_filter($data, static fn($v) => $v !== null);
 
                 if ($data['storefront'] !== null) {
                     $site = SiteModel::objects()->get(['storefrontid' => $data['storefront']]);
+                    /** @var SupplierFeedModel $feed */
+                    $feed = SupplierFeedModel::objects()->get(
+                        ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
+                    );
                 }
 
-                /** @var SupplierFeedModel $feed */
-                $feed = SupplierFeedModel::objects()->get(
-                    ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
-                );
-                if (!$feed || !$feed->enabled) {
+                $data['source'] ??= 'feed';
+
+                if ($data['source'] !== 'manual' && (!$feed || !$feed->enabled)) {
                     echo "Feed is not active\n";
                     print_r($data);
                     return;
@@ -61,8 +64,7 @@ class QueueProcessCommand extends Command
 
                 if (!$data['is_group']) {
                     //Simple product process
-                    $product_code = $data['productcode'];
-                    if (!$product_code) {
+                    if (!$product_code = $data['productcode']) {
                         echo "Empty productcode, skip product\n";
                         return;
                     }
@@ -71,7 +73,7 @@ class QueueProcessCommand extends Command
                         echo "Empty site for product {$data['productcode']}\n";
                         return;
                     }
-                    if ($product->hash_product !== $data['hash_product']) {
+                    if ($data['source'] === 'manual' || $product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
                         if ($data['eta_date_mm_dd_yyyy']) {
                             $product->eta_date_mm_dd_yyyy = strtotime($data['eta_date_mm_dd_yyyy']);
@@ -84,9 +86,15 @@ class QueueProcessCommand extends Command
                                 $product->setMainCategory($site->base_category);
                             }
                         }
+                        if ($data['source'] !== 'manual') {
+                            $product->group_root = null;
+                        }
+
                         $changed = SupplierFeedHelper::getChanged($product);
                         $product->save();
-                        ProductHelper::setProductAttributes($product, $data['attributes'] ?? [], $site);
+                        if ($data['attributes'] && $site) {
+                            ProductHelper::setProductAttributes($product, $data['attributes'], $site);
+                        }
                         SupplierFeedHelper::feedFiles($product, $data);
                         SupplierFeedHelper::getVideos($product);
                         print(($is_new ? 'Adding' : '') . "$product->productcode\n");

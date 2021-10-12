@@ -21,6 +21,7 @@ class ExternalMarketplaceDisabledModel extends Model
     {
         return [
             'marketplace' => [
+                'field' => 'marketplace_id',
                 'class' => ForeignField::class,
                 'modelClass' => ExternalMarketPlaceModel::class,
                 'link' => ['marketplace_id' => 'id'],
@@ -34,7 +35,10 @@ class ExternalMarketplaceDisabledModel extends Model
                 'class' => CharField::class,
                 'primary' => true,
             ],
-            'update_date' => DateTimeField::class
+            'update_date' => [
+                'class' => DateTimeField::class,
+                'autoNow' => true
+            ]
         ];
     }
 }

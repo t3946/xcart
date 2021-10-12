@@ -2,6 +2,8 @@
 
 namespace Modules\Core\Controllers\Api;
 
+use Modules\Core\Admin\GeneralSettingsAdmin;
+use Modules\Core\CoreModule;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Core\Models\ModuleModel;
@@ -74,14 +76,17 @@ class GeneralSettingsController extends Controller
                         break;
                     case 'Fraud_check':
                         $option_settings = [
-                            'link' => '/admin/list/Core/GeneralSettingsAdmin/Fraud_check',
+                            'link' => Xcart::app()->router->url('admin:list', [
+                                'module' => CoreModule::getName(),
+                                'admin' => GeneralSettingsAdmin::classNameShort(),
+                            ]).'/Fraud_check',
                             'isNew' => true,
                             'lang' => $ar_name_opt[$catname] ?? ''
                         ];
                         break;
                     default:
                         $option_settings = [
-                            'link' => "configuration.php?option=$catname",
+                            'link' => "/admin/configuration.php?option=$catname",
                             'lang' => $ar_name_opt[$catname] ?? '',
                             'isNew' => false,
                         ];

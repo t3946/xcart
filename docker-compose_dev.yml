@@ -37,6 +37,7 @@ services:
     depends_on:
       - php
     tty: true
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     ports:
       - "80:80"
       - "443:443"
@@ -46,6 +47,8 @@ services:
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
       - ./docker/nginx/configs/:/etc/nginx/configs/
       - ./docker/nginx/sites/:/etc/nginx/sites-enabled.d/
+      - ./docker/certbot/conf:/etc/letsencrypt
+      - ./docker/certbot/www:/var/www/certbot
 
   php:
     build:
@@ -100,6 +103,22 @@ services:
     #  - NODE_ENV=production
     volumes:
       - ./:/home/node/app
+
+  certbot:
+    container_name: certbot
+    image: certbot/dns-route53
+    networks:
+      - frontend
+    depends_on:
+      - nginx
+    tty: true
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./docker/certbot/conf:/etc/letsencrypt
+      - ./docker/certbot/www:/var/www/certbot
+    environment:
+      AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
+      AWS_SECRET_ACCESS_KEY: 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
 
 
 networks:

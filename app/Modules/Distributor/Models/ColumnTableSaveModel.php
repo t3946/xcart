@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Distributor\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
@@ -7,12 +8,20 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property int manufacturer_id
+ * @property DistributorModel manufacture
+ * @property int num_table
+ * @property int num_column
+ * @property string option_name
+ */
 class ColumnTableSaveModel extends Model
 {
     public static function tableName()
     {
         return 'xcart_column_table_save';
     }
+
     public static function getFields()
     {
         return [
@@ -26,10 +35,10 @@ class ColumnTableSaveModel extends Model
                 'class' => CharField::class
             ],
             'manufacture' => [
-                'field' => 'manufactureid',
+                'field' => 'manufacturer_id',
                 'class' => ForeignField::class,
                 'modelClass' => DistributorModel::class,
-                'link' => ['manufacturerid' => 'manufacturerid'],
+                'link' => ['manufacturer_id' => 'manufacturerid'],
                 'null' => false,
             ],
             'num_table' => [

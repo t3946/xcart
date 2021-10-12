@@ -19,8 +19,7 @@ class Translate
     public function __construct()
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        $config = $site->getConfig();
-        $l = $config['Preferred_language'] ?? 'en';
+        $l = $site->lang->lang_code ?? 'en';
         $this->translator = new Translator($l);
         $this->translator->addLoader('po', new PoFileLoader());
         $this->translator->addResource('po', Xcart::app()->getModule('Translate')->getPath()."/lang/{$l}.po", $l, 'messages');
@@ -46,9 +45,8 @@ class Translate
     public function stringReplacement($str, array $params = [])
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        $config = $site->getConfig();
 
-        $str_o =  $this->translator->trans($str, $params, 'messages', $config['Preferred_language'] ?? 'en');
+        $str_o =  $this->translator->trans($str, $params, 'messages', $site->lang->lang_code ?? 'en');
 
         if ($str_o === '') {
             $str_o = $str;

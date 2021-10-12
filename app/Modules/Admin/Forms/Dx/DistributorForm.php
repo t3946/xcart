@@ -12,11 +12,14 @@ class DistributorForm extends ModelForm
 {
     public array $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
 
-    public $templates = [
+    public array $templates = [
         'default' => 'admin/distributor/form/_dx_form.tpl'
     ];
-    public $fieldTemplate = 'admin/distributor/form/field.tpl';
-    public $hintTemplate = 'admin/distributor/form/hint.tpl';
+    public string $fieldTemplate = 'admin/distributor/form/field.tpl';
+    public string $hintTemplate = 'admin/distributor/form/hint.tpl';
+
+    public static array $vrs = [1, 3, 50, 2, 5, 40, 51, 52, 14, 8, 6, 7, 12, 10, 13, 11, 9];
+    public static array $fqa = [1, 52, 10, 6];
 
     public static array $sections = [
         'General' => [
@@ -54,7 +57,7 @@ class DistributorForm extends ModelForm
             15 => [
                 'title' => 'Upload file lists',
                 'form' => DistributorPriceForm::class,
-                'required' => true,
+                'required' => false,
                 'hidden' => true,
             ],
             22 => [
@@ -176,16 +179,26 @@ class DistributorForm extends ModelForm
 
     public static function getSections(): array
     {
-        $vrs = Xcart::app()->user->hasRoles(['vrs', 'vrv']);
-        foreach (parent::getSections() as $key => $section) {
-            $res[$key] = array_filter($section, static fn($s) => !(($vrs === true) && $s['hidden'] ?? false === true));
+        if (Xcart::app()->user->hasRoles(['vrs', 'vrv'])) {
+            foreach (parent::getSections() as $key => $section) {
+                $res[$key] = array_filter($section, static fn($k, $s) => in_array($s, self::$vrs, true), ARRAY_FILTER_USE_BOTH);
+            }
+            return $res ?? [];
         }
-        return $res ?? [];
+
+        if (Xcart::app()->user->hasRoles(['fqa'])) {
+            foreach (parent::getSections() as $key => $section) {
+                $res[$key] = array_filter($section, static fn($k, $s) => in_array($s, self::$fqa, true), ARRAY_FILTER_USE_BOTH);
+            }
+            return $res ?? [];
+        }
+
+        return parent::getSections();
     }
 
     /**
-     * переделать ассоциативный массив секций в обычный, чтобы при переводе в json порядок не нарушался
-     * @param callable|null $map позволяет модифицировать элементы массива
+     * Переделать ассоциативный массив секций в обычный, чтобы при переводе в json порядок не нарушался
+     * @param callable|null $map Позволяет модифицировать элементы массива
     */
     public static function getSectionsArray(?callable $map): array
     {
@@ -193,23 +206,25 @@ class DistributorForm extends ModelForm
         $array = [];
 
         foreach ($sections as $name => $sub_sections_list) {
-            $item = [
-                'name' => $name,
-                'sub_sections' => [],
-            ];
+            if ($sub_sections_list) {
+                $item = [
+                    'name' => $name,
+                    'sub_sections' => [],
+                ];
 
-            foreach ($sub_sections_list as $key => $sub_section) {
-                $sub_section['key'] = $key;
+                foreach ($sub_sections_list as $key => $sub_section) {
+                    $sub_section['key'] = $key;
 
-                if ($map){
-                    $map($sub_section);
+                    if ($map){
+                        $map($sub_section);
+                    }
+
+                    $item['sub_sections'][] = $sub_section;
                 }
 
-                $item['sub_sections'][] = $sub_section;
+
+                $array[] = $item;
             }
-
-
-            $array[] = $item;
         }
 
         return $array;

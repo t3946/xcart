@@ -8,6 +8,6 @@
 +----------------------------------------------------------------------+
 *}
 
-{if (!$xcartApp->user->hasRoles(['vrs','vrv']))}
+{if (!$xcartApp->user->hasRoles(['vrs','vrv','fqa']))}
 <a class="VertMenuItems" href="{$catalogs.admin}/cidev_admin_filters.php">{$lng.lbl_cidev_best_search_filter} (SF)</a>
 {/if}

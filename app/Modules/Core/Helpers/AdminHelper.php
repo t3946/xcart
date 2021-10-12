@@ -71,7 +71,7 @@ class AdminHelper
 
         //старое меню
         $user = Xcart::app()->user;
-        if (!$user->hasRoles(['vrs', 'vrv'])) {
+        if (!$user->hasRoles(['vrs', 'vrv','fqa'])) {
             $old_menu = [
                 [
                     "name" => "Management",

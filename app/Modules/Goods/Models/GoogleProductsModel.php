@@ -34,8 +34,8 @@ class GoogleProductsModel extends Model
             ],
             'shopping_status' => [
                 'class' => CharField::class,
-                'null' => false,
-                'default' => ''
+                'null' => true,
+                'default' => null
             ],
         ];
     }

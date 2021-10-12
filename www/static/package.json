@@ -98,7 +98,7 @@
     "redux-saga": "^1.1.3",
     "redux-thunk": "^2.2.0",
     "regenerator-runtime": "^0.13.7",
-    "select2": "^4.1.0-rc.0",
+    "select2": "^4.0.13",
     "simplebar": "^2.6.1",
     "slick-carousel": "^1.8.1",
     "source-map-loader": "^2.0.1",

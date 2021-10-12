@@ -79,9 +79,13 @@ class ProductVerificationAdmin extends Admin
                 );
                 return implode('<br/>', $links);
             case 'productcode':
-                return "<a target='_blank' href='{$item->getAdminUrl()}'>{$item->$property}</a>";
+                $len = mb_strlen($item->$property);
+                $name = ($len > 30) ? mb_substr($item->$property, 0, 30) . '...' : $item->$property;
+                return "<a target='_blank' href='{$item->getAdminUrl()}'>{$name}</a>";
             case 'product':
-                return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$item->getFrontendName()}</a>";
+                $len = mb_strlen($item->getFrontendName());
+                $name = ($len > 30) ? mb_substr($item->getFrontendName(), 0, 30) . '...' : $item->getFrontendName();
+                return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$name}</a>";
             case 'link':
                 return $item->getDistributorUrl()
                     ? "<a target='_blank' href='{$item->getDistributorUrl()}'>{$item->getMpn()}</a>"
@@ -96,6 +100,9 @@ class ProductVerificationAdmin extends Admin
     public function getAvailableListColumns()
     {
         return [
+            'distributor' => [
+                'title' => 'Dx'
+            ],
             'product' => [
                 'title' => 'Front End'
             ],
@@ -105,7 +112,7 @@ class ProductVerificationAdmin extends Admin
             ],
             'link' => [
                 'template' => $this->columnDefaultTemplate,
-                'title' => 'Distr Website',
+                'title' => 'Dx Website',
             ],
             'verification_status' => [
                 'template' => 'list/columns/default.tpl',

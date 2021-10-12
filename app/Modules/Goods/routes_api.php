@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Brand\Controllers\DefaultController;
 use Modules\Goods\Controllers\Api\ApiAnalyticController;
 use Modules\Goods\Controllers\Api\ApiImageController;
 use Modules\Goods\Controllers\Api\ApiProductController;
@@ -87,7 +88,7 @@ return [
     ],
     [
         'route' => 'brand/{i:id}/{slug:slug}/',
-        'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
+        'target' => [DefaultController::class, 'actionViewOld'],
         'name' => 'viewApi'
     ],
     [
