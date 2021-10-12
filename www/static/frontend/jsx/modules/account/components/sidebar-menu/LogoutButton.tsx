@@ -20,7 +20,10 @@ const LogoutButton: React.FC<PropsInterface> = function (
       logoutAction({
         callback() {
           dispatch(userClearAction());
-          history.push(route("account:login"));
+
+          if (history) {
+            history.push(route("account:login"));
+          }
         },
       })
     );
