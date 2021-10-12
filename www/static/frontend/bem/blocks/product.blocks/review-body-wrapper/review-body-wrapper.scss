@@ -2,14 +2,4 @@
   position: relative;
   max-height: rem-calc(300);
   overflow: hidden;
-
-  &:after {
-    position: absolute;
-    content: '';
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: rem-calc(10);
-    background: linear-gradient(to top, #ffffff 20%, transparent);
-  }
 }

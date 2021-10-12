@@ -1,6 +1,6 @@
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import React from "react";
-import Review from "@client/modules/product/Components/Review";
+import Review from "@client/modules/product/Components/Review/Review";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 

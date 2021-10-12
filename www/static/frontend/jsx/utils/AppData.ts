@@ -13,6 +13,10 @@ export const route = function (
 ): string {
   let path = appData.routes[slug];
 
+  if (!path) {
+    console.error("Unknown path " + slug);
+  }
+
   const interpolations = path.match(/{\w+:\w+}/gi);
 
   if (!interpolations) {

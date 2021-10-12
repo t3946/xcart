@@ -2,3 +2,13 @@ export const getRatingsAndReviewsAction = (payload: Record<any, any>): any => ({
   type: "GET_PRODUCT_RATINGS_AND_REVIEWS",
   payload,
 });
+
+export const markHelpfulAction = (payload: Record<any, any>): any => ({
+  type: "MARK_HELPFUL",
+  payload,
+});
+
+export const unmarkHelpfulAction = (payload: Record<any, any>): any => ({
+  type: "UNMARK_HELPFUL",
+  payload,
+});

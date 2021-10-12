@@ -10,6 +10,7 @@ use Modules\Reviews\Models\HelpfulReviewsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\TotalProductReviewsModel;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Exceptions\Exception;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Expression;
@@ -125,6 +126,9 @@ class ReviewsApi extends FrontendController
         $offset = $this->data['offset'] ?: 0;
         $limit = $this->data['limit'] ?: 10;
         $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
+        $qs = HelpfulReviewsModel::objects()->getQuerySet();
+        $alias = $qs->getTableAlias();
+        $user_id = $this->getUser()->user_id;
 
         $query_set = ProductReviewsModel::objects()
             ->select([
@@ -134,6 +138,7 @@ class ReviewsApi extends FrontendController
                 'overall_rating' => 'rating__rating',
                 'user_public_name' => 'user__public_name',
                 'user_avatar' => 'user__avatar_image',
+                'markedHelpful' => new Expression("IF($alias.user_id, true, false)"),
             ])
             ->asArray()
             ->limit($limit)
@@ -141,6 +146,7 @@ class ReviewsApi extends FrontendController
             ->filter([
                 'product_id' => $product_id,
                 new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
+                new QOr(['helpful__user_id' => $user_id, 'helpful__user_id__isnull' => true]),
             ]);
 
         switch ($sort) {
@@ -199,10 +205,18 @@ class ReviewsApi extends FrontendController
     {
         $user = $this->getUser();
 
-        (new HelpfulReviewsModel([
+        $data = [
             'review_id' => $this->data['reviewId'],
             'user_id' => $user->user_id,
-        ]))->save();
+        ];
+        $object = HelpfulReviewsModel::objects()->get($data);
+
+        if (!$object) {
+            (new HelpfulReviewsModel([
+                'review_id' => $this->data['reviewId'],
+                'user_id' => $user->user_id,
+            ]))->save();
+        }
 
         $this->jsonResponse(["result" => "ok"]);
     }
