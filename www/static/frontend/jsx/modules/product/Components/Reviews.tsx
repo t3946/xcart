@@ -3,6 +3,7 @@ import React from "react";
 import Review from "@client/modules/product/Components/Review/Review";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import ReviewSkeleton from "@client/modules/product/Components/Review/ReviewSkeleton";
 
 interface PropsInterface {
   productId: number;
@@ -25,12 +26,17 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
     },
   ];
   const [selectedItem, setSelectedItem] = React.useState(sortItems[0]);
+  const reviewSkeletonsNumber = 3;
 
   function reviewsTemplate() {
     const reviewsTemplates = [];
 
     if (!reviews) {
-      return reviewsTemplates;
+      return Array(reviewSkeletonsNumber).fill(
+        <ReviewSkeleton />,
+        0,
+        reviewSkeletonsNumber
+      );
     }
 
     for (const review of reviews) {
