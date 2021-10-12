@@ -72,7 +72,7 @@ class OrderSearchStore extends BaseStore
      *
      * @return bool
      */
-    private function checkNot($type)
+    private function checkNot($type): bool
     {
         $type = explode('.', $type);
 
@@ -311,11 +311,13 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['tag']) || $this->checkNot('order.tag')) {
-                $qs->join('inner join', 'xcart_orders_additional_tags', ['orderid' => 'tagl.orderid'], 'tagl');
+                $qs->join('left join', 'xcart_orders_additional_tags', ['orderid' => 'tagl.orderid'], 'tagl');
 
-                $val = ($data['order']['tag']) ? $data['order']['tag'] : [''];
+                $val = ($data['order']['tag']) ?: [''];
 
-                $this->getQ(['tagl.status_id__in' => $val], 'order.tag');
+                $this->where[] = $this->checkNot('order.tag')
+                    ? new QOr([new QAndNot(['tagl.status_id__in' => $val]), ['tagl.status_id__isnull' => true]])
+                    : new QAnd(['tagl.status_id__in' => $val]);
             }
 
             if (!empty($data['order']['distributor']) || $this->checkNot('order.distributor')) {
