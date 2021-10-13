@@ -14,7 +14,7 @@ const ReviewsReducer = (
       store[action.productId] = store[action.productId].concat(action.reviews);
 
       return { ...store };
-    case "SET_HELPFUL": {
+    case "SET_HELPFUL":
       for (const product_id in store) {
         const reviews = store[product_id];
 
@@ -29,7 +29,17 @@ const ReviewsReducer = (
       }
 
       return { ...store };
-    }
+
+    case "ADD_REVIEWS":
+      const { productId, reviews } = action.payload;
+
+      if (!store[productId]) {
+        store[productId] = [];
+      }
+
+      store[productId] = [...store[productId], ...reviews];
+      return { ...store };
+
     default:
       return store;
   }

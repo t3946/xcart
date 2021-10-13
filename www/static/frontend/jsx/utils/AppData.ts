@@ -1,5 +1,11 @@
 const newWindow: any = window;
-const appData = newWindow.appData;
+
+const appData: {
+  routes: Record<string, string>;
+  reviews: {
+    orders: any[];
+  };
+} = newWindow.appData;
 
 /**
  * get route path by slug
@@ -30,8 +36,10 @@ export const route = function (
   }
 
   for (let i = 0; i < interpolations.length; i++) {
-    path = path.replace(interpolations[i], routeParams[i]);
+    path = path.replace(interpolations[i], <string>routeParams[i]);
   }
 
   return path;
 };
+
+export default appData;

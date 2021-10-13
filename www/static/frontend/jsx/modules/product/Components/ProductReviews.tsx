@@ -48,7 +48,9 @@ const ProductReviews: React.FC = function () {
       );
     }
   } else {
-    dispatch(getRatingsAndReviewsAction({ data: { productId } }));
+    dispatch(
+      getRatingsAndReviewsAction({ data: { productId, limit: 3, offset: 0 } })
+    );
   }
 
   function featureRatingsTemplate() {

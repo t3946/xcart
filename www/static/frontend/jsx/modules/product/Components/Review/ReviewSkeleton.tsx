@@ -1,22 +1,49 @@
 import React from "react";
 import RatingStars from "@client/modules/shared/components/ratings/RatingStars";
 import classnames from "classnames";
+import { useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 
 const ReviewSkeleton: React.FC = function () {
   const classes = {
     header: ["review__header", "review-header", "skeleton-box"],
   };
 
+  function markAsHelpfulTemplate() {
+    const user = useSelector((e: AccountStore) => e.user);
+
+    if (!user) {
+      return;
+    }
+
+    return (
+      <div
+        className={
+          "d-flex flex-column flex-md-row align-items-center mx--10 mx-md-0 mt-3"
+        }
+      >
+        <button className={"form-button w-100 w-md-auto skeleton-box"}>
+          helpful
+        </button>
+
+        <a
+          href="#"
+          className={"common-link review__report-abuse-link skeleton-box"}
+        >
+          Report abuse
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className={"reviews__review review"}>
-      <div>
-        <img
-          src={""}
-          width={32}
-          height={32}
-          className={"review-avatar-image review__avatar skeleton-box"}
+      <div className={"d-flex align-items-center"}>
+        <span
+          className={
+            "review-avatar-image review__avatar skeleton-box d-inline-block"
+          }
         />
-
         <span className="skeleton-box">User Name</span>
       </div>
 
@@ -49,26 +76,7 @@ const ReviewSkeleton: React.FC = function () {
           helpful count
         </p>
 
-        <div
-          className={
-            "d-flex flex-column flex-md-row align-items-center mx--10 mx-md-0 mt-3"
-          }
-        >
-          <button
-            className={
-              "form-button w-100 w-md-auto skeleton-box"
-            }
-          >
-            helpful
-          </button>
-
-          <a
-            href="#"
-            className={"common-link review__report-abuse-link skeleton-box"}
-          >
-            Report abuse
-          </a>
-        </div>
+        {markAsHelpfulTemplate()}
       </div>
 
       <div className="review__divider reviews-divider reviews-divider" />

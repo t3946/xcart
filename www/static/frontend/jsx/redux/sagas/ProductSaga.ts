@@ -9,7 +9,7 @@ function* getProductRatingsAndReviews(action): Generator {
   const { data } = action.payload;
 
   const res: any = yield api.post<any>(
-    route("goods:api:reviews:get-ratings-and-reviews"),
+    route("reviews:api:get-ratings-and-reviews"),
     JSON.stringify(data)
   );
 
@@ -24,6 +24,53 @@ function* getProductRatingsAndReviews(action): Generator {
     productId: data.productId,
     reviews: res.reviews,
   });
+
+  yield put({
+    type: "SET_PRODUCT_REVIEWS_ORDERS",
+    reviews: res.reviewsOrders,
+  });
+}
+
+function* markHelpful(action): Generator {
+  const { data, success } = action.payload;
+
+  yield api
+    .post<any>(route("reviews:api:mark-helpful"), JSON.stringify(data))
+    .then(function (res) {
+      success(res);
+    });
+
+  yield put({
+    type: "SET_HELPFUL",
+    reviewId: data.reviewId,
+    helpful: true,
+  });
+}
+
+function* unmarkHelpful(action): Generator {
+  const { data, success } = action.payload;
+
+  yield api
+    .post<any>(route("reviews:api:unmark-helpful"), JSON.stringify(data))
+    .then(function (res) {
+      success(res);
+    });
+
+  yield put({
+    type: "SET_HELPFUL",
+    reviewId: data.reviewId,
+    helpful: false,
+  });
+}
+
+function* getReviews(action): Generator {
+  const { data, success } = action.payload;
+
+  yield api
+    .post<any>(route("reviews:api:get-reviews"), JSON.stringify(data))
+    .then(function (res) {
+      success(res);
+    });
 }
 
 export default function* reviewsActionWatcher(): SagaIterator {
@@ -31,4 +78,8 @@ export default function* reviewsActionWatcher(): SagaIterator {
     "GET_PRODUCT_RATINGS_AND_REVIEWS",
     getProductRatingsAndReviews
   );
+
+  yield takeLatest("MARK_HELPFUL", markHelpful);
+  yield takeLatest("UNMARK_HELPFUL", unmarkHelpful);
+  yield takeLatest("GET_REVIEWS", getReviews);
 }
