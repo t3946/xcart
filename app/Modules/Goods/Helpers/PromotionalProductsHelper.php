@@ -633,6 +633,12 @@ class PromotionalProductsHelper
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
+        if ($model->isGroupRoot()
+            && ($child = $model->childmodel->getFrontendChilds()->limit(1)->get())
+            && $image = $child->getMainImage()) {
+            $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
+        }
+
         if ($model && $image = $model->getMainImage()) {
             return $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
         }
