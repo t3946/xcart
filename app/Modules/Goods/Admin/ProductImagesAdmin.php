@@ -96,12 +96,11 @@ class ProductImagesAdmin extends ListViewAdmin
                 }
             }
             if ($this->ownerModel->save()) {
-                $link = $imageModel ? $imageModel->path->getValue() : $model->path->getValue();
                 $action = [
                     'product_id' => $product_model->pk ?? $this->ownerPk,
                     'dx_code' => $product_model->distributor->code,
                     'image_position' => $this->ownerModel->order_by,
-                    'image_link' => $link,
+                    'image_link' => $imageModel ? $imageModel->getCdnURL() : $model->getCdnURL(),
                     'action' => 'create'
                 ];
                 Xcart::app()->queue->send('images_action', json_encode($action, JSON_THROW_ON_ERROR));
