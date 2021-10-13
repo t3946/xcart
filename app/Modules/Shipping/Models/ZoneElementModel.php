@@ -20,23 +20,23 @@ class ZoneElementModel extends Model
     {
         return [
             'field' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
             ],
             'field_type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
             ],
             'zone' => [
                 'field' => 'zoneid',
-                'class' => ForeignField::className(),
-                'modelClass' => ZoneModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ZoneModel::class,
                 'link' => ['zoneid' => 'zoneid'],
                 'primary' => true,
             ],
             'shipping_rates' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ShippingRateModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ShippingRateModel::class,
                 'link' => ['zoneid' => 'zoneid'],
             ]
         ];

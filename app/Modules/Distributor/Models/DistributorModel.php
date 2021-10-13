@@ -91,7 +91,7 @@ class DistributorModel extends Model
 
         return [
             'manufacturerid' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
             ],
             'manufacturer' => [
                 'class' => CharField::class

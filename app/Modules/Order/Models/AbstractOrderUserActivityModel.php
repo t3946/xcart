@@ -27,20 +27,20 @@ abstract class AbstractOrderUserActivityModel extends Model
         return [
             'user' => [
                 'field' => 'user_id',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
                 'link' => ['id', 'user_id'],
                 'primary' => true,
             ],
             'order' => [
                 'field' => 'order_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['order_id' => 'orderid'],
                 'primary' => true,
             ],
             'created_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'default' => (new \DateTime())->modify('+5 seconds'),
                 'autoNowAdd' => true,
                 'autoNow' => true,

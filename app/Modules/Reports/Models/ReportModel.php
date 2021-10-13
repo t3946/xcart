@@ -19,20 +19,20 @@ class ReportModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'enabled' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => 1,
             ],
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'verboseName' => 'Report name',
             ],
             'form_data' => [
-                'class' => JsonField::className(),
+                'class' => JsonField::class,
                 'null' => false,
                 'verboseName' => 'Report condition',
             ],

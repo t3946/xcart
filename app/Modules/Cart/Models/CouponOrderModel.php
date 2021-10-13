@@ -41,35 +41,35 @@ class CouponOrderModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
 
             'order' => [
-                'class'=> ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class'=> ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['order_id' => 'orderid'],
                 'null' => true,
             ],
 
             'coupon' => [
-                'class' => ForeignField::className(),
-                'modelClass' => CouponKitModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => CouponKitModel::class,
                 'link' => ['coupon_id' => 'id'],
                 'managerFunction' => 'objectsAll',
                 'null' => false,
             ],
 
             'customer' => [
-                'class' => HasToOneField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => HasToOneField::class,
+                'modelClass' => UserModel::class,
                 'link' => ['login' => 'login'],
             ],
 
             'login' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
             ],
             'created_at' => [
-                'class' => DatetimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNowAdd' => true,
             ]
         ];

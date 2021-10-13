@@ -48,7 +48,7 @@ class ModelForm extends MixinBaseForm
 
         foreach ($instance->getFieldsInit() as $name => $field) {
             /** @var \Xcart\App\Orm\Fields\Field $field */
-            if ($field->editable === false || is_a($field, AutoField::className()) || in_array($name, $this->getExclude())) {
+            if ($field->editable === false || is_a($field, AutoField::class) || in_array($name, $this->getExclude())) {
                 continue;
             }
 

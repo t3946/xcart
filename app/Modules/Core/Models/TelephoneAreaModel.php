@@ -22,7 +22,7 @@ class TelephoneAreaModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'country_model' => [
                 'class' => ForeignField::class,

@@ -17,14 +17,14 @@ class CountUsesRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {
-        return CountUsedRestriction::className();
+        return CountUsedRestriction::class;
     }
 
     public function getFields()
     {
         return array_merge(parent::getFields(), [
             'max_use' => [
-                'class' => NumberField::className(),
+                'class' => NumberField::class,
                 'required' => true,
                 'value' => $this->getDataValue('max_use', 1),
                 'label' => 'Maximum coupon uses'

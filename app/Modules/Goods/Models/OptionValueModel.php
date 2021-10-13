@@ -20,15 +20,15 @@ class OptionValueModel extends Model
     {
         return [
             'optionid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'option_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'modified_price' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ]

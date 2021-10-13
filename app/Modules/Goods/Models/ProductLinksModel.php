@@ -15,19 +15,19 @@ class ProductLinksModel extends Model
     {
         return [
             'productid1' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => 0
             ],
             'productid2' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => 0
             ],
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],

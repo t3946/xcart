@@ -40,13 +40,13 @@ class AmazonListInboundShipment extends Model
     {
         return [
             'shipment_id' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => ''
             ],
             'are_cases_required' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'null' => false,
                 'default' => false,
             ],

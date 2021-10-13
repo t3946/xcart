@@ -18,7 +18,7 @@ class AmazonFbaProductsQuickModel extends Model
     {
         return [
             'productid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ]
         ];
     }

@@ -49,74 +49,74 @@ class Page extends TreeModel
 
         return array_merge(parent::getFields(), [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'verboseName' => 'Name'
             ],
             'url' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'verboseName' => 'Url',
             ],
             'content' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
                 'verboseName' => 'Content'
             ],
             'content_short' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
                 'verboseName' => 'Short content'
             ],
             'file' => [
-                'class' => ImageField::className(),
+                'class' => ImageField::class,
                 'null' => true,
                 'sizes' => $sizes,
                 'verboseName' => 'File',
             ],
             'created_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNowAdd' => true,
                 'verboseName' => 'Created at'
             ],
             'updated_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNow' => true,
                 'verboseName' => 'Updated at'
             ],
             'published_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => true,
                 'verboseName' => 'Published at',
             ],
             'view' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'verboseName' => 'View'
             ],
             'view_children' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'verboseName' => 'View children'
             ],
             'is_index' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'verboseName' => 'Is index (main page)'
             ],
             'no_index' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'verboseName' => 'No index'
             ],
             'is_published' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'verboseName' => 'Is published',
                 'default' => true
             ],
             'sorting' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'choices' => [
                     'published_at' => 'Published time ASC',

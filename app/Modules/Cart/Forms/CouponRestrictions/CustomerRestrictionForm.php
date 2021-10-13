@@ -11,18 +11,18 @@ class CustomerRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {
-        return CustomerRestriction::className();
+        return CustomerRestriction::class;
     }
 
     public function getFields()
     {
         return array_merge(parent::getFields(), [
             'phone' => [
-                'class' => NumberField::className(),
+                'class' => NumberField::class,
                 'value' => $this->getDataValue('phone'),
             ],
             'email' => [
-                'class' => EmailField::className(),
+                'class' => EmailField::class,
                 'value' => $this->getDataValue('email'),
             ],
         ]);

@@ -35,25 +35,25 @@ class CouponKitForm extends ModelForm
     {
         return [
             'discount' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'hint' => 'Discount by cart position'
             ],
             'max_discount' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'hint' => 'Max discount by subtotal cart'
             ],
             'description' => [
-                'class' => EditorField::className(),
+                'class' => EditorField::class,
                 'html' => [
                     'class' => 'tinymce-field',
                 ],
             ],
-            'type' => RadioField::className(),
+            'type' => RadioField::class,
             'restrictions' => [
-                'class' => ListViewField::className(),
-                'adminClass' => DiscountRestrictionAdmin::className(),
+                'class' => ListViewField::class,
+                'adminClass' => DiscountRestrictionAdmin::class,
                 'defaultOrder' => [
                     'class'
                 ]

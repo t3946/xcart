@@ -22,7 +22,7 @@ class TrackingLinksModel extends Model
     {
         return [
             'linkid' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
             ],
         ];
     }

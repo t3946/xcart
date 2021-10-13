@@ -80,24 +80,24 @@ class SiteConfigModel extends Model
             ],
 
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
                 'primary' => true
             ],
             'comment' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'category' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'length' => 32,
                 'default' => '',
             ],
             'type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => 'text',
                 'choices' => [
@@ -112,28 +112,28 @@ class SiteConfigModel extends Model
             ],
 
             'validation' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
 
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'value' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false,
                 'default' => ''
             ],
             'defvalue' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false,
                 'default' => ''
             ],
             'variants' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false,
                 'default' => ''
             ],
@@ -143,6 +143,6 @@ class SiteConfigModel extends Model
 
     public function __toString()
     {
-        return $this->value;
+        return (string)$this->value;
     }
 }

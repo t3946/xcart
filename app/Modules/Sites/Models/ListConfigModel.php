@@ -36,27 +36,27 @@ class ListConfigModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'storefront' => [
                 'field' => 'sf_code',
-                'class' => ForeignCharField::className(),
-                'modelClass' => SiteModel::className(),
+                'class' => ForeignCharField::class,
+                'modelClass' => SiteModel::class,
                 'link' => ['sf_code' => 'code'],
             ],
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
             ],
             'description' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
             ],
             'list_icon' => [
-                'class' => ImageField::className(),
+                'class' => ImageField::class,
                 'verboseName' => 'Icon on list',
             ],
             'list_image' => [
-                'class' => ImageField::className(),
+                'class' => ImageField::class,
                 'verboseName' => 'Icon background on list',
                 'sizes' => [
                     'q85' => [
@@ -78,7 +78,7 @@ class ListConfigModel extends Model
                 ],
             ],
             'position' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'verboseName' => 'Position in list',
                 'default' => 9999,
             ],

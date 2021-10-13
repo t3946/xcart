@@ -18,15 +18,15 @@ class MetaText extends Model
     {
         return [
             'title' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'verboseName' => MetaModule::t("Title")
             ],
             'code' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'verboseName' => MetaModule::t("Code")
             ],
             'text' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'verboseName' => MetaModule::t('Text')
             ]
         ];
@@ -49,6 +49,6 @@ class MetaText extends Model
 
     public function render($name)
     {
-        return self::renderString($this->{$name}, $this->params);
+        return $this->renderString($this->{$name}, $this->params);
     }
 } 

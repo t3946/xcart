@@ -25,6 +25,6 @@ class UserModule extends Module
     }
     public static function getPasswordHasher()
     {
-        return PasswordHelper::className();
+        return PasswordHelper::class;
     }
 }

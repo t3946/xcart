@@ -24,22 +24,22 @@ class ProductsSfMovesModel extends Model
         return [
 
             'batch_id' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'default' => false
             ],
 
             'productid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'default' => false
             ],
 
             'resource_id' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'default' => false
             ],
 
             'resource_type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => false,
                 'choices' => [
                     self::RESOURCE_TYPE_CATEGORY => 'Category',
@@ -49,7 +49,7 @@ class ProductsSfMovesModel extends Model
             ],
 
             'resource_extra_value' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => false
             ]
 

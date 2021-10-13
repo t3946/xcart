@@ -32,47 +32,47 @@ class CronModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'active' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'default' => false,
                 'null' => false,
             ],
             'is_run' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'default' => false,
                 'null' => false,
             ],
             'run_force' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'default' => false,
                 'null' => false,
             ],
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'null' => false,
             ],
             'command' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'null' => false,
             ],
             'schedule' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'null' => false,
             ],
             'log_file' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
             ],
             'run_start' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => true,
             ],
             'run_end' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'null' => true,
             ],
 

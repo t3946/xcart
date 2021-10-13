@@ -19,20 +19,20 @@ class ShippingProductModel extends Model
         return [
             'product' => [
                 'field' => 'product_id',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['product_id' => 'productid'],
                 'primary' => true,
             ],
             'shipping_rate' => [
                 'field' => 'shipping_rate_id',
-                'class' => ForeignField::className(),
-                'modelClass' => ShippingRateModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ShippingRateModel::class,
                 'link' => ['shipping_rate_id' => 'rateid'],
                 'primary' => true,
             ],
             'weight_ratio' => [
-                'class' => FloatField::className(),
+                'class' => FloatField::class,
             ],
         ];
     }

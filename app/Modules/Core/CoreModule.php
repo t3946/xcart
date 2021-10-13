@@ -50,7 +50,7 @@ class CoreModule extends Module
         });
 
 
-        $template->addBlockCompiler('cache', CacheCompiler::className()."::blockCacheOpen", CacheCompiler::className()."::blockCacheClose", []);
+        $template->addBlockCompiler('cache', CacheCompiler::class."::blockCacheOpen", CacheCompiler::class."::blockCacheClose", []);
 
 
 //        $template->addAccessorSmart("global_config", "config", Fenom::ACCESSOR_PROPERTY);

@@ -51,10 +51,10 @@ class BaseFraudCheckModelV2 extends Model
     {
         return [
             'question_id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'question_template_body' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null
             ],

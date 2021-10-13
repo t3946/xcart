@@ -24,51 +24,51 @@ class OrderGroupInvoiceProductModel extends Model
         return [
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
                 'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
                 'primary' => true,
             ],
             'invoice_number' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'primary' => true,
                 'default' => 0
             ],
             'item' => [
                 'field' => 'itemid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderDetailModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderDetailModel::class,
                 'link' => ['itemid' => 'itemid'],
                 'null' => false,
                 'primary' => true,
             ],
             'item_string' => [
                 'field' => 'item_string',
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
                 'primary' => true,
             ],
             'product' => [
                 'field' => 'product_id',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['product_id' => 'productid'],
                 'null' => true,
                 'default' => null,
             ],
             'updated_at' => [
-                'class' => TimestampField::className(),
+                'class' => TimestampField::class,
             ],
         ];
     }

@@ -26,19 +26,19 @@ class CouponRestrictionModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'coupon' => [
-                'class' => ForeignField::className(),
-                'modelClass' => CouponKitModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => CouponKitModel::class,
                 'link' => ['coupon_id' => 'id'],
                 'required' => true,
             ],
             'class' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => false,
             ],
             'data' => [
-                'class' => JsonField::className(),
+                'class' => JsonField::class,
                 'required' => true,
                 'default' => [],
             ]

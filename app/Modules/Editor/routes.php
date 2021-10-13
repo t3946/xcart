@@ -1,24 +1,26 @@
 <?php
 
+use Modules\Editor\Controllers\EditorController;
+
 return [
     [
         'route' => '/index',
-        'target' => [\Modules\Editor\Controllers\EditorController::className(), 'index'],
+        'target' => [EditorController::class, 'index'],
         'name' => 'index'
     ],
     [
         'route' => '/upload',
-        'target' => [\Modules\Editor\Controllers\EditorController::className(), 'upload'],
+        'target' => [EditorController::class, 'upload'],
         'name' => 'upload'
     ],
     [
         'route' => '/changed',
-        'target' => [\Modules\Editor\Controllers\EditorController::className(), 'changed'],
+        'target' => [EditorController::class, 'changed'],
         'name' => 'changed'
     ],
     [
         'route' => '/api',
-        'target' => [\Modules\Editor\Controllers\EditorController::className(), 'api'],
+        'target' => [EditorController::class, 'api'],
         'name' => 'api'
     ],
 ];

@@ -37,27 +37,27 @@ class OrderDetailModel  extends Model
     {
         return [
             'itemid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'product_model' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'null' => false,
             ],
             'back' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],
             'retail_trust_price' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0
             ],
             'extra_data' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => '',
             ],

@@ -146,7 +146,7 @@ class DropDownField extends Field
             && ($model = $this->form->getModel())
             && $field = $model->getField($this->name)
         ) {
-            if (is_a($field, ManyToManyField::className())) {
+            if (is_a($field, ManyToManyField::class)) {
                 $this->multiple = true;
 
                 $modelClass = $field->modelClass;

@@ -19,25 +19,25 @@ class UserFiltersLinkModel extends Model
             'user' => [
                 'primary' => true,
                 'field' => 'user_id',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
                 'verboseName' => 'User',
                 'link' => ['user_id' => 'id'],
             ],
             'filter' => [
                 'primary' => true,
                 'field' => 'filter_id',
-                'class' => ForeignField::className(),
-                'modelClass' => DashboardFilter::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DashboardFilter::class,
                 'verboseName' => 'Filter in dashboard',
                 'link' => ['filter_id' => 'id']
             ],
             'position_row'    => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null'  => true,
             ],
             'position_column' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null'  => true,
             ],
         ];

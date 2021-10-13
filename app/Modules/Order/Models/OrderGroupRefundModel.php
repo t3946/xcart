@@ -24,15 +24,15 @@ class OrderGroupRefundModel extends Model
         return [
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'null' => false,
                 'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'null' => false,
                 'primary' => true,
             ],

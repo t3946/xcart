@@ -10,12 +10,12 @@ use Xcart\App\Orm\Model;
 
 class HistoryDataModel extends Model
 {
-    const RESOURCE_TYPE_PRODUCT = 'product';
-    const RESOURCE_TYPE_CATEGORY = 'category';
-    const RESOURCE_TYPE_BRAND = 'brand';
+    public const RESOURCE_TYPE_PRODUCT = 'product';
+    public const RESOURCE_TYPE_CATEGORY = 'category';
+    public const RESOURCE_TYPE_BRAND = 'brand';
 
-    const FIELD_NAME_COST_TO_US = 'cost_to_us';
-    const FIELD_NAME_BRAND_ID = 'brandid';
+    public const FIELD_NAME_COST_TO_US = 'cost_to_us';
+    public const FIELD_NAME_BRAND_ID = 'brandid';
 
     public static function tableName()
     {
@@ -26,28 +26,28 @@ class HistoryDataModel extends Model
     {
         return [
             'resourceid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false
             ],
             'resource_type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false
             ],
             'changedate' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'primary' => true,
                 'autoNowAdd' => true,
                 'null' => false
             ],
             'fieldname' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false
             ],
             'value' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false
             ],

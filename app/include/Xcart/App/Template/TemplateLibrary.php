@@ -30,7 +30,7 @@ class TemplateLibrary
     public static function getExtensions()
     {
         $extensions = [];
-        $class = static::className();
+        $class = static::class;
         $reflection = new ReflectionClass($class);
         $methods = $reflection->getMethods(ReflectionMethod::IS_STATIC | ReflectionMethod::IS_PUBLIC);
         $kinds = ['function', 'functionSmart', 'modifier', 'compiler', 'accessorProperty', 'accessorFunction', 'block'];

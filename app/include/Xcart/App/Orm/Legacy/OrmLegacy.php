@@ -40,7 +40,7 @@ class OrmLegacy extends BaseOrmLegacy
 
     public static function tableName()
     {
-        $class = static::className();
+        $class = static::class;
         /** @var Data $model */
         $model = new $class;
 

@@ -21,13 +21,13 @@ class AmazonReorderBatchModel extends Model
     {
         return [
             'batch_id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'user_id' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
             ],
             'status' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'default' => 'processing',
                 'choices' => [
                     'processing' => 'Processing',
@@ -35,21 +35,21 @@ class AmazonReorderBatchModel extends Model
                 ],
             ],
             'created_at' => [
-                'class' => TimestampField::className(),
+                'class' => TimestampField::class,
             ],
             'assortment' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'default' => 'Y'
             ],
             'link' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'default' => null,
                 'null' => true
             ],
             'user' => [
                 'field' => 'user_id',
-                'class' => ForeignField::className(),
-                'modelClass' => UserModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => UserModel::class,
                 'link' => ['user_id' => 'id'],
                 'null' => false,
             ]

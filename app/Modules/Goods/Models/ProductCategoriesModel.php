@@ -18,8 +18,8 @@ class ProductCategoriesModel extends Model
         return [
             'category' => [
                 'field' => 'categoryid',
-                'class' => ForeignField::className(),
-                'modelClass' => CategoryModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => CategoryModel::class,
                 'link' => ['categoryid' => 'categoryid'],
                 'primary' => true,
                 'null' => false,
@@ -27,21 +27,21 @@ class ProductCategoriesModel extends Model
             ],
             'product' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'primary' => true,
                 'null' => false,
                 'default' => 0
             ],
             'main' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => false,
                 'null' => false,
                 'default' => 'N'
             ],
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],

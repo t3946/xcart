@@ -45,10 +45,10 @@ class SurfPathModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'additional_data' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'default' => '',
                 'null' => false
             ],

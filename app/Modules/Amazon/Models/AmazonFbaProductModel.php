@@ -19,7 +19,7 @@ class AmazonFbaProductModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ]
         ];
     }

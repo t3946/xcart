@@ -28,7 +28,7 @@ class DiscountRestrictionAdmin extends ListViewAdmin
     {
         return [
             'brand' => [
-                'class' => BrandModel::className(),
+                'class' => BrandModel::class,
                 'columns' => [
                     'brand', 'pk'
                 ],
@@ -37,7 +37,7 @@ class DiscountRestrictionAdmin extends ListViewAdmin
                 ]
             ],
             'category' => [
-                'class' => CategoryModel::className(),
+                'class' => CategoryModel::class,
                 'columns' => [
                     'category', 'pk'
                 ],
