@@ -634,7 +634,7 @@ class PromotionalProductsHelper
         }
 
         if ($model->isGroupRoot()
-            && ($child = $model->childmodel->getFrontendChilds()->limit(1)->get())
+            && ($child = $model->getFrontendChilds()->limit(1)->get())
             && $image = $child->getMainImage()) {
             $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
         }
