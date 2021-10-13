@@ -6,6 +6,10 @@
   }
 
   @include breakpoint(lg up) {
-    padding: 0 rem-calc(60) 0 rem-calc(140);
+    padding: 0 rem-calc(24) 0 rem-calc(60);
+  }
+
+  @include breakpoint(lx up) {
+    padding: 0 rem-calc(24) 0 rem-calc(140);
   }
 }

@@ -6,7 +6,7 @@
   }
 
   @include breakpoint(lg up) {
-    padding: rem-calc(38);
+    padding: rem-calc(40) rem-calc(60);
     font-size: rem-calc(16);
   }
 }

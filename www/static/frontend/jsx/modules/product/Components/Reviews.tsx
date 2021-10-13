@@ -9,6 +9,7 @@ import {
   getReviewsAction,
   addReviewsAction,
 } from "@client/jsx/redux/actions/ProductActions";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface PropsInterface {
   productId: number;
@@ -27,6 +28,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
   const [isLoading, setIsLoading] = React.useState(false);
   const orders = appData.reviews.orders;
   const [sort, setSort] = React.useState(orders[0]);
+  const breakpoint = useBreakpoint();
 
   function reviewsTemplate() {
     const reviewsTemplates = [];
@@ -92,7 +94,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
     }
 
     return (
-      <div className="product-reviews__see-more-reviews">
+      <div className="product-reviews__see-more-reviews d-lg-none">
         <button
           className={"form-button form-button__outline"}
           onClick={getMoreReviews}
@@ -104,34 +106,40 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
   }
 
   React.useEffect(function () {
+    let reviewLoadedObserver = null;
+    let target = null;
+
     if (!LastReviewRef.current || isAllLoaded) {
       return;
     }
 
-    const target = LastReviewRef.current.base;
+    breakpoint({
+      lg: function () {
+        target = LastReviewRef.current.base;
 
-    const options = {
-      root: ReviewsContainerRef.current.base,
-      rootMargin: "0px",
-      threshold: 0.75,
-    };
+        const options = {
+          root: ReviewsContainerRef.current.base,
+          rootMargin: "0px",
+          threshold: 0.75,
+        };
 
-    const reviewLoadedObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !isLoading) {
-            observer.unobserve(target);
-            getMoreReviews();
-          }
-        });
+        reviewLoadedObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !isLoading) {
+              observer.unobserve(target);
+              getMoreReviews();
+            }
+          });
+        }, options);
+
+        reviewLoadedObserver.observe(target);
       },
-      options
-    );
-
-    reviewLoadedObserver.observe(target);
+    });
 
     return function () {
-      reviewLoadedObserver.unobserve(target);
+      if (reviewLoadedObserver && target) {
+        reviewLoadedObserver.unobserve(target);
+      }
     };
   });
 
@@ -155,11 +163,13 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
         />
       </h3>
 
-      <div
-        className="reviews-container product-reviews__reviews-container common-scrollbar"
-        ref={ReviewsContainerRef}
-      >
-        {reviewsTemplate()}
+      <div className="reviews-wrapper">
+        <div
+          className="reviews-container product-reviews__reviews-container common-scrollbar"
+          ref={ReviewsContainerRef}
+        >
+          {reviewsTemplate()}
+        </div>
       </div>
 
       {seeMoreReviewsTemplate()}
