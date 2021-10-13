@@ -3,6 +3,7 @@
 namespace Xcart\App\Storage\FileNameHasher;
 
 use League\Flysystem\FilesystemInterface;
+use Xcart\App\Storage\Files\File;
 
 interface FileNameHasherInterface
 {
@@ -20,5 +21,5 @@ interface FileNameHasherInterface
      *
      * @return string
      */
-    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name, $default_extension = '');
+    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name, $default_extension = '', $file = null);
 }
