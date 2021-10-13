@@ -8,6 +8,7 @@ import appData from "@client/jsx/utils/AppData";
 import {
   getReviewsAction,
   addReviewsAction,
+  clearReviewsAction,
 } from "@client/jsx/redux/actions/ProductActions";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
@@ -29,6 +30,10 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
   const orders = appData.reviews.orders;
   const [sort, setSort] = React.useState(orders[0]);
   const breakpoint = useBreakpoint();
+
+  if (currentPage === 0 && isAllLoaded === false && !reviews && !isLoading) {
+    getMoreReviews();
+  }
 
   function reviewsTemplate() {
     const reviewsTemplates = [];
@@ -109,7 +114,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
     let reviewLoadedObserver = null;
     let target = null;
 
-    if (!LastReviewRef.current || isAllLoaded) {
+    if (!LastReviewRef.current?.base || isAllLoaded) {
       return;
     }
 
@@ -156,8 +161,11 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
           items={orders}
           onClick={(item) => {
             setSort(item);
+            dispatch(clearReviewsAction({ productId: props.productId }));
+            setCurrentPage(0);
+            setIsAllLoaded(false);
           }}
-          name={"name-qwe123"}
+          name={"select-sort"}
           value={sort}
           classes={{ group: "w-auto" }}
         />

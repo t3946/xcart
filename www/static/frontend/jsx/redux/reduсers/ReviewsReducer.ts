@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 import { productsRatingsInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { unset } from "lodash";
 
 const ReviewsReducer = (
   store: Record<number, any> = productsRatingsInitialValue,
@@ -31,13 +32,17 @@ const ReviewsReducer = (
       return { ...store };
 
     case "ADD_REVIEWS":
-      const { productId, reviews } = action.payload;
+      const { productId } = action.payload;
 
       if (!store[productId]) {
         store[productId] = [];
       }
 
-      store[productId] = [...store[productId], ...reviews];
+      store[productId] = [...store[productId], ...action.payload.reviews];
+      return { ...store };
+
+    case "CLEAR_REVIEWS":
+      unset(store, action.payload.productId);
       return { ...store };
 
     default:

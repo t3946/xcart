@@ -156,6 +156,7 @@ class ReviewsApi extends FrontendController
                 $qs = ProductReviewsModel::objects()->getQuerySet();
                 $group = (new Expression("IFNULL({$qs->getTableAlias()}.product_review_id,UUID())"))->toSql();
                 $query_set->group([$group]);
+                $query_set = $query_set->order(['-markedHelpful']);
                 break;
 
             case self::SORT_HAS_ATTACHMENTS:
