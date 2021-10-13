@@ -113,7 +113,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
     const options = {
       root: ReviewsContainerRef.current.base,
       rootMargin: "0px",
-      threshold: 0.5,
+      threshold: 0.75,
     };
 
     const reviewLoadedObserver = new IntersectionObserver(
@@ -156,7 +156,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
       </h3>
 
       <div
-        className="reviews-container product-reviews__reviews-container"
+        className="reviews-container product-reviews__reviews-container common-scrollbar"
         ref={ReviewsContainerRef}
       >
         {reviewsTemplate()}
