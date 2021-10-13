@@ -38,7 +38,7 @@ SQL;
                 $action = [
                     'product_id' => $product->pk,
                     'dx_code' => $product->distributor->code,
-                    'image_position' => $image->orderby,
+                    'image_position' => 0,
                     'image_link' => $image_url,
                     'action' => 'create'
                 ];

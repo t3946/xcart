@@ -18,6 +18,7 @@ use Xcart\App\Orm\Model;
  * @property int image_id
  * @property ImageField path
  * @property string hash
+ * @property bool is_manual
  * @property ProductImageLinkModel[]|Manager $links
  */
 class ProductImageModel extends Model
