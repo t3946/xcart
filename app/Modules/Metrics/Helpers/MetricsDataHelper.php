@@ -11,7 +11,6 @@ class MetricsDataHelper
     /**
      * @param string $metrics_name - name metrics(example: product_data)
      * @param float $result - count result data (example 5.5)
-     * @param array $params - example ['code' => 'TER', 'is_active' => 3]
      * @return string
      */
     public static function convertToMetrics(string $metrics_name, float $result): string
@@ -37,15 +36,16 @@ class MetricsDataHelper
      * @param array $data example: [['value' => 5.5, 'params' => ['code' => 'DSD']]]
      * @return string
      */
-    public static function convertMultiDataToMetricsWithParams(string $name_metrics, array $data)
+    public static function convertMultiDataToMetricsWithParams(string $name_metrics, array $data): string
     {
         $str_result = '';
-        foreach ($data as $key => $metrics_data) {
+        foreach ($data as $metrics_data) {
             $str_result .= self::convertToMetricsWithParams($name_metrics, $metrics_data['value'], $metrics_data['params']);
         }
         return $str_result;
     }
-    public static function pushMetrics(string $job_name, string $str_result, string $instance = 'host.docker.internal:80') : bool
+
+    public static function pushMetrics(string $job_name, string $str_result, string $instance = 'host.docker.internal:80'): bool
     {
         $client = new Client(['verify' => false, 'timeout' => 10]);
         $requestOptions = [
@@ -56,6 +56,7 @@ class MetricsDataHelper
             'timeout' => 20,
         ];
         $url = "http://165.22.39.66:9091/metrics/job/{$job_name}/instance/$instance";
+        /*        $url = "http://host.docker.internal:9091/metrics/job/{$job_name}/instance/$instance";*/
         $request_options['body'] = "$str_result\n";
 
         if ($response = $client->request('POST', $url, $request_options)) {

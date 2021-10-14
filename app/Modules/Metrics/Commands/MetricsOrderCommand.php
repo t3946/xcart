@@ -3,14 +3,12 @@
 namespace Modules\Metrics\Commands;
 
 use DateTime;
-use Modules\Admin\Controllers\CommonController;
-use Modules\Admin\Statistic\OrderStatistic;
 use Modules\Core\Models\CountryModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Metrics\Helpers\MetricsDataHelper;
-use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
@@ -27,7 +25,7 @@ class MetricsOrderCommand extends Command
         /** @var SiteModel $site */
         foreach (SiteModel::objects()->all() as $site) {
             $data_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
-               'name' => (string)$site,
+                'name' => (string)$site,
             ]);
         }
         /** @var PaymentMethodModel $process */
@@ -55,13 +53,13 @@ class MetricsOrderCommand extends Command
         MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
 
         $time = [
-            'Last 24 hours' => new \DateTime('-1 days'),
-            'Last 7 days' => new \DateTime('-7 days'),
-            'Last 30 days' => new \DateTime('-30 days'),
-            'Last 90 days' => new \DateTime('-90 days')
+            'Last 24 hours' => new DateTime('-1 days'),
+            'Last 7 days' => new DateTime('-7 days'),
+            'Last 30 days' => new DateTime('-30 days'),
+            'Last 90 days' => new DateTime('-90 days')
         ];
         /** @var OrderModel $order */
-        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()]) as $order) {
+        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()])->cache(300) as $order) {
             $site = $order->site;
             $name_process = (string)$order->payment_method;
             $name_process = "$name_process [{$order->payment_method->pk}]";
@@ -70,7 +68,13 @@ class MetricsOrderCommand extends Command
                 $name_dx = "[{$group_model->manufacturer->code}] $name_dx";
                 foreach ($time as $period => $date_time) {
                     if ($order->date > $date_time->getTimestamp()) {
-                        $ar_metrics[$period][] = [
+                        if (in_array($group_model->cb_status, [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED])) {
+                            $gross_margin = [
+                                'gross_profit' => $group_model->accounting_gross_5_profit,
+                                'sales_volume' => $group_model->accounting_gross_0,
+                            ];
+                        }
+                        $data_order = [
                             'order_id' => $order->pk,
                             'dx_name' => $name_dx,
                             'site' => (string)$site,
@@ -79,18 +83,76 @@ class MetricsOrderCommand extends Command
                             'country' => (string)$order->billing_country,
                             'sum' => $group_model->total_gross,
                             'payment_process' => $name_process,
+                            'gross_margin' => $gross_margin ?? [],
                         ];
+                        $ar_metrics[$period][] = $data_order;
                     }
                 }
             }
         }
         foreach ($ar_metrics as $period => $orders) {
             foreach ($orders as $order_info) {
+                if (!empty($order_info['gross_margin'])) {
+                    $str_result .= MetricsDataHelper::convertToMetricsWithParams(
+                        'order_gross_profit',
+                        $order_info['gross_margin']['gross_profit'], [
+                            'order_id' => $order_info['order_id'],
+                            'period' => $period,
+                            'dx_name' => $order_info['dx_name']
+                        ]
+                    );
+
+                    $str_result .= MetricsDataHelper::convertToMetricsWithParams('order_sales_volume',
+                        $order_info['gross_margin']['sales_volume'], [
+                            'order_id' => $order_info['order_id'],
+                            'period' => $period,
+                            'dx_name' => $order_info['dx_name']
+                        ]
+                    );
+                }
+
+
+                unset($order_info['gross_margin']);
                 $str_result .= MetricsDataHelper::convertToMetricsWithParams(
                     'orders',
                     $order_info['sum'],
                     array_merge($order_info, ['period' => $period])
                 );
+            }
+        }
+
+        foreach ($time as $period => $date_time) {
+            /* Получение медианного среднего чека за определённый период */
+            $orders_by_period = OrderGroupModel::objects()
+                ->filter([
+                    'order__date__gte' => $date_time->getTimestamp(),
+                    'cb_status__in' => [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED]
+                ])
+                ->group(['orderid'])->order(['order__total']);
+            $order_list = $orders_by_period->all();
+
+            $medium_order_counter = round($orders_by_period->count() / 2);
+            /** @var OrderGroupModel $median_order */
+            $median_order = $order_list[$medium_order_counter - 1];
+            if (!empty($median_order)) {
+                $str_result .= MetricsDataHelper::convertToMetricsWithParams('median_order_amount', $median_order->order->total, [
+                    'period' => $period,
+                    'order_id' => $median_order->orderid
+                ]);
+            }
+
+            /* Получение среднего кол-ва товаров по заказам */
+            $amount_items = 0;
+            /** @var OrderGroupModel $order */
+            foreach ($order_list as $order) {
+                foreach ($order->detail_models as $detail_model) {
+                    $amount_items += $detail_model->amount;
+                }
+            }
+            if (!empty($amount_items)) {
+                $str_result .= MetricsDataHelper::convertToMetricsWithParams('average_amount_items', $amount_items, [
+                    'period' => $period
+                ]);
             }
         }
         $result = MetricsDataHelper::pushMetrics('order-info', "$str_result\n");

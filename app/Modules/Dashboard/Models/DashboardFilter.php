@@ -21,6 +21,10 @@ use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string name
+ * @property GroupModel group
+ */
 class DashboardFilter extends Model
 {
     private $s_store = null;
