@@ -885,7 +885,7 @@ function func_show_login_password_info(manufacturerid) {
         <td>&nbsp;</td>
         <td width="80%">
             {if $distributorModel}
-                {assign var=carriers value=$distributorModel->carriers->order(['orderby']))}
+                {assign var=carriers value=$distributorModel->carriers->order(['orderby'])}
                 {assign var=ccc value=$carriers->valuesList(['carrier_id'], true)}
             {/if}
             <select name="distributor_carrier[]" multiple class="select2" style="width: 80%">
