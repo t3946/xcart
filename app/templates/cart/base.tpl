@@ -14,7 +14,7 @@
                         <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg"
                              alt="{$site->company_name}" class="show-for-large logo-big">
 
-                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site>code|lower}/logo-small.svg"
+                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo-small.svg"
                              alt="{$site->company_name}"
                              class="show-for-small hide-for-large logo-small">
                     </a>
