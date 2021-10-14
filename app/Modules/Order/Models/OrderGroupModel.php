@@ -43,6 +43,8 @@ use Xcart\OrderGroup;
  * @property bool notify_sent
  * @property Manager|OrderDetailModel[] detail_models
  * @property float total_tax
+ * @property float accounting_gross_5_profit
+ * @property float accounting_gross_0
  * @property OrderOffHourMessageModel|null off_hours_message
  * @property OrderGroupTaxModel[]|Manager tax_rates
  */
