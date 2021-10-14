@@ -248,6 +248,15 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['group.shippingid__in' => $val], 'order.delivery_method');
             }
 
+            if (!empty($data['order']['order_submission_methods']) || $this->checkNot('order.order_submission_methods')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_manufacturers', ['manufacturer.manufacturerid' => 'group.manufacturerid'], 'manufacturer');
+
+                $val = $data['order']['order_submission_methods'] ?: [''];
+
+                $this->getQ(['manufacturer.submit_to_operator__in' => $val], 'manufacturer.submit_to_operator');
+            }
+
             if (!empty($data['order']['c2b_status']) || $this->checkNot('order.c2b_status')) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
 

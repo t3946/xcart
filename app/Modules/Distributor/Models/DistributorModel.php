@@ -598,6 +598,14 @@ class DistributorModel extends Model
             'expertise' => [
                 'class' => BooleanField::class,
                 'default' => false
+            ],
+            'submit_to_operator' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'through_distributor_website' => 'through distributor website',
+                    'by_email_or_and_fax' => 'by email or/and fax',
+                ],
+                'default' => 'through_distributor_website'
             ]
         ];
     }

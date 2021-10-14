@@ -67,6 +67,7 @@ class SearchHelper
                 'manual_string'        => OrderSearchStore::CONST_MANUAL_STRING,
                 'reconciliation_status'=> OrderSearchStore::getReconciliationStatuses(),
                 'transaction_status'   => OrderTransactionModel::getFields()['transaction_status']['choices'],
+                'order_submission_methods' => DistributorModel::getFields()['submit_to_operator']['choices'],
             ];
 
             Xcart::app()->cache->set($key, $properties,120 + rand(0, 120));
