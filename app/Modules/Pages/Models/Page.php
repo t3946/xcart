@@ -249,7 +249,7 @@ class Page extends TreeModel
                 'root' => $this->root,
                 'view_children__isnull' => false
             ])
-            ->order('-lft')
+            ->order(['-lft'])
             ->get();
 
         return $model ? $model->view_children : null;

@@ -361,8 +361,8 @@ if (!empty($active_modules['Multiple_Storefronts']) && $option === 'Multiple_Sto
 		->get(['storefrontid' => $current_storefront])
 		->config
 		->filter(['name__in' => array_keys(\Modules\Sites\Models\SiteConfigModel::SITE_CONFIG_PARAMS)])
-		->order('orderby')
-		->valuesList('*');
+		->order(['orderby'])
+		->valuesList(['*']);
 	$configuration[] = [
 		'name' => 'sf_top_image_favicon',
 		'comment' => 'Storefront favicon',

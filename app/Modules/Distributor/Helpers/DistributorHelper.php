@@ -30,7 +30,7 @@ class DistributorHelper
     {
         $to = $dx->contacts_model->filter([
             'utility__utility_id' => $unity_type
-        ])->valuesList('email', true);
+        ])->valuesList(['email'], true);
 
         $to = array_unique(array_map('trim', $to));
 

@@ -188,7 +188,7 @@ abstract class ManagerBase implements ManagerInterface, IteratorAggregate, Array
     /**
      * {@inheritdoc}
      */
-    public function filter($conditions)
+    public function filter($conditions): QuerySetInterface
     {
         $this->getQuerySet()->filter($conditions);
         return $this;

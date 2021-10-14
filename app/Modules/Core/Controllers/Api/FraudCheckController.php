@@ -68,7 +68,7 @@ class FraudCheckController extends Controller
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getGlobalConfig();
 
-        $fraud_status = FraudStatusModel::objects()->order('order_by')->valuesList(['code', 'name']);
+        $fraud_status = FraudStatusModel::objects()->order(['order_by'])->valuesList(['code', 'name']);
         $ar_settings['data'] = [
             'fraud_domains_free_email_provider' => $config['fraud_domains_free_email_provider'] ?? '',
             'Overall_RS_threshold_for_Clear_status' => (float)$config['Overall_RS_threshold_for_Clear_status'] ?? 0,

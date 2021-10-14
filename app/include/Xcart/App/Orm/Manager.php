@@ -2,6 +2,8 @@
 
 namespace Xcart\App\Orm;
 
+use Exception;
+
 /**
  * Class Manager
  * @package Xcart\App\Orm
@@ -41,9 +43,10 @@ class Manager extends ManyToManyManager
     /**
      * @param array $conditions
      *
-     * @return \Xcart\App\Orm\ModelInterface|null
+     * @return ModelInterface|null|array
+     * @throws Exception\MultipleObjectsReturned
      */
-    public function get($conditions = [])
+    public function get(array $conditions = [])
     {
         return $this->getQuerySet()->get($conditions);
     }
@@ -150,9 +153,12 @@ class Manager extends ManyToManyManager
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $q
+     * @param bool|null $flat
+     * @return array
+     * @throws Exception
      */
-    public function valuesList($q, $flat = false)
+    public function valuesList(array $q, ?bool $flat = false): array
     {
         return $this->getQuerySet()->valuesList($q, $flat);
     }

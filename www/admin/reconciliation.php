@@ -551,7 +551,7 @@ if ($REQUEST_METHOD == "POST") {
             $_filter_m = ['distributors__manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
 
 
-        $reconcileModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m))->order('id')->all();
+        $reconcileModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m))->order(['id'])->all();
 
         $orderReconcile = OrderGroupModel::objects()->filter([
             'order__date__gte' => $search_data['reconciliation_tab_calculation']['date']['start_date'],
@@ -618,7 +618,7 @@ if ($REQUEST_METHOD == "POST") {
                         /*
                          * Hack for Amazon distributor
                          */
-                        if (($amz_dx = $r_model->distributors->valuesList('manufacturerid', true)) && !in_array(578, $amz_dx)) {
+                        if (($amz_dx = $r_model->distributors->valuesList(['manufacturerid'], true)) && !in_array(578, $amz_dx)) {
                             $f_invoice['manufacturerid__in'] = $amz_dx;
                         }
                         foreach (OrderGroupInvoiceModel::objects()->filter($f_invoice) as $groupInvoice) {

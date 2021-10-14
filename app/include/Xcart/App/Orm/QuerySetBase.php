@@ -195,9 +195,10 @@ abstract class QuerySetBase implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+     * @param array $filter
      * @return array
      */
-    abstract public function all();
+    abstract public function all(array $filter = []): array;
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>

@@ -620,7 +620,9 @@ class PromotionalProductsHelper
             new Expression("date >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 30 DAY))"),
         ])
             ->cache(Cache::CACHE_DAY)
-            ->order([new Expression('SUM(amount) DESC')])->group(['order_details__orderid', 'productid'])->valuesList('pk', true);
+            ->order([new Expression('SUM(amount) DESC')])
+            ->group(['order_details__orderid', 'productid'])
+            ->valuesList(['pk'], true);
     }
 
     public static function getProductOfTheDayImage(ProductModel $model = null): string

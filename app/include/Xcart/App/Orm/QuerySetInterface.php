@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: max
- * Date: 07/12/2016
- * Time: 16:04
- */
 
 namespace Xcart\App\Orm;
 
@@ -17,16 +11,16 @@ use Doctrine\Dbal\Connection;
 interface QuerySetInterface
 {
     /**
-     * @param $conditions
-     * @return array|ModelInterface
+     * @param array $conditions
+     * @return array|null|ModelInterface
      */
-    public function get($conditions = []);
+    public function get(array $conditions = []);
 
     /**
-     * @param array $conditions
+     * @param array|string $conditions
      * @return $this
      */
-    public function filter($conditions);
+    public function filter($conditions): QuerySetInterface;
 
     /**
      * @param array $conditions

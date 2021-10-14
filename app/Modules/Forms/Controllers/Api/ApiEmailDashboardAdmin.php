@@ -362,7 +362,7 @@ class ApiEmailDashboardAdmin extends Controller
 
     public function actionGetLabels(): array
     {
-        $label_list = LabelModel::objects()->filter(['type' => LabelModel::LABEL_TYPE_USER])->order('name')->asArray(true)->all();
+        $label_list = LabelModel::objects()->filter(['type' => LabelModel::LABEL_TYPE_USER])->order(['name'])->asArray(true)->all();
         return $label_list;
     }
 

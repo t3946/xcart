@@ -218,7 +218,7 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
             $dx = DistributorModel::objects()->get(['manufacturerid' => $mid]);
             $ato = $dx->contacts_model->filter([
                 'utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY
-            ])->valuesList('email', true);
+            ])->valuesList(['email'], true);
 
             $ato = array_unique(array_map('trim', $ato));
             $to .= implode(',', $ato);

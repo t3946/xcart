@@ -38,7 +38,7 @@ if ($ogModels) {
         try {
             $res = AmazonFbaOutboundHelper::getFulfillmentOrderTrackingNumbers($oClientPack->callGetFulfillmentOrder($ogm->getAmazonShippingOrderId()));
             if ($res) {
-                $tracks = $ogm->trackings->valuesList('tracknum', true);
+                $tracks = $ogm->trackings->valuesList(['tracknum'], true);
 
                 foreach ($res as $amTrack) {
                     if (!in_array($amTrack['track_number'], $tracks, true)) {

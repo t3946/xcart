@@ -53,7 +53,7 @@ class DistributorRequestAvailForm extends DistributorForm
                     }
                     return $result ?? [];
                 },
-                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY])->valuesList('id', true),
+                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::REQUEST_AVAIL_UTILITY])->valuesList(['id'], true),
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
                 'hidden' => $dx ? !$dx->d_availability_must_be_checked : false,
