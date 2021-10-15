@@ -2,6 +2,7 @@
 
 namespace Modules\Reviews\Controllers\Api;
 
+use Modules\Account\Controllers\AccountController;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\Models\ReviewRatingsModel;
@@ -14,6 +15,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
+use XeroPHP\Models\Accounting\Account;
 
 class ReviewsApi extends FrontendController
 {
@@ -40,7 +42,7 @@ class ReviewsApi extends FrontendController
         ]))->save();
     }
 
-    public function getRatings()
+    public function getTotalRatings(): array
     {
         $total_product_ratings = TotalProductRatingsModel::objects()->all(['product_id' => $this->data['productId']]);
         $ratings = array_map(function ($total_model) {
@@ -90,7 +92,7 @@ class ReviewsApi extends FrontendController
 
     public function getRatingsAction()
     {
-        $this->jsonResponse($this->getRatings());
+        $this->jsonResponse($this->getTotalRatings());
     }
 
     public function createReview()
@@ -98,7 +100,7 @@ class ReviewsApi extends FrontendController
         $review_data = [
             'header' => $this->data['header'],
             'body' => $this->data['body'],
-            'product_id' => $this->data['product_id'],
+            'product_id' => $this->data['productId'],
         ];
         $review_data['user_id'] = (int)Xcart::app()->getUser()->user_id;
         $ip = Xcart::app()->request->getUserIP();
@@ -106,13 +108,13 @@ class ReviewsApi extends FrontendController
         $review = new ProductReviewsModel($review_data);
         $review->save();
 
-        $product_review_id = $review->getAttribute('product_review_id');
+        $product_review_id = $review->pk;
 
         foreach ($this->data['ratings'] as $slug => $rating) {
             $this->createRating($product_review_id, $slug, $rating);
         }
 
-        $this->jsonResponse($review->toArray());
+        $this->jsonResponse($review->getAttributes());
     }
 
     /**
@@ -132,6 +134,7 @@ class ReviewsApi extends FrontendController
             'user_public_name' => 'user__public_name',
             'user_avatar' => 'user__avatar_image',
             'markedHelpful' => new Expression("IF($alias.user_id, true, false)"),
+            "created_timestamp" => "UNIX_TIMESTAMP(created)",
         ];
         $filter_fields = [
             'product_id' => $product_id,
@@ -163,7 +166,8 @@ class ReviewsApi extends FrontendController
                 break;
 
             case self::SORT_NEW:
-                $query_set = $query_set->order(['-product_review_id']);
+                $query_set = $query_set->order(['-created_timestamp']);
+                $query_set->group(["product_review_id"]);
                 break;
         }
 
@@ -179,7 +183,7 @@ class ReviewsApi extends FrontendController
     public function getReviewsAction()
     {
         $product_id = $this->data['productId'];
-        $sort = $this->data['sort'] || self::SORT_DEFAULT;
+        $sort = $this->data['sort'] ?: self::SORT_DEFAULT;
         $offset = $this->data['offset'];
         $limit = $this->data['limit'];
         $this->jsonResponse($this->getReviews($product_id, $limit, $offset, $sort));
@@ -199,7 +203,7 @@ class ReviewsApi extends FrontendController
         $limit = $this->data['limit'];
 
         $this->jsonResponse([
-            'ratings' => $this->getRatings(),
+            'ratings' => $this->getTotalRatings(),
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort),
             'totalReviews' => $this->getTotalReviews(),
             'reviewsOrders' => [
@@ -216,6 +220,7 @@ class ReviewsApi extends FrontendController
                     "value" => self::SORT_NEW,
                 ],
             ],
+            'product' => AccountController::getProduct($this->data['productId']),
         ]);
     }
 

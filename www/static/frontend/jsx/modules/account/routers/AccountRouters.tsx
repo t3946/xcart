@@ -51,6 +51,7 @@ import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
 import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
+import ReviewForm from "@client/jsx/modules/account/components/review/ReviewForm";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -341,6 +342,11 @@ export const AccountRouters = (): any => {
                     "account:two-step-verification-recovery-password-assistance"
                   )}
                   component={PasswordAssistance}
+                />
+                <Route
+                  exact
+                  path={route("account:review")}
+                  component={PageContainerHoc(<SideBarMenu />, <ReviewForm />)}
                 />
               </Switch>
             </div>

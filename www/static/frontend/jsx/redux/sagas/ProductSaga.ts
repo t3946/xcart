@@ -20,14 +20,13 @@ function* getProductRatingsAndReviews(action): Generator {
   });
 
   yield put({
-    type: "ADD_PRODUCT_REVIEWS",
-    productId: data.productId,
-    reviews: res.reviews,
+    type: "SET_PRODUCT_REVIEWS_ORDERS",
+    reviews: res.reviewsOrders,
   });
 
   yield put({
-    type: "SET_PRODUCT_REVIEWS_ORDERS",
-    reviews: res.reviewsOrders,
+    type: "SET_PRODUCT",
+    product: res.product,
   });
 }
 

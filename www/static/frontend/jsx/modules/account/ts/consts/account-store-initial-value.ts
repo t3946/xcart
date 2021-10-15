@@ -84,6 +84,7 @@ const accountStoreInitialValue = {
   publicProfile: publicProfileInitialValue,
   productsRatings: productsRatingsInitialValue,
   productsReviews: productsReviewsInitialValue,
+  product: null,
 };
 
 export default accountStoreInitialValue;

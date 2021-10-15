@@ -1,11 +1,6 @@
 const newWindow: any = window;
 
-const appData: {
-  routes: Record<string, string>;
-  reviews: {
-    orders: any[];
-  };
-} = newWindow.appData;
+const appData: any = newWindow.appData;
 
 /**
  * get route path by slug

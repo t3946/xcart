@@ -1,0 +1,17 @@
+.plus-panel-button-container {
+  border: 1px solid #c4c4c4;
+  position: relative;
+  color: #055a93;
+  transition: all .15s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    color: #055890;
+    border: 1px solid #78b4dc;
+  }
+
+  &:active {
+    color: #034f83;
+    background-color: #f6fcff;
+  }
+}

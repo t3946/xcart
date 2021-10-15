@@ -21,6 +21,12 @@ return [
     ],
 
     [
+        'route' => '/review',
+        'target' => [AccountController::class, 'actionReview'],
+        'name' => 'review'
+    ],
+
+    [
         'route' => '/addresses',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'addresses'

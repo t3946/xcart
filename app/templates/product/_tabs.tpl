@@ -33,9 +33,9 @@
     </ul>
 
     <div class="tabs-content" data-tabs-content="product_tabs">
-        <div class="tabs-panel is-active" id="description">
-            <div class="tab-description tab-content">
-                {include 'product/tabs/_description.tpl' model=$model}
+        <div class="tabs-panel is-active p-0" id="description">
+            <div class="tab-content">
+                <div id="product-reviews-target"></div>
             </div>
         </div>
 
@@ -76,9 +76,6 @@
         </div>
 
         <div class="tabs-panel" id="reviews">
-            <div class="tab-content">
-                <div id="product-reviews-target"></div>
-            </div>
         </div>
     </div>
 

@@ -1,0 +1,5 @@
+.form-review-star_hover {
+  @include breakpoint(lg up) {
+    color: #ff8a00;
+  }
+}

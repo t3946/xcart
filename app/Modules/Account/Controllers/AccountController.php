@@ -7,12 +7,13 @@ use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Core\Models\CountryModel;
-use Modules\Core\Models\GlobalConfigModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\TotalProductReviewsModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
@@ -91,7 +92,7 @@ class AccountController extends FrontendController
 
     public function actionProductIndex($sku)
     {
-        $product =  ProductModel::objects()->filter(['productcode' => $sku])->get();
+        $product = ProductModel::objects()->filter(['productcode' => $sku])->get();
         StorageHelper::push([
             "product" => $product->getAttributes(),
         ], null, 'product_info');
@@ -182,25 +183,25 @@ class AccountController extends FrontendController
         $user = Xcart::app()->auth->getUser(true);
 
 
-        if($user->getIsGuest()){
+        if ($user->getIsGuest()) {
             $this->redirect('account:login', [], 301);
             $this->actionIndex();
         }
 
-        [$user_id, $type, $listHash] = explode('/',CoreHelper::decryptText($code, $tag));
+        [$user_id, $type, $listHash] = explode('/', CoreHelper::decryptText($code, $tag));
 
 
         $invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash]);
 
         $invited_user_name = UserModel::objects()->get(['user_id' => $user_id])->name;
 
-        if(UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $invite_list->product_list_id])->user_id){
+        if (UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $invite_list->product_list_id])->user_id) {
             $this->redirect('/account/your-lists/' . $listHash, [], 301);
         }
 
         StorageHelper::push([
             "userId" => $user_id,
-            'userName' =>$invited_user_name,
+            'userName' => $invited_user_name,
             "type" => $type,
             "inviteList" => $invite_list->getAttributes(),
         ], null, 'invite_data');
@@ -208,5 +209,27 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
+    /**
+     * get product data with total reviews number
+     */
+    public static function getProduct($product_id): array
+    {
+        $total_reviews = TotalProductReviewsModel::objects()->get(['product_id' => $product_id])['total'];
+        $product = ProductModel::objects()->get(['productid' => $product_id]);
+        $attributes = $product->getAttributes();
+        $attributes["total_reviews"] = $total_reviews;
+        $image = $product->getMainImage();
+        $image_url = (string)$image;
+        $attributes['image'] = $image_url;
 
+        return $attributes;
+    }
+
+    public function actionReview(): void
+    {
+        $product_id = 16133;
+        $product = $this->getProduct($product_id);
+        StorageHelper::push($product, 'product', 'review');
+        $this->actionIndex();
+    }
 }

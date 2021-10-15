@@ -11,6 +11,8 @@ import {
   clearReviewsAction,
 } from "@client/jsx/redux/actions/ProductActions";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import AppData from "@client/jsx/utils/AppData";
+import classnames from "classnames";
 
 interface PropsInterface {
   productId: number;
@@ -19,49 +21,62 @@ interface PropsInterface {
 const Reviews: React.FC<any> = function (props: PropsInterface) {
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
+  const totalReviews = AppData.products[props.productId].total_reviews;
   const ReviewsContainerRef = React.useRef<any>();
   const reviews = useSelector((e: AccountStore) => e.productsReviews)[
     props.productId
   ];
   const reviewsPerOnePage = 3;
   const [currentPage, setCurrentPage] = React.useState(0);
-  const [isAllLoaded, setIsAllLoaded] = React.useState(false);
+  const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === 0);
   const [isLoading, setIsLoading] = React.useState(false);
   const orders = appData.reviews.orders;
   const [sort, setSort] = React.useState(orders[0]);
   const breakpoint = useBreakpoint();
+  const [isIntersecting, setIsIntersecting] = React.useState(false);
 
-  if (currentPage === 0 && isAllLoaded === false && !reviews && !isLoading) {
-    getMoreReviews();
+  //load first reviews
+  if (!isAllLoaded && !isLoading) {
+    if (!reviews || isIntersecting) {
+      getMoreReviews();
+      setIsIntersecting(false);
+    }
+  }
+
+  //update all reviews loaded flag
+  if (reviews && totalReviews === reviews.length && !isAllLoaded) {
+    // console.log("SET setIsAllLoaded true");
+    setIsAllLoaded(true);
   }
 
   function reviewsTemplate() {
     const reviewsTemplates = [];
 
-    if (!reviews) {
-      return Array(reviewsPerOnePage).fill(
-        <ReviewSkeleton />,
-        0,
-        reviewsPerOnePage
-      );
-    }
-
-    for (let i = 0; i < reviews.length; i++) {
-      if (i + 1 === reviews.length) {
-        reviewsTemplates.push(<Review {...reviews[i]} ref={LastReviewRef} />);
-      } else {
-        reviewsTemplates.push(<Review {...reviews[i]} />);
+    if (reviews) {
+      for (let i = 0; i < reviews.length; i++) {
+        if (i + 1 === reviews.length) {
+          reviewsTemplates.push(<Review {...reviews[i]} ref={LastReviewRef} />);
+        } else {
+          reviewsTemplates.push(<Review {...reviews[i]} />);
+        }
       }
     }
 
     if (isLoading) {
-      reviewsTemplates.push(<ReviewSkeleton />);
+      const loadedReviewsNumber = reviews ? reviews.length : 0;
+      const lastReviews = totalReviews - loadedReviewsNumber;
+      const skeletonsNumber = Math.min(lastReviews, reviewsPerOnePage);
+
+      for (let i = 0; i < skeletonsNumber; i++) {
+        reviewsTemplates.push(<ReviewSkeleton />);
+      }
     }
 
     return reviewsTemplates;
   }
 
   function getMoreReviews() {
+    // console.log("getMoreReviews");
     setIsLoading(true);
 
     dispatch(
@@ -76,11 +91,6 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
         success(res) {
           setIsLoading(false);
           setCurrentPage(currentPage + 1);
-
-          if (res.length === 0) {
-            setIsAllLoaded(true);
-            return;
-          }
 
           dispatch(
             addReviewsAction({
@@ -130,9 +140,12 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
 
         reviewLoadedObserver = new IntersectionObserver((entries, observer) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting && !isLoading) {
+            setIsIntersecting(entry.isIntersecting);
+
+            if (entry.isIntersecting) {
+              // console.log("isIntersecting load product");
               observer.unobserve(target);
-              getMoreReviews();
+              // getMoreReviews();
             }
           });
         }, options);
@@ -146,6 +159,11 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
         reviewLoadedObserver.unobserve(target);
       }
     };
+  });
+
+  console.log({
+    sort,
+    currentPage,
   });
 
   return (
@@ -171,7 +189,12 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
         />
       </h3>
 
-      <div className="reviews-wrapper">
+      <div
+        className={classnames([
+          "reviews-wrapper",
+          { "overflow-hidden": reviews && reviews.length === 0 },
+        ])}
+      >
         <div
           className="reviews-container product-reviews__reviews-container common-scrollbar"
           ref={ReviewsContainerRef}

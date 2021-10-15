@@ -1,0 +1,23 @@
+.star-container {
+  padding: 0 rem-calc(2);
+
+  @include breakpoint(md up) {
+    padding: 0 rem-calc(3);
+  }
+
+  &:first-child {
+    padding: 0 rem-calc(2) 0 0;
+
+    @include breakpoint(md up) {
+      padding: 0 rem-calc(3) 0 0;
+    }
+  }
+
+  &:last-child {
+    padding: 0 0 0 rem-calc(2);
+
+    @include breakpoint(md up) {
+      padding: 0 0 0 rem-calc(3);
+    }
+  }
+}

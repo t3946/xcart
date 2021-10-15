@@ -4,7 +4,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
 import accountStoreInitialValue from "../../modules/account/ts/consts/account-store-initial-value";
 import { AccountStore } from "../../modules/account/ts/types/account-store.type";
-import accountRootSaga from "../sagas/account-sagas/MainSaga";
+import accountRootSaga from "../sagas/account/MainSaga";
 import accountMainReducer from "../reduсers/account/MainReduсer";
 import WalletReducer from "../reduсers/account/PaymentsReducer";
 import MenuReducer from "../reduсers/account/MenuReducer";
@@ -23,6 +23,7 @@ import MiniCartReducer from "@client/jsx/redux/reduсers/MiniCartReducer";
 import PublicProfileReducer from "@client/jsx/redux/reduсers/account/PublicProfileReducer";
 import RatingsReducer from "@client/jsx/redux/reduсers/RatingsReducer";
 import ReviewsReducer from "@client/jsx/redux/reduсers/ReviewsReducer";
+import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -47,6 +48,7 @@ export const accountStore: Store<AccountStore> = createStore(
     publicProfile: PublicProfileReducer,
     productsRatings: RatingsReducer,
     productsReviews: ReviewsReducer,
+    product: ProductReducer,
   }),
   accountStoreInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

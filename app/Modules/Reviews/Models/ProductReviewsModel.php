@@ -44,31 +44,20 @@ class ProductReviewsModel extends Model
                 'autoNowAdd' => true,
             ],
             'rating' => [
-                'field' => 'product_review_id',
                 'class' => ForeignField::class,
                 'modelClass' => ReviewRatingsModel::class,
                 'link' => ['product_review_id' => 'review_id'],
-                'primary' => true,
             ],
             'user' => [
-                'field' => 'user_id',
                 'class' => ForeignField::class,
                 'modelClass' => UserModel::class,
                 'link' => ['user_id' => 'user_id'],
-                'primary' => true,
             ],
             'helpful' => [
-                'field' => 'product_review_id',
                 'class' => ForeignField::class,
                 'modelClass' => HelpfulReviewsModel::class,
                 'link' => ['product_review_id' => 'review_id'],
-                'primary' => true,
             ],
         ];
-    }
-
-    public function toArray(): array
-    {
-        return $this->getAttributes();
     }
 }

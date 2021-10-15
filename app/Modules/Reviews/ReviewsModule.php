@@ -3,6 +3,7 @@
 namespace Modules\Reviews;
 
 use Modules\Reviews\Controllers\Api\ReviewsApi;
+use Modules\Reviews\Models\RatingsModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Module\Module;
 
@@ -27,5 +28,18 @@ class ReviewsModule extends Module
                 'value' => ReviewsApi::SORT_HAS_ATTACHMENTS,
             ],
         ], 'orders', 'reviews');
+
+        $ratings_models = RatingsModel::objects()->asArray()->all();
+        $ratings = ['overall' => null, 'features' => []];
+
+        foreach ($ratings_models as $i => $model) {
+            if ($model['slug'] === 'overall') {
+                $ratings['overall'] = $model;
+            } else {
+                $ratings['features'][] = $model;
+            }
+        }
+
+        StorageHelper::push($ratings, 'ratings', 'ratings');
     }
 }
