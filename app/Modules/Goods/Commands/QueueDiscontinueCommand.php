@@ -25,14 +25,21 @@ class QueueDiscontinueCommand extends Command
         /** @var DistributorModel $dx */
 
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+
             $dx = DistributorModel::objects()->get(['code' => $data['dx_code']]);
-            $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
+
+            $filter = [
+                'forsale' => 'Y',
+                'manufacturerid' => $dx->manufacturerid,
+            ];
+
+            if ($data['storefront']) {
+                $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
+                $filter['sites__storefrontid'] = $data['storefront'];
+            }
+
             $dis_count = ProductModel::without_group()
-                ->filter([
-                    'forsale' => 'Y',
-                    'manufacturerid' => $dx->manufacturerid,
-                    'sites__storefrontid' => $data['storefront']
-                ])
+                ->filter($filter)
                 ->exclude(['productcode__in' => $data['active_sku'] ?? []])
                 ->update(['forsale' => 'N', 'hash_product' => null]);
 

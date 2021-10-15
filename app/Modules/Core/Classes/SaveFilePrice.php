@@ -7,7 +7,6 @@ namespace Modules\Core\Classes;
 use JsonException;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
-use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 
 class SaveFilePrice
@@ -27,13 +26,11 @@ class SaveFilePrice
         $this->search_by = $search_by;
     }
 
-    /** Send data about full query save price from RabbitMQ
+    /** Send data about full query save price to RabbitMQ
      * @throws JsonException
-     * @throws UnknownPropertyException
      */
     public function sendStats(): void
     {
-        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
         $ar_active = [
             'active_sku' => $this->success_productcode,
             'dx_code' => $this->dx_code,
@@ -41,9 +38,8 @@ class SaveFilePrice
             'feed_source' => 'manual',
             'products_in_feed' => $this->count_update,
             'feed_source_date' => date('Y-m-d H:i:s'),
-            'storefront' => $site->pk
         ];
-        Xcart::app()->queue->send('products_active_test', json_encode($ar_active, JSON_THROW_ON_ERROR));
+        Xcart::app()->queue->send('products_active', json_encode($ar_active, JSON_THROW_ON_ERROR));
     }
 
     /** Collect data
