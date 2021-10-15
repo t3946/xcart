@@ -268,7 +268,7 @@ class ProductAdminForm extends ModelForm
             'product_options' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionsAdmin::class,
-                'defaultOrder' => 'position'
+                'defaultOrder' => ['position']
             ],
             'filter_values' => [
                 'class' => ListViewField::class,

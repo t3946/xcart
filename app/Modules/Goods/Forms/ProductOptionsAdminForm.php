@@ -30,7 +30,7 @@ class ProductOptionsAdminForm extends ModelForm
             'variants' => [
                 'class' => ListViewField::class,
                 'adminClass' => ProductOptionVariantsAdmin::class,
-                'defaultOrder' => 'position'
+                'defaultOrder' => ['position']
             ],
         ];
         if ($this->getInstance()->getIsNewRecord()) {
