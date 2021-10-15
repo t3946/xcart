@@ -4,18 +4,16 @@
 namespace Modules\Order\Helpers;
 
 
-use GuzzleHttp\Client;
-use Modules\Core\Models\FraudFAQuestionModel;
-use Modules\Core\Models\TelephoneAreaModel;
 use Modules\Goods\Models\ProductHardResellModel;
 use Modules\Order\Models\BaseFraudCheckModelV2;
-use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\OrderBaseFraudCheckModelV2;
-use Modules\Order\Models\OrderFraudCheckModel;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Manager;
 
 class BaseFraudCheckHelperV2
 {
@@ -96,6 +94,25 @@ class BaseFraudCheckHelperV2
         $field = preg_replace('/[\[,.-\/@_\]]/', '', $field);
         $field = strtoupper($field);
         return $field;
+    }
+    public static function scoreCHECK_PRODUCTS_ON_CHARGEBACK(OrderModel $order, BaseFraudCheckModelV2 $fraud) : array
+    {
+        $fraud_result = 'positive';
+        $outcome = 1;
+        $additional_info = [];
+        foreach ($order->getProducts() as $product_model) {
+            /** @var OrderDetailModel[]|Manager $order_chargeback */
+            $order_chargeback = OrderDetailModel::objects()->filter(['productid' => $product_model->pk, 'order_group__cb_status' => OrderStatusModel::ORDER_STATUS_CHARGE_BACKED]);
+            if ($order_chargeback->count()) {
+                $outcome = 0;
+                $fraud_result = 'negative';
+                foreach ($order_chargeback as $order_detail) {
+                    $additional_info[] = $order_detail->orderid;
+                }
+                break;
+            }
+        }
+        return [$fraud_result, $fraud->weight, $additional_info, null, $outcome];
     }
 
     public static function scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE(OrderModel $order, BaseFraudCheckModelV2 $fraud): array

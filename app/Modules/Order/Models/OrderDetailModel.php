@@ -18,6 +18,8 @@ use Xcart\OrderDetail;
  * @property int order_group_id
  * @property float price
  * @property int amount
+ * @property OrderModel order
+ * @property int orderid
  */
 class OrderDetailModel  extends Model
 {
@@ -71,6 +73,13 @@ class OrderDetailModel  extends Model
                 'class' => ForeignField::class,
                 'modelClass' => OrderGroupModel::class,
                 'link' => ['order_group_id' => 'order_group_id'],
+                'null' => false,
+            ],
+            'order' => [
+                'field' => 'orderid',
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
+                'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
         ];

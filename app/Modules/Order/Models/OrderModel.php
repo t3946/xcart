@@ -64,7 +64,7 @@ use Xcart\Order;
  * @property int|mixed subtotal
  * @property Manager|OrderDetailModel[] detail_models
  * @property Manager|OrderGroupModel[] groups
- * @property PaymentMethodModel payment_method
+ * @property mixed|PaymentMethodModel payment_method_model
  * @property string|null non_us_confirmation
  * @property string orig_po
  * @property string po_number
@@ -96,7 +96,6 @@ use Xcart\Order;
  * @property SiteModel site
  * @property string order_prefix
  * @property mixed|Field|FileField|ModelFieldInterface currency
- * @property mixed|Field|FileField|ModelFieldInterface payment_method_model
  * @property mixed|Field|FileField|ModelFieldInterface overall_fraud_score
  * @property mixed|Field|FileField|ModelFieldInterface bare_fraud_score
  * @property mixed|Field|FileField|ModelFieldInterface dc_status
