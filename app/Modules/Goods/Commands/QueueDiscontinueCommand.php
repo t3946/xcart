@@ -38,12 +38,15 @@ class QueueDiscontinueCommand extends Command
                 $filter['sites__storefrontid'] = $data['storefront'];
             }
 
-            $dis_count = ProductModel::without_group()
-                ->filter($filter)
-                ->exclude(['productcode__in' => $data['active_sku'] ?? []])
-                ->update(['forsale' => 'N', 'hash_product' => null]);
 
-            echo "Discontinued {$data['dx_code']}: $dis_count products\n";
+            if ($data['active_sku']) {
+                $dis_count = ProductModel::without_group()
+                    ->filter($filter)
+                    ->exclude(['productcode__in' => $data['active_sku']])
+                    ->update(['forsale' => 'N', 'hash_product' => null]);
+
+                echo "Discontinued {$data['dx_code']}: $dis_count products\n";
+            }
 
             unset($data['active_sku']);
             print_r($data);
