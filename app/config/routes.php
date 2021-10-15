@@ -18,14 +18,19 @@ return array_merge($admin_routes, [
         'route' => '',
         'path' => 'Modules.Distributor.routes',
     ],
-	[
-		'route' => '',
-		'path' => 'Modules.Core.routes',
-	],
+    [
+        'route' => '',
+        'path' => 'Modules.Core.routes',
+    ],
     [
         'route' => '/product',
         'path' => 'Modules.Landing.routes',
         'namespace' => 'landing',
+    ],
+    [
+        'route' => '',
+        'path' => 'Modules.Metrics.routes',
+        'namespace' => 'metrics'
     ],
     [
         'route' => '/amp',
@@ -60,7 +65,6 @@ return array_merge($admin_routes, [
     //            'cache' => false
     //        ]
     //    ],
-
 
 
     [

@@ -94,7 +94,7 @@ class ApiDxController extends Controller
                                     $count_good++;
                                 }
                             }
-                            if ($count_good > (count($row) / 100) * 30) { // if count not empty column in row > 30%
+                            if ($count_good > (count($row) / 100) * 20) { // if count not empty column in row > 30%
                                 $ar_data[$counter_table][] = $row;
                             }
                             if (!empty($ar_data[$counter_table]) && count($ar_data[$counter_table]) === self::COUNT_ITEMS_TABLE) {

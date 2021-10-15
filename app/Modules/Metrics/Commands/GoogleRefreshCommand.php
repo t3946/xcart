@@ -8,7 +8,6 @@ class GoogleRefreshCommand extends Command
 
     public function handle($arguments = [])
     {
-        $google_ads = new GoogleAds();
-        $google_ads->generateRefreshToken();
+        GoogleAds::generateRefreshToken();
     }
 }
