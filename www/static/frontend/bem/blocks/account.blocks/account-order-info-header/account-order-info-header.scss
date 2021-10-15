@@ -1,0 +1,43 @@
+.order-info-header{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+
+
+.order-info-header-item{
+  padding: 10px 35px;
+  background-color: #F4F4F4;
+  color: #4A4949;
+  text-decoration: none;
+  border: 1px solid #C4C4C4;
+  text-align: center;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  transition: .2s all ease-out;
+
+  &:last-child{
+    margin-right: 0px;
+  }
+
+  &:hover{
+    text-decoration: none;
+    color: #000000;
+    background-color: #C4C4C4;
+  }
+}
+
+.order-info-header-item-selected{
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.order-info-header-title{
+  width: 100%;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  text-align: center;
+}

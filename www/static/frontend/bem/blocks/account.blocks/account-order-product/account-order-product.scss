@@ -20,12 +20,18 @@
   white-space: nowrap;
 }
 
+.order-items-list{
+  overflow: hidden;
+  transition: .3s all linear;
+}
+
 .order-item-body-product-name, .order-item-body-product-sku{
   font-size: 16px;
 }
 
 .order-item-body-product-name{
   color: #075A91;
+  cursor: pointer;
   &:hover{
     text-decoration: underline;
   }
@@ -33,4 +39,35 @@
 
 .order-item-body-product-sku{
   color: #009317;
+}
+
+.order-product{
+  padding: 25px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #c4c4c4;
+
+  &:last-child{
+    border-bottom: 0;
+  }
+}
+
+.order-products{
+  width: 100%;
+}
+
+.order-product-select-count{
+  width: 70px !important;
+}
+
+
+.order-product-select-action{
+  width: 100% !important;
+}
+
+.order-product-select-action-header{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

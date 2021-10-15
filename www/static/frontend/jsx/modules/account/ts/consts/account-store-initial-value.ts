@@ -1,3 +1,5 @@
+import { ordersHeaderSelectValues } from "@client/modules/account/ts/consts/orders-header-select-values";
+
 const thisWindow: any = window;
 
 const appData = thisWindow.appData;
@@ -37,6 +39,24 @@ export const accountLoginAndSecurityValue = {
 export const accountMobileAlert = {
   alert: null,
   isVisible: false,
+};
+
+export const accountOrdersInitialValue = {
+  ordersLoading: false,
+  orders: {
+    open: {
+      items: null,
+      selectValue: ordersHeaderSelectValues[0],
+    },
+    cancelled: {
+      items: null,
+      selectValue: ordersHeaderSelectValues[0],
+    },
+    completed: {
+      items: null,
+      selectValue: ordersHeaderSelectValues[0],
+    },
+  },
 };
 
 export const shadowPanelInitialValue = {

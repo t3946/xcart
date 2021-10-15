@@ -1,0 +1,34 @@
+.products-order-item-title{
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  margin-bottom: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.products-order-item-header{
+  padding: 14px 24px;
+  background-color: #F4F4F4;
+}
+
+.products-order-item, .products-order-item-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.products-order-item-header-sku{
+  width: 50%;
+}
+
+.products-order-item-header-extended, .products-order-item-header-qty, .products-order-item-header-price{
+  width: 15%;
+  text-align: center;
+}
+
+.products-order-item{
+  padding: 26px 24px;
+  border-bottom: 1px solid #C4C4C4;
+}

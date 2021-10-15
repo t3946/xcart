@@ -31,6 +31,7 @@ export interface AccountStore {
     checkoutUrl: string;
   };
   publicProfile: AccountPublicProfileStore;
+  ordersStore: OrdersStore;
 }
 
 export interface AccountAddressesStore {
@@ -71,6 +72,24 @@ export interface AccountMobileAlertStore {
   alert: {
     variant: AlertVariants;
     message: string;
+  };
+}
+
+export interface OrdersStore {
+  ordersLoading: boolean;
+  orders: {
+    open: {
+      items: any[] | null;
+      selectValue: SelectValue<number, string>;
+    };
+    cancelled: {
+      items: any[] | null;
+      selectValue: SelectValue<number, string>;
+    };
+    completed: {
+      items: any[] | null;
+      selectValue: SelectValue<number, string>;
+    };
   };
 }
 

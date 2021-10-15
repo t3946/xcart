@@ -7,8 +7,8 @@ export const FormSelect = ({
   items,
   onClick,
   value,
-  name,
-  label = "",
+  name = null,
+  label = null,
   classes = undefined,
   id = undefined,
 }) => {

@@ -1,0 +1,34 @@
+.account-tabs{
+  border-bottom: 2px solid #C4C4C4 !important;
+  margin-bottom: 0 !important;
+}
+
+.account-tab{
+  padding: 12px 35px;
+  border-radius: 0 !important;
+  margin-right: 3px !important;
+  border: 1px solid #C4C4C4 !important;
+  color: #505050 !important;
+  background-color:  #E7EAEB !important;
+  margin-bottom: -2px !important;
+  border-bottom: 2px solid #C4C4C4 !important;
+  &:hover{
+    background-color: #c4c4c4 !important;
+    text-decoration: none !important;
+  }
+}
+
+.account-tab.active{
+  padding: 11px 34px;
+  border: 2px solid #C4C4C4 !important;
+  background-color:  #fff!important;
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+  padding-bottom: 14px !important;
+}
+
+.account-tab-content{
+  border: 2px solid #C4C4C4;
+  border-top: 0;
+  padding: 40px 25px 57px;
+}

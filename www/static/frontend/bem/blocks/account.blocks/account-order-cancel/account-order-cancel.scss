@@ -1,0 +1,44 @@
+.order-product-list-body{
+  width: 100%;
+  padding: 0 35px;
+}
+
+.order-cancel-items-textarea{
+  resize: none;
+  height: 104px !important;
+}
+
+.order-cancel-items-textarea-input{
+  width: 100%;
+}
+
+.order-cancel-items-textarea-group{
+  margin-top: 40px;
+  margin-bottom: 34px;
+}
+
+.request-cancellation-btn{
+  width: rem-calc(267);
+  margin-bottom: 44px;
+  font-size: rem-calc(16);
+  padding: 0 36px;
+}
+
+.order-cancel-items-disclosure{
+  padding: 19px 25px 29px;
+  background-color: #F4F4F4;
+}
+
+.order-cancel-items-disclosure-title{
+  font-weight: 700;
+  font-size: rem-calc(18);
+  margin-bottom: 12px;
+}
+
+.order-cancel-items-disclosure-subtitle{
+  font-size: rem-calc(16);
+}
+
+.order-actions-page-label{
+  font-size: 22px !important;
+}

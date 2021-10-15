@@ -52,9 +52,14 @@ import { AddProductToListPage } from "@client/modules/account/pages/AddProductTo
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
 import { DeleteProductPage } from "@client/modules/account/pages/DeleteProductPage";
-import { OpenOrdersPage } from "@client/modules/account/pages/OpenOrdersPage";
-import { CanceledOrdersPage } from "@client/modules/account/pages/CanceledOrdersPage";
-import { CompletedOrdersPage } from "@client/modules/account/pages/CompletedOrdersPage";
+import { OrdersPage } from "@client/modules/account/pages/OrdersPage";
+import { OrderInfoContainerPage } from "@client/modules/account/hoc/OrderInfoContainerPage";
+import { OrderTrackingPage } from "@client/modules/account/pages/OrderTrackingPage";
+import { ProductsOrderedPage } from "@client/modules/account/pages/ProductsOrderedPage";
+import { OrderAddressesPage } from "@client/modules/account/pages/OrderAddressesPage";
+import { OrderCommunicationPage } from "@client/modules/account/pages/OrderCommunicationPage";
+import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
+import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -368,7 +373,7 @@ export const AccountRouters = (): any => {
                   path={route("account:open-orders")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
-                    <OpenOrdersPage />
+                    <OrdersPage label={"Open orders"} type={"open"} />
                   )}
                 />
                 <Route
@@ -376,7 +381,7 @@ export const AccountRouters = (): any => {
                   path={route("account:canceled-orders")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
-                    <CanceledOrdersPage />
+                    <OrdersPage label={"Cancelled orders"} type={"cancelled"} />
                   )}
                 />
                 <Route
@@ -384,7 +389,75 @@ export const AccountRouters = (): any => {
                   path={route("account:completed-orders")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
-                    <CompletedOrdersPage />
+                    <OrdersPage label={"Completed orders"} type={"completed"} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/order-tracking"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderTrackingPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/products-ordered"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <ProductsOrderedPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/order-info/addresses"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderAddressesPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/communication"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderCommunicationPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/order-info/log"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderLogPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/order-actions"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderActionsPage />
+                    </OrderInfoContainerPage>
                   )}
                 />
               </Switch>

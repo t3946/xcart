@@ -93,6 +93,36 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'completed-orders'
     ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/order-tracking',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-tracking'
+    ],
+    [
+        'route' => '/orders/order-info/products-ordered',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-products'
+    ],
+    [
+        'route' => '/orders/order-info/order-actions',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-actions'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/addresses',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-addresses'
+    ],
+    [
+        'route' => '/orders/order-info/communication',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-communication'
+    ],
+    [
+        'route' => '/orders/order-info/log',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-log'
+    ],
 
 
 
@@ -191,7 +221,6 @@ return [
         'target' => [AccountController::class, 'publicProfile'],
         'name' => 'public-profile'
     ],
-
 
     //api
     [

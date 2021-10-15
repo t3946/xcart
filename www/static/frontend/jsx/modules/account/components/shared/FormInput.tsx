@@ -91,7 +91,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
               className={classnames(
                 "form-input",
                 `${error && "form-input-error"}`,
-                classes.textArea
+                classes?.textArea
               )}
               name={name}
               id={id}

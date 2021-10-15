@@ -8,6 +8,7 @@ import loginAndSecuritySaga from "@client/jsx/redux/sagas/account-sagas/LoginAnd
 import { listsActionWatcher } from "@client/jsx/redux/sagas/account-sagas/ListsSaga";
 import TSVSaga from "@client/jsx/redux/sagas/account-sagas/TSVSaga";
 import ResetPasswordSaga from "@client/jsx/redux/sagas/account-sagas/ResetPasswordSaga";
+import { ordersActionWatcher } from "@client/jsx/redux/sagas/account-sagas/OrdersSaga";
 
 export default function* accountRootSaga(): Generator {
   yield all([
@@ -20,5 +21,6 @@ export default function* accountRootSaga(): Generator {
     listsActionWatcher(),
     TSVSaga(),
     ResetPasswordSaga(),
+    ordersActionWatcher(),
   ]);
 }
