@@ -33,7 +33,7 @@ class QueueDiscontinueCommand extends Command
                 'manufacturerid' => $dx->manufacturerid,
             ];
 
-            if ($data['storefront']) {
+            if (isset($data['storefront'])) {
                 $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
                 $filter['sites__storefrontid'] = $data['storefront'];
             }
@@ -48,15 +48,17 @@ class QueueDiscontinueCommand extends Command
             unset($data['active_sku']);
             print_r($data);
 
-            $feed->setAttributes([
-                'process_time' => $data['process_time'],
-                'last_update_time' => time(),
-                'last_update_period' => time() - $feed->last_update_time,
-                'feed_source' => $data['feed_source'],
-                'feed_source_date' => $data['feed_source_date'],
-                'last_update_items_count' => $data['products_in_feed']
-            ]);
-            $feed->save();
+            if ($feed) {
+                $feed->setAttributes([
+                     'process_time' => $data['process_time'],
+                     'last_update_time' => time(),
+                     'last_update_period' => time() - $feed->last_update_time,
+                     'feed_source' => $data['feed_source'],
+                     'feed_source_date' => $data['feed_source_date'],
+                     'last_update_items_count' => $data['products_in_feed']
+                ]);
+                $feed->save();
+            }
 
             $message->ack();
         }
