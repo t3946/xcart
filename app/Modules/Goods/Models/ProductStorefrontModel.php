@@ -17,16 +17,16 @@ class ProductStorefrontModel extends Model
         return [
             'product' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'primary' => true,
                 'null' => false,
             ],
             'sf' => [
                 'field' => 'sfid',
-                'class' => ForeignField::className(),
-                'modelClass' => SiteModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
                 'link' => ['sfid' => 'storefrontid'],
                 'primary' => true,
                 'null' => false,

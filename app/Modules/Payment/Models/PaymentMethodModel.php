@@ -33,23 +33,23 @@ class PaymentMethodModel extends Model
     {
         return [
             'paymentid' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
             ],
             'processor' => [
                 'field' => 'processor_id',
-                'class' => ForeignField::className(),
-                'modelClass' => ProcessorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProcessorModel::class,
                 'link' => ['processor_id' => 'processor_id'],
             ],
             'frontend_processor' => [
                 'field' => 'frontend_processor_id',
-                'class' => ForeignField::className(),
-                'modelClass' => ProcessorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProcessorModel::class,
                 'link' => ['frontend_processor_id' => 'processor_id'],
             ],
             'cc_processor_models' => [
                 'class' => HasManyField::class,
-                'modelClass' => PaymentProcessorModel::className(),
+                'modelClass' => PaymentProcessorModel::class,
                 'link' => ['paymentid' => 'paymentid'],
             ],
             'site' => [

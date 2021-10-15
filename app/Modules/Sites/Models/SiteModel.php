@@ -6,6 +6,9 @@ use Modules\Core\Components\GlobalConfig;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductCategoriesModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Translate\Models\LanguageModel;
 use Modules\Pages\Models\Page;
 use Xcart\App\Helpers\Text;
@@ -35,6 +38,7 @@ use Xcart\App\Orm\Model;
  * @property CategoryModel base_category
  * @property string $domain
  * @property LanguageModel $lang
+ * @property Manager|ProductModel[] products
  */
 class SiteModel extends Model
 {
@@ -295,6 +299,11 @@ class SiteModel extends Model
                     'E' => 'Service',
                     'D' => 'Disabled'
                 ],
+            ],
+            'products' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => ProductModel::class,
+                'through' => ProductStorefrontModel::class,
             ],
             'logo' => [
                 'class' => ImageField::class,

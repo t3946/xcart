@@ -22,35 +22,35 @@ class MetricsOrderCommand extends Command
         $str_result = '';
         $start_date = (new DateTime('-90 days'))->setTime(0, 0);
         $data_result = '';
-        /** @var SiteModel $site */
-        foreach (SiteModel::objects()->all() as $site) {
-            $data_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
-                'name' => (string)$site,
-            ]);
-        }
-        /** @var PaymentMethodModel $process */
-        foreach (PaymentMethodModel::objects()->all() as $process) {
-            $name = (string)$process;
-            $data_result .= MetricsDataHelper::convertToMetricsWithParams('payments', '1', [
-                'name' => "$process [$process->pk]"
-            ]);
-        }
-        /** @var DistributorModel $distributor */
-        foreach (DistributorModel::objects()->all() as $distributor) {
-            $name = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$distributor);
-            $name = "[$distributor->code] $name";
-            $data_result .= MetricsDataHelper::convertToMetricsWithParams('distributors', '1', [
-                'name' => $name
-            ]);
-        }
-
-        /** @var CountryModel $country */
-        foreach (CountryModel::objects()->filter(['active' => 'Y']) as $country) {
-            $data_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
-                'name' => (string)$country,
-            ]);
-        }
-        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
+//        /** @var SiteModel $site */
+//        foreach (SiteModel::objects()->all() as $site) {
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('sites', '1', [
+//                'name' => (string)$site,
+//            ]);
+//        }
+//        /** @var PaymentMethodModel $process */
+//        foreach (PaymentMethodModel::objects()->all() as $process) {
+//            $name = (string)$process;
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('payments', '1', [
+//                'name' => "$process [$process->pk]"
+//            ]);
+//        }
+//        /** @var DistributorModel $distributor */
+//        foreach (DistributorModel::objects()->all() as $distributor) {
+//            $name = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$distributor);
+//            $name = "[$distributor->code] $name";
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('distributors', '1', [
+//                'name' => $name
+//            ]);
+//        }
+//
+//        /** @var CountryModel $country */
+//        foreach (CountryModel::objects()->filter(['active' => 'Y']) as $country) {
+//            $data_result .= MetricsDataHelper::convertToMetricsWithParams('countries', '1', [
+//                'name' => (string)$country,
+//            ]);
+//        }
+//        MetricsDataHelper::pushMetrics('base_data', "$data_result\n");
 
         $time = [
             'Last 24 hours' => new DateTime('-1 days'),
@@ -59,20 +59,39 @@ class MetricsOrderCommand extends Command
             'Last 90 days' => new DateTime('-90 days')
         ];
         /** @var OrderModel $order */
-        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()])->cache(300) as $order) {
+        foreach (OrderModel::objects()->filter(['date__gte' => $start_date->getTimestamp()])->limit(400)->cache(300) as $order) {
             $site = $order->site;
-            $name_process = (string)$order->payment_method;
-            $name_process = "$name_process [{$order->payment_method->pk}]";
-            foreach ($order->groups as $group_model) {
-                $name_dx = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$group_model->manufacturer);
-                $name_dx = "[{$group_model->manufacturer->code}] $name_dx";
-                foreach ($time as $period => $date_time) {
-                    if ($order->date > $date_time->getTimestamp()) {
-                        if (in_array($group_model->cb_status, [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED])) {
-                            $gross_margin = [
-                                'gross_profit' => $group_model->accounting_gross_5_profit,
-                                'sales_volume' => $group_model->accounting_gross_0,
-                            ];
+            $name_process = (string)$order->payment_method_model;
+            $name_process = "$name_process [{$order->payment_method_model->paymentid}]";
+
+            foreach ($time as $period => $date_time) {
+                if ($order->date > $date_time->getTimestamp()) {
+                    foreach ($order->groups as $group_model) {
+                        $name_dx = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$group_model->manufacturer);
+                        $name_dx = "[{$group_model->manufacturer->code}] $name_dx";
+
+                        if (in_array($group_model->cb_status, [
+                                    OrderStatusModel::ORDER_STATUS_COMPLETED,
+                                    OrderStatusModel::ORDER_STATUS_AUTHORIZED,
+                                    OrderStatusModel::ORDER_STATUS_UNPAID_PO
+                                ]) && !empty((float)$group_model->accounting_gross_0))
+                        {
+
+                            $str_result .= MetricsDataHelper::convertToMetricsWithParams(
+                                'order_gross_profit',
+                                $group_model->accounting_gross_5_profit, [
+                                    'order_id' => $order->pk,
+                                    'period' => $period,
+                                    'dx_name' => $name_dx
+                                ]
+                            );
+                            $str_result .= MetricsDataHelper::convertToMetricsWithParams('order_sales_volume',
+                                $group_model->accounting_gross_0, [
+                                    'order_id' => $order->pk,
+                                    'period' => $period,
+                                    'dx_name' => $name_dx
+                                ]
+                            );
                         }
                         $data_order = [
                             'order_id' => $order->pk,
@@ -83,7 +102,6 @@ class MetricsOrderCommand extends Command
                             'country' => (string)$order->billing_country,
                             'sum' => $group_model->total_gross,
                             'payment_process' => $name_process,
-                            'gross_margin' => $gross_margin ?? [],
                         ];
                         $ar_metrics[$period][] = $data_order;
                     }
@@ -92,27 +110,6 @@ class MetricsOrderCommand extends Command
         }
         foreach ($ar_metrics as $period => $orders) {
             foreach ($orders as $order_info) {
-                if (!empty($order_info['gross_margin'])) {
-                    $str_result .= MetricsDataHelper::convertToMetricsWithParams(
-                        'order_gross_profit',
-                        $order_info['gross_margin']['gross_profit'], [
-                            'order_id' => $order_info['order_id'],
-                            'period' => $period,
-                            'dx_name' => $order_info['dx_name']
-                        ]
-                    );
-
-                    $str_result .= MetricsDataHelper::convertToMetricsWithParams('order_sales_volume',
-                        $order_info['gross_margin']['sales_volume'], [
-                            'order_id' => $order_info['order_id'],
-                            'period' => $period,
-                            'dx_name' => $order_info['dx_name']
-                        ]
-                    );
-                }
-
-
-                unset($order_info['gross_margin']);
                 $str_result .= MetricsDataHelper::convertToMetricsWithParams(
                     'orders',
                     $order_info['sum'],
@@ -126,7 +123,7 @@ class MetricsOrderCommand extends Command
             $orders_by_period = OrderGroupModel::objects()
                 ->filter([
                     'order__date__gte' => $date_time->getTimestamp(),
-                    'cb_status__in' => [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED]
+                    'cb_status__in' => [OrderStatusModel::ORDER_STATUS_COMPLETED, OrderStatusModel::ORDER_STATUS_AUTHORIZED, OrderStatusModel::ORDER_STATUS_UNPAID_PO]
                 ])
                 ->group(['orderid'])->order(['order__total']);
             $order_list = $orders_by_period->all();

@@ -16,6 +16,7 @@ use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
@@ -160,7 +161,6 @@ class OrderFraudCheckController extends Controller
                 case 'CHECK_STRIPE_DEBIT_OR_CREDIT_CARD':
                     $name_card = $answer_item->additional_info['name_card'];
                     break;
-
             }
             $template = str_replace(
                 [
@@ -301,13 +301,31 @@ HTML;
 HTML;
         $shipping_address = $orderModel->getShippingAddressString();
         $customer_email = $orderModel->email;
+        $order_chargeback_list = '';
         $orders_full_names = "{$orderModel->s_firstname}<br />{$orderModel->b_firstname}<br />{$orderModel->firstname}";
         $orders_company_names = "{$orderModel->s_company}<br />{$orderModel->b_company}";
         if ($aProductLinks = BaseFraudCheckHelperV2::getProductList($orderModel)) {
             $links_to_ordered_products = implode('<br>', $aProductLinks);
         }
-        /** @var OrderFraudCheckModel $answer */
+        /** @var OrderBaseFraudCheckModelV2 $answer */
         foreach ($base_answer_fraud as $answer) {
+            $question = $answer->question;
+            switch ($question->question_code)
+            {
+                case 'CHECK_PRODUCTS_ON_CHARGEBACK':
+                    /** @var SiteModel $site */
+                    $site = Xcart::app()->getModule('Sites')->getSite();
+                    foreach ($answer->additional_info as $order_id) {
+                        /** @var OrderModel $order_model */
+                        $order_model = OrderModel::objects()->get(['pk' => $order_id]);
+                        if ($order_model) {
+                            $order_chargeback_list .= <<<HTML
+<br/><a target="_blank" href="https://{$site->domain}{$order_model->getAdminUrl()}" style="color: #1F08F8;">{$order_model->getOrderNumber()}</a>
+HTML;
+                        }
+                    }
+                    break;
+            }
             $template = str_replace(
                 [
                     '{{emails_domain}}',
@@ -317,7 +335,8 @@ HTML;
                     '{{orders_full_names}}',
                     '{{orders_company_names}}',
                     '{{links_to_ordered_products}}',
-                    '{{google_shipping}}'
+                    '{{google_shipping}}',
+                    '{{orders_url_list}}'
                 ],
                 [
                     "@{$email_domain}",
@@ -327,7 +346,8 @@ HTML;
                     $orders_full_names,
                     $orders_company_names,
                     $links_to_ordered_products ?? '',
-                    $google_shipping_l
+                    $google_shipping_l,
+                    $order_chargeback_list
                 ],
                 $answer->question->question_template_body
             );
