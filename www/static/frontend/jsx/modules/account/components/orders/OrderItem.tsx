@@ -17,7 +17,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
     }
   );
 
-  const accordion = useAccordion(300);
+  const accordion = useAccordion(200);
 
   const [showAllItems, setShowAllItems] = useState(false);
 
@@ -85,7 +85,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             className="order-items-list"
           >
             {order.orderGroups.map((group, groupIndex) => {
-              return group.orderGroupsItems.map((item, itemIndex) => {
+              return group.orderGroupsItems.map((groupItem, itemIndex) => {
                 if (groupIndex === 0 && itemIndex === 0) {
                   return null;
                 }
@@ -98,16 +98,15 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                       />
                       <div>
                         <a className="order-item-body-product-name">
-                          Ecstasy Crafts Architextures Treasures - Wooden
-                          Corkscrew
+                          {groupItem.product}
                         </a>
                         <div className="order-item-body-product-sku">
-                          ECS-7G25093
+                          {groupItem.productcode}
                         </div>
                       </div>
                     </div>
                     <div className="order-item-body-product-right-part-text">
-                      x 3
+                      x {groupItem.avaible}
                     </div>
                   </div>
                 );

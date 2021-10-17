@@ -1,61 +1,59 @@
-import { AddToCartButton } from '@/js/Classes/AddToCartButton';
+import { AddToCartButton } from "@/js/Classes/AddToCartButton";
 
-$(document).on('click', '.front-endless-pager a.show-more', function(e){
-    //TODO: старый код подгрузки каталога
-    return;
-    e.preventDefault();
-    endless_paginate()
+$(document).on("click", ".front-endless-pager a.show-more", function (e) {
+  //TODO: старый код подгрузки каталога
+  return;
+  e.preventDefault();
+  endless_paginate();
 });
 
-window.endless_paginate = ()=>{
-    let $this = $('.front-endless-pager a.show-more');
-    // let $parent = $this.parent();
-    let $container = $('.content .product-items');
-    let text_loading = $this.data('text-loading');
-    let text_default = $this.data('text-default');
+window.endless_paginate = () => {
+  let $this = $(".front-endless-pager a.show-more");
+  // let $parent = $this.parent();
+  let $container = $(".content .product-items");
+  let text_loading = $this.data("text-loading");
+  let text_default = $this.data("text-default");
 
-    if ($this.length) {
+  if ($this.length) {
+    Pace.ignore(function () {
+      $.ajax($this.attr("href"), {
+        dataType: "json",
+        success: (data) => {
+          $container.removeClass("hide");
+          $this.css("margin", "20px 0");
 
-        Pace.ignore(function (){
-            $.ajax($this.attr('href'), {
-                'dataType': 'json',
-                'success' : (data)=>{
-                    $container.removeClass( 'hide' );
-                    $this.css('margin', '20px 0');
+          $(".products-state-line").show();
+          let old_uri = $this.attr("href");
 
-                    $('.products-state-line').show();
-                    let old_uri = $this.attr('href');
+          $container.append(data.content);
 
-                    $container.append(data.content);
+          if (data.href) {
+            $this.find(".text").html(text_default);
+            $this.attr("href", data.href);
+            $this.removeAttr("disabled");
+          } else {
+            $this.remove();
+          }
 
-                    if (data.href) {
-                        $this.find('.text').html(text_default);
-                        $this.attr('href', data.href);
-                        $this.removeAttr('disabled');
-                    }
-                    else {
-                        $this.remove();
-                    }
+          $(".page_count_wrap").html(data.page_count);
 
-                    $('.page_count_wrap').html(data.page_count);
+          window.LazyLoad.update();
 
-                    window.LazyLoad.update();
+          $container.find(".add-to-cart-button").each(function (i, e) {
+            new AddToCartButton(e);
+          });
+        },
+        error: () => {
+          window.loader.detach();
+          $this.find(".text").html(text_default);
+          $this.removeAttr("disabled");
 
-                    $container.find('.add-to-cart-button').each(function (i, e) {
-                        new AddToCartButton(e);
-                    });
-                },
-                'error': ()=>{
-                    window.loader.detach();
-                    $this.find('.text').html(text_default);
-                    $this.removeAttr('disabled');
+          //window.addFlashMessage('An error has occurred. Please try again later.', 'error');
+        },
+      });
+    });
 
-                    //window.addFlashMessage('An error has occurred. Please try again later.', 'error');
-                }
-            });
-        });
-
-        $this.attr('disabled', 'disabled');
-        $this.find('.text').html(text_loading);
-    }
+    $this.attr("disabled", "disabled");
+    $this.find(".text").html(text_loading);
+  }
 };
