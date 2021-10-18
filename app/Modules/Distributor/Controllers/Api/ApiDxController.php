@@ -94,7 +94,7 @@ class ApiDxController extends Controller
                                     $count_good++;
                                 }
                             }
-                            if ($count_good > (count($row) / 100) * 30) { // if count not empty column in row > 30%
+                            if ($count_good > (count($row) / 100) * 20) { // if count not empty column in row > 30%
                                 $ar_data[$counter_table][] = $row;
                             }
                             if (!empty($ar_data[$counter_table]) && count($ar_data[$counter_table]) === self::COUNT_ITEMS_TABLE) {
@@ -146,7 +146,9 @@ class ApiDxController extends Controller
                 $ob_save_price->active_for_sale_value = $active_products;
                 $ob_save_price->collectField($select, $ar_save);
                 $ob_save_price->savePrice();
-                $ob_save_price->sendStats();
+                if (filter_var($post->need_send, FILTER_VALIDATE_BOOLEAN)) {
+                    $ob_save_price->sendStats();
+                }
                 $result['status'] = true;
                 $result['countUpdate'] = $ob_save_price->count_update;
             } catch (\Throwable $exception) {
@@ -167,21 +169,36 @@ class ApiDxController extends Controller
                         $column->save();
                     }
                 }
+                if (!empty($active_products)) {
+                    foreach ($active_products as $table_index => $value) {
+                        $column = new ColumnTableSaveModel();
+                        $column->num_table = $table_index;
+                        $column->is_for_sale_value = true;
+                        $column->manufacture = $dx;
+                        $column->option_name = $value;
+                        $column->save();
+                    }
+                }
                 $this->jsonResponse($result);
             }
         }
     }
 
     /* Get order columns by manufacturerid */
-    public function getColumnByDx(int $dx)
+    public function getColumnByDx(int $dx) : void
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
         $ar_column = [];
+        $ar_for_sale_value = [];
         /** @var ColumnTableSaveModel $column */
         foreach (ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx_model->pk]) as $column) {
+            if ($column->is_for_sale_value) {
+                $ar_for_sale_value[$column->num_table] = $column->option_name;
+                continue;
+            }
             $ar_column[$column->num_table][$column->num_column] = $column->option_name;
         }
-        $this->jsonResponse($ar_column);
+        $this->jsonResponse(['column' => $ar_column, 'for_sale_value' => $ar_for_sale_value]);
     }
 
 }

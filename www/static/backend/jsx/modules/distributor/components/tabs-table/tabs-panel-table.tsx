@@ -1,22 +1,14 @@
 import React, { Fragment } from "react";
 import { TablePrice } from "@admin/modules/distributor/components/table-price/table-price";
 import { TabPanel } from "@material-ui/lab";
+import { IListTablePrice } from "@admin/modules/distributor/ts/types/table-price.types";
 
-interface ITabsPanelTable {
-  arTable: [];
-  select: { get: any; set: any };
-  checked: { get: any; set: any };
-  activeField: {
-    get: any;
-    set: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  };
-}
-
-export const TabsPanelTable: React.FC<ITabsPanelTable> = ({
+export const TabsPanelTable: React.FC<IListTablePrice> = ({
   arTable,
   select,
   checked,
   activeField,
+  needSend,
 }) => {
   return (
     <Fragment>
@@ -28,6 +20,7 @@ export const TabsPanelTable: React.FC<ITabsPanelTable> = ({
             select={select}
             checked={checked}
             activeField={activeField}
+            needSend={needSend}
           />
         </TabPanel>
       ))}

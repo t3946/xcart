@@ -39,6 +39,7 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   const [tabIndex, setTabIndex] = useState(`0`);
   const [mainCheck, setMainCheck] = useState<any>({});
   const [valueActive, setValueActive] = useState({});
+  const [needSend, setNeedSend] = useState(false);
   const { showSnackbar } = useContext(SnackbarContext);
 
   const onSaveHandler = () => {
@@ -49,6 +50,7 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
       data.append("dx", dx);
       data.append("active_value", JSON.stringify(valueActive));
       data.append("checkField", JSON.stringify(mainCheck));
+      data.append("need_send", needSend);
       setLoading(true);
       api.post("/api/dx/products-price/save", data).then((res: IResponse) => {
         if (res) {
@@ -96,9 +98,12 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
     }
   }, [arTable]);
   useEffect(() => {
-    api.get(`/api/dx/column/get/${dx}`).then((res: {}) => {
-      setSelect(res);
-    });
+    api
+      .get(`/api/dx/column/get/${dx}`)
+      .then((res: { column: any; for_sale_value: any }) => {
+        setSelect(res.column);
+        setValueActive(res.for_sale_value);
+      });
   }, []);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setTabIndex(newValue);
@@ -149,6 +154,7 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
               select={{ get: select, set: onChangeSelectHandler }}
               checked={{ get: mainCheck, set: handleCheckedChange }}
               activeField={{ get: valueActive, set: onChangeForSaleFieldValue }}
+              needSend={{ get: needSend, set: setNeedSend }}
             />
           ) : (
             <LoadingDialog />
