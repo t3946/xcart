@@ -13,7 +13,7 @@ interface ICartItem
     /**
      * @return int|float
      */
-    public function getPrice();
+    public function getPrice(): float;
 
     /**
      * @param $quantity int

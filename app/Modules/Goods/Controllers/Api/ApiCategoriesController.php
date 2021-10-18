@@ -2,18 +2,19 @@
 
 namespace Modules\Goods\Controllers\Api;
 
+use DateTime;
 use Modules\Goods\Controllers\AbstractCatalogController;
-use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
-use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\SurfMetaModel;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\QuerySet;
 
 class ApiCategoriesController extends AbstractCatalogController
 {
@@ -29,25 +30,22 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderNew(): void
     {
-        $qs = parent::getQS()->filter(
-            [
-                'detail_images__image_id__isnull' => false,
-            ]
-        )->order(['-add_date'])->group(['productid'])->limit(1000)->cache(3600);
+        $qs = parent::getQS()
+            ->filter(['detail_images__image_id__isnull' => false])
+            ->order(['-add_date'])
+            ->group(['productid'])
+            ->limit(200)
+            ->cache(3600);
 
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getPaginatedProducts($qs));
         }
     }
 
-    public function actionSliderFeatured()
+    public function actionSliderFeatured(): void
     {
         $qs = parent::getQS()
-            ->filter(
-                [
-                    'featured__product_order__isnull' => false,
-                ]
-            )
+            ->filter(['featured__product_order__isnull' => false])
             ->order(['?']);
 
         if ($this->getRequest()->getIsAjax()) {
@@ -113,7 +111,8 @@ class ApiCategoriesController extends AbstractCatalogController
             );
     }
 
-    private function getPaginatedProducts($qs) {
+    private function getPaginatedProducts($qs): array
+    {
         //sorting products
         $isCatalogPage = (int)$this->getRequest()->get->get('isCatalogPage', 0);
 
@@ -146,8 +145,6 @@ class ApiCategoriesController extends AbstractCatalogController
     /**
      * get paginated category by id
      * @param int $id category id
-     * @param string $slug
-     * @throws \Exception
      */
     public function actionCatalogCategory(int $id): void
     {
@@ -157,7 +154,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
         $this->model = CategoryModel::objects()->filter(['categoryid' => $id])->get();
 
-        /** @var \Xcart\App\Orm\QuerySet $qs */
+        /** @var QuerySet $qs */
         $qs = $this->getQS($this->model);
 
         if ($this->getRequest()->getIsAjax()) {
@@ -169,10 +166,11 @@ class ApiCategoriesController extends AbstractCatalogController
      * get array of main product fields (product has many excess data because this method takes only needed info) and return this
      * @param $products
      * @return array
+     * @throws UnknownPropertyException
      */
     private function getProductData($products): array
     {
-        if (!\is_array($products)) {
+        if (!is_array($products)) {
             $products->limit(20)->cache(3600);
         }
 
@@ -208,7 +206,7 @@ class ApiCategoriesController extends AbstractCatalogController
                     }
                 }
             } else {
-                if ($product->isGroupChild() && $this->is_slider) {
+                if ($this->is_slider && $product->isGroupChild()) {
                     $product = $product->parent;
                 }
                 $imageModel = $product->getImages()[0];
@@ -224,7 +222,7 @@ class ApiCategoriesController extends AbstractCatalogController
             $eta_date = '';
 
             if ($product->eta_date_mm_dd_yyyy && $product->eta_date_mm_dd_yyyy > time()) {
-                $date = (new \DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
+                $date = (new DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
                 $eta_date = date_format($date, "d F Y");
             }
 
