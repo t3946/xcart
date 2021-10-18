@@ -110,7 +110,7 @@ use Xcart\Product;
  */
 class ProductModel extends Model implements ICartItem
 {
-    private string $front_name = '';
+    private ?string $front_name = null;
 
     public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
