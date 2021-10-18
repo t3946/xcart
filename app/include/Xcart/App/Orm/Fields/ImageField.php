@@ -130,7 +130,6 @@ class ImageField extends FileField
     public $allowSquare = true;
     public $allowLandscape = true;
     public $allowPortrait = true;
-//    public $detectCorrupted = false;
 
     /**
      * @return array
@@ -158,7 +157,6 @@ class ImageField extends FileField
 
         return $constraints;
     }
-
 
     public function deleteOld()
     {
@@ -307,7 +305,6 @@ class ImageField extends FileField
         return $this->getFilesystem()->get($value);
     }
 
-
     protected function findSizePrefix($prefix, $throw = true)
     {
         $newPrefix = null;
@@ -362,5 +359,4 @@ class ImageField extends FileField
 
         return $path;
     }
-
 }
