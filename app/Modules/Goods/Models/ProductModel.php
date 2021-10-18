@@ -65,14 +65,14 @@ use Xcart\Product;
  * @property string fulldescr
  * @property string controlled_by_feed
  * @property mixed brandid
- * @property integer source_sfid
- * @property integer manufacturerid
+ * @property int source_sfid
+ * @property int manufacturerid
  * @property int add_date
  * @property int mod_date
  * @property mixed|string upc
- * @property null|\Xcart\App\Orm\Manager|\Modules\Sites\Models\SiteModel sites
- * @property null|\Xcart\App\Orm\Manager|\Modules\Goods\Models\CategoryModel[] categories
- * @property null|\Xcart\App\Orm\Manager|ProductModel[] childs
+ * @property null|Manager|SiteModel sites
+ * @property null|Manager|CategoryModel[] categories
+ * @property null|Manager|ProductModel[] childs
  * @property mixed cost_to_us
  * @property mixed amazon_fba
  * @property string provider
@@ -91,8 +91,17 @@ use Xcart\Product;
  * @property string group_mask
  * @property int group_root
  * @property GoogleProductsModel google_ads
- * @property ProductImageModel[]|\Xcart\App\Orm\Manager detail_images
+ * @property ProductImageModel[]|Manager detail_images
  * @property UserModel last_modify_user
+ * @property float $new_map_price
+ * @property string $seo_product_name
+ * @property bool $brand_normalized
+ * @property string $seo_fulldescr
+ * @property string $descr
+ * @property int $avail
+ * @property float $shipping_freight
+ * @property string $supplier_internal_id
+ * @property string $pc_classify_status
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -101,20 +110,22 @@ use Xcart\Product;
  */
 class ProductModel extends Model implements ICartItem
 {
-    private $front_name;
+    private string $front_name = '';
 
     public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
     public const NO_ASIN_FOUND = 'No ASIN found';
 
-    private $priceArray;
+    private array $priceArray = [];
 
     public const PRODUCT_STATUS_NOT_VERIFY = 0;
     public const PRODUCT_STATUS_PROBLEM_NOT_FIXED = 1;
     public const PRODUCT_STATUS_PROBLEM_FIXED = 2;
     public const PRODUCT_STATUS_VERIFY = 3;
 
-    use DataModelTrait, AutoMetaTrait, SlugifyTrait;
+    use AutoMetaTrait;
+    use DataModelTrait;
+    use SlugifyTrait;
 
     public static function getDataModelClass(): string
     {
@@ -333,14 +344,14 @@ class ProductModel extends Model implements ICartItem
             ],
             'childs' => [
                 'class' => HasManyField::class,
-                'modelClass' => ProductModel::class,
+                'modelClass' => __CLASS__,
                 'link' => ['productid' => 'group_root'],
                 'extra' => ['productid__isnt' => new Expression('group_root')]
             ],
             'parent' => [
                 'field' => 'group_root',
                 'class' => ForeignField::class,
-                'modelClass' => ProductModel::class,
+                'modelClass' => __CLASS__,
                 'link' => ['group_root' => 'productid'],
                 'null' => true,
             ],
@@ -521,32 +532,36 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasToOneField::class,
                 'modelClass' => GoogleProductsModel::class,
                 'link' => ['productid' => 'product_id']
+            ],
+            'is_group_root' => [
+                'class' => BooleanField::class,
+                'default' => false
             ]
         ];
     }
 
-    public function getMPN()
+    public function getMPN(): string
     {
         $model = $this->distributor;
 
-        if (strpos($this->productcode, $model->code) == 0) {
-            return substr($this->productcode, \strlen($model->code)+1 );
+        if (strpos($this->productcode, $model->code) === 0) {
+            return substr($this->productcode, strlen($model->code) + 1);
         }
 
-        return null;
+        return '';
     }
 
-    public function isGroupRoot()
+    public function isGroupRoot(): bool
     {
         return ($this->productid == $this->group_root);
     }
 
-    public function isGroupChild()
+    public function isGroupChild(): bool
     {
         return (null !== $this->group_root && ($this->productid != $this->group_root));
     }
 
-    public function isAmazonFBAEnabled()
+    public function isAmazonFBAEnabled(): bool
     {
         return $this->amazon_fba === 'Y';
     }
@@ -599,7 +614,7 @@ class ProductModel extends Model implements ICartItem
         return $this->getImages()[0];
     }
 
-    public function isSaleSticker()
+    public function isSaleSticker(): bool
     {
         if ($this->isOutOfStock()) {
             return false;
@@ -615,7 +630,7 @@ class ProductModel extends Model implements ICartItem
         return (bool)($this->sites->filter(['storefrontid' => $id])->count());
     }
 
-    public function isOutOfStock()
+    public function isOutOfStock(): bool
     {
         if ($this->eta_date_mm_dd_yyyy && time() < $this->eta_date_mm_dd_yyyy) {
             return true;
@@ -623,7 +638,7 @@ class ProductModel extends Model implements ICartItem
         return $this->isOutOfStockFrontend();
     }
 
-    public function isOutOfStockFrontend()
+    public function isOutOfStockFrontend(): bool
     {
         if ($this->group_root == $this->productid) {
             return false;
@@ -660,7 +675,7 @@ class ProductModel extends Model implements ICartItem
         return false;
     }
 
-    public function getAbsoluteUrl($full = false)
+    public function getAbsoluteUrl($full = false): string
     {
         $url = '';
         if ($this->productid) {
@@ -679,7 +694,7 @@ class ProductModel extends Model implements ICartItem
         return $url;
     }
 
-    public function getBaseDomain()
+    public function getBaseDomain(): string
     {
         if ($site = $this->sites->limit(1)->get()) {
             $res = $site->getBaseDomain();
@@ -687,8 +702,9 @@ class ProductModel extends Model implements ICartItem
         return $res ?? '';
     }
 
-    public function getDomain()
+    public function getDomain(): string
     {
+        /** @var SiteModel $site */
         if ($site = $this->sites->limit(1)->get()) {
             $res = $site->domain;
         }
@@ -768,7 +784,7 @@ class ProductModel extends Model implements ICartItem
         return $bread;
     }
 
-    public function getPrice($quantity = 1)
+    public function getPrice($quantity = 1): float
     {
         $fPrice = 0;
         $prices = $this->getPrices();
@@ -782,9 +798,7 @@ class ProductModel extends Model implements ICartItem
             }
         }
 
-        $fMapPrice = (float) $this->new_map_price;
-        $fPrice = max($fPrice, $fMapPrice);
-        return $fPrice;
+        return max($fPrice, (float) $this->new_map_price);
     }
 
     public function recalculate($quantity, $type, $data)
@@ -799,11 +813,10 @@ class ProductModel extends Model implements ICartItem
 
     public function __toString()
     {
-//        return "[{$this->productid}] {$this->product} ({$this->productcode})";
         return $this->getFrontendName();
     }
 
-    public function getFrontendName()
+    public function getFrontendName(): string
     {
         if ($this->front_name === null) {
             $brand_name = '';
@@ -820,7 +833,7 @@ class ProductModel extends Model implements ICartItem
         return $this->front_name;
     }
 
-    public function getFrontendDescription()
+    public function getFrontendDescription(): string
     {
         return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr;
     }
@@ -840,8 +853,7 @@ class ProductModel extends Model implements ICartItem
 
     public function getPrices(): array
     {
-        if ($this->priceArray === null) {
-            $this->priceArray = [];
+        if (!$this->priceArray) {
             $curr = $this->distributor->currency;
             foreach ($this->pricing as $price) {
                 $price_value = CurrencyHelper::convert($curr, max($price->price, $this->new_map_price));
@@ -850,7 +862,7 @@ class ProductModel extends Model implements ICartItem
                 }
             }
         }
-        return $this->priceArray ?? [];
+        return $this->priceArray;
     }
 
     public function getActualQuantity($quantity)
@@ -861,7 +873,7 @@ class ProductModel extends Model implements ICartItem
         if ($this->mult_order_quantity && $min > 1) {
             $tq = ceil($tq / $min) * $min;
         }
-        else if ($tq < $min) {
+        elseif ($tq < $min) {
             $tq = $min;
         }
 
@@ -885,12 +897,12 @@ class ProductModel extends Model implements ICartItem
         return $this->thumbnail->limit(1)->get();
     }
 
-    public function getAdminUrl()
+    public function getAdminUrl(): string
     {
         return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
     }
 
-    public function isCategorized()
+    public function isCategorized(): bool
     {
         return ($this->pc_classify_status === 'ACC' || $this->pc_classify_status === 'MC');
     }
@@ -916,7 +928,7 @@ class ProductModel extends Model implements ICartItem
         ]);
     }
 
-    public function isFreeShipping()
+    public function isFreeShipping(): bool
     {
         return false;
     }
@@ -932,21 +944,14 @@ class ProductModel extends Model implements ICartItem
         $fExtraMarginValue = null;
         if (($distributor = $this->distributor)
             && $distributor->reduce_extra_margin
-            && (float)$distributor->price_coef_z !== (float) 0
-            && (($cost_to_us = $this->getProductCostToUs()) > 0)) {
-
-            if ($distributor->max_extra_margin > (float) 0) {
-                $fExpectedMargin = $cost_to_us * $distributor->max_extra_margin;
-            } else {
-                $fExpectedMargin = round((
-                        $cost_to_us
-                        * (float)$distributor->price_coef_x
-                        + (float)$distributor->price_coef_y)
-                    / (float)$distributor->price_coef_z, 2);
-            }
+            && (float) $distributor->price_coef_z !== (float) 0
+            && ((float) $this->cost_to_us > (float) 0))
+        {
+            $fExpectedMargin = $distributor->max_extra_margin > (float)0
+                ? $this->cost_to_us * $distributor->max_extra_margin
+                : round(($this->cost_to_us * $distributor->price_coef_x + $distributor->price_coef_y) / $distributor->price_coef_z,2);
 
             $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
-
         }
         return $fExtraMarginValue;
     }
@@ -959,15 +964,17 @@ class ProductModel extends Model implements ICartItem
         return $this->options->filter(['active' => true])->order(['position'])->all();
     }
 
-    public function getAmazonArbitragePrice($qty = 1):? array
+    public function getAmazonArbitragePrice($qty = 1): array
     {
-        $result = null;
+        /** @var AmazonOfferCompetitorsModel $offer */
+        if ($this->ASIN && $offer = AmazonOfferCompetitorsModel::objects()->get([
+                'id' => new Expression("f_amazonGetMinArbitrageOffer('$this->ASIN', $qty)")
+            ])) {
 
-        if ($this->ASIN && $offer = AmazonOfferCompetitorsModel::objects()->get(['id' => new Expression("f_amazonGetMinArbitrageOffer('{$this->ASIN}', {$qty})")])) {
-            $result = [$offer->ListingPrice, $offer->Shipping];
+            return [$offer->ListingPrice, $offer->Shipping];
         }
 
-        return $result;
+        return [];
     }
 
     public function getVolume():? float
@@ -983,18 +990,9 @@ class ProductModel extends Model implements ICartItem
         return max((float)$this->shipping_weight ?: (float)$this->weight, 0.01);
     }
 
-    public function getFrontendPrice($forQuantity = 1)
+    public function getFrontendPrice($forQuantity = 1): float
     {
-        $fPrice = $this->getPrice($forQuantity);
-
-        /*if ($fPrice > $this->cost_to_us && $this->isOutOfStock() && $this->isSupplierFeedsEnabled()) {
-            $fPrice = round($this->cost_to_us + ($fPrice - $this->cost_to_us) / 3,2);
-            $fPrice = max((float) $this->new_map_price, $fPrice);
-        }*/
-
-        //$fPrice = CurrencyHelper::convert($this->distributor->currency, $fPrice);
-
-        return $fPrice;
+        return $this->getPrice($forQuantity);
     }
 
     public function isMarketPlaceEnabled($marketpalce_id): bool
@@ -1034,10 +1032,8 @@ class ProductModel extends Model implements ICartItem
             $value = $upc;
         }
 
-        if ($name === 'eta_date_mm_dd_yyyy' ) {
-            if ($this->eta_date_lock) {
-                $value = $this->eta_date_mm_dd_yyyy;
-            }
+        if (($name === 'eta_date_mm_dd_yyyy') && $this->eta_date_lock) {
+            $value = $this->eta_date_mm_dd_yyyy;
         }
         if ($name === 'weight' && $this->weight_lock) {
             $value = $this->weight;

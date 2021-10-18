@@ -63,6 +63,8 @@ use Xcart\Manufacturer;
  * @property bool allow_dispatch_off_working_hours
  * @property DistributorContactsModel[]|Manager contacts_model
  * @property bool avail
+ * @property string $d_website_search_for_sku_url
+ * @property float $max_extra_margin
  */
 class DistributorModel extends Model
 {

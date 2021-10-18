@@ -85,16 +85,14 @@ class OrderDetailModel  extends Model
         ];
     }
 
-    public function getAmazonCompetitorMinPrice():? array
+    public function getAmazonCompetitorMinPrice(): array
     {
-        $result = null;
-
         /** @var ProductModel $product */
         if ($product = $this->product_model) {
-            $result = $product->getAmazonArbitragePrice($this->amount);
+            return $product->getAmazonArbitragePrice($this->amount);
         }
 
-        return $result;
+        return [];
     }
 
     public function getOptions(): array
