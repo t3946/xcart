@@ -16,7 +16,7 @@ class AmpProductModel extends ProductModel
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
 
-    public function getAbsoluteUrl($full = false, $amp = false)
+    public function getAbsoluteUrl($full = false, $amp = false): string
     {
         if ($this->productid && $amp ) {
             $url = Xcart::app()->router->url(
