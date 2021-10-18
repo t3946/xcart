@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { selectColumn } from "@admin/modules/distributor/components/table-price/constants";
 import { SelectField } from "@admin/modules/distributor/components/field-form-price/field-select";
 import { Grid, Switch, Tooltip, Typography } from "@material-ui/core";
@@ -8,6 +8,10 @@ interface ITablePrice {
   select: { get: any; set: any };
   indexTable: number;
   checked: { get: any; set: any };
+  activeField: {
+    get: any;
+    set: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  };
 }
 
 export const TablePrice: React.FC<ITablePrice> = ({
@@ -15,18 +19,27 @@ export const TablePrice: React.FC<ITablePrice> = ({
   select,
   indexTable,
   checked,
+  activeField,
 }) => {
   const [pop, setPop] = useState("");
 
+  const issetForSaleField = (): boolean => {
+    if (select.get[indexTable]) {
+      if (Object.values(select.get[indexTable]).includes("for_sale")) {
+        return true;
+      }
+    }
+    return false;
+  };
   return (
-    <>
+    <Fragment>
       <Grid
         alignItems="center"
         justifyContent="center"
         container
         direction="row"
       >
-        <Typography variant="body2">Productcode</Typography>
+        <Typography variant="body2">Product code</Typography>
         <Switch
           checked={checked.get[indexTable] !== "productcode"}
           onChange={checked.set}
@@ -38,10 +51,29 @@ export const TablePrice: React.FC<ITablePrice> = ({
         />
         <Typography variant="body2">UPC</Typography>
       </Grid>
+      <div>
+        {issetForSaleField() && (
+          <Grid
+            alignItems="center"
+            justifyContent="center"
+            container
+            direction="column"
+          >
+            <Typography variant="body2">
+              Please write field value, which be use for active product
+            </Typography>
+            <input
+              value={activeField.get[indexTable] ?? ""}
+              id={indexTable.toString()}
+              onChange={(event) => activeField.set(event)}
+            />
+          </Grid>
+        )}
+      </div>
 
       <table className="table__dx-price" id="somethingUnique" cellSpacing="0">
         <tr>
-          {arTable[0].map((cell, i) => (
+          {arTable[0].map((_, i) => (
             <th style={{ width: 200 }}>
               <SelectField
                 valueList={select.get}
@@ -72,6 +104,6 @@ export const TablePrice: React.FC<ITablePrice> = ({
           </tr>
         ))}
       </table>
-    </>
+    </Fragment>
   );
 };

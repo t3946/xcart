@@ -129,6 +129,7 @@ class ApiDxController extends Controller
         $file = $_FILES['file'];
         $result = ['status' => false, 'countUpdate' => 0];
         $search_by = json_decode($post->checkField, true);
+        $active_products = json_decode($post->active_value, true);
         $dx = DistributorModel::objects()->get(['manufacturerid' => $post->dx]);
 
         $reader = IOFactory::createReaderForFile($file['tmp_name']);
@@ -142,12 +143,13 @@ class ApiDxController extends Controller
         if ($dx instanceof DistributorModel) {
             $ob_save_price = new SaveFilePrice($dx, $search_by);
             try {
+                $ob_save_price->active_for_sale_value = $active_products;
                 $ob_save_price->collectField($select, $ar_save);
                 $ob_save_price->savePrice();
                 $ob_save_price->sendStats();
                 $result['status'] = true;
                 $result['countUpdate'] = $ob_save_price->count_update;
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $result['error'] = $exception->getMessage();
             } finally {
                 // overwriting column order in excel table

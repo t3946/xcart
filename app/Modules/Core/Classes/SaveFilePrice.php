@@ -18,6 +18,7 @@ class SaveFilePrice
     private array $success_productcode = [];
     private array $fields_image = [];
     private string $dx_code;
+    public array $active_for_sale_value;
     public array $search_by = [];
 
     public function __construct(DistributorModel $dx_model, array $search_by)
@@ -61,6 +62,7 @@ class SaveFilePrice
             }
         }
     }
+
     /* Through tables and rows of the table and searches for the product, if it finds, updates */
     public function savePrice(): void
     {
@@ -93,7 +95,14 @@ class SaveFilePrice
                 case 'list_price':
                 case 'new_map_price':
                     if (!in_array($field, $this->fields_image[$t_index], true)) {
-                        $ar_field[$field] = str_replace(['$', ','],'', $item[$num_row]);
+                        $ar_field[$field] = str_replace(['$', ','], '', $item[$num_row]);
+                    }
+                    break;
+                case 'for_sale':
+                    if (empty($this->active_for_sale_value[$t_index])) {
+                        $ar_field[$field] = 'N';
+                    } else {
+                        $ar_field[$field] = $this->active_for_sale_value[$t_index] === $item[$num_row] ? 'Y' : 'N';
                     }
                     break;
                 default:
