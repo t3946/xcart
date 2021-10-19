@@ -388,8 +388,9 @@ class AdminHelper
     private static function userData()
     {
         $user = Xcart::app()->getUser();
-
-        StorageHelper::push($user->id ? $user->getAttributes() : null, null, 'user');
+        if ($user->id) {
+            StorageHelper::push($user->id ? $user->getAttributes() : null, null, 'user');
+        }
     }
 
     /**
