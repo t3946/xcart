@@ -1,5 +1,6 @@
 .star-container {
   padding: 0 rem-calc(2);
+  cursor: pointer;
 
   @include breakpoint(md up) {
     padding: 0 rem-calc(3);

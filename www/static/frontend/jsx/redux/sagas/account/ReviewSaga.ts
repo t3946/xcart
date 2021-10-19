@@ -1,4 +1,4 @@
-import { put, takeLatest } from "redux-saga/effects";
+import { takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { route } from "@client/jsx/utils/AppData";
@@ -11,7 +11,7 @@ function* createReview(action): Generator {
   console.log("createReview", form);
 
   yield api
-    .post<any>(route("reviews:api:create"), JSON.stringify(form))
+    .post<any>(route("reviews:api:create"), form, {})
     .then(function (res) {
       success(res);
     });

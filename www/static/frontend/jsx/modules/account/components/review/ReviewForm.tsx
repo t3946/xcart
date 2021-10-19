@@ -6,17 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import appData from "@client/jsx/utils/AppData";
 import SelectRating from "@client/modules/account/components/review/SelectRating";
-import PlusPanelButton from "@client/jsx/modules/account/components/common/PlusPanelButton";
 import { Form as RBForm } from "react-bootstrap";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
 import Camera from "@client/jsx/modules/icon/components/account/camera/Camera";
 import { createReviewAction } from "@client/jsx/redux/actions/account-actions/ReviewActions";
+import Files from "@client/jsx/modules/account/components/review/Files";
 
 const ReviewForm = (): any => {
   const product = appData.review.product;
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: AccountStore) => e.user);
+  const [files, setFiles] = React.useState([]);
   const initialValues = {
     overall: 0,
     headLine: "header",
@@ -56,20 +57,26 @@ const ReviewForm = (): any => {
   }
 
   function submit(values, actions) {
-    const form = {
-      header: values.headLine,
-      body: values.textBody,
-      productId: product.productid,
-      ratings: {
-        overall: values.overall,
-      },
+    const form = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+      form.append(`files[${i}]`, files[i]);
+    }
+
+    form.append("header", values.headLine);
+    form.append("body", values.textBody);
+    form.append("productId", product.productid);
+    const fdRatings = {
+      overall: values.overall,
     };
 
     ratings.features.forEach(function (e) {
-      form.ratings[e.slug] = values[e.slug];
+      fdRatings[e.slug] = values[e.slug];
     });
 
-    console.log("SUBMTI FORM", form);
+    form.append("ratings", JSON.stringify(fdRatings));
+
+    console.log("SUBMIT FORM", form);
 
     dispatch(
       createReviewAction({
@@ -127,8 +134,6 @@ const ReviewForm = (): any => {
       />
     );
   }
-
-  console.log(product);
 
   return (
     <div>
@@ -218,12 +223,7 @@ const ReviewForm = (): any => {
                     alone.
                   </p>
 
-                  <PlusPanelButton
-                    classes={{
-                      container: "form-review-add-file-button d-none d-md-flex",
-                      icon: "form-review-add-file-button-icon",
-                    }}
-                  />
+                  <Files setFiles={setFiles} />
 
                   <div className="d-md-none form-review-add-file-button_mobile d-flex align-items-center justify-content-center">
                     <Camera />

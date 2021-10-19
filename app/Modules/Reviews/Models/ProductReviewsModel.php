@@ -58,6 +58,11 @@ class ProductReviewsModel extends Model
                 'modelClass' => HelpfulReviewsModel::class,
                 'link' => ['product_review_id' => 'review_id'],
             ],
+            'files' => [
+                'class' => ForeignField::class,
+                'modelClass' => ReviewFileModel::class,
+                'link' => ['product_review_id' => 'review_id'],
+            ]
         ];
     }
 }

@@ -143,9 +143,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
             setIsIntersecting(entry.isIntersecting);
 
             if (entry.isIntersecting) {
-              // console.log("isIntersecting load product");
               observer.unobserve(target);
-              // getMoreReviews();
             }
           });
         }, options);

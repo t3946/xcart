@@ -3,11 +3,13 @@
 namespace Modules\Reviews\Controllers\Api;
 
 use Modules\Account\Controllers\AccountController;
+
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\Models\ReviewRatingsModel;
 use Modules\Reviews\Models\TotalProductRatingsModel;
 use Modules\Reviews\Models\HelpfulReviewsModel;
+use Modules\Reviews\Models\ReviewFileModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\TotalProductReviewsModel;
 use Xcart\App\Controller\FrontendController;
@@ -15,7 +17,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
-use XeroPHP\Models\Accounting\Account;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ReviewsApi extends FrontendController
 {
@@ -98,9 +100,9 @@ class ReviewsApi extends FrontendController
     public function createReview()
     {
         $review_data = [
-            'header' => $this->data['header'],
-            'body' => $this->data['body'],
-            'product_id' => $this->data['productId'],
+            'header' => $_POST['header'],
+            'body' => $_POST['body'],
+            'product_id' => $_POST['productId'],
         ];
         $review_data['user_id'] = (int)Xcart::app()->getUser()->user_id;
         $ip = Xcart::app()->request->getUserIP();
@@ -108,10 +110,26 @@ class ReviewsApi extends FrontendController
         $review = new ProductReviewsModel($review_data);
         $review->save();
 
-        $product_review_id = $review->pk;
+        $review_id = $review->pk;
+        $ratings = json_decode($_POST['ratings']);
 
-        foreach ($this->data['ratings'] as $slug => $rating) {
-            $this->createRating($product_review_id, $slug, $rating);
+        foreach ($ratings as $slug => $rating) {
+            $this->createRating($review_id, $slug, $rating);
+        }
+
+        //save files
+        for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
+            $files = $_FILES['files'];
+
+            $uploadedFile = new UploadedFile(
+                $files['tmp_name'][$i],
+                $files['name'][$i],
+                $files['type'][$i],
+                (int)$files['size'][$i],
+                (int)$files['error'][$i],
+            );
+
+            (new ReviewFileModel(['review_id' => $review_id, 'image_path' => $uploadedFile]))->save();
         }
 
         $this->jsonResponse($review->getAttributes());
@@ -123,18 +141,25 @@ class ReviewsApi extends FrontendController
     public function getReviews($product_id, $limit, $offset, $sort): array
     {
         $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
+
         $qs = HelpfulReviewsModel::objects()->getQuerySet();
-        $alias = $qs->getTableAlias();
+        $ratings_alias = $qs->getTableAlias();
+
+        $qs = ReviewFileModel::objects()->getQuerySet();
+        $files_alias = $qs->getTableAlias();
+
         $user_id = $this->getUser()->user_id;
         $select_fields = [
             '*',
             'helpful__user_id',
+            'files__review_id',
             new Count('helpful__user_id', 'helpful_count'),
             'overall_rating' => 'rating__rating',
             'user_public_name' => 'user__public_name',
             'user_avatar' => 'user__avatar_image',
-            'markedHelpful' => new Expression("IF($alias.user_id, true, false)"),
-            "created_timestamp" => "UNIX_TIMESTAMP(created)",
+            'markedHelpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
+            'created_timestamp' => 'UNIX_TIMESTAMP(created)',
+            'files' => new Expression("GROUP_CONCAT($files_alias.image_path)"),
         ];
         $filter_fields = [
             'product_id' => $product_id,
@@ -143,7 +168,7 @@ class ReviewsApi extends FrontendController
 
         // select user marked helpful if user authorised
         if ($user_id) {
-            $select_fields['markedHelpful'] = new Expression("IF($alias.user_id, true, false)");
+            $select_fields['markedHelpful'] = new Expression("IF($ratings_alias.user_id, true, false)");
             $filter_fields[] = new QOr(['helpful__user_id' => $user_id, 'helpful__user_id__isnull' => true]);
         }
 
