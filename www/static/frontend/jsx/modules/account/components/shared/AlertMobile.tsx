@@ -2,7 +2,7 @@ import React from "react";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { useDispatch, useSelector } from "react-redux";
 import TimesIcon from "@client/modules/icon/components/account/ModalTimes";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import classnames from "classnames";
 import {
   alertIconTemplate,
@@ -11,7 +11,7 @@ import {
 
 const AlertMobile: React.FC = function () {
   const dispatch = useDispatch();
-  const mobileAlert = useSelector((e: AccountStore) => e.mobileAlert);
+  const mobileAlert = useSelector((e: StoreInterface) => e.mobileAlert);
   const { isVisible } = mobileAlert;
   const initialAlertValue = {
     variant: VariantsEnum.success,

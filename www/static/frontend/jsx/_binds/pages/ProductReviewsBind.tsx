@@ -1,6 +1,6 @@
 import React from "react";
 import ProductReviews from "@client/jsx/modules/product/Components/ProductReviews";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { Provider } from "react-redux";
 
 (function (): void {
@@ -11,7 +11,7 @@ import { Provider } from "react-redux";
   }
 
   React.render(
-    <Provider store={accountStore as any}>
+    <Provider store={Store as any}>
       <ProductReviews />
     </Provider>,
     target

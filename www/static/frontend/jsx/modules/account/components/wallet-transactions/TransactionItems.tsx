@@ -2,10 +2,10 @@ import React from "react";
 import { TransactionItemsElem } from "@client/modules/account/components/wallet-transactions/TransactionItemsElem";
 import { TransactionItemsListTotal } from "@client/modules/account/components/wallet-transactions/TransactionItemsListTotal";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 export const TransactionItems = ({ refund = undefined, info }) => {
-  const breakpoint = useSelector((e: AccountStore) => e.main.breakpoint);
+  const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   return (
     <div>

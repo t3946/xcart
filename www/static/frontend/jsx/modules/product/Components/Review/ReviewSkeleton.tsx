@@ -2,7 +2,7 @@ import React from "react";
 import RatingStars from "@client/modules/shared/components/ratings/RatingStars";
 import classnames from "classnames";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 const ReviewSkeleton: React.FC = function () {
   const classes = {
@@ -10,7 +10,7 @@ const ReviewSkeleton: React.FC = function () {
   };
 
   function markAsHelpfulTemplate() {
-    const user = useSelector((e: AccountStore) => e.user);
+    const user = useSelector((e: StoreInterface) => e.user);
 
     if (!user) {
       return;

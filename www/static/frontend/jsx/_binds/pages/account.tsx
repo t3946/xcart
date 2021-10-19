@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { AccountRouters } from "../../modules/account/routers/AccountRouters";
+import { AccountRouters } from "@client/jsx/modules/account/routers/AccountRouters";
 import { Provider } from "react-redux";
-import { accountStore } from "../../redux/stores/StoreAccount";
-import HatNavigation from "@client/jsx/modules/account/components/hat/HatNavigation";
+import Store from "@client/jsx/redux/stores/Store";
 
 (() => {
   const elem = document.getElementsByClassName("account")[0];
@@ -14,7 +13,7 @@ import HatNavigation from "@client/jsx/modules/account/components/hat/HatNavigat
 
   ReactDOM.render(
     (() => (
-      <Provider store={accountStore}>
+      <Provider store={Store as any}>
         <AccountRouters />
       </Provider>
     ))(),

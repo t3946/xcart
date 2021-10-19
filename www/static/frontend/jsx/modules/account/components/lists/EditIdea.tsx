@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { editIdeaName } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { ListItem } from "@client/modules/account/ts/types/list.type";
 
 interface EditIdeaProps {
@@ -23,7 +23,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
 }) => {
   const [isEdit, setIsEdit] = useState(false);
 
-  const isLoading = useSelector((e: AccountStore) => e.lists.listLoading);
+  const isLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const dispatch = useDispatch();
 

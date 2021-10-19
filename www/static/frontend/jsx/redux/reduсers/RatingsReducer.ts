@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { productsRatingsInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { productsRatingsInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
 
 const RatingsReducer = (
   store: Record<any, any> = productsRatingsInitialValue,

@@ -1,9 +1,14 @@
-import { applyMiddleware, combineReducers, createStore, Store } from "redux";
+import {
+  applyMiddleware,
+  combineReducers,
+  createStore,
+  Store as ReduxStore,
+} from "redux";
 import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
-import accountStoreInitialValue from "../../modules/account/ts/consts/account-store-initial-value";
-import { AccountStore } from "../../modules/account/ts/types/account-store.type";
+import storeInitialValue from "../../modules/account/ts/consts/store-initial-value";
+import StoreInterface from "@client/jsx/modules/account/ts/types/store.type";
 import accountRootSaga from "../sagas/account/MainSaga";
 import accountMainReducer from "../reduсers/account/MainReduсer";
 import WalletReducer from "../reduсers/account/PaymentsReducer";
@@ -27,7 +32,7 @@ import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
-export const accountStore: Store<AccountStore> = createStore(
+const Store: ReduxStore<StoreInterface> = createStore(
   combineReducers({
     addresses: accountAddressesReducer,
     main: accountMainReducer,
@@ -50,8 +55,10 @@ export const accountStore: Store<AccountStore> = createStore(
     productsReviews: ReviewsReducer,
     product: ProductReducer,
   }),
-  accountStoreInitialValue,
+  storeInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
 sagaMiddleware.run(accountRootSaga);
+
+export default Store;

@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
-import { AccountListsStore } from "@client/modules/account/ts/types/account-store.type";
-import { accountListsInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { AccountListsStore } from "@client/modules/account/ts/types/store.type";
+import { accountListsInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
 import { AccountListProductActionEnum } from "@client/modules/account/ts/types/account-list-product-action";
 import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
 

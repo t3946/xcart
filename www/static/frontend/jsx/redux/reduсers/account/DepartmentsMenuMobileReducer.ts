@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { departmentsMenuMobile } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { departmentsMenuMobile } from "@client/modules/account/ts/consts/store-initial-value";
 
 const DepartmentsMobileMenuReducer = (
   store: Record<any, any> = departmentsMenuMobile,

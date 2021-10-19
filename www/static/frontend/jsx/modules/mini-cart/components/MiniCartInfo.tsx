@@ -1,12 +1,12 @@
 import React from "react";
 import t from "@client/jsx/i18n";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import classnames from "classnames";
 import { route } from "@client/jsx/utils/AppData";
 
 const MiniCartInfo: React.FC = () => {
-  const cart = useSelector((e: AccountStore) => e.cart);
+  const cart = useSelector((e: StoreInterface) => e.cart);
 
   const buttonRef = React.useRef();
 

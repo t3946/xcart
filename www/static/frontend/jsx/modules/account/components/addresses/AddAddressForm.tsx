@@ -3,7 +3,7 @@ import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
 import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { Form, Formik, useFormik } from "formik";
+import { Form, Formik } from "formik";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
@@ -15,7 +15,7 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 export const AddAddressForm = ({ addressInfo }) => {
@@ -50,7 +50,7 @@ export const AddAddressForm = ({ addressInfo }) => {
       return;
     }
 
-    dispatch(addAddress(newAddress, onPended, accountStore.getState().user.id));
+    dispatch(addAddress(newAddress, onPended, Store.getState().user.id));
   };
   return (
     <div className="add-address-form-container">

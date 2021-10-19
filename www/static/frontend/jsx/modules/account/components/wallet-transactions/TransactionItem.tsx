@@ -8,12 +8,12 @@ import { TransactionItems } from "./TransactionItems";
 import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { useSelector } from "react-redux";
-import { AccountStore } from "../../ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 export const TransactionItem = ({ transactionInfo, first }) => {
   const accordion = useAccordion(500);
 
-  const breakpoint = useSelector((e: AccountStore) => e.main.breakpoint);
+  const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   return (
     <div className="transaction">

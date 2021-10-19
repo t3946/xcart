@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom";
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
@@ -7,16 +6,15 @@ import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import appData from "@client/jsx/utils/AppData";
 import SelectRating from "@client/modules/account/components/review/SelectRating";
 import { Form as RBForm } from "react-bootstrap";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import Camera from "@client/jsx/modules/icon/components/account/camera/Camera";
 import { createReviewAction } from "@client/jsx/redux/actions/account-actions/ReviewActions";
 import Files from "@client/jsx/modules/account/components/review/Files";
 
 const ReviewForm = (): any => {
   const product = appData.review.product;
-  const history = useHistory();
   const dispatch = useDispatch();
-  const user = useSelector((e: AccountStore) => e.user);
+  const user = useSelector((e: StoreInterface) => e.user);
   const [files, setFiles] = React.useState([]);
   const initialValues = {
     overall: 0,
@@ -43,6 +41,7 @@ const ReviewForm = (): any => {
         <img
           src={user.avatar_image}
           className={"mobile-menu-avatar form-review-avatar"}
+          alt={""}
         />
       );
     }
@@ -56,7 +55,7 @@ const ReviewForm = (): any => {
     );
   }
 
-  function submit(values, actions) {
+  function submit(values) {
     const form = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -142,14 +141,7 @@ const ReviewForm = (): any => {
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {function ({
-          setValues,
-          isSubmitting,
-          values,
-          errors,
-          touched,
-          handleChange,
-        }) {
+        {function ({ setValues, values, errors, touched, handleChange }) {
           return (
             <Form>
               <InnerPage

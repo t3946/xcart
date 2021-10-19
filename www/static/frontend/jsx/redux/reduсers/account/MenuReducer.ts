@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { accountMenuInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
+import { accountMenuInitialValue } from "../../../modules/account/ts/consts/store-initial-value";
 
 const MenuReducer = (state = accountMenuInitialValue, action: AnyAction) => {
   switch (action.type) {

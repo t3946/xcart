@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { TransactionsList } from "../components/wallet-transactions/TransactionsList";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { useDispatch, useSelector } from "react-redux";
 import { getTransaction } from "@client/jsx/redux/actions/account-actions/PaymentsActions";
 
 export const Transactions: React.FC = () => {
   const transactions = useSelector(
-    (e: AccountStore) => e.payments.transactions
+    (e: StoreInterface) => e.payments.transactions
   );
 
   const dispatch = useDispatch();

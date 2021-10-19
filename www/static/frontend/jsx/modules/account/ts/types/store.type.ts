@@ -4,37 +4,6 @@ import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/alert";
 import { List } from "@client/modules/account/ts/types/list.type";
 
-export interface AccountStore {
-  addresses: AccountAddressesStore;
-  main: AccountMainStore;
-  user: any;
-  payments: AccountPaymentsStore;
-  mobileMenu: any;
-  lists: AccountListsStore;
-  shadowPanel: {
-    isVisible: boolean;
-    zIndex: number;
-    subscribers: Record<string, boolean>;
-  };
-  departmentsMenuMobile: {
-    isVisible: boolean;
-  };
-  departmentsMenuDesktop: {
-    isVisible: boolean;
-  };
-  countries: any;
-  loginAndSecurity: AccountLoginAndSecurityStore;
-  mobileAlert: AccountMobileAlertStore;
-  cart: {
-    quantity: number;
-    checkoutUrl: string;
-  };
-  publicProfile: AccountPublicProfileStore;
-  productsRatings: any;
-  productsReviews: any;
-  product: any;
-}
-
 export interface AccountAddressesStore {
   addressesList: AddressItemDto[];
   loading: boolean;
@@ -79,3 +48,36 @@ export interface AccountMobileAlertStore {
 export interface AccountPublicProfileStore {
   alert: Record<any, any>;
 }
+
+interface StoreInterface {
+  addresses: AccountAddressesStore;
+  main: AccountMainStore;
+  user: any;
+  payments: AccountPaymentsStore;
+  mobileMenu: any;
+  lists: AccountListsStore;
+  shadowPanel: {
+    isVisible: boolean;
+    zIndex: number;
+    subscribers: Record<string, boolean>;
+  };
+  departmentsMenuMobile: {
+    isVisible: boolean;
+  };
+  departmentsMenuDesktop: {
+    isVisible: boolean;
+  };
+  countries: any;
+  loginAndSecurity: AccountLoginAndSecurityStore;
+  mobileAlert: AccountMobileAlertStore;
+  cart: {
+    quantity: number;
+    checkoutUrl: string;
+  };
+  publicProfile: AccountPublicProfileStore;
+  productsRatings: any;
+  productsReviews: any;
+  product: any;
+}
+
+export default StoreInterface;

@@ -2,9 +2,8 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { priorityProductSelectValuesConst } from "@client/modules/account/ts/consts/priority-product-select-values.const";
 import { editCommentInProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
@@ -46,7 +45,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
     onSubmit: handleSubmit,
   });
 
-  const isLoading = useSelector((e: AccountStore) => e.lists.listLoading);
+  const isLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   return (
     <div>

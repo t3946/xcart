@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
-import { AccountMobileAlertStore } from "@client/modules/account/ts/types/account-store.type";
-import { accountMobileAlert } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { AccountMobileAlertStore } from "@client/modules/account/ts/types/store.type";
+import { accountMobileAlert } from "@client/modules/account/ts/consts/store-initial-value";
 
 const MobileAlertReducer = (
   state: AccountMobileAlertStore = accountMobileAlert,

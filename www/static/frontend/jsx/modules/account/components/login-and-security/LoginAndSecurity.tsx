@@ -6,7 +6,7 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import classnames from "classnames";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
 import Alert from "@client/modules/account/components/shared/Alert";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { setAlertAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import {
@@ -21,8 +21,8 @@ const LoginAndSecurity = (): any => {
   const breakpoint = useBreakpoint();
   const history = useHistory();
   const user = useSelector((e: StoreDto) => e.user);
-  const countries = useSelector((e: AccountStore) => e.countries);
-  const alert = useSelector((e: AccountStore) => e.loginAndSecurity.alert);
+  const countries = useSelector((e: StoreInterface) => e.countries);
+  const alert = useSelector((e: StoreInterface) => e.loginAndSecurity.alert);
   const [show, setShow] = React.useState(alert !== null);
   const ALERT_SHOW_TIME_MS = 3000;
 

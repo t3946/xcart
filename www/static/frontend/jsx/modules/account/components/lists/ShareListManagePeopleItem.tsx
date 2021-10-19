@@ -1,5 +1,5 @@
 import React from "react";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { ShareListManagePeopleSelect } from "@client/modules/account/components/lists/ShareListManagePeopleSelect";
 import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
 import { viewUserListRight } from "@client/modules/account/utils/view-user-list-right";
@@ -19,8 +19,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   userListInfo,
   onClick,
 }) => {
-  const isYourAccount =
-    userListInfo.user.user_id === accountStore.getState().user.id;
+  const isYourAccount = userListInfo.user.user_id === Store.getState().user.id;
 
   const breakpoint = useBreakpoint();
 

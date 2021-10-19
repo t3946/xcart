@@ -1,13 +1,13 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
-import { ApiService } from "../../../modules/shared/services/api.service";
+import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
-import { accountStore } from "../../stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 
 const api = new ApiService();
 
 const getUser = () => {
-  return accountStore.getState().user;
+  return Store.getState().user;
 };
 
 function* getCards(): Generator {
@@ -50,7 +50,7 @@ function* addCard(action: AnyAction): Generator {
 
   yield put({
     type: "GET_ADDRESSES",
-    userId: accountStore.getState().user.id,
+    userId: Store.getState().user.id,
   });
 
   yield action.onRequestEnd();
@@ -71,7 +71,7 @@ function* editCard(action: AnyAction): Generator {
 
   yield put({
     type: "GET_ADDRESSES",
-    userId: accountStore.getState().user.id,
+    userId: Store.getState().user.id,
   });
 
   yield action.onRequestEnd();
@@ -82,7 +82,7 @@ function* removeCard(action: AnyAction): Generator {
     .post<any>(
       `/account/api/wallet/remove-card`,
       JSON.stringify({
-        user: accountStore.getState().user.id,
+        user: Store.getState().user.id,
         card: action.id,
       })
     )

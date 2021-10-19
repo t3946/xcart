@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { ManageList } from "@client/modules/account/components/lists/ManageList";
 
 interface ManageListPageURLParams {
@@ -12,7 +12,7 @@ export const ManageListPage: React.FC = () => {
 
   const history = useHistory();
 
-  const lists = accountStore.getState().lists.lists;
+  const lists = Store.getState().lists.lists;
 
   if (!lists) {
     history.push(`/account/your-lists/${params.listHash}`);

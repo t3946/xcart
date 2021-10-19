@@ -6,7 +6,7 @@ import { createList } from "../../../../redux/actions/account-actions/ListsActio
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { useHistory } from "react-router";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
@@ -29,7 +29,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const history = useHistory();
 
-  const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
+  const listLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {

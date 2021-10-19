@@ -68,9 +68,10 @@ export const publicProfileInitialValue = {
 };
 
 export const productsRatingsInitialValue = {};
+
 export const productsReviewsInitialValue = {};
 
-const accountStoreInitialValue = {
+const storeInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
   user: accountUserInitialValue,
@@ -87,4 +88,4 @@ const accountStoreInitialValue = {
   product: null,
 };
 
-export default accountStoreInitialValue;
+export default storeInitialValue;

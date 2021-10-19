@@ -2,7 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "../../../modules/shared/services/api.service";
 import { AnyAction } from "redux";
-import { accountStore } from "../../stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 
 const api = new ApiService();
 
@@ -50,7 +50,7 @@ function* removeAddress(action: AnyAction): Generator {
       `/account/api/addresses/remove-address`,
       JSON.stringify({
         addressId: action.id,
-        user: accountStore.getState().user.id,
+        user: Store.getState().user.id,
       })
     )
     .then((response) => response)
@@ -97,7 +97,7 @@ function* editAddress(action: AnyAction): Generator {
       `/account/api/addresses/edit-address`,
       JSON.stringify({
         address: action.address,
-        user: accountStore.getState().user.id,
+        user: Store.getState().user.id,
       })
     )
     .then((response) => response)

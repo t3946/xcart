@@ -5,11 +5,11 @@ import { getCountryByCode } from "@client/jsx/utils/Countries";
 import { editPhoneAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
 
 const TSVChangePreferredMethod: React.FC<any> = function () {
-  const countries = useSelector((e: AccountStore) => e.countries);
+  const countries = useSelector((e: StoreInterface) => e.countries);
   const dispatch = useDispatch();
 
   const initialValues = {

@@ -1,7 +1,7 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { AnyAction } from "redux";
 import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
@@ -9,7 +9,7 @@ import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-sto
 const api = new ApiService();
 
 const getUser = () => {
-  return accountStore.getState().user;
+  return Store.getState().user;
 };
 
 function* getLists(): Generator {
@@ -36,7 +36,7 @@ function* createList(action: AnyAction): Generator {
 
   yield put({
     type: "SET_LISTS",
-    lists: accountStore.getState().lists.lists.concat(result),
+    lists: Store.getState().lists.lists.concat(result),
   });
 
   yield action.callback(result);
@@ -65,7 +65,7 @@ function* deleteList(action: AnyAction): Generator {
 
   yield put({
     type: "SET_LISTS",
-    lists: accountStore.getState().lists.lists.filter((e) => {
+    lists: Store.getState().lists.lists.filter((e) => {
       if (e.product_list_id !== action.listId) {
         return e;
       }
@@ -141,7 +141,7 @@ function* addProductOnList(action: AnyAction): Generator {
 
   yield put({
     type: "SET_LISTS",
-    lists: accountStore.getState().lists.lists.map((e) => {
+    lists: Store.getState().lists.lists.map((e) => {
       if (e.product_list_id === action.listId) {
         return {
           ...e,
@@ -169,7 +169,7 @@ function* editIdeaName(action: AnyAction): Generator {
   yield put({
     type: "SET_LISTS",
     lists: editNameOnList(
-      accountStore.getState().lists.lists,
+      Store.getState().lists.lists,
       action.listId,
       action.productId,
       action.name
@@ -194,7 +194,7 @@ function* editCommentInProduct(action: AnyAction): Generator {
   yield put({
     type: "SET_LISTS",
     lists: EditCommentDataOnProduct(
-      accountStore.getState().lists.lists,
+      Store.getState().lists.lists,
       action.listId,
       action.productId,
       action.data
@@ -216,11 +216,9 @@ function* manageList(action: AnyAction): Generator {
 
   yield put({
     type: "SET_LISTS",
-    lists: accountStore
-      .getState()
-      .lists.lists.map((e) =>
-        e.product_list_id === action.listId ? { ...e, ...action.data } : e
-      ),
+    lists: Store.getState().lists.lists.map((e) =>
+      e.product_list_id === action.listId ? { ...e, ...action.data } : e
+    ),
   });
 
   yield action.callback();

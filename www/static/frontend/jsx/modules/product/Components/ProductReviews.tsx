@@ -2,7 +2,7 @@ import React from "react";
 import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
 import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import ArrowIcon from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
@@ -34,7 +34,7 @@ const ProductReviews: React.FC = function () {
     document.location.pathname.match(/\/product\/(\d+)/)[1]
   );
 
-  const ratings = useSelector((e: AccountStore) => e.productsRatings)[
+  const ratings = useSelector((e: StoreInterface) => e.productsRatings)[
     productId
   ];
 

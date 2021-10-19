@@ -2,7 +2,7 @@ import { FormSelect } from "@client/modules/account/components/shared/FormSelect
 import React from "react";
 import Review from "@client/modules/product/Components/Review/Review";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import ReviewSkeleton from "@client/modules/product/Components/Review/ReviewSkeleton";
 import appData from "@client/jsx/utils/AppData";
 import {
@@ -23,7 +23,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
   const LastReviewRef = React.useRef<any>();
   const totalReviews = AppData.products[props.productId].total_reviews;
   const ReviewsContainerRef = React.useRef<any>();
-  const reviews = useSelector((e: AccountStore) => e.productsReviews)[
+  const reviews = useSelector((e: StoreInterface) => e.productsReviews)[
     props.productId
   ];
   const reviewsPerOnePage = 3;

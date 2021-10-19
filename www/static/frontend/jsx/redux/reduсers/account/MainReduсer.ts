@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
-import { AccountMainStore } from "../../../modules/account/ts/types/account-store.type";
-import { accountMainStoreInitialValue } from "../../../modules/account/ts/consts/account-store-initial-value";
+import { AccountMainStore } from "@client/jsx/modules/account/ts/types/store.type";
+import { accountMainStoreInitialValue } from "../../../modules/account/ts/consts/store-initial-value";
 
 const accountMainReducer = (
   state: AccountMainStore = accountMainStoreInitialValue,

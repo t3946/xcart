@@ -5,7 +5,7 @@ import MarkAsHelpful from "@client/modules/product/Components/Review/MarkAsHelpf
 import HelpfulCount from "@client/modules/product/Components/Review/HelpfulCount";
 import Body from "@client/modules/product/Components/Review/Body";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import Files from "@client/jsx/modules/product/Components/Review/Files";
 
 interface PropsInterface {
@@ -56,7 +56,7 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
   }
 
   function markAsHelpfulTemplate() {
-    const user = useSelector((e: AccountStore) => e.user);
+    const user = useSelector((e: StoreInterface) => e.user);
 
     if (!user) {
       return;

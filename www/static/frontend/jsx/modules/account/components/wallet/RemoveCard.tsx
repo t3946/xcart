@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { removeCard } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { CardHeader } from "./CardHeader";
-import { AccountStore } from "../../ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 
 interface RemoveCardProps {
@@ -21,11 +21,11 @@ export const RemoveCard: React.FC<RemoveCardProps> = ({ cardInfo }) => {
   const dispatch = useDispatch();
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.payments.submitCardFormLoading
+    (e: StoreInterface) => e.payments.submitCardFormLoading
   );
 
   const onRemoveEnd = () => {
-    if (accountStore.getState().main.breakpoint.is768) {
+    if (Store.getState().main.breakpoint.is768) {
       history.push("/account/payments/wallet");
       return;
     }

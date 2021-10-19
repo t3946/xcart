@@ -14,7 +14,7 @@ import {
 import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "../../utils/detect-card-type";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { useHistory } from "react-router";
 
 export const AddCardForm: React.FC = () => {
@@ -53,7 +53,7 @@ export const AddCardForm: React.FC = () => {
   };
 
   const cardsHandleCancel = () => {
-    if (accountStore.getState().main.breakpoint.is768) {
+    if (Store.getState().main.breakpoint.is768) {
       history.push("/account/payments/wallet");
       return;
     }

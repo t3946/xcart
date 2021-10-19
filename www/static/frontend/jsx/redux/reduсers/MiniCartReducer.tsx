@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { cartInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { cartInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
 
 const MiniCartReducer = (
   store: Record<any, any> = cartInitialValue,

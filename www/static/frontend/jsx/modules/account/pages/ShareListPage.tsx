@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { ShareList } from "@client/modules/account/components/lists/ShareList";
 import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
@@ -11,7 +11,7 @@ interface ShareListPageURLParams {
 export const ShareListPage: React.FC = () => {
   const params = useParams<ShareListPageURLParams>();
 
-  const lists = accountStore.getState().lists.lists;
+  const lists = Store.getState().lists.lists;
 
   const history = useHistory();
 

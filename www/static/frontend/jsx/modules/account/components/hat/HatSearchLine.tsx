@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import DepartmentsMenu from "./DepartmentsMenu";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
@@ -11,6 +11,7 @@ import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButtonDesktop";
+import AppData from "@client/jsx/utils/AppData";
 
 interface PropsInterface {
   isStatic?: boolean;
@@ -22,7 +23,7 @@ const HatSearchLine: React.FC<PropsInterface> = (
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
   const isVisibleDepartmentsMenu = useSelector(
-    (e: AccountStore) => e.departmentsMenuDesktop.isVisible
+    (e: StoreInterface) => e.departmentsMenuDesktop.isVisible
   );
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
@@ -42,8 +43,8 @@ const HatSearchLine: React.FC<PropsInterface> = (
               type="text"
               name="q"
               className="input-search"
-              placeholder={appData.config.cidev_header_code}
-              value={appData.params.get.q}
+              placeholder={AppData.config.cidev_header_code}
+              value={AppData.params.get.q}
               itemProp="query-input"
               data-suggestion-url={route("catalog:search:suggestion")}
               autoComplete="off"
@@ -56,7 +57,7 @@ const HatSearchLine: React.FC<PropsInterface> = (
 
             <a
               className={classnames("button-clear", {
-                active: appData.params.get.q,
+                active: AppData.params.get.q,
               })}
             />
           </div>

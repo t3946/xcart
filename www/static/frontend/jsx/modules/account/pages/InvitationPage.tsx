@@ -3,12 +3,12 @@ import { Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { acceptInvite } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useHistory } from "react-router";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { viewUserListRight } from "@client/modules/account/utils/view-user-list-right";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 
-export const InvitationPage = () => {
+export const InvitationPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -27,7 +27,7 @@ export const InvitationPage = () => {
     history.push("/account/");
   };
 
-  const user = useSelector((e: AccountStore) => e.user);
+  const user = useSelector((e: StoreInterface) => e.user);
 
   const loading = useSelector((store: AccountStore) => store.lists.listLoading);
 

@@ -5,14 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
+import AppData from "@client/jsx/utils/AppData";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
-  const cart = useSelector((e: AccountStore) => e.cart);
+  const cart = useSelector((e: StoreInterface) => e.cart);
 
   const isVisibleMenu = useSelector(
-    (e: AccountStore) => e.departmentsMenuMobile.isVisible
+    (e: StoreInterface) => e.departmentsMenuMobile.isVisible
   );
 
   function toggleMobileDepartmentsMenu(e) {
@@ -24,7 +25,7 @@ const HatNavigation = (): any => {
 
   function mainMenuTemplate() {
     const items = [];
-    const menu = appData.mainMenu;
+    const menu = AppData.mainMenu;
 
     for (let i = 0; i < menu.length; i++) {
       const item = menu[i];
@@ -56,7 +57,7 @@ const HatNavigation = (): any => {
         >
           <div
             dangerouslySetInnerHTML={{
-              __html: appData.templates.renderStaticNotifications,
+              __html: AppData.templates.renderStaticNotifications,
             }}
           />
 
@@ -75,14 +76,14 @@ const HatNavigation = (): any => {
                 <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
                   <a href="/">
                     <img
-                      src={`/static/frontend/dist/images/logos/sites/${appData.site.code}/logo.svg`}
-                      alt={appData.config.companyName}
+                      src={`/static/frontend/dist/images/logos/sites/${AppData.site.code}/logo.svg`}
+                      alt={AppData.config.companyName}
                       className="d-none d-lg-block hat-logo"
                     />
 
                     <img
-                      src={`/static/frontend/dist/images/logos/sites/${appData.site.code}/logo-small.svg`}
-                      alt={appData.config.companyName}
+                      src={`/static/frontend/dist/images/logos/sites/${AppData.site.code}/logo-small.svg`}
+                      alt={AppData.config.companyName}
                       className="d-block d-lg-none hat-logo"
                     />
                   </a>
@@ -116,7 +117,7 @@ const HatNavigation = (): any => {
 
                     <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">
                       <a
-                        href={appData.routes["cart:list"]}
+                        href={AppData.routes["cart:list"]}
                         className="mobile__cart middle-inline-block hat-navigation-item"
                       >
                         <span className="count">

@@ -7,13 +7,14 @@ import {
   addProduct,
   getLists,
 } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
 import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { List } from "@client/modules/account/ts/types/list.type";
+import AppData from "@client/jsx/utils/AppData";
 
 interface AddToListSelectOnProductPageProps {
   items: List[];
@@ -27,7 +28,7 @@ interface AddToListSelectOnProductPageProps {
 
 export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPageProps> =
   ({ onClick, name, label = "", classes = undefined }) => {
-    const lists = accountStore.getState().lists.lists;
+    const lists = Store.getState().lists.lists;
 
     const id = "1";
 
@@ -49,7 +50,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       breakpoint({
         xs: () =>
           window.location.assign(
-            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${window.appData.product_info.product.productcode}`
+            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${AppData.product_info.product.productcode}`
           ),
         sm: addProductDialog.handleClickOpen,
       });
@@ -59,7 +60,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       breakpoint({
         xs: () =>
           window.location.assign(
-            `/account/your-lists/add-list/${window.appData.product_info.product.productcode}`
+            `/account/your-lists/add-list/${AppData.product_info.product.productcode}`
           ),
         sm: createListDialog.handleClickOpen,
       });
@@ -71,7 +72,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
           .find((e) => e.product_list_id === listId)
           ?.products.find(
             (e) =>
-              e.product_id === window.appData.product_info.product.productid
+              e.product_id === AppData.product_info.product.productid
           )
       ) {
         setIsAlreadyInList(true);
@@ -83,7 +84,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       dispatch(
         addProduct(
           listId,
-          window.appData.product_info.product.productid,
+          AppData.product_info.product.productid,
           null,
           () => showAddProductContent(listId)
         )
@@ -97,7 +98,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       dispatch(
         addProduct(
           listInfo.product_list_id,
-          window.appData.product_info.product.productid,
+          AppData.product_info.product.productid,
           null,
           () => showAddProductContent(listInfo.product_list_id)
         )
@@ -203,7 +204,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
         <CreateNewListDialog
           open={createListDialog.open}
           handleClose={createListDialog.handleClose}
-          productId={window.appData.product_info.product.productid}
+          productId={AppData.product_info.product.productid}
           onProductAdded={onCreateList}
           actionType={"product"}
         />
