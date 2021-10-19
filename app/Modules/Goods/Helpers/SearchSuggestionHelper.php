@@ -15,32 +15,25 @@ class SearchSuggestionHelper
     private $search;
 
     public function __construct($search, $indexes=null, $type = 'product') {
-        /** @var \Modules\Core\CoreModule $coreModule */
-        $coreModule = Xcart::app()->getModule('Sites');
-        $config = $coreModule->getSite()->getGlobalConfig();
 
-        $config_min_scope = $config['search_results_minimum_score_value'];
-
+        $config = GlobalConfig::getInstance();
         $this->search = trim($search);
+
         $this->elastic = new ElasticSearch($config['es_url'], $indexes ?: $this->getSearchIndex());
         $this->elastic->setSource("*._id");
-        $this->elastic->setMinScore($config_min_scope);
+        $this->elastic->setMinScore($config['search_results_minimum_score_value']);
         $this->elastic->setType($type);
         $this->elastic->setQueryParams($search);
-        GlobalConfig::getInstance()->setOldMode(false);
     }
 
-    public function getSearchIndex()
+    public function getSearchIndex(): string
     {
-        /** @var \Modules\Sites\SitesModule $siteModule */
-        $siteModule = Xcart::app()->getModule('Sites');
-
-        if ($siteModel = $siteModule->getSite(false)) {
+        if ($siteModel = Xcart::app()->getModule('Sites')->getSite(false)) {
             return $siteModel->domain;
         }
 
         $sites = SiteModel::getAllEnabled();
-        $indexes = array_map(function($model) { return $model->domain; }, $sites);
+        $indexes = array_map(static fn($model) => $model->domain, $sites);
 
         return implode(',', $indexes);
     }
