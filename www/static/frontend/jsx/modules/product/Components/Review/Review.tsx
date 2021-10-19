@@ -6,6 +6,7 @@ import HelpfulCount from "@client/modules/product/Components/Review/HelpfulCount
 import Body from "@client/modules/product/Components/Review/Body";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import Files from "@client/jsx/modules/product/Components/Review/Files";
 
 interface PropsInterface {
   product_review_id: string;
@@ -20,6 +21,7 @@ interface PropsInterface {
   user_avatar: string;
   helpful_count: string;
   markedHelpful: boolean;
+  files: string;
 }
 
 const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
@@ -95,6 +97,8 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
       </div>
 
       <Body content={props.body} />
+
+      <Files files={props.files.split(",")} />
 
       <div>
         <HelpfulCount count={helpful_count} />

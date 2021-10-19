@@ -1,5 +1,5 @@
 .product-reviews-right-column {
-  padding: rem-calc(26) rem-calc(20) rem-calc(89);
+  padding: 0 rem-calc(20);
 
   @include breakpoint(md up) {
     padding: rem-calc(38) rem-calc(28) rem-calc(72);
@@ -9,7 +9,7 @@
     padding: 0 rem-calc(24) 0 rem-calc(60);
   }
 
-  @include breakpoint(lx up) {
+  @include breakpoint(xl up) {
     padding: 0 rem-calc(24) 0 rem-calc(140);
   }
 }

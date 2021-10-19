@@ -1,0 +1,18 @@
+.review-image-thumb {
+  background-position: center;
+  background-size: cover;
+  display: inline-block;
+  cursor: pointer;
+  width: rem-calc(90);
+  height: rem-calc(123);
+
+  @include breakpoint(md up) {
+    width: rem-calc(88);
+    height: rem-calc(116);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(65);
+    height: rem-calc(88);
+  }
+}
