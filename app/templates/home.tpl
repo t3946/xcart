@@ -127,7 +127,7 @@
         {*</div>*}
     {*</div>*}
 
-    {add $main_html = $.fetch_info_block('mainpage', null, ['sfcode' => $site->code, 'lang' => $config['Preferred_language']])}
+    {add $main_html = $.fetch_info_block('mainpage', null, ['sfcode' => $site->code, 'lang' => $site->lang->lang_code])}
     {if $main_html}
     <div class="row">
         <div class="small-12 column">
