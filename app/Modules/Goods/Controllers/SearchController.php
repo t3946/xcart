@@ -154,13 +154,17 @@ class SearchController extends AbstractCatalogController
 
     public function getElastic($search, $min_score = null)
     {
-        $config = GlobalConfig::getInstance();
+        /** @var \Modules\Core\CoreModule $coreModule */
+        $coreModule = Xcart::app()->getModule('Sites');
+        $config = $coreModule->getSite()->getGlobalConfig();
+        $config_min_scope = $config['search_results_minimum_score_value'];
 
         $classElastic = new ElasticSearch($config['es_url'], $this->getSearchIndex());
         $classElastic->setSource("*._id");
-        $classElastic->setMinScore($min_score ?: $config['search_results_minimum_score_value']);
+        $classElastic->setMinScore($min_score ?: $config_min_scope);
         $classElastic->setType('product');
         $classElastic->setQueryParams($search);
+        GlobalConfig::getInstance()->setOldMode(false);
 
         return $classElastic;
     }
