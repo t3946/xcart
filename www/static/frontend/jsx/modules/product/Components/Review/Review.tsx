@@ -30,7 +30,7 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
       "review-header",
       {
         "rating-star__red": rating > 0 && rating <= 2,
-        "rating-star__yellow": rating === 0 || (rating > 2 && rating <= 3),
+        "rating-star__yellow": rating > 2 && rating <= 3,
         "rating-star__green": rating > 3,
       },
     ],
