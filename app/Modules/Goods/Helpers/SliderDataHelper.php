@@ -108,7 +108,7 @@ SQL;
 
             $saveOrder = true;
 
-            $config = GlobalConfig::getInstance();
+            $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
 
             $classElastic = new ElasticSearch($config['es_url'], $site->domain);
             $classElastic->setSource('*._id');

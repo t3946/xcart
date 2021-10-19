@@ -19,9 +19,11 @@ class ViewedRelatedProducts
 
     public function __construct( $categories = null, $search_string = null )
     {
-        $config = GlobalConfig::getInstance();
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $site_domain = Xcart::app()->getModule('Sites')->getSite()->domain;
+        $config = $site->getGlobalConfig();
+
+        $site_domain = $site->domain;
 
         $this->ssid = Xcart::app()->request->session->getId();
 

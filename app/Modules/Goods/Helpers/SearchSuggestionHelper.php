@@ -16,7 +16,7 @@ class SearchSuggestionHelper
 
     public function __construct($search, $indexes=null, $type = 'product') {
 
-        $config = GlobalConfig::getInstance();
+        $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
         $this->search = trim($search);
 
         $this->elastic = new ElasticSearch($config['es_url'], $indexes ?: $this->getSearchIndex());
