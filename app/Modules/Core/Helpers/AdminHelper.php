@@ -328,7 +328,7 @@ class AdminHelper
         $data["user"] = Xcart::app()->getUser()->login;
 
         //sites
-        $site_list = SiteModel::objects()->exclude(['status' => 'D'])->order(['orderby'])->all();
+        $site_list = SiteModel::objects()->exclude(['status' => 'D'])->all();
 
         foreach ($site_list as $site) {
             switch ($site->code) {
@@ -350,6 +350,7 @@ class AdminHelper
                 "code" => $site->code,
                 'favicon' => $site->file_edit_image_favicon->getValue() ?? ''
             ];
+            usort($data["sites"], static fn($a, $b) => $a['name'] > $b['name']);
         }
 
         //quick links
