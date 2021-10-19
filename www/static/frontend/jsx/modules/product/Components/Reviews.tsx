@@ -45,7 +45,6 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
 
   //update all reviews loaded flag
   if (reviews && totalReviews === reviews.length && !isAllLoaded) {
-    // console.log("SET setIsAllLoaded true");
     setIsAllLoaded(true);
   }
 
@@ -76,7 +75,6 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
   }
 
   function getMoreReviews() {
-    // console.log("getMoreReviews");
     setIsLoading(true);
 
     dispatch(
@@ -157,11 +155,6 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
         reviewLoadedObserver.unobserve(target);
       }
     };
-  });
-
-  console.log({
-    sort,
-    currentPage,
   });
 
   return (
