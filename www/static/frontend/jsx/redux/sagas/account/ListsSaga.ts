@@ -5,9 +5,6 @@ import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 import { AnyAction } from "redux";
 import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
-import { ManageListRequestData } from "@client/modules/account/ts/types/manage-list-form.types";
-import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
-import { GetListAndProductIndexes } from "@client/modules/account/utils/edit-store-funcs/lists/get-product";
 
 const api = new ApiService();
 
