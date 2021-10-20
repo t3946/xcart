@@ -98,7 +98,7 @@
 
                 <div id="content">
                     {block "search-menu"}
-                        <div class="sticky-menu-container">
+                        <div id="search-header" class="sticky-menu-container header-fixed">
                             <div class="sticky def-zi2" style="width: 100%">
                                 <div id="search_container" class="desktop_menu_search_cart show-for-large"
                                      data-toggler="show-for-large">

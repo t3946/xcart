@@ -8,7 +8,7 @@ import LoadingDialog from "@admin/modules/distributor/components/dialog-table-pr
 import { ApiService } from "@admin/modules/shared/services/api.service";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { TabsPanelTable } from "@admin/modules/distributor/components/tabs-table/tabs-panel-table";
-import { TabContext, TabList } from "@material-ui/lab";
+import { TabContext } from "@material-ui/lab";
 import { TabListTable } from "@admin/modules/distributor/components/tabs-table/tab-list-table";
 import { validFileData } from "@admin/modules/distributor/components/dialog-table-price/constants";
 import CloseIcon from "@material-ui/icons/Close";
@@ -38,6 +38,8 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   const [loading, setLoading] = useState(true);
   const [tabIndex, setTabIndex] = useState(`0`);
   const [mainCheck, setMainCheck] = useState<any>({});
+  const [valueActive, setValueActive] = useState({});
+  const [needSend, setNeedSend] = useState(false);
   const { showSnackbar } = useContext(SnackbarContext);
 
   const onSaveHandler = () => {
@@ -46,7 +48,9 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
       data.append("file", file.get);
       data.append("select", JSON.stringify(select));
       data.append("dx", dx);
+      data.append("active_value", JSON.stringify(valueActive));
       data.append("checkField", JSON.stringify(mainCheck));
+      data.append("need_send", needSend);
       setLoading(true);
       api.post("/api/dx/products-price/save", data).then((res: IResponse) => {
         if (res) {
@@ -94,9 +98,12 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
     }
   }, [arTable]);
   useEffect(() => {
-    api.get(`/api/dx/column/get/${dx}`).then((res: {}) => {
-      setSelect(res);
-    });
+    api
+      .get(`/api/dx/column/get/${dx}`)
+      .then((res: { column: any; for_sale_value: any }) => {
+        setSelect(res.column);
+        setValueActive(res.for_sale_value);
+      });
   }, []);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setTabIndex(newValue);
@@ -108,6 +115,15 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
       ...{ [indexTable]: !event.target.checked ? "productcode" : "upc" },
     }));
   };
+  const onChangeForSaleFieldValue = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setValueActive((prev) => ({
+      ...prev,
+      [event.target.id]: event.target.value,
+    }));
+  };
+
   const onCloseDialog = () => {
     file.set(null);
     state.set(false);
@@ -137,6 +153,8 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
               arTable={arTable}
               select={{ get: select, set: onChangeSelectHandler }}
               checked={{ get: mainCheck, set: handleCheckedChange }}
+              activeField={{ get: valueActive, set: onChangeForSaleFieldValue }}
+              needSend={{ get: needSend, set: setNeedSend }}
             />
           ) : (
             <LoadingDialog />

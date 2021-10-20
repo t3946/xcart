@@ -3,6 +3,7 @@
 namespace Modules\Distributor\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -14,6 +15,7 @@ use Xcart\App\Orm\Model;
  * @property int num_table
  * @property int num_column
  * @property string option_name
+ * @property bool is_for_sale_value
  */
 class ColumnTableSaveModel extends Model
 {
@@ -29,7 +31,9 @@ class ColumnTableSaveModel extends Model
                 'class' => AutoField::class
             ],
             'num_column' => [
-                'class' => IntField::class
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false
             ],
             'option_name' => [
                 'class' => CharField::class
@@ -43,7 +47,12 @@ class ColumnTableSaveModel extends Model
             ],
             'num_table' => [
                 'class' => IntField::class
-            ]
+            ],
+            'is_for_sale_value' => [
+                'class' => BooleanField::class,
+                'null' => true,
+                'default' => 0,
+            ],
         ];
     }
 }

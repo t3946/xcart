@@ -78,7 +78,7 @@ class OrderDetailModel  extends Model
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::class,
-                'modelClass' => ProductModel::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
