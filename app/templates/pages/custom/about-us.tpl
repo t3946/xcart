@@ -133,13 +133,6 @@
                     </section>
                     {/if}
 
-                    {*<section class="recognition">*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-12">*}
-                                {*<h3 class="weight-light">Recognition</h3>*}
-                            {*</div>*}
-                        {*</div>*}
-                    {*</section>*}
                 </div>
             </div>
         </div>
