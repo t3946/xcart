@@ -160,7 +160,7 @@ JSON;
             }
         }
 
-        return ['category_suggestions' => $suggests];
+        return ['category_suggestions' => $suggests ?: null];
     }
 
     public function suggestion_phrase($count = 5, $self_include = false)
