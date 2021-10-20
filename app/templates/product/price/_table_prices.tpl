@@ -20,37 +20,11 @@
                     <div class="table table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if}">
                         <div class="column product-table-prices_price-column column-price small-4">
                             <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
-                                {$site_currency->symbol_prefix}
-                                <span>
-                                    {if !$site_currency->after}
-                                        {$site_currency}
-                                    {/if}
-                                </span>
-                                <span class="price" var-price>
-                                    {$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount))}
-                                </span>
-                                <span>
-                                    {if $site_currency->after}
-                                        {$site_currency}
-                                    {/if}
-                                </span>
+                                {$model->getFrontendPrice($model->min_amount)|site_currency}
                             </div>
                             {if $has_discount}
                                 <div class="value product-quantity-old-price">
-                                    {$site_currency->symbol_prefix}
-                                    <span>
-                                        {if !$site_currency->after}
-                                            {$site_currency}
-                                        {/if}
-                                    </span>
-                                    <span class="price">
-                                        {$model->list_price}
-                                    </span>
-                                    <span>
-                                        {if $site_currency->after}
-                                            {$site_currency}
-                                        {/if}
-                                    </span>
+                                    {$model->list_price|site_currency}
                                 </div>
                             {/if}
                         </div>
@@ -73,18 +47,8 @@
                                 </div>
                                 {if $model->list_price > $model->getFrontendPrice($model->min_amount)}
                                     <div class="value product-quantity-old-price">
-                                        {$site_currency->symbol_prefix}
-                                        <span>
-                                            {if !$site_currency->after}
-                                                {$site_currency}
-                                            {/if}
-                                        </span>
-                                        <span class="price product-quantity-old-price">{number_format($model->list_price * $model->min_amount, 2, '.', ' ')}</span>
-                                        <span>
-                                            {if $site_currency->after}
-                                                {$site_currency}
-                                            {/if}
-                                        </span>
+                                        {set $extended_price = $model->list_price * $model->min_amount}
+                                        {$extended_price|site_currency}
                                     </div>
                                 {/if}
                             </div>
