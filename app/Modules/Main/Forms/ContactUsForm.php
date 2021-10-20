@@ -157,7 +157,7 @@ class ContactUsForm extends FrontendForm
      */
     private function getDepartments(): array
     {
-        return [
+        $departments = [
             '' => '',
             'Product questions' => MainModule::t('Product questions'),
             'Shipping quote' => MainModule::t('Shipping quote'),
@@ -168,6 +168,11 @@ class ContactUsForm extends FrontendForm
             'W-9 from request' => MainModule::t('W-9 from request'),
             'Other requests ' => MainModule::t('Other requests '),
         ];
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        if (in_array($site->country, ['RU'])) {
+            unset($departments['W-9 from request']);
+        }
+        return $departments;
     }
 
 }

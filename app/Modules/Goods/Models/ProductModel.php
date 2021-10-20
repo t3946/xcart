@@ -902,7 +902,7 @@ class ProductModel extends Model implements ICartItem
 
     public static function without_groupManager($instance = null): Manager
     {
-        return static::objects($instance)->filter([new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])]);
+        return static::objects($instance)->filter(['is_group_root' => false]);
     }
 
     public static function showedManager($instance = null) : Manager

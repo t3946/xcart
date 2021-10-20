@@ -8,9 +8,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-11-11 17:59+0300\n"
+"PO-Revision-Date: 2021-10-20 12:15+0300\n"
 "Language: ru_RU\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 msgctxt "Delete"
@@ -667,7 +667,7 @@ msgstr "Введите свой email адрес"
 
 msgctxt "Department"
 msgid "Department"
-msgstr "Отдел"
+msgstr "Департамент"
 
 msgctxt "Your message will be routed to this department"
 msgid "Your message will be routed to this department"
@@ -675,7 +675,7 @@ msgstr "Ваше сообщение будет направлено в выбр�
 
 msgctxt "Product SKU or your order #"
 msgid "Product SKU or your order #"
-msgstr "Артикул товара или № заказа"
+msgstr "Код товара или № заказа"
 
 msgctxt "SKU of product you are interested in or your order #"
 msgid "SKU of product you are interested in or your order #"
@@ -871,7 +871,7 @@ msgstr ""
 
 msgctxt "optional"
 msgid "optional"
-msgstr "не обязательно"
+msgstr "по желанию"
 
 msgctxt "Email address is invalid"
 msgid "Email address is invalid"
@@ -1263,7 +1263,7 @@ msgstr "рабочих дней"
 
 msgctxt "departments"
 msgid "departments"
-msgstr ""
+msgstr "Департамент"
 
 msgctxt "Contact us"
 msgid "Contact us"

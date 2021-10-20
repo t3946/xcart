@@ -55,8 +55,8 @@ class MetricsDataHelper
             'connect_timeout' => 10,
             'timeout' => 20,
         ];
-        $url = "http://165.22.39.66:9091/metrics/job/{$job_name}/instance/$instance";
-        /*        $url = "http://host.docker.internal:9091/metrics/job/{$job_name}/instance/$instance";*/
+        /*        $url = "http://165.22.39.66:9091/metrics/job/{$job_name}/instance/$instance";*/
+        $url = "http://host.docker.internal:9091/metrics/job/{$job_name}/instance/$instance";
         $request_options['body'] = "$str_result\n";
 
         if ($response = $client->request('POST', $url, $request_options)) {
