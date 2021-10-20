@@ -59,56 +59,10 @@
                         {raw $model->content}
                     </div>
 
-
-                    <section class="managements">
-                        <div class="row">
-                            <div class="column large-12">
-                                <div class="text">
-                                    Since the creation of our company in 2005, we have shipped hundreds of thousands of orders to satisfied customers all over the world!
-                                    &shy;
-                                    We are grateful for your continued support!
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="columns small-12 medium-3 counting">
-                                <div class="count">
-                                    20
-                                </div>
-                                <div class="title">
-                                    Stores
-                                </div>
-                            </div>
-
-                            <div class="columns small-12 medium-3 counting">
-                                <div class="count">
-                                    80000
-                                </div>
-                                <div class="title">
-                                    Buyers
-                                </div>
-                            </div>
-
-                            <div class="columns small-12 medium-3 counting">
-                                <div class="count">
-                                    9
-                                </div>
-                                <div class="title">
-                                    Countries
-                                </div>
-                            </div>
-
-                            <div class="columns small-12 medium-3 counting">
-                                <div class="count">
-                                    13
-                                </div>
-                                <div class="title">
-                                    Working years
-                                </div>
-                            </div>
-
-                        </div>
-                    </section>
+                    {set $about_us = $.fetch_info_block('about_us', null, ['lang' => $site->lang->lang_code])}
+                    {if $about_us}
+                        {$about_us}
+                    {/if}
 
                     {set $team = $.getTeam}
 
@@ -179,13 +133,6 @@
                     </section>
                     {/if}
 
-                    {*<section class="recognition">*}
-                        {*<div class="row">*}
-                            {*<div class="columns small-12">*}
-                                {*<h3 class="weight-light">Recognition</h3>*}
-                            {*</div>*}
-                        {*</div>*}
-                    {*</section>*}
                 </div>
             </div>
         </div>

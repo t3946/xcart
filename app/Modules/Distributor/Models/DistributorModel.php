@@ -63,6 +63,8 @@ use Xcart\Manufacturer;
  * @property bool allow_dispatch_off_working_hours
  * @property DistributorContactsModel[]|Manager contacts_model
  * @property bool avail
+ * @property string $d_website_search_for_sku_url
+ * @property float $max_extra_margin
  */
 class DistributorModel extends Model
 {
@@ -91,7 +93,7 @@ class DistributorModel extends Model
 
         return [
             'manufacturerid' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
             ],
             'manufacturer' => [
                 'class' => CharField::class
@@ -598,6 +600,14 @@ class DistributorModel extends Model
             'expertise' => [
                 'class' => BooleanField::class,
                 'default' => false
+            ],
+            'submit_to_operator' => [
+                'class' => CharField::class,
+                'choices' => [
+                    'through_distributor_website' => 'through distributor website',
+                    'by_email_or_and_fax' => 'by email or/and fax',
+                ],
+                'default' => 'through_distributor_website'
             ]
         ];
     }

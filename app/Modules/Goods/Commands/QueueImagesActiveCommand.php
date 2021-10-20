@@ -45,6 +45,10 @@ class QueueImagesActiveCommand extends Command
                 'hash' => $data['image_hash']
             ]);
 
+            if ((int)$data['image_position'] === 0) {
+                $image->is_manual = true;
+            }
+
             if ($image->getChangedAttributes()) {
                 echo "Image has changed\n";
                 echo "==============Queue data=============\n";

@@ -25,21 +25,21 @@ class OrderExtrasModel extends Model
         return [
 
             'orderid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => 0
             ],
 
             'khash' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false,
                 'default' => ''
             ],
 
             'value' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
             ]
 

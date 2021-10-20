@@ -39,7 +39,7 @@ class CategoryRestriction extends AbstractRestriction
     public function validate($product = null)
     {
         if ($product && $ids = $this->getCategoriesIds()) {
-            $cids = $product->categories->valuesList('categoryid', true);
+            $cids = $product->categories->valuesList(['categoryid'], true);
 
             foreach ($cids as $cid) {
                 if (in_array($cid, $ids)) {

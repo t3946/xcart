@@ -30,13 +30,13 @@
         <div class="row checkout-hat-wrapper">
             <div class="columns large-4 medium-6 checkout-hat-logo">
                 <a href="/">
-                    <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
-                         alt="{$.getSiteConfig->company_name->value}"
+                    <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg"
+                         alt="{$site->company_name}"
                          class="show-for-large logo-big checkout-hat-logo-image"
                     >
 
-                    <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
-                         alt="{$.getSiteConfig->company_name->value}"
+                    <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo-small.svg"
+                         alt="{$site->company_name}"
                          class="show-for-small hide-for-large logo-small checkout-hat-logo-image">
                 </a>
             </div>

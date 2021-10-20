@@ -135,12 +135,12 @@ if (!empty($_POST['template_submit'])) {
 
 $aModels = GlobalConfigModel::objects()
     ->filter(['category' => 'thankyou_for_order'])
-    ->order('orderby')
+    ->order(['orderby'])
     ->all();
 
 $aSiteModels = SiteConfigModel::objects()
     ->filter(['category' => 'thankyou_for_order'])
-    ->order('orderby')
+    ->order(['orderby'])
     ->all();
 
 $sites = SiteModel::objects()->order(['domain'])->all();

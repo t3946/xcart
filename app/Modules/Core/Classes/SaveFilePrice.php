@@ -7,7 +7,6 @@ namespace Modules\Core\Classes;
 use JsonException;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
-use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 
 class SaveFilePrice
@@ -19,6 +18,7 @@ class SaveFilePrice
     private array $success_productcode = [];
     private array $fields_image = [];
     private string $dx_code;
+    public array $active_for_sale_value;
     public array $search_by = [];
 
     public function __construct(DistributorModel $dx_model, array $search_by)
@@ -27,13 +27,11 @@ class SaveFilePrice
         $this->search_by = $search_by;
     }
 
-    /** Send data about full query save price from RabbitMQ
+    /** Send data about full query save price to RabbitMQ
      * @throws JsonException
-     * @throws UnknownPropertyException
      */
     public function sendStats(): void
     {
-        $site = Xcart::app()->getModule('Sites')->getSelectedSite();
         $ar_active = [
             'active_sku' => $this->success_productcode,
             'dx_code' => $this->dx_code,
@@ -41,9 +39,8 @@ class SaveFilePrice
             'feed_source' => 'manual',
             'products_in_feed' => $this->count_update,
             'feed_source_date' => date('Y-m-d H:i:s'),
-            'storefront' => $site->pk
         ];
-        Xcart::app()->queue->send('products_active_test', json_encode($ar_active, JSON_THROW_ON_ERROR));
+        Xcart::app()->queue->send('products_active', json_encode($ar_active, JSON_THROW_ON_ERROR));
     }
 
     /** Collect data
@@ -65,6 +62,7 @@ class SaveFilePrice
             }
         }
     }
+
     /* Through tables and rows of the table and searches for the product, if it finds, updates */
     public function savePrice(): void
     {
@@ -97,7 +95,14 @@ class SaveFilePrice
                 case 'list_price':
                 case 'new_map_price':
                     if (!in_array($field, $this->fields_image[$t_index], true)) {
-                        $ar_field[$field] = str_replace(['$', ','],'', $item[$num_row]);
+                        $ar_field[$field] = str_replace(['$', ','], '', $item[$num_row]);
+                    }
+                    break;
+                case 'for_sale':
+                    if (empty($this->active_for_sale_value[$t_index])) {
+                        $ar_field[$field] = 'N';
+                    } else {
+                        $ar_field[$field] = $this->active_for_sale_value[$t_index] === $item[$num_row] ? 'Y' : 'N';
                     }
                     break;
                 default:

@@ -148,7 +148,7 @@ class ProductSortHelper
     public function getOrderByBrand()
     {
         $qs = clone $this->qs;
-        list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
+        [$oldOrder, $orderOptions] = $qs->getQueryBuilder()->getOrder();
         array_unshift($oldOrder, '-manufacturerid');
         return $qs->order($oldOrder);
     }

@@ -17,7 +17,7 @@ class DefaultHasher implements FileNameHasherInterface
     /**
      * {@inheritdoc}
      */
-    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name, $default_extension = '')
+    public function resolveUploadPath(FilesystemInterface $filesystem, $uploadTo, $name, $default_extension = '', $file = null)
     {
         $uploadTo = ltrim($uploadTo, '/');
 

@@ -12,7 +12,7 @@ class CategoryRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {
-        return CategoryRestriction::className();
+        return CategoryRestriction::class;
     }
 
     public function getFields()
@@ -26,7 +26,7 @@ class CategoryRestrictionForm extends DiscountRestrictionForm
 
         return array_merge(parent::getFields(), [
             'category' => [
-                'class' => Select2Field::className(),
+                'class' => Select2Field::class,
                 'value' => $bid,
                 'choices' => $choices,
                 'ajaxUrl' => (new DiscountRestrictionAdmin)->getSuggestionUrl('category'),

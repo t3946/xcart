@@ -72,7 +72,7 @@ class OrderSearchStore extends BaseStore
      *
      * @return bool
      */
-    private function checkNot($type)
+    private function checkNot($type): bool
     {
         $type = explode('.', $type);
 
@@ -248,6 +248,15 @@ class OrderSearchStore extends BaseStore
                 $this->getQ(['group.shippingid__in' => $val], 'order.delivery_method');
             }
 
+            if (!empty($data['order']['order_submission_methods']) || $this->checkNot('order.order_submission_methods')) {
+                $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
+                $qs->join('inner join', 'xcart_manufacturers', ['manufacturer.manufacturerid' => 'group.manufacturerid'], 'manufacturer');
+
+                $val = $data['order']['order_submission_methods'] ?: [''];
+
+                $this->getQ(['manufacturer.submit_to_operator__in' => $val], 'manufacturer.submit_to_operator');
+            }
+
             if (!empty($data['order']['c2b_status']) || $this->checkNot('order.c2b_status')) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
 
@@ -311,11 +320,18 @@ class OrderSearchStore extends BaseStore
             }
 
             if (!empty($data['order']['tag']) || $this->checkNot('order.tag')) {
-                $qs->join('inner join', 'xcart_orders_additional_tags', ['orderid' => 'tagl.orderid'], 'tagl');
-
-                $val = ($data['order']['tag']) ? $data['order']['tag'] : [''];
-
-                $this->getQ(['tagl.status_id__in' => $val], 'order.tag');
+                if ($data['order']['tag']) {
+                    $val = $data['order']['tag'];
+                    if ($this->checkNot('order.tag')) {
+                        if ($val) {
+                            $val_str = implode(',', $val);
+                            $this->where[] = new Expression("NOT EXISTS (select 1 from xcart_orders_additional_tags tagl WHERE `xcart_orders_1`.`orderid`= tagl.orderid AND tagl.status_id IN ('$val_str'))");
+                        }
+                    } else {
+                        $qs->join('left join', 'xcart_orders_additional_tags', ['orderid' => 'tagl.orderid'], 'tagl');
+                        $this->where[] = new QAnd(['tagl.status_id__in' => $val]);
+                    }
+                }
             }
 
             if (!empty($data['order']['distributor']) || $this->checkNot('order.distributor')) {

@@ -20,8 +20,8 @@ class PromotionalProductsHelper
         if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get()) {
             return $product;
         }
-        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
-        return $product;
+
+        return ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
     }
 
     public static function getBestSellerProduct(): ?ProductModel
@@ -31,8 +31,8 @@ class PromotionalProductsHelper
         if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get()) {
             return $product;
         }
-        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
-        return $product;
+
+        return ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(1)->get();
     }
 
     public static function getNewProduct(): ?ProductModel
@@ -43,8 +43,7 @@ class PromotionalProductsHelper
         if ($product = $qs->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get()) {
             return $product;
         }
-        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get();
-        return $product;
+        return ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['-productid'])->limit(1)->get();
     }
 
     public static function getSliderProduct(): ?array
@@ -55,8 +54,7 @@ class PromotionalProductsHelper
         if ($product = $qs->cache(Cache::CACHE_DAY)->order(['?'])->limit(5)->all()) {
             return $product;
         }
-        $product = ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(5)->all();
-        return $product;
+        return ProductModel::showed()->cache(Cache::CACHE_DAY)->order(['?'])->limit(5)->all();
     }
 
 
@@ -620,7 +618,9 @@ class PromotionalProductsHelper
             new Expression("date >= UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 30 DAY))"),
         ])
             ->cache(Cache::CACHE_DAY)
-            ->order([new Expression('SUM(amount) DESC')])->group(['order_details__orderid', 'productid'])->valuesList('pk', true);
+            ->order([new Expression('SUM(amount) DESC')])
+            ->group(['order_details__orderid', 'productid'])
+            ->valuesList(['pk'], true);
     }
 
     public static function getProductOfTheDayImage(ProductModel $model = null): string
@@ -633,9 +633,20 @@ class PromotionalProductsHelper
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
-        if ($model && $image = $model->getMainImage()) {
+        if (!$model) {
+            return '';
+        }
+
+        if ($model->isGroupRoot()
+            && ($child = $model->getFrontendChilds()->limit(1)->get())
+            && $image = $child->getMainImage()) {
             return $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
         }
+
+        if ($image = $model->getMainImage()) {
+            return $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
+        }
+
         return '';
     }
 
@@ -649,7 +660,17 @@ class PromotionalProductsHelper
             return "//cdn.{$site->getBaseDomain()}{$img}";
         }
 
-        if ($model && $image = $model->getMainImage()) {
+        if (!$model) {
+            return '';
+        }
+
+        if ($model->isGroupRoot()
+            && ($child = $model->getFrontendChilds()->limit(1)->get())
+            && $image = $child->getMainImage()) {
+            return $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
+        }
+
+        if ($image = $model->getMainImage()) {
             return $image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW);
         }
         return '';

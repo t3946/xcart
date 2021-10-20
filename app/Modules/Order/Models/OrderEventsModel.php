@@ -31,18 +31,18 @@ class OrderEventsModel extends Model
         return [
             'order' => [
                 'field' => 'order_id',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['order_id' => 'orderid'],
                 'primary' => true,
             ],
             'created_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNowAdd' => true,
                 'primary' => true,
             ],
             'message' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true
             ],
             'user' => [

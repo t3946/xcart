@@ -28,27 +28,27 @@ class UpdatedProductModel extends Model
     {
         return [
             'type' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'time_stamp' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
             ],
             'product' => [
                 'field' => 'resourceid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['resourceid' => 'productid'],
             ],
             'resourceid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'mask' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => true,
             ],
 

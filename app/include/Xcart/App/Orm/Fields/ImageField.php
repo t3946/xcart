@@ -350,7 +350,8 @@ class ImageField extends FileField
             $this->getFilesystem(),
             $this->getUploadTo(),
             $file->getFilename(),
-            'jpg'
+            'jpg',
+            $file
         );
 
         $this->_original = $this->getImagine()->load($contents);

@@ -45,7 +45,7 @@ class PaymentMethodModel extends Model
 
     public static function activeManager( $instance = null ): Manager
     {
-        return static::objects( $instance )->filter( [ 'is_active' => 1 ] )->order( 'position' );
+        return static::objects( $instance )->filter( [ 'is_active' => 1 ] )->order( ['position'] );
     }
 
     public function __toString()

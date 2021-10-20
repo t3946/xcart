@@ -79,7 +79,7 @@ class OrderFraudCheckController extends Controller
                 $ar_settings['locked_orders'] = $count_locked_orders;
             }
         }
-        $ar_settings['status'] = FraudStatusModel::objects()->order('order_by')->valuesList(['code', 'name']);
+        $ar_settings['status'] = FraudStatusModel::objects()->order(['order_by'])->valuesList(['code', 'name']);
         $ar_settings['lang'] = [
             'basement' => LanguageModel::objects()->get(['name' => 'lbl_fraud_check_expert_section'])->value
         ];

@@ -17,22 +17,22 @@ class ProductUpcChangesModel extends Model
     {
         return [
             'productid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'original_upc' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'corrected_upc' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],
             'last_date' => [
-                'class' => TimestampField::className(),
+                'class' => TimestampField::class,
                 'null' => false,
             ],
         ];

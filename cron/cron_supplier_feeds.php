@@ -217,7 +217,7 @@ foreach ($supplier_feeds as $k => $supplierFeedModel) {
                 new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])
             ])
             ->paginate(++$i, 10000)
-            ->valuesList('productcode', true))
+            ->valuesList(['productcode'], true))
          {
 
             print PHP_EOL . "{$i} iteration: Found " . count($discountinued_products) . " products "  . PHP_EOL;

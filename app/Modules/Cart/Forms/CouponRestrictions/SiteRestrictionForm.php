@@ -12,19 +12,19 @@ class SiteRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {
-        return SiteRestriction::className();
+        return SiteRestriction::class;
     }
 
     public function getFields()
     {
         return array_merge(parent::getFields(), [
             'not_in' => [
-                'class' => CheckboxField::className(),
+                'class' => CheckboxField::class,
                 'value' => $this->getDataValue('not_in', false),
                 'label' => 'Not for selected'
             ],
             'site' => [
-                'class' => DropDownField::className(),
+                'class' => DropDownField::class,
                 'value' => $this->getDataValue('site'),
                 'choices' => function(){
                     $result = [];

@@ -17,25 +17,25 @@ class GlobalConfigModel extends Model
     {
         return [
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'value' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false
             ],
             'defvalue' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false
             ],
             'category' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'length' => 32,
             ],
             'type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'default' => 'text',
                 'chosen' => [
                     'numeric'=>'numeric',
@@ -48,20 +48,20 @@ class GlobalConfigModel extends Model
                 ]
             ],
             'variants' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false
             ],
             'validation' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false
             ],
             'orderby' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
             ],
             'comment' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ],

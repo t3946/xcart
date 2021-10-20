@@ -125,7 +125,7 @@ if(defined('IS_ROBOT')) {
 		"isFlash" => ""
 	);
 } else {
-
+    $adaptives = [];
 	if($adaptive_restart)
 		$adaptives = array();
 

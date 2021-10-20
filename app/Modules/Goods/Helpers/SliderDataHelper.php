@@ -108,9 +108,9 @@ SQL;
 
             $saveOrder = true;
 
-            $config = Xcart::app()->getModule('Core')::getGlobalConfig();
+            $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
 
-            $classElastic = new ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
+            $classElastic = new ElasticSearch($config['es_url'], $site->domain);
             $classElastic->setSource('*._id');
             $classElastic->setType('product');
             $classElastic->setMinScore(0.5);
@@ -134,8 +134,6 @@ SQL;
             }
 
             $res = $classElastic->query();
-
-            GlobalConfig::getInstance()->setOldMode(false);
 
             if (!empty($res['hits']['hits'])) {
                 $hits = $res['hits']['hits'];

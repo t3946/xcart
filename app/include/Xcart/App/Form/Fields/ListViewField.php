@@ -26,7 +26,7 @@ class ListViewField extends Field
     public $adminClass = null;
     public ?Admin $admin = null;
 
-    public $defaultOrder = [];
+    public array $defaultOrder = [];
 
     /**
      * @var array

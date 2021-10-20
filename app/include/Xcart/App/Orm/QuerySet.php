@@ -3,6 +3,7 @@
 namespace Xcart\App\Orm;
 
 use Doctrine\DBAL\Cache\QueryCacheProfile;
+use Exception;
 use Xcart\App\Orm\Exception\MultipleObjectsReturned;
 use Xcart\App\QueryBuilder\Aggregation\Aggregation;
 use Xcart\App\QueryBuilder\Aggregation\Avg;
@@ -25,10 +26,10 @@ class QuerySet extends QuerySetBase
     /**
      * @var array a list of relations that this query should be performed with
      */
-    protected $with = [];
-    protected $_group = [];
-    protected $sql;
-    protected $cache;
+    protected array $with = [];
+    protected array $_group = [];
+    protected string $sql;
+    protected int $cache = 0;
 
     protected $_data;
 
@@ -38,9 +39,9 @@ class QuerySet extends QuerySetBase
      *
      * @param array $filter
      * @return array the query results. If the query results in nothing, an empty array will be returned.
-     * @throws \Exception
+     * @throws Exception
      */
-    public function all($filter = [])
+    public function all(array $filter = []): array
     {
         if ($filter) {
             $this->filter($filter);
@@ -65,10 +66,10 @@ class QuerySet extends QuerySetBase
     /**
      * @param int $batchSize
      *
-     * @return \Xcart\App\Orm\BatchDataIterator
-     * @throws \Exception
+     * @return BatchDataIterator
+     * @throws Exception
      */
-    public function batch($batchSize = 100)
+    public function batch(int $batchSize = 100): BatchDataIterator
     {
         return new BatchDataIterator($this->getConnection(), [
             'qs' => $this,
@@ -81,10 +82,10 @@ class QuerySet extends QuerySetBase
     /**
      * @param int $batchSize
      *
-     * @return \Xcart\App\Orm\BatchDataIterator
-     * @throws \Exception
+     * @return BatchDataIterator
+     * @throws Exception
      */
-    public function each($batchSize = 100)
+    public function each(int $batchSize = 100): BatchDataIterator
     {
         return new BatchDataIterator($this->getConnection(), [
             'qs' => $this,
@@ -96,13 +97,12 @@ class QuerySet extends QuerySetBase
 
     /**
      * @param array $columns
-     * @param bool $flat
+     * @param bool|null $flat
      *
      * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
+     * @throws Exception
      */
-    public function valuesList($columns, $flat = false)
+    public function valuesList(array $columns, ?bool $flat = false): array
     {
         if ($this->_data) {
             $rows = $this->_data;
@@ -138,8 +138,7 @@ class QuerySet extends QuerySetBase
      * @param array $attributes
      *
      * @return int updated records
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $attributes)
     {
@@ -150,7 +149,7 @@ class QuerySet extends QuerySetBase
      * @param array $attributes
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateSql(array $attributes)
     {
@@ -226,7 +225,7 @@ class QuerySet extends QuerySetBase
      * @param int $pageSize
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function paginate($page = 1, $pageSize = 10)
     {
@@ -236,7 +235,7 @@ class QuerySet extends QuerySetBase
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function allSql()
     {
@@ -248,7 +247,7 @@ class QuerySet extends QuerySetBase
      * @param array $filter
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getSql($filter = [])
     {
@@ -280,12 +279,11 @@ class QuerySet extends QuerySetBase
      *
      * @param array $filter
      *
-     * @return null|\Xcart\App\Orm\ModelInterface
-     * @throws \Doctrine\DBAL\DBALException
-     * @throws \Exception
-     * @throws \Xcart\App\Orm\Exception\MultipleObjectsReturned
+     * @return null|array|ModelInterface
+     * @throws Exception
+     * @throws MultipleObjectsReturned
      */
-    public function get($filter = [])
+    public function get(array $filter = [])
     {
         $rows = $this->execute($this->getSql($filter));
 
@@ -300,14 +298,14 @@ class QuerySet extends QuerySetBase
             $rows = $this->populateWith($rows);
         }
         $row = array_shift($rows);
+
         if ($this->asArray) {
             return $row;
         }
-        else {
-            $model = $this->createModel($row);
-            $model->setIsNewRecord(false);
-            return $model;
-        }
+
+        $model = $this->createModel($row);
+        $model->setIsNewRecord(false);
+        return $model;
     }
 
     public function setSql($sql)
@@ -343,7 +341,7 @@ class QuerySet extends QuerySetBase
 
                 if ($field instanceof RelatedField) {
                     foreach ($field->getJoin($this->getQueryBuilder(), $this->getTableAlias()) as $join) {
-                        list($type, $table, $on, $alias) = $join;
+                        [$type, $table, $on, $alias] = $join;
                         $this->join($type, $table, $on, $alias);
                     }
                 }
@@ -359,21 +357,22 @@ class QuerySet extends QuerySetBase
                 if ($value instanceof Model) {
                     return $value->pk;
                 }
-                else if ($value instanceof Manager || $value instanceof QuerySet) {
+
+                if ($value instanceof Manager || $value instanceof QuerySet) {
                     return $value->getQueryBuilder();
                 }
                 return $value;
             }, $query);
-        } else {
-            return $query;
         }
+
+        return $query;
     }
 
     /**
-     * @param array $query
+     * @param array|string $query
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function filter($query)
     {
@@ -385,7 +384,7 @@ class QuerySet extends QuerySetBase
      * @param array $query
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function orFilter(array $query)
     {
@@ -397,7 +396,7 @@ class QuerySet extends QuerySetBase
      * @param array $query
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function exclude(array $query)
     {
@@ -409,7 +408,7 @@ class QuerySet extends QuerySetBase
      * @param array $query
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function orExclude(array $query)
     {
@@ -423,7 +422,7 @@ class QuerySet extends QuerySetBase
      * @param string $name Column name
      *
      * @return string Quoted column name
-     * @throws \Exception
+     * @throws Exception
      */
     public function quoteColumnName($name)
     {
@@ -442,51 +441,39 @@ class QuerySet extends QuerySetBase
      *
      * @param $columns
      *
-     * @return $this
-     * @throws \Exception
+     * @return QuerySet
+     * @throws Exception
      */
-    public function order($columns)
+    public function order(array $columns): QuerySet
     {
-        if (is_array($columns)) {
-            $newColumns = array_map(function ($value) {
+        $newColumns = array_map(function ($value) {
+            if ($value instanceof Model) {
+                return $value->pk;
+            }
 
-                if ($value instanceof Model) {
-                    return $value->pk;
+            if ($value instanceof Manager || $value instanceof QuerySet) {
+                return $value->getQueryBuilder();
+            }
+
+            if (is_string($value)) {
+                $direction = $value[0] === '-' ? '-' : '';
+
+                $column = $direction ? substr($value, 1) : $value;
+
+                if ($this->getModel()->getMeta()->hasForeignField($column)) {
+                    $field = $this->getModel()->getField($column);
+                    return $direction . $field->getAttributeName();
                 }
-                else if ($value instanceof Manager || $value instanceof QuerySet) {
-                    return $value->getQueryBuilder();
+
+                if ($field = $this->getModel()->getField($column)) {
+                    return $direction . $field->getAttributeName();
                 }
-//                else if ($value instanceof Expression) {
-//                    return $value->toSQL($this->getQueryBuilder());
-//                }
-                else if (is_string($value)) {
-                    $direction = substr($value, 0, 1) === '-' ? '-' : '';
 
-                    if ($direction) {
-                        $column = substr($value, 1);
-                    }
-                    else {
-                        $column = $value;
-                    }
-                    
-
-                    if ($this->getModel()->getMeta()->hasForeignField($column)) {
-                        $field = $this->getModel()->getField($column);
-
-                        return $direction . $field->getAttributeName();
-                    }
-                    else if ($field = $this->getModel()->getField($column)) {
-                        return $direction . $field->getAttributeName();
-                    }
-                    else {
-                        return $value;
-                    }
-                }
                 return $value;
-            }, $columns);
-        } else {
-            $newColumns = $columns;
-        }
+            }
+            return $value;
+        }, $columns);
+
         $this->getQueryBuilder()->order($newColumns);
         return $this;
     }
@@ -495,7 +482,6 @@ class QuerySet extends QuerySetBase
      * @param null|string|array $q
      *
      * @return float|int
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function sum($q)
     {
@@ -517,7 +503,6 @@ class QuerySet extends QuerySetBase
      * @param null|string|array $q
      *
      * @return float|int
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function average($q)
     {
@@ -577,7 +562,6 @@ class QuerySet extends QuerySetBase
      * @param null|string|array $q
      *
      * @return float|int
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function min($q)
     {
@@ -599,7 +583,6 @@ class QuerySet extends QuerySetBase
      * @param null|string|array $q
      *
      * @return float|int
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function max($q)
     {
@@ -653,7 +636,7 @@ class QuerySet extends QuerySetBase
      * @param string $q
      *
      * @return int
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function count($q = '*')
     {
@@ -707,7 +690,6 @@ class QuerySet extends QuerySetBase
      * Truncate table
      *
      * @return int
-     * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
     public function truncate()
@@ -723,7 +705,7 @@ class QuerySet extends QuerySetBase
      * @param mixed $fields
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function distinct($fields = true)
     {
@@ -735,7 +717,7 @@ class QuerySet extends QuerySetBase
      * @param $columns
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function group($columns)
     {
@@ -804,9 +786,8 @@ class QuerySet extends QuerySetBase
         return $field;
     }
 
-    public function cache($ttl = null)
+    public function cache(int $ttl = null)
     {
-//        $this->cache = ($life_time)?$life_time:$this->getConnection()->getConfiguration()->;
         $this->cache = $ttl;
         return $this;
     }

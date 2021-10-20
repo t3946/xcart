@@ -94,18 +94,27 @@
   max-width: 200px;
   position: relative;
 }
+
+.td-first-item {
+  font-weight: bold;
+}
+
 .pop-menu__table-dx {
   background-color: white !important;
   font-size: 12px !important;
   color: black !important;
   border: 0.12rem solid black;
 }
-.app-bar__back-color{
+
+.app-bar__back-color {
   color: black !important;
   background-color: #efefef !important;
 }
 
-.close-dialog__button{
+.close-dialog__button {
   text-align: right;
   padding: 10px;
+}
+.form-group-select{
+  margin-bottom: 0 !important;
 }

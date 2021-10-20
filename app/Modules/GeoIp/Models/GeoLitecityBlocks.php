@@ -19,7 +19,7 @@ class GeoLitecityBlocks extends Model
     {
         return [
             'startIpNum' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true
             ],
         ];

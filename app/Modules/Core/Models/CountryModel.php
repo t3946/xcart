@@ -41,8 +41,8 @@ class CountryModel extends Model
                 'primary' => true,
             ],
             'zone_element' => [
-                'class' => HasManyField::className(),
-                'modelClass' => ZoneElementModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ZoneElementModel::class,
                 'link' => ['code' => 'field'],
                 'extra' => ['field_type' => 'C']
             ],

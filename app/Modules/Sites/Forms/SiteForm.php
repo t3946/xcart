@@ -24,6 +24,7 @@ class SiteForm extends ModelForm
         'static_page',
         'marketplaces',
         'short_name',
+        'products',
     ];
 
     public function getFields()

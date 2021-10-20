@@ -27,10 +27,10 @@ class ShippingModel extends Model
     {
         return [
             'shippingid' => [
-                'class' => AutoField::className()
+                'class' => AutoField::class
             ],
             'important' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'length' => 1,
                 'null' => false,
                 'default' => 0,

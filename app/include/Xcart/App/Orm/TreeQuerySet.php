@@ -185,7 +185,7 @@ class TreeQuerySet extends QuerySet
     /**
      * {@inheritdoc}
      */
-    public function all($filter = [])
+    public function all(array $filter = []): array
     {
         if ($this->treeKey) {
             $this->asArray(true);

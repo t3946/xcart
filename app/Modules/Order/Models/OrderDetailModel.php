@@ -59,7 +59,7 @@ class OrderDetailModel  extends Model
                 'default' => 0
             ],
             'extra_data' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => '',
             ],
@@ -78,23 +78,21 @@ class OrderDetailModel  extends Model
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::class,
-                'modelClass' => ProductModel::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
         ];
     }
 
-    public function getAmazonCompetitorMinPrice():? array
+    public function getAmazonCompetitorMinPrice(): array
     {
-        $result = null;
-
         /** @var ProductModel $product */
         if ($product = $this->product_model) {
-            $result = $product->getAmazonArbitragePrice($this->amount);
+            return $product->getAmazonArbitragePrice($this->amount);
         }
 
-        return $result;
+        return [];
     }
 
     public function getOptions(): array

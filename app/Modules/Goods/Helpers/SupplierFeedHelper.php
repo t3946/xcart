@@ -239,7 +239,7 @@ class SupplierFeedHelper
 
             if ($uploads) {
 
-                $p_images = ImageDModel::objects()->filter(['image_path__in' => $uploads, 'id' => $model->productid])->valuesList('image_path', true);
+                $p_images = ImageDModel::objects()->filter(['image_path__in' => $uploads, 'id' => $model->productid])->valuesList(['image_path'], true);
 
                 foreach ($uploads as $key => $url) {
 
@@ -453,7 +453,7 @@ class SupplierFeedHelper
                     $data['productcode'] = $parent->productcode;
                 }
                 if (!isset($data['pc_classify_status']) && $child->isCategorized()) {
-                    $data['supplier_categories'] = array_reverse(CategoryModel::objects($child->getMainCategory())->parents(true)->valuesList('category', true));
+                    $data['supplier_categories'] = array_reverse(CategoryModel::objects($child->getMainCategory())->parents(true)->valuesList(['category'], true));
                     $data['pc_classify_status'] = 'ACC';
                 }
             }
@@ -534,7 +534,7 @@ class SupplierFeedHelper
             while ($discountinued_products = ProductModel::without_group()
                 ->filter($filter)
                 ->paginate(++$i, 10000)
-                ->valuesList('productcode', true)) {
+                ->valuesList(['productcode'], true)) {
                 foreach ($discountinued_products as $productcode) {
                     if (!in_array($productcode, $all_feed_productcodes, true)) {
                         $discontinued_products_count++;

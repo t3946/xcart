@@ -30,28 +30,28 @@ class OrderGroupMemoModel extends Model
         return [
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
                 'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
-                'class' => ForeignField::className(),
-                'modelClass' => DistributorModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
                 'primary' => true,
             ],
             'memo_number' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0,
                 'primary' => true,
             ],
             'memo_date' => [
-                'class' => DateField::className(),
+                'class' => DateField::class,
                 'null' => true
             ],
             'dx_invoice_number' => [

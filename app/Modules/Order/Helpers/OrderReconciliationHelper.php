@@ -62,7 +62,7 @@ class OrderReconciliationHelper
                 $params['d_net_payment_terms_in_days'] = 0;
             }
 
-            $d = DistributorModel::objects()->filter($params)->order('manufacturer');
+            $d = DistributorModel::objects()->filter($params)->order(['manufacturer']);
 
             $d->select(['*', 'net' => new Expression('DATEDIFF(DATE_ADD(DATE(invoice_date), INTERVAL COALESCE(d_net_payment_terms_in_days, 0) - 1 DAY), DATE(NOW()))')]);
 

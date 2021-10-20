@@ -16,10 +16,10 @@ class ProductTermModel extends Model
     {
         return [
             'termid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'term' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => ''
             ]

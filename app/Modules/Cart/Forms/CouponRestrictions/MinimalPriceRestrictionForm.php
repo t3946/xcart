@@ -9,14 +9,14 @@ class MinimalPriceRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {
-        return MinimalPriceRestriction::className();
+        return MinimalPriceRestriction::class;
     }
 
     public function getFields()
     {
         return array_merge(parent::getFields(), [
             'min_price' => [
-                'class' => NumberField::className(),
+                'class' => NumberField::class,
                 'required' => true,
                 'value' => $this->getDataValue('min_price', 0),
                 'label' => 'Minimal price'

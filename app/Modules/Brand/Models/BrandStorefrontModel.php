@@ -18,23 +18,23 @@ class BrandStorefrontModel extends Model
     {
         return [
             'id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'brand' => [
                 'field' => 'brandid',
-                'class' => ForeignField::className(),
-                'modelClass' => BrandModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => BrandModel::class,
                 'link' => ['brandid' => 'brandid'],
             ],
             'products_count' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],
             'storefront' => [
                 'field' => 'sfid',
-                'class' => ForeignField::className(),
-                'modelClass' => SiteModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => SiteModel::class,
                 'link' => ['sfid' => 'storefrontid'],
             ],
         ];

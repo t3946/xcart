@@ -13,11 +13,13 @@ use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
+use Xcart\App\Storage\FileNameHasher\MD5FileContentHasher;
 
 /**
  * @property int image_id
  * @property ImageField path
  * @property string hash
+ * @property bool is_manual
  * @property ProductImageLinkModel[]|Manager $links
  */
 class ProductImageModel extends Model
@@ -60,6 +62,7 @@ class ProductImageModel extends Model
                         'method' => 'adaptiveResize'
                     ]
                 ],
+                'nameHasher' => MD5FileContentHasher::class,
                 'null' => true,
                 'default' => null
             ],

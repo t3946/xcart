@@ -30,23 +30,23 @@ class MetaTemplate extends Model
     public static function getFields() 
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'title' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'verboseName' => "Title"
             ],
             'code' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'verboseName' => "Code",
                 'unique' => true,
             ],
             'description' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'verboseName' => 'Description',
                 'null' => true
             ],
             'advanced' => [
-                'class' => JsonField::className(),
+                'class' => JsonField::class,
                 'verboseName' => 'Advanced fields',
                 'null' => true
             ],

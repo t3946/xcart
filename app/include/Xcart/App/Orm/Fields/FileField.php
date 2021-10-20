@@ -82,13 +82,13 @@ class FileField extends CharField
     /**
      * @return FileNameHasherInterface
      */
-    public function getNameHasher()
+    public function getNameHasher(): FileNameHasherInterface
     {
         if ($this->nameHasher === null) {
             $this->nameHasher = new MD5NameHasher();
         }
 
-        return $this->nameHasher;
+        return new $this->nameHasher();
     }
 
     /**
@@ -319,7 +319,9 @@ class FileField extends CharField
         $path = $this->getNameHasher()->resolveUploadPath(
             $this->getFilesystem(),
             $this->getUploadTo(),
-            $file->getClientOriginalName()
+            $file->getClientOriginalName(),
+            '',
+            $file
         );
         if (!$this->getFilesystem()->write($path, $this->content)) {
             throw new Exception('Failed to save file');
@@ -345,7 +347,9 @@ class FileField extends CharField
         $path = $this->getNameHasher()->resolveUploadPath(
             $this->getFilesystem(),
             $this->getUploadTo(),
-            $file->getFilename()
+            $file->getFilename(),
+            '',
+            $file
         );
 
         if (!$this->getFilesystem()->write($path, $contents)) {

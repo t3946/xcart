@@ -48,7 +48,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     }
                     return $result ?? [];
                 },
-                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY])->valuesList('id', true),
+                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::ORDER_MESSAGE_UTILITY])->valuesList(['id'], true),
                 'label' => 'Order messages contact',
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,
@@ -178,7 +178,7 @@ class DistributorOrderSubmissionForm extends DistributorForm
                     }
                     return $result ?? [];
                 },
-                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::DISPATCH_UTILITY])->valuesList('id', true),
+                'selected' => $dx->contacts_model->filter(['utility__utility_id' => DistributorUtilityModel::DISPATCH_UTILITY])->valuesList(['id'], true),
                 'label' => "'Dispatch to' email contact",
                 'fieldTemplate' => $this->fieldTemplate,
                 'hintTemplate' => $this->hintTemplate,

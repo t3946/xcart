@@ -22,15 +22,15 @@ class PricingModel extends Model
     {
         return [
             'priceid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
                 'primary' => true,
                 'null' => false,
             ],
 
             'product' => [
                 'field' => 'productid',
-                'class' => HasManyField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid']
             ]
         ];

@@ -287,8 +287,8 @@ to
 {if $reconciliations}
     {foreach from=$reconciliations item=v key=k}
         {assign var=invoices_total value=0}
-        {assign var=invoices_array value=$v.model->invoices->order('invoice_date')->all()}
-        {assign var=memo_array value=$v.model->memos->order('memo_date')->all()}
+        {assign var=invoices_array value=$v.model->invoices->order(['invoice_date'])->all()}
+        {assign var=memo_array value=$v.model->memos->order(['memo_date'])->all()}
         {assign var=all_array value=array_merge($invoices_array, $memo_array)}
         {assign var=all_array_cnt value=count($all_array)}
         {foreach from=$invoices_array item=vo key=ko}

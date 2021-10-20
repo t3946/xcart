@@ -11,11 +11,11 @@
             <div class="row align-justify">
                 <div class="columns shop-logo-block">
                     <a href="/">
-                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo.svg"
-                             alt="{$.getSiteConfig->company_name->value}" class="show-for-large logo-big">
+                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg"
+                             alt="{$site->company_name}" class="show-for-large logo-big">
 
-                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$.getSite->code|lower}/logo-small.svg"
-                             alt="{$.getSiteConfig->company_name->value}"
+                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo-small.svg"
+                             alt="{$site->company_name}"
                              class="show-for-small hide-for-large logo-small">
                     </a>
                 </div>

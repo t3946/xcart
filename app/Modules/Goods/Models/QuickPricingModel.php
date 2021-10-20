@@ -17,25 +17,25 @@ class QuickPricingModel extends Model
         return [
             'product' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'primary' => true
             ],
             'price' => [
                 'field' => 'priceid',
-                'class' => ForeignField::className(),
-                'modelClass' => PricingModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => PricingModel::class,
                 'link' => ['priceid' => 'priceid', 'variantid' => 'variantid'],
                 'primary' => true
             ],
             'variantid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true,
                 'default' => 0,
             ],
             'membershipid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'default' => 0,
             ],
         ];

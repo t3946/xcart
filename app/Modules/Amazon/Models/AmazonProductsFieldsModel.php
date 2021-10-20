@@ -19,7 +19,7 @@ class AmazonProductsFieldsModel extends Model
     {
         return [
             'productid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ]
         ];
     }

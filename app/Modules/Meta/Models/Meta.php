@@ -15,29 +15,29 @@ class Meta extends Model
     {
         $fields = [
             'is_custom' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'verboseName' => 'Is custom',
                 'helpText' => 'If "Set manually" field was not set, data will be generated automatically'
             ],
             'title' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 200,
                 'verboseName' => 'Title'
             ],
             'keywords' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 200,
                 'verboseName' => 'Keywords',
                 'null' => true
             ],
             'description' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 200,
                 'verboseName' => 'Description',
                 'null' => true
             ],
             'url' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'verboseName' => 'Url',
                 'null' => true
             ],

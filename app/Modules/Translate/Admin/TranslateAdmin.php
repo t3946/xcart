@@ -275,7 +275,7 @@ class TranslateAdmin extends Admin
         }
 
         $lang_codes = $filter_form->name->getValue()
-            ?? LanguageModel::objects()->valuesList( 'lang_code', true );
+            ?? LanguageModel::objects()->valuesList( ['lang_code'], true );
 
         $file_loader = new PoFileLoader();
         $translates = [];

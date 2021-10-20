@@ -19,14 +19,14 @@ class AmazonFbaMissingSkuModel extends Model
     {
         return [
             'missing_productcode' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true,
                 'null' => false,
             ],
             'product' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'null' => true,
                 'default' => null,
             ],

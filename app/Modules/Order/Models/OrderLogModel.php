@@ -25,33 +25,33 @@ class OrderLogModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
             'type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 2,
                 'default' => '',
                 'null' => false,
             ],
             'date' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],
             'login' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 40,
                 'default' => '',
                 'null' => false,
             ],
             'log' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false,
             ]
         ];

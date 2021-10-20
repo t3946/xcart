@@ -67,7 +67,7 @@ class PaymentMethodModel extends Model
 
     public function __toString()
     {
-        return (string)$this->payment_method;
+        return $this->payment_method;
     }
 
 }

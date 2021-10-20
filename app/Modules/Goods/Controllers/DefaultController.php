@@ -11,7 +11,11 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Goods\Models\ProductVideosModel;
 use Modules\Meta\Types\MetaType;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Exceptions\InvalidConfigException;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -20,7 +24,9 @@ class DefaultController extends FrontendController
 {
     public function actionViewOld($id, $slug): void
     {
-        $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
+        /** @var ProductModel $model */
+        $model = ProductModel::objects()->filter(['productid' => $id])->get();
+        $this->view_internal($model);
     }
 
     public function actionProductQuestions(): void
@@ -47,7 +53,7 @@ class DefaultController extends FrontendController
 
         $this->display('product/tabs/_questions.tpl', [
             'form' => $form,
-            'message' => $message,
+            'message' => $message ?? '',
             'productQuestion' => $questions,
             'productId' => $productId
         ]);
@@ -70,20 +76,22 @@ class DefaultController extends FrontendController
 
     public function actionView($sku): void
     {
-        $this->view_internal(ProductModel::objects()->filter(['productcode' => $sku])->get());
+        /** @var ProductModel $model */
+        $model = ProductModel::objects()->filter(['productcode' => $sku])->get();
+        $this->view_internal($model);
     }
 
     /**
      * @param ProductModel|null $model
      *
-     * @throws \Xcart\App\Exceptions\HttpException
-     * @throws \Xcart\App\Exceptions\InvalidConfigException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws HttpException
+     * @throws InvalidConfigException
+     * @throws UnknownPropertyException
      */
-    private function view_internal($model = null): void
+    private function view_internal(?ProductModel $model = null): void
     {
 
-        /** @var \Modules\Sites\Models\SiteModel $site */
+        /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         if (!$model) {

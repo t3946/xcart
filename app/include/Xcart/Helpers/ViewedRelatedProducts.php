@@ -14,20 +14,20 @@ class ViewedRelatedProducts
     /***
      * @var ElasticSearch
      */
-    private $elastic;
-    private $_search_with_categories = false;
+    private ElasticSearch $elastic;
+    private bool $_search_with_categories = false;
 
     public function __construct( $categories = null, $search_string = null )
     {
-        $config = GlobalConfig::getInstance()->setOldMode();
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-        /** @var \Modules\Sites\SitesModule $siteModule */
-        $siteModule = Xcart::app()->getModule('Sites');
-        $site_domain = $siteModule->getSite()->domain;
+        $config = $site->getGlobalConfig();
+
+        $site_domain = $site->domain;
 
         $this->ssid = Xcart::app()->request->session->getId();
 
-        $this->elastic = new ElasticSearch($config["ElasticSearch_options"]['es_url'],  $site_domain);
+        $this->elastic = new ElasticSearch($config['es_url'],  $site_domain);
 
         if (!empty($categories)) {
             $this->categories = $categories;
@@ -126,7 +126,7 @@ SQL;
         $boost = 1 + count($resources) / 10 - 0.1;
         foreach ($resources as $n => $resource)
         {
-            if ($resource['resource_type'] == 'P')
+            if ($resource['resource_type'] === 'P')
             {
                 $summary_pids[] = $resource['resource_id'];
                 $o_boost = $boost;
@@ -159,7 +159,7 @@ SQL;
 }
 JSQN;
             }
-            elseif($resource['resource_type'] == 'S') {
+            elseif($resource['resource_type'] === 'S') {
 
                 $s_phrase = preg_replace("/[^0-9a-zA-Z=.'-]/", " ", $resource['additional_data']);
                 $s_phrase = trim($s_phrase);

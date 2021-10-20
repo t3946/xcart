@@ -58,7 +58,6 @@ class QueueProcessCommand extends Command
 
                 if ($data['source'] !== 'manual' && (!$feed || !$feed->enabled)) {
                     echo "Feed is not active\n";
-                    print_r($data);
                     return;
                 }
 
@@ -69,10 +68,17 @@ class QueueProcessCommand extends Command
                         return;
                     }
                     [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $product_code]);
+
                     if ($is_new && !$site) {
                         echo "Empty site for product {$data['productcode']}\n";
                         return;
                     }
+
+                    if ($is_new && $feed && $feed->feed_type === 'I') {
+                        echo "Dont add product for inventory feed: {$data['productcode']}\n";
+                        return;
+                    }
+
                     if ($data['source'] === 'manual' || $product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
                         if ($data['eta_date_mm_dd_yyyy']) {
@@ -114,6 +120,12 @@ class QueueProcessCommand extends Command
                     $group_code = self::getGroupProductCode($data);
                     /** @var ProductModel $group_product */
                     [$group_product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $group_code]);
+
+                    if ($is_new && $feed && $feed->feed_type === 'I') {
+                        echo "Dont add group product for inventory feed: {$group_code}\n";
+                        return;
+                    }
+
                     if ($group_product->hash_product !== $data['hash_product']) {
                         $group_product->setAttributes($data);
                         $group_product->group_root = $group_product->productid;
@@ -137,6 +149,12 @@ class QueueProcessCommand extends Command
                             continue;
                         }
                         [$product, $is_new] = ProductModel::objects()->getOrNew(['productcode' => $child_code]);
+
+                        if ($is_new && $feed && $feed->feed_type === 'I') {
+                            echo "Dont add child product for inventory feed: {$child_code}\n";
+                            return;
+                        }
+
                         if ($product->hash_product !== $child['hash_product'] || $product->group_root != $group_product->productid) {
                             $child += ['manufacturerid' => $group_product['manufacturerid']];
                             $product->setAttributes($child);

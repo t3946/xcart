@@ -19,19 +19,19 @@ class ReferrerModel extends Model
     {
         return [
             'referer_id' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'referer' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'default' => '',
             ],
             'visits' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'default' => 0
             ],
             'last_visited' => [
-                'class' => TimestampField::className(),
+                'class' => TimestampField::class,
                 'autoNow' => true
             ]
         ];

@@ -474,6 +474,29 @@
         <li>
             <div class="row">
                 <div class="columns large-4">
+                    <label for="o_delivery">Order submission:</label>
+                </div>
+
+                <div class="columns large-5">
+                    <select name="search[order][order_submission_methods][]" id="o_order_submission" class="big select2-field" multiple>
+                        {foreach $order_submission_methods as $key => $method}
+                            <option value="{$key}" {if $form_data.order.order_submission_methods && $key in list $form_data.order.order_submission_methods}selected{/if}>
+                                {$method}
+                            </option>
+                        {/foreach}
+                    </select>
+                </div>
+
+                <div class="columns large-3 not">
+                    <input type="checkbox" value="1" name="search[not][order][order_submission_methods]" id="nodm" {if $form_data.not.order.order_submission_methods}checked{/if}>
+                    <label for="nodm">Invert selection</label>
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="columns large-4">
                     <label for="o_c2b">C2B payment status:</label>
                 </div>
 

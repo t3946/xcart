@@ -53,36 +53,36 @@ class CouponKitModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
 
             'orders' => [
-                'class' => ManyToManyField::className(),
-                'modelClass' => OrderModel::className(),
-                'through' => CouponOrderModel::className(),
+                'class' => ManyToManyField::class,
+                'modelClass' => OrderModel::class,
+                'through' => CouponOrderModel::class,
             ],
 
             'active' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
             ],
 
             'deleted' => [
-                'class' => BooleanField::className(),
+                'class' => BooleanField::class,
                 'default' => false,
             ],
 
             'code' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
                 'unique' => true,
             ],
 
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'required' => true,
             ],
 
             'type' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'required' => true,
                 'default' => 1,
                 'choices' => [
@@ -92,41 +92,41 @@ class CouponKitModel extends Model
             ],
 
             'discount' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'required' => true,
             ],
 
             'max_discount' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'required' => true,
                 'verboseName' => 'Max summ discount',
             ],
 
             'uses_per_user' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 1,
                 'verboseName' => 'Max uses per user',
             ],
 
             'created_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNowAdd' => true,
             ],
 
             'updated_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'autoNow' => true,
             ],
 
             'restrictions' => [
-                'class' => HasManyField::className(),
-                'modelClass' => CouponRestrictionModel::className(),
+                'class' => HasManyField::class,
+                'modelClass' => CouponRestrictionModel::class,
                 'link' => ['id' => 'coupon_id'],
             ],
 
             'description' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => true,
             ],
         ];

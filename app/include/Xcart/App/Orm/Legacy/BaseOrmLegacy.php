@@ -29,7 +29,7 @@ class BaseOrmLegacy
      */
     public static function create(array $attributes)
     {
-        $className = static::className();
+        $className = static::class;
 
         /** @var static $record */
         $record = new $className;

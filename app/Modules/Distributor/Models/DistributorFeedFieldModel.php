@@ -19,19 +19,19 @@ class DistributorFeedFieldModel extends Model
     {
         return [
             'feed_id' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => true,
                 'primary' => true,
                 'default' => ''
             ],
             'manufacturerid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => true,
                 'primary' => true,
                 'default' => 0
             ],
             'field_name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => false,
                 'primary' => true,
                 'default' => ''

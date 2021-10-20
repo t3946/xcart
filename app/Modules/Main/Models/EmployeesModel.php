@@ -25,24 +25,24 @@ class EmployeesModel extends Model
     public static function getFields()
     {
         return [
-            'id' => AutoField::className(),
-            'isCeo' => BooleanField::className(),
-            'name' => CharField::className(),
+            'id' => AutoField::class,
+            'isCeo' => BooleanField::class,
+            'name' => CharField::class,
             'post' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
             ],
             'photo' => [
-                'class' => ImageField::className(),
+                'class' => ImageField::class,
                 'sizes' => self::$sizes
             ],
             'photo2' => [
-                'class' => ImageField::className(),
+                'class' => ImageField::class,
                 'sizes' => self::$sizes,
                 'null' => true,
             ],
             'position' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'default' => 9999,
                 'null' => false,
             ],

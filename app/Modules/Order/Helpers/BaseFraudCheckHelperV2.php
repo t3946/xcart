@@ -6,6 +6,7 @@ namespace Modules\Order\Helpers;
 
 use Modules\Goods\Models\ProductHardResellModel;
 use Modules\Order\Models\BaseFraudCheckModelV2;
+use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderBaseFraudCheckModelV2;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
@@ -102,7 +103,10 @@ class BaseFraudCheckHelperV2
         $additional_info = [];
         foreach ($order->getProducts() as $product_model) {
             /** @var OrderDetailModel[]|Manager $order_chargeback */
-            $order_chargeback = OrderDetailModel::objects()->filter(['productid' => $product_model->pk, 'order_group__cb_status' => OrderStatusModel::ORDER_STATUS_CHARGE_BACKED]);
+            $order_chargeback = OrderDetailModel::objects()->filter([
+                'productid' => $product_model->pk,
+                'order__fraud_status__in' => [FraudStatusModel::STATUS_FRAUD_PURE, FraudStatusModel::STATUS_FRAUD_PROBABLY, FraudStatusModel::STATUS_FRAUD_CHARGEBACK]
+            ]);
             if ($order_chargeback->count()) {
                 $outcome = 0;
                 $fraud_result = 'negative';

@@ -17,15 +17,15 @@ class ProductCategoryTermsModel extends Model
     {
         return [
             'categoryid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true
             ],
             'termid' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'primary' => true
             ],
             'term_count' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
             ],
         ];
     }

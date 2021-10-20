@@ -25,7 +25,7 @@ trait AdminTrait
         $menu = [];
         $adminClasses = static::getAdminClasses();
         foreach ($adminClasses as $adminClass) {
-            if (is_a($adminClass, Admin::className(), true) && $adminClass::$public) {
+            if (is_a($adminClass, Admin::class, true) && $adminClass::$public) {
                 if (!Xcart::app()->user->hasRoles(['vrs','vrv', 'fqa'])) {
                     $menu[] = [
                         'adminClassName' => $adminClass::className(),

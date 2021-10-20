@@ -25,31 +25,43 @@ class QueueDiscontinueCommand extends Command
         /** @var DistributorModel $dx */
 
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
+
             $dx = DistributorModel::objects()->get(['code' => $data['dx_code']]);
-            $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
-            $dis_count = ProductModel::without_group()
-                ->filter([
-                    'forsale' => 'Y',
-                    'manufacturerid' => $dx->manufacturerid,
-                    'sites__storefrontid' => $data['storefront']
-                ])
-                ->exclude(['productcode__in' => $data['active_sku'] ?? []])
-                ->update(['forsale' => 'N', 'hash_product' => null]);
 
-            $feed->setAttributes([
-                'process_time' => $data['process_time'],
-                'last_update_time' => time(),
-                'last_update_period' => time() - $feed->last_update_time,
-                'feed_source' => $data['feed_source'],
-                'feed_source_date' => $data['feed_source_date'],
-                'last_update_items_count' => $data['products_in_feed']
-            ]);
-            $feed->save();
+            $filter = [
+                'forsale' => 'Y',
+                'manufacturerid' => $dx->manufacturerid,
+            ];
 
-            echo "Discontinued {$data['dx_code']}: $dis_count products\n";
+            if (isset($data['storefront'])) {
+                $feed = SupplierFeedModel::objects()->limit(1)->get(['manufacturerid' => $dx->pk, 'storefront_id' => $data['storefront']]);
+                $filter['sites__storefrontid'] = $data['storefront'];
+            }
+
+
+            if ($data['active_sku']) {
+                $dis_count = ProductModel::without_group()
+                    ->filter($filter)
+                    ->exclude(['productcode__in' => $data['active_sku']])
+                    ->update(['forsale' => 'N', 'hash_product' => null]);
+
+                echo "Discontinued {$data['dx_code']}: $dis_count products\n";
+            }
 
             unset($data['active_sku']);
             print_r($data);
+
+            if ($feed) {
+                $feed->setAttributes([
+                     'process_time' => $data['process_time'],
+                     'last_update_time' => time(),
+                     'last_update_period' => time() - $feed->last_update_time,
+                     'feed_source' => $data['feed_source'],
+                     'feed_source_date' => $data['feed_source_date'],
+                     'last_update_items_count' => $data['products_in_feed']
+                ]);
+                $feed->save();
+            }
 
             $message->ack();
         }

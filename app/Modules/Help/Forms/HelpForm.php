@@ -32,7 +32,7 @@ class HelpForm extends ModelForm
             'menu_items' => [
                 'class' => ListViewField::class,
                 'adminClass' => HelpItemsAdmin::class,
-                'defaultOrder' => 'order_by'
+                'defaultOrder' => ['order_by']
             ]
         ];
     }

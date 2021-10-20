@@ -34,7 +34,7 @@ class FraudStatusModel extends Model
     {
         return [
             'code' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'primary' => true
             ],
         ];

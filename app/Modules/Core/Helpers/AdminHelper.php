@@ -328,29 +328,18 @@ class AdminHelper
         $data["user"] = Xcart::app()->getUser()->login;
 
         //sites
-        $site_list = SiteModel::objects()->exclude(['status' => 'D'])->order(['orderby'])->all();
+        $site_list = SiteModel::objects()->exclude(['status' => 'D'])->all();
 
         foreach ($site_list as $site) {
-            switch ($site->code) {
-                case 'AT':
-                case 'DS':
-                    $icon = "dummy.svg";
-                    break;
-                case 'RD':
-                    $icon = "go-freddy.svg";
-                    break;
-                default:
-                    $icon = str_replace(' ', '-', strtolower($site->getName())) . ".svg";
-            }
-
             $data["sites"][] = [
                 "name" => $site->getName(),
                 "id" => (int)$site->storefrontid,
-                "icon" => $icon,
                 "code" => $site->code,
                 'favicon' => $site->file_edit_image_favicon->getValue() ?? ''
             ];
         }
+
+        usort($data["sites"], static fn($a, $b) => $a['name'] > $b['name']);
 
         //quick links
         $data["quickLinks"] = [
@@ -388,8 +377,9 @@ class AdminHelper
     private static function userData()
     {
         $user = Xcart::app()->getUser();
-
-        StorageHelper::push($user->id ? $user->getAttributes() : null, null, 'user');
+        if ($user->id) {
+            StorageHelper::push($user->id ? $user->getAttributes() : null, null, 'user');
+        }
     }
 
     /**

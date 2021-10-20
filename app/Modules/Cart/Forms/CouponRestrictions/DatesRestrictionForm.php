@@ -11,19 +11,19 @@ class DatesRestrictionForm extends DiscountRestrictionForm
 {
     public static function getRestrictClass()
     {
-        return DateRestriction::className();
+        return DateRestriction::class;
     }
 
     public function getFields()
     {
         return array_merge(parent::getFields(), [
             'start' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'required' => true,
                 'value' => $this->getDataValue('start'),
             ],
             'end' => [
-                'class' => DateField::className(),
+                'class' => DateField::class,
                 'required' => true,
                 'value' => $this->getDataValue('end'),
             ],
