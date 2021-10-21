@@ -54,8 +54,6 @@ class SitemapCommand extends Command
 
             $generator = new SitemapGenerator($site->getAbsoluteUrl(), $outputDir);
 
-            $generator->enableCompression();
-
             $generator->setMaxUrlsPerSitemap(50000);
 
             $generator->setSitemapFileName("$site->domain-sitemap.xml");
