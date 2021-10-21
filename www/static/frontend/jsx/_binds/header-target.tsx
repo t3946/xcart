@@ -6,6 +6,7 @@ import Store from "@client/jsx/redux/stores/Store";
 import ShadowPanel from "../modules/account/components/shared/ShadowPanel";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import HatSearchLine from "@client/modules/account/components/hat/HatSearchLine";
+import PhotoSwipeContainer from "@client/jsx/components/PhotoSwipeContainer";
 
 $(() => {
   const target = document.getElementById("header-target");
@@ -22,6 +23,7 @@ $(() => {
       <HatNavigation />
       <ShadowPanel />
       <HatSearchLine isStatic={true} />
+      <PhotoSwipeContainer />
     </Provider>,
     target
   );

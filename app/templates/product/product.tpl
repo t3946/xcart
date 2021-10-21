@@ -146,6 +146,8 @@
                                                 data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
                                                 data-preview="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
                                                 data-id="{$image->imageid}"
+                                                data-width="{$image->getAttribute('image_x')}"
+                                                data-height="{$image->getAttribute('image_y')}"
                                                 type="image">
                                         </option>
                                     {/if}

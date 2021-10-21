@@ -6,10 +6,12 @@ import {
 } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
-import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
 import storeInitialValue from "../../modules/account/ts/consts/store-initial-value";
 import StoreInterface from "@client/jsx/modules/account/ts/types/store.type";
 import accountRootSaga from "../sagas/account/MainSaga";
+
+//reducers
+import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
 import accountMainReducer from "../reduсers/account/MainReduсer";
 import WalletReducer from "../reduсers/account/PaymentsReducer";
 import MenuReducer from "../reduсers/account/MenuReducer";
@@ -29,6 +31,7 @@ import PublicProfileReducer from "@client/jsx/redux/reduсers/account/PublicProf
 import RatingsReducer from "@client/jsx/redux/reduсers/RatingsReducer";
 import ReviewsReducer from "@client/jsx/redux/reduсers/ReviewsReducer";
 import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
+import PhotoswipeReducer from "@client/jsx/redux/reduсers/PhotoswipeReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -54,6 +57,7 @@ const Store: ReduxStore<StoreInterface> = createStore(
     productsRatings: RatingsReducer,
     productsReviews: ReviewsReducer,
     product: ProductReducer,
+    photoswipe: PhotoswipeReducer,
   }),
   storeInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

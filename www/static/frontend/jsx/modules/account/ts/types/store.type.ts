@@ -3,6 +3,7 @@ import { SelectValue } from "./select-value.type";
 import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/alert";
 import { List } from "@client/modules/account/ts/types/list.type";
+import PhotoSwipe from "@client/libs/photoswipe/dist/photoswipe";
 
 export interface AccountAddressesStore {
   addressesList: AddressItemDto[];
@@ -49,6 +50,11 @@ export interface AccountPublicProfileStore {
   alert: Record<any, any>;
 }
 
+export interface PhotoSwipeStore {
+  items: [];
+  gallery: PhotoSwipe;
+}
+
 interface StoreInterface {
   addresses: AccountAddressesStore;
   main: AccountMainStore;
@@ -78,6 +84,7 @@ interface StoreInterface {
   productsRatings: any;
   productsReviews: any;
   product: any;
+  photoswipe: PhotoSwipeStore;
 }
 
 export default StoreInterface;

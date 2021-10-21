@@ -129,7 +129,15 @@ class ReviewsApi extends FrontendController
                 (int)$files['error'][$i],
             );
 
-            (new ReviewFileModel(['review_id' => $review_id, 'image_path' => $uploadedFile]))->save();
+            $image_name = $uploadedFile->getPath() . '/' . $uploadedFile->getFilename();
+            list($width, $height) = getimagesize($image_name);
+
+            (new ReviewFileModel([
+                'review_id' => $review_id,
+                'image_path' => $uploadedFile,
+                'width' => $width,
+                'height' => $height,
+            ]))->save();
         }
 
         $this->jsonResponse($review->getAttributes());
@@ -159,7 +167,6 @@ class ReviewsApi extends FrontendController
             'user_avatar' => 'user__avatar_image',
             'markedHelpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
             'created_timestamp' => 'UNIX_TIMESTAMP(created)',
-            'files' => new Expression("GROUP_CONCAT($files_alias.image_path)"),
         ];
         $filter_fields = [
             'product_id' => $product_id,
@@ -199,7 +206,20 @@ class ReviewsApi extends FrontendController
         $reviews = $query_set->all();
 
         for ($i = 0; $i < count($reviews); $i++) {
+
             $reviews[$i]['markedHelpful'] = !($reviews[$i]['markedHelpful'] === "0");
+            $reviews[$i]['files'] = ReviewFileModel::objects()
+                ->asArray()
+                ->select(
+                    [
+                        "path" => "image_path",
+                        "width",
+                        "height",
+                    ]
+                )
+                ->all([
+                    "review_id" => $reviews[$i]["product_review_id"]
+                ]);
         }
 
         return $reviews;

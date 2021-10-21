@@ -1,18 +1,21 @@
-import { h, render } from "preact";
+import React from "react";
 import ProductImageSlider from "../components/ProductImageSlider";
+import { Provider } from "react-redux";
+import Store from "@client/jsx/redux/stores/Store";
+import $ from "jquery";
 
 (() => {
   $(".product__images-slider").each((i, item) => {
-    let data = $(item).find("datalist");
+    const data = $(item).find("datalist");
 
     if (data.length) {
-      let items = [];
+      const items = [];
 
-      let options = data.find("option");
+      const options = data.find("option");
 
       if (options.length) {
         options.each((n, option) => {
-          let type = option.getAttribute("type").toLowerCase();
+          const type = option.getAttribute("type").toLowerCase();
 
           if (type === "image") {
             items.push({
@@ -23,6 +26,8 @@ import ProductImageSlider from "../components/ProductImageSlider";
               title: option.dataset.title || null,
               thumb: option.dataset.thumb || null,
               preview: option.dataset.preview || null,
+              width: parseInt(option.dataset.width),
+              height: parseInt(option.dataset.height),
             });
           }
 
@@ -47,7 +52,14 @@ import ProductImageSlider from "../components/ProductImageSlider";
           }
         });
 
-        render(<ProductImageSlider items={items} />, item);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        React.render(
+          <Provider store={Store as any}>
+            <ProductImageSlider items={items} />
+          </Provider>,
+          item
+        );
       }
     }
   });

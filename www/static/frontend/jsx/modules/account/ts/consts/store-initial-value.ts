@@ -71,6 +71,11 @@ export const productsRatingsInitialValue = {};
 
 export const productsReviewsInitialValue = {};
 
+export const photoswipeInitialValue = {
+  items: null,
+  gallery: null,
+};
+
 const storeInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -86,6 +91,7 @@ const storeInitialValue = {
   productsRatings: productsRatingsInitialValue,
   productsReviews: productsReviewsInitialValue,
   product: null,
+  photoswipe: photoswipeInitialValue,
 };
 
 export default storeInitialValue;

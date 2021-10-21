@@ -26,6 +26,12 @@ class ReviewFileModel extends Model {
                 'uploadTo' => 'images/review_images/',
                 'maxSize' => '20M',
             ],
+            'width' => [
+                'class' => IntField::class,
+            ],
+            'height' => [
+                'class' => IntField::class,
+            ],
         ];
     }
 }

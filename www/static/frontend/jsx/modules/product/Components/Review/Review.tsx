@@ -21,7 +21,7 @@ interface PropsInterface {
   user_avatar: string;
   helpful_count: string;
   markedHelpful: boolean;
-  files: string;
+  files: Record<any, any>[];
 }
 
 const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
@@ -98,7 +98,7 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
 
       <Body content={props.body} />
 
-      <Files files={props.files.split(",")} />
+      <Files files={props.files} />
 
       <div>
         <HelpfulCount count={helpful_count} />

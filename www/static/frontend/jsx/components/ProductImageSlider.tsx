@@ -1,9 +1,8 @@
-import { h, Component } from "preact";
+import { Component } from "react";
 import storeApp from "../redux/stores/StoreApp";
 import renderToStringr from "preact-render-to-string";
 import { videoLinkToObject } from "../utils/video";
 import SwiperCore, { Navigation } from "swiper";
-import PhotoSwipe from "./PhotoSwipeContainer";
 import throttle from "lodash/throttle";
 import extend from "lodash/extend";
 import map from "lodash/map";
@@ -11,11 +10,18 @@ import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 import ScreenSize from "../utils/ScreenSize";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { photoSwipeSetItemsAction } from "../redux/actions/PhotoswipeActions";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
+import Store from "../redux/stores/Store";
 
 React.useLayoutEffect = React.useEffect;
 SwiperCore.use([Navigation]);
 
-export default class ProductImageSlider extends Component {
+/**
+ * Управляет двойным слайдером с просмотром картинок на странице продукта.
+ * Запускает просмотр картинок в в PhotoSwipe viewer'е (который разворачивается на весь экран)
+ */
+class ProductImageSlider extends Component {
   constructor(props) {
     super();
 
@@ -34,10 +40,10 @@ export default class ProductImageSlider extends Component {
     // добавить слушатель события resize
     document.addEventListener("resize_monitor.media_change", this.onResize);
 
-    let globalState = storeApp.getState();
+    const globalState = storeApp.getState();
     let media = globalState.frontend.media;
     if (media == "") {
-      let screen = new ScreenSize();
+      const screen = new ScreenSize();
       state = screen.getInfo();
       actionMedia(state.media);
       media = state.media;
@@ -81,18 +87,18 @@ export default class ProductImageSlider extends Component {
   }
 
   onResize(event) {
-    let newState = this.createNewState(this.state, event.detail);
+    const newState = this.createNewState(this.state, event.detail);
     if (newState) {
       this.setState(newState);
     }
   }
 
   prepareItems(items) {
-    for (let i in items) {
-      let item = items[i];
+    for (const i in items) {
+      const item = items[i];
 
       if (item.type === "image") {
-        let wait = --this.state.wait;
+        const wait = --this.state.wait;
 
         this.setState({
           wait: wait,
@@ -102,7 +108,7 @@ export default class ProductImageSlider extends Component {
 
       if (item.type === "video") {
         videoLinkToObject(item.href, (meta) => {
-          let wait = --this.state.wait;
+          const wait = --this.state.wait;
           items[i] = extend(item, { meta: meta });
 
           this.setState({
@@ -126,16 +132,20 @@ export default class ProductImageSlider extends Component {
     }
   }
 
+  /**
+   * view image in photo swipe image viewer
+   */
   zoomHndl(e, item) {
     e.preventDefault();
 
     if (!this.preparedItems) {
-      let items = [];
-      for (let i in this.state.items) {
-        let item = this.state.items[i];
+      const items = [];
+
+      for (const i in this.state.items) {
+        const item = this.state.items[i];
 
         if (item.type === "image") {
-          items.push({ src: item.src, w: null, h: null });
+          items.push({ src: item.src, w: item.width, h: item.height });
         } else if (item.type === "html") {
           items.push({ html: item.html });
         } else if (item.type === "video") {
@@ -172,13 +182,9 @@ export default class ProductImageSlider extends Component {
       this.preparedItems = items;
     }
 
-    let pswp = PhotoSwipe;
-    pswp.options.index = this.state.index;
-    pswp.options.speed = 300;
-    pswp.options.zoomEl = false;
-    pswp.options.maxSpreadZoom = 1;
-    pswp.setImages(this.preparedItems);
-    pswp.init();
+    console.log("УСТАНАВЛИВАЮ ITEMS", this.preparedItems);
+
+    Store.dispatch(photoSwipeSetItemsAction(this.preparedItems));
   }
 
   prevHndl(e) {
@@ -216,7 +222,7 @@ export default class ProductImageSlider extends Component {
 
   renderThumbs() {
     return map(this.state.items, (item, n) => {
-      let is_active = this.state.index == n ? " active" : "";
+      const is_active = this.state.index == n ? " active" : "";
       //let is_active = '';
 
       if (item.type === "image") {
@@ -232,7 +238,7 @@ export default class ProductImageSlider extends Component {
         );
       }
       if (item.type === "video") {
-        let src = item.thumb || item.meta.images.thumb || null;
+        const src = item.thumb || item.meta.images.thumb || null;
 
         if (src) {
           return (
@@ -312,15 +318,16 @@ export default class ProductImageSlider extends Component {
 
   renderAllDetails() {
     return map(this.state.items, (item, n) => {
-      let is_active = "";
-      let position = n + 1;
-      let key = "detail." + position;
+      const is_active = "";
+      const position = n + 1;
+      const key = "detail." + position;
 
       if (item.type === "image") {
         return (
           <SwiperSlide
             key={key}
             onClick={(e) => {
+              console.log("onclick");
               this.zoomHndl(e, item);
             }}
             style={"background-image: url(" + item.preview + ")"}
@@ -329,7 +336,7 @@ export default class ProductImageSlider extends Component {
       }
 
       if (item.type === "video") {
-        let content = this.renderVideoItem(item);
+        const content = this.renderVideoItem(item);
         let clName = "slide type-video ";
 
         clName += this.state.isVideo ? "video-show" : "video-hide";
@@ -378,8 +385,8 @@ export default class ProductImageSlider extends Component {
       return;
     }
     return map(this.state.items, (item, n) => {
-      let index = n + 1;
-      let key = "detailClick." + index;
+      const index = n + 1;
+      const key = "detailClick." + index;
       let classList = "clickBarItem";
       if (this.state.index == n) {
         classList += " active";
@@ -400,11 +407,11 @@ export default class ProductImageSlider extends Component {
   }
 
   renderSliderThumbs() {
-    let sliderButtonsClasses = this.state.items.length <= 3 ? " hide" : "";
-    let buttonStyles = {
+    const sliderButtonsClasses = this.state.items.length <= 3 ? " hide" : "";
+    const buttonStyles = {
       width: "100%",
     };
-    let hideEl = !this.state.showThumbs ? "display:none" : "";
+    const hideEl = !this.state.showThumbs ? "display:none" : "";
 
     return (
       <div className="slider-thumbs" style={hideEl}>
@@ -516,3 +523,5 @@ export default class ProductImageSlider extends Component {
     );
   }
 }
+
+export default ProductImageSlider;
