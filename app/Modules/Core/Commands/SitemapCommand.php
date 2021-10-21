@@ -116,7 +116,6 @@ class SitemapCommand extends Command
 
             $generator->finalize();
 
-            break;
         }
     }
 }
