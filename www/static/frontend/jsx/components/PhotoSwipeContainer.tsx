@@ -154,12 +154,6 @@ const PhotoSwipeContainer: React.FC = function () {
     });
 
     gallery.listen("afterChange", () => {
-      const item = gallery.currItem;
-
-      if (item.onShow) {
-        item.onShow(item, gallery);
-      }
-
       changePadding(gallery);
       setForceUpdate({ ...forceUpdate });
     });
