@@ -75,10 +75,13 @@ class SitemapCommand extends Command
                                 'categories__prevent_index_products' => 'Y'
                             ]);
 
-                        /** @var ProductModel $product */
-                        foreach ($qs as $product) {
-                            $date = $product->mod_date ? (new DateTime())->setTimestamp($product->mod_date) : new DateTime();
-                            $generator->addURL($product->getAbsoluteUrl(), $date, $item['freq'], $item['priority'], []);
+
+                        $i = 0;
+                        while ($products = $qs->paginate(++$i, 1000)) {
+                            foreach ($products as $product) {
+                                $date = $product->mod_date ? (new DateTime())->setTimestamp($product->mod_date) : new DateTime();
+                                $generator->addURL($product->getAbsoluteUrl(), $date, $item['freq'], $item['priority'], []);
+                            }
                         }
 
                         break;
@@ -92,8 +95,11 @@ class SitemapCommand extends Command
                                 'prevent_index_category_page' => 'Y'
                             ]);
 
-                        foreach ($qs as $category) {
-                            $generator->addURL($category->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                        $i = 0;
+                        while ($categories = $qs->paginate(++$i, 1000)) {
+                            foreach ($categories as $category) {
+                                $generator->addURL($category->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                            }
                         }
                         break;
                     case self::SITE_MAP_BRAND:
@@ -105,8 +111,12 @@ class SitemapCommand extends Command
                             ->exclude([
                                 'prevent_search_indexing_brand_page' => 'Y'
                             ]);
-                        foreach ($qs as $brand) {
-                            $generator->addURL($brand->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+
+                        $i = 0;
+                        while ($brands = $qs->paginate(++$i, 1000)) {
+                            foreach ($brands as $brand) {
+                                $generator->addURL($brand->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                            }
                         }
                         break;
                 }
