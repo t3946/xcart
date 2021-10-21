@@ -834,7 +834,7 @@ function func_order_data($orderid)
                 $alt_products[$k]                = $alt_product;
                 $alt_products[$k]["orderby"]     = $orderby;
                 $alt_products[$k]["productcode"] = $productcode;
-                $alt_products[$k]["url"]         = "https://" . $all_storefronts[$alt_product["sfid"]]["domain"] . "/" . func_clean_url_get("P", $alt_product["productid"], false);
+                $alt_products[$k]["url"]         = "https://" . $all_storefronts[$alt_product["sfid"]]["domain"] . "/product/{$alt_product["productid"]}/";
             }
         }
 
