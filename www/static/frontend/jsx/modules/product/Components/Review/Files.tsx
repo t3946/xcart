@@ -1,5 +1,5 @@
 import React from "react";
-import { photoSwipeSetItemsAction } from "@client/jsx/redux/actions/PhotoswipeActions";
+import { photoSwipeSetItemsAction } from "@client/jsx/redux/actions/PhotoSwipeActions";
 import { useDispatch } from "react-redux";
 
 interface PropsInterface {

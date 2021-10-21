@@ -2,7 +2,7 @@ import { AnyAction } from "redux";
 import { photoswipeInitialValue } from "@client/jsx/modules/account/ts/consts/store-initial-value";
 import { PhotoSwipeStore } from "@client/modules/account/ts/types/store.type";
 
-const ReviewsReducer = (
+const PhotoSwipeReducer = (
   store: PhotoSwipeStore = photoswipeInitialValue,
   action: AnyAction
 ): Record<any, any> => {
@@ -26,4 +26,4 @@ const ReviewsReducer = (
   }
 };
 
-export default ReviewsReducer;
+export default PhotoSwipeReducer;

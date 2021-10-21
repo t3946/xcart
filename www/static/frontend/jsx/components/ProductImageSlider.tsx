@@ -10,9 +10,8 @@ import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 import ScreenSize from "../utils/ScreenSize";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { photoSwipeSetItemsAction } from "../redux/actions/PhotoswipeActions";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import Store from "../redux/stores/Store";
+import { photoSwipeSetItemsAction } from "@client/jsx/redux/actions/PhotoSwipeActions";
+import Store from "@client/jsx/redux/stores/Store";
 
 React.useLayoutEffect = React.useEffect;
 SwiperCore.use([Navigation]);

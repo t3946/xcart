@@ -31,7 +31,7 @@ import PublicProfileReducer from "@client/jsx/redux/reduсers/account/PublicProf
 import RatingsReducer from "@client/jsx/redux/reduсers/RatingsReducer";
 import ReviewsReducer from "@client/jsx/redux/reduсers/ReviewsReducer";
 import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
-import PhotoswipeReducer from "@client/jsx/redux/reduсers/PhotoswipeReducer";
+import PhotoSwipeReducer from "@client/jsx/redux/reduсers/PhotoSwipeReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -57,7 +57,7 @@ const Store: ReduxStore<StoreInterface> = createStore(
     productsRatings: RatingsReducer,
     productsReviews: ReviewsReducer,
     product: ProductReducer,
-    photoswipe: PhotoswipeReducer,
+    photoswipe: PhotoSwipeReducer,
   }),
   storeInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

@@ -6,7 +6,7 @@ import StoreInterface from "@client/modules/account/ts/types/store.type";
 import {
   photoSwipeInitAction,
   photoSwipeClearAction,
-} from "@client/jsx/redux/actions/PhotoswipeActions";
+} from "@client/jsx/redux/actions/PhotoSwipeActions";
 import classnames from "classnames";
 import ArrowIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Arrow";
 import TimesIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Times";
