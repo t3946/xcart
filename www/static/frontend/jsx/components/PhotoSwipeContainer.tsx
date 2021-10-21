@@ -8,6 +8,8 @@ import {
   photoSwipeClearAction,
 } from "@client/jsx/redux/actions/PhotoswipeActions";
 import classnames from "classnames";
+import ArrowIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Arrow";
+import TimesIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Times";
 
 const PhotoSwipeContainer: React.FC = function () {
   const photoSwipeStore = useSelector((e: StoreInterface) => e.photoswipe);
@@ -255,11 +257,7 @@ const PhotoSwipeContainer: React.FC = function () {
           >
             <button className="pswp__button--arrow--left photoswipe-navigate-button product-photo-slider-button product-photo-slider-button_left" />
 
-            <img
-              className="photoswipe-navigate-button-icon"
-              src="/static/frontend/dist/images/photoswipe/arrow.svg"
-              alt=""
-            />
+            <ArrowIcon className="photoswipe-navigate-button-icon photo-swipe-icon" />
           </div>
 
           <div
@@ -271,12 +269,7 @@ const PhotoSwipeContainer: React.FC = function () {
           >
             <button className="pswp__button--arrow--right photoswipe-navigate-button product-photo-slider-button product-photo-slider-button_right" />
 
-            <img
-              className="photoswipe-navigate-button-icon"
-              src="/static/frontend/dist/images/photoswipe/arrow.svg"
-              style={{ transform: "rotateY(180deg)" }}
-              alt=""
-            />
+            <ArrowIcon className="photoswipe-navigate-button-icon photoswipe-navigate-button-icon_reflected photo-swipe-icon" />
           </div>
 
           <div className="pswp__caption">
@@ -287,11 +280,7 @@ const PhotoSwipeContainer: React.FC = function () {
             className="photoswipe-close-button"
             onClick={() => gallery.close()}
           >
-            <img
-              className="photoswipe-close-button-icon"
-              src="/static/frontend/dist/images/photoswipe/cross.svg"
-              alt=""
-            />
+            <TimesIcon className="photoswipe-close-button-icon photo-swipe-icon" />
           </div>
         </div>
       </div>
