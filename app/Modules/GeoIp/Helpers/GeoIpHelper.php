@@ -13,6 +13,7 @@ use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\Sites\Models\SiteConfigModel;
+use Modules\Sites\Models\SiteModel;
 
 class GeoIpHelper
 {
@@ -114,7 +115,7 @@ class GeoIpHelper
         return $model;
     }
 
-    public static function getPhones($params)
+    public static function getPhones($params): string
     {
         $state = $orderState = null;
 
@@ -131,12 +132,15 @@ class GeoIpHelper
             $orderState = static::getStateByPhone($params['phone']);
         }
 
-        $phones = ($state ? $state->phone : '') . ($orderState ? ($state->phone && $orderState->phone ? ', ' : '') . $orderState->phone : '');
+        $phones = ($state->phone ?? '') . ($orderState ? ($state->phone && $orderState->phone ? ', ' : '') . $orderState->phone : '');
 
-        if (empty($phones)) {
-            $phones = $params['storefrontid']
-                ? SiteConfigModel::objects()->get(['name' => 'cidev_top_header_code', 'storefrontid' => $params['storefrontid']])->value
-                : GlobalConfigModel::objects()->get(['name' => 'cidev_top_header_code'])->value;
+        if (!$phones) {
+            /** @var SiteModel $site */
+            if ($params['storefrontid'] && $site = SiteModel::objects()->get(['pk' => $params['storefrontid']])) {
+                $phones = $site->cidev_top_header_code;
+            } else {
+                $phones = GlobalConfigModel::objects()->get(['name' => 'cidev_top_header_code'])->value;
+            }
         }
 
         return $phones;

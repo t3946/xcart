@@ -30,6 +30,7 @@
         "grpc/grpc": "^1.38",
         "guzzlehttp/guzzle": "^6.3",
         "hellogerard/jobby": "^3.4.0",
+        "icamys/php-sitemap-generator": "^4.3",
         "imagine/imagine": "^0.7.1",
         "jaybizzle/crawler-detect": "^1.2",
         "league/flysystem": "^1.0",

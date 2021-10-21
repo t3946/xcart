@@ -4,6 +4,7 @@
 *.tiff
 *.log
 www.*.xml
+www.*.xml.gz
 thumbs.db
 Thumbs.db
 .DS_Store
