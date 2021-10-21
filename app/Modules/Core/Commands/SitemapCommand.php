@@ -77,7 +77,7 @@ class SitemapCommand extends Command
 
 
                         $i = 0;
-                        while ($products = $qs->paginate(++$i, 1000)) {
+                        while ($products = $qs->paginate(++$i, 1000)->all()) {
                             foreach ($products as $product) {
                                 $date = $product->mod_date ? (new DateTime())->setTimestamp($product->mod_date) : new DateTime();
                                 $generator->addURL($product->getAbsoluteUrl(), $date, $item['freq'], $item['priority'], []);
@@ -96,7 +96,7 @@ class SitemapCommand extends Command
                             ]);
 
                         $i = 0;
-                        while ($categories = $qs->paginate(++$i, 1000)) {
+                        while ($categories = $qs->paginate(++$i, 1000)->all()) {
                             foreach ($categories as $category) {
                                 $generator->addURL($category->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
                             }
@@ -113,7 +113,7 @@ class SitemapCommand extends Command
                             ]);
 
                         $i = 0;
-                        while ($brands = $qs->paginate(++$i, 1000)) {
+                        while ($brands = $qs->paginate(++$i, 1000)->all()) {
                             foreach ($brands as $brand) {
                                 $generator->addURL($brand->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
                             }
