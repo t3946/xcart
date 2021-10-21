@@ -58,7 +58,7 @@ class SitemapCommand extends Command
 
             $generator->setSitemapFileName("$site->domain-sitemap.xml");
 
-            $generator->setSitemapIndexFileName("$site->domain-sitemap-index.xml");
+            $generator->setSitemapIndexFileName("$site->domain-sitemap.xml");
 
             foreach (self::$sitemap_items as $item) {
                 switch ($item['type']) {
