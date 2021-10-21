@@ -115,7 +115,7 @@ class GeoIpHelper
         return $model;
     }
 
-    public static function getPhones($params): string
+    public static function getPhones($params): ?string
     {
         $state = $orderState = null;
 
