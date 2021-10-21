@@ -53,6 +53,8 @@ export interface AccountPublicProfileStore {
 export interface PhotoSwipeStore {
   items: [];
   gallery: PhotoSwipe;
+  thumbs: HTMLElement[];
+  index: number;
 }
 
 interface StoreInterface {

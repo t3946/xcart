@@ -74,6 +74,8 @@ export const productsReviewsInitialValue = {};
 export const photoswipeInitialValue = {
   items: null,
   gallery: null,
+  thumbs: null,
+  index: 0,
 };
 
 const storeInitialValue = {

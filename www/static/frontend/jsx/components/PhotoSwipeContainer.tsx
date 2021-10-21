@@ -13,7 +13,7 @@ import TimesIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Times";
 
 const PhotoSwipeContainer: React.FC = function () {
   const photoSwipeStore = useSelector((e: StoreInterface) => e.photoswipe);
-  const items = photoSwipeStore.items;
+  const { items, thumbs, index } = photoSwipeStore;
 
   let gallery = photoSwipeStore.gallery;
 
@@ -31,14 +31,24 @@ const PhotoSwipeContainer: React.FC = function () {
     setTotalItems(items.length);
   }
 
-  const options = {
-    index: 0,
+  const options: Record<any, any> = {
+    index: index,
     speed: 300,
     bgOpacity: 0.91,
     zoomEl: false,
     maxSpreadZoom: 1,
     showHideOpacity: true,
   };
+
+  if (thumbs) {
+    options.getThumbBoundsFn = function (index) {
+      const pageYScroll =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const rect = thumbs[index].getBoundingClientRect();
+
+      return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+    };
+  }
 
   const classes: Record<any, any> = {
     navButtonContainer: ["product-photo-slider-button-container"],

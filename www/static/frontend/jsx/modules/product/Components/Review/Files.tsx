@@ -1,5 +1,9 @@
 import React from "react";
-import { photoSwipeSetItemsAction } from "@client/jsx/redux/actions/PhotoSwipeActions";
+import {
+  photoSwipeSetItemsAction,
+  photoSwipeSetThumbsInitiatorAction,
+  photoSwipeSetOptionIndexAction,
+} from "@client/jsx/redux/actions/PhotoSwipeActions";
 import { useDispatch } from "react-redux";
 
 interface PropsInterface {
@@ -8,30 +12,23 @@ interface PropsInterface {
 
 const Files: React.FC<PropsInterface> = function (props: PropsInterface) {
   const dispatch = useDispatch();
+  const thumbsContainer = React.useRef<HTMLDivElement>();
 
-  function fileTemplate(link) {
+  function fileTemplate(link, index: number) {
     return (
       <div
         className={"review-image-thumb review__image-thumb"}
         style={{ backgroundImage: `url(${link})` }}
-        onClick={() => {
-          console.log("view in photo swipe", { items });
+        onClick={(e) => {
+          dispatch(photoSwipeSetOptionIndexAction(index));
 
           dispatch(
-            photoSwipeSetItemsAction(
-              // items.filter((e) => {
-              //   return e.src.indexOf("mp4") === -1;
-              // })
-              // [
-              //   {
-              //     src: "/images/review_images/07d0f1e469e80dd5f28e08174bef3af9.png",
-              //     w: null,
-              //     h: null,
-              //   },
-              // ]
-              items
+            photoSwipeSetThumbsInitiatorAction(
+              thumbsContainer.current.childNodes
             )
           );
+
+          dispatch(photoSwipeSetItemsAction(items));
         }}
       />
     );
@@ -40,11 +37,12 @@ const Files: React.FC<PropsInterface> = function (props: PropsInterface) {
   const templates = [];
   const items = [];
 
-  for (const file of props.files) {
+  for (let i = 0; i < props.files.length; i++) {
+    const file = props.files[i];
     const { path, width, height } = file;
     const link = "/" + path;
 
-    templates.push(fileTemplate(link));
+    templates.push(fileTemplate(link, i));
 
     items.push({
       src: link,
@@ -53,7 +51,11 @@ const Files: React.FC<PropsInterface> = function (props: PropsInterface) {
     });
   }
 
-  return <div className={"review__files"}>{templates}</div>;
+  return (
+    <div className={"review__files"} ref={thumbsContainer}>
+      {templates}
+    </div>
+  );
 };
 
 export default Files;
