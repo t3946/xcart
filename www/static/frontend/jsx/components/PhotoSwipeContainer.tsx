@@ -77,13 +77,9 @@ const PhotoSwipeContainer: React.FC = function () {
       return;
     }
 
-    const image = container.lastChild;
-    const imageWidth = image.offsetWidth;
-    const zoomScale = parseFloat(
-      container.style.transform.match(/scale\((.*?)\)/)[1]
-    );
-    const visibleWidth = imageWidth * zoomScale;
-    const offset = Math.ceil(visibleWidth / 2) + 50;
+    const { w, fitRatio } = gallery.currItem;
+    const scaledWidth = Math.round(w * Math.min(fitRatio, 1));
+    const offset = Math.ceil(scaledWidth / 2) + 50;
 
     prevButtonRef.current.style.paddingRight = `${offset}px`;
     nextButtonRef.current.style.paddingLeft = `${offset}px`;
