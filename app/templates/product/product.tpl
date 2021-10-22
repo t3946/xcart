@@ -38,7 +38,7 @@
 
 {block 'seo'}
     {parent}
-    <link rel="amphtml" href="{$model->getAmpAbsoluteUrl()}">
+    <link rel="amphtml" href="{$model->getAmpAbsoluteUrl(true)}">
 {/block}
 
 {block "before-content"}
