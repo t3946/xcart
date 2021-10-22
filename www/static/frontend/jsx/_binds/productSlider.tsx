@@ -1,5 +1,5 @@
 import React from "react";
-import ProductImageSlider from "../components/ProductImageSlider";
+import Slider from "@client/jsx/components/product/ImagesSlider/Slider";
 import { Provider } from "react-redux";
 import Store from "@client/jsx/redux/stores/Store";
 import $ from "jquery";
@@ -56,7 +56,7 @@ import $ from "jquery";
         // @ts-ignore
         React.render(
           <Provider store={Store as any}>
-            <ProductImageSlider items={items} />
+            <Slider items={items} />
           </Provider>,
           item
         );
