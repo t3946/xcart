@@ -7,6 +7,7 @@ import {
   photoSwipeSetItemsAction,
   photoSwipeSetThumbInitiatorAction,
   photoSwipeSetOwnerIdAction,
+  photoSwipeSetOptionIndexAction,
 } from "@client/jsx/redux/actions/PhotoSwipeActions";
 import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
@@ -88,6 +89,7 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
   function openImageViewer() {
     dispatch(photoSwipeSetOwnerIdAction(componentId));
     dispatch(photoSwipeSetItemsAction(getPhotoSwipeItems()));
+    dispatch(photoSwipeSetOptionIndexAction(index));
     syncWithImageViewer();
   }
 
