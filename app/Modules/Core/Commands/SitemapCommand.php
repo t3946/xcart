@@ -60,6 +60,8 @@ class SitemapCommand extends Command
 
             $generator->setSitemapIndexFileName("$site->domain-sitemap.xml");
 
+            $counter = 0;
+
             foreach (self::$sitemap_items as $item) {
                 switch ($item['type']) {
                     case self::SITE_MAP_PRODUCT:
@@ -76,9 +78,11 @@ class SitemapCommand extends Command
 
                         $i = 0;
                         while ($products = $qs->paginate(++$i, 1000)->all()) {
+                            /** @var ProductModel $product */
                             foreach ($products as $product) {
                                 $date = $product->mod_date ? (new DateTime())->setTimestamp($product->mod_date) : new DateTime();
                                 $generator->addURL($product->getAbsoluteUrl(), $date, $item['freq'], $item['priority'], []);
+                                $counter++;
                             }
                         }
 
@@ -95,8 +99,10 @@ class SitemapCommand extends Command
 
                         $i = 0;
                         while ($categories = $qs->paginate(++$i, 1000)->all()) {
+                            /** @var CategoryModel $category */
                             foreach ($categories as $category) {
                                 $generator->addURL($category->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                                $counter++;
                             }
                         }
                         break;
@@ -112,8 +118,10 @@ class SitemapCommand extends Command
 
                         $i = 0;
                         while ($brands = $qs->paginate(++$i, 1000)->all()) {
+                            /** @var BrandModel $brand */
                             foreach ($brands as $brand) {
                                 $generator->addURL($brand->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                                $counter++;
                             }
                         }
                         break;
@@ -122,8 +130,10 @@ class SitemapCommand extends Command
 
             $generator->flush();
 
-            $generator->finalize();
-
+            if ($counter) {
+                $generator->finalize();
+                $generator->submitSitemap();
+            }
         }
     }
 }
