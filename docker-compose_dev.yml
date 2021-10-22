@@ -59,6 +59,7 @@ services:
     networks:
       - frontend
       - backend
+      - elastic
     depends_on:
       - mysql
       - redis
@@ -120,7 +121,75 @@ services:
       AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
       AWS_SECRET_ACCESS_KEY: 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
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.authc.api_key.enabled=true
+      - ELASTIC_PASSWORD=admin
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  ent-search:
+    image: docker.elastic.co/enterprise-search/enterprise-search:7.15.1
+    container_name: ent-search
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+    environment:
+      - "JAVA_OPTS=-Xms512m -Xmx512m"
+      - ENT_SEARCH_DEFAULT_PASSWORD=admin
+      - elasticsearch.username=admin
+      - elasticsearch.password=admin
+      - elasticsearch.host=http://elasticsearch:9200
+      - allow_es_settings_modification=true
+      - secret_management.encryption_keys=[4a2cd3f81d39bf28738c10db0ca782095ffac07279561809eecc722e0c20eb09]
+      - elasticsearch.startup_retry.interval=15
+    ports:
+      - 3002:3002
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.15.1
+    container_name: kibana
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+      - ent-search
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_HOSTs: http://elasticsearch:9200
+      ENTERPRISESEARCH_HOST: http://ent-search:3002
+      ELASTICSEARCH_USERNAME: admin
+      ELASTICSEARCH_PASSWORD: admin
+    networks:
+      - elastic
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
 
 networks:
   frontend:
   backend:
+  elastic:
