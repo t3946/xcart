@@ -2,13 +2,18 @@
 
 namespace Modules\Sites\Forms;
 
+use Exception;
 use Modules\Core\Models\CountryModel;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Sites\Admin\SiteAddressesAdmin;
 use Modules\Sites\Admin\SitesAdmin;
+use Modules\Sites\Admin\SitesMenuAdmin;
+use Modules\Sites\Admin\SiteSocialsAdmin;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\ImageField;
+use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
@@ -27,7 +32,10 @@ class SiteForm extends ModelForm
         'products',
     ];
 
-    public function getFields()
+    /**
+     * @throws Exception
+     */
+    public function getFields(): array
     {
         return [
             'corporates' => [
@@ -81,7 +89,7 @@ class SiteForm extends ModelForm
                 'label' => 'Preferred served country',
                 'choices' => function () {
                     foreach (CountryModel::objects() as $model) {
-                        $result[$model->code] = "{$model->code}: {$model->name}";
+                        $result[$model->code] = "$model->code: $model->name";
                     }
                     return $result ?? [];
                 },
@@ -153,15 +161,27 @@ class SiteForm extends ModelForm
                     'data-url' => (new SitesAdmin())->getSuggestionUrl('category')."?site={$this->getInstance()->pk}",
                 ],
             ],
+            'addresses' => [
+                'class' => ListViewField::class,
+                'adminClass' => SiteAddressesAdmin::class,
+            ],
+            'menu_list' => [
+                'class' => ListViewField::class,
+                'adminClass' => SitesMenuAdmin::class
+            ],
+            'socials' => [
+                'class' => ListViewField::class,
+                'adminClass' => SiteSocialsAdmin::class
+            ]
         ];
     }
 
-    public function getModel()
+    public function getModel(): SiteModel
     {
         return new SiteModel();
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'Edit Site';
     }

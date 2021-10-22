@@ -40,17 +40,17 @@ abstract class Admin
 
     public $section;
 
-    public static $public = true;
+    public static bool $public = true;
 
-    public $allTemplate = 'admin/all.tpl';
+    public string $allTemplate = 'admin/all.tpl';
     public string $allList = 'admin/list/_list.tpl';
     public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
-    public $listRowTemplate = 'admin/list/_tr.tpl';
+    public string $listRowTemplate = 'admin/list/_tr.tpl';
 
-    public $infoTemplate = 'admin/info.tpl';
-    public $createTemplate = 'admin/create.tpl';
-    public $updateTemplate = 'admin/update.tpl';
+    public string $infoTemplate = 'admin/info.tpl';
+    public string $createTemplate = 'admin/create.tpl';
+    public string $updateTemplate = 'admin/update.tpl';
     public $filterTemplate = 'admin/filter.tpl';
     public $formTemplate = 'admin/form/_form.tpl';
     public $columnDefaultTemplate = 'admin/list/columns/default.tpl';
@@ -82,12 +82,12 @@ abstract class Admin
         return [];
     }
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [];
     }
 
-    public function getExcludedColumns()
+    public function getExcludedColumns(): array
     {
         return [];
     }
@@ -390,7 +390,7 @@ abstract class Admin
     /**
      * @return ModelForm
      */
-    abstract public function getForm();
+    abstract public function getForm(): ?ModelForm;
 
     /**
      * @return ModelForm

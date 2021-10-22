@@ -56,7 +56,7 @@
                                         <div class="columns small-1 medium-5 large-push-3 show-for-large">
                                             <div class="main-menu-wrap">
                                                 <ul class="main-menu no-bullet show-for-medium">
-                                                    {get_menu code='main-menu'}
+                                                    {get_menu code='Header'}
                                                 </ul>
                                             </div>
                                         </div>

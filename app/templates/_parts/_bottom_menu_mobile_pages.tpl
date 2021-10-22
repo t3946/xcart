@@ -1,5 +1,5 @@
 <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">
-    {set $menu_items = $.get_menu_items('pages-menu') }
+    {set $menu_items = $.get_menu_items('Bottom') }
     {foreach $menu_items as $item}
 
         {set $childs = $item.items}

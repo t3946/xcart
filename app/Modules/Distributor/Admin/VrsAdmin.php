@@ -8,13 +8,11 @@ use Modules\Distributor\Forms\VrsForm;
 use Modules\Distributor\Models\VrsModel;
 use Xcart\App\Form\Form;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Model;
-use Xcart\App\Orm\QuerySet;
 
 class VrsAdmin extends Admin
 {
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'sf',
@@ -28,7 +26,8 @@ class VrsAdmin extends Admin
             'created_at'
         ];
     }
-    public function getForm()
+
+    public function getForm(): VrsForm
     {
         return new VrsForm();
     }
@@ -38,7 +37,7 @@ class VrsAdmin extends Admin
         return new VrsFilterForm();
     }
 
-    public function getAvailableListColumns()
+    public function getAvailableListColumns(): array
     {
         return [
             'sf' => [
@@ -62,32 +61,39 @@ class VrsAdmin extends Admin
             ],
         ];
     }
+
     public function getItemProperty(Model $item, $property)
     {
-        switch ($property)
-        {
+        switch ($property) {
             case 'company':
                 return "<a href='{$item->getWebSiteUrl()}'>{$item->$property}</a>";
         }
         return parent::getItemProperty($item, $property);
     }
-    public function getModel() : Model
+
+    public function getModel(): Model
     {
         return new VrsModel();
     }
-    public static function getName()
+
+    public static function getName(): string
     {
         return 'VRS Team';
     }
+
     public function isAjaxCreate(): bool
     {
         return true;
     }
+
     public function isAjaxUpdate(): bool
     {
         return true;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getQuerySet()
     {
         if (Xcart::app()->user->hasRoles(['vrs', 'vrv'])) {

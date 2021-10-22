@@ -2,6 +2,10 @@
 
 namespace Modules\Translate\Classes;
 
+use Symfony\Component\Translation\Loader\PoFileLoader;
+use Symfony\Component\Translation\Translator;
+use Xcart\App\Main\Xcart;
+
 /**
  * https://www.i18next.com/
  */
@@ -35,18 +39,14 @@ class I18nextManager
      */
     public static function getTranslates(string $locale, bool $minify = true): string
     {
-        $path = $_SERVER[ 'DOCUMENT_ROOT' ] . "/../app/Modules/Translate/lang/$locale.i18next.json";
+        $file_loader = new PoFileLoader();
+        $translator = new Translator($locale);
+        $translator->addLoader('po', $file_loader);
+        $resource_path = Xcart::app()->getModule('Translate')->getPath() . "/lang/{$locale}.po";
+        $translator->addResource('po', $resource_path, $locale, 'messages');
+        $catalogue = $translator->getCatalogue();
+        $language = $catalogue->all()['messages'];
 
-        if (!file_exists($path)) {
-            self::convert($locale);
-        }
-
-        $json = file_get_contents($path);
-
-        if ($minify) {
-            $json = json_encode(json_decode($json));
-        }
-
-        return $json;
+        return json_encode($language, true);
     }
 }

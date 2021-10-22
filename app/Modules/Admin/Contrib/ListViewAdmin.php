@@ -11,13 +11,13 @@ abstract class ListViewAdmin extends Admin
 {
     public $ownerPk = null;
     public string $owner_model_field;
-    public $ownerField = null;
+    public ?string $ownerField = null;
     public $ownerAdmin = null;
     public $manyToMany = false;
     public $ownerModel = null;
     public string $related_field;
     public string $through_field;
-    public $instance;
+    public Model $instance;
 
     public function getInstance()
     {
@@ -47,7 +47,7 @@ abstract class ListViewAdmin extends Admin
     {
         $form = $this->getForm();
         $this->isManyToManyModel();
-        if ($this->ownerPk && !$this->manyToMany) {
+        if (!is_null($this->ownerPk) && !$this->manyToMany) {
             $model->{$this->ownerField} = $this->ownerPk;
         }
         $form->setInstance($model);

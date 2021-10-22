@@ -7,11 +7,12 @@ namespace Modules\Sites\Admin;
 use Modules\Admin\Contrib\Admin;
 use Modules\Sites\Forms\Corporates\CorporatesForm;
 use Modules\Sites\Models\CorporateModel;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 
 class CorporatesAdmin extends Admin
 {
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['name', 'country', 'state'];
     }
@@ -43,7 +44,7 @@ class CorporatesAdmin extends Admin
         ];
     }
 
-    public function getForm()
+    public function getForm(): ModelForm
     {
         if ($this->section) {
             if ($sections = CorporatesForm::getSections()) {

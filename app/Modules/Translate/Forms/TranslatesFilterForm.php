@@ -26,9 +26,9 @@ class TranslatesFilterForm extends Form
 
                     return $languages ?? [];
                 },
+                'multiple' => true,
                 'html' => [
                     'style' => 'width: 300px',
-                    'multiple' => true,
                 ],
             ],
             'text' => [

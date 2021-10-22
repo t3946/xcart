@@ -19,7 +19,7 @@
         {/foreach}
 
         <li class="tabs-title">
-            <a href="#return-policy" aria-selected="false">{t 'Return policy'}</a>
+            <a href="#return-policy" aria-selected="false">{t 'Return Policy'}</a>
         </li>
 
         <li class="tabs-title">
@@ -60,7 +60,11 @@
                 {if $warehouse->d_frontend_return_policy}
                     {$warehouse->d_frontend_return_policy|html_entity_decode}
                 {else}
-                    {$gConfig.frontend_return_policy|html_entity_decode}
+                    {if in_array($site->lang->lang_code, ['ru'])}
+                        {$gConfig.frontend_return_policy_ru|html_entity_decode}
+                    {else}
+                        {$gConfig.frontend_return_policy|html_entity_decode}
+                    {/if}
                 {/if}
             </div>
         </div>

@@ -3,23 +3,8 @@
 namespace Modules\Admin\Contrib;
 
 
-use Xcart\App\QueryBuilder\Aggregation\Count;
-use Xcart\App\QueryBuilder\Expression;
-use Xcart\App\QueryBuilder\Q\QOr;
-use Modules\Admin\Models\AdminConfig;
-use Xcart\App\Exceptions\HttpException;
-use Xcart\App\Form\ModelForm;
-use Xcart\App\Helpers\ClassNames;
-use Xcart\App\Helpers\SmartProperties;
-use Xcart\App\Helpers\Text;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Model;
-use Xcart\App\Orm\QuerySet;
 use Xcart\App\Orm\TreeManager;
-use Xcart\App\Pagination\DataSource\QuerySetDataSource;
-use Xcart\App\Pagination\Pagination;
-use Xcart\App\Template\Renderer;
-use Xcart\App\Traits\SmartyRenderTrait;
 
 abstract class NestedAdmin extends Admin
 {
@@ -78,7 +63,7 @@ abstract class NestedAdmin extends Admin
         return $bread;
     }
 
-    public function getExcludedColumns()
+    public function getExcludedColumns() : array
     {
         return $this->nestedExcluded;
     }

@@ -11,15 +11,15 @@ use Modules\Sites\Models\BankAccountModel;
 
 class BankAccountAdmin extends ListViewAdmin
 {
-    public $ownerField = 'corporate';
-    public static $public = false;
+    public ?string $ownerField = 'corporate';
+    public static bool $public = false;
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['bank_name', 'account_type', 'account_number'];
     }
 
-    public function getAvailableListColumns()
+    public function getAvailableListColumns(): array
     {
         return [
             'bank_name' => [
@@ -38,22 +38,22 @@ class BankAccountAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm(): BankAccountForm
     {
         return new BankAccountForm;
     }
 
-    public function getModel()
+    public function getModel(): BankAccountModel
     {
         return new BankAccountModel;
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Bank accounts';
     }
 
-    public function getAllUrl()
+    public function getAllUrl(): string
     {
         $admin = new CorporatesAdmin;
         $admin->section = 'bank_accounts';

@@ -15,7 +15,7 @@ use Xcart\App\Orm\QuerySet;
 
 class ProductVerificationAdmin extends Admin
 {
-    public $allTemplate = 'verification/all.tpl';
+    public string $allTemplate = 'verification/all.tpl';
 
     public const ORDER_CB_STATUSES = [
         OrderStatusModel::ORDER_STATUS_COMPLETED,
@@ -24,17 +24,17 @@ class ProductVerificationAdmin extends Admin
         OrderStatusModel::ORDER_STATUS_QUEUED
     ];
 
-    public function getForm()
+    public function getForm(): ProductVerificationForm
     {
         return new ProductVerificationForm();
     }
 
-    public function getModel()
+    public function getModel(): ProductModel
     {
         return new ProductModel();
     }
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'distributor',
@@ -97,7 +97,7 @@ class ProductVerificationAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getAvailableListColumns()
+    public function getAvailableListColumns(): array
     {
         return [
             'distributor' => [
@@ -120,7 +120,7 @@ class ProductVerificationAdmin extends Admin
         ];
     }
 
-    public function getListItemActions()
+    public function getListItemActions(): array
     {
         return [];
     }
@@ -136,12 +136,12 @@ class ProductVerificationAdmin extends Admin
         return '';
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Product Verification';
     }
 
-    public function getListGroupActions()
+    public function getListGroupActions(): array
     {
         return [];
     }

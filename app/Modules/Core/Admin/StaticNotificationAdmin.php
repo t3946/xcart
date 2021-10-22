@@ -4,7 +4,6 @@ namespace Modules\Core\Admin;
 
 use Modules\Admin\Contrib\Admin;
 use Modules\Core\Forms\StaticNotificationForm;
-use Modules\Core\Models\StaticNotificationModel;
 
 class StaticNotificationAdmin extends Admin
 {
@@ -22,13 +21,13 @@ class StaticNotificationAdmin extends Admin
         ]);
     }
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['title', 'active'];
     }
 
 
-    public function getForm()
+    public function getForm(): StaticNotificationForm
     {
         return new StaticNotificationForm();
     }

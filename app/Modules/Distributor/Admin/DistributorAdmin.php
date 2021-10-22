@@ -9,6 +9,7 @@ use Modules\Distributor\Forms\DxFilterForm;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Form;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
@@ -19,7 +20,7 @@ class DistributorAdmin extends Admin
 {
     public ?string $order = '-created_at';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'manufacturer',
@@ -117,8 +118,9 @@ class DistributorAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getForm()
+    public function getForm(): ?ModelForm
     {
+        return null;
     }
 
     public function getModel()

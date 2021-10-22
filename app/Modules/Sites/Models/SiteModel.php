@@ -1,12 +1,8 @@
 <?php
 namespace Modules\Sites\Models;
 
-use Doctrine\DBAL\Types\Types;
 use Modules\Core\Components\GlobalConfig;
-use Modules\Core\Models\CountryModel;
-use Modules\Core\Models\StateModel;
 use Modules\Goods\Models\CategoryModel;
-use Modules\Goods\Models\ProductCategoriesModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Translate\Models\LanguageModel;
@@ -39,11 +35,14 @@ use Xcart\App\Orm\Model;
  * @property string $domain
  * @property LanguageModel $lang
  * @property Manager|ProductModel[] products
+ * @property null|Manager|SitesMenuModel[] menu_list
+ * @property ImageField logo
+ * @property ImageField logo_mobile
  */
 class SiteModel extends Model
 {
-    private $_config = [];
-    private $_globalConfig = [];
+    private array $_config = [];
+    private array $_globalConfig = [];
 
 
     public function __toString()
@@ -64,10 +63,10 @@ class SiteModel extends Model
 
         if ($attr) {
             $str = implode(', ', $attr);
-            $str = " ({$str})";
+            $str = " ($str)";
         }
 
-        return "[{$this->code}] {$this->getName()}{$str}";
+        return "[$this->code] {$this->getName()}$str";
     }
 
     public static function tableName(): string
@@ -324,15 +323,30 @@ class SiteModel extends Model
                 'uploadTo' => 'images/favicons/',
                 'null' => true,
             ],
+            'addresses' => [
+                'class' => HasManyField::class,
+                'link' => ['storefrontid' => 'site_id'],
+                'modelClass' => SitesAddressesModel::class
+            ],
+            'menu_list' => [
+                'class' => HasManyField::class,
+                'link' => ['storefrontid' => 'site_id'],
+                'modelClass' => SitesMenuModel::class,
+            ],
+            'socials' => [
+                'class' => HasManyField::class,
+                'link' => ['storefrontid' => 'site_id'],
+                'modelClass' => SiteSocialsModel::class
+            ]
         ];
     }
 
-    public function getLogo()
+    public function getLogo(): string
     {
         return $this->logo->getValue() ?? '';
     }
 
-    public function getMobileLogo()
+    public function getMobileLogo(): string
     {
         return $this->logo_mobile->getValue() ?? $this->getLogo();
     }

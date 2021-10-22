@@ -11,10 +11,10 @@ use Modules\Help\Models\HelpMenuContentModel;
 class HelpItemsAdmin extends ListViewAdmin
 {
     public ?string $sort = 'order_by';
-    public $ownerField = 'menu';
-    public static $public = false;
+    public ?string $ownerField = 'menu';
+    public static bool $public = false;
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'form_type',
@@ -23,7 +23,7 @@ class HelpItemsAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm(): HelpItemsForm
     {
         return new HelpItemsForm();
     }

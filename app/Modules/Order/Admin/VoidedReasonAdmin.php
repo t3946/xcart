@@ -12,14 +12,14 @@ class VoidedReasonAdmin extends NestedAdmin
 {
     public ?string $sort = 'pos';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'name',
         ];
     }
 
-    public function getForm()
+    public function getForm(): VoidedReasonForm
     {
         return new VoidedReasonForm();
     }

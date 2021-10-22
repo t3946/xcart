@@ -68,10 +68,11 @@ class ForeignField extends RelatedField
         if ($this->from) {
             return $this->from;
         }
-
-        if (count($this->link) == 1) {
-            $link = array_keys($this->link);
-            return reset($link);
+        if (!empty($this->link)) {
+            if (count($this->link) == 1) {
+                $link = array_keys($this->link);
+                return reset($link);
+            }
         }
 
         if ($name = $this->getAttributeName()) {

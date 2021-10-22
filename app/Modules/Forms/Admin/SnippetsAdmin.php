@@ -10,7 +10,7 @@ use Modules\Forms\Models\SnippetModel;
 class SnippetsAdmin extends Admin
 {
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['id', 'code', 'name', 'description'];
     }
@@ -46,7 +46,7 @@ class SnippetsAdmin extends Admin
         return 'Snippet';
     }
 
-    public function getForm()
+    public function getForm(): SnippetsForm
     {
         return new SnippetsForm();
     }

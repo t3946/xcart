@@ -19,13 +19,13 @@ class TemplatesAdmin extends Admin
 
     public ?string $sort = 'pos';
 
-    public static $public = false;
+    public static bool $public = false;
 
-    public $allTemplate = 'template/all.tpl';
-    public $createTemplate = 'template/_create.tpl';
-    public $updateTemplate = 'template/_update.tpl';
+    public string $allTemplate = 'template/all.tpl';
+    public string $createTemplate = 'template/_create.tpl';
+    public string $updateTemplate = 'template/_update.tpl';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'template_name',
@@ -40,17 +40,17 @@ class TemplatesAdmin extends Admin
         return array_merge([['General settings', '/admin/configuration.php']], parent::getBreadcrumbs());
     }
 
-    public function getForm()
+    public function getForm(): TemplateForm
     {
         return new TemplateForm();
     }
 
-    public function getModel()
+    public function getModel(): TemplateModel
     {
         return new TemplateModel();
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Templates for order-related messages';
     }
@@ -81,7 +81,7 @@ class TemplatesAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getListItemActions()
+    public function getListItemActions(): array
     {
         return [
             'update',
@@ -98,7 +98,7 @@ class TemplatesAdmin extends Admin
         return true;
     }
 
-    public function applyOrder($qs)
+    public function applyOrder($qs): QuerySet
     {
         $order = $this->getOrder();
 

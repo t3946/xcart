@@ -13,7 +13,7 @@ class TaxesAdmin extends Admin
 {
     public ?string $sort = 'position';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['tax_name', 'apply_to', 'address_type', 'is_vat'];
     }
@@ -49,12 +49,12 @@ class TaxesAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getForm()
+    public function getForm(): TaxesForm
     {
         return new TaxesForm();
     }
 
-    public function getModel()
+    public function getModel(): TaxModel
     {
         return new TaxModel;
     }
@@ -69,10 +69,6 @@ class TaxesAdmin extends Admin
         return ['add'];
     }
 
-    /*public function isAjaxUpdate(): bool
-    {
-        return true;
-    }*/
 
     public function isAjaxCreate(): bool
     {

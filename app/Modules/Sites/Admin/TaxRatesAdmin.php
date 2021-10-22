@@ -11,15 +11,15 @@ use Xcart\App\Orm\Model;
 
 class TaxRatesAdmin extends ListViewAdmin
 {
-    public static $public = false;
-    public $ownerField = 'tax';
+    public static bool $public = false;
+    public ?string $ownerField = 'tax';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['zone', 'rate_value'];
     }
 
-    public function getForm()
+    public function getForm(): TaxRatesForm
     {
         return new TaxRatesForm();
     }

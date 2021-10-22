@@ -14,7 +14,7 @@ use Xcart\App\Orm\Model;
 class PageAdmin extends Admin
 {
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'name',
@@ -39,7 +39,7 @@ class PageAdmin extends Admin
         ];
     }
 
-    public function getForm()
+    public function getForm(): PagesForm
     {
         return new PagesForm();
     }
@@ -60,7 +60,7 @@ class PageAdmin extends Admin
             return nl2br(implode("\n", $item->sites->all()));
         }
         if ($property === 'language') {
-            return (string) $item->language;
+            return (string)$item->language;
         }
 
         return parent::getItemProperty($item, $property);
