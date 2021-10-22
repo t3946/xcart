@@ -39,13 +39,14 @@ const PhotoSwipeContainer: React.FC = function () {
     zoomEl: false,
     maxSpreadZoom: 1,
     showHideOpacity: true,
+    history: false,
   };
-  const thumbs = useSelector((e: StoreInterface) => e.photoswipe.thumbs);
 
-  if (thumbs) {
+  if (photoSwipeStore.thumb || photoSwipeStore.thumbs) {
     const getThumbBoundsFn = function (index) {
       // if thumbs is not array then thumbs then there only one thumb
-      const thumb = thumbs.constructor === Array ? thumbs[index] : thumbs;
+      const thumb = photoSwipeStore.thumb || photoSwipeStore.thumbs[index];
+
       const pageYScroll =
         window.pageYOffset || document.documentElement.scrollTop;
       const rect = thumb.getBoundingClientRect();

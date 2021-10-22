@@ -13,16 +13,18 @@ import {
 interface PropsInterface {
   items: Record<any, any>[];
   isVideo: boolean;
+  openImageViewer: () => void;
 }
 
 const SliderItems = function (props: PropsInterface): Record<any, any>[] {
+  const { openImageViewer } = props;
+
   let preparedItems = null;
 
   const items = map(props.items, (item: Record<any, any>, i) => {
     const position = i + 1;
     const key = "detail." + position;
     const IMAGE_TYPE = "image";
-    const HTML_TYPE = "html";
     const VIDEO_TYPE = "video";
 
     function renderVideoItem(item, forceVideo = false, autoplay = true) {
@@ -62,8 +64,6 @@ const SliderItems = function (props: PropsInterface): Record<any, any>[] {
      * view image in photo swipe image viewer
      */
     function zoomHandler(e, item, index?: number) {
-      e.preventDefault();
-
       if (!preparedItems) {
         const items = [];
 
@@ -73,10 +73,6 @@ const SliderItems = function (props: PropsInterface): Record<any, any>[] {
           switch (item.type) {
             case IMAGE_TYPE:
               items.push({ src: item.src, w: item.width, h: item.height });
-              break;
-
-            case HTML_TYPE:
-              items.push({ html: item.html });
               break;
 
             case VIDEO_TYPE:
@@ -126,9 +122,7 @@ const SliderItems = function (props: PropsInterface): Record<any, any>[] {
         return (
           <SwiperSlide
             key={key}
-            onClick={(e) => {
-              zoomHandler(e, item, i);
-            }}
+            onClick={openImageViewer}
             className={"d-flex align-items-center justify-content-center"}
           >
             <img src={item.preview} alt="" className={"product-page-image"} />
@@ -149,9 +143,7 @@ const SliderItems = function (props: PropsInterface): Record<any, any>[] {
         return (
           <div
             className={classnames(classes)}
-            onClick={(e) => {
-              zoomHandler(e, item);
-            }}
+            onClick={openImageViewer}
             key={key}
           >
             {content}

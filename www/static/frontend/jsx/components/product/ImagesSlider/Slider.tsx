@@ -3,9 +3,23 @@ import uuid from "react-uuid";
 import { Swiper } from "swiper/react";
 import SliderItems from "@client/jsx/components/product/ImagesSlider/SliderItems";
 import SliderThumbs from "@client/jsx/components/product/ImagesSlider/SliderThumbs";
+import {
+  photoSwipeSetItemsAction,
+  photoSwipeSetThumbInitiatorAction,
+  photoSwipeSetOwnerIdAction,
+} from "@client/jsx/redux/actions/PhotoSwipeActions";
+import { useDispatch, useSelector } from "react-redux";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
+
+interface ItemsInterface {
+  type: string;
+  src: string;
+  width: number;
+  height: number;
+}
 
 interface PropsInterface {
-  items: [];
+  items: ItemsInterface[];
 }
 
 const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
@@ -14,17 +28,85 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
   const [index, setIndex] = React.useState(0);
   const { items } = props;
   const [productImagesSlider, setProductImagesSlider] = React.useState(null);
+  const dispatch = useDispatch();
+  const photoSwipe = useSelector((e: StoreInterface) => e.photoswipe);
+
+  // do if image viewer photo swipe now works for this slider
+  function syncWithImageViewer() {
+    if (photoSwipe.ownerId !== componentId) {
+      return;
+    }
+
+    // sync viewer and slider
+    if (photoSwipe.index !== index) {
+      slideTo(photoSwipe.index);
+    }
+
+    const activeImageElement = getActiveImageElement();
+
+    if (activeImageElement !== photoSwipe.thumb) {
+      dispatch(photoSwipeSetThumbInitiatorAction(activeImageElement));
+    }
+  }
+
+  // get current image element from images slider
+  function getActiveImageElement(): HTMLElement | null {
+    if (!productImagesSlider) {
+      return null;
+    }
+
+    const slides = productImagesSlider.slides;
+    const index = productImagesSlider.activeIndex;
+
+    return slides[index].firstChild;
+  }
 
   /**
-   * обновляет индекс, нужно для синхронизации слайдера с картинками и слайдера с тумбами
+   * get photo swipe items array from swiper items
    */
+  function getPhotoSwipeItems(): Record<any, any>[] {
+    const IMAGE_TYPE = "image";
+    const photoSwipeItems = [];
+
+    for (const i in items) {
+      const item = items[i];
+
+      switch (item.type) {
+        case IMAGE_TYPE:
+          photoSwipeItems.push({
+            src: item.src,
+            w: item.width,
+            h: item.height,
+          });
+          break;
+      }
+    }
+
+    return photoSwipeItems;
+  }
+
+  function openImageViewer() {
+    dispatch(photoSwipeSetOwnerIdAction(componentId));
+    dispatch(photoSwipeSetItemsAction(getPhotoSwipeItems()));
+    syncWithImageViewer();
+  }
+
   function slideTo(index: number): void {
     setIndex(index);
+    setIsVideo(false);
+  }
 
-    if (productImagesSlider && index !== productImagesSlider.realIndex) {
-      productImagesSlider.slideToLoop(index);
-      setIsVideo(false);
-    }
+  // handle image slider change event
+  function slideChangeHandler(swiper) {
+    slideTo(swiper.realIndex);
+    syncWithImageViewer();
+  }
+
+  syncWithImageViewer();
+
+  //synchronize thumbs and images sliders
+  if (productImagesSlider && index !== productImagesSlider.realIndex) {
+    productImagesSlider.slideToLoop(index);
   }
 
   return (
@@ -42,11 +124,12 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
         effect={"coverflow"}
         className={"product-images-slider swiper-container"}
         onSwiper={setProductImagesSlider}
-        onSlideChange={(swiper) => slideTo(swiper.realIndex)}
+        onSlideChange={slideChangeHandler}
       >
         {SliderItems({
           items,
           isVideo,
+          openImageViewer,
         })}
       </Swiper>
     </div>

@@ -74,6 +74,7 @@ export const productsReviewsInitialValue = {};
 export const photoswipeInitialValue = {
   items: null,
   gallery: null,
+  thumb: null,
   thumbs: null,
   index: 0,
   ownerId: null,

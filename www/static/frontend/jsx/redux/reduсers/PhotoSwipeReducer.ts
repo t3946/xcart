@@ -19,6 +19,10 @@ const PhotoSwipeReducer = (
       store.gallery = action.gallery;
       return { ...store };
 
+    case "PHOTOSWIPE_SET_THUMB_INITIATOR":
+      store.thumb = action.thumb;
+      return { ...store };
+
     case "PHOTOSWIPE_SET_THUMBS_INITIATOR":
       store.thumbs = action.thumbs;
       return { ...store };

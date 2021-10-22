@@ -15,6 +15,13 @@ export const photoSwipeInitAction = (gallery: PhotoSwipe): any => ({
   gallery,
 });
 
+export const photoSwipeSetThumbInitiatorAction = (
+  thumb: NodeListOf<ChildNode> | HTMLElement
+): any => ({
+  type: "PHOTOSWIPE_SET_THUMB_INITIATOR",
+  thumb,
+});
+
 export const photoSwipeSetThumbsInitiatorAction = (
   thumbs: NodeListOf<ChildNode> | HTMLElement
 ): any => ({
