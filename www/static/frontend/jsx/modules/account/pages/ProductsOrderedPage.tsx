@@ -2,7 +2,7 @@ import React from "react";
 import { ProductsOrderedItem } from "@client/modules/account/components/orders/ProductsOrderedItem";
 
 interface ProductsOrderedPageProps {
-  orderItem;
+  orderItem?: any;
 }
 
 export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({

@@ -1,17 +1,22 @@
 import React from "react";
 import { getDataToTracking } from "@client/modules/account/utils/get-data-to-tracking";
-import { transportationTypes } from "@client/modules/account/ts/consts/transportations-types";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface OrderTrackingItemProps {
   orderInfo: any;
   trackingInfo?: any;
+  orderGroupInfo: any;
 }
 
 export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
   orderInfo,
   trackingInfo,
+  orderGroupInfo,
 }) => {
-  const trackingViewData = getDataToTracking(transportationTypes[2]);
+  const trackingViewData = getDataToTracking(
+    orderGroupInfo.dc_status,
+    useBreakpoint()({ xs: true, md: false })
+  );
 
   return (
     <div className="order-tracking-container">
@@ -26,12 +31,16 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
           <div className="order-tracking-text">
             Shipped with USPS First-Class Package Service
           </div>
-          <div className="order-tracking-weight-text">
-            Tracking number:{" "}
-            <span className="order-tracking-number">
-              9361289733009135532388
-            </span>
-          </div>
+          {trackingInfo && (
+            <>
+              <div className="order-tracking-weight-text">
+                Tracking number:{" "}
+                <span className="order-tracking-number">
+                  {trackingInfo.tracknum}
+                </span>
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className={"order-tracking-line"}>
@@ -48,7 +57,7 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
                 key={index}
               >
                 <div className="order-tracking-line-round" />
-                <div className="order-tracking-line-round-text">Text</div>
+                <div className="order-tracking-line-round-text">{e.label}</div>
                 {e.date && (
                   <div className="order-tracking-line-round-date">{e.date}</div>
                 )}

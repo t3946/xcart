@@ -5,6 +5,7 @@ import { useAccordion } from "@client/modules/account/hooks/useAccordion";
 interface OrderItemProps {
   order: any;
   orderType: string;
+  orderItem: any;
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
@@ -69,12 +70,16 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
               />
               <div>
                 <a className="order-item-body-product-name">
-                  Ecstasy Crafts Architextures Treasures - Wooden Corkscrew
+                  {order.orderGroups[0].orderGroupsItems[0].product}
                 </a>
-                <div className="order-item-body-product-sku">ECS-7G25093</div>
+                <div className="order-item-body-product-sku">
+                  {order.orderGroups[0].orderGroupsItems[0].productcode}
+                </div>
               </div>
             </div>
-            <div className="order-item-body-product-right-part-text">x 3</div>
+            <div className="order-item-body-product-right-part-text">
+              x {order.orderGroups[0].orderGroupsItems[0].amount}
+            </div>
           </div>
 
           <div
@@ -106,7 +111,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                       </div>
                     </div>
                     <div className="order-item-body-product-right-part-text">
-                      x {groupItem.avaible}
+                      x {groupItem.amount}
                     </div>
                   </div>
                 );

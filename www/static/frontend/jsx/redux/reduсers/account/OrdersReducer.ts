@@ -26,6 +26,16 @@ const OrdersReducer = (
           ...state.orders,
         },
       };
+    case "SEND_EMAIL":
+      return {
+        ...state,
+        ordersLoading: true,
+      };
+    case "STOP_LOADING":
+      return {
+        ...state,
+        ordersLoading: false,
+      };
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { fillArrayItemsOnOrderActions } from "@client/modules/account/utils/fill-array-items-order-actions";
@@ -8,8 +8,38 @@ interface CancelItemsProps {
 }
 
 export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
+  const [returnedItemsValues, setReturnedItemsValues] = useState<any>([]);
+
+  const [cancelText, setCancelText] = useState("");
+
+  const updateValueOnReturnItems = (field, value, id) => {
+    if (returnedItemsValues.find((e) => e.productid === id)) {
+      setReturnedItemsValues(
+        returnedItemsValues.map((e) => {
+          if (e.productid === id)
+            return {
+              ...e,
+              [field]: value,
+            };
+          return e;
+        })
+      );
+      return;
+    }
+    setReturnedItemsValues(
+      returnedItemsValues.concat({
+        productid: id,
+        [field]: value,
+      })
+    );
+  };
+
+  const getProductItem = (id) => {
+    return returnedItemsValues.find((e) => e.productid === id);
+  };
+
   return (
-    <div>
+    <div className="order-product-list-body">
       <div className="page-label order-actions-page-label">Cancel items</div>
       <div className="order-product-list-header">
         <div className="order-product-list-header-sku">Item name / SKU </div>
@@ -40,9 +70,17 @@ export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
                   <div className="order-product-list-header-quantity-cancel">
                     <FormSelect
                       classes={{ group: "order-product-select-count" }}
-                      value={{ value: 0, viewValue: 0 }}
+                      value={
+                        getProductItem(e.productid)?.amount || {
+                          value: 0,
+                          viewValue: 0,
+                        }
+                      }
                       items={fillArrayItemsOnOrderActions(e.amount)}
                       id={e.productcode}
+                      onClick={(value) =>
+                        updateValueOnReturnItems("amount", value, e.productid)
+                      }
                     />
                   </div>
                 </div>
@@ -53,8 +91,10 @@ export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
         <FormInput
           inputType="textarea"
           name={"aw"}
-          handleChange={null}
-          value={null}
+          handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setCancelText(e.target.value)
+          }
+          value={cancelText}
           id={"132"}
           placeholder="Explain why you would like to cancel items"
           classes={{

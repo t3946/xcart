@@ -1,10 +1,10 @@
-import React, { useCallback } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { useDropzone } from "react-dropzone";
 import { fillArrayItemsOnOrderActions } from "@client/modules/account/utils/fill-array-items-order-actions";
 import { returnSelectValues } from "@client/modules/account/ts/consts/order-actions-select.const";
 import { FileDrop } from "@client/modules/account/components/shared/FileDrop";
+import { FileItem } from "@client/modules/account/components/orders/FileItem";
 
 interface ReturnOrReplaceItemProps {
   orderItem: any;
@@ -13,12 +13,48 @@ interface ReturnOrReplaceItemProps {
 export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
   orderItem,
 }) => {
-  const onDrop = useCallback(([acceptedFile]) => {
-    console.log(acceptedFile);
-  }, []);
+  const onDrop = ([acceptedFile]) => {
+    setFiles((prev) =>
+      prev.concat({
+        id: files.length === 0 ? 0 : prev[prev.length - 1].id + 1,
+        file: acceptedFile,
+      })
+    );
+  };
 
+  const [returnedItemsValues, setReturnedItemsValues] = useState<any>([]);
+
+  const [returnText, setReturnText] = useState("");
+
+  const [files, setFiles] = useState([]);
+
+  const updateValueOnReturnItems = (field, value, id) => {
+    if (returnedItemsValues.find((e) => e.productid === id)) {
+      setReturnedItemsValues(
+        returnedItemsValues.map((e) => {
+          if (e.productid === id)
+            return {
+              ...e,
+              [field]: value,
+            };
+          return e;
+        })
+      );
+      return;
+    }
+    setReturnedItemsValues(
+      returnedItemsValues.concat({
+        productid: id,
+        [field]: value,
+      })
+    );
+  };
+
+  const getProductItem = (id) => {
+    return returnedItemsValues.find((e) => e.productid === id);
+  };
   return (
-    <div>
+    <div className="order-product-list-body">
       <div className="page-label order-actions-page-label">
         Return or replace items
       </div>
@@ -48,9 +84,17 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
                   <div className="order-product-list-header-quantity">
                     <FormSelect
                       classes={{ group: "order-product-select-count" }}
-                      value={{ value: 0, viewValue: 0 }}
+                      value={
+                        getProductItem(e.productid)?.amount || {
+                          value: 0,
+                          viewValue: 0,
+                        }
+                      }
                       items={fillArrayItemsOnOrderActions(e.amount)}
                       id={`${e.productcode}-amount`}
+                      onClick={(value) =>
+                        updateValueOnReturnItems("amount", value, e.productid)
+                      }
                     />
                   </div>
                   <div className="order-product-list-header-quantity-cancel">
@@ -59,7 +103,15 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
                         group: "order-product-select-action",
                         selectHeader: "order-product-select-action-header",
                       }}
-                      value={returnSelectValues[0]}
+                      value={
+                        getProductItem(e.productid)?.quantity || {
+                          value: undefined,
+                          viewValue: "Select an option",
+                        }
+                      }
+                      onClick={(value) =>
+                        updateValueOnReturnItems("quantity", value, e.productid)
+                      }
                       id={`${e.productcode}-action`}
                       items={returnSelectValues}
                     />
@@ -73,8 +125,10 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
         <FormInput
           inputType="textarea"
           name={"aw"}
-          handleChange={null}
-          value={null}
+          handleChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setReturnText(e.target.value)
+          }
+          value={returnText}
           id={"132"}
           placeholder="Explain why you would like to return products for a refund
           or replace them with the same or different products"
@@ -92,6 +146,13 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
             Choose file
           </button>
         </FileDrop>
+        {files.map((e: { id: number; file: File }) => (
+          <FileItem
+            key={e.id}
+            file={e.file}
+            onClick={() => setFiles(files.filter((file) => file.id !== e.id))}
+          />
+        ))}
 
         <div className="order-cancel-items-disclosure">
           <div className="order-cancel-items-disclosure-title">Disclosure</div>

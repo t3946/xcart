@@ -23,6 +23,34 @@ function* getCards(action: AnyAction): Generator {
   });
 }
 
+function* sendEmail(action: AnyAction): Generator {
+  try {
+    const formData = new FormData();
+
+    Object.entries(action.email).forEach(([key, value]: any) => {
+      if (Array.isArray(value)) {
+        value.forEach((e) => {
+          formData.append(`${key}[]`, e);
+        });
+        return;
+      }
+      if (key === "date" && value) {
+        value = value.getTime() / 1000;
+      }
+      formData.append(key, value);
+    });
+
+    yield api.post(`/admin/forms/api/send-email`, formData);
+
+    yield action.onSend();
+
+    yield put({
+      type: "STOP_LOADING",
+    });
+  } catch (e) {}
+}
+
 export function* ordersActionWatcher(): SagaIterator {
   yield takeLatest("GET_ORDERS", getCards);
+  yield takeLatest("SEND_EMAIL", sendEmail);
 }

@@ -5,6 +5,12 @@ export const getOrders = (ordersType: string): any => ({
   ordersType,
 });
 
+export const setOrders = (orders: any[], orderType: string): any => ({
+  type: "SET_ORDERS",
+  orders,
+  orderType,
+});
+
 export const changeTimeGap = (
   ordersType: string,
   newValue: SelectValue<number, string>
@@ -12,4 +18,10 @@ export const changeTimeGap = (
   type: "CHANGE_TIME_GAP",
   ordersType,
   newValue,
+});
+
+export const sendEmail = (email: any, onSend: () => void): any => ({
+  type: "SEND_EMAIL",
+  email,
+  onSend,
 });

@@ -75,7 +75,7 @@
 .order-tracking-line-round-container{
   position: absolute;
   top: -100%;
-  width: 100px;
+  width: 125px;
 
   &:last-child{
     right: 0;
@@ -151,8 +151,9 @@
 }
 
 .order-tracking-map{
-  width: 666px;
+  width: 100%;
   height: 374px;
+  margin-right: 18px;
 }
 
 .address-card-container{
@@ -160,6 +161,12 @@
   position: relative;
   min-height: 178px;
   width: 304px;
+  cursor: pointer;
+  transition: .2s all ease-in-out;
+
+  &:hover{
+    background-color: #c4c4c4;
+  }
 }
 
 .address-card-title{
@@ -194,3 +201,67 @@
 .leaflet-container {
   height: 374px;
 }
+
+@media (max-width: 1000px) {
+  .order-tracking-info{
+    flex-direction: column;
+  }
+
+  .order-tracking-map{
+    margin-right: 0;
+  }
+
+  .order-tracking-info-addresses-cards{
+    margin-top: 15px;
+    flex-direction: row;
+  }
+}
+@media (max-width: 768px) {
+  .order-tracking-info-addresses-cards{
+    flex-direction: column;
+  }
+
+  .order-tracking-line-blue{
+    width: 8px;
+    bottom: 0;
+  }
+
+  .order-tracking-line{
+    width: 8px;
+    height: 320px;
+    margin: 0 auto;
+  }
+
+  .order-tracking-info{
+   margin-bottom: 15px;
+  }
+  .address-card-container{
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .order-tracking-footer{
+    background-color: #F0F8FF;
+  }
+
+  .order-tracking-line-container{
+    height: 350px;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 40px;
+  }
+
+  .order-tracking-line-round-container{
+    left: 50%;
+    transform: translate(-50%, 0px);
+    width: 100%;
+    &:last-child{
+      bottom: 0;
+    }
+
+    &:first-child{
+      top: 0;
+    }
+  }
+}
+

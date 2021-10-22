@@ -8,4 +8,9 @@ return [
         'target' => [OrdersApi::class, 'getOrders'],
         'name' => 'get-orders',
     ],
+    [
+        'route' => '/get-one-order/{*:order_id}',
+        'target' => [OrdersApi::class, 'getOneOrder'],
+        'name' => 'get-order',
+    ],
 ];

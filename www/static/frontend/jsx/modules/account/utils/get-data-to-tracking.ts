@@ -1,28 +1,39 @@
-import { transportationTypes } from "@client/modules/account/ts/consts/transportations-types";
-
-export const getDataToTracking = (state: string) => {
-  const stateIndex = transportationTypes.findIndex((value) => value === state);
+export const getDataToTracking = (state: string, vertical: boolean) => {
+  const deliveryStatus = [
+    { codes: ["T", "K", "M", "E", "DP"], label: "Ordered" },
+    { codes: ["C", "L", "DA", "B", "G"], label: "Dispatched" },
+    { codes: ["S"], label: "Shipped" },
+    { codes: [], label: "Out for delivery" },
+    { codes: ["Z"], label: "Delivered" },
+  ];
 
   const data = { items: null, lineWidth: null };
 
-  data.items = transportationTypes.map((_, index) => {
+  let isFind = false;
+
+  data.items = deliveryStatus.map((e, index) => {
     const roundItemProps = {
       containerClass: null,
       roundStyle: null,
       date: null,
+      label: e.label,
     };
-    if (stateIndex === index) {
+    if (e.codes.find((e) => e === state)) {
       roundItemProps.containerClass =
         "order-tracking-line-round-container__this-state";
 
       data.lineWidth =
-        index === 4 ? { width: "100%" } : { width: `${index * 25 + 12.5}%` };
+        index === 4
+          ? { [vertical ? "height" : "width"]: "100%" }
+          : { [vertical ? "height" : "width"]: `${index * 25 + 12.5}%` };
+
+      isFind = true;
     }
-    if (stateIndex > index) {
+    if (!isFind) {
       roundItemProps.containerClass =
         "order-tracking-line-round-container__completed-state";
     }
-    if (stateIndex >= index) {
+    if (!isFind || e.codes.find((e) => e === state)) {
       roundItemProps.date = new Date().toLocaleDateString("en-EN", {
         month: "long",
         day: "2-digit",
@@ -33,7 +44,7 @@ export const getDataToTracking = (state: string) => {
     }
     if (index !== 0 && index !== 4) {
       roundItemProps.roundStyle = {
-        left: `${25 * index}%`,
+        [vertical ? "top" : "left"]: `${25 * index}%`,
         transform: "translate(-50%, 0)",
       };
     }

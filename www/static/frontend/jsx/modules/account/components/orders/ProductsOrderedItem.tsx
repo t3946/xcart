@@ -40,7 +40,9 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItemProps> = ({
           </div>
         );
       })}
-      <TransactionItemsListTotal orderInfo={orderItem} />
+      <div className="products-order-item-transaction-total">
+        <TransactionItemsListTotal orderInfo={orderItem} />
+      </div>
     </div>
   );
 };

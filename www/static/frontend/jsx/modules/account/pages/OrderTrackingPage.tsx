@@ -1,70 +1,42 @@
-import React, { useState } from "react";
-import GoogleMapReact from "google-map-react";
-import { OrderTrackingAddressCard } from "@client/modules/account/components/orders/OrderTrackingAddressCard";
-import { useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
-import { OrderTrackingItem } from "@client/modules/account/components/orders/OrderTrackingItem";
-import { Maps } from "@client/modules/account/components/shared/Maps";
-
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+import React, { useEffect, useState } from "react";
+import { ApiService } from "@client/modules/shared/services/api.service";
+import { OrderTrackingGroup } from "@client/modules/account/components/orders/OrderTrackingGroup";
 
 interface OrderTrackingPageProps {
-  orderItem: any;
+  orderItem?: any;
 }
 
 export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
   orderItem,
 }) => {
-  console.log(orderItem);
+  useEffect(() => {
+    api
+      .get(
+        `https://nominatim.openstreetmap.org/search.php?street=${orderItem.orderInfo.s_address}&city=${orderItem.orderInfo.s_city}&state=${orderItem.orderInfo.s_state}&postalcode=${orderItem.orderInfo.s_zipcode}&polygon_geojson=1&format=jsonv2`
+      )
+      .then((e) => setShippingPos([e[0].lat, e[0].lon]))
+      .catch((e) => console.log(e));
+  }, []);
 
-  const showTracking = () => {
-    if (orderItem.trackings.length) {
-      return orderItem.trackings.map((e) => {
-        return <OrderTrackingItem trackingInfo={e} orderInfo={orderItem} />;
-      });
-    }
-    return <OrderTrackingItem orderInfo={orderItem} />;
-  };
+  const [shippingPos, setShippingPos] = useState(null);
+
+  const api = new ApiService();
+  console.log(orderItem);
 
   return (
     <div>
       <div className="page-label">Order tracking</div>
-      {showTracking()}
-      <div className="order-tracking-info">
-        <div className={"order-tracking-map"}>
-          <Maps />
-          {/*<GoogleMapReact*/}
-          {/*  defaultCenter={{ lat: -22.917923, lng: -223.688898 }}*/}
-          {/*  defaultZoom={5}*/}
-          {/*>*/}
-          {/*  <AnyReactComponent*/}
-          {/*    lat={59.955413}*/}
-          {/*    lng={30.337844}*/}
-          {/*    text="My Marker"*/}
-          {/*  />*/}
-          {/*</GoogleMapReact>*/}
-        </div>
-        <div className="order-tracking-info-addresses-cards">
-          <OrderTrackingAddressCard
-            logo={
-              "/static/frontend/images/icons/account/shipping-from-icon.svg"
-            }
-            title="Shipping from"
-            text="Wilmington, DE 19801
-            USA"
-          />
-          <OrderTrackingAddressCard
-            logo={"/static/frontend/images/icons/account/shipping-to-icon.svg"}
-            title="Shipping to"
-            text={`${orderItem.orderInfo.s_zipcode} ${orderItem.orderInfo.s_city} 
-            ${orderItem.orderInfo.s_address}`}
-          />
-        </div>
-      </div>
+      {orderItem.orderGroups.map((group) => (
+        <OrderTrackingGroup
+          shippingPos={shippingPos}
+          orderItem={orderItem}
+          orderGroupInfo={group}
+        />
+      ))}
       <div className="order-tracking-container order-tracking-footer">
         <p>
           <b>Payment status: </b>
-          <span>Paid</span>
+          <span>{orderItem.orderInfo.payment_status}</span>
         </p>
         <div>
           <b>Payment date: </b>

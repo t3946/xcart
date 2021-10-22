@@ -60,6 +60,7 @@ import { OrderAddressesPage } from "@client/modules/account/pages/OrderAddresses
 import { OrderCommunicationPage } from "@client/modules/account/pages/OrderCommunicationPage";
 import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
 import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
+import { EmailPage } from "@client/modules/account/pages/EmailPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -457,6 +458,16 @@ export const AccountRouters = (): any => {
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
                       <OrderActionsPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/email-info/:emailId"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <EmailPage />
                     </OrderInfoContainerPage>
                   )}
                 />

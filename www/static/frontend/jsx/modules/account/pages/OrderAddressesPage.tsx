@@ -1,7 +1,7 @@
 import React from "react";
 
 interface OrderAddressesPageProps {
-  orderItem: any;
+  orderItem?: any;
 }
 
 export const OrderAddressesPage: React.FC<OrderAddressesPageProps> = ({

@@ -4,8 +4,6 @@
   margin-bottom: 40px;
 }
 
-
-
 .order-info-header-item{
   padding: 10px 35px;
   background-color: #F4F4F4;
@@ -40,4 +38,19 @@
   font-weight: 700;
   margin-bottom: 35px;
   text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .order-info-header{
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .order-info-header-item{
+    margin-right: 15px;
+    width: 176px;
+    margin-bottom: 15px;
+    justify-content: center;
+  }
+
 }
