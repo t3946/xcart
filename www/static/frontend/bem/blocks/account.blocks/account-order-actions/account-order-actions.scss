@@ -1,0 +1,19 @@
+.order-actions-accordion-header{
+  padding: 20px 15px;
+  background-color: #E0E5E9;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: -2px;
+  border-top: 2px solid #B2B8BC;
+  border-bottom: 2px solid #B2B8BC;
+  color: #505050;
+}
+
+.order-actions-accordion-header__open{
+  background-color: #ffffff;
+}
+
+.order-actions-accordion-body{
+  overflow: hidden;
+  transition: .3s all;
+}
