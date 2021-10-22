@@ -76,6 +76,7 @@ export const photoswipeInitialValue = {
   gallery: null,
   thumbs: null,
   index: 0,
+  ownerId: null,
 };
 
 const storeInitialValue = {

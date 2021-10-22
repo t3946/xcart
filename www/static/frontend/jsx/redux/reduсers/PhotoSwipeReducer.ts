@@ -23,6 +23,10 @@ const PhotoSwipeReducer = (
       store.thumbs = action.thumbs;
       return { ...store };
 
+    case "PHOTOSWIPE_SET_OWNER_UUID":
+      store.ownerId = action.uuid;
+      return { ...store };
+
     case "PHOTOSWIPE_CLEAR":
       return {
         items: null,

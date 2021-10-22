@@ -6,6 +6,7 @@ import StoreInterface from "@client/modules/account/ts/types/store.type";
 import {
   photoSwipeInitAction,
   photoSwipeClearAction,
+  photoSwipeSetOptionIndexAction,
 } from "@client/jsx/redux/actions/PhotoSwipeActions";
 import classnames from "classnames";
 import ArrowIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Arrow";
@@ -13,7 +14,7 @@ import TimesIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Times";
 
 const PhotoSwipeContainer: React.FC = function () {
   const photoSwipeStore = useSelector((e: StoreInterface) => e.photoswipe);
-  const { items, thumbs, index } = photoSwipeStore;
+  const { items, index } = photoSwipeStore;
 
   let gallery = photoSwipeStore.gallery;
 
@@ -39,15 +40,24 @@ const PhotoSwipeContainer: React.FC = function () {
     maxSpreadZoom: 1,
     showHideOpacity: true,
   };
+  const thumbs = useSelector((e: StoreInterface) => e.photoswipe.thumbs);
 
   if (thumbs) {
-    options.getThumbBoundsFn = function (index) {
+    const getThumbBoundsFn = function (index) {
+      // if thumbs is not array then thumbs then there only one thumb
+      const thumb = thumbs.constructor === Array ? thumbs[index] : thumbs;
       const pageYScroll =
         window.pageYOffset || document.documentElement.scrollTop;
-      const rect = thumbs[index].getBoundingClientRect();
+      const rect = thumb.getBoundingClientRect();
 
       return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
     };
+
+    if (gallery) {
+      gallery.options.getThumbBoundsFn = getThumbBoundsFn;
+    } else {
+      options.getThumbBoundsFn = getThumbBoundsFn;
+    }
   }
 
   const classes: Record<any, any> = {
@@ -57,9 +67,6 @@ const PhotoSwipeContainer: React.FC = function () {
     prevButtonIcon: ["photoswipe-left-arrow"],
     nextButtonIcon: ["photoswipe-right-arrow"],
   };
-
-  if (gallery) {
-  }
 
   if (totalItems <= 2) {
     classes.navButtonContainer.push({
@@ -162,6 +169,10 @@ const PhotoSwipeContainer: React.FC = function () {
     gallery.listen("afterChange", () => {
       changePadding(gallery);
       setForceUpdate({ ...forceUpdate });
+    });
+
+    gallery.listen("itemChanged", () => {
+      dispatch(photoSwipeSetOptionIndexAction(gallery.getCurrentIndex()));
     });
 
     gallery.listen("resize", () => {

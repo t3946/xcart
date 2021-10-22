@@ -10,8 +10,14 @@ import { actionMedia } from "../redux/reduсers/appHeadReduсer";
 import ScreenSize from "../utils/ScreenSize";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { photoSwipeSetItemsAction } from "@client/jsx/redux/actions/PhotoSwipeActions";
+import {
+  photoSwipeSetItemsAction,
+  photoSwipeSetThumbsInitiatorAction,
+  photoSwipeSetOptionIndexAction,
+  photoSwipeSetOwnerIdAction,
+} from "@client/jsx/redux/actions/PhotoSwipeActions";
 import Store from "@client/jsx/redux/stores/Store";
+import uuid from 'react-uuid';
 
 React.useLayoutEffect = React.useEffect;
 SwiperCore.use([Navigation]);
@@ -21,11 +27,23 @@ SwiperCore.use([Navigation]);
  * Запускает просмотр картинок в в PhotoSwipe viewer'е (который разворачивается на весь экран)
  */
 class ProductImageSlider extends Component {
+  private readonly sliderImageRef: React.RefObject<any> = React.createRef();
+
   constructor(props) {
     super();
 
-    let len = 0,
-      wait = 0;
+    Store.subscribe(() => {
+      const state = Store.getState();
+
+      if (state.photoswipe.gallery) {
+        // console.log("GALLERY IS ACTIVE");
+        this.productImagesSlider.slideTo(state.photoswipe.index + 1);
+      } else {
+        // console.log("GALLERY INACTIVE");
+      }
+    });
+
+    let len = 0;
 
     if (props.items) {
       len = props.items.length;
@@ -134,7 +152,7 @@ class ProductImageSlider extends Component {
   /**
    * view image in photo swipe image viewer
    */
-  zoomHndl(e, item) {
+  zoomHndl(e, item, index: number) {
     e.preventDefault();
 
     if (!this.preparedItems) {
@@ -181,8 +199,12 @@ class ProductImageSlider extends Component {
       this.preparedItems = items;
     }
 
-    console.log("УСТАНАВЛИВАЮ ITEMS", this.preparedItems);
+    const activeImage = this.sliderImageRef.current.querySelector(
+      ".swiper-slide-active img"
+    );
 
+    Store.dispatch(photoSwipeSetThumbsInitiatorAction(activeImage));
+    Store.dispatch(photoSwipeSetOptionIndexAction(index));
     Store.dispatch(photoSwipeSetItemsAction(this.preparedItems));
   }
 
@@ -316,9 +338,9 @@ class ProductImageSlider extends Component {
   }
 
   renderAllDetails() {
-    return map(this.state.items, (item, n) => {
+    return map(this.state.items, (item, i) => {
       const is_active = "";
-      const position = n + 1;
+      const position = i + 1;
       const key = "detail." + position;
 
       if (item.type === "image") {
@@ -326,11 +348,12 @@ class ProductImageSlider extends Component {
           <SwiperSlide
             key={key}
             onClick={(e) => {
-              console.log("onclick");
-              this.zoomHndl(e, item);
+              this.zoomHndl(e, item, i);
             }}
-            style={"background-image: url(" + item.preview + ")"}
-          />
+            className={"d-flex align-items-center justify-content-center"}
+          >
+            <img src={item.preview} alt="" className={"product-page-image"} />
+          </SwiperSlide>
         );
       }
 
@@ -353,30 +376,6 @@ class ProductImageSlider extends Component {
         );
       }
     });
-  }
-
-  renderSlyDetails() {
-    if (this.state.count) {
-      return (
-        <SwiperSlide
-          change={{
-            function() {
-              alert("change");
-            },
-          }}
-        >
-          <div
-            className="frame"
-            ref={(el) => (this.refs.frameDetail = el)}
-            style={{ height: this.state.height }}
-          >
-            {this.renderAllDetails()}
-          </div>
-        </SwiperSlide>
-      );
-    }
-
-    return null;
   }
 
   renderDetailClickBar() {
@@ -499,6 +498,16 @@ class ProductImageSlider extends Component {
 
     const detail = this.renderDetailClickBar();
 
+    if (this.productImagesSlider) {
+      const slides = this.productImagesSlider.slides;
+      const index = this.productImagesSlider.activeIndex;
+      const activeImage = slides[index].firstChild;
+
+      Store.dispatch(photoSwipeSetThumbsInitiatorAction(activeImage));
+
+      console.log("ACTIVE IMAGE", activeImage);
+    }
+
     return (
       <div className="images-slider">
         {this.renderSliderThumbs()}
@@ -515,6 +524,7 @@ class ProductImageSlider extends Component {
           className={"product-images-slider swiper-container"}
           onSwiper={(swiper) => (this.productImagesSlider = swiper)}
           onSlideChange={() => this.onChange()}
+          ref={this.sliderImageRef}
         >
           {this.renderAllDetails()}
         </Swiper>
