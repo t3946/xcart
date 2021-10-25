@@ -2,6 +2,7 @@
 
 namespace Modules\Forms\Admin;
 
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Admin\Contrib\Admin;
@@ -97,7 +98,7 @@ class EmailAdmin extends Admin
         return 'Email';
     }
 
-    public function getForm(): EmailForm
+    public function getForm(): ModelForm
     {
         return new EmailForm();
     }

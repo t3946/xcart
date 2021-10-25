@@ -13,9 +13,9 @@ use Xcart\App\Orm\Model;
 
 class DxTaxesAdmin extends ListViewAdmin
 {
-    public $ownerField = 'distributor';
+    public ?string $ownerField = 'distributor';
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'tax_name',
@@ -25,7 +25,7 @@ class DxTaxesAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm() : DistributorTaxEditForm
     {
         return new DistributorTaxEditForm();
     }

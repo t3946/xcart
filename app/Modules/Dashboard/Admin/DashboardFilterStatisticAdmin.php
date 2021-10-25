@@ -7,6 +7,7 @@ namespace Modules\Dashboard\Admin;
 use Modules\Admin\Contrib\Admin;
 use Modules\Dashboard\Models\DashboardFilter;
 use Modules\Dashboard\Models\DashboardFilterStatisticModel;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
 
 class DashboardFilterStatisticAdmin extends Admin
@@ -14,7 +15,7 @@ class DashboardFilterStatisticAdmin extends Admin
     public string $allList = 'dashboard/admin/_list.tpl';
     private array $filter_data = [];
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         $dates_data = DashboardFilterStatisticModel::objects()->order(['-date', '-hour'])->asArray()->all();
 
@@ -32,8 +33,9 @@ class DashboardFilterStatisticAdmin extends Admin
         return new DashboardFilter();
     }
 
-    public function getForm()
+    public function getForm() : ?ModelForm
     {
+        return null;
     }
 
     public function getListItemActions()

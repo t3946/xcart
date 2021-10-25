@@ -20,7 +20,7 @@ interface IMiddleware
      * @param $output string
      * @return string
      */
-    public function processView(Request $request, string $output):string;
+    public function processView(Request $request, string $output);
 
     /**
      * @param Exception $exception

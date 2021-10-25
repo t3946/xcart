@@ -42,37 +42,37 @@ class PagesForm extends ModelForm
     public function getFields()
     {
         return [
-            'is_index' => CheckboxField::className(),
-            'no_index' => CheckboxField::className(),
-            'is_published' => CheckboxField::className(),
+            'is_index' => CheckboxField::class,
+            'no_index' => CheckboxField::class,
+            'is_published' => CheckboxField::class,
             'content_short' => [
-                'class' => TextAreaField::className(),
+                'class' => TextAreaField::class,
                 'label' => 'Short content',
             ],
             'content' => [
-                'class' => EditorField::className(),
+                'class' => EditorField::class,
                 'label' => 'Content',
                 'html' => [
                     'class' => "tinymce-field",
                 ],
             ],
             'view' => [
-                'class' => DropDownField::className(),
+                'class' => DropDownField::class,
                 'choices' => Page::getViews(),
                 'label' => 'View',
             ],
             'view_children' => [
-                'class' => DropDownField::className(),
+                'class' => DropDownField::class,
                 'choices' => Page::getViews(),
                 'label' => 'View children',
             ],
             'published_at' => [
-                'class' => DateTimeField::className(),
+                'class' => DateTimeField::class,
                 'html' => [
                     'readonly' => 'readonly',
                 ],
             ],
-            'file' => ImageField::className(),
+            'file' => ImageField::class,
 //            'published_at' => DateTimeField::className()
             'sites' => [
                 'class' => Select2Field::class,
@@ -93,6 +93,12 @@ class PagesForm extends ModelForm
             'language' => [
                 'class' => DropDownField::class,
                 'required' => true
+            ],
+            'sorting' => [
+              'class' => DropDownField::class
+            ],
+            'parent' => [
+                'class' => DropDownField::class,
             ]
         ];
     }
@@ -100,7 +106,7 @@ class PagesForm extends ModelForm
     public function getInlines()
     {
         return [
-            ['meta' => MetaInlineForm::className()],
+            ['meta' => MetaInlineForm::class],
         ];
     }
 

@@ -10,12 +10,9 @@ use Xcart\App\Form\ModelForm;
 
 class OptionVariantsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'option';
+    public ?string $ownerField = 'option';
 
-    /**
-     * @return ModelForm
-     */
-    public function getForm()
+    public function getForm() : OptionVariantsAdminForm
     {
         return new OptionVariantsAdminForm();
     }
@@ -52,7 +49,7 @@ class OptionVariantsAdmin extends ListViewAdmin
     }
 
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return ['id', 'name', 'value'];
     }

@@ -65,7 +65,7 @@ class CacheMiddleware extends Middleware
         }
     }
 
-    public function processView(Request $request, string $output): string
+    public function processView(Request $request, string $output)
     {
         if (!Cli::isCli()) {
 

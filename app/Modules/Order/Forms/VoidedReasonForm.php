@@ -17,7 +17,7 @@ class VoidedReasonForm extends ModelForm
         return new VoidedReasonModel();
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'Voided reason';
     }

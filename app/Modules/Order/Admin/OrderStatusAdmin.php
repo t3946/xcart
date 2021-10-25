@@ -75,7 +75,7 @@ class OrderStatusAdmin extends Admin
         return parent::getCanSort($qs);
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Order statuses';
     }

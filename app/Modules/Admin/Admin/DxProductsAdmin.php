@@ -14,9 +14,9 @@ class DxProductsAdmin extends ProductAdmin
 {
     public DistributorModel $dxModel;
 
-    public $allTemplate = 'admin/distributor/dx_52.tpl';
+    public string $allTemplate = 'admin/distributor/dx_52.tpl';
 
-    public function getListColumns()
+    public function getListColumns() :  array
     {
         return [
             'image',
@@ -42,7 +42,7 @@ class DxProductsAdmin extends ProductAdmin
         ])->order(['-pk']);
     }
 
-    public static function getName()
+    public static function getName() : string
     {
         return 'Active products';
     }

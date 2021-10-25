@@ -17,19 +17,19 @@ class DxCommunicationAdmin extends EmailAdmin
     public $section;
     public $ownerField = 'manufacturerid';
     public $ownerPk;
-    public $allTemplate = 'admin/distributor/dx_emails.tpl';
+    public string $allTemplate = 'admin/distributor/dx_emails.tpl';
 
-    public function getForm()
+    public function getForm() : DistributorForm
     {
         return new DistributorForm();
     }
 
-    public function getSearchColumns()
+    public function getSearchColumns() : array
     {
         return [];
     }
 
-    public static function getName()
+    public static function getName() : string
     {
         return 'Communication with distributor';
     }
@@ -98,9 +98,9 @@ class DxCommunicationAdmin extends EmailAdmin
         ]);
     }
 
-    public function info($pk, $dx)
+    public function info($pk)
     {
-        $this->ownerPk = $dx;
+        $this->ownerPk = $pk;
         parent::info($pk);
     }
 

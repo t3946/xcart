@@ -31,7 +31,7 @@ class CheckDepositedAdmin extends Admin
         return new CheckDepositedModel;
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Checks deposited';
     }

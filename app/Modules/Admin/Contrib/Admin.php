@@ -44,7 +44,7 @@ abstract class Admin
 
     public string $allTemplate = 'admin/all.tpl';
     public string $allList = 'admin/list/_list.tpl';
-    public $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
+    public string $listItemActionsTemplate = 'admin/list/_item_actions.tpl';
     public $listPaginationTemplate = 'admin/list/_pagination.tpl';
     public string $listRowTemplate = 'admin/list/_tr.tpl';
 

@@ -19,7 +19,7 @@ class SliderLibrary extends TemplateLibrary
      * @name renderSlider
      * @return string
      */
-    public static function renderSlider($params)
+    public static function renderSlider($params): string
     {
         if ($params) {
 
@@ -30,6 +30,7 @@ class SliderLibrary extends TemplateLibrary
                 'slider_name' => $slider['name'],
             ]);
         }
+        return '';
     }
 
 
@@ -43,6 +44,7 @@ class SliderLibrary extends TemplateLibrary
         if ($params) {
             return self::getSliderData(is_array($params) ? current($params) : $params);
         }
+        return [];
     }
 
     private static function getSliderData(string $code) :? array

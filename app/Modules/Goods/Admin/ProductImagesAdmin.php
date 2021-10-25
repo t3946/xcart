@@ -4,21 +4,10 @@ namespace Modules\Goods\Admin;
 
 
 use Modules\Admin\Contrib\ListViewAdmin;
-use Modules\Goods\Admin\ProductOptionsAdmin;
-use Modules\Goods\Admin\ProductOptionVariantsAdmin;
 use Modules\Goods\Forms\ProductImageForm;
-use Modules\Goods\Models\ImageProductModel;
-use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductImageModel;
-use Modules\Goods\Models\ProductImagesModel;
 use Modules\Goods\Models\ProductModel;
-use Modules\Goods\Models\ProductOptionModel;
-use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\ImageField;
-use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\Select2Field;
-use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
@@ -26,7 +15,7 @@ class ProductImagesAdmin extends ListViewAdmin
 {
     public $ownerModel = ProductModel::class;
     public string $owner_model_field = 'detail_images';
-    public $ownerField = 'image_id';
+    public ?string $ownerField = 'image_id';
     public string $related_field = 'image_id';
     public string $through_field = 'product_id';
     public bool $autoFixSort = true;
@@ -50,7 +39,7 @@ class ProductImagesAdmin extends ListViewAdmin
         ];
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'image',
@@ -66,7 +55,7 @@ class ProductImagesAdmin extends ListViewAdmin
         return new ProductImageModel();
     }
 
-    public function getForm()
+    public function getForm() : ProductImageForm
     {
         $form = new ProductImageForm();
         $form->admin = $this;

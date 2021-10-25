@@ -7,12 +7,14 @@
                 <div class="present-icons">
                     <div class="row">
                         <div class="columns large-4 medium-6 small-12">
-                            <img alt="S3 Stores, Inc." class="footer-logo lazy-img" data-src="{assets 'images/logos/s3stores_footer.svg'}">
+                            <img alt="S3 Stores, Inc." class="footer-logo lazy-img"
+                                 data-src="{assets 'images/logos/s3stores_footer.svg'}">
                         </div>
 
                         <div class="columns large-4 medium-6 show-for-medium footer-schedule-column">
                             <div class="footer-schedule">
-                                <img alt="{t 'Web order 24/7'}" class="footer-schedule-icon lazy-img" data-src="{assets 'images/icons/footer/web_order.svg'}">
+                                <img alt="{t 'Web order 24/7'}" class="footer-schedule-icon lazy-img"
+                                     data-src="{assets 'images/icons/footer/web_order.svg'}">
                                 <div class="content">
                                     <div class="footer-schedule-title">{t 'Web Orders'}</div>
                                     <div class="footer-schedule-content">{t '24 hours a day'}</div>
@@ -34,12 +36,13 @@
                     <div class="row footer_info-blocks-row">
                         <div class="columns large-4 medium-6 small-12">
                             <div>
-                                <div class="footer-info-block-title">Telephone Customer Service</div>
+                                <div class="footer-info-block-title">{t 'Telephone Customer Service'}</div>
                                 <ul class="no-bullet menu-list">
                                     <li class="footer-info-block-item">{$site->customer_service_working_time}</li>
                                     <li class="footer-info-block-item">
                                         {if $site->cidev_top_header_code}
-                                            {t 'Toll Free: '} <span class="footer-phone">{$site->cidev_top_header_code}</span>
+                                            {t 'Toll Free: '}
+                                            <span class="footer-phone">{$site->cidev_top_header_code}</span>
                                         {/if}
                                     </li>
                                     <li class="footer-info-block-item">
@@ -64,30 +67,20 @@
                                 <li><a class="footer-link" href="/contactus/">{t 'Contact Us'}</a></li>
                             </ul>
                         </div>
-
-                        <div class="columns small-4 show-for-large">
-                            <div>
-                                <div class="footer-info-block-title">USA Address</div>
-                                <ul class="no-bullet menu-list">
-                                    <li class="footer-info-block-item">{t 'S3 Stores, Inc.'}</li>
-                                    <li class="footer-info-block-item">{t '2885 Sanford Ave SW #12717'}</li>
-                                    <li class="footer-info-block-item">{t 'Grandville, MI 49418'}</li>
-                                    <li class="footer-info-block-item">{t 'USA'}</li>
-                                </ul>
+                        {set $addresses = $site.addresses->all()}
+                        {foreach $addresses as $address_model }
+                            <div class="columns small-4 show-for-large">
+                                <div>
+                                    <div class="footer-info-block-title">{$address_model.address.name}</div>
+                                    <ul class="no-bullet menu-list">
+                                        <li class="footer-info-block-item">{$address_model.address.company}</li>
+                                        <li class="footer-info-block-item">{$address_model.address.address}</li>
+                                        <li class="footer-info-block-item">{$address_model.address.address_state}</li>
+                                        <li class="footer-info-block-item">{$address_model.address.country}</li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="columns small-4 show-for-large">
-                            <div>
-                                <div class="footer-info-block-title">Canadian Address</div>
-                                <ul class="no-bullet menu-list">
-                                    <li class="footer-info-block-item">{t 'S3 Stores, Inc.'}</li>
-                                    <li class="footer-info-block-item">{t '27 Joseph St.'}</li>
-                                    <li class="footer-info-block-item">{t 'Chatham, Ontario N7L3G4'}</li>
-                                    <li class="footer-info-block-item">{t 'Canada'}</li>
-                                </ul>
-                            </div>
-                        </div>
+                        {/foreach}
                     </div>
                 </div>
 
@@ -95,9 +88,11 @@
 
             <div class="column small-12 medium-4 footer-right-column">
                 <div class="footer-socials show-for-medium footer_socials">
-                    <a href="https://www.facebook.com/s3stores/" rel="nofollow noopener" target="_blank" class="facebook"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow noopener" class="pinterest"></a>
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow noopener" target="_blank" class="youtube"></a>
+                    {set $socials = $site.socials->filter(['is_active' => true])->order(['order_by'])->all()}
+                    {foreach $socials as $social_model }
+                        <a href="{$social_model->social->url}" rel="nofollow noopener" target="_blank" style="background-image: url({$social_model->social->getLogoPath()})"
+                           class="facebook"></a>
+                    {/foreach}
                 </div>
             </div>
         </div>
@@ -119,51 +114,65 @@
                                         {set $po = $method}
                                     {else}
                                         <li class="footer-payment-method-item footer-payment-method_item">
-                                            <img width="54" height="36" class="lazy-img footer-payment-method-image" data-src="/{$method->logo}" alt="{$method->name}">
+                                            <img width="54" height="36" class="lazy-img footer-payment-method-image"
+                                                 data-src="/{$method->logo}" alt="{$method->name}">
                                         </li>
                                     {/if}
                                 {/foreach}
                             </ul>
 
-                            <a class="footer-link" href="/ecomerce-fraud">{t 'Combating eCommerce Fraud'}</a>
+                            {if !in_array($site->code, ['RD'])}<a class="footer-link"
+                                                                  href="/ecomerce-fraud">{t 'Combating eCommerce Fraud'}</a>{/if}
                         </div>
 
                         <div class="columns large-4 medium-6 small-12 flex-container align-bottom footer-purchase-order-column footer_purchase-order-column">
-                            {if $po }
+                            {if $po}
                                 <div>
                                     <a href="/purchase-orders">
                                         <ul class="footer-payment-methods footer_payment-methods no-bullet menu-list">
                                             <li class="footer-payment-method-item footer-payment-method_item">
-                                                <img width="54" height="36" class="lazy-img footer-payment-method-image" data-src="/{$po->logo}" alt="{$po->name}">
+                                                <img width="54" height="36" class="lazy-img footer-payment-method-image"
+                                                     data-src="/{$po->logo}" alt="{$po->name}">
                                             </li>
                                         </ul>
                                     </a>
-                                    <a class="purchase-order footer-link" href="/purchase-orders">{t 'Purchase Orders'}</a>
+                                    <a class="purchase-order footer-link"
+                                       href="/purchase-orders">{t 'Purchase Orders'}</a>
                                 </div>
                             {/if}
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="column medium-4 small-12 footer-confidence">
-                <div class="no-bullet menu-list shop-with-confidence footer-right-column">
-                    <div class="footer-info-block-title">
-                        {t 'Shop with Confidence'}
-                    </div>
-                    <div class="confidence">
+            {if !in_array($site->code, ['RD'])}
+                <div class="column medium-4 small-12 footer-confidence">
+                    <div class="no-bullet menu-list shop-with-confidence footer-right-column">
+                        <div class="footer-info-block-title">
+                            {t 'Shop with Confidence'}
+                        </div>
+                        <div class="confidence">
                         <span id="bbb">
                             {ignore}
-                                <a rel="nofollow noopener" target="_blank" id="bbblink" class="rbhzbul" href="https://www.bbb.org/ca/on/chatham/profile/furniture-stores/s3-stores-inc-0187-1054268#bbbseal" title="S3 Stores, Inc., Furniture Stores, Chatham, ON" style="display: none;position: relative;overflow: hidden; width: 200px; height: 76px; margin: 0px; padding: 0px;"><img style="padding: 0px; border: none;" id="bbblinkimg" src="https://seal-london.bbb.org/logo/rbhzbul/s3-stores-1054268.png" width="400" height="76" alt="S3 Stores, Inc., Furniture Stores, Chatham, ON" /></a><script type="text/javascript">var bbbprotocol = ( ("https:" == document.location.protocol) ? "https://" : "http://" ); (function(){var s=document.createElement('script');s.src=bbbprotocol + 'seal-london.bbb.org' + unescape('%2Flogo%2Fs3-stores-1054268.js');s.type='text/javascript';s.async=true;var st=document.getElementsByTagName('script');st=st[st.length-1];var pt=st.parentNode;pt.insertBefore(s,pt.nextSibling);})();</script>
-                        {/ignore}
+                                <a rel="nofollow noopener" target="_blank" id="bbblink" class="rbhzbul"
+                                   href="https://www.bbb.org/ca/on/chatham/profile/furniture-stores/s3-stores-inc-0187-1054268#bbbseal"
+                                   title="S3 Stores, Inc., Furniture Stores, Chatham, ON"
+                                   style="display: none;position: relative;overflow: hidden; width: 200px; height: 76px; margin: 0px; padding: 0px;"><img
+                                            style="padding: 0px; border: none;" id="bbblinkimg"
+                                            src="https://seal-london.bbb.org/logo/rbhzbul/s3-stores-1054268.png"
+                                            width="400" height="76"
+                                            alt="S3 Stores, Inc., Furniture Stores, Chatham, ON"/></a>
+                                <script type="text/javascript">var bbbprotocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+                                    (function (){var s=document.createElement('script');s.src=bbbprotocol + 'seal-london.bbb.org' + unescape('%2Flogo%2Fs3-stores-1054268.js');s.type='text/javascript';s.async=true;var st=document.getElementsByTagName('script');st=st[st.length-1];var pt=st.parentNode;pt.insertBefore(s,pt.nextSibling);})();</script>
+                            {/ignore}
                         </span>
 
-                        <span id="g_review"></span>
+                            <span id="g_review"></span>
 
-                        <span id="siteseal"></span>
+                            <span id="siteseal"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {/if}
         </div>
 
         <div class="row">
@@ -178,9 +187,10 @@
 
                 {*mobile socials*}
                 <div class="footer-socials footer_socials hide-for-medium">
-                    <a href="https://www.youtube.com/channel/UCjE6xR1TriWo-hCDsbpvMKg" rel="nofollow noopener" target="_blank" class="youtube"></a>
-                    <a href="https://www.pinterest.com/s3storesinc/" target="_blank" rel="nofollow noopener" class="pinterest"></a>
-                    <a href="https://www.facebook.com/s3stores/" rel="nofollow noopener" target="_blank" class="facebook"></a>
+                    {foreach $socials as $social_model }
+                        <a href="{$social_model->social->url}" rel="nofollow noopener"
+                           target="_blank" class="youtube" style="background-image: url({$social_model->social->getLogoPath()})"></a>
+                    {/foreach}
                 </div>
             </div>
         </div>
@@ -190,11 +200,12 @@
     <div class="footer-menu">
         <div class="row">
             <div class="column small-12 medium-8 copyright small-order-2 medium-order-1">
-                {t 'Copyright ©'} {$site.start_year}-{time()|date_format:'%Y'} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
+                {t 'Copyright ©'} {$site.start_year}
+                -{time()|date_format:'%Y'} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
             </div>
             <div class="column small-12 medium-4 footer-right-column small-order-1 medium-order-2 footer-copyright-links-column">
                 <ul class="no-bullet">
-                    {get_menu code='footer-menu'}
+                    {get_menu code='Footer'}
                 </ul>
             </div>
         </div>

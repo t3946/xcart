@@ -19,7 +19,7 @@ use Xcart\App\Orm\Model;
 
 class ProductAdmin extends Admin
 {
-    public $listItemActionsTemplate = 'admin/list/custom_item_actions.tpl';
+    public string $listItemActionsTemplate = 'admin/list/custom_item_actions.tpl';
 
     /**
      * @return ModelForm
