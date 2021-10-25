@@ -44,7 +44,7 @@
                         <ul class="vertical tabs" data-tabs id="contact-us-tabs">
                             <li class="tabs-title is-active"><a href="#Email" aria-selected="true"><span>{t 'Email'}</span></a></li>
                             <li class="tabs-title"><a data-tabs-target="Phone" href="#Phone"><span>{t 'Phone'}</span></a></li>
-                            {if !in_array($site->country, ['RU'])} <li class="tabs-title"><a data-tabs-target="Fax" href="#Fax"><span>{t 'Fax'}</span></a></li>{/if}
+                            {if !empty($site->fax_number)} <li class="tabs-title"><a data-tabs-target="Fax" href="#Fax"><span>{t 'Fax'}</span></a></li>{/if}
                             <li class="tabs-title"><a data-tabs-target="Mail" href="#Mail"><span>{t 'Mail'}</span></a></li>
                         </ul>
                     </div>
