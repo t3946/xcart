@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, IconButton, Paper, Tooltip } from "@material-ui/core";
-import ReactToPrint from "react-to-print";
 import PrintIcon from "@material-ui/icons/Print";
+import ReactToPrint from "react-to-print";
 
 interface EmailHeaderProps {
   info: any;

@@ -55,7 +55,7 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
     );
   };
   return (
-    <>
+    <React.Fragment>
       {showTracking()}
       <div className="order-tracking-info">
         <div className={"order-tracking-map"}>
@@ -82,6 +82,6 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
           />
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };

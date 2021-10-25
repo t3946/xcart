@@ -34,6 +34,7 @@ export const OrdersListHeader: React.FC<OrdersListHeaderProps> = ({
           onClick={onSelectValueChange}
           items={ordersHeaderSelectValues}
           id="orders-select"
+          name={"awd"}
         />
       </div>
     </div>

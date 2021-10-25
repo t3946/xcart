@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { IconButton } from "@material-ui/core";
 import ClearIcon from "@material-ui/icons/Clear";
+import { IconButton } from "@material-ui/core";
 
 interface FileItemProps {
   file: File;
