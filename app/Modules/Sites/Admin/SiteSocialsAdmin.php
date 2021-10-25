@@ -4,6 +4,7 @@ namespace Modules\Sites\Admin;
 
 use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Sites\Forms\SiteSocialForm;
+use Modules\Sites\Models\SiteModel;
 use Modules\Sites\Models\SiteSocialsModel;
 use Xcart\App\Orm\Model;
 
@@ -11,6 +12,9 @@ class SiteSocialsAdmin extends ListViewAdmin
 {
     public ?string $ownerField = 'site_id';
     public static bool $public = false;
+    public ?string $sort = 'order_by';
+    public bool $autoFixSort = true;
+    public $owner_model = SiteModel::class;
 
     public function getForm(): SiteSocialForm
     {

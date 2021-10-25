@@ -13,7 +13,7 @@ use Xcart\App\Orm\Model;
 
 class ProductImagesAdmin extends ListViewAdmin
 {
-    public $ownerModel = ProductModel::class;
+    public $owner_model = ProductModel::class;
     public string $owner_model_field = 'detail_images';
     public ?string $ownerField = 'image_id';
     public string $related_field = 'image_id';
@@ -77,18 +77,18 @@ class ProductImagesAdmin extends ListViewAdmin
             /** @var ProductModel $product_model */
             $product_model = ProductModel::objects()->get(['pk' => $this->ownerPk]);
             if ($imageModel) {
-                $this->ownerModel->{$this->related_field} = $imageModel->pk;
+                $this->owner_model->{$this->related_field} = $imageModel->pk;
             } else {
                 $model->path->uploadTo = "images/{$product_model->distributor->code}";
                 if ($form->isValid() && $form->save()) {
-                    $this->ownerModel->{$this->related_field} = $form->getInstance()->pk;
+                    $this->owner_model->{$this->related_field} = $form->getInstance()->pk;
                 }
             }
-            if ($this->ownerModel->save()) {
+            if ($this->owner_model->save()) {
                 $action = [
                     'product_id' => $product_model->pk ?? $this->ownerPk,
                     'dx_code' => $product_model->distributor->code,
-                    'image_position' => $this->ownerModel->order_by,
+                    'image_position' => $this->owner_model->order_by,
                     'image_link' => $imageModel ? $imageModel->getCdnURL() : $model->getCdnURL(),
                     'action' => 'create'
                 ];
@@ -149,13 +149,13 @@ class ProductImagesAdmin extends ListViewAdmin
             $form->setInstance($model);
             $request = Xcart::app()->request;
             if ($request->getIsPost() && $form->populate($_POST, $_FILES)) {
-                $product_model = $this->ownerModel::objects()->get(['pk' => $owner_id]);
+                $product_model = $this->owner_model::objects()->get(['pk' => $owner_id]);
                 $model->path->uploadTo = "images/{$product_model->distributor->code}";
                 if ($form->isValid() && $form->save()) {
                     $action = [
                         'product_id' => $product_model->pk ?? $this->ownerPk,
                         'dx_code' => $product_model->distributor->code,
-                        'image_position' => $this->ownerModel->order_by,
+                        'image_position' => $this->owner_model->order_by,
                         'image_link' => $model->path->getValue(),
                         'action' => 'create'
                     ];

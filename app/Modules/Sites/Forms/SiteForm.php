@@ -171,7 +171,8 @@ class SiteForm extends ModelForm
             ],
             'socials' => [
                 'class' => ListViewField::class,
-                'adminClass' => SiteSocialsAdmin::class
+                'adminClass' => SiteSocialsAdmin::class,
+                'defaultOrder' => ['order_by']
             ]
         ];
     }

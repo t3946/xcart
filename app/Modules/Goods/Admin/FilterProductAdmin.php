@@ -11,7 +11,7 @@ use Xcart\App\Orm\Model;
 
 class FilterProductAdmin extends ListViewAdmin
 {
-    public $ownerModel = ProductModel::class;
+    public $owner_model = ProductModel::class;
     public string $owner_model_field = 'filter_values';
     public ?string $ownerField = 'fv_id';
     public string $related_field = 'fv_id';
