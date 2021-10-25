@@ -137,7 +137,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - data1:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -151,8 +151,8 @@ services:
       - elasticsearch
     environment:
       - "JAVA_OPTS=-Xms512m -Xmx512m"
-      - ENT_SEARCH_DEFAULT_PASSWORD=admin
-      - elasticsearch.username=admin
+      - ENT_SEARCH_DEFAULT_PASSWORD=adminpass
+      - elasticsearch.username=elastic
       - elasticsearch.password=admin
       - elasticsearch.host=http://elasticsearch:9200
       - allow_es_settings_modification=true
@@ -175,17 +175,13 @@ services:
     environment:
       ELASTICSEARCH_HOSTs: http://elasticsearch:9200
       ENTERPRISESEARCH_HOST: http://ent-search:3002
-      ELASTICSEARCH_USERNAME: admin
+      ELASTICSEARCH_USERNAME: elastic
       ELASTICSEARCH_PASSWORD: admin
     networks:
       - elastic
 
 volumes:
-  data01:
-    driver: local
-  data02:
-    driver: local
-  data03:
+  data1:
     driver: local
 
 
