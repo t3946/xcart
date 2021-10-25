@@ -13,14 +13,14 @@ class HelpAdmin extends Admin
 {
     public ?string $sort = 'order_by';
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'title',
         ];
     }
 
-    public function getForm()
+    public function getForm() : HelpForm
     {
         return new HelpForm();
     }

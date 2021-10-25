@@ -10,10 +10,10 @@ use Modules\Distributor\Models\DistributorTabModel;
 
 class DxTabsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'distributor';
+    public ?string $ownerField = 'distributor';
     public ?string $sort = 'position';
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'name',
@@ -21,7 +21,7 @@ class DxTabsAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm() : DistributorTabForm
     {
         return new DistributorTabForm();
     }

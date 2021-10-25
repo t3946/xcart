@@ -37,6 +37,7 @@ use Xcart\App\Orm\Model;
  * @property LanguageModel $lang
  * @property Manager|ProductModel[] products
  * @property bool $search_all_website_show
+ * @property null|Manager|SitesMenuModel[] menu_list
  * @property ImageField $logo
  * @property ImageField $logo_mobile
  * @property SiteConfigModel[]|Manager $config
@@ -329,6 +330,21 @@ class SiteModel extends Model
                 'uploadTo' => 'images/favicons/',
                 'null' => true,
             ],
+            'addresses' => [
+                'class' => HasManyField::class,
+                'link' => ['storefrontid' => 'site_id'],
+                'modelClass' => SitesAddressesModel::class
+            ],
+            'menu_list' => [
+                'class' => HasManyField::class,
+                'link' => ['storefrontid' => 'site_id'],
+                'modelClass' => SitesMenuModel::class,
+            ],
+            'socials' => [
+                'class' => HasManyField::class,
+                'link' => ['storefrontid' => 'site_id'],
+                'modelClass' => SiteSocialsModel::class
+            ]
         ];
     }
 

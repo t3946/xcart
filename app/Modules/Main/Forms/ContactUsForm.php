@@ -50,6 +50,7 @@ class ContactUsForm extends FrontendForm
                 'label' => MainModule::t('Full name'),
                 'hint' => MainModule::t('Your first and last name'),
                 'html' => [
+                    'class' => 'contact-form-input',
                     'placeholder' => MainModule::t('Albert H. Einstein'),
                 ],
 
@@ -58,12 +59,16 @@ class ContactUsForm extends FrontendForm
                 'class' => CharCleanField::class,
                 'label' => MainModule::t('Your company name'),
                 'html' => [
+                    'class' => 'contact-form-input',
                     'placeholder' => MainModule::t('Eureka Inc.'),
                 ],
             ],
             'zip_postal_code' => [
                 'class' => NumberField::class,
                 'label' => MainModule::t('Your zip/postal code'),
+                'html' => [
+                    'class' => 'contact-form-input',
+                ]
             ],
             'phone_number' => [
                 'class' => CharCleanField::class,
@@ -71,6 +76,7 @@ class ContactUsForm extends FrontendForm
                 'hint' => MainModule::t('Phone number you can be reached at'),
                 'type' => 'tel',
                 'html' => [
+                    'class' => 'contact-form-input',
                     'placeholder' => MainModule::t('(609) 734-8000'),
                 ],
             ],
@@ -85,6 +91,7 @@ class ContactUsForm extends FrontendForm
                     new EmailValidator()
                 ],
                 'html' => [
+                    'class' => 'contact-form-input',
                     'placeholder' => MainModule::t('albert.einstein@gmail.com'),
                 ],
             ],
@@ -94,6 +101,9 @@ class ContactUsForm extends FrontendForm
                 'choices' => $this->getDepartments(),
                 'hint' => MainModule::t('Your message will be routed to this department'),
                 'required' => true,
+                'html' => [
+                    'class' => 'contact-form-input',
+                ],
             ],
             'product_sku' => [
                 'class' => CharCleanField::class,
@@ -101,6 +111,7 @@ class ContactUsForm extends FrontendForm
                 'label' => MainModule::t('Product SKU or your order #'),
                 'hint' => MainModule::t('SKU of product you are interested in or your order #'),
                 'html' => [
+                    'class' => 'contact-form-input',
                     'placeholder' => MainModule::t('EDR-T-A63127 or AR-54321'),
                 ],
                 'validators' => [
@@ -112,6 +123,7 @@ class ContactUsForm extends FrontendForm
                 'label' => MainModule::t('Subject line'),
                 'required' => true,
                 'html' => [
+                    'class' => 'contact-form-input',
                     'placeholder' => MainModule::t('Is gravitation responsible for people falling in love?'),
                 ],
                 'className' => 'wide'
@@ -120,7 +132,10 @@ class ContactUsForm extends FrontendForm
                 'class' => TextField::class,
                 'label' => MainModule::t('Your message'),
                 'required' => true,
-                'className' => 'wide'
+                'className' => 'wide',
+                'html' => [
+                    'class' => 'contact-form-input',
+                ],
             ],
         ];
     }
@@ -157,7 +172,7 @@ class ContactUsForm extends FrontendForm
      */
     private function getDepartments(): array
     {
-        return [
+        $departments = [
             '' => '',
             'Product questions' => MainModule::t('Product questions'),
             'Shipping quote' => MainModule::t('Shipping quote'),
@@ -168,6 +183,11 @@ class ContactUsForm extends FrontendForm
             'W-9 from request' => MainModule::t('W-9 from request'),
             'Other requests ' => MainModule::t('Other requests '),
         ];
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        if (in_array($site->country, ['RU'])) {
+            unset($departments['W-9 from request']);
+        }
+        return $departments;
     }
 
 }

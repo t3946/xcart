@@ -19,10 +19,10 @@ class DxPriceFileAdmin extends Admin
 {
     public $section;
     public $ownerField = 'manufacturerid';
-    public $allTemplate = 'admin/distributor/dx-price.tpl';
+    public string $allTemplate = 'admin/distributor/dx-price.tpl';
     public $ownerPk;
 
-    public function getForm()
+    public function getForm() : DistributorPriceForm
     {
         return new DistributorPriceForm();
     }

@@ -2,6 +2,7 @@
 
 namespace Modules\Translate\Admin;
 
+use Exception;
 use Gettext\Generators\Mo;
 use Gettext\Generators\Po;
 use Gettext\Merge;
@@ -15,8 +16,11 @@ use Modules\Translate\Models\TranslateModel;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 use Symfony\Component\Translation\Translator;
 use Throwable;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Form\Form;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Pagination\DataSource\ArrayDataSource;
+use Xcart\App\Pagination\Pagination;
 
 /**
  * CRUD
@@ -24,12 +28,12 @@ use Xcart\App\Main\Xcart;
 class TranslateAdmin extends Admin
 {
     public string $allList = '_list.tpl';
-    public $listRowTemplate = '_tr.tpl';
+    public string $listRowTemplate = '_tr.tpl';
 
     /**
      * describe list of fields that need print in table
      */
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'lang_code',
@@ -41,7 +45,7 @@ class TranslateAdmin extends Admin
     /**
      * Edit form
      */
-    public function getForm()
+    public function getForm(): TranslateForm
     {
         return new TranslateForm;
     }
@@ -49,34 +53,41 @@ class TranslateAdmin extends Admin
     /**
      * CRUD row model
      */
-    public function getModel()
+    public function getModel(): TranslateModel
     {
         return new TranslateModel;
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Translate Manager';
     }
 
-    private function readPO( string $lang_code ): Translations
+    /**
+     * @throws UnknownPropertyException
+     */
+    private function readPO(string $lang_code): Translations
     {
-        $path = Xcart::app()->getModule( 'Translate' )->getPath();
-        return Translations::fromPoFile( "$path/lang/$lang_code.po" );
+        $path = Xcart::app()->getModule('Translate')->getPath();
+        return Translations::fromPoFile("$path/lang/$lang_code.po");
     }
 
-    private function writePO( Translations $translations, string $lang_code ): void
+    /**
+     * @throws UnknownPropertyException
+     */
+    private function writePO(Translations $translations, string $lang_code): void
     {
-        $path = Xcart::app()->getModule( 'Translate' )->getPath();
+        $path = Xcart::app()->getModule('Translate')->getPath();
 
-        if ( !Po::toFile( $translations, "$path/lang/$lang_code.po" ) ) {
-            Xcart::app()->flash->error( "Can\'t write file $path/lang/$lang_code.po please check chmod" );
+        if (!Po::toFile($translations, "$path/lang/$lang_code.po")) {
+            Xcart::app()->flash->error("Can\'t write file $path/lang/$lang_code.po please check chmod");
+            return;
         }
 
         Mo::toFile($translations, "$path/lang/$lang_code.mo");
     }
 
-    private function getCreateForm()
+    private function getCreateForm(): TranslateCreateForm
     {
         return new TranslateCreateForm;
     }
@@ -84,23 +95,23 @@ class TranslateAdmin extends Admin
     /**
      * Write new translation to file
      * @param TranslateModel $model new translate object
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws UnknownPropertyException
      */
-    private function updateTranslation( TranslateModel $model ): void
+    private function updateTranslation(TranslateModel $model): void
     {
         //get new translation
         $translation = $model->asTranslation();
         $new_translations = new Translations;
-        $new_translations->append( $translation );
+        $new_translations->append($translation);
 
         //get list translations
-        $lang_code = $model->getAttribute( 'lang_code' );
-        $translations = $this->readPO( $lang_code );
+        $lang_code = $model->getAttribute('lang_code');
+        $translations = $this->readPO($lang_code);
 
         //update translations
-        $translations->mergeWith( $new_translations, Merge::DEFAULTS | Merge::TRANSLATION_OVERRIDE );
+        $translations->mergeWith($new_translations, Merge::DEFAULTS | Merge::TRANSLATION_OVERRIDE);
 
-        $this->writePO( $translations, $lang_code );
+        $this->writePO($translations, $lang_code);
     }
 
     /**
@@ -109,80 +120,90 @@ class TranslateAdmin extends Admin
      * @return TranslateModel
      * @throws Throwable
      */
-    private function fetchTranslateByKey( string $pk ): TranslateModel
+    private function fetchTranslateByKey(string $pk): TranslateModel
     {
-        $lang_code = substr( $pk, 0, 2 );
-        $msg_id = urldecode( substr( $pk, 3 ) );
+        $lang_code = substr($pk, 0, 2);
+        $msg_id = urldecode(substr($pk, 3));
 
-        foreach ( $this->readPO( $lang_code ) as $translate ) {
-            if ( $translate->getOriginal() === $msg_id ) {
+        foreach ($this->readPO($lang_code) as $translate) {
+            if ($translate->getOriginal() === $msg_id) {
                 break;
             }
         }
 
-        return new TranslateModel( [
+        return new TranslateModel([
             'id' => $pk,
             'lang_code' => $lang_code,
             'msgctxt' => $msg_id,
             'msgid' => $msg_id,
-            'msgstr' => isset( $translate ) ? $translate->getTranslation() : '',
-        ] );
+            'msgstr' => isset($translate) ? $translate->getTranslation() : '',
+        ]);
     }
 
-    public function getUpdateUrl( $pk = null )
+    /**
+     * @throws Exception
+     */
+    public function getUpdateUrl($pk = null): string
     {
-        $query = [ 'msgid' => $msgid = substr( $pk, 3 ) ];
+        $query = ['msgid' => substr($pk, 3)];
 
-        if ( Xcart::app()->request->get->has( 'popup' ) ) {
-            $query[ 'popup' ] = true;
+        if (Xcart::app()->request->get->has('popup')) {
+            $query['popup'] = true;
         }
 
-        return Xcart::app()->router->url( 'admin:update', [
+        return Xcart::app()->router->url('admin:update', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => substr( $pk, 0, 2 ),
-        ], $query );
+            'pk' => substr($pk, 0, 2),
+        ], $query);
     }
 
-    public function getRemoveUrl( $pk = null )
+    /**
+     * @throws Exception
+     */
+    public function getRemoveUrl($pk = null): string
     {
-        $query = [ 'msgid' => $msgid = substr( $pk, 3 ) ];
+        $query = ['msgid' => substr($pk, 3)];
 
-        if ( Xcart::app()->request->get->has( 'popup' ) ) {
-            $query[ 'popup' ] = true;
+        if (Xcart::app()->request->get->has('popup')) {
+            $query['popup'] = true;
         }
 
-        return Xcart::app()->router->url( 'admin:remove', [
+        return Xcart::app()->router->url('admin:remove', [
             'module' => static::getModuleName(),
             'admin' => static::classNameShort(),
-            'pk' => substr( $pk, 0, 2 ),
-        ], $query );
+            'pk' => substr($pk, 0, 2),
+        ], $query);
     }
 
-    public function remove( $pk = null )
+    /**
+     * @throws Throwable
+     * @throws UnknownPropertyException
+     */
+    public function remove($pk = null)
     {
-        $pk = $pk . '-' . Xcart::app()->request->get->get( 'msgid' );
+        $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
         //get new translation
-        $model = $this->fetchTranslateByKey( $pk );
+        $model = $this->fetchTranslateByKey($pk);
         $remove_translations = new Translations;
-        $remove_translations->append( $model->asTranslation() );
+        $remove_translations->append($model->asTranslation());
 
         //get list translations
-        $lang_code = $model->getAttribute( 'lang_code' );
-        $translations = $this->readPO( $lang_code );
+        $lang_code = $model->getAttribute('lang_code');
+        $translations = $this->readPO($lang_code);
 
         //update translations
         $new_translations = new Translations;
-        foreach ( $translations as $item ) {
-            if ( $remove_translations->find( $item ) ) {
+        foreach ($translations as $item) {
+            if ($remove_translations->find($item)) {
                 continue;
             }
 
-            $new_translations->append( $item );
+            $new_translations->append($item);
         }
 
-        $this->writePO( $new_translations, $lang_code );
-        $this->jsonResponse( [ 'success' => true ] );
+        $this->writePO($new_translations, $lang_code);
+        $this->jsonResponse(['success' => true]);
     }
 
     /**
@@ -190,53 +211,51 @@ class TranslateAdmin extends Admin
      * @param null $parent_id
      * @throws Throwable
      */
-    public function update( $pk = null, $parent_id = null ): void
+    public function update($pk = null, $parent_id = null): void
     {
-        if ( $pk !== null ) {
-            $pk = $pk . '-' . Xcart::app()->request->get->get( 'msgid' );
+        if ($pk !== null) {
+            $pk = $pk . '-' . Xcart::app()->request->get->get('msgid');
         }
 
         $this->setBreadcrumbs();
         $req_method = Xcart::app()->request->getMethod();
         $form = $pk ? $this->getUpdateForm() : $this->getCreateForm();
 
-        if ( $req_method === 'GET' ) {
-            $form->populate( $_GET, $_FILES );
-            $translate_model = $pk ? $this->fetchTranslateByKey( $pk ) : new TranslateModel;
-        }
-        elseif (
+        if ($req_method === 'GET') {
+            $form->populate($_GET, $_FILES);
+            $translate_model = $pk ? $this->fetchTranslateByKey($pk) : new TranslateModel;
+        } elseif (
             $req_method === 'POST'
-            && $form->populate( $_POST, $_FILES )
+            && $form->populate($_POST, $_FILES)
         ) {
-            if ( $form->isValid() ) {
+            if ($form->isValid()) {
                 $translate_model = $form->getInstance();
-                $message_context = $translate_model->getAttribute( 'msgctxt' );
-                $translate_model->setAttribute( 'msgid', $message_context );
-                $this->updateTranslation( $translate_model );
-                Xcart::app()->flash->success( 'Changes have been successfully applied.' );
-                $pk = $translate_model->getAttribute( 'lang_code' ) . '-' . $translate_model->getAttribute( 'msgid' );
-                Xcart::app()->request->redirect( $this->getUpdateUrl( urlencode( $pk ) ) );
-            }
-            else {
-                Xcart::app()->flash->error( 'Please, fix errors' );
+                $message_context = $translate_model->getAttribute('msgctxt');
+                $translate_model->setAttribute('msgid', $message_context);
+                $this->updateTranslation($translate_model);
+                Xcart::app()->flash->success('Changes have been successfully applied.');
+                $pk = $translate_model->getAttribute('lang_code') . '-' . $translate_model->getAttribute('msgid');
+                Xcart::app()->request->redirect($this->getUpdateUrl(urlencode($pk)));
+            } else {
+                Xcart::app()->flash->error('Please, fix errors');
             }
         }
 
-        if ( !isset( $translate_model ) ) {
+        if (!isset($translate_model)) {
             return;
         }
 
-        $form->setInstance( $translate_model );
+        $form->setInstance($translate_model);
 
         //create or update
-        $is_new = is_null( $pk );
+        $is_new = is_null($pk);
         $template = $is_new ? $this->createTemplate : $this->updateTemplate;
 
-        $this->renderInternal( $template, [
+        $this->renderInternal($template, [
             'form' => $form,
             'model' => $translate_model,
             'new' => $is_new
-        ] );
+        ]);
     }
 
     public function getFilterForm(): ?Form
@@ -262,20 +281,23 @@ class TranslateAdmin extends Admin
         ];
     }
 
-    public function all( $pk = null )
+    /**
+     * @throws UnknownPropertyException
+     */
+    public function all($pk = null)
     {
         $request = Xcart::app()->request;
 
         $this->setBreadcrumbs();
         $qs = $this->getQuerySet();
 
-        if ( $request->getIsGet() && $filter_form = $this->getFilterForm() ) {
-            $filter_form->populate( $_GET, $_FILES );
-            $this->handleFilter( $qs, $filter_form );
+        if ($request->getIsGet() && $filter_form = $this->getFilterForm()) {
+            $filter_form->populate($_GET, $_FILES);
+            $this->handleFilter($qs, $filter_form);
         }
 
         $lang_codes = $filter_form->name->getValue()
-            ?? LanguageModel::objects()->valuesList( ['lang_code'], true );
+            ?? LanguageModel::objects()->valuesList(['lang_code'], true);
 
         $file_loader = new PoFileLoader();
         $translates = [];
@@ -285,46 +307,55 @@ class TranslateAdmin extends Admin
 
 
         $text_filter_func = $is_case_sense ? 'strpos' : 'stripos';
-        foreach ( $lang_codes as $lang_code ) {
-            $translator = new Translator( $lang_code );
-            $translator->addLoader( 'po', $file_loader );
-            $resource_path = Xcart::app()->getModule( 'Translate' )->getPath() . "/lang/{$lang_code}.po";
-            $translator->addResource( 'po', $resource_path, $lang_code, 'messages' );
+        foreach ($lang_codes as $lang_code) {
+            if (empty($lang_code)) {
+                continue;
+            }
+            $translator = new Translator($lang_code);
+            $translator->addLoader('po', $file_loader);
+            $resource_path = Xcart::app()->getModule('Translate')->getPath() . "/lang/{$lang_code}.po";
+            $translator->addResource('po', $resource_path, $lang_code, 'messages');
             $catalogue = $translator->getCatalogue();
 
-            foreach ( $catalogue->all()[ 'messages' ] as $msgid => $translate ) {
+
+            foreach ($catalogue->all()['messages'] as $msgid => $translate) {
                 //already translated
-                if ( $is_no_translate && htmlentities( $translate ) !== '' ) {
+                if ($is_no_translate && htmlentities($translate) !== '') {
                     continue;
                 }
 
                 //no match by text filter
                 if (
                     $text_filter
-                    && $text_filter_func( htmlentities( $msgid ), $text_filter ) === false
-                    && $text_filter_func( htmlentities( $translate ), $text_filter ) === false
+                    && $text_filter_func(htmlentities($msgid), $text_filter) === false
+                    && $text_filter_func(htmlentities($translate), $text_filter) === false
                 ) {
                     continue;
                 }
 
-                $translates[] = new TranslateModel( [
+                $translates[] = new TranslateModel([
                     'lang_code' => $lang_code,
-                    'msgctxt' => htmlentities( $msgid ),
-                    'msgid' => htmlentities( $msgid ),
-                    'msgstr' => htmlentities( $translate ),
-                    'id' => htmlentities( "$lang_code-$msgid" ),
-                ] );
+                    'msgctxt' => htmlentities($msgid),
+                    'msgid' => htmlentities($msgid),
+                    'msgstr' => htmlentities($translate),
+                    'id' => htmlentities("$lang_code-$msgid"),
+                ]);
             }
         }
+        $pagination = new Pagination($translates, [
+            'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,
+            'pageSizes' => $this->pageSizes
+        ], new ArrayDataSource());
 
-        $this->renderInternal( $this->allTemplate, [
-            'objects' => $translates,
+        $this->renderInternal($this->allTemplate, [
+            'objects' => $pagination->paginate(),
+            'pagination' => $pagination,
             'order' => $this->getOrder(),
             'search' => $this->getSearchColumns(),
             'columns' => $this->buildListColumns(),
             'canSort' => false,
             'filter_form' => $filter_form ?? null,
-        ] );
+        ]);
     }
 
     public function isAjaxCreate(): bool

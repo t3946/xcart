@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import t from "../../../i18n";
+import React from "react";
+import t from "@/i18n";
 import MiniCartInfoDto from "@modules/mini-cart/ts/types/MiniCartInfoDto";
 import { convertCartNumber } from "../../../utils/convertCartNumber";
 

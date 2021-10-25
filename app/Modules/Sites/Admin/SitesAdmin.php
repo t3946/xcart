@@ -15,7 +15,7 @@ class SitesAdmin extends Admin
 
     use AdminTrait;
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'code',
@@ -24,29 +24,29 @@ class SitesAdmin extends Admin
         ];
     }
 
-    public function getForm()
+    public function getForm(): SiteForm
     {
         return new SiteForm();
     }
 
-    public function getModel()
+    public function getModel(): SiteModel
     {
         return new SiteModel();
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Sites';
     }
 
     public function isAjaxUpdate(): bool
     {
-        return true;
+        return false;
     }
 
     public function isAjaxCreate(): bool
     {
-        return true;
+        return false;
     }
 
     public function getSuggestionColumns()
@@ -77,7 +77,7 @@ class SitesAdmin extends Admin
         return $qs;
     }
 
-    public function getListItemActions()
+    public function getListItemActions(): array
     {
         return [
             'update',

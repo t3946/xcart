@@ -6,6 +6,7 @@ namespace Modules\PBX\Admin;
 
 use DateTime;
 use Exception;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\QueryBuilder\Q\QAnd;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Contrib\Admin;
@@ -24,7 +25,7 @@ use Xcart\App\Orm\QuerySet;
 
 class PBXAdmin extends Admin
 {
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'orders',
@@ -38,8 +39,9 @@ class PBXAdmin extends Admin
         ];
     }
 
-    public function getForm()
+    public function getForm(): ?ModelForm
     {
+        return null;
     }
 
     public function getModel()

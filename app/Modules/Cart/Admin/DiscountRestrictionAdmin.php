@@ -9,17 +9,18 @@ use Modules\Cart\Forms\DiscountRestrictionForm;
 use Modules\Cart\Models\CouponKitModel;
 use Modules\Cart\Models\CouponRestrictionModel;
 use Modules\Goods\Models\CategoryModel;
+use Xcart\App\Form\ModelForm;
 
 class DiscountRestrictionAdmin extends ListViewAdmin
 {
-    public $ownerField = 'coupon';
+    public ?string $ownerField = 'coupon';
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Discount Restriction';
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return ['(string)'];
     }
@@ -48,7 +49,7 @@ class DiscountRestrictionAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm() : ModelForm
     {
         $defClass = $this->getInstance()->getFormClass();
 

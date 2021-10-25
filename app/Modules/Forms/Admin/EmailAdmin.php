@@ -2,6 +2,8 @@
 
 namespace Modules\Forms\Admin;
 
+use Xcart\App\Form\ModelForm;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Admin\Contrib\Admin;
 use Modules\Forms\Forms\EmailForm;
@@ -14,29 +16,29 @@ use Xcart\App\Pagination\Pagination;
 
 class EmailAdmin extends Admin
 {
-    public $infoTemplate = '/admin/email_info.tpl';
-    public $allTemplate = '/admin/email_all.tpl';
-    public $listRowTemplate =  'admin/distributor/form/list/_tr_email.tpl';
+    public string $infoTemplate = '/admin/email_info.tpl';
+    public string $allTemplate = '/admin/email_all.tpl';
+    public string $listRowTemplate =  'admin/distributor/form/list/_tr_email.tpl';
     public string $allList = 'admin/list/_email_list.tpl';
 
-    public static $public = false;
+    public static bool $public = false;
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['from_address', 'subject', 'date'];
     }
 
-    public function getUserColumns()
+    public function getUserColumns(): array
     {
         return [];
     }
 
-    public function getSearchColumns()
+    public function getSearchColumns(): array
     {
         return ['subject', 'snippet', 'from_address'];
     }
 
-    public function applyOrder($qs)
+    public function applyOrder($qs): QuerySet
     {
         $order = $this->getOrder();
 
@@ -56,7 +58,7 @@ class EmailAdmin extends Admin
         return $qs;
     }
 
-    public function getAvailableListColumns()
+    public function getAvailableListColumns(): array
     {
         return [
             'id' => [
@@ -91,22 +93,22 @@ class EmailAdmin extends Admin
         ];
     }
 
-    public static function getItemName()
+    public static function getItemName(): string
     {
         return 'Email';
     }
 
-    public function getForm()
+    public function getForm(): ModelForm
     {
         return new EmailForm();
     }
 
-    public function getModel()
+    public function getModel(): EmailModel
     {
         return new EmailModel();
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Inbox/Sorting dashboard';
     }
@@ -129,12 +131,12 @@ class EmailAdmin extends Admin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getListItemActions()
+    public function getListItemActions(): array
     {
         return [];
     }
 
-    public function getListGroupActions()
+    public function getListGroupActions(): array
     {
         return [];
     }

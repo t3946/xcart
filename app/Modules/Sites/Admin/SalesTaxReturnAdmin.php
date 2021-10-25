@@ -9,8 +9,8 @@ use Modules\Sites\Forms\Corporates\SalesTaxReturnForm;
 
 class SalesTaxReturnAdmin extends TaxReturnAdmin
 {
-    public static $public = false;
-    public function getForm()
+    public static bool $public = false;
+    public function getForm(): SalesTaxReturnForm
     {
         return new SalesTaxReturnForm;
     }

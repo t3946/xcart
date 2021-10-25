@@ -18,28 +18,28 @@ use Xcart\App\Orm\QuerySet;
 class TemplateCategoryAdmin extends NestedAdmin
 {
 
-    public static $public = false;
+    public static bool $public = false;
 
     public ?string $sort = 'pos';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'name',
         ];
     }
 
-    public function getForm()
+    public function getForm(): TemplateCategoryForm
     {
         return new TemplateCategoryForm();
     }
 
-    public function getModel()
+    public function getModel(): TemplateCategoryModel
     {
         return new TemplateCategoryModel();
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Template categories';
     }
@@ -49,7 +49,7 @@ class TemplateCategoryAdmin extends NestedAdmin
         return array_merge([['General settings', '/admin/configuration.php']], parent::getBreadcrumbs());
     }
 
-    public function getListItemActions()
+    public function getListItemActions(): array
     {
         return [
             'update',

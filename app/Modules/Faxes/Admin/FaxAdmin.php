@@ -11,7 +11,7 @@ use Modules\Faxes\Models\FaxModel;
 class FaxAdmin extends Admin
 {
 
-    public function getForm()
+    public function getForm() : FaxForm
     {
         return new FaxForm;
     }

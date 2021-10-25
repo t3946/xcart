@@ -16,11 +16,11 @@ class DxContactsAdmin extends Admin
 {
     public DistributorModel $dxModel;
 
-    public $allTemplate = 'admin/distributor/dx_3.tpl';
-    public $listItemActionsTemplate = 'admin/distributor/form/list/_item_actions.tpl';
+    public string $allTemplate = 'admin/distributor/dx_3.tpl';
+    public string $listItemActionsTemplate = 'admin/distributor/form/list/_item_actions.tpl';
     public ?string $sort = 'position';
 
-    public function getForm()
+    public function getForm() : DistributorContactsForm
     {
         return new DistributorContactsForm();
     }
@@ -38,7 +38,7 @@ class DxContactsAdmin extends Admin
         return parent::getQuerySet();
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'contact_name',

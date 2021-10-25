@@ -19,12 +19,12 @@ use Xcart\App\Orm\Model;
 
 class ProductAdmin extends Admin
 {
-    public $listItemActionsTemplate = 'admin/list/custom_item_actions.tpl';
+    public string $listItemActionsTemplate = 'admin/list/custom_item_actions.tpl';
 
     /**
      * @return ModelForm
      */
-    public function getForm()
+    public function getForm() : ModelForm
     {
         return new ProductAdminForm();
     }
@@ -34,7 +34,7 @@ class ProductAdmin extends Admin
 		return new ProductModel();
 	}
 
-	public function getListColumns()
+	public function getListColumns() : array
 	{
 		return [
             'image',
@@ -45,7 +45,7 @@ class ProductAdmin extends Admin
 		];
 	}
 
-    public function getSuggestionColumns()
+    public function getSuggestionColumns(): array
     {
         return [
             'brand' => [
@@ -78,8 +78,8 @@ class ProductAdmin extends Admin
         ];
     }
 
-	public static function getName()
-	{
+	public static function getName(): string
+    {
 		return 'Products';
 	}
 

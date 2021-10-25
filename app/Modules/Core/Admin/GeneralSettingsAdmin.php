@@ -1,43 +1,44 @@
 <?php
+
 namespace Modules\Core\Admin;
+
 use Modules\Admin\Contrib\Admin;
 use Modules\Core\Models\GlobalConfigModel;
-use Modules\Forms\Forms\TemplateCategoryForm;
-use Modules\Forms\Models\TemplateCategoryModel;
+use Xcart\App\Form\ModelForm;
 
 class GeneralSettingsAdmin extends Admin
 {
-	public $allTemplate = 'admin/general_settings.tpl';
+    public string $allTemplate = 'admin/general_settings.tpl';
 
-	public function getForm()
-	{
-		return null;
-	}
+    public function getForm(): ?ModelForm
+    {
+        return null;
+    }
 
-	public function getModel()
-	{
-		return new GlobalConfigModel();
-	}
+    public function getModel()
+    {
+        return new GlobalConfigModel();
+    }
 
-	public static function getName()
-	{
-		return 'General Settings';
-	}
+    public static function getName()
+    {
+        return 'General Settings';
+    }
 
-	public function getListItemActions()
-	{
-		return [
-			'update',
-		];
-	}
+    public function getListItemActions()
+    {
+        return [
+            'update',
+        ];
+    }
 
-	public function isAjaxUpdate(): bool
-	{
-		return true;
-	}
+    public function isAjaxUpdate(): bool
+    {
+        return true;
+    }
 
-	public function isAjaxCreate(): bool
-	{
-		return true;
-	}
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
 }

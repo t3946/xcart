@@ -17,7 +17,7 @@ abstract class Middleware implements IMiddleware
     private $requestIsWeb = null;
 
     /**
-     * @param \Xcart\App\Request\Request|\Xcart\App\Request\HttpRequest $request
+     * @param Request|HttpRequest $request
      */
     public function processRequest(Request $request)
     {
@@ -27,27 +27,26 @@ abstract class Middleware implements IMiddleware
     }
 
     /**
-     * @param \Xcart\App\Request\Request $request
+     * @param Request $request
      */
     public function processCliRequest($request) {}
 
     /**
-     * @param \Xcart\App\Request\HttpRequest $request
+     * @param HttpRequest $request
      */
     public function processHttpRequest(HttpRequest $request) {}
 
     /**
      * Event owner RenderTrait
-     * @param \Xcart\App\Request\Request $request
+     * @param Request $request
      * @param $output string
-     * @return string
      */
-    public function processView(Request $request, string $output):string {}
+    public function processView(Request $request, string $output) {}
 
     public function processException(Exception $exception) {}
 
     /**
-     * @param \Xcart\App\Request\Request|\Xcart\App\Request\HttpRequest $request
+     * @param Request|HttpRequest $request
      */
     public function processResponse(Request $request)
     {
@@ -58,12 +57,12 @@ abstract class Middleware implements IMiddleware
 
 
     /**
-     * @param \Xcart\App\Request\Request $request
+     * @param Request $request
      */
     public function processCliResponse(CliRequest $request) {}
 
     /**
-     * @param \Xcart\App\Request\HttpRequest $request
+     * @param HttpRequest $request
      */
     public function processHttpResponse(HttpRequest $request) {}
 
@@ -78,7 +77,7 @@ abstract class Middleware implements IMiddleware
     }
 
     /**
-     * @param \Xcart\App\Request\Request $request
+     * @param Request $request
      */
     public function processEnd($request) {}
 

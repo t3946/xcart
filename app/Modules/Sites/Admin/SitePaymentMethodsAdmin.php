@@ -6,6 +6,7 @@ use Modules\Admin\Contrib\Admin;
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Sites\Forms\SitePaymentMethodForm;
 use Modules\Sites\Models\PaymentMethodModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Model;
 
 class SitePaymentMethodsAdmin extends Admin
@@ -14,7 +15,7 @@ class SitePaymentMethodsAdmin extends Admin
 
     use AdminTrait;
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return [
             'name',
@@ -23,12 +24,12 @@ class SitePaymentMethodsAdmin extends Admin
         ];
     }
 
-    public function getForm()
+    public function getForm(): SitePaymentMethodForm
     {
         return new SitePaymentMethodForm();
     }
 
-    public function getModel()
+    public function getModel(): PaymentMethodModel
     {
         return new PaymentMethodModel();
     }
@@ -38,7 +39,7 @@ class SitePaymentMethodsAdmin extends Admin
         return 'Payment methods';
     }
 
-    public function getItemProperty( Model $item, $property )
+    public function getItemProperty(Model $item, $property)
     {
         if ($property === 'logo') {
             $src = $item->getAttribute('logo');
@@ -46,7 +47,7 @@ class SitePaymentMethodsAdmin extends Admin
             return "<img src=\"/$src\" alt=\"$title logo\" title=\"$title\" height=\"60\" />";
         }
 
-        return parent::getItemProperty($item, $property );
+        return parent::getItemProperty($item, $property);
     }
 
     public function isAjaxUpdate(): bool

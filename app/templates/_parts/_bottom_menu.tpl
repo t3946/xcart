@@ -6,7 +6,7 @@
     <div class="show-for-medium row">
         <div class="column small-12">
             <ul class="no-bullet menu-list">
-                {get_menu code='pages-menu'}
+                {get_menu code='Bottom'}
             </ul>
         </div>
     </div>

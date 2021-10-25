@@ -9,17 +9,16 @@ use Modules\Goods\Forms\BrandForm;
 use Xcart\App\Form\Form;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
-use Xcart\App\Traits\Configurator;
 
 class BrandAdmin extends Admin
 {
     public ?string $order = 'brand';
-    public function getForm()
+    public function getForm(): BrandForm
     {
         return new BrandForm();
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'brand',

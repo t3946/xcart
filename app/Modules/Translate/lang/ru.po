@@ -8,14 +8,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2019-08-13T07:31:19-05:00\n"
-"PO-Revision-Date: 2019-11-11 17:59+0300\n"
+"PO-Revision-Date: 2021-10-21 09:36+0300\n"
 "Language: ru_RU\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
 msgctxt "Delete"
 msgid "Delete"
 msgstr "Удалить"
+
+msgctxt "Cart name"
+msgid "Cart name"
+msgstr "Test"
 
 msgctxt "Clean"
 msgid "Clean"
@@ -115,7 +119,7 @@ msgstr "Удалить"
 
 msgctxt "SKU"
 msgid "SKU"
-msgstr "Артикул"
+msgstr "Код товара"
 
 msgctxt "Order Confirmation"
 msgid "Order Confirmation"
@@ -457,6 +461,18 @@ msgctxt "24 hours a day, 7 days a week"
 msgid "24 hours a day, 7 days a week"
 msgstr "24 часа в день, 7 дней в неделю"
 
+msgctxt "Telephone Customer Service"
+msgid "Telephone Customer Service"
+msgstr "Служба поддержки клиентов"
+
+msgctxt "24 hours a day"
+msgid "24 hours a day"
+msgstr "24 часа в день"
+
+msgctxt "7 days a week"
+msgid "7 days a week"
+msgstr "7 дней в неделю"
+
 msgctxt "Email Support"
 msgid "Email Support"
 msgstr "Email поддержки"
@@ -667,7 +683,7 @@ msgstr "Введите свой email адрес"
 
 msgctxt "Department"
 msgid "Department"
-msgstr "Отдел"
+msgstr "Департамент"
 
 msgctxt "Your message will be routed to this department"
 msgid "Your message will be routed to this department"
@@ -675,7 +691,7 @@ msgstr "Ваше сообщение будет направлено в выбр�
 
 msgctxt "Product SKU or your order #"
 msgid "Product SKU or your order #"
-msgstr "Артикул товара или № заказа"
+msgstr "Код товара или № заказа"
 
 msgctxt "SKU of product you are interested in or your order #"
 msgid "SKU of product you are interested in or your order #"
@@ -871,7 +887,7 @@ msgstr ""
 
 msgctxt "optional"
 msgid "optional"
-msgstr "не обязательно"
+msgstr "по желанию"
 
 msgctxt "Email address is invalid"
 msgid "Email address is invalid"
@@ -915,7 +931,7 @@ msgstr "О нас"
 
 msgctxt "Our Price Guarantee"
 msgid "Our Price Guarantee"
-msgstr "Гарантия цены"
+msgstr "Гарантия низких цены"
 
 msgctxt "Sales Taxes"
 msgid "Sales Taxes"
@@ -923,7 +939,7 @@ msgstr "Налог с продаж"
 
 msgctxt "Safe & Secure Shopping"
 msgid "Safe & Secure Shopping"
-msgstr ""
+msgstr "Надёжные и безопасные покупки"
 
 msgctxt "Bill Me Later"
 msgid "Bill Me Later"
@@ -943,7 +959,7 @@ msgstr "Комьюнити"
 
 msgctxt "Backorder Policy"
 msgid "Backorder Policy"
-msgstr ""
+msgstr "Отсутствие товара на складе"
 
 msgctxt "Return Policy"
 msgid "Return Policy"
@@ -1115,7 +1131,7 @@ msgstr "ЦЕНА"
 
 msgctxt "Out Of Stock"
 msgid "Out Of Stock"
-msgstr "Нет в наличии"
+msgstr "Нет на складе"
 
 msgctxt "FIND SIMILAR PRODUCTS"
 msgid "FIND SIMILAR PRODUCTS"
@@ -1249,9 +1265,9 @@ msgstr[2] ""
 msgctxt "Lead time for this product is %count% business day"
 msgid "Lead time for this product is %count% business day"
 msgid_plural "Lead time for this product is %count% business days"
-msgstr[0] "Время обработки заказа %count% рабочий день"
-msgstr[1] "Время обработки заказа %count% рабочих дня"
-msgstr[2] "Время обработки заказа %count% рабочих дней"
+msgstr[0] "Срок изготовления данного изделия составляет %count% рабочий день"
+msgstr[1] "Срок изготовления данного изделия составляет %count% рабочих дня"
+msgstr[2] "Срок изготовления данного изделия составляет %count% рабочих дней"
 
 msgctxt "Lead time for this product is"
 msgid "Lead time for this product is"
@@ -1263,7 +1279,7 @@ msgstr "рабочих дней"
 
 msgctxt "departments"
 msgid "departments"
-msgstr ""
+msgstr "Департамент"
 
 msgctxt "Contact us"
 msgid "Contact us"
@@ -1452,6 +1468,10 @@ msgstr "К сожалению ничего не найдено, пожалуйс
 msgctxt "You have already subscribed"
 msgid "You have already subscribed"
 msgstr "Вы уже подписались на нашу рассылку"
+
+msgctxt "Your recently viewed items"
+msgid "Your recently viewed items"
+msgstr "Вы недавно смотрели"
 
 msgctxt "Confirmation email was sent. Please check your inbox."
 msgid "Confirmation email was sent. Please check your inbox."

@@ -137,8 +137,16 @@ class Page extends TreeModel
                 'class' => ForeignField::class,
                 'field' => 'lang_id',
                 'modelClass' => LanguageModel::class,
+                'link' => ['lang_id' => 'lang_id'],
                 'label' => 'Language'
-            ]
+            ],
+            'parent' => [
+                'field' => 'parent_id',
+                'class' => ForeignField::class,
+                'modelClass' => __CLASS__,
+                'link' => ['parent_id' => 'id'],
+                'null' => true,
+            ],
         ]);
     }
 

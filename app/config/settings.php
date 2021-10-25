@@ -166,12 +166,15 @@ return array_replace_recursive([
                'google' => [
                    'class' => LocalGoogleAdapter::class,
                    'service' =>  (static function () {
-                       $client = new Google_Client();
-                       $client->setClientId('476035507554-q89jo4gbnjjocuc7hg0ds79mooi0r23b.apps.googleusercontent.com');
-                       $client->setClientSecret('wuJVAJpW5MGYL61YNCDIZjAl');
-                       $client->refreshToken('1/qc43GNFqjXRLwCYUxgN5a3NE7pkmKyCIFb59h5hPuGU');
-                       $client->setApplicationName('Test');
-                       return new Google_Service_Drive($client);
+                       try {
+                           $client = new Google_Client();
+                           $client->setClientId('476035507554-q89jo4gbnjjocuc7hg0ds79mooi0r23b.apps.googleusercontent.com');
+                           $client->setClientSecret('wuJVAJpW5MGYL61YNCDIZjAl');
+                           $client->refreshToken('1/qc43GNFqjXRLwCYUxgN5a3NE7pkmKyCIFb59h5hPuGU');
+                           $client->setApplicationName('Google Drive');
+                           return new Google_Service_Drive($client);
+                       } catch (\Throwable $exception) {
+                       }
                    })(),
                    'root_folder' => '1GnC0ylYOOxticsnJg_XOtDZShwDTYgak'
                ]

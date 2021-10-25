@@ -5,7 +5,6 @@ namespace Modules\Order\Controllers\Api;
 
 
 use Modules\Core\Models\FraudCheckColumnModel;
-use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\FraudCheckFAHelper;

@@ -133,7 +133,7 @@ class TreeManager extends Manager
      *
      * @return \Xcart\App\Orm\TreeManager
      */
-    public function asTree($key = 'items')
+    public function asTree(string $key = 'items')
     {
         $this->getQuerySet()->asTree($key);
 

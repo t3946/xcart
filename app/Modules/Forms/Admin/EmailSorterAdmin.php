@@ -15,7 +15,7 @@ use Xcart\App\Orm\Model;
 class EmailSorterAdmin extends Admin
 {
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['type', 'filter_field', 'cond', 'value', 'entity', 'target', 'related_value'];
     }
@@ -77,14 +77,14 @@ class EmailSorterAdmin extends Admin
                 $class = $item->getField('entity')->getValue();
                 /** @var Model $model */
                 $model = new $class;
-                return (string) $model::objects()->get([$model::getPrimaryKeyName() => $id]);
+                return (string)$model::objects()->get([$model::getPrimaryKeyName() => $id]);
             }
         }
 
         return parent::getItemProperty($item, $property);
     }
 
-    public function getForm()
+    public function getForm(): EmailSorterForm
     {
         return new EmailSorterForm();
     }

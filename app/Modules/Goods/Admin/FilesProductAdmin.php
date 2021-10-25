@@ -14,7 +14,7 @@ use Xcart\App\Orm\Model;
 
 class FilesProductAdmin extends ListViewAdmin
 {
-    public $ownerField = 'productid';
+    public ?string $ownerField = 'productid';
 
     public function getSuggestionColumns()
     {
@@ -36,7 +36,7 @@ class FilesProductAdmin extends ListViewAdmin
             ]
         ];
     }
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'description',
@@ -60,7 +60,7 @@ class FilesProductAdmin extends ListViewAdmin
     {
         return new ProductFileModel();
     }
-    public function getForm()
+    public function getForm() : FileProductForm
     {
         return new FileProductForm();
     }

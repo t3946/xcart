@@ -10,15 +10,15 @@ use Modules\Sites\Models\MerchantAccountModel;
 
 class MerchantAccountAdmin extends ListViewAdmin
 {
-    public static $public = false;
-    public $ownerField = 'corporate';
+    public static bool $public = false;
+    public ?string $ownerField = 'corporate';
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return ['issuer', 'number'];
     }
 
-    public function getAvailableListColumns()
+    public function getAvailableListColumns(): array
     {
         return [
             'issuer' => [
@@ -33,7 +33,7 @@ class MerchantAccountAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm() : MerchantAccountForm
     {
         return new MerchantAccountForm;
     }

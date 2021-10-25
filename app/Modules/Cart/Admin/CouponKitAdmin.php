@@ -9,7 +9,7 @@ use Xcart\App\Main\Xcart;
 
 class CouponKitAdmin extends Admin
 {
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'code',
@@ -17,22 +17,22 @@ class CouponKitAdmin extends Admin
         ];
     }
 
-    public function getExcludedColumns()
+    public function getExcludedColumns() : array
     {
         return ['orders'];
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Coupon KIT';
     }
 
-    public function getForm()
+    public function getForm(): CouponKitForm
     {
         return new CouponKitForm();
     }
 
-    public function getModel()
+    public function getModel(): CouponKitModel
     {
         return new CouponKitModel();
     }

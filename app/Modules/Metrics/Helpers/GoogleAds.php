@@ -1,11 +1,11 @@
 <?php
+
 namespace Modules\Metrics\Helpers;
+
 use Google\Auth\CredentialsLoader;
 use Google\Auth\OAuth2;
-use Psr\Http\Message\ServerRequestInterface;
-use React\EventLoop\Factory;
-use React\Http\Message\Response;
-use React\Http\Server;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
 
 class GoogleAds
 {
@@ -24,25 +24,123 @@ class GoogleAds
      */
     private const OAUTH2_CALLBACK_PATH = '/oauth2callback';
 
-    public function __construct()
+    public const API_VERSION = 8;
+    public string $customer_id;
+    public string $manager_id;
+    private string $refresh_token = '1//0cj2_yHjt34KVCgYIARAAGAwSNwF-L9IrY6Fx8AN3mkHGW4jS1RCSQJC1uo3Rrf4FngePP2Xx2kD8lGI2NDQ-rKlBSU9tUQkME8Y';
+    private string $developer_token = 'wtOWB16hC0UlGT2NQcge4w';
+    private string $client_id = '193950091514-p4980nf62bu5phb6rsiktj1utn5dimoj.apps.googleusercontent.com';
+    private string $client_secret = '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';
+    private Client $client;
+    private string $authorization_token;
+
+    public function __construct(string $customer_id, string $manager_id)
     {
-        if (!class_exists(Server::class)) {
-            echo 'Please install "react/http" package to be able to run this example';
-            exit(1);
+        $this->customer_id = $customer_id;
+        $this->manager_id = $manager_id;
+        $this->client = new Client(['verify' => false, 'timeout' => 30]);
+        $this->getAuthorizationToken();
+    }
+
+    public function getAllCampaigns()
+    {
+        $query = "SELECT campaign.name, campaign_budget.amount_micros, campaign.status, campaign.optimization_score, " .
+            "campaign.advertising_channel_type, metrics.clicks, metrics.impressions, metrics.ctr, metrics.average_cpc, " .
+            "metrics.cost_micros, campaign.bidding_strategy_type FROM campaign";
+        $result_query = $this->querySearch($query);
+    }
+
+    public function getBudgetIdByCampaignId(int $campaign_id)
+    {
+        $query = "SELECT campaign_budget.id FROM campaign WHERE campaign.id = $campaign_id";
+        $campaign_list = $this->querySearch($query);
+        foreach ($campaign_list as $campaign) {
+            if (!empty($campaign['campaignBudget'])) {
+                return (int)$campaign['campaignBudget']['id'];
+            }
         }
     }
 
-    public function generateRefreshToken()
+    private function querySearch(string $query): array
+    {
+        $api_version = self::API_VERSION;
+        $header = $this->getHeaders();
+        $result = $this->query("https://googleads.googleapis.com/v$api_version/customers/{$this->customer_id}/googleAds:search", [
+            'query' => ['query' => $query],
+            'headers' => $header
+        ]);
+        return $result['results'] ?? [];
+    }
+
+    private function query(string $url, array $params): array
+    {
+        if ($response = $this->client->request('POST', $url, $params)) {
+            if ($result = json_decode($response->getBody(), true)) {
+                return $result;
+            }
+        }
+        return [];
+    }
+
+    public function updateCampaignBudgetById(int $id_campaign, array $field_update)
+    {
+        $api_version = self::API_VERSION;
+        $header = $this->getHeaders();
+        $url = "https://googleads.googleapis.com/v{$api_version}/customers/{$this->customer_id}/campaignBudgets:mutate";
+
+        $fields = array_keys($field_update);
+        $result = $this->query($url, [
+            "body" => json_encode([
+                'operations' => [
+                    [
+                        'update' => array_merge([
+                            'resourceName' => "customers/$this->customer_id/campaignBudgets/$id_campaign",
+                        ], $field_update),
+                        'updateMask' => implode(',', $fields),
+                    ]
+                ]
+            ], JSON_UNESCAPED_SLASHES),
+            'headers' => $header
+        ]);
+
+    }
+
+    private function getHeaders(): array
+    {
+        return [
+            "Content-Type" => "application/json",
+            "developer-token" => $this->developer_token,
+            "login-customer-id" => $this->manager_id,
+            "Authorization" => "Bearer $this->authorization_token"
+        ];
+    }
+
+    private function getAuthorizationToken()
+    {
+        if ($response = $this->client->request("POST", "https://www.googleapis.com/oauth2/v3/token", [
+            "query" => [
+                "client_id" => $this->client_id,
+                "client_secret" => $this->client_secret,
+                "refresh_token" => $this->refresh_token,
+                "grant_type" => "refresh_token"
+            ]
+        ])) {
+            $data = json_decode($response->getBody(), true);
+            if (!empty($data['access_token'])) {
+                $this->authorization_token = $data['access_token'];
+            }
+        }
+    }
+
+    public static function generateRefreshToken()
     {
         try {
-            $loop = Factory::create();
-            // Creates a socket for localhost with random port.
-            $socket = new \React\Socket\Server('https://www.artistsupplysource.com', $loop);
-
             $clientId = trim("193950091514-p4980nf62bu5phb6rsiktj1utn5dimoj.apps.googleusercontent.com");
             $clientSecret = trim("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");
 
-            $redirectUrl = str_replace('tcp:', 'http:', $socket->getAddress());
+            /*            $redirectUrl = str_replace('tcp:', 'http:', str_replace('127.0.0.1', 'localhost', $socket->getAddress()));*/
+            $redirectUrl = 'http://localhost';
+            /*            $redirectUrl = str_replace('tcp:', 'http:', $socket->getAddress());*/
             $oauth2 = new OAuth2(
                 [
                     'clientId' => $clientId,
@@ -51,87 +149,16 @@ class GoogleAds
                     'redirectUri' => $redirectUrl . self::OAUTH2_CALLBACK_PATH,
                     'tokenCredentialUri' => CredentialsLoader::TOKEN_CREDENTIAL_URI,
                     'scope' => self::SCOPE,
-                    // Create a 'state' token to prevent request forgery. See
-                    // https://developers.google.com/identity/protocols/OpenIDConnect#createxsrftoken
-                    // for details.
                     'state' => sha1(openssl_random_pseudo_bytes(1024))
                 ]
             );
 
-            $authToken = null;
-
-            $server = new Server(
-                $loop,
-                function (ServerRequestInterface $request) use ($oauth2, $loop, &$authToken) {
-                    // Stops the server after tokens are retrieved.
-                    if (!is_null($authToken)) {
-                        $loop->stop();
-                    }
-
-                    // Check if the requested path is the one set as the redirect URI.
-                    if (
-                        $request->getUri()->getPath()
-                        !== parse_url($oauth2->getRedirectUri(), PHP_URL_PATH)
-                    ) {
-                        return new Response(
-                            404,
-                            ['Content-Type' => 'text/plain'],
-                            'Page not found'
-                        );
-                    }
-
-                    // Exit if the state is invalid to prevent request forgery.
-                    $state = $request->getQueryParams()['state'];
-                    if (empty($state) || ($state !== $oauth2->getState())) {
-                        throw new UnexpectedValueException(
-                            "The state is empty or doesn't match expected one." . PHP_EOL
-                        );
-                    };
-
-                    // Set the authorization code and fetch refresh and access tokens.
-                    $code = $request->getQueryParams()['code'];
-                    $oauth2->setCode($code);
-                    $authToken = $oauth2->fetchAuthToken();
-
-                    $refreshToken = $authToken['refresh_token'];
-                    print 'Your refresh token is: ' . $refreshToken . PHP_EOL;
-
-                    $propertiesToCopy = '[GOOGLE_ADS]' . PHP_EOL;
-                    $propertiesToCopy .= 'developerToken = "INSERT_DEVELOPER_TOKEN_HERE"' . PHP_EOL;
-                    $propertiesToCopy .= <<<EOD
-; Required for manager accounts only: Specify the login customer ID used to authenticate API calls.
-; This will be the customer ID of the authenticated manager account. You can also specify this later
-; in code if your application uses multiple manager account + OAuth pairs.
-; loginCustomerId = "INSERT_LOGIN_CUSTOMER_ID_HERE"
-EOD;
-                    $propertiesToCopy .= PHP_EOL . '[OAUTH2]' . PHP_EOL;
-                    $propertiesToCopy .= "clientId = \"{$oauth2->getClientId()}\"" . PHP_EOL;
-                    $propertiesToCopy .= "clientSecret = \"{$oauth2->getClientSecret()}\"" . PHP_EOL;
-                    $propertiesToCopy .= "refreshToken = \"$refreshToken\"" . PHP_EOL;
-
-                    print 'Copy the text below into a file named "google_ads_php.ini" in your home '
-                        . 'directory, and replace "INSERT_DEVELOPER_TOKEN_HERE" with your developer '
-                        . 'token:' . PHP_EOL;
-                    print PHP_EOL . $propertiesToCopy;
-
-                    return new Response(
-                        200,
-                        ['Content-Type' => 'text/plain'],
-                        'Your refresh token has been fetched. Check the console output for '
-                        . 'further instructions.'
-                    );
-                }
-            );
-
-            $server->listen($socket);
             printf(
                 'Log into the Google account you use for Google Ads and visit the following URL '
                 . 'in your web browser: %1$s%2$s%1$s%1$s',
                 PHP_EOL,
                 $oauth2->buildFullAuthorizationUri(['access_type' => 'offline'])
             );
-
-            $loop->run();
         } catch (\Throwable $exception) {
             printf($exception->getMessage());
         }

@@ -12,7 +12,7 @@ class OrderStatusAdmin extends Admin
 {
     public ?string $sort = 'orderby';
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'type',
@@ -22,7 +22,7 @@ class OrderStatusAdmin extends Admin
         ];
     }
 
-    public function getForm()
+    public function getForm() : OrderStatusForm
     {
         return new OrderStatusForm();
     }
@@ -75,7 +75,7 @@ class OrderStatusAdmin extends Admin
         return parent::getCanSort($qs);
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Order statuses';
     }

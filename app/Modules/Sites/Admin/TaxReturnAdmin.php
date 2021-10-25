@@ -10,15 +10,15 @@ use Modules\Sites\Models\TaxReturnModel;
 
 class TaxReturnAdmin extends ListViewAdmin
 {
-    public static $public = false;
-    public $ownerField = 'corporate';
+    public static bool $public = false;
+    public ?string $ownerField = 'corporate';
 
     public function getUserColumns()
     {
         return [];
     }
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['from_date', 'to_date', 'status'];
     }
@@ -42,7 +42,7 @@ class TaxReturnAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm(): TaxReturnForm
     {
         return new TaxReturnForm;
     }

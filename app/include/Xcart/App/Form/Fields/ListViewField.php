@@ -74,7 +74,7 @@ class ListViewField extends Field
         if ($field instanceof RelatedField) {
             /** @var  RelatedField $field */
             $manager = $field->getManager();
-            if (!$model->pk) {
+            if (is_null($model->pk)) {
                 return [];
             }
             return $manager->order($this->defaultOrder)->all();

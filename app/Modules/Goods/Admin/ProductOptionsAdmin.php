@@ -9,14 +9,13 @@ use Modules\Goods\Models\OptionNewModel;
 use Modules\Goods\Models\ProductOptionModel;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
-use Xcart\App\Orm\QuerySet;
 
 class ProductOptionsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'product_id';
+    public ?string $ownerField = 'product_id';
     public ?string $sort = 'position';
 
-    public function getExcludedColumns()
+    public function getExcludedColumns() : array
     {
         return ['product', 'variants'];
     }
@@ -24,7 +23,7 @@ class ProductOptionsAdmin extends ListViewAdmin
     /**
      * @return ModelForm
      */
-    public function getForm()
+    public function getForm() : ProductOptionsAdminForm
     {
         return new ProductOptionsAdminForm();
     }
@@ -34,9 +33,9 @@ class ProductOptionsAdmin extends ListViewAdmin
         return new ProductOptionModel();
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
-        return ['(string)', 'var'];
+        return ['(string)'];
     }
 
     public static function getItemName()

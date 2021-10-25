@@ -11,18 +11,15 @@ use Xcart\App\Orm\QuerySet;
 
 class ProductOptionVariantsAdmin extends ListViewAdmin
 {
-    public $ownerField = 'product_option_id';
+    public ?string $ownerField = 'product_option_id';
     public ?string $sort = 'position';
 
     public function getModel()
     {
         return new ProductOptionVariantModel();
     }
-
-    /**
-     * @return ModelForm
-     */
-    public function getForm()
+    
+    public function getForm() : ProductOptionVariantsAdminForm
     {
         return new ProductOptionVariantsAdminForm();
     }
@@ -32,7 +29,7 @@ class ProductOptionVariantsAdmin extends ListViewAdmin
         return 'Variant';
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return ['(string)'];
     }

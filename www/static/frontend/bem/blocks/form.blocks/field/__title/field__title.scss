@@ -1,6 +1,9 @@
 .field__title {
   margin: 0 0 5px 0;
 }
+.contact-form-input {
+  height: 100% !important;
+}
 
 @include breakpoint(md up) {
   .field__title {

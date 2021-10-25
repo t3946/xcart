@@ -25,12 +25,15 @@ use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Traits\SlugifyTrait;
 
 /**
  * @property mixed brandid
  * @property ?string brand
+ * @property string avail
+ * @property ProductModel[]|Manager products_active
  */
 class BrandModel extends Model
 {
@@ -179,6 +182,12 @@ class BrandModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['brandid' => 'brandid']
+            ],
+            'products_active' => [
+                'class' => HasManyField::class,
+                'modelClass' => ProductModel::class,
+                'link' => ['brandid' => 'brandid'],
+                'extra' => ['forsale' => 'Y']
             ],
             'image' => [
                 'class' => ImageField::class,

@@ -13,16 +13,18 @@ class FilterProductAdmin extends ListViewAdmin
 {
     public $ownerModel = ProductModel::class;
     public string $owner_model_field = 'filter_values';
-    public $ownerField = 'fv_id';
+    public ?string $ownerField = 'fv_id';
     public string $related_field = 'fv_id';
     public string $through_field = 'productid';
-    public function getForm()
+
+    public function getForm() : ProductFilterValueForm
     {
         $form = new ProductFilterValueForm();
         $form->admin = $this;
         return $form;
     }
-    public function getListColumns()
+
+    public function getListColumns(): array
     {
         return [
             'filter',
@@ -34,6 +36,7 @@ class FilterProductAdmin extends ListViewAdmin
     {
         return new FilterValueModel();
     }
+
     public function getItemProperty(Model $item, $property)
     {
         switch ($property) {
@@ -42,6 +45,7 @@ class FilterProductAdmin extends ListViewAdmin
         }
         return parent::getItemProperty($item, $property);
     }
+
     public function getUpdateUrl($pk = null): string
     {
         return Xcart::app()->router->url('admin:update_owned', [

@@ -191,7 +191,6 @@ export default class AddToCartButton extends Component {
 
   render() {
     this.computeClasses();
-
     return (
       <div className={this.classes.mainWrapper} ref={this.mainWrapper}>
         <a

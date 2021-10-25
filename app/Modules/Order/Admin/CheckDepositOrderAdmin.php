@@ -6,20 +6,22 @@ namespace Modules\Order\Admin;
 
 use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Order\Models\CheckDepositedOrderModel;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
 
 class CheckDepositOrderAdmin extends ListViewAdmin
 {
-    public $ownerField = 'order';
-    public static $public = false;
+    public ?string $ownerField = 'order';
+    public static bool $public = false;
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['order', 'check_number', 'amount', 'notes'];
     }
 
-    public function getForm()
+    public function getForm(): ?ModelForm
     {
+        return null;
     }
 
     public function getModel()

@@ -14,15 +14,15 @@ use Xcart\App\Orm\Model;
 
 class ShareHolderAdmin extends ListViewAdmin
 {
-    public static $public = false;
-    public $ownerField = 'corporate';
+    public static bool $public = false;
+    public ?string $ownerField = 'corporate';
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['name', 'shares', 'percent'];
     }
 
-    public function getAvailableListColumns()
+    public function getAvailableListColumns(): array
     {
         return [
             'name' => [
@@ -43,17 +43,17 @@ class ShareHolderAdmin extends ListViewAdmin
         ];
     }
 
-    public function getForm()
+    public function getForm(): ShareholderForm
     {
         return new ShareholderForm;
     }
 
-    public function getModel()
+    public function getModel(): ShareHolderModel
     {
         return new ShareHolderModel;
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Shareholders';
     }

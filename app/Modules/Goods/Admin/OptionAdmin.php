@@ -14,12 +14,12 @@ class OptionAdmin extends Admin
     /**
      * @return ModelForm
      */
-    public function getForm()
+    public function getForm() : ModelForm
     {
         return new OptionAdminForm();
     }
 
-    public function getModel()
+    public function getModel(): OptionNewModel
     {
         return new OptionNewModel();
     }
@@ -50,7 +50,7 @@ class OptionAdmin extends Admin
         ];
     }
 
-    public function getExcludedColumns()
+    public function getExcludedColumns() : array
     {
         return ['variants', '(string)'];
     }
@@ -65,7 +65,7 @@ class OptionAdmin extends Admin
 
     }
 
-    public function getListColumns()
+    public function getListColumns(): array
     {
         return ['id', 'title', 'values'];
     }

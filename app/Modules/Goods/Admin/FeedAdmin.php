@@ -8,27 +8,26 @@ use DateTime;
 use Modules\Admin\Contrib\Admin;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Goods\Forms\FeedForm;
-use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
-use Xcart\App\Main\Xcart;
+use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
 
 class FeedAdmin extends Admin
 {
-    public $listRowTemplate = '/feeds/_tr_feed.tpl';
+    public string $listRowTemplate = '/feeds/_tr_feed.tpl';
     public string $allList = '/feeds/_list.tpl';
 
-    public function getForm()
+    public function getForm(): ?ModelForm
     {
         return new FeedForm();
     }
 
-    public function getModel()
+    public function getModel(): SupplierFeedModel
     {
         return new SupplierFeedModel;
     }
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'feed_id',

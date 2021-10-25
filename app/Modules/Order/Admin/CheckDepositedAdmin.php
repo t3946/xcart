@@ -11,17 +11,17 @@ use Xcart\App\Orm\Model;
 
 class CheckDepositedAdmin extends Admin
 {
-    public $createTemplate = 'deposited/_check_create.tpl';
-    public $updateTemplate = 'deposited/_check_update.tpl';
+    public string $createTemplate = 'deposited/_check_create.tpl';
+    public string $updateTemplate = 'deposited/_check_update.tpl';
 
-    public static $public = false;
+    public static bool $public = false;
 
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return ['check_date', 'currency_model', 'total_deposit_amount', 'status'];
     }
 
-    public function getForm()
+    public function getForm() : CheckDepositForm
     {
         return new CheckDepositForm;
     }
@@ -31,7 +31,7 @@ class CheckDepositedAdmin extends Admin
         return new CheckDepositedModel;
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return 'Checks deposited';
     }

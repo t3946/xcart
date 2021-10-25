@@ -4,14 +4,13 @@ namespace Modules\Meta\Admin;
 
 use Modules\Admin\Contrib\Admin;
 use Modules\Meta\Forms\MetaForm;
-use Modules\Meta\MetaModule;
 use Modules\Meta\Models\Meta;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
 class MetaAdmin extends Admin
 {
-    public function getListColumns()
+    public function getListColumns() : array
     {
         return [
             'title',
@@ -21,7 +20,7 @@ class MetaAdmin extends Admin
         ];
     }
 
-    public function getSearchColumns()
+    public function getSearchColumns(): array
     {
         return ['url', 'title', 'description', 'keywords'];
     }
@@ -50,7 +49,7 @@ class MetaAdmin extends Admin
         return new Meta;
     }
 
-    public function getForm()
+    public function getForm(): MetaForm
     {
         return new MetaForm;
     }
