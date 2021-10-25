@@ -18,6 +18,7 @@ namespace Xcart\App\Template;
 use Fenom;
 use Modules\Sites\Helpers\CurrentSiteHelper;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\SiteModel;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Xcart\App\Helpers\Paths;
@@ -121,8 +122,8 @@ class TemplateManager
             return !array_key_exists($variable, $array);
         });
 
-        $this->_renderer->addModifier('site_currency', function($variable, $param = [], $default = '') {
-            return CurrentSiteHelper::formatCurrency($variable, $param ?: null);
+        $this->_renderer->addModifier('site_currency', function($variable, SiteModel $site = null, string $ext = '') {
+            return CurrentSiteHelper::formatCurrency($variable, $site, $ext);
         });
 
         $this->_renderer->addAccessorSmart("app", "app", Fenom::ACCESSOR_PROPERTY);
