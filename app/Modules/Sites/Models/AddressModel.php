@@ -16,7 +16,7 @@ class AddressModel extends Model
 {
     public static function tableName(): string
     {
-        return 'xcart_addresses';
+        return 'xcart_site_addresses';
     }
     public function __toString()
     {
