@@ -106,16 +106,23 @@ JSON;
         }
 
         if (isset($result['hits']['hits']) && $result['hits']['hits'] && is_array($result['hits']['hits'])) {
+
+            $site = Xcart::app()->getModule('Sites')->getSite();
+
             foreach($result['hits']['hits'] as $hit) {
                 $ids[] = $hit['_id'];
             }
+
             /** @var ProductModel[] $products */
-            if ($ids && $products = ProductModel::objects()->filter(['productid__in' => $ids])->all()) {
+            if ($ids && $products = ProductModel::objects()->filter([
+                    'productid__in' => $ids,
+                    'sites__storefrontid' => $site->pk,
+                ])->all()) {
                 foreach($products as $product) {
-                    if (!$product->isGroupRoot()) {
-                        $thumb = $product->getMainImage();
-                    } else {
+                    if ($product->isGroupRoot()) {
                         $thumb = ($child = $product->childs->limit(1)->get()) ? $child->getMainImage() : null;
+                    } else {
+                        $thumb = $product->getMainImage();
                     }
 
                     $p_suggestions[] = [
