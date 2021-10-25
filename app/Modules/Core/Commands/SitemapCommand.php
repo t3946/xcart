@@ -1,0 +1,145 @@
+<?php
+
+namespace Modules\Core\Commands;
+
+use DateTime;
+use Icamys\SitemapGenerator\FileSystem;
+use Icamys\SitemapGenerator\SitemapGenerator;
+use Modules\Brand\Models\BrandModel;
+use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Commands\Command;
+use Xcart\App\Helpers\Paths;
+use Xcart\App\QueryBuilder\Q\QOr;
+
+class SitemapCommand extends Command
+{
+    private const SITE_MAP_PRODUCT = 'P';
+    private const SITE_MAP_CATEGORY = 'C';
+    private const SITE_MAP_BRAND = 'B';
+    private const SITE_MAP_PAGES = 'S';
+
+    private const SITE_MAP_FREQ_MONTHLY = 'monthly';
+    private const SITE_MAP_FREQ_DAILY = 'daily';
+
+    private static array $sitemap_items = [
+        [
+            'type' => self::SITE_MAP_CATEGORY,
+            'freq' => self::SITE_MAP_FREQ_MONTHLY,
+            'priority' => 0.1,
+        ],
+        [
+            'type' => self::SITE_MAP_PRODUCT,
+            'freq' => self::SITE_MAP_FREQ_DAILY,
+            'priority' => 0.9,
+        ],
+        [
+            'type' => self::SITE_MAP_BRAND,
+            'freq' => self::SITE_MAP_FREQ_MONTHLY,
+            'priority' => 0.1,
+        ],
+        [
+            'type' => self::SITE_MAP_PAGES,
+            'freq' => self::SITE_MAP_FREQ_MONTHLY,
+            'priority' => 0.1,
+        ],
+    ];
+
+    public function handle($arguments = [])
+    {
+        foreach (SiteModel::getAllEnabled() as $site) {
+            print("$site->domain: XML generation.\n");
+
+            $outputDir = Paths::get('www');
+
+            $fs = new FileSystem();
+
+            $index_file = "$site->domain-sitemap.xml";
+
+            $generator = new SitemapGenerator($site->getAbsoluteUrl(), $outputDir, $fs);
+
+            $generator->setMaxUrlsPerSitemap(50000);
+
+            $generator->setSitemapFileName("$site->domain-sitemap.xml");
+
+            $generator->setSitemapIndexFileName("$site->domain-sitemap.xml");
+
+            $counter = 0;
+
+            foreach (self::$sitemap_items as $item) {
+                switch ($item['type']) {
+                    case self::SITE_MAP_PRODUCT:
+                        $qs = ProductModel::forsale()
+                            ->filter([
+                                'sites__storefrontid' => $site->pk,
+                                new QOr(['is_group_root' => true, 'group_root__isnull' => true]),
+                            ])
+                            ->exclude([
+                                'prevent_search_indexing_this_product_page__isnt' => 'Y',
+                                'categories__prevent_index_products' => 'Y'
+                            ]);
+
+
+                        $i = 0;
+                        while ($products = $qs->paginate(++$i, 1000)->all()) {
+                            /** @var ProductModel $product */
+                            foreach ($products as $product) {
+                                $date = $product->mod_date ? (new DateTime())->setTimestamp($product->mod_date) : new DateTime();
+                                $generator->addURL($product->getAbsoluteUrl(), $date, $item['freq'], $item['priority'], []);
+                                $counter++;
+                            }
+                        }
+
+                        break;
+                    case self::SITE_MAP_CATEGORY:
+                        $qs = CategoryModel::objects()
+                            ->filter([
+                                'avail' => 'Y',
+                                'site__storefrontid' => $site->pk
+                            ])
+                            ->exclude([
+                                'prevent_index_category_page' => 'Y'
+                            ]);
+
+                        $i = 0;
+                        while ($categories = $qs->paginate(++$i, 1000)->all()) {
+                            /** @var CategoryModel $category */
+                            foreach ($categories as $category) {
+                                $generator->addURL($category->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                                $counter++;
+                            }
+                        }
+                        break;
+                    case self::SITE_MAP_BRAND:
+                        $qs = BrandModel::objects()
+                            ->filter([
+                               'avail' => 'Y',
+                               'brand_storefront__sfid' => $site->pk
+                            ])
+                            ->exclude([
+                                'prevent_search_indexing_brand_page' => 'Y'
+                            ]);
+
+                        $i = 0;
+                        while ($brands = $qs->paginate(++$i, 1000)->all()) {
+                            /** @var BrandModel $brand */
+                            foreach ($brands as $brand) {
+                                $generator->addURL($brand->getAbsoluteUrl(), new DateTime(), $item['freq'], $item['priority'], []);
+                                $counter++;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            $generator->flush();
+
+            if ($counter) {
+                $fs->unlink("$outputDir/$index_file");
+                $generator->finalize();
+                $generator->submitSitemap();
+            }
+        }
+    }
+}

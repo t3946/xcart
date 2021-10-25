@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Sites\Models;
 
+use Exception;
 use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
@@ -35,9 +36,15 @@ use Xcart\App\Orm\Model;
  * @property string $domain
  * @property LanguageModel $lang
  * @property Manager|ProductModel[] products
+ * @property bool $search_all_website_show
  * @property null|Manager|SitesMenuModel[] menu_list
- * @property ImageField logo
- * @property ImageField logo_mobile
+ * @property ImageField $logo
+ * @property ImageField $logo_mobile
+ * @property SiteConfigModel[]|Manager $config
+ * @property bool $shop_closed
+ * @property ListConfigModel $list_config
+ * @property string $company_name
+ * @property string $cidev_top_header_code
  */
 class SiteModel extends Model
 {
@@ -351,7 +358,12 @@ class SiteModel extends Model
         return $this->logo_mobile->getValue() ?? $this->getLogo();
     }
 
-    public function getConfig()
+    /**
+     * @return array
+     * @throws Exception
+     * @deprecated use SiteModel properties
+     */
+    public function getConfig(): array
     {
         if (!$this->_config) {
 
@@ -365,7 +377,7 @@ class SiteModel extends Model
         return $this->_config;
     }
 
-    public function getGlobalConfig()
+    public function getGlobalConfig(): array
     {
         if (!$this->_globalConfig) {
             $this->_globalConfig = GlobalConfig::getInstance()->getAllData();
@@ -385,12 +397,12 @@ class SiteModel extends Model
         return $domain;
     }
 
-    public function isWork()
+    public function isWork(): bool
     {
         return !$this->shop_closed;
     }
 
-    public function showInLists()
+    public function showInLists(): bool
     {
         if ($this->isWork()) {
             return $this->search_all_website_show;
@@ -399,38 +411,35 @@ class SiteModel extends Model
         return false;
     }
 
-    public static function getAllEnabled()
+    /**
+     * @return SiteModel[]
+     */
+    public static function getAllEnabled(): array
     {
-        $models = static::objects()->all();
-        $models = array_filter($models , function($model){ return $model->isWork(); });
-
-        return $models;
+        return array_filter(static::objects()->all() , static fn(SiteModel $model) => $model->isWork());
     }
 
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl(): string
     {
         return $this->getHttpOrHttps()  . $this->domain;
     }
 
-    public function getHttpOrHttps()
+    public function getHttpOrHttps(): string
     {
         return  'https://';
     }
 
     public function getCompanyName()
     {
-        $config = $this->getConfig();
-        return !empty($config['company_name']) ? $config['company_name'] : $this->getName();
+        return $this->company_name ?: $this->getName();
     }
 
     public function getName()
     {
         $name = $this->getBaseDomain();
 
-        $config = $this->getConfig();
-
-        if (!empty($config['company_name'])) {
-            $name = $config['company_name'];
+        if ($this->company_name) {
+            $name = $this->company_name;
 
             if (strpos($name, '.') !== false ) {
                 $name = substr($name, 0 , strpos($name, '.'));
@@ -446,7 +455,6 @@ class SiteModel extends Model
 
     public function getFrontendName()
     {
-        /** @var ListConfigModel $config */
         if ($config = $this->list_config) {
             return $config->getName();
         }

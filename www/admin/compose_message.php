@@ -288,12 +288,6 @@ $storefront_url = "https://{$storefronts[$products[0]['storefrontid']]['domain']
 $subject = str_replace('{{storefront-url}}', $storefront_url, $subject);
 $body = str_replace('{{storefront-url}}', $storefront_url, $body);
 
-$first_product_category_id = func_query_first_cell("SELECT categoryid FROM $sql_tbl[products_categories] WHERE main='Y' AND productid='" . $products[0]['productid'] . "'");
-$first_product_category_url = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='C' AND resource_id='$first_product_category_id'");
-$first_product_category_url = "{$storefront_url}/{$first_product_category_url}/";
-
-$subject = str_replace('{{first-product-category-url}}', $first_product_category_url, $subject);
-$body = str_replace('{{first-product-category-url}}', $first_product_category_url, $body);
 
 $reorder_hash_url = $storefront_url . '/cart.php?mode=add_to_cart&o=' . text_crypt($orderid);
 $subject = str_replace('{{reorder-hash-url}}', $reorder_hash_url, $subject);

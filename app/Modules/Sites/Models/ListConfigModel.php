@@ -98,10 +98,10 @@ class ListConfigModel extends Model
 
         $name = '';
 
-        $config = $this->storefront->getConfig();
+        $site = $this->storefront;
 
-        if (!empty($config['company_name'])) {
-            $name = $config['company_name'];
+        if ($site->company_name) {
+            $name = $site->company_name;
 
             if (strpos($name, '.') !== false ) {
                 $name = substr($name, 0 , strpos($name, '.'));

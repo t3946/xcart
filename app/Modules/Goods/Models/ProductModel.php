@@ -346,7 +346,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasManyField::class,
                 'modelClass' => __CLASS__,
                 'link' => ['productid' => 'group_root'],
-                'extra' => ['productid__isnt' => new Expression('group_root')]
+                'extra' => ['is_group_root' => false]
             ],
             'parent' => [
                 'field' => 'group_root',

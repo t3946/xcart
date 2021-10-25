@@ -52,7 +52,7 @@ class CurrentSiteHelper
         }
     }
 
-    public static function formatCurrency($value, SiteModel $site = null): string
+    public static function formatCurrency($value, SiteModel $site = null, string $ext = ''): string
     {
         if ($site === null) {
             $site = Xcart::app()->getModule('Sites')->getSite();
@@ -62,7 +62,7 @@ class CurrentSiteHelper
             $arr = [
                 $site_currency->symbol_prefix,
                 !$site_currency->after ? $site_currency : '',
-                " <span class=\"price\">{$site_currency->getCurrencyFormat($value)}</span>",
+                " <span class=\"price\" $ext>{$site_currency->getCurrencyFormat($value)}</span>",
                 $site_currency->after ? $site_currency : '',
             ];
             return trim(implode('', $arr));
