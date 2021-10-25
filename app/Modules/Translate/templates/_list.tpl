@@ -20,18 +20,19 @@
                             <i class="icon-plus"></i>
                         </a>
                     {/if}
-                    {var $lang_code = $filter_form->getField('name')->getValue()[0]}
-                    {if $lang_code}
+                    {var $lang_codes = $filter_form->getField('name')->getValue()}
+                    {if is_array($lang_codes)}
+                        {var $lang_code = $lang_codes|array_filter|array_values}
                         <form class="upload-translations-form">
                             <label>
-                                Upload {$lang_code}.po translates file:
-                                <input type="file" name="translates-list" value="upload_translates"/>
+                                Upload {$lang_code[0]}.po translates file:
+                                <input id="{$lang_code[0]}" type="file" name="translates-list" value="upload_translates"/>
                             </label>
                             <button>Upload</button>
                         </form>
                         <a class="download-translations-button"
-                           href="{url 'admin_translate:download'}?lang_code={$lang_code}">
-                            <span class="text">Download {$lang_code}.po</span>
+                           href="{url 'admin_translate:download'}?lang_code={$lang_code[0]}">
+                            <span class="text">Download {$lang_code[0]}.po</span>
                         </a>
                     {/if}
                 </div>
