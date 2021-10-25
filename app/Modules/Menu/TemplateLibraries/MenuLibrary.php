@@ -20,22 +20,24 @@ class MenuLibrary extends TemplateLibrary
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
         $menu_parent = $site->menu_list->get(['menu__name' => "{$name_menu} {$site->lang->lang_code}"]);
-        $footer_item = SiteMenuModel::objects()->filter(['root' => $menu_parent->menu->root])->asTree()->all();
-        if (!empty($footer_item)) {
-            $items = array_map(static function ($item) {
-                $ar_item = [
-                    'name' => $item['name'],
-                    'items' => array_map(static fn($item_child) => [
-                            'name' => $item_child['name'],
-                            'items' => [],
-                            'url' => "/{$item_child['url']}" ?? '/'
-                        ], $item['items']) ?? []
-                ];
-                if (!empty($item['url'])) {
-                    $ar_item['url'] = $item['url'];
-                }
-                return $ar_item;
-            }, $footer_item[0]['items']);
+        if ($menu_parent) {
+            $footer_item = SiteMenuModel::objects()->filter(['root' => $menu_parent->menu->root])->asTree()->all();
+            if (!empty($footer_item)) {
+                $items = array_map(static function ($item) {
+                    $ar_item = [
+                        'name' => $item['name'],
+                        'items' => array_map(static fn($item_child) => [
+                                'name' => $item_child['name'],
+                                'items' => [],
+                                'url' => "/{$item_child['url']}" ?? '/'
+                            ], $item['items']) ?? []
+                    ];
+                    if (!empty($item['url'])) {
+                        $ar_item['url'] = $item['url'];
+                    }
+                    return $ar_item;
+                }, $footer_item[0]['items']);
+            }
         }
         return $items;
     }
