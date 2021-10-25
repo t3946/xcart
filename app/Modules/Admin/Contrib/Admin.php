@@ -3,12 +3,13 @@
 namespace Modules\Admin\Contrib;
 
 
-use Xcart\App\Form\Fields\DateRangeField;
+use DateTime;
+use Doctrine\DBAL\DBALException;
+use Exception;
+use UnexpectedValueException;
 use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Orm\Fields\DateField;
-use Xcart\App\QueryBuilder\Aggregation\Count;
-use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\Orm\TreeModel;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
 use Xcart\App\Exceptions\HttpException;
@@ -24,7 +25,6 @@ use Xcart\App\Orm\Fields\TreeForeignField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\QuerySet;
-use Xcart\App\Orm\TreeManager;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use Xcart\App\Template\Renderer;
@@ -70,6 +70,8 @@ abstract class Admin
     public bool $innerRender = false;
 
     public bool $autoFixSort = true;
+
+    public $owner_model = null;
 
     /** @var Model */
     public $model;
@@ -437,7 +439,7 @@ abstract class Admin
      * add filter conditions to query set
      * @param $qs QuerySet
      * @return QuerySet
-     * @throws \Exception
+     * @throws Exception
      */
     public function handleSearch($qs, $search)
     {
@@ -486,7 +488,7 @@ abstract class Admin
                 } elseif ($model_field instanceof DateField) {
                     $ar_time = explode('-', $value);
                     $ar_time = array_map(function ($a) {
-                        $date_time = \DateTime::createFromFormat('m/d/Y', trim($a));
+                        $date_time = DateTime::createFromFormat('m/d/Y', trim($a));
                         $date_time->setTime(0, 0, 0);
                         return $date_time;
                     }, $ar_time);
@@ -529,7 +531,7 @@ abstract class Admin
                 $qs = $qs->filter($filter);
             }
         } else {
-            throw new \UnexpectedValueException("Entity: {$entity} not set in suggestion columns");
+            throw new UnexpectedValueException("Entity: {$entity} not set in suggestion columns");
         }
 
         return $qs;
@@ -566,7 +568,7 @@ abstract class Admin
     /**
      * @param $qs QuerySet|Manager
      * @return QuerySet|Manager
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function fixSort($qs)
     {
@@ -871,7 +873,7 @@ abstract class Admin
 
     public function update($pk = null, $parent_id = null)
     {
-        /** @var \Xcart\App\Orm\TreeModel $model */
+        /** @var TreeModel $model */
         $new = false;
         if (is_null($pk)) {
             $new = true;

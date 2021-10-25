@@ -38,6 +38,7 @@ node_modules
 /www/static/backend/versions
 /www/static/backend/bem/bem.scss
 /app/include/vendors
+/app/Modules/Translate/lang
 !/skin1_kolin/
 /docker/mysql/data/
 /docker/redis/data/
