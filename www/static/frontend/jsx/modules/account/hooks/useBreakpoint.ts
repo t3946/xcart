@@ -1,9 +1,9 @@
 import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import breakpoints from "@client/modules/account/ts/consts/breakpoints";
 
 function resizeHandler() {
-  accountStore.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
+  Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
 }
 
 export default function useBreakpoint(): (actions: ActionsInterface) => any {

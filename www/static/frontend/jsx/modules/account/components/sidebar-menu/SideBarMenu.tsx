@@ -5,11 +5,11 @@ import { useSelector } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 const SideBarMenu: React.FC = () => {
   const breakpoint = useBreakpoint();
-  const user = useSelector((e: AccountStore) => e.user);
+  const user = useSelector((e: StoreInterface) => e.user);
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
     {

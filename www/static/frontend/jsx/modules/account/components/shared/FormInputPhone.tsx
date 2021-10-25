@@ -2,7 +2,7 @@ import React from "react";
 import { Form as RBForm } from "react-bootstrap";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { getCountryByCode } from "@client/jsx/utils/Countries";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import classnames from "classnames";
@@ -36,7 +36,7 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
     mode,
     label,
   } = props;
-  const countries = useSelector((e: AccountStore) => e.countries);
+  const countries = useSelector((e: StoreInterface) => e.countries);
   const countryCodeFieldName = name + "CountryCode";
   const phoneExtFieldName = name + "Ext";
   const phoneMask = "(999) 999-9999";
@@ -63,7 +63,7 @@ const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
   /**
    * Get countries list for select input
    */
-  function getSelectItems() {
+  function getSelectItems(): any {
     const codes = [];
 
     for (const country of countries) {

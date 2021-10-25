@@ -12,17 +12,17 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import ModalTSVDisable from "@client/modules/account/components/login-and-security/ModalTSVDisable";
 import InnerPage from "@client/jsx/modules/account/components/shared/InnerPage";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 const TSVSettings = (): any => {
   const breakpoint = useBreakpoint();
   const disableTSVModal = useDialog();
-  const user = useSelector((e: AccountStore) => e.user);
+  const user = useSelector((e: StoreInterface) => e.user);
   const history = useHistory();
   const dispatch = useDispatch();
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
 
-  useSelector((e: AccountStore) => e.main.breakpoint);
+  useSelector((e: StoreInterface) => e.main.breakpoint);
 
   if (user === null) {
     history.push(route("account:login"));

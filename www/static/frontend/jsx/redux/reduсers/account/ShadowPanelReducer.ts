@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { shadowPanelInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { shadowPanelInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
 
 const ShadowPanelReducer = (
   state: Record<any, any> = shadowPanelInitialValue,

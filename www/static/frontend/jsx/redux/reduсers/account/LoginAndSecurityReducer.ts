@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
-import { AccountLoginAndSecurityStore } from "@client/modules/account/ts/types/account-store.type";
-import { accountLoginAndSecurityValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { AccountLoginAndSecurityStore } from "@client/modules/account/ts/types/store.type";
+import { accountLoginAndSecurityValue } from "@client/modules/account/ts/consts/store-initial-value";
 
 const LoginAndSecurityReducer = (
   state: AccountLoginAndSecurityStore = accountLoginAndSecurityValue,

@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { countries } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { countries } from "@client/modules/account/ts/consts/store-initial-value";
 import CountryDto from "@client/modules/account/ts/types/country.type";
 
 const CountriesReducer = (

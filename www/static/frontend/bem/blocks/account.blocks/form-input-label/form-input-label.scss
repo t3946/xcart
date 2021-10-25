@@ -5,7 +5,7 @@
     color: #000000;
     position: relative;
 
-    @include breakpoint(xs up) {
+    @include breakpoint(md up) {
         font-size: rem-calc(18);
         line-height: rem-calc(25);
         margin-bottom: rem-calc(10);

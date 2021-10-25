@@ -12,7 +12,7 @@ import TimesLightIcon from "@client/jsx/components/icons/font-awesome/times/Time
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import Alert from "@client/modules/account/components/shared/Alert";
 import { setAlertAction } from "@client/jsx/redux/actions/account-actions/ProfileActions";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 
 const PublicProfile = (): any => {
@@ -24,7 +24,7 @@ const PublicProfile = (): any => {
     history.push(route("account:login"));
   }
 
-  const alert = useSelector((e: AccountStore) => e.publicProfile.alert);
+  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const alertShowTimeMs = 3000;
   const maxKB = 10;

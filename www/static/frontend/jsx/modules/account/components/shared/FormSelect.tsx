@@ -3,7 +3,28 @@ import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 
-export const FormSelect = ({
+interface Item {
+  viewValue: string;
+  previewValue: string;
+  value: any;
+}
+
+interface PropsInterface {
+  items: Item[];
+  onClick?: (item: Item) => any;
+  value: any;
+  name: any;
+  label?: any;
+  classes?: {
+    input?: any;
+    group?: any;
+    selectHeader?: any;
+    selectList?: any;
+  };
+  id?: any;
+}
+
+export const FormSelect: React.FC<PropsInterface> = ({
   items,
   onClick,
   value,
@@ -11,7 +32,7 @@ export const FormSelect = ({
   label = null,
   classes = undefined,
   id = undefined,
-}) => {
+}: PropsInterface) => {
   const selectedItem = value;
   const [open, setOpen] = useState(false);
 
@@ -36,7 +57,8 @@ export const FormSelect = ({
     >
       {label && <label className="form-input-label">{label}</label>}
       <div
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setOpen(!open);
         }}
         className={classnames("select-wrapper", classes?.input)}

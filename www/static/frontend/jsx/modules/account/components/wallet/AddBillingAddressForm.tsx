@@ -15,8 +15,8 @@ import {
   addCard,
   addDataFromSubmitCardForm,
 } from "../../../../redux/actions/account-actions/PaymentsActions";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
-import { AccountStore } from "../../ts/types/account-store.type";
+import Store from "@client/jsx/redux/stores/Store";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 interface AddBillingAddressFormProps {
@@ -29,14 +29,14 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
 
-  const countries = useSelector((e: AccountStore) => e.main.countries);
+  const countries = useSelector((e: StoreInterface) => e.main.countries);
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.payments.submitCardFormLoading
+    (e: StoreInterface) => e.payments.submitCardFormLoading
   );
 
   const cardSubmitData = useSelector(
-    (e: AccountStore) => e.payments.submitFormData
+    (e: StoreInterface) => e.payments.submitFormData
   );
 
   const states = useSelector((e: any) => e.main.states);
@@ -65,7 +65,7 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
         {
           ...cardSubmitData,
           address: newAddress,
-          userId: accountStore.getState().user.id,
+          userId: Store.getState().user.id,
         },
         () => {
           context.handleClose();

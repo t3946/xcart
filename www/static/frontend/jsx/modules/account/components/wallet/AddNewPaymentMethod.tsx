@@ -4,7 +4,6 @@ import { CardDialog } from "@client/modules/account/components/wallet/CardDialog
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { useHistory } from "react-router";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 export const AddNewPaymentMethod: React.FC = () => {

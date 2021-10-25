@@ -1,15 +1,12 @@
 import React, { useContext } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import {
-  addProduct,
-  setLists,
-} from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 import { ListItem } from "@client/modules/account/ts/types/list.type";
 
@@ -26,9 +23,9 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
 
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const listId = accountStore
-    .getState()
-    .lists.lists.find((e) => e.cache_url === listHash).product_list_id;
+  const listId = Store.getState().lists.lists.find(
+    (e) => e.cache_url === listHash
+  ).product_list_id;
 
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {
@@ -38,7 +35,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
     dispatch(addProduct(listId, null, formik.values.name, onAddingEnd));
   };
 
-  const listLoading = useSelector((e: AccountStore) => e.lists.listLoading);
+  const listLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const onAddingEnd = (idea: ListItem) => {
     onCancelBtnClick();

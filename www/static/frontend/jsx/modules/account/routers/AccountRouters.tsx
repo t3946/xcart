@@ -4,8 +4,8 @@ import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
 import { Addresses } from "../pages/Addresses";
 import { Transactions } from "../pages/Transactions";
 import { Wallet } from "../pages/Wallet";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import { accountStore } from "../../../redux/stores/StoreAccount";
+import { useDispatch, useSelector } from "react-redux";
+import Store from "@client/jsx/redux/stores/Store";
 import LoginForm from "../../account/components/authorization/LoginForm";
 import RegisterForm from "../../account/components/authorization/RegisterForm";
 import { AddAddressPage } from "../pages/AddAddressPage";
@@ -27,7 +27,7 @@ import FormChangePassword from "@client/modules/account/components/login-and-sec
 import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
 import { route } from "@client/jsx/utils/AppData";
 import { ListsSidebarMenu } from "../components/lists/ListsSidebarMenu";
-import { AccountStore } from "../ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { ListsPage } from "../pages/ListsPage";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
@@ -51,6 +51,7 @@ import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
 import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
+import ReviewForm from "@client/jsx/modules/account/components/review/ReviewForm";
 import { DeleteProductPage } from "@client/modules/account/pages/DeleteProductPage";
 import { OrdersPage } from "@client/modules/account/pages/OrdersPage";
 import { OrderInfoContainerPage } from "@client/modules/account/hoc/OrderInfoContainerPage";
@@ -64,34 +65,17 @@ import { EmailPage } from "@client/modules/account/pages/EmailPage";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
-  const user = useSelector((e: AccountStore) => e.user);
+  const user = useSelector((e: StoreInterface) => e.user);
 
   useEffect(() => {
     dispatch(getTerritory());
 
-    if (accountStore.getState().user) {
-      dispatch(getAddresses(accountStore.getState().user.id));
+    if (Store.getState().user) {
+      dispatch(getAddresses(Store.getState().user.id));
     }
   }, []);
 
   dispatch(setBreadcrumbsAddresses(staticRoutes));
-
-  const classes = {
-    leftColumnClasses: [
-      "col account-page-left-column d-none",
-      {
-        "d-lg-block": user !== null,
-      },
-    ],
-    rightColumnClasses: [
-      "col",
-      {
-        "account-page-right-column": user !== null,
-        "d-flex": user === null,
-        "justify-content-center": user === null,
-      },
-    ],
-  };
 
   return (
     <>
@@ -360,6 +344,11 @@ export const AccountRouters = (): any => {
                     "account:two-step-verification-recovery-password-assistance"
                   )}
                   component={PasswordAssistance}
+                />
+                <Route
+                  exact
+                  path={route("account:review")}
+                  component={PageContainerHoc(<SideBarMenu />, <ReviewForm />)}
                 />
                 <Route
                   exact

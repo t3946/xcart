@@ -1,0 +1,5 @@
+.product-reviews-header_big {
+  @include breakpoint(lg up) {
+    font-size: rem-calc(24);
+  }
+}

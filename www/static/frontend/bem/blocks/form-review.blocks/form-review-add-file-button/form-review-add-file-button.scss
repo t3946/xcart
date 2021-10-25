@@ -1,0 +1,11 @@
+.form-review-add-file-button {
+  @include breakpoint(md up) {
+    width: rem-calc(108);
+    height: rem-calc(108);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(90);
+    height: rem-calc(90);
+  }
+}

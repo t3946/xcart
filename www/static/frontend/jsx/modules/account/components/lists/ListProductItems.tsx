@@ -12,7 +12,7 @@ import {
 import { reorderMass } from "@client/modules/account/utils/reorder-mass";
 import { AccountListProductActionEnum } from "@client/modules/account/ts/types/account-list-product-action";
 import { MovedProductPlaceholder } from "@client/modules/account/components/lists/MovedProductPlaceholder";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { DeleteProductPlaceholder } from "@client/modules/account/components/lists/DeleteProductPlaceholder";
 import { ListProductIdeaItem } from "@client/modules/account/components/lists/ListProductIdeaItem";
 import { ListItemTypeEnum } from "@client/modules/account/ts/consts/list-item-type.enum";
@@ -30,7 +30,7 @@ export const ListProductItems = ({ info, path, edit }) => {
   const dispatch = useDispatch();
 
   const deleteProductsWithTypeAction = () => {
-    const lists = accountStore.getState().lists.lists;
+    const lists = Store.getState().lists.lists;
 
     dispatch(
       setLists(
@@ -81,9 +81,9 @@ export const ListProductItems = ({ info, path, edit }) => {
     listId: string,
     product: ListItem
   ) => {
-    const toList = accountStore
-      .getState()
-      .lists.lists.find((e) => e.product_list_id === value.value);
+    const toList = Store.getState().lists.lists.find(
+      (e) => e.product_list_id === value.value
+    );
 
     const productOnList = toList.products.find(
       (e) => e.product_id === product.product_id

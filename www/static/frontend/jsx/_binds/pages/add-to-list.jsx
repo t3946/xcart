@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { AccountRouters } from "../../modules/account/routers/AccountRouters";
 import { Provider } from "react-redux";
-import { accountStore } from "../../redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { AddToListSelectOnProductPage } from "../../modules/account/components/lists/AddToListSelectOnProductPage";
 import Snackbar from "../../modules/account/components/snackbar/Snackbar";
 
@@ -17,7 +17,7 @@ import Snackbar from "../../modules/account/components/snackbar/Snackbar";
 
   ReactDOM.render(
     (() => (
-      <Provider store={accountStore}>
+      <Provider store={Store}>
         <Snackbar>
           <AddToListSelectOnProductPage id={"add-to-list-btn"} />
         </Snackbar>

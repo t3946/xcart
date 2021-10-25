@@ -6,7 +6,7 @@ import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snack
 import { ShareListInviteSection } from "@client/modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@client/modules/account/components/lists/ShareListManagePeople";
 import { useParams } from "react-router-dom";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { List } from "@client/modules/account/ts/types/list.type";
 
 interface ShareListProps {
@@ -21,7 +21,7 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
   let list: List | undefined;
 
   if (!id) {
-    list = accountStore.getState().lists.lists[0];
+    list = Store.getState().lists.lists[0];
   }
 
   const dispatch = useDispatch();

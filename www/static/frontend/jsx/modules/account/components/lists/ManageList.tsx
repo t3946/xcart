@@ -5,7 +5,7 @@ import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { Grid } from "@material-ui/core";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { FormCheckBox } from "@client/modules/account/components/shared/FormCheckBox";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { getValuesForSelect } from "@client/modules/account/utils/edit-store-funcs/getValuesForSelect";
 import classnames from "classnames";
 import { fillingMassForMonths } from "@client/modules/account/utils/filling-mass-for-months";
@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { manageList } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { convertManageListFormDataToRequest } from "@client/modules/account/utils/convert-manage-list-form-data-to-request";
 import { ManageListFormData } from "@client/modules/account/ts/types/manage-list-form.types";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 import { List } from "@client/modules/account/ts/types/list.type";
 
@@ -33,7 +33,7 @@ export const ManageList: React.FC<ManageListProps> = ({
 
   const [dayItems, setDayItems] = useState(getDaysForSelect(0));
 
-  const loading = useSelector((e: AccountStore) => e.lists.listLoading);
+  const loading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const handleSubmit = (values: ManageListFormData) => {
     dispatch(
@@ -171,7 +171,7 @@ export const ManageList: React.FC<ManageListProps> = ({
         </Grid>
         <FormSelect
           items={getValuesForSelect(
-            accountStore.getState().addresses.addressesList,
+            Store.getState().addresses.addressesList,
             "address_id",
             "full_name"
           )}

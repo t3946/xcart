@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
+import Store from "@client/jsx/redux/stores/Store";
+import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
 import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
-import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { useDispatch } from "react-redux";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 interface ManageListPageURLParams {
   listHash: string;
@@ -19,7 +16,7 @@ export const DeleteListPage: React.FC = () => {
 
   const history = useHistory();
 
-  const lists = accountStore.getState().lists.lists;
+  const lists = Store.getState().lists.lists;
 
   if (!lists) {
     history.push("/account/your-lists/");

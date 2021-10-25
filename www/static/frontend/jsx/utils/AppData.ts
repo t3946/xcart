@@ -1,5 +1,6 @@
 const newWindow: any = window;
-const appData = newWindow.appData;
+
+const appData: any = newWindow.appData;
 
 /**
  * get route path by slug
@@ -12,6 +13,10 @@ export const route = function (
   ...routeParams: (string | number)[]
 ): string {
   let path = appData.routes[slug];
+
+  if (!path) {
+    console.error("Unknown path " + slug);
+  }
 
   const interpolations = path.match(/{\w+:\w+}/gi);
 
@@ -26,8 +31,10 @@ export const route = function (
   }
 
   for (let i = 0; i < interpolations.length; i++) {
-    path = path.replace(interpolations[i], routeParams[i]);
+    path = path.replace(interpolations[i], <string>routeParams[i]);
   }
 
   return path;
 };
+
+export default appData;

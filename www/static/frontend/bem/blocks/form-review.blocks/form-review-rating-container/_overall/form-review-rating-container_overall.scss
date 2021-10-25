@@ -1,0 +1,7 @@
+.form-review-rating-container_overall {
+  width: rem-calc(155);
+
+  @include breakpoint(md up) {
+    width: rem-calc(184);
+  }
+}

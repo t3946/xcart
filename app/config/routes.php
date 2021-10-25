@@ -127,5 +127,9 @@ return array_merge($admin_routes, [
         'path' => 'Modules.Account.routes',
         'namespace' => 'account'
     ],
-
+    [
+        'route' => '/reviews',
+        'path' => 'Modules.Reviews.routes',
+        'namespace' => 'reviews'
+    ],
 ]);

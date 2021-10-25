@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
-import { publicProfileInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
-import { AccountPublicProfileStore } from "@client/modules/account/ts/types/account-store.type";
+import { publicProfileInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
+import { AccountPublicProfileStore } from "@client/modules/account/ts/types/store.type";
 
 const PublicProfileReducer = (
   state: AccountPublicProfileStore = publicProfileInitialValue,

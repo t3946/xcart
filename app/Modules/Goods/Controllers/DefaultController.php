@@ -20,10 +20,10 @@ use Xcart\App\Pagination\Pagination;
 
 class DefaultController extends FrontendController
 {
-    public function actionViewOld($id, $slug): void
+    public function actionViewOld($id): void
     {
-        AccountController::provideAccountData();
-
+        $product = AccountController::getProduct($id);
+        StorageHelper::push($product, $id, 'products');
         $this->view_internal(ProductModel::objects()->filter(['productid' => $id])->get());
     }
 

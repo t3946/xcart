@@ -103,6 +103,7 @@
     "react-to-print": "^2.12.6",
     "react-transition-group": "^4.4.2",
     "react-yandex-maps": "^4.6.0",
+    "react-uuid": "^1.0.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.1.3",

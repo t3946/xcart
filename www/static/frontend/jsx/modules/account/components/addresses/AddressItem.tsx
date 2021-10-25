@@ -6,7 +6,7 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;
@@ -23,8 +23,8 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   const changeDefault = () => {
     dispatch(
       changeDefaultAddress(
-        addressInfo.address_id,
-        accountStore.getState().user.id
+        addressInfo.addresses_id,
+        Store.getState().user.id
       )
     );
   };

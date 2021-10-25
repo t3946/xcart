@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
-import { AccountPaymentsStore } from "@client/modules/account/ts/types/account-store.type";
-import { accountPaymentsStoreInitialValue } from "@client/modules/account/ts/consts/account-store-initial-value";
+import { AccountPaymentsStore } from "@client/modules/account/ts/types/store.type";
+import { accountPaymentsStoreInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
 
 const accountWalletReducer = (
   state: AccountPaymentsStore = accountPaymentsStoreInitialValue,

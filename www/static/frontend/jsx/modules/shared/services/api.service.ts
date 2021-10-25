@@ -21,6 +21,7 @@ export class ApiService {
       mode: "cors",
       cache: "no-cache",
       credentials: "same-origin",
+      headers,
       redirect: "follow",
       referrerPolicy: "no-referrer",
       body: data,

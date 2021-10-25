@@ -31,5 +31,7 @@ return [
     'Subscribe',
     'Xero',
     'Translate',
-    'Help'
+    'Help',
+    'Account',
+    'Reviews',
 ];

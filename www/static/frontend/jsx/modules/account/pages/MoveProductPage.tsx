@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { useHistory, useParams } from "react-router-dom";
 import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
 import { moveProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
@@ -13,8 +13,8 @@ interface MoveProductPageURLProps {
   listId: string;
 }
 
-export const MoveProductPage = () => {
-  const lists = useSelector((e: AccountStore) => e.lists.lists);
+export const MoveProductPage: React.FC = () => {
+  const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
   const history = useHistory();
 
@@ -39,9 +39,9 @@ export const MoveProductPage = () => {
       console.log(1);
       return;
     }
-    const toList = accountStore
-      .getState()
-      .lists.lists.find((e) => e.product_list_id === value);
+    const toList = Store.getState().lists.lists.find(
+      (e) => e.product_list_id === value
+    );
 
     const productOnList = toList.products.find(
       (e) => e.product_id === product.product_id

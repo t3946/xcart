@@ -1,0 +1,11 @@
+.feature-rating-list__item {
+  margin: 0 0 rem-calc(16);
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(6);
+  }
+
+  &:last-child {
+    margin: 0;
+  }
+}

@@ -3,7 +3,7 @@ import { Provider, useSelector, useDispatch } from "react-redux";
 import MiniCartItems from "@client/jsx/components/MiniCartItems";
 import MiniCartInfo from "@client/modules/mini-cart/components/MiniCartInfo";
 import storeCart from "@client/jsx/redux/stores/StoreCart";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import HoverIntent from "react-hoverintent";
 import { setCartQuantityAction } from "@client/jsx/redux/actions/CartActions";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
@@ -11,7 +11,7 @@ import TransitionFade from "@client/modules/account/components/shared/Transition
 import hideAllMenu from "@client/jsx/modules/account/utils/hide-all-menu";
 
 const MiniCart: React.FC = () => {
-  const cart = useSelector((e: AccountStore) => e.cart);
+  const cart = useSelector((e: StoreInterface) => e.cart);
   const [isEnter, setIsEnter] = React.useState(false);
   const dispatch = useDispatch();
 

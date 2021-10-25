@@ -7,13 +7,14 @@ import {
   addProduct,
   getLists,
 } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
 import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { List } from "@client/modules/account/ts/types/list.type";
+import AppData from "@client/jsx/utils/AppData";
 
 interface AddToListSelectOnProductPageProps {
   items: List[];
@@ -27,8 +28,8 @@ interface AddToListSelectOnProductPageProps {
 }
 
 export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPageProps> =
-  ({ onClick, name, label = "", classes = undefined, product }) => {
-    const lists = accountStore.getState().lists.lists;
+  ({ onClick, name, label = "", classes = undefined }) => {
+    const lists = Store.getState().lists.lists;
 
     const productInfo = window.appData?.productInfo?.product || product;
 
@@ -52,9 +53,9 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       breakpoint({
         xs: () =>
           window.location.assign(
-            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${productInfo.productcode}`
+            `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${AppData.product_info.product.productcode}`
           ),
-        md: addProductDialog.handleClickOpen,
+        sm: addProductDialog.handleClickOpen,
       });
     };
 
@@ -62,9 +63,9 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       breakpoint({
         xs: () =>
           window.location.assign(
-            `/account/your-lists/add-list/${productInfo.productcode}`
+            `/account/your-lists/add-list/${AppData.product_info.product.productcode}`
           ),
-        md: createListDialog.handleClickOpen,
+        sm: createListDialog.handleClickOpen,
       });
     };
 
@@ -72,7 +73,10 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       if (
         lists
           .find((e) => e.product_list_id === listId)
-          ?.products.find((e) => e.product_id === productInfo.productid)
+          ?.products.find(
+            (e) =>
+              e.product_id === AppData.product_info.product.productid
+          )
       ) {
         setIsAlreadyInList(true);
         setSelectedList(lists.find((e) => e.product_list_id === listId));
@@ -81,8 +85,11 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       }
       setIsAlreadyInList(false);
       dispatch(
-        addProduct(listId, productInfo.productid, null, () =>
-          showAddProductContent(listId)
+        addProduct(
+          listId,
+          AppData.product_info.product.productid,
+          null,
+          () => showAddProductContent(listId)
         )
       );
       setSelectedList(lists.find((e) => e.product_list_id === listId));
@@ -92,8 +99,11 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
       setSelectedList(listInfo);
       createListDialog.handleClose();
       dispatch(
-        addProduct(listInfo.product_list_id, productInfo.productid, null, () =>
-          showAddProductContent(listInfo.product_list_id)
+        addProduct(
+          listInfo.product_list_id,
+          AppData.product_info.product.productid,
+          null,
+          () => showAddProductContent(listInfo.product_list_id)
         )
       );
     };
@@ -197,7 +207,7 @@ export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPage
         <CreateNewListDialog
           open={createListDialog.open}
           handleClose={createListDialog.handleClose}
-          productId={productInfo.productid}
+          productId={AppData.product_info.product.productid}
           onProductAdded={onCreateList}
           actionType={"product"}
         />

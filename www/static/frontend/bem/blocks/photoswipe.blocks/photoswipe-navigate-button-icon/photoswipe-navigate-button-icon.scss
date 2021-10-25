@@ -9,11 +9,18 @@
   opacity: 1;
 }
 
-.photoswipe-arrow__disabled:hover .photoswipe-navigate-button-icon,
-.photoswipe-arrow__disabled:hover .photoswipe-navigate-button-icon {
-  opacity: 0.5;
-}
+.photoswipe-arrow_disabled {
+  .photoswipe-navigate-button {
+    cursor: default;
+  }
 
-.photoswipe-arrow__disabled .photoswipe-navigate-button {
-  cursor: default;
+  .photoswipe-navigate-button-icon {
+    opacity: 0.25;
+  }
+
+  &:hover {
+    .photoswipe-navigate-button-icon {
+      opacity: 0.25;
+    }
+  }
 }

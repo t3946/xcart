@@ -2392,6 +2392,7 @@ var _gestureStartTime,
 
 		if(itemChanged) {
 			self.updateCurrItem(true);
+			_shout('itemChanged');
 		}
 
 		return itemChanged;

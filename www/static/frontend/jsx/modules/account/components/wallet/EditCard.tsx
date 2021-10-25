@@ -9,10 +9,10 @@ import { fillMassToSelect } from "../../utils/fill-mass-to-select";
 import { convertDataToEditCardForm } from "../../utils/convert-data-to-edit-card-form";
 import { useDispatch, useSelector } from "react-redux";
 import { editCard } from "../../../../redux/actions/account-actions/PaymentsActions";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { CardHeader } from "./CardHeader";
 import { editCardFormValidationSchema } from "../../ts/consts/add-card-form";
-import { AccountStore } from "../../ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { onCardActionsEnd } from "@client/modules/account/utils/on-card-actions-end";
 import { useHistory } from "react-router-dom";
@@ -31,7 +31,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
   );
 
   const submitCardFormLoading = useSelector(
-    (e: AccountStore) => e.payments.submitCardFormLoading
+    (e: StoreInterface) => e.payments.submitCardFormLoading
   );
 
   const context = useContext(WalletCardsDialogContext);
@@ -49,7 +49,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
   const getCardAddressInfo = (cardInfo) => {
     const card = { ...cardInfo };
     if (cardSubmitData?.address?.address_id) {
-      [card.address] = accountStore
+      [card.address] = Store
         .getState()
         .addresses.addressesList.filter(
           (address) => address.address_id === cardSubmitData.address.address_id
@@ -92,7 +92,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
               ).toString()
             ),
           },
-          userId: accountStore.getState().user.id,
+          userId: Store.getState().user.id,
         },
         onCardActionsEnd
       )

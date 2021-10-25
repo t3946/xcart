@@ -5,7 +5,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { SideBarMenuItem } from "@client/modules/account/components/sidebar-menu/SideBarMenuItem";
 import { getLists } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { ListsSidebarLabel } from "@client/modules/account/components/lists/ListsSidebarLabel";
@@ -23,7 +23,7 @@ export const ListsSidebarMenu: React.FC = () => {
     }
   });
 
-  const lists = useSelector((e: AccountStore) => e.lists.lists);
+  const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
   const backOnAccount = () => {
     history.push("/account/");

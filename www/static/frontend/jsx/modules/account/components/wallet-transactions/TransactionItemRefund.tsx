@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React  from "react";
 import { TransactionHeader } from "./TransactionHeader";
 import { TransactionItemTopBlock } from "./TransactionItemTopBlock";
 import { TransactionItemContactBlock } from "./TransactionItemContactBlock";
@@ -6,12 +6,12 @@ import { TransactionAddresses } from "./TransactionAddresses";
 import { TransactionItems } from "./TransactionItems";
 import { useAccordion } from "../../hooks/useAccordion";
 import { useSelector } from "react-redux";
-import { AccountStore } from "../../ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 export const TransactionItemRefund = ({ transactionInfo, first }) => {
   const accordion = useAccordion(500);
 
-  const breakpoint = useSelector((e: AccountStore) => e.main.breakpoint);
+  const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   return (
     <div>

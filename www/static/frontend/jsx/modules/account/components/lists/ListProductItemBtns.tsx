@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, Collapse } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { useSelector } from "react-redux";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
 import classnames from "classnames";
 import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
@@ -30,7 +30,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   time,
   listId,
 }) => {
-  const lists = useSelector((e: AccountStore) => e.lists.lists);
+  const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
   return (
     <div className={"product-list-item-btns-container"}>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { ShareListManagePeopleItem } from "@client/modules/account/components/lists/ShareListManagePeopleItem";
 import { editUserRights } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
@@ -13,7 +13,7 @@ interface ShareListManagePeopleProps {
 export const ShareListManagePeople: React.FC<ShareListManagePeopleProps> = ({
   id,
 }) => {
-  const list = useSelector((e: AccountStore) =>
+  const list = useSelector((e: StoreInterface) =>
     e.lists.lists.find((e) => e.cache_url === id)
   );
 

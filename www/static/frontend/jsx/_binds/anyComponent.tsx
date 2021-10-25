@@ -1,11 +1,11 @@
 import { Provider } from "react-redux";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { AccountRouters } from "@client/modules/account/routers/AccountRouters";
 import React from "react";
 
-const AnyComponent = () => {
+const AnyComponent: React.FC = () => {
   return (
-    <Provider store={accountStore}>
+    <Provider store={Store as any}>
       <AccountRouters />
     </Provider>
   );

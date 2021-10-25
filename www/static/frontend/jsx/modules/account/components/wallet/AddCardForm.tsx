@@ -14,7 +14,7 @@ import {
 import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "../../utils/detect-card-type";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { useHistory } from "react-router";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
