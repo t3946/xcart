@@ -8,6 +8,7 @@ use Xcart\App\Orm\Model;
  * @property int site_menu_id
  * @property SiteModel site
  * @property SiteMenuModel menu
+ * @property int site_id
  */
 class SitesMenuModel extends Model
 {

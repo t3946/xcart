@@ -12,8 +12,9 @@ use Xcart\App\Orm\Model;
  * @property int id
  * @property int site_id
  * @property SiteModel site
- * @property int address_id
- * @property AddressModel address
+ * @property int social_id
+ * @property SocialModel social
+ * @property int order_by
  */
 class SiteSocialsModel extends Model
 {
