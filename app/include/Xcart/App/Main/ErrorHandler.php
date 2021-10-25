@@ -4,7 +4,8 @@ namespace Xcart\App\Main;
 
 use ErrorException;
 use Exception;
-use Modules\Pages\Models\Page;
+use Modules\Pages\Models\PagesStorefrontLink;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Application\Application;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Exceptions\CompileErrorException;
@@ -561,10 +562,12 @@ class ErrorHandler
         if ($this->useTemplate) {
             $template_name = $view . '.tpl';
             if ($data['data']['code'] == 404) {
+                /** @var SiteModel $site_model */
                 $site_model = Xcart::app()->getModule('Sites')->getSite();
-                $page_404 = Page::objects()->get(['url' => 404, 'lang_id' => $site_model->lang->lang_id]);
+                /** @var PagesStorefrontLink $page_404 */
+                $page_404 = PagesStorefrontLink::objects()->get(['page__url' => 404, 'storefront_id' => $site_model->pk]);
                 if (!empty($page_404)) {
-                    $template_name = "pages/$page_404->view";
+                    $template_name = "pages/{$page_404->page->view}";
                 }
             }
             $output = $this->renderTemplate($template_name, $data);

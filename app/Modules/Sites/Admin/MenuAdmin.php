@@ -32,13 +32,6 @@ class MenuAdmin extends NestedAdmin
         return 'Site menu';
     }
 
-    public function getListItemActions(): array
-    {
-        return [
-            'update',
-        ];
-    }
-
     public function isAjaxUpdate(): bool
     {
         return true;
