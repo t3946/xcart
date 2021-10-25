@@ -3,6 +3,7 @@
 namespace Modules\Core\Commands;
 
 use DateTime;
+use Icamys\SitemapGenerator\FileSystem;
 use Icamys\SitemapGenerator\SitemapGenerator;
 use Modules\Brand\Models\BrandModel;
 use Modules\Goods\Models\CategoryModel;
@@ -52,7 +53,11 @@ class SitemapCommand extends Command
 
             $outputDir = Paths::get('www');
 
-            $generator = new SitemapGenerator($site->getAbsoluteUrl(), $outputDir);
+            $fs = new FileSystem();
+
+            $index_file = "$site->domain-sitemap.xml";
+
+            $generator = new SitemapGenerator($site->getAbsoluteUrl(), $outputDir, $fs);
 
             $generator->setMaxUrlsPerSitemap(50000);
 
@@ -131,6 +136,7 @@ class SitemapCommand extends Command
             $generator->flush();
 
             if ($counter) {
+                $fs->unlink("$outputDir/$index_file");
                 $generator->finalize();
                 $generator->submitSitemap();
             }
