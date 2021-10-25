@@ -25,6 +25,7 @@ use Xcart\App\Orm\TreeModel;
 /**
  * Class Page
  * @package Modules\Pages
+ * @property string view
  * @method static \Modules\Pages\Models\PageManager objects($instance = null)
  */
 class Page extends TreeModel

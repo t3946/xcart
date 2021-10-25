@@ -7,6 +7,12 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property int page_id
+ * @property int storefront_id
+ * @property Page page
+ * @property SiteModel storefront
+ */
 class PagesStorefrontLink extends Model
 {
     public static function getFields()
