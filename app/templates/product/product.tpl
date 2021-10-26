@@ -73,7 +73,7 @@
         <section class="product-title product-title-small">
             <div class="row">
                 <div class="col-12">
-                    <h1>
+                    <h1 class="fw-bold">
                         {$model->getFrontendName()}
 
                         {if $model->retail_trust_enabled}
@@ -152,28 +152,17 @@
                                         </option>
                                     {/if}
                                 {/foreach}
+
                                 {if $videos}
                                     {foreach $videos as $video}
                                         <option value="{$video->video}"
-                                                data-thumb=""
+                                                data-thumbs='{json_encode($video->getThumbs())}'
                                                 data-id="{$video->id}"
+                                                data-provider="{$video->provider}"
                                                 type="video">
-
                                         </option>
                                     {/foreach}
                                 {/if}
-
-                                {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*}
-                                {*type="video"*}
-                                {*data-thumb=""*}
-                                {*data-id="{$video->id}"*}
-                                {*></option>*}
-                                {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-                                {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
-                                {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-                                {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
-                                {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-
                             </datalist>
                         {else}
                             <div class="not-avail-thumb">

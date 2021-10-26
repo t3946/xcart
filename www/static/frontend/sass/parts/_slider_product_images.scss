@@ -261,6 +261,7 @@
 }
 .play-icon {
   position: relative;
+  cursor: pointer;
 
   &:before, &:after {
     content: '';

@@ -39,7 +39,7 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
     }
 
     // sync viewer and slider
-    if (photoSwipe.index !== index) {
+    if (photoSwipe.index !== undefined && photoSwipe.index !== index) {
       slideTo(photoSwipe.index);
     }
 
@@ -62,11 +62,27 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
     return slides[index].firstChild;
   }
 
+  function videoItemTemplate(item) {
+    return `<div class="wrapper">
+        <div class="video-wrapper">
+          <iframe
+            class="pswp__video"
+            width="960"
+            height="640"
+            src=${item.href}
+            allowFullScreen
+            allow="autoplay"
+          />
+        </div>
+      </div>`;
+  }
+
   /**
    * get photo swipe items array from swiper items
    */
   function getPhotoSwipeItems(): Record<any, any>[] {
     const IMAGE_TYPE = "image";
+    const VIDEO_TYPE = "video";
     const photoSwipeItems = [];
 
     for (const i in items) {
@@ -78,6 +94,14 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
             src: item.src,
             w: item.width,
             h: item.height,
+          });
+          break;
+
+        case VIDEO_TYPE:
+          photoSwipeItems.push({
+            html: videoItemTemplate(item),
+            w: 960,
+            h: 640,
           });
           break;
       }
@@ -95,7 +119,7 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
 
   function slideTo(index: number): void {
     setIndex(index);
-    setIsVideo(false);
+    setIsVideo(items[index].type === "video");
   }
 
   // handle image slider change event
