@@ -7,6 +7,7 @@ export class ApiService {
       credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",
@@ -24,6 +25,9 @@ export class ApiService {
       headers,
       redirect: "follow",
       referrerPolicy: "no-referrer",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: data,
     });
 

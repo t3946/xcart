@@ -16,9 +16,9 @@
   align-items: center;
   transition: .2s all ease-out;
 
-  &:last-child{
-    margin-right: 0px;
-  }
+  //&:last-child{
+  //  margin-right: 0px;
+  //}
 
   &:hover{
     text-decoration: none;
@@ -43,7 +43,8 @@
 @media (max-width: 1200px) {
   .order-info-header{
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
+    padding-left: 15px;
   }
 
   .order-info-header-item{
@@ -51,6 +52,19 @@
     width: 176px;
     margin-bottom: 15px;
     justify-content: center;
+  }
+
+}
+
+@media (max-width: 410px) {
+  .order-info-header-item{
+    margin-right: 0;
+    height: 70px;
+  }
+
+  .order-info-header{
+    padding-left: 0px;
+    margin-bottom: 0;
   }
 
 }

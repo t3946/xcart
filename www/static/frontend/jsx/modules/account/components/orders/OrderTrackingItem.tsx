@@ -13,9 +13,10 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
   trackingInfo,
   orderGroupInfo,
 }) => {
+  const breakpoint = useBreakpoint();
   const trackingViewData = getDataToTracking(
     orderGroupInfo.dc_status,
-    useBreakpoint()({ xs: true, md: false })
+    breakpoint({ xs: true, md: false })
   );
 
   return (
@@ -56,11 +57,15 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
                 style={e.roundStyle}
                 key={index}
               >
-                <div className="order-tracking-line-round" />
+                {breakpoint({
+                  md: <div className="order-tracking-line-round" />,
+                })}
                 <div className="order-tracking-line-round-text">{e.label}</div>
-                {e.date && (
-                  <div className="order-tracking-line-round-date">{e.date}</div>
-                )}
+                {breakpoint({
+                  xs: <div className="order-tracking-line-round" />,
+                  md: null,
+                })}
+                <div className="order-tracking-line-round-date">{e?.date}</div>
               </div>
             );
           })}

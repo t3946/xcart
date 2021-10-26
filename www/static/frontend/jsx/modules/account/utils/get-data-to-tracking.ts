@@ -44,12 +44,17 @@ export const getDataToTracking = (state: string, vertical: boolean) => {
     }
     if (index !== 0 && index !== 4) {
       roundItemProps.roundStyle = {
-        [vertical ? "top" : "left"]: `${25 * index}%`,
+        [vertical ? "top" : "left"]: `${
+          vertical ? 100 - 25 * index : 25 * index
+        }%`,
         transform: "translate(-50%, 0)",
       };
     }
     return roundItemProps;
   });
+  if (vertical) {
+    data.items = data.items.reverse();
+  }
 
   return data;
 };
