@@ -31,6 +31,8 @@ node_modules
 /log/debug_cache/
 /html_cache/
 /app/Modules/Translate/lang/*.i18next.json
+/app/Modules/Translate/lang/*.po
+/app/Modules/Translate/lang/*.mo
 /www/static/frontend/dist
 /www/static/frontend/versions
 /www/static/frontend/bem/bem.scss
@@ -38,7 +40,6 @@ node_modules
 /www/static/backend/versions
 /www/static/backend/bem/bem.scss
 /app/include/vendors
-/app/Modules/Translate/lang
 !/skin1_kolin/
 /docker/mysql/data/
 /docker/redis/data/
