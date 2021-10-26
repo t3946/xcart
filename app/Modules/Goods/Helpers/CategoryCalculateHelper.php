@@ -17,8 +17,7 @@ class CategoryCalculateHelper
 {
     public static function reCalcProductsCount(CategoryModel $model)
     {
-        $ta = ProductModel::objects()->getQuerySet()->getTableAlias();
-        $qor = new QOr(['group_root__raw' => " = `{$ta}`.`productid`", 'group_root__isnull' => true]);
+        $qor = new QOr(['is_group_root' => true, 'group_root__isnull' => true]);
 
         $model->global_product_count = ProductModel::objects()
             ->with(['categories'])
