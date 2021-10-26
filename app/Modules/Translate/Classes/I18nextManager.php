@@ -4,6 +4,7 @@ namespace Modules\Translate\Classes;
 
 use Symfony\Component\Translation\Loader\PoFileLoader;
 use Symfony\Component\Translation\Translator;
+use Throwable;
 use Xcart\App\Main\Xcart;
 
 /**
@@ -44,8 +45,12 @@ class I18nextManager
         $translator->addLoader('po', $file_loader);
         $resource_path = Xcart::app()->getModule('Translate')->getPath() . "/lang/{$locale}.po";
         $translator->addResource('po', $resource_path, $locale, 'messages');
-        $catalogue = $translator->getCatalogue();
-        $language = $catalogue->all()['messages'];
+        try {
+            $catalogue = $translator->getCatalogue();
+            $language = $catalogue->all()['messages'];
+        } catch (Throwable $exception) {
+            $language = [];
+        }
 
         return json_encode($language, true);
     }

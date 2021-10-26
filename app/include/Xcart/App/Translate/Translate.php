@@ -4,6 +4,7 @@ namespace Xcart\App\Translate;
 
 use Symfony\Component\Translation\Loader\PoFileLoader;
 use Symfony\Component\Translation\Translator;
+use Throwable;
 use Xcart\App\Main\Xcart;
 
 /**
@@ -46,7 +47,12 @@ class Translate
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $str_o =  $this->translator->trans($str, $params, 'messages', $site->lang->lang_code ?? 'en');
+        try {
+            $str_o =  $this->translator->trans($str, $params, 'messages', $site->lang->lang_code ?? 'en');
+        } catch(Throwable $exception) {
+            $str_o = '';
+        }
+
 
         if ($str_o === '') {
             $str_o = $str;
