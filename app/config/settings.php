@@ -56,6 +56,7 @@ return array_replace_recursive([
                ],
            ],
        ],
+       'vimeo_access_token' => 'd1b90b9bc4deb327e219424ec700ff04',
    ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [

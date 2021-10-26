@@ -4,7 +4,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import {
-  photoSwipeInitAction,
+  photoSwipeSetGalleryAction,
   photoSwipeClearAction,
   photoSwipeSetOptionIndexAction,
 } from "@client/jsx/redux/actions/PhotoSwipeActions";
@@ -85,6 +85,11 @@ const PhotoSwipeContainer: React.FC = function () {
     });
   }
 
+  // remove get params from url
+  function removeUrlParams(url) {
+    return url.split("?")[0];
+  }
+
   /**
    * change prev nex buttons offsets
    */
@@ -95,12 +100,62 @@ const PhotoSwipeContainer: React.FC = function () {
       return;
     }
 
-    const { w, fitRatio } = gallery.currItem;
-    const scaledWidth = Math.round(w * Math.min(fitRatio, 1));
-    const offset = Math.ceil(scaledWidth / 2) + 50;
+    const currItem = gallery.currItem;
+    const { fitRatio } = gallery.currItem;
 
-    prevButtonRef.current.style.paddingRight = `${offset}px`;
-    nextButtonRef.current.style.paddingLeft = `${offset}px`;
+    // slide is image
+    if (currItem.src) {
+      const w = currItem.w;
+      const scaledWidth = Math.round(w * Math.min(fitRatio, 1));
+      const offset = Math.ceil(scaledWidth / 2) + 50;
+
+      prevButtonRef.current.style.paddingRight = `${offset}px`;
+      nextButtonRef.current.style.paddingLeft = `${offset}px`;
+
+      prevButtonRef.current.style.width = "50%";
+      nextButtonRef.current.style.width = "50%";
+    }
+    // slide is video
+    else if (currItem.html) {
+      const frameWidth = 960;
+      const buttonWidth = (window.innerWidth - frameWidth) / 2;
+      const padding = 30;
+
+      prevButtonRef.current.style.paddingRight = `${padding}px`;
+      nextButtonRef.current.style.paddingLeft = `${padding}px`;
+
+      prevButtonRef.current.style.width = `${buttonWidth}px`;
+      nextButtonRef.current.style.width = `${buttonWidth}px`;
+    }
+  }
+
+  /**
+   * stop play for all videos exception current item video
+   * @param stopAll if true then stop all videos without exception
+   */
+  function toggleVideoPlay(stopAll = false): void {
+    const currentItemIframe =
+      gallery.currItem.container.getElementsByTagName("iframe")[0];
+
+    gallery.items.forEach((item) => {
+      if (!item.container) {
+        return;
+      }
+
+      const iframe: HTMLIFrameElement =
+        item.container.getElementsByTagName("iframe")[0];
+
+      if (iframe && (iframe !== currentItemIframe || stopAll === true)) {
+        iframe.setAttribute("src", removeUrlParams(iframe.src));
+      } else if (currentItemIframe && stopAll === false) {
+        currentItemIframe.src =
+          removeUrlParams(currentItemIframe.src) + "?autoplay=1&mute=1&muted=1";
+
+        addEventListener(currentItemIframe, function () {
+          console.log("ONLOAD SCRIPT");
+        });
+      }
+    });
   }
 
   React.useEffect(() => {
@@ -117,6 +172,7 @@ const PhotoSwipeContainer: React.FC = function () {
 
     gallery.listen("afterInit", () => {
       document.body.style.overflow = "hidden";
+      toggleVideoPlay();
     });
 
     // close gallery handler
@@ -129,6 +185,7 @@ const PhotoSwipeContainer: React.FC = function () {
         item.onBlur(item, gallery);
       }
 
+      toggleVideoPlay(true);
       dispatch(photoSwipeClearAction());
     });
 
@@ -163,7 +220,9 @@ const PhotoSwipeContainer: React.FC = function () {
         if (prevItem.onBlur) {
           prevItem.onBlur(prevItem, gallery);
         }
+
         changePadding(gallery);
+        toggleVideoPlay();
       }
     });
 
@@ -192,7 +251,7 @@ const PhotoSwipeContainer: React.FC = function () {
 
     changePadding(gallery);
 
-    dispatch(photoSwipeInitAction(gallery));
+    dispatch(photoSwipeSetGalleryAction(gallery));
   });
 
   return (
@@ -214,6 +273,7 @@ const PhotoSwipeContainer: React.FC = function () {
         <div className="pswp__ui pswp__ui--hidden">
           <div className="pswp__top-bar">
             <div className="pswp__counter" />
+
             <button
               className="pswp__button pswp__button--close"
               title="Close (Esc)"
@@ -237,6 +297,7 @@ const PhotoSwipeContainer: React.FC = function () {
                 </g>
               </svg>
             </button>
+
             <button
               className="pswp__button pswp__button--share"
               title="Share"

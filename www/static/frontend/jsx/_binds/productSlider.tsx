@@ -38,19 +38,13 @@ import $ from "jquery";
               alt: option.dataset.alt || null,
               title: option.dataset.title || null,
               img: option.dataset.poster || null,
-              thumb: option.dataset.thumb || null,
-            });
-          }
-
-          if (type === "html") {
-            items.push({
-              type: type,
-              html: option.innerHTML,
-              title: option.dataset.title || null,
-              thumb: option.dataset.thumb || null,
+              thumbs: JSON.parse(option.dataset.thumbs),
+              provider: option.dataset.provider,
             });
           }
         });
+
+        console.log(items);
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

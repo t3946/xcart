@@ -10,7 +10,7 @@ export const photoSwipeSetOptionIndexAction = (index: number): any => ({
   index,
 });
 
-export const photoSwipeInitAction = (gallery: PhotoSwipe): any => ({
+export const photoSwipeSetGalleryAction = (gallery: PhotoSwipe): any => ({
   type: "PHOTOSWIPE_SET_GALLERY",
   gallery,
 });

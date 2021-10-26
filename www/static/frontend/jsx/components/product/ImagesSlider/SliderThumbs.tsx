@@ -16,8 +16,9 @@ const SliderThumbs: React.FC<PropsInterface> = function (
     width: "100%",
   };
   const IMAGE_TYPE = "image";
-  const HTML_TYPE = "html";
   const VIDEO_TYPE = "video";
+  const VIDEO_PROVIDER_VIMEO = "vimeo";
+  const VIDEO_PROVIDER_YOUTUBE = "youtube";
 
   const classes = {
     navButton: [
@@ -29,8 +30,16 @@ const SliderThumbs: React.FC<PropsInterface> = function (
     navButtonNext: ["next", "product-thumbs-slider-next"],
   };
 
+  // document.body.addEventListener("iframeOnload", function (e) {
+  //   console.log("");
+  // });
+
   function prev() {
-    slideTo((index || items.length) - 1);
+    const index = (props.index || items.length) - 1;
+
+    console.log("PREV", { index });
+
+    slideTo(index);
   }
 
   function next() {
@@ -47,9 +56,10 @@ const SliderThumbs: React.FC<PropsInterface> = function (
       const style: React.CSSProperties = {};
       const classes = [
         "slide",
+        "images-slider-thumb",
         {
           "type-image": type === IMAGE_TYPE,
-          "type-video": type === HTML_TYPE,
+          "type-video": type === VIDEO_TYPE,
           active: isActive,
         },
       ];
@@ -60,10 +70,21 @@ const SliderThumbs: React.FC<PropsInterface> = function (
           break;
 
         case VIDEO_TYPE:
-          const src = item.thumb || item.meta.images.thumb;
+          let src;
+
+          switch (item.provider) {
+            case VIDEO_PROVIDER_VIMEO:
+              src = item.thumbs[1];
+              break;
+
+            case VIDEO_PROVIDER_YOUTUBE:
+              src = item.thumbs[0];
+              break;
+          }
 
           if (src) {
             style.backgroundImage = `url(${src})`;
+            classes.push("play-icon");
           }
 
           break;
