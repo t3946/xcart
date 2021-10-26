@@ -4,7 +4,7 @@ import { deleteProduct } from "@client/jsx/redux/actions/account-actions/ListsAc
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { List } from "@client/modules/account/ts/types/list.type";
 
 interface DeleteProductPageURLParams {
@@ -24,9 +24,9 @@ export const DeleteProductPage: React.FC = () => {
     dispatch(deleteProduct(params.listId, params.productId, onCancelClick));
   };
 
-  const list = accountStore
-    .getState()
-    .lists.lists.find((e: List) => e.product_list_id === params.listId);
+  const list = Store.getState().lists.lists.find(
+    (e: List) => e.product_list_id === params.listId
+  );
 
   const onCancelClick = () => {
     history.push(`/account/your-lists/${list.cache_url}`);

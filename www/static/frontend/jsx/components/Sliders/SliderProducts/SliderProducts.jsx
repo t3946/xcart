@@ -4,7 +4,7 @@ import classnames from "classnames";
 import ProductCard from "@/components/product/card/slider/Card";
 import { CardSceleton } from "@/components/product/card/slider/CardSceleton";
 import $ from "jquery";
-import { accountStore } from "../../../redux/stores/StoreAccount";
+import Store from "../../../redux/stores/Store";
 import {
   addProduct,
   deleteProduct,
@@ -35,10 +35,10 @@ export default class SliderProducts extends Component {
 
     this.swiperRef = React.createRef();
 
-    accountStore.subscribe(() => {
+    Store.subscribe(() => {
       this.setState({
         ...this.state,
-        lists: accountStore
+        lists: Store
           .getState()
           .lists?.lists?.find((e, index) => index === 0),
       });
@@ -51,19 +51,19 @@ export default class SliderProducts extends Component {
     if (this.state.lists) {
       return;
     }
-    accountStore.dispatch(getLists());
+    Store.dispatch(getLists());
   }
 
   onFlagClick(e, inList, productId) {
     e.stopPropagation();
 
     if (!inList) {
-      accountStore.dispatch(
+      Store.dispatch(
         addProduct(this.state.lists.product_list_id, productId, null, () => {})
       );
       return;
     }
-    accountStore.dispatch(
+    Store.dispatch(
       deleteProduct(this.state.lists.product_list_id, productId, () => {})
     );
   }

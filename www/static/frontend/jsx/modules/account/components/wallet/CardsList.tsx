@@ -7,7 +7,6 @@ import { changeDefaultCard } from "@client/jsx/redux/actions/account-actions/Pay
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
 import { useHistory } from "react-router";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import { LoadingContainer } from "@client/modules/account/components/shared/LoadingContainer";
 
 interface CardsListProps {
   cards: CardItemDto[];

@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
 export const BreadCrumbs: React.FC = () => {
   useLocation();

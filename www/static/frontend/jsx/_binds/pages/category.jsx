@@ -1,7 +1,7 @@
 import { render } from "preact";
 import Catalog from "@/components/catalog/Catalog";
 import { Provider } from "react-redux";
-import { accountStore } from "../../redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 
 export default (() => {
   // init catalog
@@ -16,7 +16,7 @@ export default (() => {
   const catalogUrl = "/api" + document.location.pathname;
 
   return render(
-    <Provider store={accountStore}>
+    <Provider store={Store}>
       <Catalog
         sortingOptions={sortingOptions}
         sortKey={elem.dataset.currentSortingKey}

@@ -2,7 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 
 const api = new ApiService();
 
@@ -10,8 +10,7 @@ function* getCards(action: AnyAction): Generator {
   const orders: any = yield api
     .get<any>(
       `/account/api/orders/get-orders/${action.ordersType}/${
-        accountStore.getState().ordersStore.orders[action.ordersType]
-          .selectValue.value
+        Store.getState().ordersStore.orders[action.ordersType].selectValue.value
       }`
     )
     .then((response) => response);

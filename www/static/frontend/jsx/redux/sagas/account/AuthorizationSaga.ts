@@ -4,7 +4,6 @@ import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import { route } from "@client/jsx/utils/AppData";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 
 const api = new ApiService();
 

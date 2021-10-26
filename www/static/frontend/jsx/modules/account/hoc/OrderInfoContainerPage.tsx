@@ -1,13 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { OrderInfoHeader } from "@client/modules/account/components/orders/OrderInfoHeader";
 import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { CircularProgress } from "@material-ui/core";
 import { setOrders } from "@client/jsx/redux/actions/account-actions/OrdersActions";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
 
 export const OrderInfoContainerPage: React.FC = ({ children }) => {
   const urlParams = useParams<OrderPageURLParams>();

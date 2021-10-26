@@ -4,7 +4,7 @@ import classnames from "classnames";
 import { CardSceletonBlock } from "../product/card/catalog/CardSceletonBlock";
 import { CardSceletonLine } from "../product/card/catalog/CardSceletonLine";
 import React from "react";
-import { accountStore } from "../../redux/stores/StoreAccount";
+import Store from "../../redux/stores/Store";
 import {
   addProduct,
   deleteProduct,
@@ -26,12 +26,10 @@ export default class ProductsList extends Component {
       lists: null,
     };
 
-    accountStore.subscribe(() => {
+    Store.subscribe(() => {
       this.setState({
         ...this.state,
-        lists: accountStore
-          .getState()
-          .lists?.lists?.find((e, index) => index === 0),
+        lists: Store.getState().lists?.lists?.find((e, index) => index === 0),
       });
     });
 
@@ -71,7 +69,7 @@ export default class ProductsList extends Component {
   loadData() {
     this.props.onBeginLoading(this.state.nextPage);
 
-    accountStore.dispatch(getLists());
+    Store.dispatch(getLists());
 
     //end of pagination
     if (!this.props.catalogUrl) {
@@ -167,12 +165,12 @@ export default class ProductsList extends Component {
   onFlagClick(e, inList, productId) {
     e.stopPropagation();
     if (!inList) {
-      accountStore.dispatch(
+      Store.dispatch(
         addProduct(this.state.lists.product_list_id, productId, null, () => {})
       );
       return;
     }
-    accountStore.dispatch(
+    Store.dispatch(
       deleteProduct(this.state.lists.product_list_id, productId, () => {})
     );
   }

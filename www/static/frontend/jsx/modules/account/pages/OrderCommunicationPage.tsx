@@ -13,9 +13,9 @@ import { useHistory, useParams } from "react-router-dom";
 import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
 import { useDispatch, useSelector } from "react-redux";
 import { sendEmail } from "@client/jsx/redux/actions/account-actions/OrdersActions";
-import { accountStore } from "@client/jsx/redux/stores/StoreAccount";
+import Store from "@client/jsx/redux/stores/Store";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
 interface OrderCommunicationPageProps {
   orderItem?: any;
@@ -57,7 +57,7 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPageProps> = ({
     dispatch(
       sendEmail(
         {
-          from: accountStore.getState().user.email,
+          from: Store.getState().user.email,
           to: ["andrey@s3stores.com"],
           body: emailBody,
           files: files,

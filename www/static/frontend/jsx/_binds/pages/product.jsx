@@ -2,8 +2,6 @@ import documentReady from "../../utils/documentReady";
 
 import { render } from "preact";
 import Catalog from "@/components/catalog/Catalog";
-import { Provider } from "react-redux";
-import { accountStore } from "../../redux/stores/StoreAccount";
 
 (() => {
   let page = document.querySelector(".product-page");

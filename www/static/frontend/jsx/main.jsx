@@ -6,6 +6,7 @@ import "./_head.jsx";
 import "./_binds/pages/account";
 import "./_binds/pages/product";
 import "./_binds/pages/category";
+
 import "./_binds/productSlider";
 import "./_binds/sliders";
 

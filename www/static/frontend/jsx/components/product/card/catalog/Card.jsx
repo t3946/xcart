@@ -9,7 +9,7 @@ import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
 import { Provider } from "react-redux";
-import { accountStore } from "../../../../redux/stores/StoreAccount";
+import Store from "../../../../redux/stores/Store";
 import Snackbar from "../../../../modules/account/components/snackbar/Snackbar";
 import { AddToListSelectOnProductPage } from "../../../../modules/account/components/lists/AddToListSelectOnProductPage";
 import React from "react";
@@ -417,7 +417,7 @@ export default class Card extends Component {
             })()}
           </div>
           {this.context.viewMode !== "tile" && (
-            <Provider store={accountStore}>
+            <Provider store={Store}>
               <Snackbar>
                 <div className="add-to-list-on-product-list">
                   <AddToListSelectOnProductPage

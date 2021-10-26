@@ -1,7 +1,7 @@
 import React from "react";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/account-store.type";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
 interface ConfirmDeleteProps {
   onCancelClick: () => void;
