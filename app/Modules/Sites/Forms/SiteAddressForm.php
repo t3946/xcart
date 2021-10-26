@@ -8,7 +8,7 @@ use Xcart\App\Form\ModelForm;
 
 class SiteAddressForm extends ModelForm
 {
-    public array $exclude = ['site'];
+    public array $exclude = ['site', 'address'];
 
     public function getFields(): array
     {

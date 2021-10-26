@@ -146,7 +146,7 @@ abstract class ListViewAdmin extends Admin
         $owner_pk = $_POST['ownerPk'];
         $data = ['error' => 'При удалении объекта произошла ошибка'];
         /** @var Model $owner_model */
-        if (!empty($this->owner_model) && $owner_model = $this->owner_model::objects()->get(['pk' => $owner_pk])) {
+        if (!empty($this->owner_model) && !empty($this->owner_model_field) && $owner_model = $this->owner_model::objects()->get(['pk' => $owner_pk])) {
             if ($owner_model->getField($this->owner_model_field) instanceof ManyToManyField) {
                 $ligament_model = $owner_model->{$this->owner_model_field};
                 /** @var Model $field */
@@ -167,7 +167,7 @@ abstract class ListViewAdmin extends Admin
 
     public function isManyToManyModel(): void
     {
-        if ($this->owner_model) {
+        if ($this->owner_model && !empty($this->owner_model_field)) {
             $name_owner = $this->owner_model_field;
             $model = $this->owner_model::objects()->get(['pk' => $this->ownerPk]);
             $owner_field = $model->getField($name_owner);
