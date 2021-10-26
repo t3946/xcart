@@ -162,7 +162,6 @@ class QueueProcessCommand extends Command
                                 $product->eta_date_mm_dd_yyyy = strtotime($child['eta_date_mm_dd_yyyy']);
                             }
                             $product->parent = $group_product;
-                            $product->group_mask = $group_product->product;
                             $product->sites = [$site];
                             ProductHelper::setProductBrand($product, $child['brand_name'], $site);
                             $changed = SupplierFeedHelper::getChanged($product);
