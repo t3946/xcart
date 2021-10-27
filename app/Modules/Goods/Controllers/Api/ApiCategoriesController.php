@@ -152,13 +152,13 @@ class ApiCategoriesController extends AbstractCatalogController
             Xcart::app()->request->session->add('category_sort', $_GET['sort']);
         }
 
-        $this->model = CategoryModel::objects()->filter(['categoryid' => $id])->get();
+        if ($this->model = CategoryModel::objects()->filter(['categoryid' => $id])->get()) {
+            /** @var QuerySet $qs */
+            $qs = $this->getQS($this->model);
 
-        /** @var QuerySet $qs */
-        $qs = $this->getQS($this->model);
-
-        if ($this->getRequest()->getIsAjax()) {
-            $this->jsonResponse($this->getPaginatedProducts($qs));
+            if ($this->getRequest()->getIsAjax()) {
+                $this->jsonResponse($this->getPaginatedProducts($qs));
+            }
         }
     }
 
