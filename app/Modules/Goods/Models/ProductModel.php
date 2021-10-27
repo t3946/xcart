@@ -821,13 +821,17 @@ class ProductModel extends Model implements ICartItem
         if ($this->front_name === null) {
             $brand_name = '';
 
-            $name = $this->seo_product_name ?: $this->product;
+            if ($this->seo_product_name) {
+                $this->front_name = $this->seo_product_name;
+            } else {
+                if ($brand = $this->brand) {
+                    $brand_name = ($this->brand_normalized && !$this->isGroupRoot())
+                        ? $brand->getProductFrontendName() . ' '
+                        : '';
+                }
 
-            if ($brand = $this->brand) {
-                $brand_name = ($this->brand_normalized && !$this->isGroupRoot()) ? $brand->getProductFrontendName() . ' ' : '';
+                $this->front_name = ($this->isGroupChild()) ? $this->group_mask . ' ' . $this->product : $brand_name . $this->product;
             }
-
-            $this->front_name = ($this->isGroupChild()) ? $this->group_mask . ' ' . $name : $brand_name . $name;
         }
 
         return $this->front_name;
