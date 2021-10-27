@@ -32,14 +32,11 @@ import $ from "jquery";
           }
 
           if (type === "video") {
+            const video = JSON.parse(option.dataset.video);
+
             items.push({
-              type: type,
-              href: option.value,
-              alt: option.dataset.alt || null,
-              title: option.dataset.title || null,
-              img: option.dataset.poster || null,
-              thumbs: JSON.parse(option.dataset.thumbs),
-              provider: option.dataset.provider,
+              type,
+              ...video,
             });
           }
         });

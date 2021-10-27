@@ -38,11 +38,8 @@ const SliderItems = function (props: PropsInterface): Record<any, any>[] {
 
         switch (item.provider) {
           case VIDEO_PROVIDER_VIMEO:
-            src = item.thumbs[3];
-            break;
-
           case VIDEO_PROVIDER_YOUTUBE:
-            src = item.thumbs[1];
+            src = item.image_2;
             break;
         }
 
