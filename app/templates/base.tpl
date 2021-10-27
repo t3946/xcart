@@ -49,7 +49,7 @@
 
                                         <div class="columns show-for-medium medium-5 large-4">
                                             {if $config.flat_shipping_enabled}
-                                            <img src="{$uri}/static/frontend/dist/images/flat.png">
+                                                <img src="{$uri}/static/frontend/dist/images/flat.png">
                                             {/if}
                                         </div>
 
@@ -64,13 +64,16 @@
                                         <div class="columns hide-for-large small-6 medium-4 small-offset-0 medium-offset-0 text-align--right mobile-header">
 
                                             {if $.workingDayTimeNow}
-                                                <a href="tel:18009292431" class="mobile__call-btn middle-inline-block right-icon"></a>
+                                                <a href="tel:18009292431"
+                                                   class="mobile__call-btn middle-inline-block right-icon"></a>
                                             {/if}
 
-                                            <a class="mobile__search-btn middle-inline-block right-icon" data-swich="search_container"></a>
+                                            <a class="mobile__search-btn middle-inline-block right-icon"
+                                               data-swich="search_container"></a>
                                             {*data-swich="search_container"*}
 
-                                            <a href="{url "cart:list"}" class="mobile__cart middle-inline-block right-icon">
+                                            <a href="{url "cart:list"}"
+                                               class="mobile__cart middle-inline-block right-icon">
                                                 <span class="count">
                                                     <span class="mc_count">
                                                         {*{$.app->cart->getQuantity()}*}
@@ -85,7 +88,7 @@
                                     <div class="row align-justify">
                                         <div class="columns banner">
                                             {if $config.flat_shipping_enabled}
-                                            <img src="{$uri}/static/frontend/dist/images/flat.png">
+                                                <img src="{$uri}/static/frontend/dist/images/flat.png">
                                             {/if}
                                         </div>
                                     </div>
@@ -162,8 +165,12 @@
                     </div>
                 </div>
             </div>
-
-            {insert "_parts/_footer.tpl"}
+            {switch $site->code}
+                {case 'RD'}
+                    {insert "_parts/footer_readyfreddy.tpl"}
+                {default}
+                    {insert "_parts/_footer.tpl"}
+            {/switch}
         </div>
 
 
