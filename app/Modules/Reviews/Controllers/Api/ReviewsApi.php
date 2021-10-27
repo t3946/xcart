@@ -4,12 +4,14 @@ namespace Modules\Reviews\Controllers\Api;
 
 use Modules\Account\Controllers\AccountController;
 
+use Modules\Images\Models\ImagesModel;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\Models\ReviewRatingsModel;
+use Modules\Reviews\Models\ReviewsImagesModel;
 use Modules\Reviews\Models\TotalProductRatingsModel;
 use Modules\Reviews\Models\HelpfulReviewsModel;
-use Modules\Reviews\Models\ReviewFileModel;
+use Modules\Reviews\Models\ReviewImagesModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\TotalProductReviewsModel;
 use Xcart\App\Controller\FrontendController;
@@ -26,6 +28,8 @@ class ReviewsApi extends FrontendController
     public const SORT_HAS_ATTACHMENTS = 'has-attachments';
     public const SORT_NEW = 'most-recent';
     private const SORT_DEFAULT = self::SORT_TOP;
+    private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png'];
+    private const SUPPORTED_VIDEO_FORMATS = ['mp4'];
 
     public function __construct($request)
     {
@@ -121,6 +125,13 @@ class ReviewsApi extends FrontendController
         //save files
         for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
             $files = $_FILES['files'];
+            $extension = pathinfo($files['name'][$i])['extension'];
+
+            //is not supported file
+            if (!in_array($extension, self::SUPPORTED_IMAGE_FORMATS) &&
+                !in_array($extension, self::SUPPORTED_VIDEO_FORMATS)) {
+                continue;
+            }
 
             $uploadedFile = new UploadedFile(
                 $files['tmp_name'][$i],
@@ -129,16 +140,23 @@ class ReviewsApi extends FrontendController
                 (int)$files['size'][$i],
                 (int)$files['error'][$i],
             );
-
             $image_name = $uploadedFile->getPath() . '/' . $uploadedFile->getFilename();
-            list($width, $height) = getimagesize($image_name);
 
-            (new ReviewFileModel([
-                'review_id' => $review_id,
-                'image_path' => $uploadedFile,
-                'width' => $width,
-                'height' => $height,
-            ]))->save();
+            //is image
+            if (in_array($extension, self::SUPPORTED_IMAGE_FORMATS)) {
+                list($width, $height) = getimagesize($image_name);
+
+                (new ReviewsImagesModel())->saveImage($review_id, [
+                    'path' => $uploadedFile,
+                    'width' => $width,
+                    'height' => $height,
+                ]);
+            }
+
+            //is video
+            if (in_array($extension, self::SUPPORTED_VIDEO_FORMATS)) {
+
+            }
         }
 
         $this->jsonResponse($review->getAttributes());
@@ -153,10 +171,6 @@ class ReviewsApi extends FrontendController
 
         $qs = HelpfulReviewsModel::objects()->getQuerySet();
         $ratings_alias = $qs->getTableAlias();
-
-        $qs = ReviewFileModel::objects()->getQuerySet();
-        $files_alias = $qs->getTableAlias();
-
         $user_id = $this->getUser()->user_id;
         $select_fields = [
             '*',
@@ -209,7 +223,7 @@ class ReviewsApi extends FrontendController
         for ($i = 0; $i < count($reviews); $i++) {
 
             $reviews[$i]['markedHelpful'] = !($reviews[$i]['markedHelpful'] === "0");
-            $reviews[$i]['files'] = ReviewFileModel::objects()
+            $reviews[$i]['files'] = ReviewImagesModel::objects()
                 ->asArray()
                 ->select(
                     [
