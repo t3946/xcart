@@ -4,6 +4,7 @@ namespace Modules\Goods\Models;
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Modules\Goods\Admin\ProductAdmin;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\QueryBuilder\Expression;
@@ -903,7 +904,13 @@ class ProductModel extends Model implements ICartItem
 
     public function getAdminUrl(): string
     {
-        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
+        return Xcart::app()->router->url(
+            'admin:update',
+            [
+                'pk' => $this->pk,
+                'module' => static::getModuleName(),
+                'admin' => ProductAdmin::classNameShort(),
+            ]);
     }
 
     public function isCategorized(): bool
