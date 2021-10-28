@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Goods\Helpers\ApiProductHelper;
+use Modules\Goods\Admin\ProductAdmin;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\QueryBuilder\Expression;
@@ -113,8 +114,6 @@ use Xcart\Product;
 class ProductModel extends Model implements ICartItem
 {
     private ?string $front_name = null;
-
-    public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
 
     public const NO_ASIN_FOUND = 'No ASIN found';
 
@@ -822,13 +821,17 @@ class ProductModel extends Model implements ICartItem
         if ($this->front_name === null) {
             $brand_name = '';
 
-            $name = $this->seo_product_name ?: $this->product;
+            if ($this->seo_product_name) {
+                $this->front_name = $this->seo_product_name;
+            } else {
+                if ($brand = $this->brand) {
+                    $brand_name = ($this->brand_normalized && !$this->isGroupRoot())
+                        ? $brand->getProductFrontendName() . ' '
+                        : '';
+                }
 
-            if ($brand = $this->brand) {
-                $brand_name = ($this->brand_normalized && !$this->isGroupRoot()) ? $brand->getProductFrontendName() . ' ' : '';
+                $this->front_name = ($this->isGroupChild()) ? $this->group_mask . ' ' . $this->product : $brand_name . $this->product;
             }
-
-            $this->front_name = ($this->isGroupChild()) ? $this->group_mask . ' ' . $name : $brand_name . $name;
         }
 
         return $this->front_name;
@@ -836,7 +839,7 @@ class ProductModel extends Model implements ICartItem
 
     public function getFrontendDescription(): string
     {
-        return $this->seo_fulldescr ?: $this->fulldescr ?: $this->descr ?? '';
+        return html_entity_decode($this->seo_fulldescr ?: $this->fulldescr ?: $this->descr ?? '');
     }
 
     public function getCatalogDescription($length = 0)
@@ -899,7 +902,13 @@ class ProductModel extends Model implements ICartItem
 
     public function getAdminUrl(): string
     {
-        return sprintf(self::ADMIN_PRODUCT_MODIFY_URL, $this->productid, $this->sites->limit(1)->get()->storefrontid);
+        return Xcart::app()->router->url(
+            'admin:update',
+            [
+                'pk' => $this->pk,
+                'module' => static::getModuleName(),
+                'admin' => ProductAdmin::classNameShort(),
+            ]);
     }
 
     public function isCategorized(): bool

@@ -214,6 +214,7 @@ foreach ($cidev_updated_products->limit(10000) as $record) {
         func_flush();
     }
 
+    /** @var BrandModel $brand */
     if ($brand = BrandModel::objects()->get(['brandid' => (int) $record['resourceid']])) {
         foreach (SiteModel::objects() as $site) {
             $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
@@ -223,7 +224,8 @@ foreach ($cidev_updated_products->limit(10000) as $record) {
         }
         if ($brand->avail === 'Y' && $brand->products->count() > 0) {
 
-            foreach ($brand->storefront as $site) {
+            foreach ($brand->brand_storefront as $bsf) {
+                $site = $bsf->storefront;
                 $classElasticSearch = new Xcart\ElasticSearch($config['ElasticSearch_options']['es_url'], $site->domain);
                 $classElasticSearch->setType('brand');
                 $data_arr = [

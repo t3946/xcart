@@ -3,29 +3,23 @@
 namespace Modules\Goods\Forms;
 
 
-use Modules\Core\Models\LanguageModel;
-use Modules\Distributor\Models\DistributorModel;
+use DateTime;
 use Modules\Goods\Admin\FilesProductAdmin;
 use Modules\Goods\Admin\FilterProductAdmin;
 use Modules\Goods\Admin\ProductImagesAdmin;
 use Modules\Shipping\Models\ZoneModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Q\QOr;
-use Modules\Brand\Models\BrandModel;
 use Modules\Editor\Fields\EditorField;
 use Modules\Goods\Admin\ProductAdmin;
 use Modules\Goods\Admin\ProductOptionsAdmin;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\DateField;
-use Xcart\App\Form\Fields\DateTimeField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ListViewField;
-use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\Fields\TextAreaField;
-use Xcart\App\Form\Fields\TimeStampField;
 use Xcart\App\Form\Fields\UnixDateField;
 use Xcart\App\Form\ModelForm;
 
@@ -70,7 +64,6 @@ class ProductAdminForm extends ModelForm
                 'distributor',
                 'brand',
                 'category',
-                'main_category_id',
             ],
             'SEO options' => [
                 'prevent_search_indexing_this_product_page',
@@ -132,8 +125,9 @@ class ProductAdminForm extends ModelForm
         $brand = $product->brand;
         $distributor = $product->distributor;
         $category = $product->getMainCategory();
-        $user = $product->last_modify_user ?? Xcart::app()->user;
-        $modify_time = (new \DateTime())->setTimestamp($product->mod_date)->format('d M Y H:s');
+        $user = $product->last_modify_user;
+        $user_modified_login = $user->login ?? $product->provider;
+        $modify_time = (new DateTime())->setTimestamp($product->mod_date)->format('d M Y H:s');
         return [
             'weight' => [
                 'class' => CharField::class,
@@ -227,7 +221,6 @@ class ProductAdminForm extends ModelForm
             ],
             'product' => [
                 'class' => CharField::class,
-                'required' => true,
                 'label' => 'Product name'
             ],
             'product_price_multiplier' => [
@@ -318,7 +311,7 @@ class ProductAdminForm extends ModelForm
                 'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
                 'html' => [
                     'style' => 'width: 100%',
-                    'data-url' => (new ProductAdmin)->getSuggestionUrl('distributor'),
+                    'data-url' => (new ProductAdmin())->getSuggestionUrl('distributor'),
                 ],
             ],
             'brand' => [
@@ -326,25 +319,27 @@ class ProductAdminForm extends ModelForm
                 'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
                 'html' => [
                     'style' => 'width: 100%',
-                    'data-url' => (new ProductAdmin)->getSuggestionUrl('brand'),
+                    'data-url' => (new ProductAdmin())->getSuggestionUrl('brand'),
                 ],
             ],
             'category' => [
                 'class' => Select2Field::class,
-                'value' => $category ? $category->categoryid : null,
-                'choices' => $category ? [$category->categoryid => (string)implode('/', array_map(function ($a) {
-                    return $a['name'];
-                }, $category->getBreadcrumbs()->get()))] : [],
+                'value' => $category->categoryid ?? null,
+                'choices' => $category
+                    ? [
+                        $category->categoryid => implode(
+                            '/',
+                            array_map(
+                                static fn($a) => $a['name'],
+                                $category->getBreadcrumbs()->get()
+                            )
+                        )]
+                    : [],
                 'html' => [
                     'style' => 'width: 100%',
-                    'data-url' => (new ProductAdmin)->getSuggestionUrl('category'),
+                    'data-url' => (new ProductAdmin())->getSuggestionUrl('category'),
                 ],
                 'label' => 'Main category'
-            ],
-            'main_category_id' => [
-                'class' => CharField::class,
-                'label' => 'Main category ID',
-                'value' => $category ? $category->categoryid : null,
             ],
             'prevent_search_indexing_this_product_page' => [
                 'class' => CheckboxField::class,
@@ -416,7 +411,7 @@ class ProductAdminForm extends ModelForm
                     'readonly' => true,
                 ],
                 'label' => 'Added by',
-                'value' => "($user->login) on {$modify_time}",
+                'value' => "($user_modified_login) on $modify_time",
             ],
         ];
     }
