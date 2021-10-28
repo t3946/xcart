@@ -1,7 +1,7 @@
 import { h, Component, render } from "preact";
 import _ from "lodash";
 import Price from "@/components/product/card/components/Price";
-import { PriceProduct } from "./product/card/components/PriceProduct";
+import { PriceProduct } from "@/components/product/card/components/PriceProduct";
 
 class MiniCart extends Component {
   constructor(props, state) {

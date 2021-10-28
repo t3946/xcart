@@ -30,7 +30,7 @@ export const PriceProduct: React.FC<PriceProduct> = ({ classes, price }) => {
   return (
     <Fragment>
       {currency.symbol_prefix}
-      {!currency.after && currency.currency}
+      {!currency.after && `${currency.currency} `}
       <span className={classNames(["price-number", classes])}>
         {formatNumber()}
       </span>
