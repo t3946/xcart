@@ -19,11 +19,11 @@ class I18nextManager
     public static function convert(string $locale): void
     {
         // define convert command
-        $module = $_SERVER[ 'DOCUMENT_ROOT' ] . '/static/node_modules/i18next-conv/bin/';
+        $module = $_SERVER['DOCUMENT_ROOT'] . '/static/node_modules/i18next-conv/bin/';
         define('FORMAT_TRANSLATE_COMMAND', "node $module -l ru -s %s -t %s");
 
         // determine convert source and target
-        $lang_dir = $_SERVER[ 'DOCUMENT_ROOT' ] . '/../app/Modules/Translate/lang';
+        $lang_dir = $_SERVER['DOCUMENT_ROOT'] . '/../app/Modules/Translate/lang';
         $source = "$lang_dir/$locale.po";
         $target = "$lang_dir/$locale.i18next.json";
 
@@ -47,11 +47,36 @@ class I18nextManager
         $translator->addResource('po', $resource_path, $locale, 'messages');
         try {
             $catalogue = $translator->getCatalogue();
-            $language = $catalogue->all()['messages'];
+            $language = [];
+            foreach ($catalogue->all()['messages'] as $key => $value) {
+                $ar_lang = explode('|', $key);
+                if (count($ar_lang) > 1 && !empty($value)) {
+                    $result_lang = [];
+                    $ar_message = explode('|', $value);
+                    foreach ($ar_message as $id => $message) {
+                        $key_name = "$ar_lang[0]";
+                        switch ($id)
+                        {
+                            case 0:
+                                $key_name .= "_one";
+                                break;
+                            case 1:
+                                $key_name .= "_many";
+                                break;
+                            case '2':
+                                $key_name .= "_other";
+                                break;
+                        }
+                        $language[$key_name] = $message;
+                    }
+                } else {
+                    $language[$key] = $value;
+                }
+            }
         } catch (Throwable $exception) {
             $language = [];
         }
 
-        return json_encode($language, true);
+        return json_encode($language, JSON_FORCE_OBJECT);
     }
 }

@@ -4,6 +4,7 @@ import InputError from "@/components/Checkout/InputError";
 import "regenerator-runtime/runtime";
 import _ from "lodash";
 import Price from "@/components/product/card/components/Price";
+import { PriceProduct } from "../product/card/components/PriceProduct";
 
 export default class PayByCardStripe extends Component {
   constructor(props) {
@@ -226,10 +227,7 @@ export default class PayByCardStripe extends Component {
           <p className="checkout_stripe-description stripe-description">
             Your cart will be charged in the amount of USA of{" "}
             <span className="stripe-description-price">
-              <Price
-                currency={app.options.currency}
-                price={this.state.grand_total}
-              />
+              <PriceProduct price={this.state.grand_total} />
             </span>{" "}
             by S3 Stores, Inc.
           </p>

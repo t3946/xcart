@@ -5,6 +5,8 @@ namespace Modules\Goods\Helpers;
 use DateTime;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Sites\Models\CurrencyModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 use function is_array;
@@ -17,13 +19,15 @@ class ApiProductHelper
      * @return array
      * @throws UnknownPropertyException
      */
-    public static function getProductData($products): array
+    public static function getProductData($products, array $params = []): array
     {
         if (!is_array($products)) {
-            $products->limit(20)->cache(10);
+            $products->limit(20)->cache(60);
         }
-
-        $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        /** @var CurrencyModel $currency */
+        $currency = $site->getCurrency();
         $data = [];
 
         /**
@@ -55,6 +59,9 @@ class ApiProductHelper
                     }
                 }
             } else {
+                if ($params['is_slider'] && $product->isGroupChild()) {
+                    $product = $product->parent;
+                }
                 $imageModel = $product->getMainImage();
 
                 if ($imageModel && $url = $imageModel->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
@@ -68,8 +75,7 @@ class ApiProductHelper
             $eta_date = '';
 
             if ($product->eta_date_mm_dd_yyyy && $product->eta_date_mm_dd_yyyy > time()) {
-                $date = (new DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
-                $eta_date = date_format($date, "d F Y");
+                $eta_date = $product->getFrontendEtaDate();
             }
 
             $dx = $product->distributor;
@@ -81,8 +87,8 @@ class ApiProductHelper
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,
                 'images' => $images,
-                'description' => utf8_encode( $product->getCatalogDescription(140) ),
-                'short_description' => utf8_encode( $product->getCatalogDescription(70) ),
+                'description' => utf8_encode($product->getCatalogDescription(140)),
+                'short_description' => utf8_encode($product->getCatalogDescription(70)),
                 'inStock' => !$product->isOutOfStock(),
                 'productcode' => $product->productcode,
                 'brand' => $product->brand->brand ?? null,
@@ -117,15 +123,19 @@ class ApiProductHelper
                     'number' => $product->list_price,
                     'formatted' => $currency->getCurrencyFormat($product->list_price),
                 ],
-
-                'currency' => [
-                    'currency' => (string)$currency,
-                    'symbol_prefix' => $currency->symbol_prefix,
-                    'after' => $currency->after,
-                ]
             ];
         }
 
         return $data;
+    }
+
+    public static function getRussiaMonth(int $num_month): string
+    {
+        $monthes = [
+            1 => 'Января', 2 => 'Февраля', 3 => 'Марта', 4 => 'Апреля',
+            5 => 'Мая', 6 => 'Июня', 7 => 'Июля', 8 => 'Августа',
+            9 => 'Сентября', 10 => 'Октября', 11 => 'Ноября', 12 => 'Декабря'
+        ];
+        return $monthes[$num_month];
     }
 }

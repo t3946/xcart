@@ -4,7 +4,7 @@ import { Sceleton } from "../../../../modules/shared/components/sceleton/Sceleto
 
 export const CardSceletonLine: React.FC = () => {
   return (
-    <Grid container justify={"space-between"}>
+    <Grid container justifyContent={"space-between"}>
       <Grid item>
         <Sceleton
           margin={"0 0 20px 0"}
@@ -15,7 +15,7 @@ export const CardSceletonLine: React.FC = () => {
       </Grid>
       <Grid
         className={"sceleton-center-blocks-wrap"}
-        justify={"flex-end"}
+        justifyContent={"flex-end"}
         container
         xs
       >

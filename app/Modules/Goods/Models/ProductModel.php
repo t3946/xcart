@@ -1,9 +1,11 @@
 <?php
+
 namespace Modules\Goods\Models;
 
 use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Helpers\ProductHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\QueryBuilder\Expression;
@@ -161,21 +163,21 @@ class ProductModel extends Model implements ICartItem
                 'link' => ['ASIN' => 'ASIN'],
                 'sqlType' => Types::STRING,
             ],
-			'dim_x' => [
-				'class' => DecimalField::class,
-				'verboseName' => 'Product dimension x',
+            'dim_x' => [
+                'class' => DecimalField::class,
+                'verboseName' => 'Product dimension x',
                 'default' => 0
-			],
-			'dim_y' => [
-				'class' => DecimalField::class,
-				'verboseName' => 'Product dimension y',
+            ],
+            'dim_y' => [
+                'class' => DecimalField::class,
+                'verboseName' => 'Product dimension y',
                 'default' => 0
-			],
-			'dim_z' => [
-				'class' => DecimalField::class,
-				'verboseName' => 'Product dimension z',
+            ],
+            'dim_z' => [
+                'class' => DecimalField::class,
+                'verboseName' => 'Product dimension z',
                 'default' => 0
-			],
+            ],
 
             'sites' => [
                 'class' => ManyToManyField::class,
@@ -334,7 +336,7 @@ class ProductModel extends Model implements ICartItem
             ],
             'eta_date_mm_dd_yyyy' => [
                 'class' => UnixTimestampField::class,
-				'verboseName' => 'ETA date (mm/dd/yyyy)',
+                'verboseName' => 'ETA date (mm/dd/yyyy)',
             ],
             'category_main' => [
                 'class' => HasManyField::class,
@@ -392,7 +394,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => HasManyField::class,
                 'modelClass' => ProductOptionModel::class,
                 'link' => ['productid' => 'product_id'],
-				'verboseName' => 'Product options',
+                'verboseName' => 'Product options',
             ],
             'cost_to_us' => [
                 'class' => DecimalField::class,
@@ -403,24 +405,24 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0.01,
-				'verboseName' => 'Shipping freight (US$)',
+                'verboseName' => 'Shipping freight (US$)',
             ],
-			'free_ship_zone' => [
-				'class' => IntField::class,
-				'verboseName' => 'Free shipping for destination',
+            'free_ship_zone' => [
+                'class' => IntField::class,
+                'verboseName' => 'Free shipping for destination',
                 'default' => -1
-			],
-			'free_ship_text' => [
-				'class' => CharField::class,
-				'verboseName' => 'Free shipping text',
+            ],
+            'free_ship_text' => [
+                'class' => CharField::class,
+                'verboseName' => 'Free shipping text',
                 'null' => false,
                 'default' => ''
-			],
+            ],
             'weight' => [
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
-				'verboseName' => 'Product weight (lbs)',
+                'verboseName' => 'Product weight (lbs)',
             ],
             'list_price' => [
                 'class' => DecimalField::class,
@@ -441,23 +443,23 @@ class ProductModel extends Model implements ICartItem
                 'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0,
-				'verboseName' => 'Shipping weight (lbs)'
+                'verboseName' => 'Shipping weight (lbs)'
             ],
-			'shipping_dim_x' => [
-				'class' => DecimalField::class,
-				'verboseName' => 'Shipping dimension x',
+            'shipping_dim_x' => [
+                'class' => DecimalField::class,
+                'verboseName' => 'Shipping dimension x',
                 'default' => 0,
-			],
-			'shipping_dim_y' => [
-				'class' => DecimalField::class,
-				'verboseName' => 'Shipping dimension y',
+            ],
+            'shipping_dim_y' => [
+                'class' => DecimalField::class,
+                'verboseName' => 'Shipping dimension y',
                 'default' => 0,
-			],
-			'shipping_dim_z' => [
-				'class' => DecimalField::class,
-				'verboseName' => 'Shipping dimension z',
+            ],
+            'shipping_dim_z' => [
+                'class' => DecimalField::class,
+                'verboseName' => 'Shipping dimension z',
                 'default' => 0,
-			],
+            ],
             'brand_normalized' => [
                 'class' => BooleanField::class,
                 'null' => false,
@@ -568,18 +570,18 @@ class ProductModel extends Model implements ICartItem
 
     public function getParamList()
     {
-        if ($values = $this->filter_values->filter(['fv_active' => 'Y'])->order(['f_id','fv_order_by'])->cache(30)->all()) {
+        if ($values = $this->filter_values->filter(['fv_active' => 'Y'])->order(['f_id', 'fv_order_by'])->cache(30)->all()) {
 
-            $filters = FilterModel::objects()->filter(['f_id__in' => array_map(function($value){ return $value->f_id; }, $values)])->order(['f_order_by'])->cache(30)->all();
+            $filters = FilterModel::objects()->filter(['f_id__in' => array_map(function ($value) {
+                return $value->f_id;
+            }, $values)])->order(['f_order_by'])->cache(30)->all();
 
             $list = [];
-            foreach ($filters as $filter)
-            {
-                $list[$filter->f_id] = ['name' =>$filter->f_name, 'values' => []];
+            foreach ($filters as $filter) {
+                $list[$filter->f_id] = ['name' => $filter->f_name, 'values' => []];
             }
-            
-            foreach ($values as $value)
-            {
+
+            foreach ($values as $value) {
                 if ($list[$value->f_id]) {
                     $list[$value->f_id]['values'][] = $value->fv_name;
                 }
@@ -595,13 +597,13 @@ class ProductModel extends Model implements ICartItem
     {
         $sInDay = (60 * 60 * 24);
 
-        return ($this->add_date + $sInDay * 30)  >= time();
+        return ($this->add_date + $sInDay * 30) >= time();
     }
 
     /**
      * @return ProductImageModel[] array
      */
-    public function getImages() : array
+    public function getImages(): array
     {
         return $this->detail_images
             ->filter(['xcart_products_images_1.is_active' => true])
@@ -609,7 +611,7 @@ class ProductModel extends Model implements ICartItem
             ->all();
     }
 
-    public function getMainImage():? ProductImageModel
+    public function getMainImage(): ?ProductImageModel
     {
         return $this->getImages()[0];
     }
@@ -625,7 +627,7 @@ class ProductModel extends Model implements ICartItem
         return ($this->list_price > ($fp + $fp * .3));
     }
 
-    public function checkSite($id):bool
+    public function checkSite($id): bool
     {
         return (bool)($this->sites->filter(['storefrontid' => $id])->count());
     }
@@ -668,7 +670,7 @@ class ProductModel extends Model implements ICartItem
             return true;
         }
 
-        if ((float)$this->shipping_freight === (float) 0 && strpos($this->productcode, 'ART-') === false) {
+        if ((float)$this->shipping_freight === (float)0 && strpos($this->productcode, 'ART-') === false) {
             return true;
         }
 
@@ -724,25 +726,25 @@ class ProductModel extends Model implements ICartItem
         return $model->getAbsoluteUrl($full, true);
     }
 
-    public function getMainCategory(int $site_id = null):?CategoryModel
+    public function getMainCategory(int $site_id = null): ?CategoryModel
     {
         if (!$this->pk) {
             return null;
         }
-        $params  = [
+        $params = [
             'products__through__main' => 'Y',
             'products__through__productid' => $this->pk,
         ];
 
         if ($site_id) {
-            $params['storefrontid']  = $site_id;
+            $params['storefrontid'] = $site_id;
         }
 
         return CategoryModel::objects()
             ->limit(1)->get($params);
     }
 
-    public function setMainCategory(CategoryModel $model, int $site_id = null):void
+    public function setMainCategory(CategoryModel $model, int $site_id = null): void
     {
         $params = [
             'productid' => $this->productid,
@@ -765,21 +767,20 @@ class ProductModel extends Model implements ICartItem
         );
     }
 
-    public function getBreadcrumbs():Breadcrumbs
+    public function getBreadcrumbs(): Breadcrumbs
     {
         /** @var CategoryModel $category */
         if ($category = $this->getMainCategory()) {
             $bread = $category->getBreadcrumbs();
-        }
-        else {
+        } else {
             $bread = new Breadcrumbs();
         }
 
         if ($this->isGroupChild() && $parent = $this->parent) {
-            $bread->add($parent->getFrontendName(), 'https:'.$parent->getAbsoluteUrl(true));
+            $bread->add($parent->getFrontendName(), 'https:' . $parent->getAbsoluteUrl(true));
         }
 
-        $bread->add($this->getFrontendName(), 'https:'.$this->getAbsoluteUrl(true));
+        $bread->add($this->getFrontendName(), 'https:' . $this->getAbsoluteUrl(true));
 
         return $bread;
     }
@@ -790,15 +791,15 @@ class ProductModel extends Model implements ICartItem
         $prices = $this->getPrices();
         if ($prices) {
             foreach ($prices as $key => $price) {
-                if ($quantity >= (float) $key) {
-                    $fPrice = (float) $price;
+                if ($quantity >= (float)$key) {
+                    $fPrice = (float)$price;
                 } else {
                     break;
                 }
             }
         }
 
-        return max($fPrice, (float) $this->new_map_price);
+        return max($fPrice, (float)$this->new_map_price);
     }
 
     public function recalculate($quantity, $type, $data)
@@ -843,7 +844,7 @@ class ProductModel extends Model implements ICartItem
         $frontend_description = $this->getFrontendDescription();
         $no_tags = strip_tags($frontend_description);
 
-        if ( $length !== 0 && strlen($no_tags) > $length) {
+        if ($length !== 0 && strlen($no_tags) > $length) {
             $shorted = substr_replace($no_tags, '...', $length);
         }
 
@@ -872,8 +873,7 @@ class ProductModel extends Model implements ICartItem
 
         if ($this->mult_order_quantity && $min > 1) {
             $tq = ceil($tq / $min) * $min;
-        }
-        elseif ($tq < $min) {
+        } elseif ($tq < $min) {
             $tq = $min;
         }
 
@@ -892,7 +892,7 @@ class ProductModel extends Model implements ICartItem
     /**
      * @return ImageTModel|null
      */
-    public function getThumbnail():? ImageTModel
+    public function getThumbnail(): ?ImageTModel
     {
         return $this->thumbnail->limit(1)->get();
     }
@@ -917,7 +917,7 @@ class ProductModel extends Model implements ICartItem
         return static::objects($instance)->filter(['is_group_root' => false]);
     }
 
-    public static function showedManager($instance = null) : Manager
+    public static function showedManager($instance = null): Manager
     {
         return static::forsale($instance)->filter([
             'sites__through__sfid' => Xcart::app()->getModule('Sites')->getSite(),
@@ -939,17 +939,16 @@ class ProductModel extends Model implements ICartItem
         return $site->flat_shipping_enabled;
     }
 
-    public function getExtraMarginValue(int $forQuantity = 1) :? float
+    public function getExtraMarginValue(int $forQuantity = 1): ?float
     {
         $fExtraMarginValue = null;
         if (($distributor = $this->distributor)
             && $distributor->reduce_extra_margin
-            && (float) $distributor->price_coef_z !== (float) 0
-            && ((float) $this->cost_to_us > (float) 0))
-        {
+            && (float)$distributor->price_coef_z !== (float)0
+            && ((float)$this->cost_to_us > (float)0)) {
             $fExpectedMargin = $distributor->max_extra_margin > (float)0
                 ? $this->cost_to_us * $distributor->max_extra_margin
-                : round(($this->cost_to_us * $distributor->price_coef_x + $distributor->price_coef_y) / $distributor->price_coef_z,2);
+                : round(($this->cost_to_us * $distributor->price_coef_x + $distributor->price_coef_y) / $distributor->price_coef_z, 2);
 
             $fExtraMarginValue = ($this->getPrice($forQuantity) - $fExpectedMargin) * $forQuantity;
         }
@@ -977,7 +976,7 @@ class ProductModel extends Model implements ICartItem
         return [];
     }
 
-    public function getVolume():? float
+    public function getVolume(): ?float
     {
         if ($this->shipping_dim_x || $this->shipping_dim_y || $this->shipping_dim_z) {
             return round($this->shipping_dim_x * $this->shipping_dim_y * $this->shipping_dim_z, 2);
@@ -1007,7 +1006,7 @@ class ProductModel extends Model implements ICartItem
                 $d = $this->distributor->markets_disabled->filter(['marketplace_id' => $marketpalce_id])->count();
             }
         }
-        return !(($c+$b+$d) > 0);
+        return !(($c + $b + $d) > 0);
     }
 
     public function getPriceValidUntil(): DateTime
@@ -1015,10 +1014,10 @@ class ProductModel extends Model implements ICartItem
         return (new DateTime())->add(new DateInterval('P7D'));
     }
 
-    public function getETADate():? DateTime
+    public function getETADate(): ?DateTime
     {
         if ($this->eta_date_mm_dd_yyyy && $this->eta_date_mm_dd_yyyy > time()) {
-            $date =  new DateTime();
+            $date = new DateTime();
             $date->setTimestamp($this->eta_date_mm_dd_yyyy);
             return $date;
         }
@@ -1061,13 +1060,27 @@ class ProductModel extends Model implements ICartItem
         }
 
 
-
         parent::setAttribute($name, $value);
     }
 
     public function getSlugPart(): string
     {
         return $this->createSlug($this->product);
+    }
+
+    public function getFrontendEtaDate(): string
+    {
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $date = (new DateTime())->setTimestamp($this->eta_date_mm_dd_yyyy);
+        $lang_site = $site->lang->lang_code;
+        switch ($lang_site) {
+            case 'ru':
+                $month_name = ApiProductHelper::getRussiaMonth($date->format('n'));
+                return "{$date->format('d')} $month_name {$date->format('Y')}";
+            default:
+                return date_format($date, "d F Y");
+        }
     }
 
 }

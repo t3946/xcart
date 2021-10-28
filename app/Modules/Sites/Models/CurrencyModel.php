@@ -9,7 +9,19 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
-
+/**
+ * @property string currency_code
+ * @property string after
+ * @property string symbol
+ * @property string symbol_prefix
+ * @property double coefficient
+ * @property string is_primary
+ * @property int position
+ * @property string decimals_separator
+ * @property string thousands_separator
+ * @property int decimals
+ * @property bool active
+ */
 class CurrencyModel extends Model
 {
     use AutoMetaTrait;
@@ -36,6 +48,17 @@ class CurrencyModel extends Model
     public function getCurrencyFormat($number): string
     {
         return number_format(round($number, 2), $this->decimals ?? 2, $this->decimals_separator?? '', $this->thousands_separator ?? '');
+    }
+    public function getFrontendData() : array
+    {
+        return [
+            'currency' => (string)$this,
+            'symbol_prefix' => $this->symbol_prefix,
+            'after' => $this->after,
+            'currency_code' => $this->currency_code,
+            'decimal' => $this->decimals,
+            'thousands_separator' => $this->thousands_separator
+        ];
     }
 
     public function __toString(): string

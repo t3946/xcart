@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Sites\Admin;
+
 use Modules\Admin\Contrib\ListViewAdmin;
 use Modules\Sites\Forms\SiteAddressForm;
 use Modules\Sites\Models\AddressModel;
@@ -26,29 +28,11 @@ class SiteAddressesAdmin extends ListViewAdmin
         return parent::getItemProperty($item, $property);
     }
 
-    public function getSuggestionColumns(): array
-    {
-        return [
-            'address' => [
-                'class' => AddressModel::class,
-                'columns' => [
-                    'name', 'company'
-                ],
-                'filter' => [
-                ]
-            ],
-        ];
-    }
-
-    public static function getItemName(): string
-    {
-        return 'Address';
-    }
-
     public function getModel(): SitesAddressesModel
     {
         return new SitesAddressesModel();
     }
+
     public function getForm(): SiteAddressForm
     {
         $form = new SiteAddressForm();
