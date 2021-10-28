@@ -28,17 +28,5 @@ class MetricsProductCommand extends Command
                 'dx_code' => $distributor_model->code
             ]);
         }
-        /** @var BrandModel $brand_model */
-        foreach (BrandModel::objects()->filter(['avail' => 'Y'])->all() as $brand_model) {
-            $count_products = ProductModel::without_group()->filter(['brandid' => $brand_model->pk, 'forsale' => 'Y'])->count();
-            $count_ads_products = $brand_model->products_active->filter(['google_ads__shopping_status' => GoogleProductsModel::SHOPPING_STATUS_APPROVED])->count();
-
-            $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_active_brand', $count_products, [
-                'brand' => (string)$brand_model
-            ]);
-            $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_google_ads', $count_ads_products, [
-                'brand' => (string)$brand_model
-            ]);
-        }
     }
 }
