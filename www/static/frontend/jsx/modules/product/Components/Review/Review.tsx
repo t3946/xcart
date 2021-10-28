@@ -21,7 +21,10 @@ interface PropsInterface {
   user_avatar: string;
   helpful_count: string;
   markedHelpful: boolean;
-  files: Record<any, any>[];
+  files: {
+    images: Record<any, any>[];
+    videos: Record<any, any>[];
+  };
 }
 
 const Review: React.FC<PropsInterface> = function (props: PropsInterface) {

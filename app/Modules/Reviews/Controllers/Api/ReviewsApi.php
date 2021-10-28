@@ -4,14 +4,13 @@ namespace Modules\Reviews\Controllers\Api;
 
 use Modules\Account\Controllers\AccountController;
 
-use Modules\Images\Models\ImagesModel;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\Models\ReviewRatingsModel;
 use Modules\Reviews\Models\ReviewsImagesModel;
+use Modules\Reviews\Models\ReviewsVideosModel;
 use Modules\Reviews\Models\TotalProductRatingsModel;
 use Modules\Reviews\Models\HelpfulReviewsModel;
-use Modules\Reviews\Models\ReviewImagesModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\TotalProductReviewsModel;
 use Xcart\App\Controller\FrontendController;
@@ -155,7 +154,11 @@ class ReviewsApi extends FrontendController
 
             //is video
             if (in_array($extension, self::SUPPORTED_VIDEO_FORMATS)) {
-
+                (new ReviewsVideosModel())->saveVideo($review_id, [
+                    'video' => $uploadedFile,
+                    'provider' => 'local',
+                    'name' => pathinfo($files['name'][$i])['filename'],
+                ]);
             }
         }
 
@@ -221,20 +224,14 @@ class ReviewsApi extends FrontendController
         $reviews = $query_set->all();
 
         for ($i = 0; $i < count($reviews); $i++) {
-
             $reviews[$i]['markedHelpful'] = !($reviews[$i]['markedHelpful'] === "0");
-            $reviews[$i]['files'] = ReviewImagesModel::objects()
-                ->asArray()
-                ->select(
-                    [
-                        "path" => "image_path",
-                        "width",
-                        "height",
-                    ]
-                )
-                ->all([
-                    "review_id" => $reviews[$i]["product_review_id"]
-                ]);
+            $filter = [
+                "review_id" => $reviews[$i]["product_review_id"]
+            ];
+            $reviews[$i]['files'] = [
+                'images' => ReviewsImagesModel::objects()->select(['images__*'])->asArray()->all($filter),
+                'videos' => ReviewsVideosModel::objects()->select(['videos__*'])->asArray()->all($filter),
+            ];
         }
 
         return $reviews;

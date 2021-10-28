@@ -7,5 +7,5 @@ interface LinkImage {
 
     function getMaxSize(): string;
 
-    public function saveImage(int $entity_id, array $image_attributes);
+    public function saveImage(int $linked_entity_id, array $image_attributes);
 }

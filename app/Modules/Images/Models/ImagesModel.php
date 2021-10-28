@@ -2,6 +2,7 @@
 
 namespace Modules\Images\Models;
 
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\IntField;
@@ -9,12 +10,11 @@ use Xcart\App\Orm\Model;
 
 /**
  * do not use this class instantly. Instead, use LinkImage classes
- * @property string $id
  */
 class ImagesModel extends Model
 {
-    public static string $upload_to;
-    public static string $max_size;
+    public static string $upload_to = '';
+    public static string $max_size = '';
 
     static function tableName()
     {
@@ -25,7 +25,7 @@ class ImagesModel extends Model
     {
         return [
             'image_id' => [
-                'class' => IntField::class,
+                'class' => AutoField::class,
             ],
             'path' => [
                 'class' => FileField::class,

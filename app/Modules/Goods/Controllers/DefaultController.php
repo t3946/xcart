@@ -10,7 +10,7 @@ use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
-use Modules\Goods\Models\Videos\ProductsVideosModel;
+use Modules\Goods\Models\ProductsVideosModel;
 use Modules\Meta\Types\MetaType;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;

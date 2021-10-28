@@ -8,8 +8,6 @@ const api = new ApiService();
 function* createReview(action): Generator {
   const { form, success } = action.data;
 
-  console.log("createReview", form);
-
   yield api
     .post<any>(route("reviews:api:create"), form, {})
     .then(function (res) {

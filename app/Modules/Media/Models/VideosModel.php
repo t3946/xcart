@@ -6,12 +6,16 @@ namespace Modules\Media\Models;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Model;
 
 class VideosModel extends Model
 {
     const YOUTUBE_PROVIDER = 'youtube';
     const YOUTUBE_VIMEO = 'vimeo';
+
+    public static string $upload_to = '';
+    public static string $max_size = '';
 
     public static function tableName()
     {
@@ -32,8 +36,12 @@ class VideosModel extends Model
             ],
 
             'video' => [
-                'class' => CharField::class,
+                'class' => FileField::class,
                 'null' => false,
+                'required' => false,
+                'adapterName' => 'www',
+                'uploadTo' => self::$upload_to,
+                'maxSize' => self::$max_size,
             ],
 
             'provider' => [

@@ -4,6 +4,7 @@ namespace Modules\Reviews\Models;
 
 use Modules\Images\Interfaces\LinkImage;
 use Modules\Images\Models\ImagesModel;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -24,6 +25,12 @@ class ReviewsImagesModel extends Model implements LinkImage
             'image_id' => [
                 'class' => IntField::class,
             ],
+
+            'images' => [
+                'class' => ForeignField::class,
+                'modelClass' => ImagesModel::class,
+                'link' => ['image_id' => 'image_id'],
+            ],
         ];
     }
 
@@ -40,7 +47,7 @@ class ReviewsImagesModel extends Model implements LinkImage
     /**
      * save image and link
      */
-    public function saveImage(int $entity_id, array $image_attributes)
+    public function saveImage(int $linked_entity_id, array $image_attributes)
     {
         ImagesModel::$upload_to = $this->getUploadTo();
         ImagesModel::$max_size = $this->getMaxSize();
@@ -48,8 +55,8 @@ class ReviewsImagesModel extends Model implements LinkImage
         $image->save();
 
         $attributes = [
-            'review_id' => $entity_id,
-            'image_id' => (int)$image->id,
+            'review_id' => $linked_entity_id,
+            'image_id' => (int)$image->pk,
         ];
 
         $this->setAttributes($attributes);

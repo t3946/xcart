@@ -60,7 +60,7 @@ class ProductReviewsModel extends Model
             ],
             'files' => [
                 'class' => ForeignField::class,
-                'modelClass' => ReviewImagesModel::class,
+                'modelClass' => ReviewsImagesModel::class,
                 'link' => ['product_review_id' => 'review_id'],
             ]
         ];

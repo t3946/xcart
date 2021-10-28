@@ -6,7 +6,7 @@ import Store from "@client/jsx/redux/stores/Store";
 import ShadowPanel from "../modules/account/components/shared/ShadowPanel";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import HatSearchLine from "@client/modules/account/components/hat/HatSearchLine";
-import PhotoSwipeContainer from "@client/jsx/components/PhotoSwipeContainer";
+import PhotoSwipeContainer from "@client/jsx/modules/product/Components/PhotoSwipe/PhotoSwipeContainer";
 
 $(() => {
   const target = document.getElementById("header-target");
