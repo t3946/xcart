@@ -34,6 +34,7 @@ use Xcart\App\Traits\SlugifyTrait;
  * @property ?string brand
  * @property string avail
  * @property ProductModel[]|Manager products_active
+ * @property BrandStorefrontModel[]|Manager $brand_storefront
  */
 class BrandModel extends Model
 {
