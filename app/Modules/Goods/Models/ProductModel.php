@@ -113,8 +113,6 @@ class ProductModel extends Model implements ICartItem
 {
     private ?string $front_name = null;
 
-    public const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';
-
     public const NO_ASIN_FOUND = 'No ASIN found';
 
     private array $priceArray = [];

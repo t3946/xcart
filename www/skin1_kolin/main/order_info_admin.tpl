@@ -464,7 +464,7 @@ function check_r_fields() {
                             {if $product.coupon_discount > 0}
                                 <i class="m icon discount float__left margin__first_image"></i>
                             {/if}
-                            <a href="{$product.oProduct->getAbsoluteUrl(true)}{if $cats[$product.productid]}&cat={$cats[$product.productid]}{/if}"
+                            <a href="{$product.oProduct->getAbsoluteUrl(true)}"
                                title="" target="_blank">
                                 {$smarty.foreach.order_detail.iteration}. {$product.oProduct->getFrontendName()}
                             </a>
@@ -508,7 +508,7 @@ function check_r_fields() {
                         </td>
                         <td style="word-wrap: anywhere">
                             {if $current_membership_flag ne 'FS'}
-                                <a href="{$product.links.admin}" title="" target="_blank">{$product.productcode}</a>
+                                <a href="{$product.oProduct->getAdminUrl()}" title="" target="_blank">{$product.productcode}</a>
                             {else}
                                 {$product.productcode}
                             {/if}
