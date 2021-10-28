@@ -125,7 +125,8 @@ class ProductAdminForm extends ModelForm
         $brand = $product->brand;
         $distributor = $product->distributor;
         $category = $product->getMainCategory();
-        $user = $product->last_modify_user ?? Xcart::app()->user;
+        $user = $product->last_modify_user;
+        $user_modified_login = $user->login ?? $product->provider;
         $modify_time = (new DateTime())->setTimestamp($product->mod_date)->format('d M Y H:s');
         return [
             'weight' => [
@@ -410,7 +411,7 @@ class ProductAdminForm extends ModelForm
                     'readonly' => true,
                 ],
                 'label' => 'Added by',
-                'value' => "($user->login) on $modify_time",
+                'value' => "($user_modified_login) on $modify_time",
             ],
         ];
     }
