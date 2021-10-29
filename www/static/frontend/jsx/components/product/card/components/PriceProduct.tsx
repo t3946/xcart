@@ -34,7 +34,7 @@ export const PriceProduct: React.FC<PriceProduct> = ({ classes, price }) => {
       <span className={classNames(["price-number", classes])}>
         {formatNumber()}
       </span>
-      {currency.currency}
+      {currency.after && currency.currency}
     </Fragment>
   );
 };
