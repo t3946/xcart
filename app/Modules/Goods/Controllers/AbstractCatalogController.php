@@ -2,7 +2,14 @@
 
 namespace Modules\Goods\Controllers;
 
+use Exception;
+use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Models\ProductImageModel;
+use Modules\Sites\Models\CurrencyModel;
+use Xcart\App\Components\Breadcrumbs;
+use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Orm\Manager;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\QueryBuilder\Q\Q;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
@@ -14,6 +21,7 @@ use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
+use function is_object;
 
 abstract class AbstractCatalogController extends FrontendController
 {
@@ -43,7 +51,7 @@ abstract class AbstractCatalogController extends FrontendController
     /**
      * @param mixed $data
      *
-     * @return \Xcart\App\Orm\QuerySet|\Xcart\App\Orm\Manager
+     * @return QuerySet|Manager
      */
     public function getQS($data = null)
     {
@@ -63,10 +71,10 @@ abstract class AbstractCatalogController extends FrontendController
     }
 
     /**
-     * @param \Xcart\App\Orm\QuerySet $qs
+     * @param QuerySet $qs
      * @param CategoryModel|[] $qs
      *
-     * @return \Xcart\App\Orm\Manager|\Xcart\App\Orm\QuerySet
+     * @return Manager|QuerySet
      */
     public function getSortedQS($qs, $model = null)
     {
@@ -76,9 +84,9 @@ abstract class AbstractCatalogController extends FrontendController
     }
 
     /**
-     * @param \Xcart\App\Orm\QuerySet $qs
+     * @param QuerySet $qs
      *
-     * @return \Xcart\App\Pagination\Pagination
+     * @return Pagination
      */
     public function getPager($qs): Pagination
     {
@@ -93,11 +101,11 @@ abstract class AbstractCatalogController extends FrontendController
     /**
      * @param $data
      *
-     * @return \Xcart\App\Components\Breadcrumbs|array|null
+     * @return Breadcrumbs|array|null
      */
     public function getBreadcrumbsFromData($data)
     {
-        if (\is_object($data) && method_exists($data, 'getBreadcrumbs'))
+        if (is_object($data) && method_exists($data, 'getBreadcrumbs'))
         {
             return $data->getBreadcrumbs();
         }
@@ -110,8 +118,8 @@ abstract class AbstractCatalogController extends FrontendController
     /**
      * @param CategoryModel|BrandModel|null $model
      *
-     * @throws \Exception
-     * @throws \Xcart\App\Exceptions\HttpException
+     * @throws Exception
+     * @throws HttpException
      */
     protected function view_internal($model = null): void
     {
@@ -119,7 +127,7 @@ abstract class AbstractCatalogController extends FrontendController
 
         $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
 
-        /** @var \Xcart\App\Orm\QuerySet $pqs */
+        /** @var QuerySet $pqs */
         $pqs = $this->getQS($model);
 
         $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
@@ -134,7 +142,7 @@ abstract class AbstractCatalogController extends FrontendController
             $pager = $this->getPager($pqs);
             $pagerView = $pager->createView();
 
-            $products = $this->getProductData(($pager->paginate()));
+            $products = ApiProductHelper::getProductData($pager->paginate());
 
             $this->jsonResponse([
                 'href' => $pagerView->hasNextPage() ? $pagerView->getUrl($pager->getPage() + 1) : false,
@@ -164,120 +172,5 @@ abstract class AbstractCatalogController extends FrontendController
                     'filters' => $fh->getFilterStructure($this->filters, $model instanceof CategoryModel ? $model->level : 2),
                 ], $this->getAdvancedData($model)));
         }
-    }
-    /**
-     * get array of main product fields (product has many excess data because this method takes only needed info) and return this
-     * @param $products
-     * @return array
-     */
-    private function getProductData($products): array
-    {
-        if (!\is_array($products)) {
-            $products->limit(20)->cache(10);
-        }
-
-        $currency = Xcart::app()->getModule('Sites')->getSite()->getCurrency();
-        $data = [];
-
-        /**
-         * @var ProductModel $product
-         */
-        foreach ($products as $product) {
-            //get images
-            $images = [];
-
-            if ($product->isGroupRoot()) {
-                $children = $product->getFrontendChilds()->limit(4)->all();
-                $unique_hash_list = [];
-
-                /** @var ProductModel $child */
-                foreach ($children as $child) {
-                    $image = $child->getMainImage();
-
-                    if (in_array($image->hash, $unique_hash_list, true) === true) {
-                        continue;
-                    }
-
-                    $unique_hash_list[] = $image->hash;
-
-                    if ($image && $url = $image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
-                        $images[] = [
-                            'url' => $url,
-                            'alt' => $child->getFrontendName(),
-                        ];
-                    }
-                }
-            } else {
-                $imageModel = $product->getMainImage();
-
-                if ($imageModel && $url = $imageModel->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB)) {
-                    $images[] = [
-                        'url' => $url,
-                        'alt' => $product->getFrontendName(),
-                    ];
-                }
-            }
-
-            $eta_date = '';
-
-            if ($product->eta_date_mm_dd_yyyy && $product->eta_date_mm_dd_yyyy > time()) {
-                $date = (new \DateTime())->setTimestamp($product->eta_date_mm_dd_yyyy);
-                $eta_date = date_format($date, "d F Y");
-            }
-
-            $dx = $product->distributor;
-            $brand = $product->brand;
-
-            $data[] = [
-                'name' => htmlspecialchars_decode($product->getFrontendName() ?: $product->product, ENT_QUOTES),
-                'url' => $product->getAbsoluteUrl(),
-                'mpn' => $product->getMpn(),
-                'upc' => $product->upc,
-                'images' => $images,
-                'description' => utf8_encode($product->getCatalogDescription()),
-                'inStock' => !$product->isOutOfStock(),
-                'productcode' => $product->productcode,
-                'brand' => $product->brand->brand ?? null,
-                'brandUrl' => $product->brand ? $product->brand->getAbsoluteUrl() : null,
-                'min_amount' => $product->min_amount,
-                'lead_time' => [
-                    'lead_time_message' => trim($product->lead_time_message),
-                    'dx' => [
-                        'leadtime' => $dx->dx_leadtime,
-                        'leadtime_to' => $dx->dx_leadtime_to,
-                    ],
-                    'brand' => [
-                        'leadtime_from' => $brand->leadtime_from,
-                        'leadtime_to' => $brand->leadtime_to,
-                    ],
-                ],
-                'mult_order_quantity' => $product->mult_order_quantity,
-                'eta_date' => $eta_date,
-                'avail' => $product->r_avail,
-                'productid' => $product->productid,
-                'isNew' => $product->isNewProduct(),
-                'isSale' => $product->isSaleSticker(),
-                'isGroupRoot' => $product->isGroupRoot(),
-                'childrenNumber' => $product->getFrontendChilds()->count(),
-
-                'price' => [
-                    'number' => $product->getFrontendPrice(),
-                    'formatted' => $currency->getCurrencyFormat($product->getFrontendPrice()),
-                ],
-
-                'listPrice' => [
-                    'number' => $product->list_price,
-                    'formatted' => $currency->getCurrencyFormat($product->list_price),
-                ],
-
-                'currency' => [
-                    'currency' => (string)$currency,
-                    'symbol_prefix' => $currency->symbol_prefix,
-                    'after' => $currency->after,
-                ]
-            ];
-        }
-
-        return $data;
     }
 }

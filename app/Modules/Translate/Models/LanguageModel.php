@@ -17,7 +17,7 @@ use Xcart\App\Orm\Model;
 /**
  * @property mixed|Field|FileField|ModelFieldInterface name
  * @property mixed|Field|FileField|ModelFieldInterface lang_id
- * @property mixed|Field|FileField|ModelFieldInterface lang_code
+ * @property mixed|Field|FileField|ModelFieldInterface|string lang_code
  */
 class LanguageModel extends Model
 {

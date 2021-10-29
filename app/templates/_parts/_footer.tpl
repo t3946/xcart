@@ -1,26 +1,30 @@
 <footer itemscope itemtype="http://schema.org/WPFooter">
     {insert "_parts/_bottom_menu.tpl"}
-
+    {set $addresses = $site.addresses->all()}
     <div class="footer-content">
         <div class="row contacts-presentations">
             <div class="column small-12 medium-8 border-right-desktop">
                 <div class="present-icons">
                     <div class="row">
-                        <div class="columns large-4 medium-6 small-12">
-                            <img alt="S3 Stores, Inc." class="footer-logo lazy-img"
-                                 data-src="{assets 'images/logos/s3stores_footer.svg'}">
-                        </div>
+                        {block 'footer-logo'}
+                            <div class="columns large-4 medium-6 small-12">
+                                <img alt="S3 Stores, Inc." class="footer-logo lazy-img"
+                                     data-src="{assets 'images/logos/s3stores_footer.svg'}">
+                            </div>
+                        {/block}
 
                         <div class="columns large-4 medium-6 show-for-medium footer-schedule-column">
-                            <div class="footer-schedule">
-                                <img alt="{t 'Web order 24/7'}" class="footer-schedule-icon lazy-img"
-                                     data-src="{assets 'images/icons/footer/web_order.svg'}">
-                                <div class="content">
-                                    <div class="footer-schedule-title">{t 'Web Orders'}</div>
-                                    <div class="footer-schedule-content">{t '24 hours a day'}</div>
-                                    <div class="footer-schedule-content">{t '7 days a week'}</div>
+                            {block 'online-orders'}
+                                <div class="footer-schedule">
+                                    <img alt="{t 'Web order 24/7'}" class="footer-schedule-icon lazy-img"
+                                         data-src="{assets 'images/icons/footer/web_order.svg'}">
+                                    <div class="content">
+                                        <div class="footer-schedule-title">{t 'Web Orders'}</div>
+                                        <div class="footer-schedule-content">{t '24 hours a day'}</div>
+                                        <div class="footer-schedule-content">{t '7 days a week'}</div>
+                                    </div>
                                 </div>
-                            </div>
+                            {/block}
                         </div>
 
                         <div class="columns small-4 show-for-large">
@@ -34,30 +38,32 @@
                     </div>
 
                     <div class="row footer_info-blocks-row">
-                        <div class="columns large-4 medium-6 small-12">
-                            <div>
-                                <div class="footer-info-block-title">{t 'Telephone Customer Service'}</div>
-                                <ul class="no-bullet menu-list">
-                                    <li class="footer-info-block-item">{$site->customer_service_working_time}</li>
-                                    <li class="footer-info-block-item">
-                                        {if $site->cidev_top_header_code}
-                                            {t 'Toll Free: '}
-                                            <span class="footer-phone">{$site->cidev_top_header_code}</span>
-                                        {/if}
-                                    </li>
-                                    <li class="footer-info-block-item">
-                                        {if $site->local_phone}
-                                            {t 'Tel:'} {$site->local_phone}
-                                        {/if}
-                                    </li>
-                                    <li class="footer-info-block-item">
-                                        {if $site->fax_number}
-                                            {t 'Fax:'} {$site->fax_number}
-                                        {/if}
-                                    </li>
-                                </ul>
+                        {block 'support'}
+                            <div class="columns large-4 medium-6 small-12">
+                                <div>
+                                    <div class="footer-info-block-title">{t 'Telephone Customer Service'}</div>
+                                    <ul class="no-bullet menu-list">
+                                        <li class="footer-info-block-item">{$site->customer_service_working_time}</li>
+                                        <li class="footer-info-block-item">
+                                            {if $site->cidev_top_header_code}
+                                                {t 'Toll Free: '}
+                                                <span class="footer-phone">{$site->cidev_top_header_code}</span>
+                                            {/if}
+                                        </li>
+                                        <li class="footer-info-block-item">
+                                            {if $site->local_phone}
+                                                {t 'Tel:'} {$site->local_phone}
+                                            {/if}
+                                        </li>
+                                        <li class="footer-info-block-item">
+                                            {if $site->fax_number}
+                                                {t 'Fax:'} {$site->fax_number}
+                                            {/if}
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        {/block}
 
                         <div class="columns medium-6 small-12 hide-for-large footer-email-support-column">
                             <ul class="no-bullet menu-list email-support margin-0">
@@ -67,33 +73,37 @@
                                 <li><a class="footer-link" href="/contactus/">{t 'Contact Us'}</a></li>
                             </ul>
                         </div>
-                        {set $addresses = $site.addresses->all()}
-                        {foreach $addresses as $address_model }
-                            <div class="columns small-4 show-for-large">
-                                <div>
-                                    <div class="footer-info-block-title">{$address_model.address.name}</div>
-                                    <ul class="no-bullet menu-list">
-                                        <li class="footer-info-block-item">{$address_model.address.company}</li>
-                                        <li class="footer-info-block-item">{$address_model.address.address}</li>
-                                        <li class="footer-info-block-item">{$address_model.address.address_state}</li>
-                                        <li class="footer-info-block-item">{$address_model.address.country}</li>
-                                    </ul>
+                        {block 'addresses'}
+                            {foreach $addresses as $address_model }
+                                <div class="columns small-4 show-for-large">
+                                    <div>
+                                        <div class="footer-info-block-title">{$address_model.address.name}</div>
+                                        <ul class="no-bullet menu-list">
+                                            <li class="footer-info-block-item">{$address_model.address.company}</li>
+                                            <li class="footer-info-block-item">{$address_model.address.address}</li>
+                                            <li class="footer-info-block-item">{$address_model.address.address_state}</li>
+                                            <li class="footer-info-block-item">{$address_model.address.country}</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        {/foreach}
+                            {/foreach}
+                        {/block}
                     </div>
                 </div>
 
             </div>
 
             <div class="column small-12 medium-4 footer-right-column">
-                <div class="footer-socials show-for-medium footer_socials">
-                    {set $socials = $site.socials->filter(['is_active' => true])->order(['order_by'])->all()}
-                    {foreach $socials as $social_model }
-                        <a href="{$social_model->social->url}" rel="nofollow noopener" target="_blank" style="background-image: url({$social_model->social->getLogoPath()})"
-                           class="facebook"></a>
-                    {/foreach}
-                </div>
+                {block 'socials'}
+                    <div class="footer-socials show-for-medium footer_socials">
+                        {set $socials = $site.socials->filter(['is_active' => true])->order(['order_by'])->all()}
+                        {foreach $socials as $social_model }
+                            <a href="{$social_model->social->url}" rel="nofollow noopener" target="_blank"
+                               style="background-image: url({$social_model->social->getLogoPath()})"
+                               class="facebook"></a>
+                        {/foreach}
+                    </div>
+                {/block}
             </div>
         </div>
 
@@ -186,12 +196,15 @@
                 </button>
 
                 {*mobile socials*}
-                <div class="footer-socials footer_socials hide-for-medium">
-                    {foreach $socials as $social_model }
-                        <a href="{$social_model->social->url}" rel="nofollow noopener"
-                           target="_blank" class="youtube" style="background-image: url({$social_model->social->getLogoPath()})"></a>
-                    {/foreach}
-                </div>
+                {block 'mobile-socials'}
+                    <div class="footer-socials footer_socials hide-for-medium">
+                        {foreach $socials as $social_model }
+                            <a href="{$social_model->social->url}" rel="nofollow noopener"
+                               target="_blank" class="youtube"
+                               style="background-image: url({$social_model->social->getLogoPath()})"></a>
+                        {/foreach}
+                    </div>
+                {/block}
             </div>
         </div>
     </div>

@@ -8,6 +8,8 @@ import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
 import Product from "../Product";
+import { getPluralPrefix } from "../../../../utils/getPluralPrefix";
+import { PriceProduct } from "../components/PriceProduct";
 
 export default class Card extends Component {
   constructor(props) {
@@ -283,10 +285,7 @@ export default class Card extends Component {
                 {t("List Price")}:{" "}
               </span>
               <span className="products-slider-old-price">
-                <Price
-                  currency={product.currency}
-                  price={product.listPrice.number}
-                />
+                <PriceProduct price={product.listPrice.number} />
               </span>
             </div>
           )}
@@ -296,7 +295,7 @@ export default class Card extends Component {
               {t("Price")}:{" "}
             </span>
             <span className="products-slider-current-price">
-              <Price currency={product.currency} price={product.price.number} />
+              <PriceProduct price={product.price.number} />
             </span>
           </div>
         </div>
@@ -313,7 +312,14 @@ export default class Card extends Component {
                       title={this.product.name}
                     >
                       <span className="text">
-                        See {this.product.childrenNumber} products variation
+                        {t(
+                          `See product variation${getPluralPrefix(
+                            this.product.childrenNumber
+                          )}`,
+                          {
+                            count: this.product.childrenNumber,
+                          }
+                        )}
                       </span>
                     </a>
                   </div>

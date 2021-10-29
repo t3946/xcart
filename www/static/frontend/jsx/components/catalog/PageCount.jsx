@@ -1,4 +1,5 @@
 import CatalogContext from "@/components/catalog/CatalogContext";
+import t from "@/i18n";
 
 export default class PageCount extends Component {
   constructor() {
@@ -20,7 +21,7 @@ export default class PageCount extends Component {
         </span>
         <span> / </span>
         <span className="full">{$pager ? total : "Loading"}</span>
-        <span> items shown</span>
+        <span> {t("items shown")}</span>
       </span>
     );
   }

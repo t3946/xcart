@@ -1,9 +1,8 @@
 import Product from "@/components/product/card/Product";
 import ImgSlider from "./ImgSlider";
-import Price from "@/components/product/card/components/Price";
 import { Fragment } from "preact";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
-
+import { PriceProduct } from "../components/PriceProduct";
 
 export default class Card extends Component {
   constructor({ product }) {
@@ -36,18 +35,17 @@ export default class Card extends Component {
    * all price related elements as prices, buy button discount etc.
    */
   productPriceBlock() {
-    const { price, listPrice, currency } = this.product;
-
+    const { price, listPrice } = this.product;
     return (
       <Fragment>
         {listPrice.number > price.number && (
           <span className="products-slider-old-price">
-            <Price currency={currency} price={listPrice.number} />
+            <PriceProduct price={listPrice.number} />
           </span>
         )}
 
         <span className="products-slider-current-price">
-          <Price currency={currency} price={price.number} />
+          <PriceProduct price={price.number} />
         </span>
       </Fragment>
     );

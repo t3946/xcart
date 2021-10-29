@@ -12,6 +12,7 @@
     {set $site_currency = $site->getCurrency()}
     {set $uri = $is_dev_mode ? '' : $site->getHttpOrHttps() ~ $config.CDN_domain}
     {set $translates = $.call.Modules.Translate.Classes.I18nextManager::getTranslates($site->lang->lang_code)}
+    {set $frontend_currency = $site_currency->getFrontendData()}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
@@ -112,11 +113,7 @@
                 },
                 'discount_minutes': {$.call.Modules.User.Helpers.DiscountHelper::getDiscountMinutes()},
                 'order': {json_encode($order->attributes)},
-                currency: {
-                    currency: "{$site_currency->symbol}",
-                    symbol_prefix: "{$site_currency->symbol_prefix}",
-                    after: "{$site_currency->after}",
-                },
+                currency: {json_encode($frontend_currency)},
                 translates: {$translates},
             },
         };

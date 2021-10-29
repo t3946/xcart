@@ -15,7 +15,7 @@ i18n.use(initReactI18next).init({
   },
 
   lng: "en",
-
+  pluralSeparator: "_",
   fallbackLng: "ru",
 
   missingKeyHandler: function (lng, ns, key, fallbackValue) {

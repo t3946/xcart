@@ -50,13 +50,13 @@
             {else}
                 {set $lbl}{t 'Expected availability'}:{/set}
             {/if}
-            {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl ~ " {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}"}
+            {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl ~ " {$model->getFrontendEtaDate()}"}
         {/if}
     {else}
         {if $fill! && $fill}
             {if $model->eta_date_mm_dd_yyyy && $model->eta_date_mm_dd_yyyy > time()}
                 {set $lbl}{t 'Expected availability'}{/set}
-                {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl ~ ": {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}"}
+                {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl ~ ": {$model->getFrontendEtaDate()}"}
             {else}
                 {set $lbl}{t 'Out of stock'}{/set}
                 {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl}
@@ -68,7 +68,7 @@
             {if $model->eta_date_mm_dd_yyyy && $model->eta_date_mm_dd_yyyy > time()}
                 <div class="eta-date">
                     {set $lbl}{t 'Eta date'}{/set}
-                    {$lbl}: {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}
+                    {$lbl}: {$model->getFrontendEtaDate()}
                 </div>
             {/if}
         {/if}

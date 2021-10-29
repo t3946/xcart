@@ -736,7 +736,6 @@ abstract class BaseForm implements IteratorAggregate, Countable, ArrayAccess, IV
         if (!isset($tmp[$this->classNameShort()])) {
             return $this;
         }
-
         $data = $tmp[$this->classNameShort()];
         $this->setAttributes($data);
         return $this;
