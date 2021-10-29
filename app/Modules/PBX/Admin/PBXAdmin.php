@@ -77,7 +77,7 @@ class PBXAdmin extends Admin
             case 'audio':
                 return ($url = $item->getUrl())
                     ? "<audio 
-                            style='width: 400px;' 
+                            style='width: 370px;' 
                             controls 
                             preload='none' 
                             data-call-id='$item->id'
@@ -104,17 +104,8 @@ class PBXAdmin extends Admin
     public function getAvailableListColumns()
     {
         return array_merge(parent::getAvailableListColumns(), [
-            'direction' => [
-                'title' => 'Direction',
-                'template' => 'admin/list/columns/default.tpl',
-            ],
-            'duration' => [
-                'title' => 'Duration',
-                'template' => 'admin/list/columns/default.tpl',
-            ],
-            'audio' => [
-                'title' => 'Audio',
-                'template' => 'admin/list/columns/default.tpl',
+            'start_at' => [
+                'title' => 'Start Time <br/> Duration',
             ],
         ]);
     }

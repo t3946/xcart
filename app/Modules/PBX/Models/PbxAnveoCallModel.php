@@ -114,7 +114,7 @@ class PbxAnveoCallModel extends Model
             'start_at' => [
                 'class' => DateTimeField::class,
                 'null' => false,
-                'verboseName' => 'Starting Time'
+                'verboseName' => 'Start Time'
             ],
             'end_at' => [
                 'class' => DateTimeField::class,
