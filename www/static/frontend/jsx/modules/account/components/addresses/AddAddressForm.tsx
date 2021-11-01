@@ -181,7 +181,9 @@ export const AddAddressForm = ({
               <Grid container justifyContent="flex-end">
                 <Grid className="add-address-input">
                   <Button
-                    disabled={addressFormLoading | (errors.keys.length !== 0)}
+                    disabled={
+                      addressFormLoading || Object.keys(errors).length != 0
+                    }
                     type={"submit"}
                     className="account-submit-btn"
                   >
