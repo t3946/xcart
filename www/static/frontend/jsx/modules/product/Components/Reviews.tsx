@@ -185,15 +185,22 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
     );
   }
 
+  const classes = {
+    hat: [
+      "product-reviews-header",
+      "product-reviews-header_big",
+      "product-reviews_column-header",
+      "mb-md-20",
+      "d-flex",
+      "justify-content-between",
+      "align-items-center",
+      { "skeleton-box": !country },
+    ],
+  };
+
   return (
     <>
-      <h3
-        className={
-          "product-reviews-header product-reviews-header_big product-reviews_column-header mb-md-20 d-flex justify-content-between align-items-center"
-        }
-      >
-        {hatTemplate()}
-      </h3>
+      <h3 className={classnames(classes.hat)}>{hatTemplate()}</h3>
 
       <div
         className={classnames([
