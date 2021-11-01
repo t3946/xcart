@@ -2,6 +2,7 @@
     position: relative;
     overflow: hidden;
     border-radius: rem-calc(3);
+    color: transparent !important;
 
     &:before, &:after {
         top: 0;
