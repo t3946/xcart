@@ -158,14 +158,16 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
     };
   });
 
-  return (
-    <>
-      <h3
-        className={
-          "product-reviews-header product-reviews-header_big product-reviews_column-header mb-md-20 d-flex justify-content-between align-items-center"
-        }
-      >
-        <span>Top reviews from the {country}</span>
+  function hatTemplate() {
+    if (totalReviews === 0) {
+      return "No reviews";
+    }
+
+    return (
+      <>
+        <span>
+          {sort.previewValue} from the {country}
+        </span>
 
         <FormSelect
           items={orders}
@@ -179,6 +181,18 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
           value={sort}
           classes={{ group: "w-auto" }}
         />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <h3
+        className={
+          "product-reviews-header product-reviews-header_big product-reviews_column-header mb-md-20 d-flex justify-content-between align-items-center"
+        }
+      >
+        {hatTemplate()}
       </h3>
 
       <div
