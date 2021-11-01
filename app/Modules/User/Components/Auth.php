@@ -77,10 +77,11 @@ class Auth implements AuthInterface
         $user = null;
 
         if (!Cli::isCli()) {
-            $user = $this->getSessionUser();
-            if (!$user) {
-                if ($user = $this->getCookieUser()) {
-                    $this->updateSession($user);
+            if ($connection = Xcart::app()->db->getConnection()) {
+                if (!$user = $this->getSessionUser()) {
+                    if ($user = $this->getCookieUser()) {
+                        $this->updateSession($user);
+                    }
                 }
             }
         }

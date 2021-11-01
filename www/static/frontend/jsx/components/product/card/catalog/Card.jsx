@@ -1,14 +1,12 @@
 import classnames from "classnames";
-import { Fragment, createRef } from "preact";
+import { Fragment } from "preact";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
-import Price from "@/components/product/card/components/Price";
 import QuantityGroup from "@/components/product/card/QuantityGroup";
 import CatalogContext from "@/components/catalog/CatalogContext";
 import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
 import Product from "../Product";
-import { getPluralPrefix } from "../../../../utils/getPluralPrefix";
 import { PriceProduct } from "../components/PriceProduct";
 
 export default class Card extends Component {
@@ -312,14 +310,9 @@ export default class Card extends Component {
                       title={this.product.name}
                     >
                       <span className="text">
-                        {t(
-                          `See product variation${getPluralPrefix(
-                            this.product.childrenNumber
-                          )}`,
-                          {
-                            count: this.product.childrenNumber,
-                          }
-                        )}
+                        {t(`See product variation`, {
+                          count: this.product.childrenNumber,
+                        })}
                       </span>
                     </a>
                   </div>
