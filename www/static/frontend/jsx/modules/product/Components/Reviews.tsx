@@ -94,7 +94,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
             addReviewsAction({
               productId: props.productId,
               reviews: res.reviews,
-              countries: res.countries,
+              country: res.country,
             })
           );
         },
