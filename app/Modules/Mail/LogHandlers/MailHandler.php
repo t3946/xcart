@@ -22,7 +22,9 @@ class MailHandler extends MonologMailHandler
             $session = Xcart::app()->request->session;
 
             if ($session) {
-                $login = Xcart::app()->user->login;
+                if (Xcart::app()->db->getConnection()) {
+                    $login = Xcart::app()->user->login;
+                }
             }
 
             $msg .= $this->format('Site', $_SERVER["HTTP_HOST"]. $_SERVER['REQUEST_URI']);

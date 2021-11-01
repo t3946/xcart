@@ -5,8 +5,9 @@ namespace Xcart\App\Main;
 use Modules\Core\Components\Profiler;
 use Xcart\App\Application\Application;
 use Xcart\App\Helpers\Creator;
+use function function_exists;
 
-if (!\function_exists('d')) {
+if (!function_exists('d')) {
     require_once __DIR__ . '/dump.php';
 }
 
@@ -17,7 +18,7 @@ class Xcart
         return '0.1';
     }
 
-    /** @var \Xcart\App\Application\Application */
+    /** @var Application */
     protected static $_app;
 
     public static function init($configuration, $application = Application::class): void
@@ -34,7 +35,7 @@ class Xcart
     }
 
     /**
-     * @return \Xcart\App\Application\Application
+     * @return Application
      */
     public static function app():? Application
     {

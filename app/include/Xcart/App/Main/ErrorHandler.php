@@ -362,6 +362,26 @@ class ErrorHandler
 
     /**
      * Handles the PHP error.
+     * @param $code
+     * @param $message
+     * @param $file
+     * @param $line
+     * @param array $errcontext
+     * @return bool|void
+     * @throws CompileErrorException
+     * @throws CoreErrorException
+     * @throws CoreWarningException
+     * @throws DeprecatedException
+     * @throws ErrorException
+     * @throws NoticeException
+     * @throws ParseException
+     * @throws RecoverableErrorException
+     * @throws StrictException
+     * @throws UserDeprecatedException
+     * @throws UserErrorException
+     * @throws UserNoticeException
+     * @throws UserWarningException
+     * @throws WarningException
      */
     public function handleError($code, $message, $file, $line, array $errcontext = [])
     {
@@ -560,6 +580,9 @@ class ErrorHandler
         ];
 
         if ($this->useTemplate) {
+            if (!Xcart::app()->db->getConnection()) {
+                $view = "error_no_db";
+            }
             $template_name = $view . '.tpl';
             if ($data['data']['code'] == 404) {
                 /** @var SiteModel $site_model */

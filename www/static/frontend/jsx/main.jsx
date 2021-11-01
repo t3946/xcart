@@ -13,6 +13,8 @@ import Search from "./components/Search";
 import isMedia from "./utils/isMedia";
 import documentReady from "./utils/documentReady";
 import Waves from "node-waves";
+import "readmore-js";
+import t from "./i18n";
 
 (function () {
   documentReady(() => {
@@ -26,6 +28,25 @@ import Waves from "node-waves";
 
     Waves.attach(".waves");
     Waves.init();
+    $(".description-product-content").readmore({
+      collapsedHeight: 360,
+      embedCSS: false,
+      lessLink: `<a class='btn-description close-description' href="#">${t(
+        "Close description"
+      )}</a>`,
+      moreLink: `<a class='btn-description open-description' href="#">${t(
+        "Read more description"
+      )}</a>`,
+      speed: 3,
+      beforeToggle: (trigger, element, expanded) => {
+        if (!expanded) {
+          $("html, body").animate(
+            { scrollTop: element.offset().top },
+            { duration: 400 }
+          );
+        }
+      },
+    });
 
     $(document).on("click", ".show_more", function (e) {
       let $this = $(this);

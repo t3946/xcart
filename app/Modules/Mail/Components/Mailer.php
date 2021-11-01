@@ -161,7 +161,9 @@ class Mailer
 
         /** @var SitesModule $module */
         if ($module = Xcart::app()->getModule('Sites')) {
-            $domain = $module->getSite()->getBaseDomain();
+            if (Xcart::app()->db->getConnection()) {
+                $domain = $module->getSite()->getBaseDomain();
+            }
         }
 
         if (!$domain) {

@@ -3,9 +3,12 @@ import { initReactI18next } from "react-i18next";
 
 i18n.use(initReactI18next).init({
   resources: {
-    en: {
+    [app.options.lang]: {
       translation: app.options.translates,
     },
+  },
+  i18nFormat: {
+    localeData: ["en", "ru"],
   },
 
   interpolation: {
