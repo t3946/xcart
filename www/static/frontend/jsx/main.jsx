@@ -28,25 +28,32 @@ import t from "./i18n";
 
     Waves.attach(".waves");
     Waves.init();
-    $(".description-product-content").readmore({
-      collapsedHeight: 360,
-      embedCSS: false,
-      lessLink: `<a class='btn-description close-description' href="#">${t(
-        "Close description"
-      )}</a>`,
-      moreLink: `<a class='btn-description open-description' href="#">${t(
-        "Read more description"
-      )}</a>`,
-      speed: 3,
-      beforeToggle: (trigger, element, expanded) => {
-        if (!expanded) {
-          $("html, body").animate(
-            { scrollTop: element.offset().top },
-            { duration: 400 }
-          );
-        }
-      },
-    });
+    const description = $(".description-product-content");
+    if (description.length) {
+      if (description.height() > 360 * 1.6) {
+        description.readmore({
+          collapsedHeight: 360,
+          embedCSS: false,
+          lessLink: `<a class='btn-description close-description' href="#">${t(
+            "Close description"
+          )}</a>`,
+          moreLink: `<a class='btn-description open-description' href="#">${t(
+            "Read more description"
+          )}</a>`,
+          speed: 3,
+          beforeToggle: (trigger, element, expanded) => {
+            $("html, body").animate(
+              {
+                scrollTop: expanded
+                  ? element.offset().top - 110 // -110 т.к навигатор занимает определённую часть
+                  : element.offset().top + element.outerHeight(),
+              },
+              { duration: 600 }
+            );
+          },
+        });
+      }
+    }
 
     $(document).on("click", ".show_more", function (e) {
       let $this = $(this);
