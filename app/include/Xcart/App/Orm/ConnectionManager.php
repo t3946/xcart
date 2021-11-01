@@ -57,9 +57,13 @@ class ConnectionManager
 
             if (!empty($config['mapping'])) {
                 foreach ($config['mapping'] as $from_type => $to_type) {
-                    $this->connections[$name]
-                        ->getDatabasePlatform()
-                        ->registerDoctrineTypeMapping($from_type, $to_type);
+                    try {
+                        $this->connections[$name]
+                            ->getDatabasePlatform()
+                            ->registerDoctrineTypeMapping($from_type, $to_type);
+                    } catch (\Exception $exception) { /* Устранение циклической ошибки если не удалось подключиться к MySQL */
+                        $this->connections[$name] = null;
+                    }
                 }
             }
 
@@ -76,8 +80,9 @@ class ConnectionManager
                     $r = new ReflectionClass($class);
                     $adapter = $r->newInstanceArgs($params);
                 }
-
-                $this->connections[ $name ]->getConfiguration()->setResultCacheImpl($adapter);
+                if ($this->connections[$name] !== null) {
+                    $this->connections[$name]->getConfiguration()->setResultCacheImpl($adapter);
+                }
             }
         }
     }

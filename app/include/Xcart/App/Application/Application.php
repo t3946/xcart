@@ -2,40 +2,53 @@
 namespace Xcart\App\Application;
 
 use Exception;
+use Modules\Cart\Components\XCart;
+use Modules\Mail\Components\MailComponent;
+use Modules\Mail\Components\Mailer;
 use Modules\User\Models\UserModel;
+use Xcart\App\Cache\Cache;
 use Xcart\App\Cli\Cli;
+use Xcart\App\Components\Breadcrumbs;
+use Xcart\App\Components\Flash;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Event\EventManager;
 use Xcart\App\Exceptions\InvalidConfigException;
 use Xcart\App\Exceptions\NotFoundHttpException;
 use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Interfaces\AuthInterface;
+use Xcart\App\Logger\LoggerManager;
 use Xcart\App\Main\ComponentsLibrary;
+use Xcart\App\Middleware\MiddlewareManager;
 use Xcart\App\Module\Module;
+use Xcart\App\Orm\ConnectionManager;
 use Xcart\App\Queue\QueueManager;
 use Xcart\App\Request\CliRequest;
 use Xcart\App\Request\HttpRequest;
+use Xcart\App\Router\Router;
+use Xcart\App\Storage\Storage;
+use Xcart\App\Template\TemplateManager;
 
 /**
  * Class Application
  *
- * @property \Xcart\App\Orm\ConnectionManager $db DB connection
- * @property \Xcart\App\Middleware\MiddlewareManager $middleware Middleware
- * @property \Xcart\App\Router\Router $router Url manager, router
- * @property \Xcart\App\Request\HttpRequest|\Xcart\App\Request\CliRequest $request Request
- * @property \Xcart\App\Template\TemplateManager $template Template manager
- * @property \Xcart\App\Interfaces\AuthInterface $auth Authorization component
- * @property \Xcart\App\Cache\Cache $cache Cache component
- * @property \Xcart\App\Event\EventManager $event Event component
- * @property \Xcart\App\Storage\Storage $storage File storage component
- * @property \Xcart\App\Logger\LoggerManager $logger Logging system component
- * @property \Xcart\App\Components\Breadcrumbs $breadcrumbs
- * @property \Xcart\App\Components\Flash $flash
- * @property \Modules\Mail\Components\Mailer $mail Mailer
+ * @property ConnectionManager $db DB connection
+ * @property MiddlewareManager $middleware Middleware
+ * @property Router $router Url manager, router
+ * @property HttpRequest|CliRequest $request Request
+ * @property TemplateManager $template Template manager
+ * @property AuthInterface $auth Authorization component
+ * @property Cache $cache Cache component
+ * @property EventManager $event Event component
+ * @property Storage $storage File storage component
+ * @property LoggerManager $logger Logging system component
+ * @property Breadcrumbs $breadcrumbs
+ * @property Flash $flash
+ * @property Mailer $mail Mailer
  * @property QueueManager $queue QueueManager
- * @property \Modules\Mail\Components\MailComponent $oldMail Mailer
- * @property \Modules\Cart\Components\XCart $cart Cart
+ * @property MailComponent $oldMail Mailer
+ * @property XCart $cart Cart
  *
  * @property UserModel $user
  * 

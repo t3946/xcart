@@ -1,3 +1,10 @@
+.center-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .error-page {
   .error-data {
     width: 750px;
@@ -26,6 +33,7 @@
         margin-bottom: 10px;
         font-weight: 300;
       }
+
       .error-description {
 
         font-size: 20px;

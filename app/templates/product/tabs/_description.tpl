@@ -54,7 +54,9 @@
         <div class="description">
             <div class="h2 title">{t 'Description'}</div>
             <div class="content">
+                <article class='description-product-content' style="overflow: hidden" >
                 {raw $model->getFrontendDescription()}
+                </article>
             </div>
         </div>
 
