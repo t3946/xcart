@@ -30,11 +30,9 @@ class PBXAdmin extends Admin
         return [
             'orders',
             'e164',
-            'cname',
             'direction',
             'user',
             'start_at',
-            'duration',
             'audio',
         ];
     }
@@ -46,7 +44,7 @@ class PBXAdmin extends Admin
 
     public function getModel()
     {
-        return new PbxAnveoCallModel;
+        return new PbxAnveoCallModel();
     }
 
     public static function getName()
@@ -70,19 +68,20 @@ class PBXAdmin extends Admin
                     static fn(OrderModel $order) => "<a href='{$order->getAdminUrl()}' target='_blank'>{$order->getOrderNumber()}</a>",
                     $item->$property->all())));
             case 'e164':
-                return $item->getFrontendE164();
+                return "{$item->getFrontendE164()} $item->cname";
+            case 'start_at':
+                $duration = ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
+                return parent::getItemProperty($item, $property) . "<br/>" . $duration;
             case 'direction':
                 return $item->getDirection();
-            case 'duration':
-                return ($d = $item->getDuration()) ? $d->format('%H:%I:%S') : '';
             case 'audio':
                 return ($url = $item->getUrl())
                     ? "<audio 
-                            style='width: 212px;' 
+                            style='width: 370px;' 
                             controls 
                             preload='none' 
-                            data-call-id='{$item->id}'
-                            src='{$url}' 
+                            data-call-id='$item->id'
+                            src='$url' 
                             onplay=\"
                                 [...document.getElementsByTagName('audio')]
                                     .filter((a) => a.dataset.callId !== this.dataset.callId)
@@ -105,17 +104,8 @@ class PBXAdmin extends Admin
     public function getAvailableListColumns()
     {
         return array_merge(parent::getAvailableListColumns(), [
-            'direction' => [
-                'title' => 'Direction',
-                'template' => 'admin/list/columns/default.tpl',
-            ],
-            'duration' => [
-                'title' => 'Duration',
-                'template' => 'admin/list/columns/default.tpl',
-            ],
-            'audio' => [
-                'title' => 'Audio',
-                'template' => 'admin/list/columns/default.tpl',
+            'start_at' => [
+                'title' => 'Start Time <br/> Duration',
             ],
         ]);
     }
@@ -128,7 +118,7 @@ class PBXAdmin extends Admin
             $qs->order([
                 $order['raw']
             ]);
-        } else if ($this->sort) {
+        } elseif ($this->sort) {
             $qs->order([
                 $this->sort
             ]);
@@ -178,9 +168,7 @@ class PBXAdmin extends Admin
             $qs->filter([new QOr(array_map(static fn($a) => new QAnd($a), $or))]);
         }
 
-        $qs = parent::handleFilter($qs, $form);
-
-        return $qs;
+        return parent::handleFilter($qs, $form);
     }
 
 }

@@ -12,3 +12,9 @@ log_bin_trust_function_creators = 1
 
 skip_name_resolve=on
 event_scheduler=off
+
+
+server-id = 2
+relay-log = /var/lib/mysql/mysql-relay-bin
+relay-log-index = /var/lib/mysql/mysql-relay-bin.index
+replicate-do-db = xcart_k
