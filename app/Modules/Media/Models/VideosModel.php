@@ -11,11 +11,16 @@ use Xcart\App\Orm\Model;
 
 class VideosModel extends Model
 {
+    const ACCEPTABLE_FORMATS = [
+        'mp4',
+        'ogg',
+        'webm',
+    ];
     const YOUTUBE_PROVIDER = 'youtube';
     const YOUTUBE_VIMEO = 'vimeo';
 
     public static string $upload_to = '';
-    public static string $max_size = '';
+    private static int $max_size_mb = 100;
 
     public static function tableName()
     {
@@ -40,8 +45,8 @@ class VideosModel extends Model
                 'null' => false,
                 'required' => false,
                 'adapterName' => 'www',
-                'uploadTo' => self::$upload_to,
-                'maxSize' => self::$max_size,
+                'uploadTo' => self::$upload_to . '/%Y/%m/%d',
+                'maxSize' => self::$max_size_mb . 'M',
             ],
 
             'provider' => [
@@ -62,6 +67,14 @@ class VideosModel extends Model
                 'default' => null,
             ],
         ];
+    }
+
+    /**
+     * @return int
+     */
+    public static function getMaxSizeMb(): int
+    {
+        return self::$max_size_mb;
     }
 
     public function getThumbs(): array

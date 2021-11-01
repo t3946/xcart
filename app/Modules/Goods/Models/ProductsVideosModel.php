@@ -38,14 +38,8 @@ class ProductsVideosModel extends Model implements LinkVideo
         return 'media/reviews/';
     }
 
-    function getMaxSize(): string
-    {
-        return '100M';
-    }
-
     public function saveVideo(int $linked_entity_id, array $video_attributes) {
         VideosModel::$upload_to = $this->getUploadTo();
-        VideosModel::$max_size = $this->getMaxSize();
         $video = new VideosModel($video_attributes);
         $video->save();
 

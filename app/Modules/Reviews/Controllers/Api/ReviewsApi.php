@@ -4,6 +4,7 @@ namespace Modules\Reviews\Controllers\Api;
 
 use Modules\Account\Controllers\AccountController;
 
+use Modules\Media\Models\VideosModel;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\Models\ReviewRatingsModel;
@@ -19,6 +20,7 @@ use Xcart\App\QueryBuilder\Aggregation\Count;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Xcart\App\Storage\Files\RemoteFile;
 
 class ReviewsApi extends FrontendController
 {
@@ -132,21 +134,21 @@ class ReviewsApi extends FrontendController
                 continue;
             }
 
-            $uploadedFile = new UploadedFile(
+            $uploaded_file = new UploadedFile(
                 $files['tmp_name'][$i],
                 $files['name'][$i],
                 $files['type'][$i],
                 (int)$files['size'][$i],
                 (int)$files['error'][$i],
             );
-            $image_name = $uploadedFile->getPath() . '/' . $uploadedFile->getFilename();
+            $image_name = $uploaded_file->getPath() . '/' . $uploaded_file->getFilename();
 
             //is image
             if (in_array($extension, self::SUPPORTED_IMAGE_FORMATS)) {
                 list($width, $height) = getimagesize($image_name);
 
                 (new ReviewsImagesModel())->saveImage($review_id, [
-                    'path' => $uploadedFile,
+                    'path' => $uploaded_file,
                     'width' => $width,
                     'height' => $height,
                 ]);
@@ -155,9 +157,25 @@ class ReviewsApi extends FrontendController
             //is video
             if (in_array($extension, self::SUPPORTED_VIDEO_FORMATS)) {
                 (new ReviewsVideosModel())->saveVideo($review_id, [
-                    'video' => $uploadedFile,
+                    'video' => $uploaded_file,
                     'provider' => 'local',
                     'name' => pathinfo($files['name'][$i])['filename'],
+                ]);
+            }
+        }
+
+        $video_file_url = $_POST['videoLink'];
+
+        if ($video_file_url) {
+            $errors = $this->checkVideoFile($video_file_url)['errors'];
+
+            if (count($errors) === 0){
+                $file = new RemoteFile($video_file_url);
+
+                (new ReviewsVideosModel())->saveVideo($review_id, [
+                    'video' => $file,
+                    'provider' => 'local',
+                    'name' => pathinfo($file->getBasename())['filename'],
                 ]);
             }
         }
@@ -311,5 +329,39 @@ class ReviewsApi extends FrontendController
         ]);
 
         $this->jsonResponse(["result" => "ok"]);
+    }
+
+    public function checkVideoFile($url): array
+    {
+        $headers = get_headers($url, true);
+
+        if (stripos($headers[0], '200 OK') === false) {
+            return ['errors' => ['File not found']];
+        }
+
+        $fileSizeB = $headers['Content-Length'];
+        $fileSizeMB = round($fileSizeB / 1024 / 1024, 2);
+        $maxFileSizeMB = VideosModel::getMaxSizeMb();
+
+        if ($fileSizeMB > $maxFileSizeMB) {
+            $err = sprintf('This file has %sMB size. ', $fileSizeMB) .
+                sprintf('Max acceptable file size is %sMB.', $maxFileSizeMB);
+            return ['errors' => [$err]];
+        }
+
+        $file_ext = explode('/', $headers['Content-Type'])[1];
+
+        if (!in_array($file_ext, VideosModel::ACCEPTABLE_FORMATS)) {
+            $err = sprintf('Unsupported video format %s. Acceptable formats only: ', $file_ext) .
+                implode(', ', VideosModel::ACCEPTABLE_FORMATS);
+            return ['errors' => [$err]];
+        }
+
+        return ['errors' => []];
+    }
+
+    public function checkVideoFileAction()
+    {
+        $this->jsonResponse($this->checkVideoFile($this->data['videoFileUrl']));
     }
 }

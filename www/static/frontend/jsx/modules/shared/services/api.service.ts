@@ -1,4 +1,18 @@
 export class ApiService {
+  async head(url: string): Promise<Response> {
+    return await fetch(url, {
+      method: "HEAD",
+      mode: "no-cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+    });
+  }
+
   async get<T>(url: string): Promise<T> {
     const response = await fetch(url, {
       method: "GET",

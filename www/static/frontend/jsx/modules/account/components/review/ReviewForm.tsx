@@ -8,7 +8,10 @@ import SelectRating from "@client/modules/account/components/review/SelectRating
 import { Form as RBForm } from "react-bootstrap";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import Camera from "@client/jsx/modules/icon/components/account/camera/Camera";
-import { createReviewAction } from "@client/jsx/redux/actions/account-actions/ReviewActions";
+import {
+  createReviewAction,
+  getVideoHeaderAction,
+} from "@client/jsx/redux/actions/account-actions/ReviewActions";
 import Files from "@client/jsx/modules/account/components/review/Files";
 
 const ReviewForm = (): any => {
@@ -21,14 +24,18 @@ const ReviewForm = (): any => {
     headLine: "header",
     textBody: "body",
     publicName: user.public_name,
+    videoLink:
+      "https://st.depositphotos.com/1006011/3870/v/600/depositphotos_38703881-stock-video-vladimir-putin.mp4",
   };
   const validationSchema = yup.object().shape({
     overall: yup.number(),
     headLine: yup.string().required("Headline is a required field"),
     textBody: yup.string().required("Review text line is a required field"),
     publicName: yup.string(),
+    videoLink: yup.string(),
   });
   const ratings = appData.ratings.ratings;
+  const [isLoading, setIsLoading] = React.useState(false);
 
   ratings.features.forEach(function (e) {
     initialValues[e.slug] = 0;
@@ -65,6 +72,8 @@ const ReviewForm = (): any => {
     form.append("header", values.headLine);
     form.append("body", values.textBody);
     form.append("productId", product.productid);
+    form.append("videoLink", values.videoLink);
+
     const fdRatings = {
       overall: values.overall,
     };
@@ -134,6 +143,32 @@ const ReviewForm = (): any => {
     );
   }
 
+  function videoLinkChangeHandler(
+    values,
+    errors,
+    setErrors,
+    touched,
+    setTouched
+  ) {
+    setIsLoading(true);
+
+    dispatch(
+      getVideoHeaderAction({
+        form: {
+          videoFileUrl: values.videoLink,
+        },
+
+        success(res) {
+          errors.videoLink = res?.errors[0] || null;
+          setErrors(errors);
+          setIsLoading(false);
+          touched.videoLink = true;
+          setTouched(touched);
+        },
+      })
+    );
+  }
+
   return (
     <div>
       <Formik
@@ -141,7 +176,15 @@ const ReviewForm = (): any => {
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {function ({ setValues, values, errors, touched, handleChange }) {
+        {function ({
+          setValues,
+          values,
+          errors,
+          touched,
+          handleChange,
+          setErrors,
+          setTouched,
+        }) {
           return (
             <Form>
               <InnerPage
@@ -220,6 +263,47 @@ const ReviewForm = (): any => {
                   <div className="d-md-none form-review-add-file-button_mobile d-flex align-items-center justify-content-center">
                     <Camera />
                   </div>
+
+                  <RBForm.Group
+                    controlId="videoLink"
+                    className={"w-100 form-group_full-width"}
+                  >
+                    <RBForm.Label>
+                      <h2 className={"account-inner-page-header-2 mb-1"}>
+                        Link on video
+                      </h2>
+
+                      <p className={"form-review-comment"}>
+                        You can add video by link. Just past link on video in
+                        field below.
+                      </p>
+                    </RBForm.Label>
+
+                    <RBForm.Control
+                      type="text"
+                      name="videoLink"
+                      value={values.videoLink}
+                      className={"form-input"}
+                      isInvalid={!!touched.videoLink && !!errors.videoLink}
+                      isValid={touched.videoLink && !errors.videoLink}
+                      onChange={handleChange}
+                      onBlur={() => {
+                        videoLinkChangeHandler(
+                          values,
+                          errors,
+                          setErrors,
+                          touched,
+                          setTouched
+                        );
+                      }}
+                      placeholder={"Video link"}
+                      disabled={isLoading}
+                    />
+
+                    <RBForm.Control.Feedback type="invalid">
+                      {errors.videoLink}
+                    </RBForm.Control.Feedback>
+                  </RBForm.Group>
                 </div>
 
                 <div className="account-inner-page-divider account-inner-page__divider" />

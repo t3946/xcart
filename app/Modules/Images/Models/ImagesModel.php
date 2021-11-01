@@ -32,7 +32,7 @@ class ImagesModel extends Model
                 'required' => false,
                 'null' => true,
                 'adapterName' => 'www',
-                'uploadTo' => self::$upload_to,
+                'uploadTo' => self::$upload_to . '/%Y/%m/%d',
                 'maxSize' => self::$max_size,
             ],
             'width' => [
