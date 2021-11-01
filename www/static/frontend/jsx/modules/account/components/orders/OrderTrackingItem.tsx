@@ -1,6 +1,8 @@
 import React from "react";
 import { getDataToTracking } from "@client/modules/account/utils/get-data-to-tracking";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
 interface OrderTrackingItemProps {
   orderInfo: any;
@@ -13,10 +15,13 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
   trackingInfo,
   orderGroupInfo,
 }) => {
+  const breakpoints = useSelector(
+    (store: AccountStore) => store.main.breakpoint
+  );
   const breakpoint = useBreakpoint();
   const trackingViewData = getDataToTracking(
     orderGroupInfo.dc_status,
-    breakpoint({ xs: true, md: false })
+    !breakpoints?.md
   );
 
   return (

@@ -6,9 +6,13 @@
   align-items: center;
 }
 
-.header-left,.header-right{
+.header-left, .header-right{
   display: flex;
   align-items: center;
+}
+
+.header-left{
+  padding: 0;
 }
 
 .header-right{
@@ -17,4 +21,24 @@
 
 .order-item-header-grand-total{
   color: #83132B;
+}
+
+@media (max-width: 990px) {
+  .header-left{
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 500px) {
+  .header-left{
+    flex-direction: column;
+  }
+
+  .order-item-name{
+    font-size: 22px;
+  }
+
+  .order-item-header-container{
+    padding: rem-calc(16) rem-calc(10) rem-calc(26);
+  }
 }

@@ -1,6 +1,6 @@
 import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
-import Store from "@client/jsx/redux/stores/Store";
 import breakpoints from "@client/modules/account/ts/consts/breakpoints";
+import Store from "@client/jsx/redux/stores/Store";
 
 function resizeHandler() {
   Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
@@ -47,7 +47,7 @@ function executeBreakpoint(actions: ActionsInterface): any {
   return typeof action === "function" ? action() : action;
 }
 
-function getBreakpointsFlags(resolution: number): any {
+export function getBreakpointsFlags(resolution: number): any {
   const activeBreakpoints = {};
 
   for (const sizeName in breakpoints) {

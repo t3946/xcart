@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Map } from "@client/modules/account/components/shared/Map";
 import { OrderTrackingAddressCard } from "@client/modules/account/components/orders/OrderTrackingAddressCard";
 import { OrderTrackingItem } from "@client/modules/account/components/orders/OrderTrackingItem";
@@ -15,6 +15,7 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
   orderItem,
   shippingPos,
 }) => {
+  const ref = useRef<HTMLDivElement>();
   const [map, setMap] = useState(null);
   useEffect(() => {
     api
@@ -58,9 +59,14 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
     <React.Fragment>
       {showTracking()}
       <div className="order-tracking-info">
-        <div className={"order-tracking-map"}>
+        <div ref={ref} className={"order-tracking-map"}>
           {shippingPos && (
-            <Map setMap={setMap} markers={[shippingPos, markersCoordinates]} />
+            <Map
+              map={map}
+              width={ref.current.offsetWidth}
+              setMap={setMap}
+              markers={[shippingPos, markersCoordinates]}
+            />
           )}
         </div>
         <div className="order-tracking-info-addresses-cards">

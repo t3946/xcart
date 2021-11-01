@@ -17,7 +17,11 @@ import { cartAdd } from "../../../../redux/reduсers/appCartReducer";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import { CountInput } from "@client/modules/account/components/shared/CountInput";
 import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import useBreakpoint, {
+  getBreakpointsFlags,
+} from "@client/modules/account/hooks/useBreakpoint";
+import Store from "@client/jsx/redux/stores/Store";
+import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,
@@ -157,16 +161,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             }
             content={
               <div className="rating-stars-tooltip">
-                <OverallRating
-                  minRating={1}
-                  maxRating={5}
-                  ratings={[]}
-                />
+                {/*<OverallRating ratings={[]} />*/}
               </div>
             }
           />
           <div className="d-flex align-items-center">
-            <div className="product-list-item-price">${product.cost_to_us}</div>
+            <div className="product-list-item-price">${product?.price}</div>
             <div className="multiplication-symbol">X</div>
             <CountInput
               onBlur={onCountInputBlur}

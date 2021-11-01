@@ -17,6 +17,8 @@ export const OrderInfoContainerPage: React.FC = ({ children }) => {
     return api.get(`/account/api/orders/get-one-order/${urlParams.id}`);
   }
 
+  console.log("initial");
+
   const orderFromStore = useSelector((e: AccountStore) =>
     e.ordersStore?.orders[urlParams.orderType]?.items?.find(
       (e) => e?.orderInfo?.orderid === urlParams.id

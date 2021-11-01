@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
+import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
 
 interface Item {
   viewValue: string;
-  previewValue: string;
+  previewValue?: string;
   value: any;
 }
 
 interface PropsInterface {
-  items: Item[];
+  items: Item[] | SelectValue<any, any>[];
   onClick?: (item: Item) => any;
   value: any;
-  name: any;
+  name?: any;
   label?: any;
   classes?: {
     input?: any;

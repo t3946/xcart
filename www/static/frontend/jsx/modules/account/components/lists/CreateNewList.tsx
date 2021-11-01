@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,12 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   onCreateList,
   actionType,
 }) => {
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
   const dispatch = useDispatch();
+
+  const ref = useRef<HTMLInputElement>();
 
   const { showSnackbar } = useContext(SnackbarContext);
 
@@ -34,6 +39,10 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {
       formik.setErrors({ name: "Required field" });
+      return;
+    }
+    if (formik.values.name.length >= 50) {
+      formik.setErrors({ name: "Maximum length 50 characters" });
       return;
     }
     dispatch(createList(formik.values.name, onAddingEnd, actionType));
@@ -64,6 +73,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
     <div>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
         <FormInput
+          autoFocus={true}
           name={"name"}
           classes={{
             input: "list-input",
@@ -73,6 +83,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
           errorMessage={formik.errors.name}
           handleBlur={formik.handleBlur}
           touched={formik.touched.name}
+          inputRef={ref}
           value={formik.values.name}
         />
 

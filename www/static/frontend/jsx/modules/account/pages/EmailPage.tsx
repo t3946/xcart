@@ -4,7 +4,7 @@ import { EmailBody } from "@client/modules/account/components/orders/EmailBody";
 import { useParams } from "react-router-dom";
 
 interface EmailPageProps {
-  orderItem: any;
+  orderItem?: any;
 }
 
 interface EmailPageUrlParams {
@@ -22,9 +22,11 @@ export const EmailPage: React.FC<EmailPageProps> = ({ orderItem }) => {
 
   useEffect(() => {
     setEmailInfo(
-      orderItem.orderInfo.emails.find((e) => e.id === urlParams.emailId)
+      orderItem.orderInfo.emails.find((e) => e.id === Number(urlParams.emailId))
     );
   }, [orderItem]);
+
+  console.log(orderItem);
 
   return (
     <div>

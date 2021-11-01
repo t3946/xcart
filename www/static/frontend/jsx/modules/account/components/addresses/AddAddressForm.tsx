@@ -17,20 +17,29 @@ import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
 import Store from "@client/jsx/redux/stores/Store";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
-export const AddAddressForm = ({ addressInfo }) => {
+export const AddAddressForm = ({
+  addressInfo = undefined,
+  onCancelClick = undefined,
+}) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const countries = useSelector((e: any) => e.main.countries);
   const states = useSelector((e: any) => e.main.states);
   const { showSnackbar } = useContext(SnackbarContext);
 
+  const breakpoint = useBreakpoint();
+
   const addressFormLoading = useSelector(
     (e: any) => e.addresses.addressFormLoading
   );
 
   const onPended = () => {
-    history.push("/account/addresses");
+    breakpoint({
+      xs: () => history.push("/account/addresses"),
+      md: onCancelClick,
+    });
     showSnackbar({
       header: "Success",
       message: `${!addressInfo ? "Address added!" : "Address edit!"}`,
@@ -53,7 +62,7 @@ export const AddAddressForm = ({ addressInfo }) => {
     dispatch(addAddress(newAddress, onPended, Store.getState().user.id));
   };
   return (
-    <div className="add-address-form-container">
+    <div>
       <Formik
         initialValues={addressInfo || initialAddAddressFormValue}
         onSubmit={submitForm}
@@ -172,7 +181,7 @@ export const AddAddressForm = ({ addressInfo }) => {
               <Grid container justifyContent="flex-end">
                 <Grid className="add-address-input">
                   <Button
-                    disabled={addressFormLoading}
+                    disabled={addressFormLoading | (errors.keys.length !== 0)}
                     type={"submit"}
                     className="account-submit-btn"
                   >

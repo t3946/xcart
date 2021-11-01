@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FocusEventHandler } from "react";
+import React, { ChangeEvent, FocusEventHandler, MutableRefObject } from "react";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { FormikErrors, FormikTouched } from "formik";
@@ -23,6 +23,8 @@ interface FormInputPropsDto {
   handleBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   mask?: string;
   inputType?: string;
+  autoFocus?: boolean;
+  inputRef?: MutableRefObject<any>;
 }
 
 export const FormInput: React.FC<FormInputPropsDto> = ({
@@ -39,6 +41,8 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   handleBlur,
   mask,
   inputType = "input",
+  autoFocus,
+  inputRef,
 }) => {
   const error = errorMessage && touched;
   return (
@@ -70,6 +74,8 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
             >
               {(inputProps) => (
                 <input
+                  ref={inputRef}
+                  autoFocus={autoFocus}
                   onBlur={handleBlur}
                   placeholder={placeholder}
                   className={classnames(
@@ -97,6 +103,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
               id={id}
               onChange={handleChange}
               value={value}
+              ref={inputRef}
             />
           )}
         </div>

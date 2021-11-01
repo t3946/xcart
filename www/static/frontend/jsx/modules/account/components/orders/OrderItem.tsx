@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useAccordion } from "@client/modules/account/hooks/useAccordion";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
 interface OrderItemProps {
   order: any;
@@ -30,11 +33,13 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
     order.orderInfo.s_address;
 
   const orderId = order.orderInfo.order_prefix + order.orderInfo.orderid;
+
+  const breakPoint = useBreakpoint();
   return (
     <div className="order-item-container">
       <div className="order-item-header-container">
         <div className="order-item-body-left-side header-left">
-          <div>
+          <div className="order-item-name">
             Order # <b>{orderId}</b>
           </div>
           <NavLink
@@ -60,13 +65,25 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
       </div>
       <div className="order-item-body-container">
         <div className="order-item-body-left-side">
+          <div className="order-item-body-right-side">
+            <div>
+              <div>ORDER DATE</div>
+              <div>{orderDate}</div>
+            </div>
+            <div>
+              <div className="order-item-header-grand-total">GRAND TOTAL</div>
+              <div className="order-item-header-grand-total">
+                <b>US$ {order.orderInfo.total}</b>
+              </div>
+            </div>
+          </div>
           <div className="order-item-body-title">items ordered</div>
 
           <div className={"order-item-body-product-container"}>
             <div className="order-item-body-product-left-part">
               <img
                 className="order-item-body-product-img"
-                src="https://img2.wtftime.ru/store/2020/11/19/EYGJdrlu_amp_big.jpg"
+                src={order.orderGroups[0].orderGroupsItems[0].image}
               />
               <div>
                 <a className="order-item-body-product-name">
@@ -99,7 +116,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                     <div className="order-item-body-product-left-part">
                       <img
                         className="order-item-body-product-img"
-                        src="https://img2.wtftime.ru/store/2020/11/19/EYGJdrlu_amp_big.jpg"
+                        src={groupItem.image}
                       />
                       <div>
                         <a className="order-item-body-product-name">
@@ -126,15 +143,17 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                   accordion.onItemClick();
                   setShowAllItems(!showAllItems);
                 }}
-                className="form-button form-button__outline"
+                className="form-button form-button__outline order-item-show-btn"
               >
                 {!showAllItems ? "show more" : "hide"}
               </button>
             ))}
         </div>
-        <div className="order-item-body-right-side">
-          <div className="order-item-body-title">Shipping address</div>
-          <div>{shippingAddress}</div>
+        <div className="order-item-body-right-side order-item-address-container">
+          <div className="order-item-body-title address-title">
+            Shipping address
+          </div>
+          <div className="order-item-body-address">{shippingAddress}</div>
         </div>
       </div>
     </div>

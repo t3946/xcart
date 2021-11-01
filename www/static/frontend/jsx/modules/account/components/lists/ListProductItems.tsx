@@ -57,7 +57,7 @@ export const ListProductItems = ({ info, path, edit }) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
   const deleteItem = (id) => {
-    dispatch(deleteProduct(info.product_list_id, id));
+    dispatch(deleteProduct(info.product_list_id, id, () => {}));
   };
 
   const onDragEnd = (result) => {
@@ -108,8 +108,8 @@ export const ListProductItems = ({ info, path, edit }) => {
             {info?.products?.length ? (
               info.products.map((e, index) => (
                 <Draggable
-                  key={e.product_id}
-                  draggableId={e.product_id}
+                  key={String(e.product_id)}
+                  draggableId={String(e.product_id)}
                   index={index}
                 >
                   {(provided, snapshot) => (

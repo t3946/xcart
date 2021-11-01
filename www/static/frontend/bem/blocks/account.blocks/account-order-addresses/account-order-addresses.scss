@@ -70,3 +70,61 @@
   display: flex;
   justify-content: space-between;
 }
+
+@media (max-width: 1200px) {
+  .order-address-item{
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-addresses, .order-address-block, .order-address,{
+    border: 0;
+  }
+
+  .order-address{
+    width: 100%;
+    padding: 0;
+    height: auto;
+  }
+
+  .address-list{
+    flex-direction: column;
+  }
+
+  .order-address-block-title{
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 21px;
+    color: #000000;
+    width: 100%;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #F4F4F4;
+  }
+
+  .order-address-text-block{
+    width: 100%;
+  }
+
+  .footer-block{
+    background-color: inherit;
+  }
+
+  .order-addresses-footer-info{
+    flex-direction: column;
+  }
+
+  .order-purchase-info{
+    width: 100%;
+  }
+
+  .order-address-block-underline{
+    display: none;
+  }
+
+  .order-change-address-btn{
+    margin-bottom: rem-calc(30);
+  }
+}

@@ -14,3 +14,9 @@
 .circular-item{
   color: #ffc107 !important;
 }
+
+@media (max-width: 990px) {
+  .progress-circular{
+    height: 100vh;
+  }
+}

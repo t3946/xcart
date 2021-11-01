@@ -59,6 +59,7 @@ export interface ListProductInfo {
   productcode: string;
   productid: string;
   cost_to_us: string;
+  price: number;
 }
 
 export interface ListProductUser {

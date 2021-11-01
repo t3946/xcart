@@ -5,7 +5,7 @@ import ReactToPrint from "react-to-print";
 
 interface EmailHeaderProps {
   info: any;
-  ref: any;
+  contentRef: any;
 }
 
 export const EmailHeader: React.FC<EmailHeaderProps> = ({

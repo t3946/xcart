@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
 import {
   changeDefaultAddress,
@@ -7,6 +7,12 @@ import {
 import { useHistory } from "react-router-dom";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 import Store from "@client/jsx/redux/stores/Store";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { AddAddressForm } from "@client/modules/account/components/addresses/AddAddressForm";
+import { useDialog } from "@client/modules/account/hooks/useDialog";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { DeleteAddress } from "@client/modules/account/components/addresses/DeleteAddress";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;
@@ -20,28 +26,56 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const breakpoint = useBreakpoint();
+
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const editAddressDialog = useDialog();
+
+  const deleteAddressDialog = useDialog();
+
+  const onPended = (message: string) => {
+    showSnackbar({
+      header: "Success",
+      message: message,
+      theme: "success",
+    });
+  };
+
   const changeDefault = () => {
     dispatch(
       changeDefaultAddress(
-        addressInfo.addresses_id,
-        Store.getState().user.id
+        addressInfo.address_id,
+        Store.getState().user.id,
+        () => {
+          onPended("The default address has been successfully changed");
+        }
       )
     );
   };
 
   const handleRemoveAddress = () => {
-    dispatch(removeAddress(addressInfo.address_id));
+    dispatch(
+      removeAddress(addressInfo.address_id, () => {
+        editAddressDialog.handleClose();
+        onPended("The address has been successfully delete");
+      })
+    );
   };
 
   const editAddress = () => {
-    history.push({
-      pathname: "/account/addresses/edit",
-      state: { addressInfo: addressInfo },
+    breakpoint({
+      xs: () =>
+        history.push({
+          pathname: "/account/addresses/edit",
+          state: { addressInfo: addressInfo },
+        }),
+      md: editAddressDialog.handleClickOpen,
     });
   };
 
   return (
-    <div className="address-container address-item">
+    <div className="address-container address-border address-item">
       <div
         className={`address-header ${defaultItem && "address-header-default"} `}
       >
@@ -66,9 +100,29 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           handleEdit={editAddress}
           defaultItem={defaultItem}
           changeDefault={changeDefault}
-          handleRemove={handleRemoveAddress}
+          handleRemove={deleteAddressDialog.handleClickOpen}
         />
       </div>
+      <BootstrapDialogHOC
+        show={editAddressDialog.open}
+        title={"Edit address"}
+        onClose={editAddressDialog.handleClose}
+      >
+        <AddAddressForm
+          addressInfo={addressInfo}
+          onCancelClick={editAddressDialog.handleClose}
+        />
+      </BootstrapDialogHOC>
+      <BootstrapDialogHOC
+        show={deleteAddressDialog.open}
+        title={"Delete address"}
+        onClose={deleteAddressDialog.handleClose}
+      >
+        <DeleteAddress
+          onDeleteClick={handleRemoveAddress}
+          onCancelClick={deleteAddressDialog.handleClose}
+        />
+      </BootstrapDialogHOC>
     </div>
   );
 };

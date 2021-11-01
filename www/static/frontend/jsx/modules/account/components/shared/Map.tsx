@@ -2,7 +2,9 @@ import * as React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { Dispatch, useState } from "react";
+import { Dispatch, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
 const fromIconFile = require("../../../../../images/icons/account/shipping-from.png");
 const toIconFile = require("../../../../../images/icons/account/shipping-to.png");
@@ -23,8 +25,8 @@ function getDistance(from: [number, number], to: [number, number]) {
   const [lat1, lon1] = from;
   const [lat2, lon2] = to;
 
-  const R = 6371e3; // metres
-  const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+  const R = 6371e3;
+  const φ1 = (lat1 * Math.PI) / 180;
   const φ2 = (lat2 * Math.PI) / 180;
   const Δφ = ((lat2 - lat1) * Math.PI) / 180;
   const Δλ = ((lon2 - lon1) * Math.PI) / 180;
@@ -34,20 +36,20 @@ function getDistance(from: [number, number], to: [number, number]) {
     Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  return R * c * 1000; // in metres
+  return R * c;
 }
 
-// function calculateZoomLevel(screenWidth: number) {
-//   const equatorLength = 40075004; // in meters
-//   const widthInPixels = screenWidth;
-//   const metersPerPixel = equatorLength / 256;
-//   const zoomLevel = 1;
-//   while (metersPerPixel * widthInPixels > 2000) {
-//     metersPerPixel /= 2;
-//     ++zoomLevel;
-//   }
-//   return zoomLevel;
-// }
+function calculateZoomLevel(screenWidth: number, a: number) {
+  const widthInPixels = screenWidth;
+  const equatorLength = 40075004;
+  let metersPerPixel = equatorLength / 256;
+  let zoomLevel = 1;
+  while (metersPerPixel * widthInPixels >= a) {
+    metersPerPixel /= 4;
+    ++zoomLevel;
+  }
+  return zoomLevel;
+}
 
 const formIcon = createMapIcon(fromIconFile, 25, 30);
 
@@ -56,18 +58,33 @@ const toIcon = createMapIcon(toIconFile, 30, 20);
 interface MapProps {
   markers: Array<[number, number]>;
   setMap: Dispatch<any>;
+  width: number;
+  map: any;
 }
 
-export const Map: React.FC<MapProps> = ({ markers, setMap }) => {
+export const Map: React.FC<MapProps> = ({ markers, setMap, width, map }) => {
+  const breakpoint = useSelector((e: AccountStore) => e.main.breakpoint);
+
+  useEffect(() => {
+    if (map) {
+      map.setZoom(
+        calculateZoomLevel(
+          width,
+          Math.round(getDistance(markers[0], markers[1]))
+        )
+      );
+    }
+  }, [breakpoint, map]);
+
   return (
-    <>
+    <div>
       <MapContainer
         whenCreated={setMap}
         center={[
           (Number(markers[0][0]) + Number(markers[1][0])) / 2,
           (Number(markers[0][1]) + Number(markers[1][1])) / 2,
         ]}
-        zoom={4.2}
+        zoom={1}
         style={{ height: "374px" }}
       >
         <TileLayer
@@ -79,6 +96,6 @@ export const Map: React.FC<MapProps> = ({ markers, setMap }) => {
             <Marker icon={!index ? toIcon : formIcon} position={position} />
           ))}
       </MapContainer>
-    </>
+    </div>
   );
 };

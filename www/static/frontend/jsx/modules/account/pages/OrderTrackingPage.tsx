@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { OrderTrackingGroup } from "@client/modules/account/components/orders/OrderTrackingGroup";
+import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
+import Store from "@client/jsx/redux/stores/Store";
+import { getBreakpointsFlags } from "@client/modules/account/hooks/useBreakpoint";
 
 interface OrderTrackingPageProps {
   orderItem?: any;
@@ -10,6 +13,7 @@ export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
   orderItem,
 }) => {
   useEffect(() => {
+    Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
       .get(
         `https://nominatim.openstreetmap.org/search.php?street=${orderItem.orderInfo.s_address}&city=${orderItem.orderInfo.s_city}&state=${orderItem.orderInfo.s_state}&postalcode=${orderItem.orderInfo.s_zipcode}&polygon_geojson=1&format=jsonv2`
@@ -19,9 +23,7 @@ export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
   }, []);
 
   const [shippingPos, setShippingPos] = useState(null);
-
   const api = new ApiService();
-  console.log(orderItem);
 
   return (
     <div>

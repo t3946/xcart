@@ -32,6 +32,9 @@
   margin-left: 15px;
   cursor: pointer;
   min-width: 200px;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   &:hover{
     text-decoration: underline;
   }

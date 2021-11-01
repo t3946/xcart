@@ -1,4 +1,4 @@
-.order-product-list-body{
+.order-product-list-body, .order-product-list-body-inner{
   width: 100%;
   padding: 10px 35px;
 }
@@ -42,4 +42,14 @@
 
 .order-actions-page-label{
   font-size: 22px !important;
+}
+
+@media (max-width: 768px) {
+  .order-product-list-body{
+    padding-bottom: 32px;
+  }
+
+  .order-product-list-body-inner{
+    padding-bottom: 30px;
+  }
 }

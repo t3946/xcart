@@ -1,6 +1,6 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
-import { ApiService } from "../../../modules/shared/services/api.service";
+import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import Store from "@client/jsx/redux/stores/Store";
 
@@ -42,6 +42,8 @@ function* changeDefaultAddress(action: AnyAction): Generator {
   } catch (error) {
     console.log(error);
   }
+
+  action.callback();
 }
 
 function* removeAddress(action: AnyAction): Generator {
@@ -64,6 +66,8 @@ function* removeAddress(action: AnyAction): Generator {
   } catch (error) {
     console.log(error);
   }
+
+  action.callback();
 }
 
 function* addAddress(action: AnyAction): Generator {

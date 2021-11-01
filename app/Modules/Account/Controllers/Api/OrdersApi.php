@@ -2,19 +2,23 @@
 
 namespace Modules\Account\Controllers\Api;
 
+use Modules\Account\Models\OrderCancelItemsModel;
+use Modules\Account\Models\OrderCancelRequestModel;
+use Modules\Account\Models\OrderProblemsModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
-use Modules\Order\Models\OrderGroupRefundModel;
-use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTrackingModel;
+use Modules\Order\Models\RMADetailModel;
+use Modules\Order\Models\RMAModel;
 use Throwable;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
+use function Clue\StreamFilter\fun;
 
 class OrdersApi extends FrontendController
 {
@@ -85,6 +89,11 @@ class OrdersApi extends FrontendController
                 $mass[$key]['orderGroups'][$group_key]['orderGroupsItems'] = OrderDetailModel::objects()->
                 filter(['order_group_id' =>  $mass[$key]['orderGroups'][$group_key]['order_group_id']])->
                 asArray()->all();
+                foreach ($mass[$key]['orderGroups'][$group_key]['orderGroupsItems'] as $product_key => $product_item)
+                {
+                    $product = OrderDetailModel::objects()->get(['productid' => $product_item['productid'], 'order_group_id' =>$mass[$key]['orderGroups'][$group_key]['order_group_id'] ]);
+                    $mass[$key]['orderGroups'][$group_key]['orderGroupsItems'][$product_key]['image'] =  (string) $product->product_model->getMainImage();
+                }
                 $mass[$key]['orderGroups'][$group_key]['trackings'] =  OrderTrackingModel::objects()->filter(['order_group_id' => $mass[$key]['orderGroups'][$group_key]['order_group_id']])->asArray()->all();
             }
         }
@@ -140,8 +149,76 @@ class OrdersApi extends FrontendController
             $order['orderGroups'][$group_key]['orderGroupsItems'] = OrderDetailModel::objects()->
             filter(['order_group_id' =>  $order['orderGroups'][$group_key]['order_group_id']])->
             asArray()->all();
+            foreach ($mass[$key]['orderGroups'][$group_key]['orderGroupsItems'] as $product_key => $product_item)
+            {
+                $product = OrderDetailModel::objects()->get(['productid' => $product_item['productid'], 'order_group_id' =>$mass[$key]['orderGroups'][$group_key]['order_group_id'] ]);
+                $mass[$key]['orderGroups'][$group_key]['orderGroupsItems'][$product_key]['image'] =  (string) $product->product_model->getMainImage();
+            }
             $order['orderGroups'][$group_key]['trackings'] =  OrderTrackingModel::objects()->filter(['order_group_id' => $order['orderGroups'][$group_key]['order_group_id']])->asArray()->all();
         }
         $this->jsonResponse(['data'=>$order]);
+    }
+
+    public function sendProblemMessage()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if(!$user)
+        {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'),true);
+
+
+        OrderProblemsModel::objects()->create($data);
+
+        $this->jsonResponse(['success']);
+    }
+
+    public function openCancelItemsRequest()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if(!$user)
+        {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        [$order, $items] = array_values(json_decode(file_get_contents('php://input'),true));
+
+        OrderCancelRequestModel::objects()->create($order);
+
+        foreach ($items as $key => $item)
+        {
+            OrderCancelItemsModel::objects()->create($item);
+        }
+
+
+        $this->jsonResponse(['success']);
+    }
+
+    public function openRmaRequest()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if(!$user)
+        {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        $request_data = json_decode(file_get_contents('php://input'),true);
+
+        RMAModel::objects()->create($request_data['rma_info']);
+
+        foreach ($request_data['rma_items'] as $item)
+        {
+            RMADetailModel::objects()->create($item);
+        }
+
+        $this->jsonResponse(['success']);
     }
 }

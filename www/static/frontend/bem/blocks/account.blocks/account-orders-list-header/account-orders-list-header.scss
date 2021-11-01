@@ -4,3 +4,9 @@
   align-items: center;
   margin-bottom: 20px;
 }
+
+@media (max-width: 500px) {
+  .orders-list-header{
+    flex-direction: column;
+  }
+}

@@ -38,6 +38,7 @@ class AccountListsApi extends FrontendController
                     $items[$key]['products'][$product_key]['product'] = ProductModel::objects()->
                     filter(['productid' => $product->product_id])->
                     valuesList(['productid','productcode', "product", "cost_to_us"], false)[0];
+                    $items[$key]['products'][$product_key]['product']['price'] = ProductModel::objects()->get(['productid' => $product->product_id])->getPrice();
                     $items[$key]['products'][$product_key]['image'] =  (string) ProductModel::objects()->
                     get(['productid' => $product->product_id])->
                     getMainImage();
