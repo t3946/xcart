@@ -1,8 +1,10 @@
 textarea.form-review-text-body {
   min-height: rem-calc(155);
   line-height: 1.2;
+  padding: rem-calc(8);
 
   @include breakpoint(md up) {
     min-height: rem-calc(95);
+    padding: rem-calc(8) rem-calc(16);
   }
 }

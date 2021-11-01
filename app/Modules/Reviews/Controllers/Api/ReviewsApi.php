@@ -27,7 +27,8 @@ class ReviewsApi extends FrontendController
 {
     private $data;
     public const SORT_TOP = 'top';
-    public const SORT_HAS_ATTACHMENTS = 'has-attachments';
+    public const SORT_HAS_IMAGES = 'has-images';
+    public const SORT_HAS_VIDEOS = 'has-videos';
     public const SORT_NEW = 'most-recent';
     private const SORT_DEFAULT = self::SORT_TOP;
     private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png'];
@@ -194,32 +195,40 @@ class ReviewsApi extends FrontendController
     {
         $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
 
-        $qs = HelpfulReviewsModel::objects()->getQuerySet();
-        $ratings_alias = $qs->getTableAlias();
+        $ratings_alias = HelpfulReviewsModel::objects()->getQuerySet()->getTableAlias();
+        $reviews_images_alias = ReviewsImagesModel::objects()->getQuerySet()->getTableAlias();
+        $reviews_videos_alias = ReviewsVideosModel::objects()->getQuerySet()->getTableAlias();
+
         $user_id = $this->getUser()->user_id;
         $select_fields = [
             '*',
             'helpful__user_id',
-            'files__review_id',
             new Count('helpful__user_id', 'helpful_count'),
             'overall_rating' => 'rating__rating',
             'user_public_name' => 'user__public_name',
             'user_avatar' => 'user__avatar_image',
-            'markedHelpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
+            'marked_helpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
             'created_timestamp' => 'UNIX_TIMESTAMP(created)',
+            //_no_distinct need for generate join
+            //count images
+            new Count('images__distinct__image_id', 'images_count_no_distinct'),
+            "images_count" => "COUNT(DISTINCT `$reviews_images_alias`.`image_id`)",
+            //count videos
+            new Count('videos__distinct__video_id', 'videos_count_no_distinct'),
+            "videos_count" => "COUNT(DISTINCT `$reviews_videos_alias`.`video_id`)",
         ];
         $filter_fields = [
             'product_id' => $product_id,
             new QOr([
                 'rating__rating_id' => $overall_rating_id,
                 'rating__rating__isnull' => true,
-                'location' => $location,
             ]),
+            'location' => $location,
         ];
 
         // select user marked helpful if user authorised
         if ($user_id) {
-            $select_fields['markedHelpful'] = new Expression("IF($ratings_alias.user_id, true, false)");
+            $select_fields['marked_helpful'] = new Expression("IF($ratings_alias.user_id, true, false)");
             $filter_fields[] = new QOr([
                 'helpful__user_id' => $user_id,
                 'helpful__user_id__isnull' => true,
@@ -238,10 +247,18 @@ class ReviewsApi extends FrontendController
                 $qs = ProductReviewsModel::objects()->getQuerySet();
                 $group = (new Expression("IFNULL({$qs->getTableAlias()}.product_review_id,UUID())"))->toSql();
                 $query_set->group([$group]);
-                $query_set = $query_set->order(['-markedHelpful']);
+                $query_set = $query_set->order(['-marked_helpful']);
                 break;
 
-            case self::SORT_HAS_ATTACHMENTS:
+
+            case self::SORT_HAS_IMAGES:
+                $query_set = $query_set->order(['-images_count']);
+                $query_set->group(["product_review_id"]);
+                break;
+
+            case self::SORT_HAS_VIDEOS:
+                $query_set = $query_set->order(['-videos_count']);
+                $query_set->group(["product_review_id"]);
                 break;
 
             case self::SORT_NEW:
@@ -253,7 +270,7 @@ class ReviewsApi extends FrontendController
         $reviews = $query_set->all();
 
         for ($i = 0; $i < count($reviews); $i++) {
-            $reviews[$i]['markedHelpful'] = !($reviews[$i]['markedHelpful'] === "0");
+            $reviews[$i]['marked_helpful'] = $reviews[$i]['marked_helpful'] !== 0;
             $filter = [
                 "review_id" => $reviews[$i]["product_review_id"]
             ];
@@ -302,20 +319,6 @@ class ReviewsApi extends FrontendController
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
             'country' => CountryModel::objects()->get(['code' => $location])->name,
             'totalReviews' => $this->getTotalReviews(),
-            'reviewsOrders' => [
-                [
-                    "name" => "Top reviews",
-                    "value" => self::SORT_TOP,
-                ],
-                [
-                    "name" => "Reviews with images",
-                    "value" => self::SORT_HAS_ATTACHMENTS,
-                ],
-                [
-                    "name" => "Most recent",
-                    "value" => self::SORT_NEW,
-                ],
-            ],
             'product' => AccountController::getProduct($this->data['productId']),
         ]);
     }

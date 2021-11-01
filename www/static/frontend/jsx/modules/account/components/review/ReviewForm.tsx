@@ -21,21 +21,21 @@ const ReviewForm = (): any => {
   const [files, setFiles] = React.useState([]);
   const initialValues = {
     overall: 0,
-    headLine: "header",
-    textBody: "body",
+    headLine: "",
+    textBody: "",
     publicName: user.public_name,
-    videoLink:
-      "https://st.depositphotos.com/1006011/3870/v/600/depositphotos_38703881-stock-video-vladimir-putin.mp4",
+    videoLink: "",
   };
   const validationSchema = yup.object().shape({
     overall: yup.number(),
     headLine: yup.string().required("Headline is a required field"),
     textBody: yup.string().required("Review text line is a required field"),
     publicName: yup.string(),
-    videoLink: yup.string(),
+    videoLink: yup.string().nullable(true),
   });
   const ratings = appData.ratings.ratings;
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isCheckFileLink, setIsCheckFileLink] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   ratings.features.forEach(function (e) {
     initialValues[e.slug] = 0;
@@ -84,14 +84,14 @@ const ReviewForm = (): any => {
 
     form.append("ratings", JSON.stringify(fdRatings));
 
-    console.log("SUBMIT FORM", form);
+    setIsSubmitting(true);
 
     dispatch(
       createReviewAction({
         form,
 
         success(res) {
-          console.log("success res=", res);
+          setIsSubmitting(false);
         },
       })
     );
@@ -150,7 +150,13 @@ const ReviewForm = (): any => {
     touched,
     setTouched
   ) {
-    setIsLoading(true);
+    if (values.videoLink === "") {
+      touched.videoLink = false;
+      setTouched(touched);
+      return;
+    }
+
+    setIsCheckFileLink(true);
 
     dispatch(
       getVideoHeaderAction({
@@ -161,7 +167,7 @@ const ReviewForm = (): any => {
         success(res) {
           errors.videoLink = res?.errors[0] || null;
           setErrors(errors);
-          setIsLoading(false);
+          setIsCheckFileLink(false);
           touched.videoLink = true;
           setTouched(touched);
         },
@@ -193,7 +199,11 @@ const ReviewForm = (): any => {
                 bodyClasses={"content-panel"}
                 footerClasses={"d-flex"}
                 footer={
-                  <button className="form-button w-100 w-md-auto">
+                  <button
+                    type={"submit"}
+                    className="form-button w-100 w-md-auto"
+                    disabled={isSubmitting}
+                  >
                     submit
                   </button>
                 }
@@ -297,7 +307,7 @@ const ReviewForm = (): any => {
                         );
                       }}
                       placeholder={"Video link"}
-                      disabled={isLoading}
+                      disabled={isCheckFileLink || isSubmitting}
                     />
 
                     <RBForm.Control.Feedback type="invalid">
@@ -328,6 +338,7 @@ const ReviewForm = (): any => {
                       isInvalid={!!touched.headLine && !!errors.headLine}
                       isValid={touched.headLine && !errors.headLine}
                       placeholder={"What’s most important to know?"}
+                      disabled={isSubmitting}
                     />
 
                     <RBForm.Control.Feedback type="invalid">
@@ -358,6 +369,7 @@ const ReviewForm = (): any => {
                       placeholder={
                         "What did you like or dislike? What did you use this product for?"
                       }
+                      disabled={isSubmitting}
                     />
 
                     <RBForm.Control.Feedback type="invalid">
