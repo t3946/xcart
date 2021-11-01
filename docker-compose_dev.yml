@@ -25,6 +25,7 @@ services:
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my_dev.cnf:/etc/my.cnf.d/my.cnf
+      - ./docker/mysql/slave.cnf:/etc/my.cnf.d/repl.cnf
 
 
   # Nginx
