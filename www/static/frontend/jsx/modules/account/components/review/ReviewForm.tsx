@@ -8,7 +8,10 @@ import SelectRating from "@client/modules/account/components/review/SelectRating
 import { Form as RBForm } from "react-bootstrap";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import Camera from "@client/jsx/modules/icon/components/account/camera/Camera";
-import { createReviewAction } from "@client/jsx/redux/actions/account-actions/ReviewActions";
+import {
+  createReviewAction,
+  getVideoHeaderAction,
+} from "@client/jsx/redux/actions/account-actions/ReviewActions";
 import Files from "@client/jsx/modules/account/components/review/Files";
 
 const ReviewForm = (): any => {
@@ -18,17 +21,21 @@ const ReviewForm = (): any => {
   const [files, setFiles] = React.useState([]);
   const initialValues = {
     overall: 0,
-    headLine: "header",
-    textBody: "body",
+    headLine: "",
+    textBody: "",
     publicName: user.public_name,
+    videoLink: "",
   };
   const validationSchema = yup.object().shape({
     overall: yup.number(),
     headLine: yup.string().required("Headline is a required field"),
     textBody: yup.string().required("Review text line is a required field"),
     publicName: yup.string(),
+    videoLink: yup.string().nullable(true),
   });
   const ratings = appData.ratings.ratings;
+  const [isCheckFileLink, setIsCheckFileLink] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   ratings.features.forEach(function (e) {
     initialValues[e.slug] = 0;
@@ -65,6 +72,8 @@ const ReviewForm = (): any => {
     form.append("header", values.headLine);
     form.append("body", values.textBody);
     form.append("productId", product.productid);
+    form.append("videoLink", values.videoLink);
+
     const fdRatings = {
       overall: values.overall,
     };
@@ -75,14 +84,14 @@ const ReviewForm = (): any => {
 
     form.append("ratings", JSON.stringify(fdRatings));
 
-    console.log("SUBMIT FORM", form);
+    setIsSubmitting(true);
 
     dispatch(
       createReviewAction({
         form,
 
         success(res) {
-          console.log("success res=", res);
+          setIsSubmitting(false);
         },
       })
     );
@@ -134,6 +143,38 @@ const ReviewForm = (): any => {
     );
   }
 
+  function videoLinkChangeHandler(
+    values,
+    errors,
+    setErrors,
+    touched,
+    setTouched
+  ) {
+    if (values.videoLink === "") {
+      touched.videoLink = false;
+      setTouched(touched);
+      return;
+    }
+
+    setIsCheckFileLink(true);
+
+    dispatch(
+      getVideoHeaderAction({
+        form: {
+          videoFileUrl: values.videoLink,
+        },
+
+        success(res) {
+          errors.videoLink = res?.errors[0] || null;
+          setErrors(errors);
+          setIsCheckFileLink(false);
+          touched.videoLink = true;
+          setTouched(touched);
+        },
+      })
+    );
+  }
+
   return (
     <div>
       <Formik
@@ -141,7 +182,15 @@ const ReviewForm = (): any => {
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {function ({ setValues, values, errors, touched, handleChange }) {
+        {function ({
+          setValues,
+          values,
+          errors,
+          touched,
+          handleChange,
+          setErrors,
+          setTouched,
+        }) {
           return (
             <Form>
               <InnerPage
@@ -150,7 +199,11 @@ const ReviewForm = (): any => {
                 bodyClasses={"content-panel"}
                 footerClasses={"d-flex"}
                 footer={
-                  <button className="form-button w-100 w-md-auto">
+                  <button
+                    type={"submit"}
+                    className="form-button w-100 w-md-auto"
+                    disabled={isSubmitting}
+                  >
                     submit
                   </button>
                 }
@@ -220,6 +273,47 @@ const ReviewForm = (): any => {
                   <div className="d-md-none form-review-add-file-button_mobile d-flex align-items-center justify-content-center">
                     <Camera />
                   </div>
+
+                  <RBForm.Group
+                    controlId="videoLink"
+                    className={"w-100 form-group_full-width"}
+                  >
+                    <RBForm.Label>
+                      <h2 className={"account-inner-page-header-2 mb-1"}>
+                        Link on video
+                      </h2>
+
+                      <p className={"form-review-comment"}>
+                        You can add video by link. Just past link on video in
+                        field below.
+                      </p>
+                    </RBForm.Label>
+
+                    <RBForm.Control
+                      type="text"
+                      name="videoLink"
+                      value={values.videoLink}
+                      className={"form-input"}
+                      isInvalid={!!touched.videoLink && !!errors.videoLink}
+                      isValid={touched.videoLink && !errors.videoLink}
+                      onChange={handleChange}
+                      onBlur={() => {
+                        videoLinkChangeHandler(
+                          values,
+                          errors,
+                          setErrors,
+                          touched,
+                          setTouched
+                        );
+                      }}
+                      placeholder={"Video link"}
+                      disabled={isCheckFileLink || isSubmitting}
+                    />
+
+                    <RBForm.Control.Feedback type="invalid">
+                      {errors.videoLink}
+                    </RBForm.Control.Feedback>
+                  </RBForm.Group>
                 </div>
 
                 <div className="account-inner-page-divider account-inner-page__divider" />
@@ -244,6 +338,7 @@ const ReviewForm = (): any => {
                       isInvalid={!!touched.headLine && !!errors.headLine}
                       isValid={touched.headLine && !errors.headLine}
                       placeholder={"What’s most important to know?"}
+                      disabled={isSubmitting}
                     />
 
                     <RBForm.Control.Feedback type="invalid">
@@ -274,6 +369,7 @@ const ReviewForm = (): any => {
                       placeholder={
                         "What did you like or dislike? What did you use this product for?"
                       }
+                      disabled={isSubmitting}
                     />
 
                     <RBForm.Control.Feedback type="invalid">

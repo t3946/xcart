@@ -70,7 +70,7 @@ const OverallBars: React.FC<PropsInterface> = function (
 
   //distribute left percents from fraction
   for (let rate = maxRating; rate >= minRating; rate--) {
-    if (fraction > 0) {
+    if (fraction > 0 && percents[rate] > 0) {
       percents[rate] += 1;
       fraction -= 1;
     }

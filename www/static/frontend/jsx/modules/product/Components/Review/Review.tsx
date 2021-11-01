@@ -20,8 +20,11 @@ interface PropsInterface {
   user_public_name: string;
   user_avatar: string;
   helpful_count: string;
-  markedHelpful: boolean;
-  files: Record<any, any>[];
+  marked_helpful: boolean;
+  files: {
+    images: Record<any, any>[];
+    videos: Record<any, any>[];
+  };
 }
 
 const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
@@ -64,7 +67,7 @@ const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
 
     return (
       <MarkAsHelpful
-        isHelpful={props.markedHelpful}
+        isHelpful={props.marked_helpful}
         reviewId={parseInt(props.product_review_id)}
       />
     );

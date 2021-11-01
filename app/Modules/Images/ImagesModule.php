@@ -1,5 +1,6 @@
 <?php
-namespace Modules\Image;
+
+namespace Modules\Images;
 
 use Xcart\App\Module\Module;
 

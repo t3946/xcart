@@ -30,10 +30,6 @@ const SliderThumbs: React.FC<PropsInterface> = function (
     navButtonNext: ["next", "product-thumbs-slider-next"],
   };
 
-  // document.body.addEventListener("iframeOnload", function (e) {
-  //   console.log("");
-  // });
-
   function prev() {
     const index = (props.index || items.length) - 1;
 
@@ -74,11 +70,8 @@ const SliderThumbs: React.FC<PropsInterface> = function (
 
           switch (item.provider) {
             case VIDEO_PROVIDER_VIMEO:
-              src = item.thumbs[1];
-              break;
-
             case VIDEO_PROVIDER_YOUTUBE:
-              src = item.thumbs[0];
+              src = item.image_1;
               break;
           }
 

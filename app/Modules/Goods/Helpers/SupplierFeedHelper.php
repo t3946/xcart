@@ -5,7 +5,6 @@ namespace Modules\Goods\Helpers;
 
 use DateTime;
 use Exception;
-use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Brand\Models\BrandModel;
 use Modules\Brand\Models\BrandStorefrontModel;
@@ -19,7 +18,6 @@ use Modules\Goods\Models\ProductLinksModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
 use Modules\Goods\Models\ProductUpcChangesModel;
-use Modules\Goods\Models\ProductVideosModel;
 use Modules\Goods\Stores\SupplierFeedStore;
 use Xcart\App\Helpers\Paths;
 
@@ -106,29 +104,6 @@ class SupplierFeedHelper
 
     /**
      * @param ProductModel $model
-     * @deprecated
-     */
-    public static function getVideos(ProductModel $model): void
-    {
-        /** @var ProductVideosModel $video_model */
-        if ($model->videos) {
-            foreach ($model->videos as $video) {
-                $filter = [];
-                foreach ($video as $key => $value) {
-                    $filter[$key] = $value;
-                }
-                $filter['product_id'] = $model->productid;
-                [$video_model, $is_created] = ProductVideosModel::objects()->getOrNew($filter);
-
-                if ($is_created) {
-                    $video_model->save();
-                }
-            }
-        }
-    }
-
-    /**
-     * @param ProductModel $model
      * @param bool $is_created
      * @param SupplierFeedModel $feed
      * @param array $data
@@ -162,8 +137,6 @@ class SupplierFeedHelper
         $model = self::getEtaDate($model);
 
         $model = self::getWeightOptions($model);
-
-        self::getVideos($model);
 
         [$model, $upc_different] = self::getUPC($model);
         if ($upc_different) {

@@ -11,6 +11,7 @@ import {
 import classnames from "classnames";
 import ArrowIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Arrow";
 import TimesIcon from "@client/jsx/modules/icon/components/PhotoSwipe/Times";
+import { VIDEO_WIDTH } from "@client/modules/product/Components/PhotoSwipe/ts/const/VideoSize";
 
 const PhotoSwipeContainer: React.FC = function () {
   const photoSwipeStore = useSelector((e: StoreInterface) => e.photoswipe);
@@ -117,8 +118,7 @@ const PhotoSwipeContainer: React.FC = function () {
     }
     // slide is video
     else if (currItem.html) {
-      const frameWidth = 960;
-      const buttonWidth = (window.innerWidth - frameWidth) / 2;
+      const buttonWidth = (window.innerWidth - VIDEO_WIDTH) / 2;
       const padding = 30;
 
       prevButtonRef.current.style.paddingRight = `${padding}px`;

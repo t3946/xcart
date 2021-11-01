@@ -23,9 +23,14 @@ class ReviewsModule extends Module
                 'value' => ReviewsApi::SORT_TOP,
             ],
             [
-                'previewValue' => 'Reviews with images',
-                'viewValue' => 'Reviews with images',
-                'value' => ReviewsApi::SORT_HAS_ATTACHMENTS,
+                'previewValue' => 'With images',
+                'viewValue' => 'With images',
+                'value' => ReviewsApi::SORT_HAS_IMAGES,
+            ],
+            [
+                'previewValue' => 'With videos',
+                'viewValue' => 'With videos',
+                'value' => ReviewsApi::SORT_HAS_VIDEOS,
             ],
         ], 'orders', 'reviews');
 

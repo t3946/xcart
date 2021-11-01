@@ -77,7 +77,6 @@ class QueueProcessCommand extends Command
                         $product->save();
                         ProductHelper::setProductAttributes($product, $data['attributes'] ?? [], $site);
                         SupplierFeedHelper::feedFiles($product, $data);
-                        SupplierFeedHelper::getVideos($product);
                         print(($is_new ? 'Adding' : '') . "$product->productcode\n");
                         print_r($changed);
                     }
@@ -130,7 +129,6 @@ class QueueProcessCommand extends Command
                                 $product->setMainCategory($site->base_category);
                             }
                             SupplierFeedHelper::feedFiles($product, $data);
-                            SupplierFeedHelper::getVideos($product);
                             print(($is_new ? 'Adding' : '') . "$product->productcode\n");
                             print_r($changed);
                         }

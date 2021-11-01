@@ -69,7 +69,7 @@ const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
             class="pswp__video"
             width="960"
             height="640"
-            src=${item.href}
+            src=${item.video}
             allowFullScreen
             allow="autoplay"
           />

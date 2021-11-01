@@ -1,83 +1,83 @@
 <?php
 
 
-namespace Modules\Goods\Models;
+namespace Modules\Media\Models;
 
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Model;
 
-class ProductVideosModel extends Model
+class VideosModel extends Model
 {
+    const ACCEPTABLE_FORMATS = [
+        'mp4',
+        'ogg',
+        'webm',
+    ];
     const YOUTUBE_PROVIDER = 'youtube';
     const YOUTUBE_VIMEO = 'vimeo';
 
+    public static string $upload_to = '';
+    private static int $max_size_mb = 100;
+
     public static function tableName()
     {
-        return 'xcart_product_videos';
+        return 'xcart_videos';
     }
 
     public static function getFields()
     {
         return [
-
-            'id' => [
-                'class' => AutoField::className(),
-            ],
-
-            'product' => [
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
-                'link' => ['product_id' => 'productid'],
-                'null' => false,
-            ],
-
-            'is_local' => [
-                'class' => BooleanField::className(),
-                'null' => false,
-                'default' => false,
-            ],
-
-            'active' => [
-                'class' => BooleanField::className(),
-                'null' => false,
-                'default' => true,
-            ],
-
-            'video' => [
-                'class' => CharField::className(),
-                'null' => false,
-            ],
-
-            'image' => [
-                'class' => CharField::className(),
-                'null' => true,
-                'default' => null,
-            ],
-
-            'provider' => [
-                'class' => CharField::className(),
-                'null' => true,
-                'default' => null,
+            'video_id' => [
+                'class' => AutoField::class,
             ],
 
             'name' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'null' => true,
                 'default' => null,
             ],
 
-            'description' => [
-                'class' => CharField::className(),
+            'video' => [
+                'class' => FileField::class,
+                'null' => false,
+                'required' => false,
+                'adapterName' => 'www',
+                'uploadTo' => self::$upload_to . '/%Y/%m/%d',
+                'maxSize' => self::$max_size_mb . 'M',
+            ],
+
+            'provider' => [
+                'class' => CharField::class,
                 'null' => true,
+                'default' => null,
+            ],
+
+            'image_1' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
+            ],
+
+            'image_2' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null,
             ],
         ];
     }
 
-    public function getThumbs()
+    /**
+     * @return int
+     */
+    public static function getMaxSizeMb(): int
+    {
+        return self::$max_size_mb;
+    }
+
+    public function getThumbs(): array
     {
         $thumbs = [];
         extract($this->getAttributes(), $video = NULL, $provider = NULL);
@@ -85,8 +85,8 @@ class ProductVideosModel extends Model
 
         switch ($provider) {
             case self::YOUTUBE_PROVIDER:
-                preg_match('/embed\/(\w+)/', $video, $matches);
-                $video_key = $matches[1];
+                preg_match('/embed\/(\w+)/', $video, $video_key_matches);
+                $video_key = $video_key_matches[1];
 
                 if ($video_key) {
                     $thumbs = [

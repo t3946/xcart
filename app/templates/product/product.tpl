@@ -155,10 +155,7 @@
 
                                 {if $videos}
                                     {foreach $videos as $video}
-                                        <option value="{$video->video}"
-                                                data-thumbs='{json_encode($video->getThumbs())}'
-                                                data-id="{$video->id}"
-                                                data-provider="{$video->provider}"
+                                        <option data-video='{json_encode($video)}'
                                                 type="video">
                                         </option>
                                     {/foreach}

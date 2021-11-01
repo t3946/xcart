@@ -10,7 +10,7 @@ use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
-use Modules\Goods\Models\ProductVideosModel;
+use Modules\Goods\Models\ProductsVideosModel;
 use Modules\Meta\Types\MetaType;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
@@ -130,13 +130,14 @@ class DefaultController extends FrontendController
             'helper' => new ProductHelper(),
         ];
 
-        $flag = true;
-        /** @var ProductVideosModel $video_models */
-        $video_models = ProductVideosModel::objects()->filter(['product_id' => $model->productid])->all();
+        $product_id = $model->productid;
+        $videos = ProductsVideosModel::objects()
+            ->select(['videos__*'])
+            ->filter(['product_id' => $product_id])
+            ->asArray()
+            ->all();
 
-        if ($flag) {
-            $params['videos'] = $video_models;
-        }
+        $params['videos'] = $videos;
 
 
         if ($model->isGroupRoot()) {

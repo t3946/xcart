@@ -29,8 +29,9 @@
         border-color: #f2b405;
         box-shadow: 0 0 0 0.2rem rgba(242, 180, 5, 0.34);
     }
+}
 
-    &.is-invalid, &.is-valid {
-        background: none;
-    }
+.form-input.is-invalid,
+.form-input.is-valid {
+    background-image: none;
 }

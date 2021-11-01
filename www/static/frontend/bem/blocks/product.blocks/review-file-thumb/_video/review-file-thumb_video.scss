@@ -1,0 +1,11 @@
+.review-file-thumb_video {
+  width: rem-calc(180);
+
+  @include breakpoint(md up) {
+    width: rem-calc(176);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(130);
+  }
+}

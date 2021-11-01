@@ -34,4 +34,6 @@ return [
     'Help',
     'Account',
     'Reviews',
+    'Images',
+    'Media',
 ];
