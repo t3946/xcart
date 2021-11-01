@@ -4,6 +4,7 @@ namespace Modules\Reviews\Controllers\Api;
 
 use Modules\Account\Controllers\AccountController;
 
+use Modules\Core\Models\CountryModel;
 use Modules\Media\Models\VideosModel;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
@@ -112,7 +113,10 @@ class ReviewsApi extends FrontendController
         ];
         $review_data['user_id'] = (int)Xcart::app()->getUser()->user_id;
         $ip = Xcart::app()->request->getUserIP();
-        $review_data['location'] = GeoIpHelper::getGeoipLocation($ip)->country;
+        $location = GeoIpHelper::getGeoipLocation($ip)->country;
+        $default_location = 'US';
+        $review_data['location'] = $location ?: $default_location;
+
         $review = new ProductReviewsModel($review_data);
         $review->save();
 
@@ -186,7 +190,7 @@ class ReviewsApi extends FrontendController
     /**
      * get reviews for product by product id with sorting
      */
-    public function getReviews($product_id, $limit, $offset, $sort): array
+    public function getReviews($product_id, $limit, $offset, $sort, $location): array
     {
         $overall_rating_id = RatingsModel::objects()->get(['slug' => 'overall'])['rating_id'];
 
@@ -206,13 +210,20 @@ class ReviewsApi extends FrontendController
         ];
         $filter_fields = [
             'product_id' => $product_id,
-            new QOr(['rating__rating_id' => $overall_rating_id, 'rating__rating__isnull' => true]),
+            new QOr([
+                'rating__rating_id' => $overall_rating_id,
+                'rating__rating__isnull' => true,
+                'location' => $location,
+            ]),
         ];
 
         // select user marked helpful if user authorised
         if ($user_id) {
             $select_fields['markedHelpful'] = new Expression("IF($ratings_alias.user_id, true, false)");
-            $filter_fields[] = new QOr(['helpful__user_id' => $user_id, 'helpful__user_id__isnull' => true]);
+            $filter_fields[] = new QOr([
+                'helpful__user_id' => $user_id,
+                'helpful__user_id__isnull' => true,
+            ]);
         }
 
         $query_set = ProductReviewsModel::objects()
@@ -261,7 +272,13 @@ class ReviewsApi extends FrontendController
         $sort = $this->data['sort'] ?: self::SORT_DEFAULT;
         $offset = $this->data['offset'];
         $limit = $this->data['limit'];
-        $this->jsonResponse($this->getReviews($product_id, $limit, $offset, $sort));
+        $ip = Xcart::app()->request->getUserIP();
+        $default_location = 'US';
+        $location = GeoIpHelper::getGeoipLocation($ip)->country ?: $default_location;
+        $this->jsonResponse([
+            'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
+            'country' => CountryModel::objects()->get(['code' => $location])->name,
+        ]);
     }
 
     private function getTotalReviews()
@@ -276,10 +293,14 @@ class ReviewsApi extends FrontendController
         $sort = $this->data['sort'] || self::SORT_DEFAULT;
         $offset = $this->data['offset'];
         $limit = $this->data['limit'];
+        $ip = Xcart::app()->request->getUserIP();
+        $default_location = 'US';
+        $location = GeoIpHelper::getGeoipLocation($ip)->country ?: $default_location;
 
         $this->jsonResponse([
             'ratings' => $this->getTotalRatings(),
-            'reviews' => $this->getReviews($product_id, $limit, $offset, $sort),
+            'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
+            'country' => CountryModel::objects()->get(['code' => $location])->name,
             'totalReviews' => $this->getTotalReviews(),
             'reviewsOrders' => [
                 [

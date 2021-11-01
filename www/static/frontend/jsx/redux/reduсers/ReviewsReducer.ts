@@ -7,15 +7,6 @@ const ReviewsReducer = (
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {
-    case "ADD_PRODUCT_REVIEWS":
-      if (!store[action.productId]) {
-        store[action.productId] = [];
-      }
-
-      store[action.productId] = store[action.productId].concat(action.reviews);
-
-      return { ...store };
-
     case "SET_HELPFUL":
       for (const product_id in store) {
         const reviews = store[product_id];
@@ -33,13 +24,19 @@ const ReviewsReducer = (
       return { ...store };
 
     case "ADD_REVIEWS":
-      const { productId } = action.payload;
+      const { productId, reviews, country } = action.payload;
 
       if (!store[productId]) {
-        store[productId] = [];
+        store[productId] = {
+          country: null,
+          reviews: [],
+        };
       }
 
-      store[productId] = [...store[productId], ...action.payload.reviews];
+      const oldReviews = store[productId].reviews;
+
+      store[productId].country = country;
+      store[productId].reviews = [...oldReviews, ...reviews];
       return { ...store };
 
     case "CLEAR_REVIEWS":

@@ -23,9 +23,9 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
   const LastReviewRef = React.useRef<any>();
   const totalReviews = AppData.products[props.productId].total_reviews;
   const ReviewsContainerRef = React.useRef<any>();
-  const reviews = useSelector((e: StoreInterface) => e.productsReviews)[
-    props.productId
-  ];
+  const { reviews, country } =
+    useSelector((e: StoreInterface) => e.productsReviews)[props.productId] ||
+    {};
   const reviewsPerOnePage = 3;
   const [currentPage, setCurrentPage] = React.useState(0);
   const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === 0);
@@ -93,7 +93,8 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
           dispatch(
             addReviewsAction({
               productId: props.productId,
-              reviews: res,
+              reviews: res.reviews,
+              countries: res.countries,
             })
           );
         },
@@ -164,7 +165,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
           "product-reviews-header product-reviews-header_big product-reviews_column-header mb-md-20 d-flex justify-content-between align-items-center"
         }
       >
-        <span>Top reviews from the United States</span>
+        <span>Top reviews from the {country}</span>
 
         <FormSelect
           items={orders}
