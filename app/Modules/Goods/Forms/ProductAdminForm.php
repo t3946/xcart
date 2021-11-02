@@ -8,6 +8,7 @@ use Modules\Goods\Admin\FilesProductAdmin;
 use Modules\Goods\Admin\FilterProductAdmin;
 use Modules\Goods\Admin\ProductImagesAdmin;
 use Modules\Shipping\Models\ZoneModel;
+use Xcart\App\Form\Fields\LinkField;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Editor\Fields\EditorField;
@@ -310,15 +311,24 @@ class ProductAdminForm extends ModelForm
                 'class' => Select2Field::class,
                 'choices' => $distributor ? [$distributor->manufacturerid => (string)$distributor] : [],
                 'html' => [
-                    'style' => 'width: 100%',
+                    'style' => 'width: 70%',
                     'data-url' => (new ProductAdmin())->getSuggestionUrl('distributor'),
                 ],
+                'inputTemplate' => 'forms/field/dropdown/input_nested.tpl',
+                'extend' => 'distributor_link',
+            ],
+            'distributor_link' => [
+                'class' => LinkField::class,
+                'link_content' => " Link to Distributor's page",
+                'html' => ['class' => 'admin_link', 'target' => '_blank'],
+                'value' => $distributor->getAdminUrl(),
+
             ],
             'brand' => [
                 'class' => Select2Field::class,
                 'choices' => $brand ? [$brand->brandid => (string)$brand] : [],
                 'html' => [
-                    'style' => 'width: 100%',
+                    'style' => 'width: 70%',
                     'data-url' => (new ProductAdmin())->getSuggestionUrl('brand'),
                 ],
             ],
@@ -336,7 +346,7 @@ class ProductAdminForm extends ModelForm
                         )]
                     : [],
                 'html' => [
-                    'style' => 'width: 100%',
+                    'style' => 'width: 70%',
                     'data-url' => (new ProductAdmin())->getSuggestionUrl('category'),
                 ],
                 'label' => 'Main category'
