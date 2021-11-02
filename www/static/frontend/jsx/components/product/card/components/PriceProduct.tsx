@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import classNames from "classnames";
+import { number_format } from "../../../../utils/numberFormat";
 interface PriceProduct {
   classes?: any;
   price: number;
@@ -7,26 +8,12 @@ interface PriceProduct {
 export const PriceProduct: React.FC<PriceProduct> = ({ classes, price }) => {
   const currency = app.options.currency;
   const formatNumber = () => {
-    switch (currency.currency_code) {
-      case "RUB":
-        console.log(price);
-        return (
-          price
-            .toFixed(currency.decimal)
-            .toString()
-            .replace(
-              /(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g,
-              "$1" + currency.thousands_separator
-            ) + " "
-        );
-      default:
-        return Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-        })
-          .format(price)
-          .substr(1);
-    }
+    return number_format(
+      price,
+      currency.decimal,
+      currency.decimals_separator,
+      currency.thousands_separator
+    );
   };
   return (
     <Fragment>
