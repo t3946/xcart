@@ -79,7 +79,7 @@ export const ListsPage: React.FC = () => {
       )}
       <BootstrapDialogHOC
         show={createIdeaDialog.open}
-        title={"Create a new list"}
+        title={"Create a new idea"}
         onClose={createIdeaDialog.handleClose}
       >
         <AddIdea

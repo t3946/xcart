@@ -10,6 +10,7 @@ import { editCommentInProduct } from "@client/jsx/redux/actions/account-actions/
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
+  console.log(info);
   const dispatch = useDispatch();
 
   const handleSubmit = (values) => {
@@ -31,14 +32,14 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
       priority:
         priorityProductSelectValuesConst.find(
           (e) => e.value === info.priority
-        ) || priorityProductSelectValuesConst[0],
-      needs: info?.needs || 0,
+        ) || priorityProductSelectValuesConst[2],
+      needs: info?.needs || 1,
       has: info?.has || 0,
     },
     validationSchema: Yup.object().shape({
       comment: Yup.string()
         .required("Required field")
-        .max(250, "Remaining: 250 characters"),
+        .max(250, "The maximum comment length is 250 characters"),
       needs: Yup.number().required("Required field").min(0, "Min value - 0"),
       has: Yup.number().required("Required field").min(0, "Min value - 0"),
     }),
@@ -51,21 +52,33 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
     <div>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
         <div className="top-content">
-          <FormInput
-            name={"comment"}
-            classes={{
-              input: ["list-input-edit-idea", "text-area-input-container"],
-              textArea: ["edit-comment-text-area-input"],
-              group: ["text-area-group"],
-            }}
-            handleChange={formik.handleChange}
-            errorMessage={formik.errors.comment}
-            handleBlur={formik.handleBlur}
-            touched={formik.touched.comment}
-            label={"Comment"}
-            value={formik.values.comment}
-            inputType={"text-area"}
-          />
+          <div className="comment-input-container">
+            <FormInput
+              name={"comment"}
+              classes={{
+                input: ["list-input-edit-idea", "text-area-input-container"],
+                textArea: ["edit-comment-text-area-input"],
+                group: ["text-area-group"],
+              }}
+              handleChange={formik.handleChange}
+              errorMessage={formik.errors.comment}
+              handleBlur={formik.handleBlur}
+              touched={formik.touched.comment}
+              label={"Comment"}
+              value={formik.values.comment}
+              inputType={"text-area"}
+            />
+            {!formik.errors.comment && (
+              <div className="remaining-text">
+                Remaining:{" "}
+                {formik.values.comment.length < 250
+                  ? 250 - formik.values.comment.length
+                  : 0}{" "}
+                characters
+              </div>
+            )}
+          </div>
+
           <div className="edit-comment-img-block">
             <img
               src={info.image || ideaImg}

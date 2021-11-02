@@ -21,3 +21,8 @@
   overflow: hidden;
   transition: .3s all;
 }
+
+//основные стили не собираются, потом это нужно будет отсюда убрать
+.select-input-error-container{
+  justify-content: flex-start !important;
+}

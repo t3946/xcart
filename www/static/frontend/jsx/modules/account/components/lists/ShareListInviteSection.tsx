@@ -73,7 +73,9 @@ export const ShareListInviteSection: React.FC<ShareListInviteSection> = ({
             className="share-variants-logo"
             src="/static/frontend/images/icons/account/email.svg"
           />
-          <div className="share-variants-label">Invite by email</div>
+          <a href="mailto:" className="share-variants-label">
+            Invite by email
+          </a>
         </div>
       </div>
     </React.Fragment>

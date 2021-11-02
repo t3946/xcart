@@ -3,6 +3,7 @@ import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { FormikErrors } from "formik";
 
 interface Item {
   viewValue: string;
@@ -15,6 +16,7 @@ interface PropsInterface {
   onClick?: (item: Item) => any;
   value: any;
   name?: any;
+  errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[];
   label?: any;
   classes?: {
     input?: any;
@@ -29,6 +31,7 @@ export const FormSelect: React.FC<PropsInterface> = ({
   items,
   onClick,
   value,
+  errorMessage,
   name = null,
   label = null,
   classes = undefined,
@@ -56,37 +59,59 @@ export const FormSelect: React.FC<PropsInterface> = ({
       container
       alignItems="center"
     >
-      {label && <label className="form-input-label">{label}</label>}
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(!open);
-        }}
-        className={classnames("select-wrapper", classes?.input)}
-      >
-        <input
-          value={selectedItem}
-          className="select__input"
-          type="hidden"
-          name={name}
-        />
-        <div
-          id={id}
-          className={classnames(classes?.selectHeader, "form-select-head")}
+      {label && (
+        <label
+          className={`form-input-label ${
+            errorMessage && "form-input-label-error"
+          }`}
         >
-          {selectedItem?.previewValue || selectedItem?.viewValue}
+          {label}
+        </label>
+      )}
+      <div className={classnames(classes?.input)}>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(!open);
+          }}
+          className={classnames("select-wrapper")}
+        >
+          <input
+            value={selectedItem}
+            className="select__input"
+            type="hidden"
+            name={name}
+          />
+          <div
+            id={id}
+            className={classnames(
+              classes?.selectHeader,
+              "form-select-head",
+              `${errorMessage && "form-input-error"}`
+            )}
+          >
+            {selectedItem?.previewValue || selectedItem?.viewValue}
+          </div>
+          {open && (
+            <ul className={classnames("form-select-list", classes?.selectList)}>
+              {items.map((item) => {
+                return (
+                  <li
+                    onClick={() => onClick(item)}
+                    className="form-select-item"
+                  >
+                    {item.viewValue}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
-        {open && (
-          <ul className={classnames("form-select-list", classes?.selectList)}>
-            {items.map((item) => {
-              return (
-                <li onClick={() => onClick(item)} className="form-select-item">
-                  {item.viewValue}
-                </li>
-              );
-            })}
-          </ul>
-        )}
+        <div className="error-message-input-container select-input-error-container">
+          <div>
+            <div className="form-input-caption">{errorMessage}</div>
+          </div>
+        </div>
       </div>
     </Grid>
   );

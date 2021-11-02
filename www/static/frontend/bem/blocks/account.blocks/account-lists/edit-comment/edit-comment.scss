@@ -2,7 +2,7 @@
   margin-left: rem-calc(20);
   text-align: right;
   padding-top: rem-calc(25);
-  width: 50%;
+  width: auto;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -14,7 +14,17 @@
 }
 
 .text-area-group{
-  width: 73%;
+  width: 100%;
+}
+
+.remaining-text{
+  margin-top: -25px;
+  font-size: 12px;
+  color: #959595;
+}
+
+.comment-input-container{
+  width: 290px;
 }
 
 .edit-comment-text-area-input{
@@ -69,6 +79,10 @@
     display: block !important;
     width: 100%;
     margin-top: rem-calc(20);
+  }
+
+  .comment-input-container{
+    width: 100%;
   }
 
   .top-content{

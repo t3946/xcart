@@ -134,7 +134,11 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       />
       <BootstrapDialogHOC
         show={editCommentDialog.open}
-        title={"Edit comment, quantity & priority"}
+        title={
+          info.comment
+            ? "Edit comment, quantity & priority"
+            : "Add comment, quantity & priority"
+        }
         onClose={editCommentDialog.handleClose}
       >
         <EditComment
