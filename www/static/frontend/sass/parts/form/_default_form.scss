@@ -1,9 +1,10 @@
 @import "./compound_field";
 @import "./show_errors";
 @import "./clear_input";
-
 @mixin getDefaultFormStyles() {
-
+  .form-order-input {
+    line-height: 0 !important;
+  }
   .default-form {
 
     .submit-notes {
@@ -252,10 +253,10 @@
           display: block;
           width: rem-calc(12);
           height: rem-calc(15);
-          top: rem-calc(-10);
+          top: rem-calc(0);
           left: rem-calc(-6);
           @include breakpoint(large) {
-            top: rem-calc(-6);
+            top: rem-calc(0);
           }
         }
       }

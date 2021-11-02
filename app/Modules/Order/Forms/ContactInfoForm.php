@@ -24,7 +24,8 @@ class ContactInfoForm extends FrontendForm
                 'required' => true,
                 'hint' => OrderModule::t('First and last name of the order contact person'),
                 'html' => [
-                    'placeholder' => OrderModule::t('Albert H. Einstein')
+                    'placeholder' => OrderModule::t('Albert H. Einstein'),
+                    'class' => 'phone form-order-input',
                 ],
             ],
 
@@ -38,7 +39,7 @@ class ContactInfoForm extends FrontendForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t('(609) 924-8399'),
-                    'class' => 'phone',
+                    'class' => 'phone form-order-input',
                     'inputmode' => 'numeric',
                 ],
                 'extend' => 'phone_ext',
@@ -48,7 +49,7 @@ class ContactInfoForm extends FrontendForm
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t('ext'),
                 'html' => [
-                    'class' => 'phone_ext',
+                    'class' => 'phone_ext form-order-input',
                     'inputmode' => 'numeric',
                 ],
                 'extends' => true,
@@ -62,6 +63,9 @@ class ContactInfoForm extends FrontendForm
                 'label' => OrderModule::t('SMS notifications'),
                 'hint' => OrderModule::t('Get shipment status notifications by SMS (free service)'),
                 'labelTemplate' => 'forms/field/checkbox/label.tpl',
+                'html' => [
+                    'class' => 'form-order-input'
+                ],
             ],
 
             'email' => [
@@ -74,12 +78,13 @@ class ContactInfoForm extends FrontendForm
                 ],
                 'html' => [
                     'placeholder' => OrderModule::t('albert.einstein@gmail.com'),
+                    'class' => 'form-order-input'
                 ],
             ],
         ];
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $data = parent::getAttributes();
 
