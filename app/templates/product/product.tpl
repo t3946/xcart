@@ -188,7 +188,7 @@
 
                 {if $model->descr}
                     <div class="highlights show-for-ml">
-                        {raw $model->descr}
+                        {raw $model->descr|html_entity_decode}
                     </div>
                 {/if}
 
