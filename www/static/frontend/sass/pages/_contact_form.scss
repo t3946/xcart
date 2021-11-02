@@ -376,6 +376,7 @@
 
         .tabs-panel {
           align-items: center;
+
           .tab-content {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -386,6 +387,7 @@
             padding-right: .5rem;
           }
         }
+
         #Email {
           .title {
             display: none;
@@ -400,6 +402,7 @@
 
     .tabs-container {
       width: 43rem;
+
       .tabs-title-container {
         ul .tabs-title {
           a {
@@ -410,6 +413,7 @@
 
       .tabs-content-container .tabs-content {
         font-size: rem-calc(20);
+
         #Email {
           .title {
             padding-right: 1.875rem;

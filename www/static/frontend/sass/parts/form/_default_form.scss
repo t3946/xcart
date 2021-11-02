@@ -3,7 +3,9 @@
 @import "./clear_input";
 
 @mixin getDefaultFormStyles() {
-
+  .form-order-input {
+    line-height: 0 !important;
+  }
   .default-form {
 
     .submit-notes {
@@ -215,7 +217,7 @@
       }
     }
 
-    input[type=file]{
+    input[type=file] {
       height: auto;
       font-size: rem-calc(14);
     }
@@ -241,7 +243,7 @@
       top: 0;
       cursor: pointer;
       left: rem-calc(8);
-      @include breakpoint(large){
+      @include breakpoint(large) {
         left: rem-calc(5);
       }
 
@@ -252,10 +254,10 @@
           display: block;
           width: rem-calc(12);
           height: rem-calc(15);
-          top: rem-calc(-10);
+          top: rem-calc(0);
           left: rem-calc(-6);
           @include breakpoint(large) {
-            top: rem-calc(-6);
+            top: rem-calc(0);
           }
         }
       }
@@ -446,6 +448,7 @@
           .show-success {
             display: block;
           }
+
           .show-error {
             display: none;
           }
@@ -607,17 +610,17 @@
               width: 35%;
               text-align: left;
 
-              label{
+              label {
                 font-size: rem-calc(22);
                 font-weight: bold;
               }
             }
+
             .field {
               width: 65%;
 
               .input-container {
                 max-width: rem-calc(395);
-
                 textarea {
                   max-width: 100%;
                 }
@@ -639,6 +642,7 @@
             .field-title {
               width: rem-calc(192);
             }
+
             .field {
 
               .input-container {
@@ -770,6 +774,7 @@
 
           .tabs-panel {
             align-items: center;
+
             .tab-content {
               overflow: hidden;
               text-overflow: ellipsis;
@@ -780,6 +785,7 @@
               padding-right: .5rem;
             }
           }
+
           #Email {
             .title {
               display: none;
@@ -794,6 +800,7 @@
 
       .tabs-container {
         width: 43rem;
+
         .tabs-title-container {
           ul .tabs-title {
             a {
@@ -804,6 +811,7 @@
 
         .tabs-content-container .tabs-content {
           font-size: rem-calc(20);
+
           #Email {
             .title {
               padding-right: 1.875rem;
@@ -889,7 +897,7 @@
       }
     }
 
-    h5{
+    h5 {
       font-size: rem-calc(20);
 
       @include breakpoint(medium) {
@@ -905,6 +913,7 @@
         margin: 0;
       }
     }
+
     .private-claim {
       line-height: 110%;
       font-size: rem-calc(17);
