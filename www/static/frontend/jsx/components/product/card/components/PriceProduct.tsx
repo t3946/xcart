@@ -9,6 +9,7 @@ export const PriceProduct: React.FC<PriceProduct> = ({ classes, price }) => {
   const formatNumber = () => {
     switch (currency.currency_code) {
       case "RUB":
+        console.log(price);
         return (
           price
             .toFixed(currency.decimal)
