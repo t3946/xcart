@@ -23,6 +23,7 @@ config = {
       "@client/modules": path.resolve("./frontend/jsx/modules"),
       "@client/redux": path.resolve("./frontend/jsx/redux"),
       "@client": path.resolve("./frontend"),
+      "@local_modules": path.resolve("./local_modules"),
     },
 
     modules: [
