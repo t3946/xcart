@@ -107,16 +107,7 @@
                 <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
 
-                    {if $model->isGroupRoot()}
-                        {set $images = []}
-
-                        {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
-                        {foreach $childrens as $child}
-                            {set $images[] = $child->getImages()[0]}
-                        {/foreach}
-                    {else}
-                        {set $images = $model->getImages()}
-                    {/if}
+                    {set $images = $model->getImages()}
 
                     {if $images}
                         <div class="product-slider-sceleton-wrapper">
