@@ -120,7 +120,7 @@ class ApiProductHelper
                 ],
 
                 'listPrice' => [
-                    'number' => $product->list_price,
+                    'number' => (float)$product->list_price,
                     'formatted' => $currency->getCurrencyFormat($product->list_price),
                 ],
             ];
