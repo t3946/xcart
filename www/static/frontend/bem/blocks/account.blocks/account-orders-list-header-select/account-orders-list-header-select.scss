@@ -26,6 +26,10 @@
   }
 }
 
+.orders-list-header-select-input{
+  width: 100%;
+}
+
 @media (max-width: 990px) {
   .orders-list-header-select-header{
     height: rem-calc(34px) !important;

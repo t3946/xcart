@@ -29,6 +29,7 @@ export const OrdersListHeader: React.FC<OrdersListHeaderProps> = ({
           classes={{
             group: "orders-list-header-select-group",
             selectHeader: "orders-list-header-select-header",
+            input: "orders-list-header-select-input",
           }}
           value={selectValue}
           onClick={onSelectValueChange}

@@ -68,7 +68,7 @@ export const FormSelect: React.FC<PropsInterface> = ({
           {label}
         </label>
       )}
-      <div className={classnames(classes?.input)}>
+      <div style={{ width: "100%" }} className={classnames(classes?.input)}>
         <div
           onClick={(e) => {
             e.stopPropagation();
@@ -107,11 +107,13 @@ export const FormSelect: React.FC<PropsInterface> = ({
             </ul>
           )}
         </div>
-        <div className="error-message-input-container select-input-error-container">
-          <div>
-            <div className="form-input-caption">{errorMessage}</div>
+        {errorMessage && (
+          <div className="error-message-input-container select-input-error-container">
+            <div>
+              <div className="form-input-caption">{errorMessage}</div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Grid>
   );
