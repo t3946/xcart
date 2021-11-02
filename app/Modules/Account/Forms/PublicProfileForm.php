@@ -20,7 +20,7 @@ class PublicProfileForm extends FrontendModelForm
             ],
             'avatar_image' => [
                 'class' => ImageField::class,
-                'maxSize' => 100 * 1024,
+                'maxSize' => 10 * 1024 * 1024,
                 'types' => ['png', 'jpeg', 'jpg'],
                 'required' => false,
             ],

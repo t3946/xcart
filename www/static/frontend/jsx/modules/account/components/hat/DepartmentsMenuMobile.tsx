@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import Accordion from "react-bootstrap/Accordion";
 import AccordionContext from "react-bootstrap/AccordionContext";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
+import { useAccordionButton } from "react-bootstrap/AccordionButton";
 import Card from "react-bootstrap/Card";
 import PlusIcon from "@client/modules/icon/components/font-awesome/plus/Light";
 import MinusIcon from "@client/modules/icon/components/font-awesome/minus/Light";
@@ -42,7 +42,7 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
 
   function ContextAwareToggle({ children, eventKey, index }) {
     const currentEventKey = React.useContext(AccordionContext);
-    const decoratedOnClick = useAccordionToggle(eventKey);
+    const decoratedOnClick = useAccordionButton(eventKey);
     const isCurrentEventKey = currentEventKey === eventKey;
 
     function icon() {

@@ -27,8 +27,8 @@ const PublicProfile = (): any => {
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const alertShowTimeMs = 3000;
-  const maxKB = 10;
-  const FILE_SIZE_B = maxKB * 1024;
+  const maxMB = 10;
+  const FILE_SIZE_B = maxMB * 1024 * 1024;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
     "/static/frontend/images/pages/account/default-avatar.svg";
@@ -52,7 +52,7 @@ const PublicProfile = (): any => {
     location: yup.string().max(64, "Password must be at most 64 characters"),
     avatar_image: yup
       .mixed()
-      .test("fileSize", `Maximum uploaded file size: ${maxKB} KB`, function () {
+      .test("fileSize", `Maximum uploaded file size: ${maxMB} MB`, function () {
         const fileInput: Record<any, any> =
           document.getElementById("avatar_image");
 

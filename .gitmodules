@@ -1,3 +1,6 @@
 [submodule "www/static/local_modules/bootstrap"]
 	path = www/static/local_modules/bootstrap
 	url = https://github.com/alexander-gvozd/bootstrap.git
+[submodule "www/static/local_modules/react-avatar-editor"]
+	path = www/static/local_modules/react-avatar-editor
+	url = https://github.com/alexander-gvozd/react-avatar-editor.git
