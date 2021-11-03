@@ -15,6 +15,7 @@
 
                 <div id="content">
                     {block "search-menu"}{/block}
+                    <div id="hat-search-line-target"></div>
 
                     <div class="before-content container">
                         {block "before-content"}
