@@ -11,7 +11,20 @@ import { route } from "@client/jsx/utils/AppData";
 const LoginFormInputLogin: React.FC<any> = (props: any) => {
   const dispatch = useDispatch();
   const validationSchema = yup.object().shape({
-    login: yup.string().required("Login is a required field"),
+    login: yup
+      .string()
+      .required("Login is a required field")
+      .test(
+        "loginFormat",
+        "Enter valid email or phone number",
+        async function (value) {
+          return (
+            value &&
+            (value.search(/[^@]+?@[^@]+/) !== -1 ||
+              value.search(/\+\d{11}/) !== -1)
+          );
+        }
+      ),
   });
   const [showHelpInfo, setShowHelpInfo] = React.useState(false);
   const inputRef = React.createRef<HTMLInputElement>();
