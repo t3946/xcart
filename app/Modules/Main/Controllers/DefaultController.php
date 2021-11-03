@@ -4,6 +4,7 @@ namespace Modules\Main\Controllers;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Meta\Types\MetaType;
+use Modules\Sites\Models\SiteModel;
 use Modules\Translate\Classes\I18nextManager;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -14,19 +15,8 @@ class DefaultController extends FrontendController
 
     public function index()
     {
-//        $this->redirect('demo:index');
-
-        //@TODO: To future
-//        /** @var SitesModule $module */
-//        $module = Xcart::app()->getModule('Sites');
-//
-//        $module = $module->getSite()->getDefaultModule();
-//        $controller = new \Modules\Demo\Controllers\DefaultController($this->getRequest());
-//        $controller->run(null, func_get_args());
-
+        /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
-
-        $category_new = CategoryModel::objects()->filter(['category' => 'New Products', 'storefrontid' => $site->pk, 'level' => 1])->limit(1)->get();
 
         $this->setMetaBase(MetaType::DEFAULT, [
             'site' => $site
@@ -35,7 +25,7 @@ class DefaultController extends FrontendController
         $this->setCanonical('');
 
         $this->display('home.tpl', [
-            'category_new' => $category_new,
+            'category_new' => $site->base_category,
             'product' => PromotionalProductsHelper::getProductOfTheDay(),
             'best_seller' => PromotionalProductsHelper::getBestSellerProduct(),
             'new_product' => PromotionalProductsHelper::getNewProduct(),

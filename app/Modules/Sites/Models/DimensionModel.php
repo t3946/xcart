@@ -10,7 +10,7 @@ class DimensionModel extends Model
 {
     public static function tableName(): string
     {
-        return 'xcart_dimension';
+        return 'xcart_dimensions';
     }
 
     public static function getFields(): array

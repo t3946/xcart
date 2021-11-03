@@ -3,6 +3,7 @@
     {add $warehouse = $model->distributor}
     {add $is_specs = ($model->weight > 0 || $model->shipping_weight > 0 || $model->dim_x || $model->shipping_dim_x)}
     {add $size = $site->dimension_size->value}
+    {add $weight_label = $site->dimension_weight->value}
 
     <div class="row">
         {if $is_specs}
@@ -12,7 +13,7 @@
                 <div class="content">
                     {if $model->weight > 0}
                         {set $lbl}{t 'Weight'}{/set}
-                        {include 'product/tabs/__option.tpl' title=$lbl value="{$model->weight} {$site->dimension_weight->value}"}
+                        {include 'product/tabs/__option.tpl' title=$lbl value="{$model->weight} {$weight_label}"}
                     {/if}
 
                     {if $model->dim_x > 0 || $model->dim_y > 0 || $model->dim_z > 0}
@@ -27,7 +28,7 @@
                         {set $lbl}{t 'Shipping weight'}{/set}
                         {include 'product/tabs/__option.tpl'
                             title=$lbl
-                            value="{$model->shipping_weight} Lbs"
+                            value="{$model->shipping_weight} {$weight_label}"
                         }
                     {/if}
 
@@ -35,7 +36,7 @@
                         {set $lbl}{t 'Shipping dimensions'}{/set}
                         {include  'product/tabs/__option.tpl'
                             title=$lbl
-                            value="{$model->shipping_dim_x}\" x {$model->shipping_dim_y}\" x {$model->shipping_dim_z}\" "
+                            value="{$model->shipping_dim_x}{$size} x {$model->shipping_dim_y}{$size} x {$model->shipping_dim_z}{$size} "
                         }
                     {/if}
 

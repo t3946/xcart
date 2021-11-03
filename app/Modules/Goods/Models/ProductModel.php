@@ -105,6 +105,7 @@ use Xcart\Product;
  * @property float $shipping_freight
  * @property string $supplier_internal_id
  * @property string $pc_classify_status
+ * @property bool $is_group_root
  *
  * @method bool isForSale
  * @method static Manager showed($instance = null)
@@ -554,7 +555,7 @@ class ProductModel extends Model implements ICartItem
 
     public function isGroupRoot(): bool
     {
-        return ($this->productid == $this->group_root);
+        return $this->is_group_root;
     }
 
     public function isGroupChild(): bool
@@ -604,9 +605,25 @@ class ProductModel extends Model implements ICartItem
      */
     public function getImages(): array
     {
-        return $this->detail_images
-            ->filter(['xcart_products_images_1.is_active' => true])
-            ->order(['xcart_products_images_1.order_by', 'xcart_products_images_1.image_id'])
+        if ($this->isGroupRoot()) {
+
+            return ProductImageModel::objects()
+                ->filter([
+                    'products__group_root' => $this->pk,
+                    'products_images__is_active' => true
+                ])
+                ->group(['hash'])
+                ->order(['products_images__order_by','products_images__image_id'])
+                ->limit(4)
+                ->all();
+        }
+
+        return ProductImageModel::objects()
+            ->filter([
+                'products__productid' => $this->pk,
+                'products_images__is_active' => true
+            ])
+            ->order(['products_images__order_by','products_images__image_id'])
             ->all();
     }
 
