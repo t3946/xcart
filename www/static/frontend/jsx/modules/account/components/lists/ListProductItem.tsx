@@ -48,16 +48,30 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
 
   const mobileMenuDialog = useDialog();
 
-  const [countProductsOnCart, setCountProductsOnCart] = useState(1);
+  const [countProductsOnCart, setCountProductsOnCart] = useState(
+    product.min_amount
+  );
 
   const changeCount = (value: number, isInputEnter?: boolean) => {
     if (isInputEnter) {
+      if (value <= product.min_amount) {
+        return;
+      }
+      if (value > product.avail) {
+        setCountProductsOnCart(product.avail);
+        return;
+      }
       setCountProductsOnCart(value);
       return;
     }
-    if (value <= 0) {
+    if (value <= product.min_amount) {
       return;
     }
+    if (value > product.avail) {
+      return;
+    }
+
+    console.log("anyway");
     setCountProductsOnCart(value);
   };
 
@@ -84,10 +98,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   };
 
   const onCountInputBlur = () => {
+    if (countProductsOnCart > product.avail) {
+      setCountProductsOnCart(product.avail);
+    }
     if (countProductsOnCart > 0) {
       return;
     }
-    setCountProductsOnCart(1);
   };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
@@ -169,9 +185,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             <div className="product-list-item-price">${product?.price}</div>
             <div className="multiplication-symbol">X</div>
             <CountInput
+              avail={product.avail}
               onBlur={onCountInputBlur}
               value={countProductsOnCart}
               onChange={changeCount}
+              minAmount={product.min_amount}
+              multOrderQuantity={product.mult_order_quantity === "Y"}
             />
           </div>
           {edit &&
@@ -195,6 +214,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         btnLabel={"Add to cart"}
         edit={edit}
         id={info.product_id}
+        outOfStock={info.product.out}
         deleteItem={deleteProduct}
         onMoveClick={onMoveClick}
         onMainBtnClick={() =>

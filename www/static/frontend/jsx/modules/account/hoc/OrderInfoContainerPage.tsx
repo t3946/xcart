@@ -8,7 +8,10 @@ import { ApiService } from "@client/modules/shared/services/api.service";
 import { CircularProgress } from "@material-ui/core";
 import { setOrders } from "@client/jsx/redux/actions/account-actions/OrdersActions";
 
-export const OrderInfoContainerPage: React.FC = ({ children }) => {
+export const OrderInfoContainerPage: React.FC<any> = ({
+  children,
+  showMenu = true,
+}) => {
   const urlParams = useParams<OrderPageURLParams>();
 
   const api = new ApiService();
@@ -16,8 +19,6 @@ export const OrderInfoContainerPage: React.FC = ({ children }) => {
   function getInfo() {
     return api.get(`/account/api/orders/get-one-order/${urlParams.id}`);
   }
-
-  console.log("initial");
 
   const orderFromStore = useSelector((e: AccountStore) =>
     e.ordersStore?.orders[urlParams.orderType]?.items?.find(
@@ -42,7 +43,7 @@ export const OrderInfoContainerPage: React.FC = ({ children }) => {
     <div>
       {orderItem ? (
         <>
-          <OrderInfoHeader orderItem={orderItem} />
+          {showMenu && <OrderInfoHeader orderItem={orderItem} />}
           {React.Children.map(
             children,
             (child: ReactElement<{ orderItem: any }>) =>

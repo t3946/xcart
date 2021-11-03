@@ -28,10 +28,10 @@ interface AddToListSelectOnProductPageProps {
 }
 
 export const AddToListSelectOnProductPage: React.FC<AddToListSelectOnProductPageProps> =
-  ({ onClick, name, label = "", classes = undefined }) => {
+  ({ onClick, name, label = "", classes = undefined, product }) => {
     const lists = Store.getState().lists.lists;
 
-    const productInfo = Object.keys(window.appData?.products)[0] || product;
+    const productInfo = product || Object.keys(window.appData?.products)[0];
 
     const id = "1";
 

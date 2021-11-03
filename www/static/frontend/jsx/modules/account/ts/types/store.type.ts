@@ -137,6 +137,10 @@ interface StoreInterface {
   productsReviews: any;
   product: any;
   photoswipe: PhotoSwipeStore;
+  ordersStore?: {
+    orders: any;
+    ordersLoading: any;
+  };
 }
 
 export default StoreInterface;

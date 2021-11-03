@@ -53,3 +53,18 @@
   margin-bottom: 10px;
   transition: .3s all ease-in-out;
 }
+
+@media (max-width: 768px) {
+  .order-communication-send-btn{
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  .customer-notes-title{
+    text-align: center;
+  }
+
+  .order-communication-attachment{
+    margin-left: 0;
+  }
+}

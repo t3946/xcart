@@ -64,6 +64,9 @@ class ProductListsModel extends Model
                 'modelClass' => ListItemsModel::class,
                 'link' => ['product_list_id' => 'product_list_id']
             ],
+            'address_id' => [
+                'class' => IntField::class,
+            ],
         ];
     }
 }

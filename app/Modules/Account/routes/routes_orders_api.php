@@ -28,4 +28,9 @@ return [
         'target' => [OrdersApi::class, 'openRmaRequest'],
         'name' => 'open-rma-request',
     ],
+    [
+        'route' => '/edit-shipping-address',
+        'target' => [OrdersApi::class, 'editShippingAddress'],
+        'name' => 'edit-shipping-address',
+    ],
 ];

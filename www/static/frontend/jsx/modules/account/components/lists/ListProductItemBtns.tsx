@@ -17,6 +17,7 @@ interface ListProductItemBtnsProps {
   onMainBtnClick: () => void;
   time: string;
   listId: string;
+  outOfStock?: boolean;
 }
 
 export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
@@ -29,12 +30,14 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   onMainBtnClick,
   time,
   listId,
+  outOfStock,
 }) => {
   const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
   return (
     <div className={"product-list-item-btns-container"}>
       <Button
+        disabled={outOfStock}
         className={classnames(
           "account-submit-btn  full-width-button",
           mainBtnClasses

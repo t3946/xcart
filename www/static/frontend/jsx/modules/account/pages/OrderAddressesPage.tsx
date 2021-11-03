@@ -1,4 +1,10 @@
 import React from "react";
+import { useDialog } from "@client/modules/account/hooks/useDialog";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { useHistory, useParams } from "react-router-dom";
+import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
 
 interface OrderAddressesPageProps {
   orderItem?: any;
@@ -7,6 +13,13 @@ interface OrderAddressesPageProps {
 export const OrderAddressesPage: React.FC<OrderAddressesPageProps> = ({
   orderItem,
 }) => {
+  const changeShippingAddressDialog = useDialog();
+
+  const breakpoint = useBreakpoint();
+
+  const history = useHistory();
+
+  const params = useParams<OrderPageURLParams>();
   return (
     <div>
       <div className="page-label">Addresses and contacts</div>
@@ -48,7 +61,18 @@ export const OrderAddressesPage: React.FC<OrderAddressesPageProps> = ({
                   {orderItem.orderInfo.s_address}
                 </div>
               </div>
-              <button className="form-button order-change-address-btn">
+              <button
+                onClick={() =>
+                  breakpoint({
+                    xs: () =>
+                      history.push(
+                        `/account/orders/${params.id}/${params.orderType}/change-address`
+                      ),
+                    md: changeShippingAddressDialog.handleClickOpen,
+                  })
+                }
+                className="form-button order-change-address-btn"
+              >
                 Change shipping address
               </button>
             </div>
@@ -130,6 +154,13 @@ export const OrderAddressesPage: React.FC<OrderAddressesPageProps> = ({
           </div>
         </div>
       </div>
+      <BootstrapDialogHOC
+        show={changeShippingAddressDialog.open}
+        title={"Change address"}
+        onClose={changeShippingAddressDialog.handleClose}
+      >
+        <ChangeAddress handleClose={changeShippingAddressDialog.handleClose} />
+      </BootstrapDialogHOC>
     </div>
   );
 };

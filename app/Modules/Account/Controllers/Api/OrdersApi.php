@@ -9,6 +9,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTrackingModel;
 use Modules\Order\Models\RMADetailModel;
@@ -220,5 +221,26 @@ class OrdersApi extends FrontendController
         }
 
         $this->jsonResponse(['success']);
+    }
+
+    public function editShippingAddress()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if(!$user)
+        {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'),true));
+
+        $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+
+        $order_model->setAttributes($address_data);
+
+        $order_model->save();
+
+        $this->jsonResponse($order_model->getAttributes());
     }
 }

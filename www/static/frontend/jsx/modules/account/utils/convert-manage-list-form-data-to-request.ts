@@ -6,6 +6,7 @@ import {
 export function convertManageListFormDataToRequest(
   data: ManageListFormData
 ): ManageListRequestData {
+  console.log(data);
   return {
     description: data.description,
     name: data.listName,
@@ -14,9 +15,10 @@ export function convertManageListFormDataToRequest(
     birthday: Date.parse(
       new Date(
         new Date().getFullYear(),
-        data.month.value,
-        data.day.value
+        data.month?.value,
+        data.day?.value
       ).toString()
     ),
+    address_id: data.shippingAddress.value,
   };
 }

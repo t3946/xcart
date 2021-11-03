@@ -110,7 +110,12 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
       >
         <AddAddressForm
           addressInfo={addressInfo}
-          onCancelClick={editAddressDialog.handleClose}
+          onCancelClick={() =>
+            breakpoint({
+              xs: () => history.push("/account/addresses"),
+              md: editAddressDialog.handleClose,
+            })
+          }
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC

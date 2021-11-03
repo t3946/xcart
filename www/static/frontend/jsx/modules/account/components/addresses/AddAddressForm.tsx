@@ -19,9 +19,10 @@ import Store from "@client/jsx/redux/stores/Store";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
-export const AddAddressForm = ({
+export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
   onCancelClick = undefined,
+  children,
 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -36,10 +37,7 @@ export const AddAddressForm = ({
   );
 
   const onPended = () => {
-    breakpoint({
-      xs: () => history.push("/account/addresses"),
-      md: onCancelClick,
-    });
+    onCancelClick();
     showSnackbar({
       header: "Success",
       message: `${!addressInfo ? "Address added!" : "Address edit!"}`,
@@ -190,6 +188,7 @@ export const AddAddressForm = ({
             >
               {addressInfo ? "Save changes" : "Add Address"}
             </Button>
+            {children}
           </Grid>
         </Grid>
       </form>

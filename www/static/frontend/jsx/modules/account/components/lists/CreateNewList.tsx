@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,10 @@ import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snack
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { useHistory } from "react-router";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+import Store from "@client/jsx/redux/stores/Store";
+import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { useDialog } from "@client/modules/account/hooks/useDialog";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface CreateNewListProps {
   onCancelBtnClick: () => void;
@@ -28,9 +32,13 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   }, []);
   const dispatch = useDispatch();
 
+  const learnMoreDialog = useDialog();
+
   const ref = useRef<HTMLInputElement>();
 
   const { showSnackbar } = useContext(SnackbarContext);
+
+  const [isViewingInfo, setIsViewingInfo] = useState(false);
 
   const history = useHistory();
 
@@ -49,12 +57,16 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   };
 
   const formik = useFormik({
-    initialValues: { name: "" },
+    initialValues: {
+      name: `Shopping List ${Store.getState().lists.lists.length + 2}`,
+    },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Required field"),
     }),
     onSubmit: handleSubmit,
   });
+
+  const breakpoint = useBreakpoint();
 
   const onAddingEnd = (param: any) => {
     if (productId) {
@@ -71,44 +83,71 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
   };
   return (
     <div>
-      <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-        <FormInput
-          autoFocus={true}
-          name={"name"}
-          classes={{
-            input: "list-input",
-          }}
-          label={"List Name"}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.name}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.name}
-          inputRef={ref}
-          value={formik.values.name}
-        />
-
-        <p>
-          Use lists to save items for later. All lists are private unless you
-          share them with others.
-        </p>
-        <Tooltip
-          target={<div className="create-list-learn-more">Learn more</div>}
-          content={
-            <div className="create-list-tooltip-text">
-              Lists replaces wish lists and shopping lists, creating one place
-              for all your lists. You can also share your lists with others by
-              inviting them after you've created a list.
-            </div>
-          }
-        />
-        <SubmitCancelButtonsGroup
-          submitText="Confirm"
-          cancelText="Cancel"
-          onCancel={onCancelBtnClick}
-          groupAdvancedClasses={"manage-list-btns"}
-          disabled={listLoading}
-        />
-      </form>
+      {isViewingInfo ? (
+        <div>
+          <div className="create-list-tooltip-text">
+            Lists replaces wish lists and shopping lists, creating one place for
+            all your lists. You can also share your lists with others by
+            inviting them after you've created a list.
+          </div>
+          <button
+            onClick={() => setIsViewingInfo(false)}
+            className={"form-button"}
+          >
+            Back
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
+          <FormInput
+            autoFocus={true}
+            name={"name"}
+            classes={{
+              input: "list-input",
+            }}
+            label={"List Name"}
+            handleChange={formik.handleChange}
+            errorMessage={formik.errors.name}
+            handleBlur={formik.handleBlur}
+            touched={formik.touched.name}
+            inputRef={ref}
+            value={formik.values.name}
+          />
+          <p>
+            Use lists to save items for later. All lists are private unless you
+            share them with others.
+          </p>
+          <div
+            onClick={() =>
+              breakpoint({
+                xs: learnMoreDialog.handleClickOpen,
+                md: () => setIsViewingInfo(true),
+              })
+            }
+            className="create-list-learn-more"
+          >
+            Learn more
+          </div>
+          <SubmitCancelButtonsGroup
+            submitText="Confirm"
+            cancelText="Cancel"
+            onCancel={onCancelBtnClick}
+            groupAdvancedClasses={"manage-list-btns"}
+            disabled={listLoading}
+          />
+        </form>
+      )}
+      <BootstrapDialogHOC
+        show={learnMoreDialog.open}
+        title={"Learn more"}
+        onClose={learnMoreDialog.handleClose}
+      >
+        <div className="create-list-tooltip-text">
+          Lists replaces wish lists and shopping lists, creating one place for
+          all your lists. You can also share your lists with others by inviting
+          them after you've created a list.
+        </div>
+      </BootstrapDialogHOC>
     </div>
   );
 };

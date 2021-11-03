@@ -41,7 +41,14 @@ export const Addresses: React.FC = () => {
           title={"Add address"}
           onClose={addAddressDialog.handleClose}
         >
-          <AddAddressForm onCancelClick={addAddressDialog.handleClose} />
+          <AddAddressForm
+            onCancelClick={() =>
+              breakpoint({
+                xs: () => history.push("/account/addresses"),
+                md: addAddressDialog.handleClose,
+              })
+            }
+          />
         </BootstrapDialogHOC>
       </div>
     </div>

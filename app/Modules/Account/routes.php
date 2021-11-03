@@ -134,7 +134,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'order-email'
     ],
-
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/change-address',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-change-address'
+    ],
 
 
     [

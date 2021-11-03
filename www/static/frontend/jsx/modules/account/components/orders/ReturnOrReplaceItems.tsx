@@ -37,7 +37,6 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
 
   const openRequest = () => {
     setLoading(true);
-    console.log(orderItem);
     api
       .post(
         "/account/api/orders/open-rma-request",

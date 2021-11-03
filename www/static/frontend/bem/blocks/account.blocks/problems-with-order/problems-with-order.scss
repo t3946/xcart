@@ -9,3 +9,13 @@
 .problem-with-order-label{
   margin-left: 0 !important;
 }
+
+@media (max-width: 768px) {
+  .problem-with-order-send-btn{
+    width: 100%;
+  }
+
+  .order-product-select-errors{
+    display: none !important;
+  }
+}

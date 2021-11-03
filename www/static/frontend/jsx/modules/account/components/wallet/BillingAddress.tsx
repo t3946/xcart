@@ -68,7 +68,6 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
   return (
     <div className="billing-address-container">
       <div className="dialog-title">Select a billing address</div>
-
       <BillingAddressList
         value={value}
         setValue={setValue}

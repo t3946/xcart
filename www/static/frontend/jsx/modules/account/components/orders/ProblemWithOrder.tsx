@@ -8,6 +8,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
+import { AddressItemDto } from "@client/modules/account/ts/types/address-item.type";
+import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
 
 interface ProblemWithOrderProps {}
 
@@ -60,7 +62,7 @@ export const ProblemWithOrder: React.FC<ProblemWithOrderProps> = () => {
       <div className="page-label order-actions-page-label problem-with-order-label">
         Problem with order
       </div>
-      <p>What went wrong?</p>
+      <p className="what-went-wrong">What went wrong?</p>
       <form onSubmit={formik.handleSubmit}>
         <FormSelect
           classes={{ group: "order-product-select-errors" }}
@@ -69,6 +71,30 @@ export const ProblemWithOrder: React.FC<ProblemWithOrderProps> = () => {
           onClick={(value) => formik.setFieldValue("problem_status", value)}
           id={"problem-with-order-select"}
         />
+        <div className="order-problems-radios">
+          {problemsWithOrderSelectValue.map((e: any, index) => {
+            return (
+              <RadioBtn
+                name="radio"
+                id={index}
+                viewValue={e.viewValue}
+                groupValue={formik.values.problem_status.value}
+                radioValue={e.value}
+                onChange={(value) =>
+                  formik.setFieldValue("problem_status", {
+                    value: value,
+                    viewValue: e.viewValue,
+                  })
+                }
+                groupClasses={{
+                  group: "order-problem-radio",
+                  checked: "order-problem-radio-checked",
+                }}
+              />
+            );
+          })}
+        </div>
+
         <FormInput
           inputType="textarea"
           name={"problem_text"}

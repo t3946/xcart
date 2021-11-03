@@ -10,7 +10,6 @@ import { editCommentInProduct } from "@client/jsx/redux/actions/account-actions/
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
-  console.log(info);
   const dispatch = useDispatch();
 
   const handleSubmit = (values) => {

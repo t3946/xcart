@@ -18,4 +18,5 @@ export interface ManageListRequestData {
   recipient_name: string;
   recipient_email: string;
   birthday: number;
+  address_id: string;
 }

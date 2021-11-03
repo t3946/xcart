@@ -62,6 +62,7 @@ import { OrderCommunicationPage } from "@client/modules/account/pages/OrderCommu
 import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
 import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
 import { EmailPage } from "@client/modules/account/pages/EmailPage";
+import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -457,6 +458,16 @@ export const AccountRouters = (): any => {
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
                       <EmailPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/change-address"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage showMenu={false}>
+                      <ChangeAddress />
                     </OrderInfoContainerPage>
                   )}
                 />
