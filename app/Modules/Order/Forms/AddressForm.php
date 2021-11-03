@@ -11,6 +11,7 @@ use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Main\Xcart;
@@ -22,8 +23,9 @@ abstract class AddressForm extends FrontendForm
     public function getFields()
     {
         $geoIp = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP());
-
-        return [
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $ar_fields = [
             'firstname' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t('Full Name'),
@@ -132,5 +134,9 @@ abstract class AddressForm extends FrontendForm
 
             ],
         ];
+        if (!$site->country_model->is_many_line_addresses) {
+            unset($ar_fields['address_2']);
+        }
+        return $ar_fields;
     }
 }
