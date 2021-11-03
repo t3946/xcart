@@ -11,19 +11,19 @@ class BankAccountsForm extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets() : array
     {
         return [
             ['bank_accounts']
         ];
     }
 
-    public function getName()
+    public function getName() : string
     {
         return 'Bank accounts';
     }
 
-    public function getFields()
+    public function getFields() : array
     {
         return [
             'bank_accounts' => [

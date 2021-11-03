@@ -213,8 +213,14 @@
     <div class="footer-menu">
         <div class="row">
             <div class="column small-12 medium-8 copyright small-order-2 medium-order-1">
-                {t 'Copyright ©'} {$site.start_year}
-                -{time()|date_format:'%Y'} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
+                {switch $site->lang->lang_code}
+                    {case 'ru'}
+                        {$site.start_year}-{time()|date_format:'%Y'} {$site.corporation.name}.
+                        {$site.corporation.federal_tax_id_name}:{$site.corporation.federal_tax_id}, ОГРН: {$site.corporation.registration_number}. {t 'All Rights Reserved.'}
+                    {case 'en'}
+                        {t 'Copyright ©'} {$site.start_year}
+                            -{time()|date_format:'%Y'} {$gConfig.holding_company_name} {t 'All Rights Reserved.'}
+                {/switch}
             </div>
             <div class="column small-12 medium-4 footer-right-column small-order-1 medium-order-2 footer-copyright-links-column">
                 <ul class="no-bullet">

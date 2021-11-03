@@ -14,7 +14,7 @@ class AddressesForm extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets() : array
     {
         return [
             'Registered agent information' => [
@@ -50,7 +50,7 @@ class AddressesForm extends CorporatesForm
         ];
     }
 
-    public function getFields()
+    public function getFields() : array
     {
         $entity = $this->getInstance();
         return [

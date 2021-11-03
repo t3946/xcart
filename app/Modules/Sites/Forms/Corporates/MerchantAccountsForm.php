@@ -11,14 +11,14 @@ class MerchantAccountsForm extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets() : array
     {
         return [[
             'merchant_accounts',
         ]];
     }
 
-    public function getFields()
+    public function getFields() : array
     {
         return [
             'merchant_accounts' => [
@@ -30,7 +30,7 @@ class MerchantAccountsForm extends CorporatesForm
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'Merchant accounts';
     }

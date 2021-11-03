@@ -2,7 +2,9 @@
 
 
 {block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
-{block 'noindex'}<meta name="robots" content="noindex">{/block}
+{block 'noindex'}
+    <meta name="robots" content="noindex">
+{/block}
 
 
 {block "header"}
@@ -24,23 +26,19 @@
                          alt="verified&secured"
                          class="secured-logo-big">
                 </div>*}
-                <div class="columns s3-logo-block">
-                    <div class="s3-logo-big-link logo-link">
-                        <div id="calculate-shipping-target" data-uri="{$uri}"></div>
-                    </div>
+                {if ($site->lang->lang_code !== 'ru')}
+                    <div class="columns s3-logo-block">
+                        <div class="s3-logo-big-link logo-link">
+                            <div id="calculate-shipping-target" data-uri="{$uri}"></div>
+                        </div>
 
-                    {*<a href="" class="secured-logo-big-link logo-link">
-                        <img src="{$site->getHttpOrHttps() ~ $config.CDN_domain}/static/frontend/dist/images/logos/verified_secured_logo.svg"
-                             alt="verified&secured"
-                             class="show-for-large secured-logo-big">
-                    </a>*}
-
-                    <div href="" class="s3-logo-small-link logo-link">
-                        <img src="{$uri}/static/frontend/dist/images/logos/s3stores_logo.svg"
-                             alt="s3stores"
-                             class="show-for-small hide-for-large s3-logo-small">
+                        <div href="" class="s3-logo-small-link logo-link">
+                            <img src="{$uri}/static/frontend/dist/images/logos/s3stores_logo.svg"
+                                 alt="s3stores"
+                                 class="show-for-small hide-for-large s3-logo-small">
+                        </div>
                     </div>
-                </div>
+                {/if}
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
                     <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
                         <div class="text-order-online">
@@ -79,7 +77,8 @@
                         <a class="columns shrink cart-steps-back hide-for-large"
                            href="{$breadcrumbs->getPrevStage().url}">
                             <span class="img">
-                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg"
+                                     alt="">
                             </span>
                             <span class="text">{t 'BACK'}</span>
                         </a>
