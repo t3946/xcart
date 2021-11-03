@@ -1,14 +1,11 @@
 .brands-list-container{
+  .item-title {
+    max-width: initial;
+  }
+
   /* Стили для мобильных устройств */
   @include breakpoint(ml down) {
-
     .all-departments-menu {
-
-      @include breakpoint(ml only) {
-        .item-title {
-          max-width: calc(6.6666% - 0.625rem);
-        }
-      }
 
       padding: 0 .5rem;
 
@@ -20,22 +17,8 @@
         .title {
           text-align: center;
         }
-
       }
     }
-
-    @include breakpoint(medium down) {
-      .item-title {
-        max-width: calc(20% - 0.25rem);
-      }
-    }
-
-    @include breakpoint(medium up) {
-      .item-title {
-        max-width: calc(10% - 0.25rem);
-      }
-    }
-
   }
 
   /* Стили для десктопа */
@@ -44,7 +27,6 @@
     .all-departments-menu {
       /* Ссылка на основную категорию */
       .item-title {
-        max-width: 6.6666%;
         padding-top: .5rem;
         padding-bottom: .5rem;
         display: block;

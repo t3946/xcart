@@ -1,0 +1,21 @@
+.all-departments-menu-container {
+  overflow: hidden;
+
+  @include breakpoint(lg up) {
+    overflow: initial;
+  }
+}
+
+.all-departments-menu {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: rem-calc(4);
+
+  @include breakpoint(md up) {
+    grid-template-columns: repeat(10, 1fr);
+  }
+
+  @include breakpoint(lg up) {
+    grid-template-columns: repeat(15, 1fr);
+  }
+}
