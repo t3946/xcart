@@ -383,7 +383,7 @@ export default class Card extends Component {
                         className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout"
                         title={this.product.name}
                       >
-                        Checkout
+                        {t("Checkout")}
                       </a>
                     </div>
                   </Fragment>

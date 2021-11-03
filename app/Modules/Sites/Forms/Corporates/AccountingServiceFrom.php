@@ -14,7 +14,7 @@ class AccountingServiceFrom extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets() : array
     {
         return [
             '' => [
@@ -41,7 +41,7 @@ class AccountingServiceFrom extends CorporatesForm
         ];
     }
 
-    public function getFields()
+    public function getFields() : array
     {
         $entity = $this->getInstance();
 
@@ -85,7 +85,7 @@ class AccountingServiceFrom extends CorporatesForm
         ];
     }
 
-    public function getName()
+    public function getName() : string
     {
         return 'Accounting service company';
     }

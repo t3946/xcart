@@ -4,7 +4,7 @@
 namespace Modules\Sites\Forms\Corporates;
 
 
-use Xcart\App\QueryBuilder\Q\QOr;
+use Exception;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Sites\Models\CorporateModel;
@@ -12,13 +12,12 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DateField;
 use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
 class CorporatesForm extends ModelForm
 {
-    public function getFieldsets()
+    public function getFieldsets(): array
     {
         return [[
             'name',
@@ -72,27 +71,19 @@ class CorporatesForm extends ModelForm
         ]
     ];
 
-    public function getModel()
+    public function getModel(): CorporateModel
     {
         return new CorporateModel();
     }
 
-    public function getFields()
+    /**
+     * @throws Exception
+     */
+    public function getFields(): array
     {
+        /** @var CorporateModel $entity */
         $entity = $this->getInstance();
         return [
-            'country' => [
-                'class' => DropDownField::class,
-                'label' => 'Country',
-                'html' => ['style' => 'width:200px;'],
-                'choices' => static function () {
-                    foreach (CountryModel::objects()->order(['name']) as $country) {
-                        $result[$country->code] = (string)$country;
-                    }
-                    return $result ?? [];
-                },
-                'depends' => ['state']
-            ],
             'state' => [
                 'class' => DropDownField::class,
                 'label' => 'State/Province',
@@ -100,10 +91,22 @@ class CorporatesForm extends ModelForm
                 'choices' => static function () use ($entity) {
                     $result[''] = '';
                     foreach (StateModel::objects()->filter(['country_code__in' => [$entity->country ?? 'US']]) as $state) {
-                        $result[$state->stateid] = "{$state->country_code}: {$state}";
+                        $result[$state->stateid] = "$state->country_code: $state";
                     }
                     return $result ?? [];
                 },
+            ],
+            'country' => [
+                'class' => DropDownField::class,
+                'label' => 'Country',
+                'html' => ['style' => 'width:200px;'],
+                'choices' => (static function () {
+                    foreach (CountryModel::objects()->order(['name']) as $country) {
+                        $result[$country->code] = (string)$country;
+                    }
+                    return $result ?? [];
+                })(),
+                'depends' => ['state']
             ],
             'registration_number' => [
                 'class' => CharField::class,
@@ -111,25 +114,21 @@ class CorporatesForm extends ModelForm
             ],
             'incorporation_date' => [
                 'class' => DateField::class,
-                'html' => ['style' => 'width:100px;'],
+                'html' => ['style' => 'width:200px;'],
             ],
             'storefronts' => [
                 'class' => Select2Field::class,
                 'choices' => static function () use($entity) {
-                    $mass = [];
-                    $filter = ['corporates__id__isnull' => true];
-                    if ($entity && $entity->id) {
-                        $filter['corporates__id'] = $entity->id;
-                    }
                     /** @var SiteModel $model */
-                    foreach (SiteModel::objects()->filter([new QOr($filter)])->order(['code']) as $model) {
+                    foreach (SiteModel::objects()->all() as $model) {
                         if ($model->isWork()) {
                             $mass[$model->storefrontid] = (string)$model;
                         }
                     }
-                    return $mass;
+                    return $mass ?? [];
                 },
                 'html' => [
+                    'multi' => true,
                     'style' => 'width:300px;',
                 ],
             ],
@@ -142,7 +141,7 @@ class CorporatesForm extends ModelForm
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'Corporation';
     }

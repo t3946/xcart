@@ -5,7 +5,6 @@ namespace Modules\Sites\Forms\Corporates;
 
 
 use Modules\Sites\Admin\ShareHolderAdmin;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\NumberField;
 
@@ -13,7 +12,7 @@ class ShareholdersForm extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets() : array
     {
         return [[
             'shares',
@@ -21,7 +20,7 @@ class ShareholdersForm extends CorporatesForm
         ]];
     }
 
-    public function getFields()
+    public function getFields() : array
     {
         return [
             'shares' => [
@@ -37,7 +36,7 @@ class ShareholdersForm extends CorporatesForm
         ];
     }
 
-    public function getName()
+    public function getName() : string
     {
         return 'Shareholders';
     }

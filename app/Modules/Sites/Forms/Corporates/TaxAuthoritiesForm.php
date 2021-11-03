@@ -11,7 +11,7 @@ class TaxAuthoritiesForm extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets() : array
     {
         return [
             'Federal tax authority' => [
@@ -33,7 +33,7 @@ class TaxAuthoritiesForm extends CorporatesForm
         ];
     }
 
-    public function getFields()
+    public function getFields() : array
     {
         return [
             'federal_tax_year' => [
@@ -53,7 +53,7 @@ class TaxAuthoritiesForm extends CorporatesForm
         ];
     }
 
-    public function getName()
+    public function getName() : string
     {
         return 'Tax authorities';
     }

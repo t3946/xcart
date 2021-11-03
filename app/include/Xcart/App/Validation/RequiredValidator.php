@@ -2,6 +2,7 @@
 
 namespace Xcart\App\Validation;
 
+use Modules\Order\OrderModule;
 use Modules\Translate\TranslateModule;
 use Xcart\App\Translate\Translate;
 
@@ -14,11 +15,11 @@ class RequiredValidator extends Validator
     /**
      * @var string
      */
-    public $message = "Can't be empty";
+    public $message;
 
     public function __construct($message = null)
     {
-        $this->message = TranslateModule::t("Can't be empty");
+        $this->message = OrderModule::t("Can't be empty");
         if (!empty($message)) {
             $this->message = $message;
         }

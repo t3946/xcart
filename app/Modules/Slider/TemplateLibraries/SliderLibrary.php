@@ -4,6 +4,7 @@ namespace Modules\Slider\TemplateLibraries;
 
 
 use Modules\Goods\Helpers\PromotionalProductsHelper;
+use Modules\Order\OrderModule;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Helpers\Paths;
 use Xcart\App\Main\Xcart;
@@ -69,8 +70,8 @@ class SliderLibrary extends TemplateLibrary
         if (file_exists(Paths::get('www').$img)) {
             return [
                 [
-                    'title' => 'Everyday unbeatable',
-                    'description' => 'LOW PRICES up to 50% off',
+                    'title' => OrderModule::t('Everyday unbeatable'),
+                    'description' => OrderModule::t('LOW PRICES up to 50% off'),
                     'image' => $img,
                 ]
             ];
@@ -78,8 +79,8 @@ class SliderLibrary extends TemplateLibrary
         $models = PromotionalProductsHelper::getSliderProduct();
         foreach ($models as $model) {
             $res[] = [
-                'title' => 'Everyday unbeatable',
-                'description' => 'LOW PRICES up to 50% off',
+                'title' => OrderModule::t('Everyday unbeatable'),
+                'description' => OrderModule::t('LOW PRICES up to 50% off'),
                 'image' => PromotionalProductsHelper::getSliderImage($model),
                 'link' => $model->getAbsoluteUrl(true)
             ];

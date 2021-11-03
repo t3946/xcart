@@ -25,7 +25,7 @@
             dummy_input.remove()
         }
         {if $field->depends}
-        reloadForm(form, {$field->getForm()|get_class|json_encode}, '{$field->depends|implode:','}');
+        reloadForm(form, {$field->getForm()|get_class|json_encode}, '{implode(',', $field->depends)}');
         {/if}
     });
 

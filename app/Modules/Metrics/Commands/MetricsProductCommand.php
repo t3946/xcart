@@ -28,5 +28,6 @@ class MetricsProductCommand extends Command
                 'dx_code' => $distributor_model->code
             ]);
         }
+        $result = MetricsDataHelper::pushMetrics('products', "$str_result\n");
     }
 }

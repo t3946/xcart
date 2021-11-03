@@ -281,10 +281,14 @@ class SiteModel extends Model
                 'link' => ['lang_id' => 'lang_id'],
                 'verboseName' => 'Preferred language'
             ],
-            'corporates' => [
-                'class' => ManyToManyField::class,
+            'corporation' => [
+                'field' => 'corporation_id',
+                'class' => ForeignField::class,
                 'modelClass' => CorporateModel::class,
-                'through' => CorporateStorefrontsModel::class,
+                'null' => true,
+                'default' => null,
+                'link' => ['corporation_id' => 'id'],
+                'verboseName' => 'Corporation'
             ],
             'taxes' => [
                 'class' => ManyToManyField::class,
@@ -344,6 +348,24 @@ class SiteModel extends Model
                 'class' => HasManyField::class,
                 'link' => ['storefrontid' => 'site_id'],
                 'modelClass' => SiteSocialsModel::class
+            ],
+            'dimension_weight' => [
+                'field' => 'dimension_weight_id',
+                'class' => ForeignField::class,
+                'modelClass' => DimensionModel::class,
+                'null' => true,
+                'default' => null,
+                'link' => ['dimension_weight_id' => 'dimension_id'],
+                'verboseName' => 'Dimension weight'
+            ],
+            'dimension_size' => [
+                'field' => 'dimension_size_id',
+                'class' => ForeignField::class,
+                'modelClass' => DimensionModel::class,
+                'null' => true,
+                'default' => null,
+                'link' => ['dimension_size_id' => 'dimension_id'],
+                'verboseName' => 'Dimension size'
             ]
         ];
     }

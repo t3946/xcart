@@ -20,6 +20,11 @@ use Xcart\App\Orm\Model;
 
 class CorporateModel extends Model
 {
+    public static function tableName(): string
+    {
+        return 'sites_corporate';
+    }
+
     public static function getFields(): array
     {
         return [
@@ -575,9 +580,9 @@ class CorporateModel extends Model
                 'extra' => ['tax_type' => 'VAT']
             ],
             'storefronts' => [
-                'class' => ManyToManyField::class,
+                'class' => HasManyField::class,
                 'modelClass' => SiteModel::class,
-                'through' => CorporateStorefrontsModel::class,
+                'link' => ['id' => 'corporation_id'],
                 'verboseName' => 'Storefronts'
             ],
             'taxes' => [
@@ -605,6 +610,6 @@ class CorporateModel extends Model
 
     public function __toString()
     {
-        return (string) $this->name;
+        return (string)$this->name;
     }
 }

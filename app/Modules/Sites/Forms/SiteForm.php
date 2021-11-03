@@ -9,9 +9,12 @@ use Modules\Sites\Admin\SiteAddressesAdmin;
 use Modules\Sites\Admin\SitesAdmin;
 use Modules\Sites\Admin\SitesMenuAdmin;
 use Modules\Sites\Admin\SiteSocialsAdmin;
+use Modules\Sites\Models\CorporateModel;
 use Modules\Sites\Models\CurrencyModel;
+use Modules\Sites\Models\DimensionModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CheckboxField;
+use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ImageField;
 use Xcart\App\Form\Fields\ListViewField;
 use Xcart\App\Form\Fields\Select2Field;
@@ -38,10 +41,14 @@ class SiteForm extends ModelForm
     public function getFields(): array
     {
         return [
-            'corporates' => [
-                'class' => Select2Field::class,
-                'label' => 'Corporations',
-                'multiple' => true,
+            'corporation' => [
+                'class' => DropDownField::class,
+                'choices' => (static function () {
+                    foreach (CorporateModel::objects()->all() as $model) {
+                        $result[$model->pk] = "$model->name";
+                    }
+                    return $result ?? [];
+                }),
                 'html' => [
                     'style' => 'width: 300px'
                 ]
@@ -125,6 +132,30 @@ class SiteForm extends ModelForm
                     'style' => 'width: 300px'
                 ]
             ],
+            'dimension_weight' => [
+                'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
+                'choices' => (static function () {
+                    foreach (DimensionModel::objects()->filter(['type' => 'weight'])->all() as $dimension_model) {
+                        $data[$dimension_model->pk] = $dimension_model->name;
+                    }
+                    return $data ?? [];
+                })(),
+            ],
+            'dimension_size' => [
+                'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width: 300px'
+                ],
+                'choices' => (static function () {
+                    foreach (DimensionModel::objects()->filter(['type' => 'size']) as $dimension_model) {
+                        $data[$dimension_model->pk] = $dimension_model->name;
+                    }
+                    return $data ?? [];
+                })(),
+            ],
             'file_edit_image_favicon' => [
                 'class' => ImageField::class,
                 'label' => 'Storefront favicon',
@@ -152,13 +183,13 @@ class SiteForm extends ModelForm
                         'storefrontid' => $this->getInstance()->pk,
                         'level' => 1
                     ]) as $cat) {
-                        $res[$cat->pk] = (string) $cat;
+                        $res[$cat->pk] = (string)$cat;
                     }
                     return $res ?? [];
                 }),
                 'html' => [
                     'style' => 'width: 300px',
-                    'data-url' => (new SitesAdmin())->getSuggestionUrl('category')."?site={$this->getInstance()->pk}",
+                    'data-url' => (new SitesAdmin())->getSuggestionUrl('category') . "?site={$this->getInstance()->pk}",
                 ],
             ],
             'addresses' => [

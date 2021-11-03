@@ -77,7 +77,7 @@ abstract class AddressForm extends FrontendForm
                         ? $country->name
                         : null,
 				'html' => [
-                    'placeholder' => $country->name ?? 'United States',
+                    'placeholder' => $country->name ?? OrderModule::t('Example country'),
                     'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
                     'autocomplete' => 'new-password'
@@ -93,7 +93,7 @@ abstract class AddressForm extends FrontendForm
                     new ZipCodeValidator()
                 ],
                 'html' => [
-                    'placeholder' => $geoIp['postalCode'] ?? '08540',
+                    'placeholder' => $geoIp['postalCode'] ?? OrderModule::t('Example zipcode'),
                     'class' => 'auto-complete zip',
                     'autocomplete' => 'new-password',
                     'inputmode' => 'numeric',
@@ -114,7 +114,7 @@ abstract class AddressForm extends FrontendForm
                             'country_code' => $geoIp['country'] ?? ''
                         ]))
                         ? $state->state
-                        : 'New Jersey',
+                        : OrderModule::t('Example state'),
                     'class' => 'auto-complete state',
                     'autocomplete' => 'new-password'
                 ],
@@ -125,7 +125,7 @@ abstract class AddressForm extends FrontendForm
                 'label' => OrderModule::t('City'),
                 'required' => true,
                 'html' => [
-                    'placeholder' => $geoIp['city'] ?? 'Princeton',
+                    'placeholder' => $geoIp['city'] ?? OrderModule::t('Example city'),
                     'class' => 'auto-complete city',
                     'autocomplete' => 'new-password'
                 ],

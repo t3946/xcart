@@ -6,17 +6,15 @@ namespace Modules\Sites\Forms\Corporates;
 
 use Modules\Sites\Admin\IncomeTaxReturnAdmin;
 use Modules\Sites\Admin\SalesTaxReturnAdmin;
-use Modules\Sites\Admin\TaxReturnAdmin;
 use Modules\Sites\Admin\VatTaxReturnAdmin;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\ListViewField;
-use Xcart\App\Form\Fields\Select2Field;
 
 class TaxReturnsOutstandingForm extends CorporatesForm
 {
     public array $exclude = ['storefronts', 'taxes'];
 
-    public function getFieldsets()
+    public function getFieldsets(): array
     {
         return [
             'Income tax returns' => [
@@ -38,7 +36,7 @@ class TaxReturnsOutstandingForm extends CorporatesForm
         ];
     }
 
-    public function getFields()
+    public function getFields(): array
     {
         return [
             'income_tax_period_starts_month' => [
@@ -92,14 +90,14 @@ class TaxReturnsOutstandingForm extends CorporatesForm
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'Tax returns outstanding';
     }
 
     private static function getMonths(): array
     {
-        foreach (range(1, 12, ) as $month) {
+        foreach (range(1, 12) as $month) {
             $monthPadding = str_pad($month, 2, "0", STR_PAD_LEFT);
             $result[$month] = date('F', strtotime("2020-$monthPadding-01"));
         }
