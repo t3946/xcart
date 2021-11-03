@@ -78,7 +78,7 @@ class FilesProductAdmin extends ListViewAdmin
             case 'filesize':
                 return $item->getFileSizeMB();
             case 'filename':
-                return "{$item->$property->getValue()}";
+                return substr($item->$property->getValue(), 0, 15);
         }
         return parent::getItemProperty($item, $property);
     }
