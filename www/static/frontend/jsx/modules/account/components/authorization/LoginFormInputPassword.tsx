@@ -138,7 +138,7 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
                   name="rememberMe"
                   onChange={handleChange}
                   id="rememberMe"
-                  className="form-checkbox"
+                  className="form-checkbox d-none"
                   type="checkbox"
                   value={values.rememberMe}
                 />
