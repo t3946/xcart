@@ -73,6 +73,7 @@
 @import 'pages/checkout_options_form';
 @import "pages/checkout_shipping";
 @import "pages/product_view_list";
+@import "node_modules/cropperjs/dist/cropper";
 
 body {
   overflow-x: hidden;

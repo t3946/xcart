@@ -1,31 +1,58 @@
 import React from "react";
-import ReactAvatarEditor from "react-avatar-editor";
-import Form from "react-bootstrap/Form";
+import Cropper from "react-cropper";
 
 interface PropsInterface {
   imageRaw: string;
+  imageChange: (dataUrl: string) => void;
+  preview: HTMLElement;
 }
 
 const AvatarEditor: React.FC<PropsInterface> = function (
   props: PropsInterface
 ) {
-  const { imageRaw } = props;
-  const [scale, setScale] = React.useState(1.2);
+  const { imageRaw, imageChange, preview } = props;
+  const cropperRef = React.useRef<HTMLImageElement>(null);
+
+  const onCrop = () => {
+    const imageElement: any = cropperRef?.current;
+    const cropper: any = imageElement?.cropper;
+    imageChange(cropper.getCroppedCanvas().toDataURL());
+  };
+
+  const xAspect = 1;
+  const yAspect = 1;
+  const aspectRation = xAspect / yAspect;
+  const minAspectRation = aspectRation / 4;
+  const maxAspectRation = aspectRation * 4;
 
   return (
     <div>
-      <ReactAvatarEditor
-        image={imageRaw}
-        width={250}
-        height={250}
-        border={50}
-        color={[255, 255, 255, 0.6]}
-        scale={scale}
-        rotate={0}
+      <Cropper
+        src={imageRaw}
+        style={{ height: 400, width: "100%" }}
+        // Cropper.js options
+        initialAspectRatio={aspectRation}
+        guides={false}
+        ref={cropperRef}
+        aspectRatio={aspectRation}
+        viewMode={2}
+        zoom={(e) => {
+          if (
+            e.detail.ratio < minAspectRation ||
+            e.detail.ratio > maxAspectRation
+          ) {
+            e.preventDefault();
+          }
+        }}
+        zoomTo={1}
+        toggleDragModeOnDblclick={false}
+        dragMode={"move"}
+        preview={preview}
+        minCropBoxHeight={130}
+        minCropBoxWidth={130}
+        cropend={onCrop}
+        ready={onCrop}
       />
-
-      <Form.Label>Range</Form.Label>
-      <Form.Range />
     </div>
   );
 };

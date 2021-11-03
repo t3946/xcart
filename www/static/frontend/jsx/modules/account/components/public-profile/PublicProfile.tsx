@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { Formik, Form } from "formik";
@@ -14,6 +14,8 @@ import Alert from "@client/modules/account/components/shared/Alert";
 import { setAlertAction } from "@client/jsx/redux/actions/account-actions/ProfileActions";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import AvatarEditor from "@client/modules/account/components/public-profile/AvatarEditor";
+import dataURItoBlob from "@client/jsx/utils/dataURItoBlob";
 
 const PublicProfile = (): any => {
   const dispatch = useDispatch();
@@ -33,6 +35,9 @@ const PublicProfile = (): any => {
   const DEFAULT_AVATAR_IMAGE =
     "/static/frontend/images/pages/account/default-avatar.svg";
   const [isRemoveAvatar, setIsRemoveAvatar] = React.useState(false);
+  const [avatarRaw, setAvatarRaw] = React.useState("");
+  const [isOpenAvatarEditor, setIsOpenAvatarEditor] = React.useState(false);
+  const [avatarDataUrl, setAvatarDataUrl] = React.useState("");
 
   const initialValues = {
     publicName: user.public_name || "",
@@ -40,12 +45,12 @@ const PublicProfile = (): any => {
     avatar_image: user.avatar_image,
   };
 
-  const nameRegex = /^[A-Za-z]+$/;
+  const nameRegex = /^[A-Za-z][A-Za-z0-9 .\-']+$/;
 
   const validationSchema = yup.object().shape({
     publicName: yup
       .string()
-      .matches(nameRegex, "Only English letters")
+      .matches(nameRegex, "Incorrect name")
       .min(3, "Public name must be at least 3 characters")
       .max(32, "Public name must be at most 32 characters")
       .required("Public name is a required field"),
@@ -76,17 +81,20 @@ const PublicProfile = (): any => {
 
   const inputFileRef = React.useRef<HTMLInputElement>();
   const imageRef = React.useRef<HTMLImageElement>();
+  const imagePreviewRef = React.useRef<HTMLDivElement>();
 
   function submit(values, actions) {
     const formData = new FormData();
-    const fileInput: Record<any, any> = document.getElementById("avatar_image");
 
     formData.append("PublicProfileForm[public_name]", values.publicName);
     formData.append("PublicProfileForm[location]", values.location);
     formData.append("remove_avatar", isRemoveAvatar.toString());
 
-    if (fileInput.files[0]) {
-      formData.append("PublicProfileForm[avatar_image]", fileInput.files[0]);
+    if (avatarDataUrl) {
+      const blob = dataURItoBlob(avatarDataUrl);
+      const avatarFile = new File([blob], "avatar.jpg");
+
+      formData.append("PublicProfileForm[avatar_image]", avatarFile);
     }
 
     dispatch(
@@ -106,7 +114,6 @@ const PublicProfile = (): any => {
           );
 
           setTimeout(() => {
-            setShow(false);
             setTimeout(() => {
               dispatch(setAlertAction(null));
             }, 500);
@@ -138,7 +145,7 @@ const PublicProfile = (): any => {
       return DEFAULT_AVATAR_IMAGE;
     }
 
-    return values.avatar_image || user.avatar_image || DEFAULT_AVATAR_IMAGE;
+    return user.avatar_image || DEFAULT_AVATAR_IMAGE;
   }
 
   function beforePageTemplate() {
@@ -156,6 +163,56 @@ const PublicProfile = (): any => {
           alert: "account-inner-page_alert",
         }}
       />
+    );
+  }
+
+  function avatarEditorTemplate() {
+    function imageEditHandler(dataUrl: string) {
+      imageRef.current.src = dataUrl;
+      setAvatarDataUrl(dataUrl);
+    }
+
+    if (isOpenAvatarEditor) {
+      return (
+        <AvatarEditor
+          imageRaw={avatarRaw}
+          imageChange={imageEditHandler}
+          preview={imagePreviewRef.current}
+        />
+      );
+    }
+  }
+
+  function avatarImageTemplate(values) {
+    const classes = {
+      image: [
+        "public-profile-avatar-image",
+        {
+          "d-none": isOpenAvatarEditor,
+        },
+      ],
+      imagePreview: [
+        "avatar-preview",
+        "public-profile-avatar-image",
+        {
+          "d-none": !isOpenAvatarEditor,
+        },
+      ],
+    };
+
+    return (
+      <>
+        <img
+          className={classnames(classes.image)}
+          src={getAvatarUrl(values)}
+          alt="avatar"
+          ref={imageRef}
+        />
+
+        <div className={classnames(classes.imagePreview)} ref={imagePreviewRef}>
+          <img src="" alt="" />
+        </div>
+      </>
     );
   }
 
@@ -186,6 +243,8 @@ const PublicProfile = (): any => {
                   setIsRemoveAvatar(true);
                   values.avatar_image = "";
                   setValues(values);
+                  setIsOpenAvatarEditor(false);
+                  setAvatarDataUrl("");
                 }}
               >
                 <TimesLightIcon className="remove-avatar-icon" />
@@ -202,6 +261,8 @@ const PublicProfile = (): any => {
             fr.onload = () => {
               if (typeof fr.result === "string") {
                 imageRef.current.src = fr.result;
+                setAvatarRaw(fr.result);
+                setIsOpenAvatarEditor(true);
                 setIsRemoveAvatar(false);
               }
             };
@@ -343,12 +404,7 @@ const PublicProfile = (): any => {
                           >
                             {removeAvatarButtonTemplate()}
 
-                            <img
-                              className="public-profile-avatar-image"
-                              src={getAvatarUrl(values)}
-                              alt="avatar"
-                              ref={imageRef}
-                            />
+                            {avatarImageTemplate(values)}
 
                             <div className="add-avatar-button public-profile-avatar_button">
                               <i className="photo-camera-icon common-icon" />
@@ -377,6 +433,8 @@ const PublicProfile = (): any => {
                       </RBForm.Label>
                     </div>
                   </RBForm.Group>
+
+                  {avatarEditorTemplate()}
                 </div>
               </div>
 
@@ -390,13 +448,19 @@ const PublicProfile = (): any => {
                     Submit
                   </button>
 
-                  <button
-                    type="submit"
-                    className="form-button public-profile-footer-button form-button__outline ms-md-12"
-                    disabled={isSubmitting}
+                  <NavLink
+                    to={route("account:dashboard")}
+                    exact={true}
+                    className={"text-decoration-none"}
                   >
-                    not now
-                  </button>
+                    <button
+                      type="button"
+                      className="form-button public-profile-footer-button form-button__outline ms-md-12"
+                      disabled={isSubmitting}
+                    >
+                      not now
+                    </button>
+                  </NavLink>
                 </div>
               </div>
             </Form>
