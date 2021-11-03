@@ -35,12 +35,12 @@ const RegisterForm: React.FC<any> = () => {
     password: yup
       .string()
       .required("Password confirm required")
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
       .max(32, "Password must be at most 32 characters"),
     password_confirm: yup
       .string()
       .required("Password confirm required")
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
       .max(32, "Password must be at most 32 characters")
       .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
@@ -67,9 +67,10 @@ const RegisterForm: React.FC<any> = () => {
   }
 
   return (
-    <div className={classNames(noSidebarClasses,"account-auth-form-container")}>
+    <div
+      className={classNames(noSidebarClasses, "account-auth-form-container")}
+    >
       <div className="account-auth-form account_auth-form">
-
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -162,7 +163,9 @@ const RegisterForm: React.FC<any> = () => {
                     isInvalid={
                       touched.password_confirm && !!errors.password_confirm
                     }
-                    isValid={touched.password_confirm && !errors.password_confirm}
+                    isValid={
+                      touched.password_confirm && !errors.password_confirm
+                    }
                   />
 
                   <RBForm.Control.Feedback type="invalid">

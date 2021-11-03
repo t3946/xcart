@@ -24,7 +24,7 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
     password: yup
       .string()
       .required("Password is a required field")
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
       .max(32, "Password must be at most 32 characters"),
     rememberMe: yup.bool(),
   });

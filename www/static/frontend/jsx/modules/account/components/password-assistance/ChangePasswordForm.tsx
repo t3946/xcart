@@ -25,12 +25,12 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
     password: yup
       .string()
       .required("Password is a required field")
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
       .max(32, "Password must be at most 32 characters"),
     confirmPassword: yup
       .string()
       .required("Password Confirm is a required field")
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
       .max(32, "Password must be at most 32 characters")
       .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
@@ -75,7 +75,7 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
         return (
           <Form>
             <div className="px-12 px-sm-0">
-              <h1 className="account-form-header">Change your password man</h1>
+              <h1 className="account-form-header">Change your password</h1>
 
               <p className="auth-form-info mb-12 mb-md-14 mb-lg-20">
                 We'll ask for this password whenever you Sign-In.
@@ -101,7 +101,7 @@ const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
                   <RBForm.Text
                     className={"auth-form-info_input-caption form-group-text"}
                   >
-                    {"Password must be at least 6 characters"}
+                    {"Password must be at least 8 characters"}
                   </RBForm.Text>
                 )}
 
