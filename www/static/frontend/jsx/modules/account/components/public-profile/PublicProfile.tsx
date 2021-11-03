@@ -313,7 +313,7 @@ const PublicProfile = (): any => {
 
                       <RBForm.Text
                         className={
-                          "auth-form-info_input-caption form-group-text d-block mb-10 mb-md-0"
+                          "auth-form-info_input-caption form-group-text d-block mb-10 my-md-0 mt-lg-10"
                         }
                       >
                         This is required but can be different to the name
