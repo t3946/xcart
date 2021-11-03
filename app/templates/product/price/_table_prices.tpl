@@ -9,16 +9,16 @@
 
             <div class="product-quantity">
                 <div class="column small-12">
-                    <div class="table table__prices table__prices--top product-quantity-row__title">
-                        <div class="title column small-4 product-quantity-title">{t 'Unit Price'}</div>
-                        <div class="title column small-4 product-quantity-title">{t 'Quantity'}</div>
+                    <div class="row table__prices table__prices--top product-quantity-row__title">
+                        <div class="title col-4 product-quantity-title">{t 'Unit Price'}</div>
+                        <div class="title col-4 product-quantity-title">{t 'Quantity'}</div>
                         {if !$model->isOutOfStockFrontend()}
-                            <div class="title column small-4 product-quantity-title">{t 'Subtotal'}</div>
+                            <div class="title col-4 product-quantity-title">{t 'Subtotal'}</div>
                         {/if}
                     </div>
 
-                    <div class="table table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if}">
-                        <div class="column product-table-prices_price-column column-price small-4">
+                    <div class="row table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if} text-center">
+                        <div class="product-table-prices_price-column column-price col-4">
                             <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
                                 {$site_currency->symbol_prefix}
                                 <span>
@@ -55,8 +55,8 @@
                             {/if}
                         </div>
 
-                        <div class="column quantity small-4">
-                            <div class="value">
+                        <div class="quantity col-4">
+                            <div class="value d-flex justify-content-center">
                                 {if !$model->isOutOfStockFrontend()}
                                     {include "product/parts/_quantity_group.tpl"}
                                 {else}
@@ -66,7 +66,7 @@
                         </div>
 
                         {if !$model->isOutOfStockFrontend()}
-                            <div class="column product-table-prices_price-column column-extended small-4">
+                            <div class="product-table-prices_price-column column-extended col-4">
                                 <div class="product-quantity-extended-price">
                                     {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                                     <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount) * $model->min_amount)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
@@ -92,7 +92,7 @@
                     </div>
 
                     {if !$model->isOutOfStockFrontend()}
-                        <div class="table table__prices table__prices--down price-row-width">
+                        <div class="row table__prices table__prices--down price-row-width">
                             {set $max_show_rows = 2}
                             {set $showed_rows = 0}
                             {foreach $model->getPrices() as $quantity => $price last=$last index=$index}
@@ -133,10 +133,10 @@
                 </div>
             </div>
         </div>
-        <div class="button-section columns small-12">
+        <div class="button-section col-12">
             {if !$model->isOutOfStockFrontend()}
                 <div class="row">
-                    <div class="columns small-12">
+                    <div class="col-12 px-md-0">
                         {if $form}
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
