@@ -54,7 +54,7 @@ const PublicProfile = (): any => {
       .min(3, "Public name must be at least 3 characters")
       .max(32, "Public name must be at most 32 characters")
       .required("Public name is a required field"),
-    location: yup.string().max(64, "Password must be at most 64 characters"),
+    location: yup.string(),
     avatar_image: yup
       .mixed()
       .test("fileSize", `Maximum uploaded file size: ${maxMB} MB`, function () {
