@@ -124,7 +124,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                         Forgot your password?
                       </Link>
                       <br />
-                      <a href="#" className="common-link">
+                      <a href="#" className="common-link d-none">
                         Other issues with Sign-In
                       </a>
                     </div>
