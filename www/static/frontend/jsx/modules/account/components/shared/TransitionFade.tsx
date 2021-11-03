@@ -12,7 +12,7 @@ const TransitionFade: React.FC<PropsInterface> = function (
   props: PropsInterface
 ) {
   const { show, styles } = props;
-  const defaultDurationMs = 300;
+  const defaultDurationMs = 150;
   const durationMs = props.durationMs || defaultDurationMs;
   const defaultStyle = {
     transition: `all ${durationMs}ms ease-out`,
