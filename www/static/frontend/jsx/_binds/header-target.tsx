@@ -7,6 +7,7 @@ import ShadowPanel from "../modules/account/components/shared/ShadowPanel";
 import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
 import HatSearchLine from "@client/modules/account/components/hat/HatSearchLine";
 import PhotoSwipeContainer from "@client/jsx/modules/product/Components/PhotoSwipe/PhotoSwipeContainer";
+import MenuMobile from "@client/modules/account/components/hat/MenuMobile";
 
 $(() => {
   const target = document.getElementById("header-target");
@@ -24,6 +25,7 @@ $(() => {
       <ShadowPanel />
       <HatSearchLine isStatic={true} />
       <PhotoSwipeContainer />
+      <MenuMobile isStatic={true} />
     </Provider>,
     target
   );

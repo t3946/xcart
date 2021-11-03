@@ -7,7 +7,12 @@ import { hideAllMenu } from "@client/jsx/redux/actions/account-actions/MenuActio
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 
-const MenuMobile: React.FC<any> = () => {
+interface PropsInterface {
+  isStatic: boolean;
+}
+
+const MenuMobile: React.FC<PropsInterface> = (props: PropsInterface) => {
+  const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const mobileMenuIsVisible = useSelector(
@@ -16,26 +21,50 @@ const MenuMobile: React.FC<any> = () => {
 
   function signInButtonTemplate() {
     if (user) {
+      if (isStatic) {
+        return (
+          <a
+            href={route("account:dashboard")}
+            className="common-link text-decoration-none ms-3 mobile-menu-user-name"
+            onClick={() => dispatch(hideAllMenu())}
+          >
+            <b>{user.name}</b>
+          </a>
+        );
+      } else {
+        return (
+          <Link
+            to={route("account:dashboard")}
+            className="common-link text-decoration-none ms-3 mobile-menu-user-name"
+            onClick={() => dispatch(hideAllMenu())}
+          >
+            <b>{user.name}</b>
+          </Link>
+        );
+      }
+    }
+
+    if (isStatic) {
       return (
-        <Link
-          to={route("account:dashboard")}
-          className="common-link text-decoration-none ms-3 mobile-menu-user-name"
+        <a
+          href={route("account:login")}
+          className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4 mobile-menu-login-button"
           onClick={() => dispatch(hideAllMenu())}
         >
-          <b>{user.name}</b>
+          sign in
+        </a>
+      );
+    } else {
+      return (
+        <Link
+          to={route("account:login")}
+          className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4 mobile-menu-login-button"
+          onClick={() => dispatch(hideAllMenu())}
+        >
+          sign in
         </Link>
       );
     }
-
-    return (
-      <Link
-        to={route("account:login")}
-        className="common-link text-decoration-none form-button form-button__outline w-auto pl-4 pr-4 mobile-menu-login-button"
-        onClick={() => dispatch(hideAllMenu())}
-      >
-        sign in
-      </Link>
-    );
   }
 
   function userAvatarTemplate() {
