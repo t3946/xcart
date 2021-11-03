@@ -103,6 +103,8 @@ const PublicProfile = (): any => {
 
         success(res) {
           setShow(true);
+          user.public_name = values.publicName;
+          user.location = values.location;
 
           dispatch(userSetAction({ ...user, avatar_image: res.avatarUrl }));
 
@@ -140,7 +142,7 @@ const PublicProfile = (): any => {
   /**
    * get current selected image url
    */
-  function getAvatarUrl(values): string {
+  function getAvatarUrl(): string {
     if (isRemoveAvatar === true) {
       return DEFAULT_AVATAR_IMAGE;
     }
@@ -183,7 +185,7 @@ const PublicProfile = (): any => {
     }
   }
 
-  function avatarImageTemplate(values) {
+  function avatarImageTemplate() {
     const classes = {
       image: [
         "public-profile-avatar-image",
@@ -204,7 +206,7 @@ const PublicProfile = (): any => {
       <>
         <img
           className={classnames(classes.image)}
-          src={getAvatarUrl(values)}
+          src={getAvatarUrl()}
           alt="avatar"
           ref={imageRef}
         />
@@ -276,7 +278,7 @@ const PublicProfile = (): any => {
             removeAvatarButton: [
               "public-profile_remove-avatar position-absolute",
               {
-                "d-none": getAvatarUrl(values) === DEFAULT_AVATAR_IMAGE,
+                "d-none": getAvatarUrl() === DEFAULT_AVATAR_IMAGE,
               },
             ],
           };
@@ -328,6 +330,7 @@ const PublicProfile = (): any => {
                         className={"form-input"}
                         isInvalid={!!touched.publicName && !!errors.publicName}
                         isValid={touched.publicName && !errors.publicName}
+                        autoComplete={"off"}
                       />
 
                       <RBForm.Control.Feedback type="invalid">
@@ -359,6 +362,7 @@ const PublicProfile = (): any => {
                         className={"form-input"}
                         isInvalid={!!touched.location && !!errors.location}
                         isValid={touched.location && !errors.location}
+                        autoComplete={"off"}
                       />
 
                       <RBForm.Control.Feedback type="invalid">
@@ -404,7 +408,7 @@ const PublicProfile = (): any => {
                           >
                             {removeAvatarButtonTemplate()}
 
-                            {avatarImageTemplate(values)}
+                            {avatarImageTemplate()}
 
                             <div className="add-avatar-button public-profile-avatar_button">
                               <i className="photo-camera-icon common-icon" />
