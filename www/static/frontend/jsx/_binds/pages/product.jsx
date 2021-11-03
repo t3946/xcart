@@ -56,7 +56,9 @@ import Catalog from "@/components/catalog/Catalog";
     let questionsContainer = $("#questions");
 
     documentReady(() => {
+      console.log("AGAA");
       $("#product_tabs").on("click", "#questions-label", () => {
+        console.log(questionsContainer);
         $.ajax("/product-question/", {
           data: {
             productId: questionsContainer.data("productid"),
@@ -75,7 +77,7 @@ import Catalog from "@/components/catalog/Catalog";
 
       $("#questions").on("submit", "form", (event) => {
         event.preventDefault();
-
+        console.log("CHECKING");
         $.ajax("/product-question/", {
           method: "POST",
           data: $(event.target).serialize(),

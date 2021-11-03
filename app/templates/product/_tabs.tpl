@@ -26,7 +26,6 @@
           <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
         </li>
     </ul>
-
     <div class="tabs-content" data-tabs-content="product_tabs">
 
         <div class="tabs-panel is-active" id="description">
@@ -40,7 +39,7 @@
                 {include 'product/tabs/_shipping.tpl' model=$model tab=$tabs->filter(['name' => 'shipping'])!:null}
             </div>
         </div>
-
+        {dd($tabs)}
         {foreach $tabs as $tab}
             {if $tab->name === 'Shipping'}{continue}{/if}
             {if $tab->name === 'Return policy'}{continue}{/if}
@@ -55,19 +54,19 @@
             </div>
         {/foreach}
 
-        <div class="tabs-panel" id="return-policy">
-            <div class="tab-return-policy tab-content">
-                {if $warehouse->d_frontend_return_policy}
-                    {$warehouse->d_frontend_return_policy|html_entity_decode}
-                {else}
-                    {if in_array($site->lang->lang_code, ['ru'])}
-                        {$gConfig.frontend_return_policy_ru|html_entity_decode}
-                    {else}
-                        {$gConfig.frontend_return_policy|html_entity_decode}
-                    {/if}
-                {/if}
-            </div>
-        </div>
+{*        <div class="tabs-panel" id="return-policy">*}
+{*            <div class="tab-return-policy tab-content">*}
+{*                {if $warehouse->d_frontend_return_policy}*}
+{*                    {$warehouse->d_frontend_return_policy|html_entity_decode}*}
+{*                {else}*}
+{*                    {if in_array($site->lang->lang_code, ['ru'])}*}
+{*                        {$gConfig.frontend_return_policy_ru|html_entity_decode}*}
+{*                    {else}*}
+{*                        {$gConfig.frontend_return_policy|html_entity_decode}*}
+{*                    {/if}*}
+{*                {/if}*}
+{*            </div>*}
+{*        </div>*}
 
         <div class="tabs-panel" id="questions" data-productid="{$model->productid}">
             <div class="tab-content tab-questions">
