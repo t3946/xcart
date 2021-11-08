@@ -74,7 +74,8 @@ let ACTIONS = {
         url = app_state.options.urls.cart.get;
     }
 
-    if (url) {
+    //todo: debug
+    if (url && 0) {
       ajax(url, { method: "POST", data: action.data }).then((data) => {
         store.dispatch({ type: "SET", data: data });
 

@@ -56,6 +56,8 @@ export default class SliderProducts extends Component {
   }
 
   componentDidMount() {
+    //TODO: debug
+    return;
     this.loadNewItems();
   }
 
