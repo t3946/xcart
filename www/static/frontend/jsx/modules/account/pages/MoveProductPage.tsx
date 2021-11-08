@@ -36,7 +36,6 @@ export const MoveProductPage: React.FC = () => {
   const onChange = (value) => {
     console.log(value, params.listId);
     if (value === params.listId) {
-      console.log(1);
       return;
     }
     const toList = Store.getState().lists.lists.find(

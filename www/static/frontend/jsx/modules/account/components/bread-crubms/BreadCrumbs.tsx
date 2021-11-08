@@ -2,11 +2,11 @@ import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
-export const BreadCrumbs = (): any => {
+export const BreadCrumbs: React.FC = () => {
   useLocation();
-  const breadcrumbsStore = useSelector((e: StoreDto) => e.breadcrumbs);
+  const breadcrumbsStore = useSelector((e: AccountStore) => e.breadcrumbs);
   const breadcrumbsList = [];
   const subPathsList = window.location.pathname.split("/");
 

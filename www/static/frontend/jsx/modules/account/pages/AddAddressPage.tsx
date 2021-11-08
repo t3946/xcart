@@ -15,7 +15,9 @@ export const AddAddressPage: React.FC = () => {
   return (
     <div className="add-address-page">
       <div className="page-label">{addressInfo ? "Edit" : "Add"} Address</div>
-      <AddAddressForm addressInfo={addressInfo} />
+      <div className="add-address-form-container">
+        <AddAddressForm addressInfo={addressInfo} />
+      </div>
     </div>
   );
 };

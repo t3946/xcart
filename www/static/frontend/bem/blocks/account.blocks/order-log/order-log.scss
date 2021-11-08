@@ -1,0 +1,33 @@
+.order-log-header{
+  padding: 12px 24px;
+  background-color: #F4F4F4;
+}
+
+.order-log-item{
+  padding: 25px;
+  border-bottom: 1px solid #C4C4C4;
+}
+
+.order-log-item, .order-log-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-log-type-cell, .order-log-name-cell, .order-log-date-cell{
+  width: 20%;
+  font-size: 16px;
+}
+
+.order-log-action-cell{
+  width: 40%;
+  font-size: 16px;
+}
+
+.order-log-item-customer-service{
+  background-color:  #FEF7E0;
+}
+
+.order-log-item-user{
+  background-color: #E7FFE3;
+}

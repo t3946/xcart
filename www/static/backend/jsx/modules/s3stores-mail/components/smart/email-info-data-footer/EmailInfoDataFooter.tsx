@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { EmailGroupSelect } from "@s3stores-mail/components/smart/email-group-select/EmailGroupSelect";
 
-export const EmailInfoDataFooter: React.FC<any> = ({
+export const sEmailInfoDataFooter: React.FC<any> = ({
   handleReply,
   handleClick,
   handleForward,

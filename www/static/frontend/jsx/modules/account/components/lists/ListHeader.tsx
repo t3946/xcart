@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import { useHistory } from "react-router-dom";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { ShareListDialog } from "@client/modules/account/components/lists/ShareListDialog";
 import { ManageList } from "@client/modules/account/components/lists/ManageList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
+import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
 import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
 import { List } from "@client/modules/account/ts/types/list.type";
+import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { useDispatch } from "react-redux";
+import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
 
 interface ListHeaderProps {
   label: string;
@@ -23,7 +26,6 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   edit,
   info,
 }) => {
-  console.log(info);
   const shareDialog = useDialog();
 
   const manageListDialog = useDialog();
@@ -32,7 +34,24 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
 
   const mobileMenuDialog = useDialog();
 
+  const { showSnackbar } = useContext(SnackbarContext);
+
   const history = useHistory();
+
+  const dispatch = useDispatch();
+
+  const onRequestEnd = () => {
+    showSnackbar({
+      header: "Success",
+      message: `${info.name} list deleted successfully`,
+      theme: "success",
+    });
+  };
+
+  const handleDeleteList = () => {
+    history.push("/account/your-lists");
+    dispatch(deleteList(info.product_list_id, onRequestEnd));
+  };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
@@ -121,7 +140,11 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         title={"Confirm delete list"}
         onClose={deleteListDialog.handleClose}
       >
-        <DeleteList info={info} onCancelClick={deleteListDialog.handleClose} />
+        <ConfirmDelete
+          deleteType="list"
+          onDeleteClick={handleDeleteList}
+          onCancelClick={deleteListDialog.handleClose}
+        />
       </BootstrapDialogHOC>
       <MobileMenuForList
         items={mobileDialogItems}

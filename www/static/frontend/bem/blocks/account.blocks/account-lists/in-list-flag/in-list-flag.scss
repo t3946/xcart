@@ -1,0 +1,17 @@
+.in-list-flag-container{
+  position: absolute;
+  bottom: 20px;
+  right: 5px;
+  cursor: pointer;
+}
+
+
+.in-list-flag{
+  opacity: 0.7;
+  fill: #ffb400 !important;
+  transition: .2s all ease-in-out !important;
+
+  &:hover{
+    fill: #c4c4c4 !important;
+  }
+}

@@ -5,6 +5,36 @@ import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/ale
 import { List } from "@client/modules/account/ts/types/list.type";
 import PhotoSwipe from "@client/libs/photoswipe/dist/photoswipe";
 
+export interface AccountStore {
+  addresses: AccountAddressesStore;
+  main: AccountMainStore;
+  user: any;
+  payments: AccountPaymentsStore;
+  mobileMenu: any;
+  lists: AccountListsStore;
+  shadowPanel: {
+    isVisible: boolean;
+    zIndex: number;
+    subscribers: Record<string, boolean>;
+  };
+  departmentsMenuMobile: {
+    isVisible: boolean;
+  };
+  departmentsMenuDesktop: {
+    isVisible: boolean;
+  };
+  breadcrumbs: Record<string, string>;
+  countries: any;
+  loginAndSecurity: AccountLoginAndSecurityStore;
+  mobileAlert: AccountMobileAlertStore;
+  cart: {
+    quantity: number;
+    checkoutUrl: string;
+  };
+  publicProfile: AccountPublicProfileStore;
+  ordersStore: OrdersStore;
+}
+
 export interface AccountAddressesStore {
   addressesList: AddressItemDto[];
   loading: boolean;
@@ -43,6 +73,24 @@ export interface AccountMobileAlertStore {
   alert: {
     variant: AlertVariants;
     message: string;
+  };
+}
+
+export interface OrdersStore {
+  ordersLoading: boolean;
+  orders: {
+    open: {
+      items: any[] | null;
+      selectValue: SelectValue<number, string>;
+    };
+    cancelled: {
+      items: any[] | null;
+      selectValue: SelectValue<number, string>;
+    };
+    completed: {
+      items: any[] | null;
+      selectValue: SelectValue<number, string>;
+    };
   };
 }
 
@@ -89,6 +137,10 @@ interface StoreInterface {
   productsReviews: any;
   product: any;
   photoswipe: PhotoSwipeStore;
+  ordersStore?: {
+    orders: any;
+    ordersLoading: any;
+  };
 }
 
 export default StoreInterface;

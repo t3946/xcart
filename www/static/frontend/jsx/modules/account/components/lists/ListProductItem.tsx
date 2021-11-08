@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
 import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
@@ -15,6 +15,13 @@ import { ListProductInfo } from "@client/modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "../../../../redux/reduсers/appCartReducer";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { CountInput } from "@client/modules/account/components/shared/CountInput";
+import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
+import useBreakpoint, {
+  getBreakpointsFlags,
+} from "@client/modules/account/hooks/useBreakpoint";
+import Store from "@client/jsx/redux/stores/Store";
+import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,
@@ -35,22 +42,68 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     product = info.product;
   }
 
+  const breakpoint = useBreakpoint();
+
+  const deleteProductDialog = useDialog();
+
+  const mobileMenuDialog = useDialog();
+
+  const [countProductsOnCart, setCountProductsOnCart] = useState(
+    product.min_amount
+  );
+
+  const changeCount = (value: number, isInputEnter?: boolean) => {
+    if (isInputEnter) {
+      if (value <= product.min_amount) {
+        return;
+      }
+      if (value > product.avail) {
+        setCountProductsOnCart(product.avail);
+        return;
+      }
+      setCountProductsOnCart(value);
+      return;
+    }
+    if (value <= product.min_amount) {
+      return;
+    }
+    if (value > product.avail) {
+      return;
+    }
+
+    console.log("anyway");
+    setCountProductsOnCart(value);
+  };
+
+  const history = useHistory();
+
   const data = [
     {
       id: info.product_id,
-      quantity: 1,
+      quantity: countProductsOnCart,
       options: [],
     },
   ];
 
-  const mobileMenuDialog = useDialog();
-
-  const history = useHistory();
-
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const viewProductPage = () => {
-    window.location.assign(`/product/${info.product_id}/`);
+  const deleteProduct = () => {
+    breakpoint({
+      xs: () =>
+        history.push(
+          `/account/your-lists/delete-product/product/${listInfo.product_list_id}/${info.product_id}/`
+        ),
+      md: deleteProductDialog.handleClickOpen,
+    });
+  };
+
+  const onCountInputBlur = () => {
+    if (countProductsOnCart > product.avail) {
+      setCountProductsOnCart(product.avail);
+    }
+    if (countProductsOnCart > 0) {
+      return;
+    }
   };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
@@ -76,7 +129,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     },
     {
       label: "Delete",
-      onClick: deleteItem,
+      onClick: deleteProduct,
     },
   ];
 
@@ -101,9 +154,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
-            <div onClick={viewProductPage} className="product-list-item-name">
+            <a
+              href={`/product/${info.product_id}/`}
+              className="product-list-item-name"
+            >
               {product.product}
-            </div>
+            </a>
             {edit && (
               <img
                 onClick={mobileMenuDialog.handleClickOpen}
@@ -121,19 +177,27 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             }
             content={
               <div className="rating-stars-tooltip">
-                <OverallRating
-                  minRating={1}
-                  maxRating={5}
-                  ratings={[]}
-                />
+                {/*<OverallRating ratings={[]} />*/}
               </div>
             }
           />
-          <div className="product-list-item-price">${product.cost_to_us}</div>
+          <div className="d-flex align-items-center">
+            <div className="product-list-item-price">${product?.price}</div>
+            <div className="multiplication-symbol">X</div>
+            <CountInput
+              avail={product.avail}
+              onBlur={onCountInputBlur}
+              value={countProductsOnCart}
+              onChange={changeCount}
+              minAmount={product.min_amount}
+              multOrderQuantity={product.mult_order_quantity === "Y"}
+            />
+          </div>
           {edit &&
             (info.comment ? (
               <ListProductItemComment
                 info={info}
+                listInfo={listInfo}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
               />
             ) : (
@@ -150,7 +214,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         btnLabel={"Add to cart"}
         edit={edit}
         id={info.product_id}
-        deleteItem={deleteItem}
+        outOfStock={info.product.out}
+        deleteItem={deleteProduct}
         onMoveClick={onMoveClick}
         onMainBtnClick={() =>
           cartAdd(
@@ -163,12 +228,16 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           )
         }
         time={info.add_date}
-        listId={info.list_items_id}
+        listId={info.product_list_id}
       />
 
       <BootstrapDialogHOC
         show={editCommentDialog.open}
-        title={"Edit comment, quantity & priority"}
+        title={
+          info.comment
+            ? "Edit comment, quantity & priority"
+            : "Add comment, quantity & priority"
+        }
         onClose={editCommentDialog.handleClose}
       >
         <EditComment
@@ -176,6 +245,17 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           listId={listId}
           productId={info.product_id}
           info={info}
+        />
+      </BootstrapDialogHOC>
+      <BootstrapDialogHOC
+        show={deleteProductDialog.open}
+        title={"Confirm delete"}
+        onClose={deleteProductDialog.handleClose}
+      >
+        <ConfirmDelete
+          onCancelClick={deleteProductDialog.handleClose}
+          onDeleteClick={deleteItem}
+          deleteType={"product"}
         />
       </BootstrapDialogHOC>
       <MobileMenuForList

@@ -4,6 +4,12 @@ import classnames from "classnames";
 import ProductCard from "@/components/product/card/slider/Card";
 import { CardSceleton } from "@/components/product/card/slider/CardSceleton";
 import $ from "jquery";
+import Store from "../../../redux/stores/Store";
+import {
+  addProduct,
+  deleteProduct,
+  getLists,
+} from "../../../redux/actions/account-actions/ListsActions";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
@@ -24,9 +30,42 @@ export default class SliderProducts extends Component {
       items: Array(10).fill(1),
       isEnd: true,
       isBeginning: true,
+      lists: null,
     };
 
     this.swiperRef = React.createRef();
+
+    Store.subscribe(() => {
+      this.setState({
+        ...this.state,
+        lists: Store
+          .getState()
+          .lists?.lists?.find((e, index) => index === 0),
+      });
+    });
+
+    this.getLists();
+  }
+
+  getLists() {
+    if (this.state.lists) {
+      return;
+    }
+    Store.dispatch(getLists());
+  }
+
+  onFlagClick(e, inList, productId) {
+    e.stopPropagation();
+
+    if (!inList) {
+      Store.dispatch(
+        addProduct(this.state.lists.product_list_id, productId, null, () => {})
+      );
+      return;
+    }
+    Store.dispatch(
+      deleteProduct(this.state.lists.product_list_id, productId, () => {})
+    );
   }
 
   loadNewItems() {
@@ -111,6 +150,7 @@ export default class SliderProducts extends Component {
   }
 
   render(props, state, context) {
+    console.log(this.state);
     const { error, isLoaded, items, isBeginning, isEnd } = this.state;
 
     $(this.base).parents(".slider-block").removeClass("hide");
@@ -167,7 +207,17 @@ export default class SliderProducts extends Component {
         >
           {items.map((product, i) => (
             <SwiperSlide className="products-slider-slide" key={i}>
-              {isLoaded ? <ProductCard product={product} /> : <CardSceleton />}
+              {isLoaded ? (
+                <ProductCard
+                  onFlagClick={this.onFlagClick}
+                  inList={this.state.lists?.products?.find(
+                    (e) => e.product_id === product.productid
+                  )}
+                  product={product}
+                />
+              ) : (
+                <CardSceleton />
+              )}
             </SwiperSlide>
           ))}
 

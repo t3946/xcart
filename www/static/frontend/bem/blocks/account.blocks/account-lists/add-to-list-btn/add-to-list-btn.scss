@@ -44,7 +44,7 @@
 
 .add-to-list-select-list{
   top: rem-calc(47) !important;
-  z-index:2;
+  z-index:4;
   max-height: 320px;
   overflow-y: hidden !important;
 }
@@ -62,6 +62,8 @@
 
 .form-select-item-label{
   font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .form-select-item-img{
@@ -89,6 +91,12 @@
   margin-right: 28px;
 }
 
+@media (max-width: 1200px) {
+  .product-page-add-to-list-btn {
+    width: 80%;
+  }
+}
+
 @media (max-width: 1000px) {
   .product-page-add-to-list-btn {
     width: 100%;
@@ -104,9 +112,6 @@
     width: 100% !important;
   }
 
-  .add-to-list-label{
-    margin-left: 58px;
-  }
 
   .add-to-list-arrow-block{
     width: 58px;

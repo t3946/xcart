@@ -32,6 +32,9 @@
   margin-left: 15px;
   cursor: pointer;
   min-width: 200px;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
   &:hover{
     text-decoration: underline;
   }
@@ -63,12 +66,16 @@
   .moved-product-content{
     margin-left: rem-calc(205);
   }
+
+  .moved-product-container{
+    border: 0;
+    margin-bottom: 20px;
+  }
 }
 
 @media (max-width: 768px) {
   .moved-product-content{
     margin-left: rem-calc(10);
-    margin-bottom: rem-calc(15);
     justify-content: space-between;
   }
 

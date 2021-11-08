@@ -1,0 +1,22 @@
+.order-item-container{
+  border: 1px solid #C4C4C4;
+  margin-bottom: 20px;
+}
+
+.progress-circular{
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circular-item{
+  color: #ffc107 !important;
+}
+
+@media (max-width: 990px) {
+  .progress-circular{
+    height: 100vh;
+  }
+}

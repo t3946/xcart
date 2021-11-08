@@ -7,6 +7,7 @@ use Modules\Account\Models\CreditCardsModel;
 use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\TransactionsModel;
 use Modules\Account\Models\UserListModel;
+use Modules\Order\Models\OrderModel;
 use Modules\User\Helpers\PasswordHelper;
 use Modules\User\Models\FingerprintModel;
 use Xcart\App\Main\Xcart;
@@ -114,6 +115,11 @@ class UserModel extends Model
             'addresses' => [
                 'class' => HasManyField::class,
                 'modelClass' => AddressesModel::class,
+                'link' => ['user_id' => 'user_id']
+            ],
+            'orders' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['user_id' => 'user_id']
             ],
             'cards' => [

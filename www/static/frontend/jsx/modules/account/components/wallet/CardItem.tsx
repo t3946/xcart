@@ -8,7 +8,6 @@ import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-typ
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 import { CardHeader } from "./CardHeader";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import { Breakpoint } from "@client/modules/account/ts/types/breakpoint.type";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 interface CardItemProps {
@@ -55,7 +54,7 @@ export const CardItem: React.FC<CardItemProps> = ({
             {cardInfo.is_default ? "Default" : "Set default"}
           </div>
           <div
-            className={`accordion-arrow ${
+            className={`accordion-arrow black-arrow ${
               accordion.open && "accordion-arrow-open"
             }`}
           />
@@ -105,7 +104,7 @@ export const CardItem: React.FC<CardItemProps> = ({
                 </div>
               </AddEditBtnsBlock>
             ),
-            sm: (
+            md: (
               <div className="wallet-card-buttons">
                 <Button
                   className="account-submit-btn edit-card-btn"

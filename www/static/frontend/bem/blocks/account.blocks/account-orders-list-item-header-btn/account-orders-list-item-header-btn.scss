@@ -1,0 +1,14 @@
+.order-details-btn{
+  width: auto;
+  font-weight: 700;
+  height: rem-calc(39);
+  margin-left: 23px;
+}
+
+@media (max-width: 500px) {
+  .order-details-btn{
+    width: 100%;
+    margin-left: 0;
+    margin-top: 18px;
+  }
+}

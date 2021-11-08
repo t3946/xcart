@@ -52,11 +52,13 @@ export const deleteList = (listId: string, callback: () => void): any => ({
 
 export const deleteProduct = (
   product_list_id: string,
-  list_items_id: string
+  list_items_id: string,
+  callback?: () => void
 ): any => ({
   type: "DELETE_PRODUCT",
   product_list_id,
   list_items_id,
+  callback,
 });
 
 export const undoDeleteProduct = (

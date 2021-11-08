@@ -17,6 +17,11 @@ const accountListReducer = (
         lists: action.lists,
         listLoading: false,
       };
+    case "CREATE_LIST":
+      return {
+        ...state,
+        listLoading: true,
+      };
     case "ADD_PRODUCT_ON_LIST":
       return {
         ...state,

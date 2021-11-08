@@ -234,6 +234,8 @@ function* deleteProduct(action: AnyAction): Generator {
       })
     )
     .then((response) => response);
+
+  action?.callback();
 }
 
 function* undoDeleteProduct(action: AnyAction): Generator {

@@ -4,7 +4,7 @@ import { Sceleton } from "@client/modules/shared/components/sceleton/Sceleton";
 export const ListProductItemSkeleton: React.FC = () => {
   return (
     <div className="product-list-item-container">
-      <Sceleton height={112} maxWidth={112} />
+      <Sceleton margin="0 20px 0 0 " height={112} maxWidth={112} />
 
       <div className="product-list-item-info">
         <Sceleton height={47} maxWidth={"100%"} />

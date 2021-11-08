@@ -21,6 +21,7 @@ export class ApiService {
       credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",
@@ -29,21 +30,17 @@ export class ApiService {
     return response.json();
   }
 
-  async post<T>(
-    url: string,
-    data: BodyInit,
-    headers: Record<any, any> = {
-      "Content-Type": "application/json",
-    }
-  ): Promise<T> {
+  async post<T>(url: string, data: BodyInit): Promise<T> {
     const response = await fetch(url, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
       credentials: "same-origin",
-      headers,
       redirect: "follow",
       referrerPolicy: "no-referrer",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: data,
     });
 

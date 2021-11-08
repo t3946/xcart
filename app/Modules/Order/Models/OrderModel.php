@@ -10,6 +10,8 @@ use Modules\Amazon\Models\AmazonListInboundShipment;
 use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Forms\Models\EmailEntityModel;
+use Modules\Forms\Models\EmailModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\Order\Helpers\OrderEventHelper;
@@ -124,6 +126,7 @@ class OrderModel extends Model
 
     public static function getFields()
     {
+        $alias = EmailEntityModel::objects()->getTableAlias();
         return [
             'orderid' => [
                 'class' => AutoField::class,
@@ -375,6 +378,12 @@ class OrderModel extends Model
             'bare_fraud_score' => [
                 'class' => FloatField::class,
                 'default' => 0
+            ],
+            'email_models' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => EmailModel::class,
+                'through' => EmailEntityModel::class,
+                'extra' => ["{$alias}.model" => OrderModel::class]
             ],
         ];
     }

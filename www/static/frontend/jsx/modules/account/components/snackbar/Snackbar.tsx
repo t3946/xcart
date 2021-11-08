@@ -64,6 +64,9 @@ const Snackbar: React.FC = ({ children }) => {
           vertical: "top",
           horizontal: "center",
         }}
+        classes={{
+          root: "account-alert__root",
+        }}
         open={open}
         autoHideDuration={3000}
         onClose={handleClose}
@@ -83,10 +86,10 @@ const Snackbar: React.FC = ({ children }) => {
           >
             {getHeaderIcon()}
 
-            {header}
+            {message}
           </h2>
 
-          <p className={"account-alert-content m-0"}>{message}</p>
+          {/*<p className={"account-alert-content m-0"}>{message}</p>*/}
         </div>
       </UISnackbar>
     </React.Fragment>

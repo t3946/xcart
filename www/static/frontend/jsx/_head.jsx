@@ -21,11 +21,9 @@ import "./_binds/response_status_278";
 import "./_binds/endless_pagination";
 import "./_binds/click_mmodal";
 import "./_binds/shadow";
-import "./_binds/pages/category";
 import "./_binds/sliders";
 import "./_binds/checkout";
 
-import "./_binds/pages/product";
 import "./_binds/pages/categories";
 import "./_binds/pages/cart";
 

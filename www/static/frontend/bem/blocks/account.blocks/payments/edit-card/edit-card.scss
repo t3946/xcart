@@ -56,7 +56,7 @@
 
 
 
-@media (max-width: 1000px) {
+@media (max-width: 1250px) {
   .edit-card-input-card-name{
     margin-right: 0;
   }
@@ -66,13 +66,16 @@
   }
 }
 
-@media (max-width: 670px) {
+@media (max-width: 769px) {
   .edit-card-input-card-name{
     margin-right: 0;
   }
 
   .edit-card-content, .edit-card-btns{
     flex-direction: column;
+  }
+  .edit-card-btns{
+    margin-top: 15px;
   }
 
   .cancel-edit-card-btn{

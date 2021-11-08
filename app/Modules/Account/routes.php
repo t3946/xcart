@@ -39,9 +39,25 @@ return [
     ],
 
     [
+        'route' => '/addresses/edit',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'addresses-edit'
+    ],
+
+    [
         'route' => '/payments/wallet',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'wallet'
+    ],
+    [
+        'route' => '/payments/wallet/add',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'wallet-add'
+    ],
+    [
+        'route' => '/payments/wallet/edit',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'wallet-edit'
     ],
     [
         'route' => '/payments/transactions',
@@ -68,7 +84,61 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'orders'
     ],
-
+    [
+        'route' => '/orders/open-orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'open-orders'
+    ],
+    [
+        'route' => '/orders/canceled-orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'canceled-orders'
+    ],
+    [
+        'route' => '/orders/completed-orders',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'completed-orders'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/order-tracking',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-tracking'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/products-ordered',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-products'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/order-actions',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-actions'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/addresses',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-addresses'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/communication',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-communication'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/order-info/log',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-info-log'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/email-info/{*:email_id}',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-email'
+    ],
+    [
+        'route' => '/orders/{*:id}/{*:orderType}/change-address',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-change-address'
+    ],
 
 
     [
@@ -167,7 +237,6 @@ return [
         'name' => 'public-profile'
     ],
 
-
     //api
     [
         'route' => '/api/authorization',
@@ -220,6 +289,17 @@ return [
     [
         'route' => '/api/reset-password',
         'path' => 'Modules.Account.routes.routes_reset-password_api',
+        'namespace' => 'api',
+    ],
+
+    [
+        'route' => '/api/review',
+        'path' => 'Modules.Account.routes.routes_review_api',
+        'namespace' => 'api',
+    ],
+    [
+        'route' => '/api/orders',
+        'path' => 'Modules.Account.routes.routes_orders_api',
         'namespace' => 'api',
     ],
 ];

@@ -11,6 +11,9 @@ interface ManageListPageURLParams {
 export const DeleteListPage: React.FC = () => {
   const params = useParams<ManageListPageURLParams>();
 
+  const dispatch = useDispatch();
+  const { showSnackbar } = useContext(SnackbarContext);
+
   const history = useHistory();
 
   const lists = Store.getState().lists.lists;
@@ -25,6 +28,19 @@ export const DeleteListPage: React.FC = () => {
     history.push(`/account/your-lists/${list.cache_url}`);
   };
 
+  const onRequestEnd = () => {
+    showSnackbar({
+      header: "Success",
+      message: `${list.name} list deleted successfully`,
+      theme: "success",
+    });
+  };
+
+  const handleDeleteList = () => {
+    history.push("/account/your-lists");
+    dispatch(deleteList(list.product_list_id, onRequestEnd));
+  };
+
   return (
     <div>
       <MobileMenuBackBtn
@@ -32,7 +48,11 @@ export const DeleteListPage: React.FC = () => {
         label={"back"}
       />
       <div className="page-label">Delete list</div>
-      <DeleteList info={list} onCancelClick={onCancelClick} />
+      <ConfirmDelete
+        onDeleteClick={handleDeleteList}
+        onCancelClick={onCancelClick}
+        deleteType="list"
+      />
     </div>
   );
 };

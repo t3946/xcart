@@ -8,6 +8,7 @@
 
 .list-header-actions{
   display: flex;
+  font-size: 14px;
 }
 
 .list-header-private-type-img{
@@ -32,6 +33,7 @@
 
 .list-header-shared-block{
   display: flex;
+  align-items: center;
 }
 
 .list-header-action-item{
@@ -57,6 +59,15 @@
 
 .list-header-ellipsis{
   display: none;
+}
+
+@media (max-width: 1250px) {
+  .list-header-name{
+    max-width: 20%;
+    word-break: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 
 @media (max-width: 768px) {

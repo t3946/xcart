@@ -3,15 +3,21 @@ export const getAddresses = (userId: number): any => ({
   userId,
 });
 
-export const changeDefaultAddress = (id: number, userId: number): any => ({
+export const changeDefaultAddress = (
+  id: number,
+  userId: number,
+  callback: () => void
+): any => ({
   type: "CHANGE_DEFAULT_ADDRESS",
   id,
   userId,
+  callback,
 });
 
-export const removeAddress = (id: number): any => ({
+export const removeAddress = (id: number, callback: () => void): any => ({
   type: "REMOVE_ADDRESS",
   id,
+  callback,
 });
 
 export const addAddress = (

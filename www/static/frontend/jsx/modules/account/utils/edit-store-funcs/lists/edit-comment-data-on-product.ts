@@ -1,9 +1,10 @@
 import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
 import { GetListAndProductIndexes } from "@client/modules/account/utils/edit-store-funcs/lists/get-product";
 import { EditCommentRequestData } from "@client/modules/account/ts/types/edit-comment-request-data";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 export function EditCommentDataOnProduct(
-  items,
+  items: List[],
   listId: string,
   productId: string,
   data: EditCommentRequestData
@@ -22,5 +23,5 @@ export function EditCommentDataOnProduct(
   for (const key in data) {
     product[key] = data[key];
   }
-  return mass;
+  return [...mass];
 }

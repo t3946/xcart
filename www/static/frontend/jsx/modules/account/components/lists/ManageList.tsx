@@ -45,6 +45,10 @@ export const ManageList: React.FC<ManageListProps> = ({
     );
   };
 
+  const thisAddress = Store.getState().addresses.addressesList.find(
+    (e) => e.address_id === info.address_id
+  );
+
   const formik = useFormik({
     initialValues: {
       listName: info.name || "",
@@ -54,8 +58,8 @@ export const ManageList: React.FC<ManageListProps> = ({
       isPurchase: false,
       isDefault: false,
       shippingAddress: {
-        value: null,
-        viewValue: "None",
+        value: String(thisAddress?.address_id) || null,
+        viewValue: thisAddress?.full_name || "None",
       },
       month: info.birthday
         ? monthItems[new Date(Number(info.birthday)).getMonth() - 1]
@@ -177,7 +181,7 @@ export const ManageList: React.FC<ManageListProps> = ({
           )}
           name={"shippingAddress"}
           label={"Shipping Address"}
-          onClick={(value) => formik.setFieldValue("Shipping Address", value)}
+          onClick={(value) => formik.setFieldValue("shippingAddress", value)}
           value={formik.values.shippingAddress}
           id="form-select-list-manage-addresses"
           classes={{

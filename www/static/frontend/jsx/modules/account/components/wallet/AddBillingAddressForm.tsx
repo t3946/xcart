@@ -100,7 +100,10 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
                 items={countries}
                 value={values.country}
                 label={"Country"}
-                classes={{ input: "add-address-input" }}
+                classes={{
+                  input: "add-address-input",
+                  group: "form-input-container",
+                }}
                 onClick={(value) => {
                   setFieldValue("country", value);
                   setFieldValue("state", initialAddAddressFormValue.state);
@@ -163,7 +166,10 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
                 handleBlur={handleBlur}
               />
               <FormSelect
-                classes={{ input: "add-address-input" }}
+                classes={{
+                  input: "add-address-input",
+                  group: "form-input-container",
+                }}
                 items={getStates(states, values.country.value)}
                 value={values.state}
                 label={"State/Province"}

@@ -46,15 +46,13 @@ class AccountAddressesApi extends FrontendController
 
         $addressId = $data['addressId'];
 
-        $userId = $data['user'];
+        $user = Xcart::app()->auth->getUser(true);
 
-        $user = UserModel::objects()->get(['user_id' => $userId]);
         $addresses = $user->addresses->all();
 
         foreach ($addresses as $key => $address)
         {
-            if($address->addresses_id == $addressId){
-
+            if($address->address_id == $addressId){
                 $address->is_default = true;
             } else{
                 $address->is_default = false;
@@ -62,7 +60,7 @@ class AccountAddressesApi extends FrontendController
             $address->save();
         }
 
-        $this->jsonResponse($this->getAddressesFromBase($userId));
+        $this->jsonResponse($this->getAddressesFromBase($user->user_id));
     }
 
     public function removeAddress()
@@ -82,22 +80,20 @@ class AccountAddressesApi extends FrontendController
     {
         $data = json_decode(file_get_contents('php://input'), true);
         $address = $data['address'];
-        $userId = $data['user'];
-
-        $user = UserModel::objects()->get(['user_id' => $userId]);
+        $user = Xcart::app()->auth->getUser(true);
 
         $addresses = $user->addresses->all();
 
         if($address['is_default'])
         {
-            $add_arr = array_map(fn($a) => $a->addresses_id, $addresses);
+            $add_arr = array_map(fn($a) => $a->address_id, $addresses);
             AddressesModel::objects()->filter(['address_id__in' => $add_arr])->update(['is_default' => false]);
         }
-        $address['user_id'] = $userId;
+        $address['user_id'] = $user->user_id;
         $address['address_type'] = 'shipping';
         $model = new AddressesModel($address);
         $model->save();
-        $this->jsonResponse($this->getAddressesFromBase($userId));
+        $this->jsonResponse($this->getAddressesFromBase($user->user_id));
     }
 
     public function editAddress()

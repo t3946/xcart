@@ -6,6 +6,7 @@ import { AccountListProductActionEnum } from "@client/modules/account/ts/types/a
 import { ListPrivateEnum } from "@client/modules/account/ts/consts/list-private.enum";
 
 export interface List {
+  address_id: number;
   birthday: string | null;
   cache_url: string;
   description: string | null;
@@ -59,6 +60,10 @@ export interface ListProductInfo {
   productcode: string;
   productid: string;
   cost_to_us: string;
+  price: number;
+  mult_order_quantity: string;
+  min_amount: number;
+  avail: number;
 }
 
 export interface ListProductUser {

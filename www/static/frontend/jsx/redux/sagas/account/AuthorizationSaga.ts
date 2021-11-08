@@ -1,8 +1,9 @@
-import { takeLatest } from "redux-saga/effects";
+import { put, takeLatest } from "redux-saga/effects";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import { route } from "@client/jsx/utils/AppData";
+import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 
 const api = new ApiService();
 
@@ -63,6 +64,11 @@ function* logout(action: AnyAction) {
   yield api.get(route("account:authorization_api:logout")).then((response) => {
     callback();
     return response;
+  });
+
+  yield yield put({
+    type: "SET_LISTS",
+    lists: null,
   });
 }
 

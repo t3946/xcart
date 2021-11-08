@@ -10,6 +10,8 @@ import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMe
 import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
 import { useHistory } from "react-router-dom";
 import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
+import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
+import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 
 export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   info,
@@ -26,6 +28,20 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   const mobileMenuDialog = useDialog();
 
   const history = useHistory();
+
+  const breakpoint = useBreakpoint();
+
+  const deleteIdeaDialog = useDialog();
+
+  const deleteIdea = () => {
+    breakpoint({
+      xs: () =>
+        history.push(
+          `/account/your-lists/delete-product/idea/${listInfo.product_list_id}/${info.product_id}/`
+        ),
+      md: deleteIdeaDialog.handleClickOpen,
+    });
+  };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
@@ -50,12 +66,12 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
     },
     {
       label: "Delete",
-      onClick: deleteItem,
+      onClick: deleteIdea,
     },
   ];
 
   return (
-    <div className="product-list-item-container product-list-item-idea-container">
+    <div className="product-list-item-container ">
       <div className="movable-area">
         {edit ? (
           <ListItemMovableArea
@@ -86,6 +102,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
               <ListProductItemComment
                 info={info}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
+                listInfo={listInfo}
               />
             ) : (
               <div
@@ -101,7 +118,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
         btnLabel={"search"}
         mainBtnClasses={"account-submit-btn-outline"}
         edit={edit}
-        deleteItem={deleteItem}
+        deleteItem={deleteIdea}
         onMoveClick={onMoveClick}
         id={info.product_id}
         time={info.add_date}
@@ -117,7 +134,11 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       />
       <BootstrapDialogHOC
         show={editCommentDialog.open}
-        title={"Edit comment, quantity & priority"}
+        title={
+          info.comment
+            ? "Edit comment, quantity & priority"
+            : "Add comment, quantity & priority"
+        }
         onClose={editCommentDialog.handleClose}
       >
         <EditComment
@@ -125,6 +146,17 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
           listId={listInfo.product_list_id}
           productId={info.product_id}
           info={info}
+        />
+      </BootstrapDialogHOC>
+      <BootstrapDialogHOC
+        show={deleteIdeaDialog.open}
+        title={"Confirm delete"}
+        onClose={deleteIdeaDialog.handleClose}
+      >
+        <ConfirmDelete
+          onCancelClick={deleteIdeaDialog.handleClose}
+          onDeleteClick={deleteItem}
+          deleteType={"idea"}
         />
       </BootstrapDialogHOC>
     </div>

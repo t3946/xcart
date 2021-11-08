@@ -158,6 +158,8 @@
             <a class="notify-me grey-border">
                 <span>{t 'Notify me when product is in stock'}</span>
             </a>
+            <div class="product-page-add-to-list-btn out-of-stock"></div>
+
 
         </div>
     {/if}

@@ -35,8 +35,8 @@ class ApiEmailDashboardAdmin extends Controller
         $qs = EmailModel::objects()->getQuerySet()->order(['-date']);
         if($searchParams->hasAttachment)
         {
-            $actionItem =   array_merge($actionItem, ['attachments__attachment__isnull' => false]);
-            $actionItem =   array_merge($actionItem, ['attachments__cid__isnull' => true]);
+            $actionItem = array_merge($actionItem, ['attachments__attachment__isnull' => false]);
+            $actionItem = array_merge($actionItem, ['attachments__cid__isnull' => true]);
         }
 
         if($searchParams->from)

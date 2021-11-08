@@ -32,12 +32,12 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
 
   const openCardDialog = (cardInfo: CardItemDto, dialog, path) => {
     breakpoint({
-      xs: () =>
+      sm: () =>
         history.push({
           pathname: path,
           state: { cardInfo: cardInfo },
         }),
-      sm: dialog.handleClickOpen,
+      md: dialog.handleClickOpen,
     });
   };
   return (

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
 import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
@@ -19,6 +19,11 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
   onCancelBtnClick,
   listHash,
 }) => {
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
+
+  const ref = useRef<HTMLInputElement>();
   const dispatch = useDispatch();
 
   const { showSnackbar } = useContext(SnackbarContext);
@@ -30,6 +35,10 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {
       formik.setErrors({ name: "Required field" });
+      return;
+    }
+    if (formik.values.name.length >= 50) {
+      formik.setErrors({ name: "Maximum length 50 characters" });
       return;
     }
     dispatch(addProduct(listId, null, formik.values.name, onAddingEnd));
@@ -67,6 +76,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
           handleBlur={formik.handleBlur}
           touched={formik.touched.name}
           value={formik.values.name}
+          inputRef={ref}
         />
         <p>Save an idea. Shop for it later.</p>
         <SubmitCancelButtonsGroup

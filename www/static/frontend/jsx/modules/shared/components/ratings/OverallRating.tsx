@@ -19,8 +19,8 @@ const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
   const maxRating = 5;
 
   const classes = {
-    overallRating: [props.classes.overallRating],
-    rating: props.classes.rating,
+    overallRating: [props?.classes?.overallRating],
+    rating: props?.classes?.rating,
     overallRatingStars: [
       "d-flex",
       "justify-content-between",

@@ -109,7 +109,6 @@ function* setViewed(action: AnyAction): Generator {
   }
 }
 function* sendEmail(action: AnyAction): Generator {
-  console.log(action.email);
   try {
     const formData = new FormData();
 

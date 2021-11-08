@@ -30,7 +30,9 @@ export const MobileMenuForList: React.FC<MobileMenuForListProps> = ({
             {e?.image && (
               <img className="mobile-menu-for-list-item-img" src={e.image} />
             )}
-            {e?.label && <div>{e.label}</div>}
+            {e?.label && (
+              <div className="mobile-menu-for-list-item-text">{e.label}</div>
+            )}
             {e?.component}
           </div>
         );

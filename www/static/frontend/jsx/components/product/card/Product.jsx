@@ -14,7 +14,7 @@ export default class Product extends Component {
     this.price = createRef();
   }
 
-  render({ product, images, mainInfo, price, classes }) {
+  render({ product, images, mainInfo, price, classes, inList, onFlagClick }) {
     this.product = product;
     this.images = images;
     this.mainInfo = mainInfo;
@@ -39,6 +39,8 @@ export default class Product extends Component {
       isNew: product.isNew,
       isSale: product.isSale,
       classes: this.classes.image,
+      inList: inList,
+      onFlagClick: onFlagClick,
     };
 
     const productsSliderPriceContainer = [

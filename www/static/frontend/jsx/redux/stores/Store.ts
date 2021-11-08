@@ -1,3 +1,5 @@
+import "regenerator-runtime/runtime";
+
 import {
   applyMiddleware,
   combineReducers,
@@ -28,6 +30,7 @@ import MobileAlertReducer from "@client/jsx/redux/reduсers/account/MobileAlertR
 import CartReducer from "@client/jsx/redux/reduсers/CartReducer";
 import MiniCartReducer from "@client/jsx/redux/reduсers/MiniCartReducer";
 import PublicProfileReducer from "@client/jsx/redux/reduсers/account/PublicProfileReducer";
+import OrdersReducer from "@client/jsx/redux/reduсers/account/OrdersReducer";
 import RatingsReducer from "@client/jsx/redux/reduсers/RatingsReducer";
 import ReviewsReducer from "@client/jsx/redux/reduсers/ReviewsReducer";
 import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
@@ -54,6 +57,7 @@ const Store: ReduxStore<StoreInterface> = createStore(
     cart: CartReducer,
     miniCart: MiniCartReducer,
     publicProfile: PublicProfileReducer,
+    ordersStore: OrdersReducer,
     productsRatings: RatingsReducer,
     productsReviews: ReviewsReducer,
     product: ProductReducer,

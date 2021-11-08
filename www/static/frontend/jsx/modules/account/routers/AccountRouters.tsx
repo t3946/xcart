@@ -52,6 +52,17 @@ import { AddProductToListPage } from "@client/modules/account/pages/AddProductTo
 import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
 import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
 import ReviewForm from "@client/jsx/modules/account/components/review/ReviewForm";
+import { DeleteProductPage } from "@client/modules/account/pages/DeleteProductPage";
+import { OrdersPage } from "@client/modules/account/pages/OrdersPage";
+import { OrderInfoContainerPage } from "@client/modules/account/hoc/OrderInfoContainerPage";
+import { OrderTrackingPage } from "@client/modules/account/pages/OrderTrackingPage";
+import { ProductsOrderedPage } from "@client/modules/account/pages/ProductsOrderedPage";
+import { OrderAddressesPage } from "@client/modules/account/pages/OrderAddressesPage";
+import { OrderCommunicationPage } from "@client/modules/account/pages/OrderCommunicationPage";
+import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
+import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
+import { EmailPage } from "@client/modules/account/pages/EmailPage";
+import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -85,7 +96,7 @@ export const AccountRouters = (): any => {
               <Switch>
                 <Route
                   exact
-                  path="/account/"
+                  path="/account"
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <DashboardPage />
@@ -141,6 +152,14 @@ export const AccountRouters = (): any => {
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <Transactions />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/account/your-lists/delete-product/:type/:listId/:productId/"
+                  component={PageContainerHoc(
+                    <ListsSidebarMenu />,
+                    <DeleteProductPage />
                   )}
                 />
                 <Route
@@ -215,6 +234,7 @@ export const AccountRouters = (): any => {
                     <ListsPage />
                   )}
                 />
+
                 <Route
                   exact
                   path="/account/your-lists/add-product-to-list/:isAdded/:listId/:sku"
@@ -330,6 +350,126 @@ export const AccountRouters = (): any => {
                   exact
                   path={route("account:review")}
                   component={PageContainerHoc(<SideBarMenu />, <ReviewForm />)}
+                />
+                <Route
+                  exact
+                  path={route("account:orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <div>1233213123123312</div>
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:open-orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrdersPage label={"Open orders"} type={"open"} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:canceled-orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrdersPage label={"Cancelled orders"} type={"cancelled"} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={route("account:completed-orders")}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrdersPage label={"Completed orders"} type={"completed"} />
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/order-tracking"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderTrackingPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/products-ordered"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <ProductsOrderedPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/order-info/addresses"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderAddressesPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/communication"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderCommunicationPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/order-info/log"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderLogPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={
+                    "/account/orders/:id/:orderType/order-info/order-actions"
+                  }
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <OrderActionsPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/email-info/:emailId"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage>
+                      <EmailPage />
+                    </OrderInfoContainerPage>
+                  )}
+                />
+                <Route
+                  exact
+                  path={"/account/orders/:id/:orderType/change-address"}
+                  component={PageContainerHoc(
+                    <SideBarMenu />,
+                    <OrderInfoContainerPage showMenu={false}>
+                      <ChangeAddress />
+                    </OrderInfoContainerPage>
+                  )}
                 />
               </Switch>
             </div>
