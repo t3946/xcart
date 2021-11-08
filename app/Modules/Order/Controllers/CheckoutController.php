@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
+use Modules\Core\Models\CountryLangsModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
 use Xcart\App\QueryBuilder\Expression;
@@ -270,16 +271,32 @@ class CheckoutController extends FrontendController
     {
         if ($search = Xcart::app()->request->get->get('search')) {
 
-            $filter = ['name__contains' => $search];
-
+            /** @var SiteModel $site */
+            $site = Xcart::app()->getModule('Sites')->getSite();
+            $filter = ['lang_id' => $site->lang->lang_id, 'value__contains' => $search];
             if (array_key_exists(strtoupper($search), CountryModel::$codes)) {
-                $filter = ['code' => CountryModel::$codes[strtoupper($search)]];
+                $filter = ['country_code' => CountryModel::$codes[strtoupper($search)]];
             }
 
-            $countries = CountryModel::objects()->filter($filter)->limit(10)->order([new Expression("FIELD(code, 'US', 'CA') DESC, code")])->valuesList(['name', 'code'], false);
+            /** @var CountryLangsModel[] $countries */
+            $countries = CountryLangsModel::objects()->filter($filter)->limit(10)
+                ->order([new Expression("FIELD(country_code, 'US', 'CA') DESC, country_code")])->all();
+
+            // Если не удалось найти наименование стран по текущему языку, то ищет по всем
+            if (!$countries && !empty($filter['lang_id'])) {
+                $countries = CountryLangsModel::objects()->filter(['value__contains' => $search])->limit(10)
+                    ->order([new Expression("FIELD(country_code, 'US', 'CA') DESC, country_code")])->all();
+            }
+
+            foreach ($countries as $country) {
+                $ar_countries[] = [
+                    'name' => $country->value,
+                    'code' => $country->country_code
+                ];
+            }
         }
 
-        $this->jsonResponse($countries ?? []);
+        $this->jsonResponse($ar_countries ?? []);
     }
 
     /**

@@ -3,6 +3,9 @@
 namespace Modules\Core\Models;
 
 
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Manager;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\CoreModule;
 use Modules\Shipping\Models\ZoneElementModel;
@@ -16,6 +19,7 @@ use Xcart\App\Orm\Model;
  * @property string code
  * @property string name
  * @property string active
+ * @property null|Manager|CountryLangsModel[] lang_names
  */
 class CountryModel extends Model
 {
@@ -49,6 +53,11 @@ class CountryModel extends Model
             'name' => [
                 'class' => CharField::class,
                 'null' => true,
+            ],
+            'lang_names' => [
+                'class' => HasManyField::class,
+                'modelClass' => CountryLangsModel::class,
+                'link' => ['code' => 'country_code']
             ]
         ];
     }
@@ -56,5 +65,15 @@ class CountryModel extends Model
     public function __toString(): string
     {
         return (string) $this->name;
+    }
+    public function countryNameBySite(): string
+    {
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        /** @var CountryLangsModel $country_lang */
+        $country_lang = $this->lang_names->get(['lang_id' =>$site->lang->lang_id, 'country_code' => $this->code]);
+
+        return $country_lang->value ?? $this->name;
     }
 }
