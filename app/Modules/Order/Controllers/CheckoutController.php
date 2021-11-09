@@ -6,6 +6,9 @@ use Exception;
 use Modules\Core\Models\CountryLangsModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
+use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Exceptions\UnknownMethodException;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\Components\CartItem;
@@ -365,8 +368,8 @@ class CheckoutController extends FrontendController
     /**
      * Step 2
      *
-     * @throws \Xcart\App\Exceptions\UnknownMethodException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws UnknownMethodException
+     * @throws UnknownPropertyException
      */
     public function actionOptions(): void
     {
@@ -546,8 +549,8 @@ class CheckoutController extends FrontendController
     /**
      * Step 3
      *
-     * @throws \Xcart\App\Exceptions\UnknownMethodException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws UnknownMethodException
+     * @throws UnknownPropertyException
      */
     public function actionReview(): void
     {
@@ -564,11 +567,11 @@ class CheckoutController extends FrontendController
 
     /**
      * Review purchase order
-     * @param $order
-     * @throws \Xcart\App\Exceptions\UnknownMethodException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @param OrderModel $order
+     * @throws UnknownMethodException
+     * @throws UnknownPropertyException
      */
-    private function purchaseOrderReview($order)
+    private function purchaseOrderReview(OrderModel $order)
     {
 
         /** @var Application $app */
@@ -695,9 +698,10 @@ class CheckoutController extends FrontendController
 
     /**
      * Review default order
-     * @param $order
+     * @param OrderModel $order
+     * @throws Exception
      */
-    private function defaultReview($order)
+    private function defaultReview(OrderModel $order)
     {
 
         /** @var Application $app */
@@ -758,7 +762,7 @@ class CheckoutController extends FrontendController
      * @param int    $order_id
      * @param string $slug
      *
-     * @throws \Xcart\App\Exceptions\HttpException
+     * @throws HttpException
      */
     public function actionComplete(int $order_id, string $slug): void
     {
