@@ -1,4 +1,7 @@
 .orders-navigation-button_theme_red_active {
-  background-color: #ffffff;
   border: 1px solid #ffa9a5;
+
+  &, &:active, &:hover {
+    background-color: #ffffff;
+  }
 }
