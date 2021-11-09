@@ -45,8 +45,9 @@ trait AddressAttributesReplacement
             }
 
             if ($t_data[$replacement . 'country']) {
+                /** @var CountryModel $cModel */
                 if ($cModel = CountryModel::objects()->get(['code' => $t_data[$replacement . 'country']])) {
-                    $t_data[$replacement . 'country'] = $cModel->name;
+                    $t_data[$replacement . 'country'] = $cModel->countryNameBySite();
                     $country_f = $this->getField($replacement . 'country');
                     $country_f->setAttributes(array_merge($country_f->getAttributes(), ['data-code' => $cModel->code ?? '']));
                 }

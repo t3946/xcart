@@ -13,7 +13,6 @@ use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Order\Helpers\FraudCheckFAHelper;
-use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Goods\Models\ProductModel;
@@ -103,6 +102,7 @@ use Xcart\Order;
  * @property string fraud_status
  * @property float|string bare_fraud_score_v2
  * @property float|string overall_fraud_score_v2
+ * @property CountryModel shipping_country
  */
 class OrderModel extends Model
 {
@@ -495,7 +495,7 @@ class OrderModel extends Model
             'company' => $this->s_company,
             'city' => $this->s_city,
             'state' => $s_state ?? $this->s_state,
-            'country' => $this->shipping_country,
+            'country' => $this->shipping_country->countryNameBySite() ?? null,
             'zipcode' => $this->s_zipcode,
         ];
 
