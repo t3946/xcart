@@ -4,7 +4,6 @@
       method="{if $method}{$method}{else}POST{/if}"
       novalidate=""
       id="{$prefix}"
-      onsubmit="return false;"
       data-constraints="{$constraints}"
       {if $enctype}enctype="{$enctype}"{/if}
       data-validate="{if $validate}{$validate}{else}true{/if}">
