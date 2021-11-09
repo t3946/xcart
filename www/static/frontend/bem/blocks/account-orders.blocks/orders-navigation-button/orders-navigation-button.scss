@@ -1,0 +1,23 @@
+.orders-navigation-button {
+  $color: #4a4949;
+
+  background-color: #f4f4f4;
+  border: 1px solid #c4c4c4;
+  padding: rem-calc(9) rem-calc(26);
+  justify-content: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: $color;
+  text-align: center;
+  width: 100%;
+
+  &:hover, &:focus {
+    text-decoration: none;
+    color: $color;
+  }
+
+  @include breakpoint(xxl up) {
+    width: initial;
+  }
+}

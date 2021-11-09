@@ -63,6 +63,7 @@ import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
 import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
 import { EmailPage } from "@client/modules/account/pages/EmailPage";
 import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
+import Navigation from "@client/modules/account/components/orders/Navigation/Navigation";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -86,7 +87,7 @@ export const AccountRouters = (): any => {
           <DepartmentsMenuMobile />
           <HatNavigation />
           <HatSearchLine isStatic={true} />
-          <MenuMobile />
+          <MenuMobile isStatic={false} />
           <AlertMobile />
 
           <div className={"container"}>
@@ -354,10 +355,7 @@ export const AccountRouters = (): any => {
                 <Route
                   exact
                   path={route("account:orders")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <div>1233213123123312</div>
-                  )}
+                  component={PageContainerHoc(<SideBarMenu />, <Navigation />)}
                 />
                 <Route
                   exact

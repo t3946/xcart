@@ -44,7 +44,7 @@ export interface AccountAddressesStore {
 export interface AccountMainStore {
   countries: SelectValue<string, string>[];
   states: any;
-  breakpoint?: any;
+  breakpoint?: string[];
   isList: boolean;
 }
 
