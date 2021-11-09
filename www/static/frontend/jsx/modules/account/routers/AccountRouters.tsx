@@ -383,9 +383,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={
-                    "/account/orders/:id/:orderType/order-info/order-tracking"
-                  }
+                  path={route("account:order-info-tracking")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -395,9 +393,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={
-                    "/account/orders/:id/:orderType/order-info/products-ordered"
-                  }
+                  path={route("account:order-info-products")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -407,7 +403,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={"/account/orders/:id/:orderType/order-info/addresses"}
+                  path={route("account:order-info-addresses")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -417,9 +413,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={
-                    "/account/orders/:id/:orderType/order-info/communication"
-                  }
+                  path={route("account:order-info-communication")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -429,7 +423,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={"/account/orders/:id/:orderType/order-info/log"}
+                  path={route("account:order-info-log")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -439,9 +433,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={
-                    "/account/orders/:id/:orderType/order-info/order-actions"
-                  }
+                  path={route("account:order-info-actions")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -451,7 +443,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={"/account/orders/:id/:orderType/email-info/:emailId"}
+                  path={route("account:order-email")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage>
@@ -461,7 +453,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={"/account/orders/:id/:orderType/change-address"}
+                  path={route("account:order-change-address")}
                   component={PageContainerHoc(
                     <SideBarMenu />,
                     <OrderInfoContainerPage showMenu={false}>

@@ -18,10 +18,14 @@ export const route = function (
     console.error("Unknown path " + slug);
   }
 
-  const interpolations = path.match(/{\w+:\w+}/gi);
+  const interpolations = path.match(/{.+?:.+?}/gi);
 
   if (!interpolations) {
     return path;
+  }
+
+  if (!routeParams.length) {
+    return path.replace(/{.*?:/gi, ":").replace(/}/gi, "");
   }
 
   if (interpolations.length !== routeParams.length) {
@@ -33,7 +37,7 @@ export const route = function (
   for (let i = 0; i < interpolations.length; i++) {
     path = path.replace(interpolations[i], <string>routeParams[i]);
   }
-
+  console.log("route: ", path);
   return path;
 };
 
