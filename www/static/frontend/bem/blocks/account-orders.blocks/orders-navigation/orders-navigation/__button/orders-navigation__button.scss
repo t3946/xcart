@@ -1,5 +1,5 @@
 .orders-navigation__button {
-  @include breakpoint(lg up) {
+  @include breakpoint(xxl up) {
     margin: 0 rem-calc(7) 0 0;
 
     &:last-child {
