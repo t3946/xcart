@@ -13,8 +13,8 @@
                     {set $warehouse = $.get_warehouse($group->manufacturerid)}
                     <h2 class="review-title">
                         {t 'The items below will be shipped from warehouse in'} {$warehouse->m_city},
-                        {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
-                        {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if}
+                        {if $config.show_full_state_country}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                        {if $config.show_full_state_country}{$warehouse->country_model->countryNameBySite()}{else}{$warehouse->m_country}{/if}
                     </h2>
                     <div class="order-table">
                         <div class="order-table-row table-head show-for-large">
@@ -79,8 +79,8 @@
                                 <span class="sum-info-label">
                                     <span class="delivery-details show-for-medium">
                                         {t 'Delivery from'}  {$warehouse->m_city},
-                                        {if $config.show_full_state_country === 'Y'}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
-                                        {if $config.show_full_state_country === 'Y'}{$warehouse->country_model}{else}{$warehouse->m_country}{/if} {t 'by'}
+                                        {if $config.show_full_state_country}{$warehouse->state_model}{else}{$warehouse->m_state}{/if},
+                                        {if $config.show_full_state_country}{$warehouse->country_model->countryNameBySite()}{else}{$warehouse->m_country}{/if} {t 'by'}
                                     </span>
                                     {$shipping_m->getFrontendName()}:
                                 </span>

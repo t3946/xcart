@@ -56,29 +56,15 @@ import Catalog from "@/components/catalog/Catalog";
     let questionsContainer = $("#questions");
 
     documentReady(() => {
-      $("#product_tabs").on("click", "#questions-label", () => {
-        $.ajax("/product-question/", {
-          data: {
-            productId: questionsContainer.data("productid"),
-          },
-          success: (html) => {
-            if (html) {
-              questionsContainer.html(html);
-              let formConstructedEvent = new CustomEvent("form.constructed", {
-                detail: {},
-              });
-              document.dispatchEvent(formConstructedEvent);
-            }
-          },
-        });
-      });
-
-      $("#questions").on("submit", "form", (event) => {
+      $("#questions").on("click", ".btn-question-form", (event) => {
         event.preventDefault();
-
+        var form = $(event.target).closest("form");
+        if (!form.length) {
+          return;
+        }
         $.ajax("/product-question/", {
           method: "POST",
-          data: $(event.target).serialize(),
+          data: form.serialize(),
           success: (html) => {
             if (html) {
               questionsContainer.html(html);
@@ -95,6 +81,27 @@ import Catalog from "@/components/catalog/Catalog";
           },
         });
       });
+
+      $("#product_tabs").on("click", "#questions-label", () => {
+        console.log(questionsContainer);
+        $.ajax("/product-question/", {
+          data: {
+            productId: questionsContainer.data("productid"),
+          },
+          success: (html) => {
+            if (html) {
+              questionsContainer.html(html);
+              let formConstructedEvent = new CustomEvent("form.constructed", {
+                detail: {},
+              });
+              document.dispatchEvent(formConstructedEvent);
+            }
+          },
+        });
+      });
+
+      // $("#questions").on("submit", "form", (event) => {
+      // });
     });
 
     // group product

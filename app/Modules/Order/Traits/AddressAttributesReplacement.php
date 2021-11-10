@@ -3,6 +3,7 @@
 namespace Modules\Order\Traits;
 
 
+use Modules\Core\Models\CountryLangsModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 
@@ -44,8 +45,9 @@ trait AddressAttributesReplacement
             }
 
             if ($t_data[$replacement . 'country']) {
+                /** @var CountryModel $cModel */
                 if ($cModel = CountryModel::objects()->get(['code' => $t_data[$replacement . 'country']])) {
-                    $t_data[$replacement . 'country'] = $cModel->name;
+                    $t_data[$replacement . 'country'] = $cModel->countryNameBySite();
                     $country_f = $this->getField($replacement . 'country');
                     $country_f->setAttributes(array_merge($country_f->getAttributes(), ['data-code' => $cModel->code ?? '']));
                 }
@@ -69,15 +71,15 @@ trait AddressAttributesReplacement
 
         foreach ($replacements as $replacement) {
             if ($data[$replacement . 'country']) {
-                $filter = ['name' => $data[$replacement . 'country']];
+                $filter = ['value' => $data[$replacement . 'country']];
 
                 if (array_key_exists(strtoupper($data[$replacement . 'country']), CountryModel::$codes)) {
-                    $filter = ['code' => CountryModel::$codes[strtoupper($data[$replacement . 'country'])]];
+                    $filter = ['country_code' => CountryModel::$codes[strtoupper($data[$replacement . 'country'])]];
                 }
 
-                /** @var CountryModel $cModel */
-                if ($cModel = CountryModel::objects()->get($filter)) {
-                    $data[$replacement . 'country'] = $cModel->code;
+                /** @var CountryLangsModel $cModel */
+                if ($cModel = CountryLangsModel::objects()->get($filter)) {
+                    $data[$replacement . 'country'] = $cModel->country_code;
                 }
             }
 

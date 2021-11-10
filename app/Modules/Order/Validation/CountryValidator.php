@@ -3,6 +3,7 @@
 namespace Modules\Order\Validation;
 
 
+use Modules\Core\Models\CountryLangsModel;
 use Modules\Core\Models\CountryModel;
 use Xcart\App\Translate\Translate;
 use Xcart\App\Validation\Validator;
@@ -18,12 +19,12 @@ class CountryValidator extends Validator
     {
         if(!empty($value)) {
 
-            $filter = ['name' => $value];
+            $filter = ['value' => $value];
             if (array_key_exists(strtoupper($value), CountryModel::$codes)) {
-                $filter = ['code' => CountryModel::$codes[strtoupper($value)]];
+                $filter = ['country_code' => CountryModel::$codes[strtoupper($value)]];
             }
 
-            if (!CountryModel::objects()->get($filter)) {
+            if (!CountryLangsModel::objects()->get($filter)) {
                 $this->addError(Translate::getInstance()->t('validation', 'Is not a valid country', []));
             }
         }

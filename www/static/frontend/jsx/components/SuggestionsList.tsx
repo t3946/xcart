@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Highlighter from "react-highlight-words";
 interface SuggestionList {
   search: string;
@@ -22,13 +22,18 @@ export const SuggestionList: React.FC<SuggestionList> = ({
     }
     return {};
   };
+  const getLink = (item) => {
+    if (title === "Search suggestions") {
+      return `/search?q=${item.replace(" ", "+")}`;
+    }
+    return item.link;
+  };
 
   const getComponent = (item: any) => {
     switch (title) {
       case "Search suggestions":
         return (
-          <a
-            href={`/search?q=${item.replace(" ", "+")}`}
+          <span
             dangerouslySetInnerHTML={{
               __html: item.replace(regExp, "<b>$1</b>"),
             }}
@@ -37,8 +42,7 @@ export const SuggestionList: React.FC<SuggestionList> = ({
         );
       case "Categories":
         return (
-          <a
-            href={item.link}
+          <span
             dangerouslySetInnerHTML={{
               __html: item.name.replace(regExp, "<b>$1</b>"),
             }}
@@ -47,7 +51,7 @@ export const SuggestionList: React.FC<SuggestionList> = ({
         );
       case "Products":
         return (
-          <a href={item.link}>
+          <div className="product-wrapper">
             <span className="icon" style={getImage(item.image)}>
               <span className="show-for-sr">{item.name}</span>
             </span>
@@ -57,7 +61,7 @@ export const SuggestionList: React.FC<SuggestionList> = ({
                 __html: item.name.replace(regExp, "<b>$1</b>"),
               }}
             />
-          </a>
+          </div>
         );
     }
   };
@@ -66,7 +70,9 @@ export const SuggestionList: React.FC<SuggestionList> = ({
       <div className="suggestionsTitle">{title}</div>
       <ul>
         {items.map((item, i) => (
-          <li className={"item" + i}>{getComponent(item)}</li>
+          <a className="suggestions-item-link" href={getLink(item)}>
+            <li className={"item" + i}>{getComponent(item)}</li>
+          </a>
         ))}
       </ul>
     </div>
