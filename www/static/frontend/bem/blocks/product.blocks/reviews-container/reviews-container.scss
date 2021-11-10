@@ -23,12 +23,12 @@
 
     &:before {
       top: 0;
-      background: linear-gradient(to bottom, #ffffff, transparent);
+      background: linear-gradient(to bottom, #ffffff, #ffffff00);
     }
 
     &:after {
       bottom: 0;
-      background: linear-gradient(to top, #ffffff, transparent);
+      background: linear-gradient(to top, #ffffff, #ffffff00);
     }
   }
 }
