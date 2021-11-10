@@ -6,6 +6,8 @@ namespace Modules\Order\Traits;
 use Modules\Core\Models\CountryLangsModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 
 trait AddressAttributesReplacement
 {
@@ -63,6 +65,8 @@ trait AddressAttributesReplacement
     public function getAttributes()
     {
         $data = parent::getAttributes();
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
         $replacements = $this->replacement;
         if (!is_array($replacements)) {
@@ -71,10 +75,13 @@ trait AddressAttributesReplacement
 
         foreach ($replacements as $replacement) {
             if ($data[$replacement . 'country']) {
-                $filter = ['value' => $data[$replacement . 'country']];
+                $filter = ['value' => $data[$replacement . 'country'], 'lang_id' => $site->lang->lang_id];
 
                 if (array_key_exists(strtoupper($data[$replacement . 'country']), CountryModel::$codes)) {
-                    $filter = ['country_code' => CountryModel::$codes[strtoupper($data[$replacement . 'country'])]];
+                    $filter = [
+                        'country_code' => CountryModel::$codes[strtoupper($data[$replacement . 'country'])],
+                        'lang_id' => $site->lang->lang_id
+                    ];
                 }
 
                 /** @var CountryLangsModel $cModel */
