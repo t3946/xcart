@@ -179,7 +179,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
           }}
           name={"select-sort"}
           value={sort}
-          classes={{ group: "w-auto" }}
+          classes={{ group: "w-auto product-reviews-filter-select" }}
         />
       </>
     );

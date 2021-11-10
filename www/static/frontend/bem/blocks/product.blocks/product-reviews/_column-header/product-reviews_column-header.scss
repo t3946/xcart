@@ -1,4 +1,10 @@
 .product-reviews_column-header {
+  margin: rem-calc(26) 0 0;
+
+  @include breakpoint(md up) {
+    margin: rem-calc(40) 0 0;
+  }
+
   @include breakpoint(lg up) {
     margin: 0 rem-calc(-24) rem-calc(28) 0;
   }
