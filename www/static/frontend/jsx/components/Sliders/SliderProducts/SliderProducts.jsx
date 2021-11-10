@@ -150,7 +150,6 @@ export default class SliderProducts extends Component {
   }
 
   render(props, state, context) {
-    console.log(this.state);
     const { error, isLoaded, items, isBeginning, isEnd } = this.state;
 
     $(this.base).parents(".slider-block").removeClass("hide");
