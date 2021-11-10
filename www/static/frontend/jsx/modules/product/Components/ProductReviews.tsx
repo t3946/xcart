@@ -177,7 +177,10 @@ const ProductReviews: React.FC = function () {
 
           <div className="d-flex justify-content-center">
             <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
-              write a customer review
+              <span className={"d-none d-md-block"}>
+                write a customer review
+              </span>
+              <span className={"d-md-none"}>write a review</span>
             </button>
           </div>
         </div>
