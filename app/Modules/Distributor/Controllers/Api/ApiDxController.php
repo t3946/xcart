@@ -149,12 +149,11 @@ class ApiDxController extends Controller
                 if (filter_var($post->need_send, FILTER_VALIDATE_BOOLEAN)) {
                     $ob_save_price->sendStats();
                 }
-                $result['status'] = true;
-                $result['countUpdate'] = $ob_save_price->count_update;
+                $this->jsonResponse(['countUpdate' => $ob_save_price->count_update]);
             } catch (\Throwable $exception) {
-                $result['error'] = $exception->getMessage();
+                $this->jsonResponse(['message' => $exception->getMessage()], 400);
             } finally {
-                // overwriting column order in excel table
+                // overwriting column order in Excel table
                 $id_list = ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx->pk])->valuesList(['id'], true);
                 if ($id_list) {
                     ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
@@ -179,7 +178,6 @@ class ApiDxController extends Controller
                         $column->save();
                     }
                 }
-                $this->jsonResponse($result);
             }
         }
     }
