@@ -5,6 +5,8 @@ namespace Modules\Order\Validation;
 
 use Modules\Core\Models\CountryLangsModel;
 use Modules\Core\Models\CountryModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Translate\Translate;
 use Xcart\App\Validation\Validator;
 
@@ -17,11 +19,16 @@ class CountryValidator extends Validator
      */
     public function validate($value)
     {
-        if(!empty($value)) {
 
-            $filter = ['value' => $value];
+        if(!empty($value)) {
+            /** @var SiteModel $site */
+            $site = Xcart::app()->getModule('Sites')->getSite();
+            $filter = ['value' => $value, 'lang_id' => $site->lang->lang_id];
             if (array_key_exists(strtoupper($value), CountryModel::$codes)) {
-                $filter = ['country_code' => CountryModel::$codes[strtoupper($value)]];
+                $filter = [
+                    'country_code' => CountryModel::$codes[strtoupper($value)],
+                    'lang_id' => $site->lang->lang_id
+                ];
             }
 
             if (!CountryLangsModel::objects()->get($filter)) {
