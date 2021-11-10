@@ -165,7 +165,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
 
     return (
       <>
-        <span>
+        <span className={"d-none d-md-block"}>
           {sort.previewValue} from the {country}
         </span>
 
@@ -179,8 +179,12 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
           }}
           name={"select-sort"}
           value={sort}
-          classes={{ group: "w-auto product-reviews-filter-select" }}
+          classes={{ group: "product-reviews-filter-select mb-20 mb-md-0" }}
         />
+
+        <span className={"d-md-none"}>
+          {sort.previewValue} from the {country}
+        </span>
       </>
     );
   }
@@ -191,7 +195,7 @@ const Reviews: React.FC<any> = function (props: PropsInterface) {
       "product-reviews-header_big",
       "product-reviews_column-header",
       "mb-md-20",
-      "d-flex",
+      "d-md-flex",
       "justify-content-between",
       "align-items-center",
       { "skeleton-box": !country },
