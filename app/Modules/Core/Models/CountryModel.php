@@ -5,6 +5,7 @@ namespace Modules\Core\Models;
 
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\CoreModule;
@@ -59,7 +60,8 @@ class CountryModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => CountryLangsModel::class,
                 'link' => ['code' => 'country_code']
-            ]
+            ],
+            'is_many_line_addresses' => BooleanField::class
         ];
     }
 

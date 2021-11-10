@@ -56,7 +56,7 @@ class CurrencyModel extends Model
             'symbol_prefix' => $this->symbol_prefix,
             'after' => $this->after,
             'currency_code' => $this->currency_code,
-            'decimal' => $this->decimals,
+            'decimal' => (int)$this->decimals,
             'thousands_separator' => $this->thousands_separator,
             'decimals_separator' => $this->decimals_separator
         ];
