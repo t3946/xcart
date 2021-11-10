@@ -19,7 +19,6 @@ interface PropsInterface {
 const LoginButtonDesktop: React.FC<PropsInterface> = function (
   props: PropsInterface
 ) {
-  const maxUsernameLength = 10;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const isStatic = props.isStatic || false;
@@ -50,16 +49,6 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
     }
   }
 
-  function truncateUsername(username) {
-    if (username.length <= maxUsernameLength) {
-      return username;
-    } else {
-      return username.substr(0, maxUsernameLength - 1) + "…";
-    }
-  }
-
-  const username = truncateUsername(user.name);
-  const title = username === user.name ? "" : user.name;
   const className = "hat-login-button";
 
   const isTabletMenuVisible = useSelector(
@@ -71,46 +60,50 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
     dispatch(setVisibleShadowPanelAction(false));
   }
 
-  const CustomMenu = React.forwardRef(
-    ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-      return (
-        <div
-          ref={ref}
-          className={classnames(
-            className,
-            "account-hat-dropdown-menu col-12 p-0 rounded-0"
-          )}
-          aria-labelledby={labeledBy}
-        >
-          <div className="sidebar-menu-wrapper">
-            <LogoutButton onClick={logoutButtonClickHandler} />
-          </div>
-        </div>
-      );
-    }
-  );
+  const CustomMenu = React.forwardRef((props: any, ref: any) => {
+    const { className, "aria-labelledby": labeledBy } = props;
 
-  const CustomToggle = React.forwardRef((props, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={classnames(
+          className,
+          "account-hat-dropdown-menu col-12 p-0 rounded-0"
+        )}
+        aria-labelledby={labeledBy}
+      >
+        <div className="sidebar-menu-wrapper">
+          <LogoutButton onClick={logoutButtonClickHandler} />
+        </div>
+      </div>
+    );
+  });
+
+  const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
 
-    const arrowClasses = [
-      "login-button-desktop__arrow login-button-desktop-arrow",
-      {
-        "login-button-desktop-arrow__flip": isTabletMenuVisible,
-      },
-    ];
+    const classes = {
+      username: ["hat-login-button-username"],
+      icon: [
+        "login-button-desktop__arrow",
+        "login-button-desktop-arrow",
+        {
+          "login-button-desktop-arrow__flip": isTabletMenuVisible,
+        },
+      ],
+    };
 
     return (
       <span
         className={className}
-        title={title}
+        title={user.name}
         ref={ref}
         onClick={(e) => {
           onClick(e);
         }}
       >
-        {username}
-        <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
+        <span className={classnames(classes.username)}>{user.name}</span>
+        <ArrowIconMobileDesktop className={classnames(classes.icon)} />
       </span>
     );
   });
