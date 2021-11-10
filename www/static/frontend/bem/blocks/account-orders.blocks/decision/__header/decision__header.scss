@@ -1,0 +1,11 @@
+.decision__header {
+  margin: rem-calc(18) 0 rem-calc(22);
+
+  @include breakpoint(md up) {
+    margin: rem-calc(28) 0 rem-calc(32);
+  }
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(34);
+  }
+}

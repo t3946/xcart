@@ -1,0 +1,13 @@
+.estimate-table__caption {
+  margin: 0 0 rem-calc(13);
+  white-space: pre-line;
+  line-height: 1.4;
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(25);
+  }
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(22);
+  }
+}
