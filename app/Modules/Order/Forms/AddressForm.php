@@ -3,7 +3,6 @@
 namespace Modules\Order\Forms;
 
 use Modules\Core\Forms\FrontendForm;
-use Modules\Core\Forms\FrontendModelForm;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\CountryModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
@@ -11,8 +10,8 @@ use Modules\Order\OrderModule;
 use Modules\Order\Validation\CountryValidator;
 use Modules\Order\Validation\StateValidator;
 use Modules\Order\Validation\ZipCodeValidator;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharCleanField;
-use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Main\Xcart;
 
 abstract class AddressForm extends FrontendForm
@@ -22,8 +21,15 @@ abstract class AddressForm extends FrontendForm
     public function getFields()
     {
         $geoIp = GeoipHelper::getGeoipLocation(Xcart::app()->request->getUserIP());
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-        return [
+        $country_value = null;
+        /** @var CountryModel $country */
+        if ($geoIp && $country = CountryModel::objects()->get(['code' => $geoIp['country'] ?? ''])) {
+            $country_value = $country->countryNameBySite();
+        }
+        $ar_fields = [
             'firstname' => [
                 'class' => CharCleanField::class,
                 'label' => OrderModule::t('Full Name'),
@@ -70,13 +76,8 @@ abstract class AddressForm extends FrontendForm
                 'validators' => [
                     new CountryValidator()
                 ],
-                'value' => ($geoIp && $country = CountryModel::objects()->get(
-                        [
-                            'code' => $geoIp['country'] ?? '',
-                        ]))
-                        ? $country->name
-                        : null,
-				'html' => [
+                'value' => $country_value,
+                'html' => [
                     'placeholder' => $country->name ?? OrderModule::t('Example country'),
                     'class' => 'auto-complete country',
                     'data-code' => $country->code ?? null,
@@ -109,10 +110,10 @@ abstract class AddressForm extends FrontendForm
                 ],
                 'html' => [
                     'placeholder' => ($geoIp && $state = StateModel::objects()->get(
-                        [
-                            'code' => $geoIp['region'] ?? '',
-                            'country_code' => $geoIp['country'] ?? ''
-                        ]))
+                            [
+                                'code' => $geoIp['region'] ?? '',
+                                'country_code' => $geoIp['country'] ?? ''
+                            ]))
                         ? $state->state
                         : OrderModule::t('Example state'),
                     'class' => 'auto-complete state',
@@ -132,5 +133,9 @@ abstract class AddressForm extends FrontendForm
 
             ],
         ];
+        if (!$site->country_model->is_many_line_addresses) {
+            unset($ar_fields['address_2']);
+        }
+        return $ar_fields;
     }
 }

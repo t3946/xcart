@@ -104,9 +104,11 @@
                         {if $form}
                             {include "product/parts/_options.tpl" form=$form}
                         {/if}
-                        <div class="jackpot">
-                            {t 'Congratulations! You got a great price!'}
-                        </div>
+                        {if $site.code !== 'RD'}
+                            <div class="jackpot">
+                                {t 'Congratulations! You got a great price!'}
+                            </div>
+                        {/if}
                         <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
                             {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true }
                         </div>

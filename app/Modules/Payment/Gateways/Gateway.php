@@ -6,6 +6,7 @@ namespace Modules\Payment\Gateways;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Interfaces\GatewayInterface;
 use Modules\Payment\Models\ProcessorModel;
+use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Omnipay;
 use Omnipay\PayPal\RestGateway;
@@ -15,7 +16,7 @@ use Xcart\App\Main\Xcart;
 abstract class Gateway implements GatewayInterface
 {
 
-    /** @var \Omnipay\Common\AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway|PaymentIntentsGateway $gateway */
+    /** @var AbstractGateway|RestGateway|\Omnipay\BluePay\Gateway|\Omnipay\Xpay\Gateway|PaymentIntentsGateway|\Omnipay\Sberbank\Gateway $gateway */
     public $gateway;
 
     /** @var ProcessorModel $model */

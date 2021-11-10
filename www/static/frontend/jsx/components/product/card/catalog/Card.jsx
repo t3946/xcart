@@ -187,7 +187,10 @@ export default class Card extends Component {
       return (
         <div className="p-label lead-time product-card__label">
           <i />
-          <div className="text">{leadTimeMessage}</div>
+          <div
+            className="text"
+            dangerouslySetInnerHTML={{ __html: leadTimeMessage }}
+          />
         </div>
       );
     }

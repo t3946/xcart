@@ -22,11 +22,6 @@ class ProductQuestionForm extends FrontendModelForm
 {
 
 
-    /*public $exclude = [
-        'productid'
-    ];*/
-
-
     /**
      * @return ProductQuestionModel
      * @throws \Exception
