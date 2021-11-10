@@ -1,10 +1,8 @@
 <?php
 namespace Modules\Sites\Models;
 
-use Doctrine\DBAL\Types\Types;
 use Exception;
 use Modules\Core\Components\GlobalConfig;
-use Modules\Core\Models\CountryModel;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductStorefrontModel;
@@ -47,7 +45,6 @@ use Xcart\App\Orm\Model;
  * @property ListConfigModel $list_config
  * @property string $company_name
  * @property string $cidev_top_header_code
- * @property CountryModel country_model
  */
 class SiteModel extends Model
 {
@@ -255,14 +252,9 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => false,
             ],
-            'country_model' => [
+            'country' => [
+                'class' => CharField::class,
                 'field' => 'country',
-                'class' => ForeignField::class,
-                'modelClass' => CountryModel::class,
-                'link' => ['country' => 'code'],
-                'null' => true,
-                'default' => null,
-                'verboseName' => 'Country',
             ],
             'currency' => [
                 'field' => 'currency_id',

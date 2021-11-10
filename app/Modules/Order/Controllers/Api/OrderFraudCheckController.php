@@ -11,6 +11,7 @@ use Modules\Order\Helpers\FraudCheckFAHelper;
 use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderBaseFraudCheckModelV2;
+use Modules\Order\Models\OrderFraudCheckModel;
 use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
@@ -35,7 +36,7 @@ class OrderFraudCheckController extends Controller
             $this->jsonResponse($ar_result);
             return;
         }
-        $ar_settings = ['locked_orders' => false];
+        $ar_settings = [];
         $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
         $current_time = time();
         /** @var OrderModel $order_model */
@@ -75,7 +76,7 @@ class OrderFraudCheckController extends Controller
                 ]
             )->count();
             if ($count_locked_orders > 1) {
-                $ar_settings['locked_orders'] = true;
+                $ar_settings['locked_orders'] = $count_locked_orders;
             }
         }
         $ar_settings['status'] = FraudStatusModel::objects()->order(['order_by'])->valuesList(['code', 'name']);
@@ -211,7 +212,7 @@ class OrderFraudCheckController extends Controller
                 'outcome' => $fraud->outcome
 
             ];
-            array_push($ar_answer[$fraud->question->f_fraud->type], $data);
+            array_push($ar_answer[$fraud->question->type], $data);
         }
         return $ar_answer;
     }
@@ -515,12 +516,7 @@ HTML;
                     'columnName' => $column->fraud_name,
                     'description' => $column->description,
                     'linkUrl' => $link,
-                    'type' => $column->type,
-                    'frontendType' => $column->frontend_type,
-                    'provider' => $column->frontend_provider,
-                    'isMelissa' => $column->is_melissa_data,
-                    'sourceType' => $column->source_type,
-                    'inferredFrom' => $column->inferred_from,
+                    'type' => $column->type
                 ]);
             }
         }

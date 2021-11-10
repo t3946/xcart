@@ -37,8 +37,8 @@
             <td colspan="{$colspan}">
                 <b>
                     {t 'The items below are shipped from'} {$distributor->m_city},
-                    {if $site_config.show_full_state_country}{$distributor->state_model}{else}{$distributor->m_state}{/if},
-                    {if $site_config.show_full_state_country}{$distributor->country_model->countryNameBySite()}{else}{$distributor->m_country}{/if} {t 'by'} {$shipping->getFrontendName()} {t 'shipping'}, {$group->shipping_gross|site_currency}
+                    {if $site_config.show_full_state_country === 'Y'}{$distributor->state_model}{else}{$distributor->m_state}{/if},
+                    {if $site_config.show_full_state_country === 'Y'}{$distributor->country_model}{else}{$distributor->m_country}{/if} {t 'by'} {$shipping->getFrontendName()} {t 'shipping'}, {$group->shipping_gross|site_currency}
                 </b>
             </td>
         </tr>

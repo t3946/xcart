@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Highlighter from "react-highlight-words";
 interface SuggestionList {
   search: string;
@@ -22,18 +22,13 @@ export const SuggestionList: React.FC<SuggestionList> = ({
     }
     return {};
   };
-  const getLink = (item) => {
-    if (title === "Search suggestions") {
-      return `/search?q=${item.replace(" ", "+")}`;
-    }
-    return item.link;
-  };
 
   const getComponent = (item: any) => {
     switch (title) {
       case "Search suggestions":
         return (
-          <span
+          <a
+            href={`/search?q=${item.replace(" ", "+")}`}
             dangerouslySetInnerHTML={{
               __html: item.replace(regExp, "<b>$1</b>"),
             }}
@@ -42,7 +37,8 @@ export const SuggestionList: React.FC<SuggestionList> = ({
         );
       case "Categories":
         return (
-          <span
+          <a
+            href={item.link}
             dangerouslySetInnerHTML={{
               __html: item.name.replace(regExp, "<b>$1</b>"),
             }}
@@ -51,7 +47,7 @@ export const SuggestionList: React.FC<SuggestionList> = ({
         );
       case "Products":
         return (
-          <div className="product-wrapper">
+          <a href={item.link}>
             <span className="icon" style={getImage(item.image)}>
               <span className="show-for-sr">{item.name}</span>
             </span>
@@ -61,7 +57,7 @@ export const SuggestionList: React.FC<SuggestionList> = ({
                 __html: item.name.replace(regExp, "<b>$1</b>"),
               }}
             />
-          </div>
+          </a>
         );
     }
   };
@@ -70,9 +66,7 @@ export const SuggestionList: React.FC<SuggestionList> = ({
       <div className="suggestionsTitle">{title}</div>
       <ul>
         {items.map((item, i) => (
-          <a className="suggestions-item-link" href={getLink(item)}>
-            <li className={"item" + i}>{getComponent(item)}</li>
-          </a>
+          <li className={"item" + i}>{getComponent(item)}</li>
         ))}
       </ul>
     </div>

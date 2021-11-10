@@ -5,7 +5,6 @@ namespace Xcart\App\Orm\Fields;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
-use Xcart\App\Orm\Model;
 use Xcart\App\QueryBuilder\QueryBuilder;
 
 /**
@@ -38,7 +37,7 @@ abstract class RelatedField extends IntField
     protected $connection;
 
     /**
-     * @return Type
+     * @return \Doctrine\DBAL\Types\Type
      */
     public function getSqlType()
     {
@@ -52,7 +51,7 @@ abstract class RelatedField extends IntField
     abstract protected function fetch($value);
 
     /**
-     * @return Model
+     * @return \Xcart\App\Orm\Model
      */
     public function getRelatedModel()
     {

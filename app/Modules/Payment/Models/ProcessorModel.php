@@ -11,8 +11,6 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property string|null processor_name
- * @property string param01
- * @property string param02
  */
 class ProcessorModel extends Model
 {

@@ -47,7 +47,7 @@ class PayPal extends Gateway
 
     }
 
-    public function refund($params): bool
+    public function refund($params)
     {
         $this->result = $this->gateway
             ->refundCapture($params)
@@ -55,7 +55,7 @@ class PayPal extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function void($params): bool
+    public function void($params)
     {
         $this->result = $this->gateway
             ->void($params)
@@ -63,7 +63,7 @@ class PayPal extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function capture($params): bool
+    public function capture($params)
     {
         $this->result = $this->gateway
             ->capture($params)
@@ -71,7 +71,7 @@ class PayPal extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function lookup($params): bool
+    public function lookup($params)
     {
         switch (strtolower($params['status'])) {
             case OrderTransactionModel::STATUS_AUTHORIZED :
@@ -94,7 +94,7 @@ class PayPal extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function authorize($params): bool
+    public function authorize($params)
     {
         $this->result = $this->gateway
             ->authorize($params)
@@ -152,7 +152,7 @@ class PayPal extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function purchase($params): bool
+    public function purchase($params)
     {
         $this->result = $this->gateway
             ->purchase($params)

@@ -3,12 +3,8 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
-use Modules\Core\Models\CountryLangsModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
-use Xcart\App\Exceptions\HttpException;
-use Xcart\App\Exceptions\UnknownMethodException;
-use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\Components\CartItem;
@@ -274,26 +270,16 @@ class CheckoutController extends FrontendController
     {
         if ($search = Xcart::app()->request->get->get('search')) {
 
-            /** @var SiteModel $site */
-            $site = Xcart::app()->getModule('Sites')->getSite();
-            $filter = ['lang_id' => $site->lang->lang_id, 'value__contains' => $search];
+            $filter = ['name__contains' => $search];
+
             if (array_key_exists(strtoupper($search), CountryModel::$codes)) {
-                $filter = ['country_code' => CountryModel::$codes[strtoupper($search)], 'lang_id' => $site->lang->lang_id];
+                $filter = ['code' => CountryModel::$codes[strtoupper($search)]];
             }
 
-            /** @var CountryLangsModel[] $countries */
-            $countries = CountryLangsModel::objects()->filter($filter)->limit(10)
-                ->order([new Expression("FIELD(country_code, 'US', 'CA') DESC, country_code")])->all();
-
-            foreach ($countries as $country) {
-                $ar_countries[] = [
-                    'name' => $country->value,
-                    'code' => $country->country_code
-                ];
-            }
+            $countries = CountryModel::objects()->filter($filter)->limit(10)->order([new Expression("FIELD(code, 'US', 'CA') DESC, code")])->valuesList(['name', 'code'], false);
         }
 
-        $this->jsonResponse($ar_countries ?? []);
+        $this->jsonResponse($countries ?? []);
     }
 
     /**
@@ -362,8 +348,8 @@ class CheckoutController extends FrontendController
     /**
      * Step 2
      *
-     * @throws UnknownMethodException
-     * @throws UnknownPropertyException
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
     public function actionOptions(): void
     {
@@ -543,8 +529,8 @@ class CheckoutController extends FrontendController
     /**
      * Step 3
      *
-     * @throws UnknownMethodException
-     * @throws UnknownPropertyException
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
     public function actionReview(): void
     {
@@ -561,11 +547,11 @@ class CheckoutController extends FrontendController
 
     /**
      * Review purchase order
-     * @param OrderModel $order
-     * @throws UnknownMethodException
-     * @throws UnknownPropertyException
+     * @param $order
+     * @throws \Xcart\App\Exceptions\UnknownMethodException
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    private function purchaseOrderReview(OrderModel $order)
+    private function purchaseOrderReview($order)
     {
 
         /** @var Application $app */
@@ -692,10 +678,9 @@ class CheckoutController extends FrontendController
 
     /**
      * Review default order
-     * @param OrderModel $order
-     * @throws Exception
+     * @param $order
      */
-    private function defaultReview(OrderModel $order)
+    private function defaultReview($order)
     {
 
         /** @var Application $app */
@@ -756,7 +741,7 @@ class CheckoutController extends FrontendController
      * @param int    $order_id
      * @param string $slug
      *
-     * @throws HttpException
+     * @throws \Xcart\App\Exceptions\HttpException
      */
     public function actionComplete(int $order_id, string $slug): void
     {

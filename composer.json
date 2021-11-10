@@ -67,8 +67,7 @@
             "Omnipay\\BluePay\\" : "app/Modules/Payment/Gateways/Omnipay/BluePay",
             "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal",
             "Omnipay\\Xpay\\" : "app/Modules/Payment/Gateways/Omnipay/Xpay",
-            "Omnipay\\Stripe\\" : "app/Modules/Payment/Gateways/Omnipay/Stripe",
-            "Omnipay\\Sberbank\\" : "app/Modules/Payment/Gateways/Omnipay/Sberbank"
+            "Omnipay\\Stripe\\" : "app/Modules/Payment/Gateways/Omnipay/Stripe"
         },
         "classmap": [
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",

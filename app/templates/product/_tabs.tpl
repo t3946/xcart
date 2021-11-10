@@ -26,6 +26,7 @@
           <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
         </li>
     </ul>
+
     <div class="tabs-content" data-tabs-content="product_tabs">
 
         <div class="tabs-panel is-active" id="description">
@@ -39,6 +40,7 @@
                 {include 'product/tabs/_shipping.tpl' model=$model tab=$tabs->filter(['name' => 'shipping'])!:null}
             </div>
         </div>
+
         {foreach $tabs as $tab}
             {if $tab->name === 'Shipping'}{continue}{/if}
             {if $tab->name === 'Return policy'}{continue}{/if}

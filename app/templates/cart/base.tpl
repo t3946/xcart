@@ -40,46 +40,30 @@
                     </div>
                 {/if}
                 <div class="columns contacts-logo-block hide-for-small show-for-large">
-                    {switch $site.code}
-                    {case 'RD'}
-                        <div class="after-hours active">
-                            <div class="text-order-online">
-                                <img src="{$uri}/static/frontend/images/icons/cart/place_order_online_icon.svg"
-                                     alt=""
-                                     class="clock-icon">
-                                <span>{t 'Place order online 24/7 or'}</span>
-                            </div>
-                            <div class="phone">
-                                <span class="phone-number">{$config.local_phone}</span>
+                    <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
+                        <div class="text-order-online">
+                            <span class="green-circle-icon"></span>
+                            <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
+                        </div>
+                        <div class="phone">
+                            <span class="phone-number">{$config.local_phone}</span>
+                            <span class="phone-number">{$config.cidev_top_header_code}</span>
+                        </div>
+                    </div>
+                    <div class="after-hours {if !$.workingDayTimeNow}active{else}inactive{/if}">
+                        <div class="text-order-online">
+                            <img src="{$uri}/static/frontend/images/icons/cart/place_order_online_icon.svg"
+                                 alt=""
+                                 class="clock-icon">
+                            <span>{t 'Place order online 24/7 or'}</span>
+                        </div>
+                        <div class="phone">
+                            {if $config.cidev_top_header_code}
+                                <span class="phone-label">{t 'Call us toll free'}</span>
                                 <span class="phone-number">{$config.cidev_top_header_code}</span>
-                            </div>
+                            {/if}
                         </div>
-                    {default}
-                        <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
-                            <div class="text-order-online">
-                                <span class="green-circle-icon"></span>
-                                <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
-                            </div>
-                            <div class="phone">
-                                <span class="phone-number">{$config.local_phone}</span>
-                                <span class="phone-number">{$config.cidev_top_header_code}</span>
-                            </div>
-                        </div>
-                        <div class="after-hours {if !$.workingDayTimeNow}active{else}inactive{/if}">
-                            <div class="text-order-online">
-                                <img src="{$uri}/static/frontend/images/icons/cart/place_order_online_icon.svg"
-                                     alt=""
-                                     class="clock-icon">
-                                <span>{t 'Place order online 24/7 or'}</span>
-                            </div>
-                            <div class="phone">
-                                {if $config.cidev_top_header_code}
-                                    <span class="phone-label">{t 'Call us toll free'}</span>
-                                    <span class="phone-number">{$config.cidev_top_header_code}</span>
-                                {/if}
-                            </div>
-                        </div>
-                    {/switch}
+                    </div>
                 </div>
             </div>
         </section>

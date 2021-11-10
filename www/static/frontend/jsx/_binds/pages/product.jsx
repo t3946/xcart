@@ -56,34 +56,7 @@ import Catalog from "@/components/catalog/Catalog";
     let questionsContainer = $("#questions");
 
     documentReady(() => {
-      $("#questions").on("click", ".btn-question-form", (event) => {
-        event.preventDefault();
-        var form = $(event.target).closest("form");
-        if (!form.length) {
-          return;
-        }
-        $.ajax("/product-question/", {
-          method: "POST",
-          data: form.serialize(),
-          success: (html) => {
-            if (html) {
-              questionsContainer.html(html);
-              let messageInfo = questionsContainer.find("form").get(0).dataset;
-
-              if (!("messageText" in messageInfo)) {
-                return;
-              }
-              let text = questionsContainer
-                .find("." + messageInfo["messageText"])
-                .html();
-              window.addFlashMessage(text, messageInfo["messageType"], true);
-            }
-          },
-        });
-      });
-
       $("#product_tabs").on("click", "#questions-label", () => {
-        console.log(questionsContainer);
         $.ajax("/product-question/", {
           data: {
             productId: questionsContainer.data("productid"),
@@ -100,8 +73,28 @@ import Catalog from "@/components/catalog/Catalog";
         });
       });
 
-      // $("#questions").on("submit", "form", (event) => {
-      // });
+      $("#questions").on("submit", "form", (event) => {
+        event.preventDefault();
+
+        $.ajax("/product-question/", {
+          method: "POST",
+          data: $(event.target).serialize(),
+          success: (html) => {
+            if (html) {
+              questionsContainer.html(html);
+              let messageInfo = questionsContainer.find("form").get(0).dataset;
+
+              if (!("messageText" in messageInfo)) {
+                return;
+              }
+              let text = questionsContainer
+                .find("." + messageInfo["messageText"])
+                .html();
+              window.addFlashMessage(text, messageInfo["messageType"], true);
+            }
+          },
+        });
+      });
     });
 
     // group product

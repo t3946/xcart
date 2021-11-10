@@ -6,7 +6,7 @@
     min-height: rem-calc(24);
 
     @include breakpoint(lg up) {
-        //height: rem-calc(48);
+        height: rem-calc(48);
         border: 1px dashed;
     }
 }

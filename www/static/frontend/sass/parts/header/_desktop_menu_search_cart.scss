@@ -173,8 +173,7 @@ $search_input_large_height: rem-calc(36);
           @include breakpoint(large) {
             padding: 0 0 .5rem;
           }
-
-          .suggestions-item-link {
+          .suggestions-item-link{
             color: black;
             text-decoration: none;
           }
@@ -252,7 +251,7 @@ $search_input_large_height: rem-calc(36);
                 white-space: normal;
                 text-overflow: clip;
 
-                .product-wrapper {
+                a {
                   display: flex;
                   justify-content: left;
                   align-items: center;
@@ -262,20 +261,19 @@ $search_input_large_height: rem-calc(36);
                   &:hover {
                     text-decoration: none;
                   }
-                }
 
-                .icon {
-                  display: block;
-                  width: rem-calc(70);
-                  min-height: rem-calc(70);
-                  background-size: cover;
-                  background-position: center center;
-                }
-
-                .label {
-                  display: block;
-                  padding-left: 1rem;
-                  line-height: 1.2;
+                  .icon {
+                    display: block;
+                    width: rem-calc(70);
+                    min-height: rem-calc(70);
+                    background-size: cover;
+                    background-position: center center;
+                  }
+                  .label {
+                    display: block;
+                    padding-left: 1rem;
+                    line-height: 1.2;
+                  }
                 }
 
                 &:after {
@@ -284,16 +282,12 @@ $search_input_large_height: rem-calc(36);
               }
 
               @for $i from 0 through 2 {
-                .item#{$i} {
-                  display: block;
-                }
+                .item#{$i} { display: block; }
               }
 
-              @include breakpoint(large) {
+              @include breakpoint(large){
                 @for $i from 3 through 4 {
-                  .item#{$i} {
-                    display: block;
-                  }
+                  .item#{$i} { display: block; }
                 }
               }
             }
@@ -303,7 +297,7 @@ $search_input_large_height: rem-calc(36);
           &.category {
             display: none;
 
-            @include breakpoint(large) {
+            @include breakpoint(large){
               display: block;
             }
 
@@ -326,6 +320,7 @@ $search_input_large_height: rem-calc(36);
           }
         }
       }
+
 
 
     }
@@ -570,10 +565,11 @@ $search_input_large_height: rem-calc(36);
       width: 145px;
       position: relative;
       right: 14px;
-    };
+    }
+  ;
 
     .cart_info {
-      /*      @include active-triangle(5px, 5px);*/
+/*      @include active-triangle(5px, 5px);*/
 
       display: block;
       color: $black;
@@ -601,7 +597,8 @@ $search_input_large_height: rem-calc(36);
           image: url('/static/frontend/images/icons/header/cart.svg');
           repeat: no-repeat;
           position: center center;
-        };
+        }
+      ;
 
         .mc_count {
           display: block;
@@ -612,7 +609,8 @@ $search_input_large_height: rem-calc(36);
           right: rem-calc(5);
           font: {
             size: rem-calc(19);
-          };
+          }
+        ;
 
           &.small {
             font-size: rem-calc(14);
