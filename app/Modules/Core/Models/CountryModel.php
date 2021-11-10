@@ -30,6 +30,7 @@ class CountryModel extends Model
         'USA' => 'US',
         'US' => 'US',
         'Canada' => 'CA',
+        'RU' => 'RU'
     ];
 
     public static function tableName()
