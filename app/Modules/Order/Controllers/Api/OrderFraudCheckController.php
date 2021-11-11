@@ -37,7 +37,7 @@ class OrderFraudCheckController extends Controller
         $count_fa_frauds = OrderFraudFACheckModel::objects()->filter(['order_id' => $order_model->orderid])->count();
 
         if (!($count_frauds && $count_fa_frauds)) {
-            $this->jsonResponse([], 400);
+            $this->jsonResponse([], 404);
             return;
         }
         $ar_settings = ['locked_orders' => false];
@@ -65,11 +65,6 @@ class OrderFraudCheckController extends Controller
             if ($operator_on_order = UserModel::objects()->get(['login' => $login_last_opened_or_saved])) {
                 $operator_firstname = $operator_on_order->firstname ?: $operator_on_order->s_firstname ?: $operator_on_order->b_firstname;
             }
-//            $ar_settings['operator'] = [
-//                'firstname' => $operator_firstname,
-//                'loginLastOpened' => $login_last_opened_or_saved,
-//            ];
-//            $ar_settings['modifyOrder'] = 'Y';
         } else {
             $ar_settings = ['status' => true, 'timeUnlocked' => date("G:i", $time_unlock)];
             $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
