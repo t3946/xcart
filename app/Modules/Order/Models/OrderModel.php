@@ -495,7 +495,7 @@ class OrderModel extends Model
             'company' => $this->s_company,
             'city' => $this->s_city,
             'state' => $s_state ?? $this->s_state,
-            'country' => $this->shipping_country->countryNameBySite() ?? null,
+            'country' => $this->shipping_country,
             'zipcode' => $this->s_zipcode,
         ];
 
@@ -509,7 +509,7 @@ class OrderModel extends Model
                 'company' => $this->b_company,
                 'city' => $this->b_city,
                 'state' => $b_state ?? $this->b_state,
-                'country' => !empty($this->b_country) ? $this->billing_country->countryNameBySite() : null,
+                'country' => !empty($this->b_country) ? $this->billing_country : null,
                 'zipcode' => $this->b_zipcode,
             ];
         }
