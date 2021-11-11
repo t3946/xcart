@@ -5,7 +5,6 @@ export function number_format(
   thousands_sep = ","
 ) {
   const sign = number < 0 ? "-" : "";
-  console.log(number, decimals, dec_point, thousands_sep);
   const s_number =
     Math.abs(parseInt((number = (+number || 0).toFixed(decimals)))) + "";
   const len = s_number.length;
@@ -18,6 +17,5 @@ export function number_format(
   const ch_last = decimals
     ? dec_point + (Math.abs(number) - s_number).toFixed(decimals).slice(2)
     : "";
-  console.log(sign, ch_first, ch_rest, ch_last);
   return sign + ch_first + ch_rest + ch_last;
 }
