@@ -43,8 +43,9 @@ class UserModel extends Model
      * get user by login
      * @param $login string email or phone
      * @return ModelInterface
-    */
-    public static function getUserByLogin(string $login):? ModelInterface {
+     */
+    public static function getUserByLogin(string $login): ?ModelInterface
+    {
         return self::objects()->get(new QOr(['email' => $login, 'phone' => $login]));
     }
 
@@ -147,7 +148,10 @@ class UserModel extends Model
                 'class' => ManyToManyField::class,
                 'modelClass' => ProductListsModel::class,
                 'through' => UserListModel::class
-            ]
+            ],
+            'decisions_required_count' => [
+                'class' => CharField::class,
+            ],
         ];
     }
 
@@ -200,22 +204,18 @@ class UserModel extends Model
         $avatar_image = $this->avatar_image->getValue();
         $site = Xcart::app()->getModule('Sites')->getSite();
         $issuer = $site->getCompanyName();
+        $attributes = $this->getAttributes();
 
-        return [
-            'id' => $this->user_id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'avatar_image' => $avatar_image ? '/' . $avatar_image : '',
-            'location' => $this->location,
-            'public_name' => $this->public_name,
-            'phone_country_code' => $this->phone_country_code,
-            'tsv' => [
-                'url' => GoogleQrUrl::generate($this->email, $this->tsv_secret, $issuer),
-                'secret' => $this->tsv_secret,
-                'count' => (int)$this->tsv_count,
-            ]
+        //TODO: delete $attributes['id'] = $this->user_id;
+        $attributes['id'] = $this->user_id;
+        $attributes['avatar_image'] = $avatar_image ? '/' . $avatar_image : '';
+        $attributes['tsv'] = [
+            'url' => GoogleQrUrl::generate($this->email, $this->tsv_secret, $issuer),
+            'secret' => $this->tsv_secret,
+            'count' => (int)$this->tsv_count,
         ];
+
+        return $attributes;
     }
 
     /**

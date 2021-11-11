@@ -2,17 +2,20 @@ import React from "react";
 import Item from "@client/modules/account/components/orders/Navigation/Item";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import StoreInterface, {
+  AccountStore,
+} from "@client/modules/account/ts/types/store.type";
 import NavigationMobile from "@client/modules/account/components/orders/Navigation/NavigationMobile";
 
 const Navigation: React.FC = () => {
   useSelector((store: AccountStore) => store.main.breakpoint);
+  const user = useSelector((e: StoreInterface) => e.user);
 
   const menu = [
     {
       text: "Decisions required",
       path: "/",
-      badge: 2,
+      badge: user.decisions_required_count,
       classes: {
         button: [
           "orders-navigation-button_theme_red_active",
