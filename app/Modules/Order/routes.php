@@ -42,4 +42,9 @@ return [
         'target' => [OrderLexBotController::class, 'index'],
         'name' => 'order_bot'
     ],
+    [
+        'route' => '/api/decisions',
+        'path' => 'Modules.Order.Routes.routes_decision_api',
+        'namespace' => 'api',
+    ],
 ];

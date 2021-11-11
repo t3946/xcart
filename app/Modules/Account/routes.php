@@ -139,6 +139,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'order-change-address'
     ],
+    [
+        'route' => '/orders/decisions-required',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-decisions-required',
+    ],
 
 
     [
