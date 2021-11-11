@@ -1,0 +1,10 @@
+.estimate-advise-button__icon {
+  position: absolute;
+  left: rem-calc(16);
+  top: 50%;
+  transform: translateY(-50%);
+
+  @include breakpoint(md up) {
+    left: rem-calc(38);
+  }
+}

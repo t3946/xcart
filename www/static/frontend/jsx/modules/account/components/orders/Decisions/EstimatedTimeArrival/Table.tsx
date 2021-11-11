@@ -1,8 +1,8 @@
 import React from "react";
 import classnames from "classnames";
-import EstimatedTimeArrivalTableRow, {
+import TableRow, {
   RowInterface,
-} from "@client/modules/account/components/orders/Decisions/EstimatedTimeArrival/EstimatedTimeArrivalTableRow";
+} from "@client/modules/account/components/orders/Decisions/EstimatedTimeArrival/TableRow";
 
 export enum TableTypes {
   inStock = "inStock",
@@ -15,9 +15,7 @@ interface PropsInterface {
   items: RowInterface[];
 }
 
-const EstimatedTimeArrivalTable: React.FC<PropsInterface> = (
-  props: PropsInterface
-) => {
+const Table: React.FC<PropsInterface> = (props: PropsInterface) => {
   const tableHeaders = {
     inStock: {
       itemNameSkuQty: "Item / SKU / Qty in stock",
@@ -75,7 +73,7 @@ const EstimatedTimeArrivalTable: React.FC<PropsInterface> = (
       }
 
       return (
-        <EstimatedTimeArrivalTableRow
+        <TableRow
           row={{ name, sku, amount, date }}
           qtyHeader={tableHeaders[tableType].qty}
         />
@@ -110,4 +108,4 @@ const EstimatedTimeArrivalTable: React.FC<PropsInterface> = (
   );
 };
 
-export default EstimatedTimeArrivalTable;
+export default Table;

@@ -1,0 +1,9 @@
+.estimate-advise__button {
+  @include breakpoint(md up) {
+    margin: 0 0 0 rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    margin: 0 0 0 rem-calc(23);
+  }
+}

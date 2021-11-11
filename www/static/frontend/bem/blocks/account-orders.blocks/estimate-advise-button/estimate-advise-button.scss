@@ -1,0 +1,16 @@
+.estimate-advise-button {
+  position: relative;
+  padding: rem-calc(21) rem-calc(14) rem-calc(21) rem-calc(59);
+  box-shadow: 0 0 rem-calc(4) rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  flex: 1 0;
+  color: #959595;
+
+  @include breakpoint(md up) {
+    padding: rem-calc(21) rem-calc(40) rem-calc(21) rem-calc(98);
+  }
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(18) rem-calc(40) rem-calc(18) rem-calc(98);
+  }
+}

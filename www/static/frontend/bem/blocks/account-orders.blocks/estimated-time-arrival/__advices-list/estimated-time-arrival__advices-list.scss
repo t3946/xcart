@@ -1,0 +1,7 @@
+.estimated-time-arrival__advices-list {
+  margin: rem-calc(34) 0 0;
+
+  @include breakpoint(md up) {
+    margin: rem-calc(45) 0 0;
+  }
+}

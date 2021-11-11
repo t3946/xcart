@@ -12,9 +12,7 @@ interface propsInterface {
   qtyHeader: string;
 }
 
-const EstimatedTimeArrivalTableRow: React.FC<propsInterface> = (
-  props: propsInterface
-) => {
+const TableRow: React.FC<propsInterface> = (props: propsInterface) => {
   const { row, qtyHeader } = props;
   const { name, sku, amount, date } = row;
 
@@ -41,4 +39,4 @@ const EstimatedTimeArrivalTableRow: React.FC<propsInterface> = (
   );
 };
 
-export default EstimatedTimeArrivalTableRow;
+export default TableRow;

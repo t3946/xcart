@@ -1,0 +1,12 @@
+.estimated-time-arrival-form-controls {
+
+  @include breakpoint(md up) {
+    max-width: rem-calc(663);
+    padding: 0 rem-calc(20);
+  }
+
+  @include breakpoint(lg up) {
+    max-width: rem-calc(593);
+    padding: 0 rem-calc(25);
+  }
+}
