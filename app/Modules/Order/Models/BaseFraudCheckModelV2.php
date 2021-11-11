@@ -2,13 +2,8 @@
 
 namespace Modules\Order\Models;
 
-use Modules\Core\Models\TelephoneAreaModel;
-use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Order\Helpers\BaseFraudCheckHelperV2;
-use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Payment\Models\ProcessorModel;
-use Modules\Sites\Models\SiteModel;
-use Modules\User\Helpers\PhoneHelper;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -28,26 +23,24 @@ class BaseFraudCheckModelV2 extends Model
 {
     use AutoMetaTrait;
 
-    private $result;
-    private $order_fraud_model;
     public const FRAUD_TYPE_DIAGONAL = 'diagonal';
     public const FRAUD_TYPE_RED_FLAGS = 'red_flags';
     public const FRAUD_TYPE_PAY_PAL = 'pay_pal';
     public const FRAUD_TYPE_STRIPE = 'stripe';
     public const FRAUD_TYPE_GENERAL_PAYMENT = 'general_payment';
     private array $question_code_pay_pal = [
-        'MANUAL_PAYPAL_FULLNAME_VERIFIED',
-        'MANUAL_PAYPAL_SHIPPING_EQUAL_BILLING',
-        'MANUAL_PAYPAL_SHIPPING_CONFIRMED',
-        'MANUAL_PAYPAL_EMAIL_EQUAL_TO_ORDER'
+        'PP-VER',
+        'PP_SASA',
+        'PP_SASA_C',
+        'PP-EE'
     ];
 
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'xcart_fraud_check_v2';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
             'question_id' => [
@@ -84,9 +77,9 @@ class BaseFraudCheckModelV2 extends Model
         ];
     }
 
-    public function getScore(OrderModel $order, $recalc = true)
+    public function getScore(OrderModel $order): ?array
     {
-        if ($result = $this->getMethodResult($order, $recalc)) {
+        if ($result = $this->getMethodResult($order)) {
             [$fraud_result, $weight, $add_info, $action, $outcome] = $result;
             $fraud_score = (int)$outcome * $weight;
             return [$fraud_result, round($fraud_score, 2), $add_info, $action];
@@ -112,39 +105,24 @@ class BaseFraudCheckModelV2 extends Model
         return false;
     }
 
-    public function isBluePayPayment(OrderModel $order_model): bool
+    public function getMethodResult(OrderModel $order): ?array
     {
-        /** @var OrderTransactionModel $transaction_model */
-        if ($transaction_model = $order_model->getFirstTransaction()) {
-            return ($transaction_model->payment_method_model->frontend_processor->processor_name === ProcessorModel::PAYMENT_NAME_BLUEPAY);
+        $result = null;
+        /** @var OrderBaseFraudCheckModelV2 $order_fraud */
+        if ($order_fraud = OrderBaseFraudCheckModelV2::objects()->get(['order_id' => $order, 'question__question_code' => $this->question_code])) {
+            return [$order_fraud->fraud_result, $order_fraud->fraud_score, $order_fraud->additional_info, $order_fraud->manual_action];
         }
-        return false;
-    }
-
-    public function getMethodResult(OrderModel $order, $recalc = true)
-    {
-        if ($this->result === null) {
-            /** @var OrderBaseFraudCheckModelV2 $order_fraud */
-            if (!$recalc && $order_fraud = OrderBaseFraudCheckModelV2::objects()->get(['orderid' => $order, 'question_code' => $this->question_code])) {
-                $this->result = [$order_fraud->fraud_result, $order_fraud->fraud_score, $order_fraud->additional_info, $order_fraud->manual_action];
-                return $this->result;
-            }
-            $method = "score{$this->question_code}";
-            /** Если PayPal|Stripe вопрос, то проверяется оплата заказа была ли через них сделано **/
-            if ($this->type === self::FRAUD_TYPE_PAY_PAL) {
-                if (!$this->isPaypalPayment($order)) {
-                    return $this->result;
-                }
-            } else if ($this->type === self::FRAUD_TYPE_STRIPE) {
-                if (!$this->isStripePayment($order)) {
-                    return $this->result;
-                }
-            }
-            if (method_exists(BaseFraudCheckHelperV2::class, $method)) {
-                $this->result = BaseFraudCheckHelperV2::$method($order, $this);
-            }
+        $code_method = str_replace('-', '_', $this->question_code);
+        $method = "score$code_method";
+        /** Если PayPal|Stripe вопрос, то проверяется оплата заказа была ли через них сделана **/
+        if (in_array($this->type, [self::FRAUD_TYPE_PAY_PAL, self::FRAUD_TYPE_STRIPE])
+            && !($this->isStripePayment($order) || $this->isPaypalPayment($order))) {
+            return null;
         }
-        return $this->result;
+        if (method_exists(BaseFraudCheckHelperV2::class, $method)) {
+            $result = BaseFraudCheckHelperV2::$method($order, $this);
+        }
+        return $result;
     }
 
     public function getFirstTransaction(OrderModel $order)
@@ -155,26 +133,10 @@ class BaseFraudCheckModelV2 extends Model
         return $order->transactions->limit(1)->order(['-date'])->get();
     }
 
-    public function getOrderFraudCheck($orderModel)
-    {
-        if ($this->order_fraud_model === null) {
-            $this->order_fraud_model = OrderFraudCheckModel::objects()->get(['orderid' => $orderModel->orderid, 'question_code' => $this->question_code]);
-        }
-        return $this->order_fraud_model;
-    }
-
-    public function getManualAction(OrderModel $order): ?string
-    {
-        if (($this->auto !== 'Y') && $of = $this->getOrderFraudCheck($order)) {
-            return $of->manual_action;
-        }
-        return null;
-    }
-
     public function getResponse(OrderModel $order)
     {
-        if (Xcart::app()->template->exists($template = "fraud_check/{$this->question_code}.tpl")) {
-            [, , $add] = $this->getMethodResult($order, false);
+        if (Xcart::app()->template->exists($template = "fraud_check/$this->question_code.tpl")) {
+            [, , $add] = $this->getMethodResult($order);
             return Xcart::app()->template->render($template, ['item' => $this, 'additional_info' => $add]);
         }
         return '';

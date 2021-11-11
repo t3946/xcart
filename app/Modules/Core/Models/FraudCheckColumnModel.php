@@ -4,6 +4,7 @@
 namespace Modules\Core\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
@@ -14,7 +15,12 @@ use Xcart\App\Orm\Model;
  * @property string fraud_code
  * @property string fraud_name
  * @property string description
- * @property string|int fraud_id
+ * @property int fraud_id
+ * @property string frontend_type
+ * @property string frontend_provider
+ * @property string source_type
+ * @property bool is_melissa_data
+ * @property string inferred_from
  */
 class FraudCheckColumnModel extends Model
 {
@@ -49,9 +55,12 @@ class FraudCheckColumnModel extends Model
                     'address'
                 ]
             ],
-            'description' => [
-                'class' => CharField::class
-            ]
+            'description' => CharField::class,
+            'frontend_type' => CharField::class,
+            'frontend_provider' => CharField::class,
+            'source_type' => CharField::class,
+            'is_melissa_data' => BooleanField::class,
+            'inferred_from' => CharField::class
 		];
 	}
 }

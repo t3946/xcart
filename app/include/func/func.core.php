@@ -2319,7 +2319,7 @@ function func_google_phone_and_area_code($google_phone, $phone_ext)
     $google_phone_strlen = strlen($google_phone);
 
     if ($google_phone_strlen == 11 && $google_phone[0] == "1") {
-        $google_phone[0] = "";
+        $google_phone = substr($google_phone, 1); // past code: $google_phone[0] = "";
         $google_phone        = trim($google_phone);
         $google_phone_strlen = strlen($google_phone);
     }

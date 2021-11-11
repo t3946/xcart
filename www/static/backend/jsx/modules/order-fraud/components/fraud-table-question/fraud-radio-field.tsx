@@ -1,37 +1,37 @@
-import React, { Fragment, useContext } from "react";
-import { Form, Row } from "react-bootstrap";
-import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/FraudCheckOrderContext";
+import React, { Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
+import { changeAnswerResult } from "@redux/actions/fraudCheckActions";
 interface FraudRadioField {
   fraudCode: string;
-  section: string;
+  // section: string;
 }
 export const FraudRadioField: React.FC<FraudRadioField> = ({
   fraudCode,
-  section,
+  // section,
 }) => {
-  const { fraudManual, setFraudManual } = useContext(FraudCheckOrderContext);
+  const dispatch = useDispatch();
+  const fraudResultChange = useSelector(
+    (state: FraudCheckStore) => state.data.resultChange
+  );
   return (
     <Fragment>
       <input
         type="radio"
-        checked={
-          fraudManual[section] && fraudManual[section][fraudCode] === "Y"
-        }
+        checked={fraudResultChange[fraudCode] === "Y"}
         value="Y"
-        data-section={section}
+        // data-section={section}
         data-field={fraudCode}
-        onChange={setFraudManual}
+        onChange={(e) => dispatch(changeAnswerResult(e))}
       />
       Yes
       <br />
       <input
         type="radio"
-        data-section={section}
+        // data-section={section}
         data-field={fraudCode}
-        checked={
-          fraudManual[section] && fraudManual[section][fraudCode] === "N"
-        }
-        onChange={setFraudManual}
+        checked={fraudResultChange[fraudCode] === "N"}
+        onChange={(e) => dispatch(changeAnswerResult(e))}
         value="N"
       />
       No

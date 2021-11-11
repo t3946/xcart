@@ -9,17 +9,9 @@ export const AddressHistoryText: React.FC<AddressHistoryText> = ({
   return (
     <Fragment>
       {columnData.value !== "N/A" ? (
-        <div className="matrix-legend-address-value">
-          <div className="legend-address-value legend-city-info">
-            <a href={columnData.linkUrl}>{columnData.value["city"]}</a>
-          </div>
-          <div className="legend-address-value legend-state-info">
-            <a href={columnData.linkUrl}>{columnData.value["state"]}</a>
-          </div>
-          <div className="legend-address-value legend-zip-info">
-            <a href={columnData.linkUrl}>{columnData.value["zipcode"]}</a>
-          </div>
-        </div>
+        <a
+          href={columnData.linkUrl}
+        >{`${columnData.value["city"]} ${columnData.value["state"]} ${columnData.value["zipcode"]}`}</a>
       ) : (
         columnData.value
       )}

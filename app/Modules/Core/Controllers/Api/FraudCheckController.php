@@ -9,6 +9,7 @@ use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 
 class FraudCheckController extends Controller
@@ -34,6 +35,9 @@ class FraudCheckController extends Controller
         return $ar_result;
     }
 
+    /**
+     * @throws UnknownPropertyException
+     */
     public function getFraudCheckSettings()
     {
         $ar_settings = [
@@ -48,7 +52,7 @@ class FraudCheckController extends Controller
     {
         $ar_result = [];
         /** @var BaseFraudCheckModelV2 $question */
-        foreach (BaseFraudCheckModelV2::objects()->all() as $question) {
+        foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->all() as $question) {
             $ar_result[] = [
                 'questionId' => $question->question_id,
                 'questionCode' => $question->question_code,
@@ -61,6 +65,10 @@ class FraudCheckController extends Controller
         return $ar_result;
     }
 
+    /**
+     * @throws UnknownPropertyException
+     * @throws \Exception
+     */
     public function getBaseSettings(): array
     {
         global $fraud_Google_address_search_exclusions, $fraud_Google_phone_search_exclusions, $fraud_Google_email_search_exclusions;

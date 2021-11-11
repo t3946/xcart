@@ -22,7 +22,7 @@ export interface MainAnswer {
 }
 export interface FAAnswer {
   fraud_result: string;
-  fraud_score: string | number;
+  fraud_score: number;
   template: string;
   question_weight: number | string;
   f_fraud_name: number | string;

@@ -54,7 +54,7 @@ class FraudCheckCommandV2 extends Command
                     'additional_info' => $add_info
                 ]);
                 $overallFraudScore += (float)$orderFraud->fraud_score;
-                if ($fraud->question_code !== 'CHECK_TOTAL') {
+                if ($fraud->question_code !== 'DC-GT') {
                     $bareFraudScore += (float)$orderFraud->fraud_score;
                 }
                 $orderFraud->save();

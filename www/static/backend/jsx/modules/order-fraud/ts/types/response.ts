@@ -15,13 +15,12 @@ export interface ResponseFraudChangeStatus {
   error?: string;
 }
 
-export interface ResponseForceFraudCheck {
-  status: boolean;
-  error?: string;
-}
-
-export interface ResponseChangeResultFraudCheck {
-  status: boolean;
-  error?: string;
-  fraud_result?: FraudResultCheck;
+export interface ResponseAnswerResult {
+  bareResult: number;
+  overallResult: number;
+  answerList: {
+    fraud_result: string;
+    fraud_score: string;
+    question_code: string;
+  }[];
 }

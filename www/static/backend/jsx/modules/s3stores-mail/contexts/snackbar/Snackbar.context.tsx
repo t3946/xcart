@@ -1,5 +1,3 @@
 import React from "react";
 
-export const SnackbarContext: React.Context<any> = React.createContext(
-  null
-);
+export const SnackbarContext: React.Context<any> = React.createContext(null);
