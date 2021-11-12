@@ -37,7 +37,7 @@ export const route = function (
   for (let i = 0; i < interpolations.length; i++) {
     path = path.replace(interpolations[i], <string>routeParams[i]);
   }
-  console.log("route: ", path);
+
   return path;
 };
 
