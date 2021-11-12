@@ -2,6 +2,9 @@ import React, { useContext } from "react";
 import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/FraudCheckOrderContext";
 import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 import { getHeaderClassByName } from "@admin/modules/order-fraud/utils/add-color-column";
+import { useDispatch } from "react-redux";
+import { changeTemplateView } from "@redux/actions/fraudCheckActions";
+import { convertResult } from "@admin/modules/order-fraud/utils/convert-fraud-score";
 interface MatrixQuestion {
   columns: {
     fraud_code: string;
@@ -10,18 +13,17 @@ interface MatrixQuestion {
     fraud_id: string | number;
   }[];
   answerList: FAAnswer[];
+  handleClickAnswer: (
+    event: React.MouseEvent<HTMLDivElement>,
+    answer: FAAnswer
+  ) => void;
 }
 
 export const MatrixQuestion: React.FC<MatrixQuestion> = ({
   columns,
   answerList,
+  handleClickAnswer,
 }) => {
-  const { dialog, template } = useContext(FraudCheckOrderContext);
-
-  const onClickHandler = (anwer: FAAnswer) => {
-    template.set(anwer);
-    dialog.set();
-  };
   return (
     <table border={1} className="table-question-fraud-check">
       <tr>
@@ -40,7 +42,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
         return (
           <tr>
             <td
-              className={`table-header-fraud ${getHeaderClassByName(
+              className={`table-header-fraud column-name ${getHeaderClassByName(
                 column.fraud_name
               )}`}
             >
@@ -60,10 +62,10 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
                 return (
                   <td>
                     <div
-                      onClick={() => onClickHandler(answer)}
+                      onClick={(e) => handleClickAnswer(e, answer)}
                       className="answer-matrix-detail-text"
                     >
-                      {answer.fraud_score}
+                      {convertResult(answer)}
                     </div>
                   </td>
                 );

@@ -740,7 +740,7 @@ class OrderModel extends Model
                     'additional_info' => $additional_info
                 ]);
                 $overall_score += (float)$orderFraud->fraud_score;
-                if ($fraud->question_code !== 'CHECK_TOTAL') {
+                if ($fraud->question_code !== 'DC-GT') {
                     $bare_score += (float)$orderFraud->fraud_score;
                 }
                 $orderFraud->save();

@@ -19,7 +19,7 @@ use Xcart\App\Orm\Model;
  * @property int position
  * @property string decimals_separator
  * @property string thousands_separator
- * @property int decimals
+ * @property int|string decimals
  * @property bool active
  */
 class CurrencyModel extends Model

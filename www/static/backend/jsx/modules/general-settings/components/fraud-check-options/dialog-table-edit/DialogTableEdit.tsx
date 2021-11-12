@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment } from "react";
 import {
   Button,
   Dialog,
@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { Form } from "react-bootstrap";
-import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { useDispatch } from "react-redux";
 import {
   changeFraudBaseQuestionData,
@@ -20,14 +19,15 @@ interface DialogTableEdit {
   state: { get: boolean; set: (newState: boolean) => void };
   form: { get: ChangeQuestionDataForm; set: (newState: any) => void };
   type: string;
+  isBase?: boolean;
 }
 export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   state,
   form,
   type,
+  isBase = null,
 }) => {
   const dispatch = useDispatch();
-  const { showSnackbar } = useContext(SnackbarContext);
   const saveChangeQuestion = () => {
     switch (type) {
       case "faQuestions":
@@ -37,7 +37,6 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
         dispatch(changeFraudBaseQuestionData(form.get));
         break;
     }
-    showSnackbar("You have successfully update question data");
     state.set(!state.get);
   };
   const onChangeField = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +71,20 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
                   onChange={onChangeField}
                 />
               </Form.Group>
+              {isBase && (
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label>Order by</Form.Label>
+                  <Form.Control
+                    value={form.get.orderBy}
+                    type="text"
+                    name="orderBy"
+                    onChange={onChangeField}
+                  />
+                </Form.Group>
+              )}
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlTextarea1"

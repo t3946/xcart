@@ -10,8 +10,8 @@ import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.conte
 import { TabsPanelTable } from "@admin/modules/distributor/components/tabs-table/tabs-panel-table";
 import { TabContext } from "@material-ui/lab";
 import { TabListTable } from "@admin/modules/distributor/components/tabs-table/tab-list-table";
-import { validFileData } from "@admin/modules/distributor/components/dialog-table-price/constants";
 import CloseIcon from "@material-ui/icons/Close";
+import axios from "axios";
 
 interface IDialogTablePrice {
   state: { get: any; set: any };
@@ -43,27 +43,29 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   const { showSnackbar } = useContext(SnackbarContext);
 
   const onSaveHandler = () => {
-    if (validFileData(select, mainCheck)) {
-      const data = new FormData();
-      data.append("file", file.get);
-      data.append("select", JSON.stringify(select));
-      data.append("dx", dx);
-      data.append("active_value", JSON.stringify(valueActive));
-      data.append("checkField", JSON.stringify(mainCheck));
-      data.append("need_send", needSend);
-      setLoading(true);
-      api.post("/api/dx/products-price/save", data).then((res: IResponse) => {
-        if (res) {
+    const data = new FormData();
+    data.append("file", file.get);
+    data.append("select", JSON.stringify(select));
+    data.append("dx", dx);
+    data.append("active_value", JSON.stringify(valueActive));
+    data.append("checkField", JSON.stringify(mainCheck));
+    data.append("need_send", needSend);
+    setLoading(true);
+    axios
+      .post("/api/dx/products-price/save", data)
+      .then((response) => {
+        if (response.data) {
           state.set(false);
           showSnackbar(
-            `You have successfully updated ${res.countUpdate} products`,
+            `You have successfully updated ${response.data.countUpdate} products`,
             "success"
           );
         }
+      })
+      .catch((error) => {
+        state.set(false);
+        showSnackbar(error.response.data.message, "error");
       });
-    } else {
-      showSnackbar(`Add the selected required field to the list`, "error");
-    }
   };
 
   const onChangeSelectHandler = (

@@ -4,6 +4,7 @@
 namespace Modules\Core\Classes;
 
 
+use Exception;
 use JsonException;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
@@ -46,10 +47,17 @@ class SaveFilePrice
     /** Collect data
      * @param array $select
      * @param $ar_save
+     * @throws Exception
      */
     public function collectField(array $select, $ar_save): void
     {
+        if (empty($select)) {
+            throw new Exception('Please selected fields for update ');
+        }
         foreach ($select as $table_index => $ar_key) {
+            if (empty($ar_key)) {
+                throw new Exception('Please selected fields for update ');
+            }
             foreach ($ar_key as $key => $field) {
                 $value = array_column($ar_save[$table_index], $key);
                 if ($field === 'images') {
@@ -64,25 +72,35 @@ class SaveFilePrice
     }
 
     /* Through tables and rows of the table and searches for the product, if it finds, updates */
+    /**
+     * @throws JsonException
+     * @throws Exception
+     */
     public function savePrice(): void
     {
         $time_start = time();
         foreach ($this->ar_update_field as $table_index => $ar_fields) {
-            foreach ($ar_fields[$this->search_by[$table_index]] as $key => $code) {
-                $search_value = "$this->dx_code-$code";
-                if ($this->search_by[$table_index] !== 'productcode') {
-                    $search_value = $code;
-                }
-                $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
-                if ($product instanceof ProductModel) {
-                    $this->sendProductData($product, $table_index, $key);
-                    $this->success_productcode[] = "$this->dx_code-$code";
+            if (!$ar_fields[$this->search_by[$table_index]]) {
+                throw new Exception("Field for order search absent in list update field in $table_index table");
+            }
+                foreach ($ar_fields[$this->search_by[$table_index]] as $key => $code) {
+                    $search_value = "$this->dx_code-$code";
+                    if ($this->search_by[$table_index] !== 'productcode') {
+                        $search_value = $code;
+                    }
+                    $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
+                    if ($product instanceof ProductModel) {
+                        $this->sendProductData($product, $table_index, $key);
+                        $this->success_productcode[] = "$this->dx_code-$code";
+                    }
                 }
             }
-        }
         $this->time_exec = time() - $time_start;
     }
 
+    /**
+     * @throws JsonException
+     */
     private function sendProductData(ProductModel $product_model, int $t_index, int $num_row): void
     {
         $ar_field = [];

@@ -9,14 +9,6 @@ const fraudSettingsReducer = (
   switch (action.type) {
     case "SET_FRAUD_SETTINGS":
       return { ...state, ...action.data };
-    case "SET_SETTINGS_FORM":
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          data: action.form,
-        },
-      };
     case "SET_FA_QUESTION_DATA":
       const question = state.faQuestions[action.question.type].data.find(
         (question) => question.questionId === action.question.questionId

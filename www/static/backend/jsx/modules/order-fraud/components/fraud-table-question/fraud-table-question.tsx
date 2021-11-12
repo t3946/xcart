@@ -5,13 +5,11 @@ import { MainAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 
 interface FraudTableQuestion {
   listAnswer: MainAnswer[];
-  nameTable: string;
   title: string;
 }
 
 export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
   listAnswer,
-  nameTable,
   title,
 }) => {
   return (
@@ -58,10 +56,7 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                   {answer.question_auto === "Y" && !answer.manual_action ? (
                     "Auto"
                   ) : (
-                    <FraudRadioField
-                      section={nameTable}
-                      fraudCode={answer.question_code}
-                    />
+                    <FraudRadioField fraudCode={answer.question_code} />
                   )}
                 </td>
                 <td className="center-header-item">

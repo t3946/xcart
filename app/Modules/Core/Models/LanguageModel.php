@@ -7,6 +7,9 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property strint value
+ */
 class LanguageModel extends Model
 {
     use AutoMetaTrait;
@@ -27,7 +30,7 @@ class LanguageModel extends Model
                 'class' => CharField::class,
                 'primary' => true
             ],
-
+            'value' => CharField::class
         ];
     }
 
@@ -38,6 +41,6 @@ class LanguageModel extends Model
 
     public function __toString()
     {
-        return (string) $this->value;
+        return (string)$this->value;
     }
 }

@@ -3,6 +3,7 @@ export interface SettingsFraudOrder {
     status: boolean;
     timeUnlocked: string;
   };
+  locked_orders: boolean;
   lang?: {
     basement: string;
   };
@@ -50,4 +51,9 @@ export interface ColumnLegendData {
   link: boolean;
   linkUrl: string;
   type: string;
+  frontendType: string;
+  provider: string;
+  sourceType: string;
+  isMelissa: boolean;
+  inferredFrom: string;
 }

@@ -166,7 +166,7 @@ class FraudCheckHelper
 
     public static function scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE_FOR_SHIPPING_ADDRESS(OrderModel $order, FraudCheckModel $fraud): array
     {
-        return self::scoreMANUAL_CHECK_EMAIL_DOMAIN_WEBSITE($order, $fraud);
+        return self::scoreDC_DN($order, $fraud);
     }
 
     public static function scoreMANUAL_PAYPAL_SHIPPING_EQUAL_BILLING(OrderModel $order, FraudCheckModel $fraud): array
@@ -220,7 +220,7 @@ class FraudCheckHelper
         ];
     }
 
-    public static function scoreMANUAL_IS_FREIGHT_FORWARDER_FOUND(OrderModel $order, FraudCheckModel $fraud): array
+    public static function scoreRF_MF(OrderModel $order, FraudCheckModel $fraud): array
     {
         $fraud_result = 'neutral';
         $fraud_score = 0;

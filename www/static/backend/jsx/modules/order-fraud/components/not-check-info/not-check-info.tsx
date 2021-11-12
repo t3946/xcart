@@ -1,51 +1,32 @@
-import React, { useContext } from "react";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
-import { ApiService } from "@admin/modules/shared/services/api.service";
-import { ResponseForceFraudCheck } from "@admin/modules/order-fraud/ts/types/response";
-import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
-const api = new ApiService();
+import React from "react";
+import { Button, Grid, Paper } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { fetchForceFraudCheck } from "@redux/actions/fraudCheckActions";
 interface NotCheckInfo {
-  orderId: string | number;
-  setNotCheck: (status: boolean) => void;
-  handlerFraudInfo: () => void;
-  setLoading: (state: boolean) => void;
+  orderId: number;
+  handleForceCheck: () => void;
 }
 export const NotCheckInfo: React.FC<NotCheckInfo> = ({
   orderId,
-  setNotCheck,
-  handlerFraudInfo,
-  setLoading,
+  handleForceCheck,
 }) => {
-  const { showSnackbar } = useContext(SnackbarContext);
-  const fraudCheckHandler = () => {
-    setLoading(true);
-    api
-      .get(`/api/order/fraud-check/force-check/${orderId}`)
-      .then((res: ResponseForceFraudCheck) => {
-        if (res.status) {
-          setNotCheck(false);
-          handlerFraudInfo();
-        } else {
-          showSnackbar(`error: ${res.error}`, "error");
-        }
-      });
-  };
+  const dispatch = useDispatch();
 
   return (
     <div className="not-answer-fraud-check">
-      <Paper elevation={1}>
+      <Paper elevation={1} className="paper-wrapper">
         <Grid
           container
           justifyContent="center"
           alignItems="center"
           direction="column"
         >
-          <Typography variant="h4" align="center">
-            For Basic FC to start C2B payment status must be Authorized or
-            Unpaid:PO
-          </Typography>
+          <span className="not-check-info-title">
+            For the basic Fraud Check to start <b>C2B payment status</b> must be
+            'Authorized' or 'Unpaid: PO'
+          </span>
           <div className="fraud-force-check-button">
-            <Button variant="contained" onClick={fraudCheckHandler}>
+            <Button variant="contained" onClick={handleForceCheck}>
               Force Basic Fraud Check
             </Button>
           </div>

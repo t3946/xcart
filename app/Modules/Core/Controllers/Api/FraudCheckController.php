@@ -9,6 +9,7 @@ use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 
 class FraudCheckController extends Controller
@@ -19,7 +20,7 @@ class FraudCheckController extends Controller
         $ar_result = [];
         /** @var FraudFAQuestionModel $question */
         foreach (FraudFAQuestionModel::objects()->all() as $question) {
-            $ar_result[$question->type]['data'][] = [
+            $ar_result[$question->f_fraud->type]['data'][] = [
                 'value' => $question->weight,
                 'f_fraud' => $question->f_fraud->fraud_name,
                 't_fraud' => $question->t_fraud->fraud_name,
@@ -34,6 +35,9 @@ class FraudCheckController extends Controller
         return $ar_result;
     }
 
+    /**
+     * @throws UnknownPropertyException
+     */
     public function getFraudCheckSettings()
     {
         $ar_settings = [
@@ -48,7 +52,7 @@ class FraudCheckController extends Controller
     {
         $ar_result = [];
         /** @var BaseFraudCheckModelV2 $question */
-        foreach (BaseFraudCheckModelV2::objects()->all() as $question) {
+        foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->all() as $question) {
             $ar_result[] = [
                 'questionId' => $question->question_id,
                 'questionCode' => $question->question_code,
@@ -56,11 +60,16 @@ class FraudCheckController extends Controller
                 'template' => $question->question_template_body,
                 'weight' => $question->weight,
                 'type' => $question->type,
+                'orderBy' => $question->orderby,
             ];
         }
         return $ar_result;
     }
 
+    /**
+     * @throws UnknownPropertyException
+     * @throws \Exception
+     */
     public function getBaseSettings(): array
     {
         global $fraud_Google_address_search_exclusions, $fraud_Google_phone_search_exclusions, $fraud_Google_email_search_exclusions;
@@ -79,6 +88,7 @@ class FraudCheckController extends Controller
             'fraud_Google_address_search_exclusions' => $fraud_Google_address_search_exclusions ?? '',
             'fraud_Google_phone_search_exclusions' => $fraud_Google_phone_search_exclusions ?? '',
             'fraud_Google_email_search_exclusions' => $fraud_Google_email_search_exclusions ?? '',
+            'fraudulent_domains' => $config['fraudulent_domains'],
             'Under_review_users' => !empty($config['Under_review_users'])
                 ? explode(',', $config['Under_review_users'])
                 : [],
@@ -93,27 +103,36 @@ class FraudCheckController extends Controller
     public function updateFraudSettings(): void
     {
         $fraud_settings = json_decode(file_get_contents('php://input'), true);
-        foreach ($fraud_settings as $attr => $value) {
-            switch ($attr) {
-                case 'Under_review_users':
-                    GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => implode(',', $value)]);
-                    break;
-                default:
-                    GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => $value]);
-                    break;
+        try {
+            foreach ($fraud_settings as $attr => $value) {
+                switch ($attr) {
+                    case 'Under_review_users':
+                        GlobalConfigModel::objects()->updateOrCreate(['name' => $attr], ['value' => implode(',', $value)]);
+                        break;
+                    default:
+                        GlobalConfigModel::objects()->updateOrCreate(['name' => $attr, 'category' => 'Fraud_check'], ['value' => $value]);
+                        break;
+                }
             }
+            $this->jsonResponse(['update' => true]);
+        } catch (\Throwable $exception) {
+            $this->jsonResponse(['message' => $exception->getMessage()], 400);
         }
-        $this->jsonResponse(['update' => true]);
+
     }
 
     public function updateFAQuestion()
     {
-        $update_data = json_decode(file_get_contents('php://input'), true);
-        /** @var FraudFAQuestionModel $question_model */
-        $question_model = FraudFAQuestionModel::objects()->get(['question_id' => $update_data['questionId']]);
-        $question_model->template = $update_data['template'];
-        $question_model->weight = $update_data['weight'];
-        $this->jsonResponse(['update' => $question_model->save()]);
+        try {
+            $update_data = json_decode(file_get_contents('php://input'), true);
+            /** @var FraudFAQuestionModel $question_model */
+            $question_model = FraudFAQuestionModel::objects()->get(['question_id' => $update_data['questionId']]);
+            $question_model->template = $update_data['template'];
+            $question_model->weight = $update_data['weight'];
+            $this->jsonResponse(['update' => $question_model->save()]);
+        } catch (\Throwable $exception) {
+            $this->jsonResponse(['message' => $exception->getMessage()], 400);
+        }
     }
 
     public function updateBaseQuestion()
@@ -121,6 +140,7 @@ class FraudCheckController extends Controller
         $update_data = json_decode(file_get_contents('php://input'), true);
         /** @var BaseFraudCheckModelV2 $question_model */
         $question_model = BaseFraudCheckModelV2::objects()->get(['question_id' => $update_data['questionId']]);
+        $question_model->orderby = $update_data['orderBy'];
         $question_model->question_template_body = $update_data['template'];
         $question_model->weight = $update_data['weight'];
         $this->jsonResponse(['update' => $question_model->save()]);

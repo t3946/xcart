@@ -22,11 +22,12 @@ export interface MainAnswer {
 }
 export interface FAAnswer {
   fraud_result: string;
-  fraud_score: string | number;
+  fraud_score: number;
   template: string;
-  question_weight: number | string;
+  question_weight: number;
   f_fraud_name: number | string;
   t_fraud_name: number | string;
   manual_action: string;
-  outcome: number | string;
+  outcome: number;
+  type: string;
 }
