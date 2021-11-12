@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Models;
 
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
@@ -10,7 +11,7 @@ use Xcart\App\Orm\Model;
 
 class DecisionModel extends Model
 {
-    public const DECISION_TYPE_ESTIMATED_TIME_ARRIVAL = 1;
+    public const DECISION_TYPE_ESTIMATED_TIME_ARRIVAL = 0;
 
     public static function tableName()
     {
@@ -43,6 +44,12 @@ class DecisionModel extends Model
             'options' => [
                 'class' => JsonField::class,
             ],
+
+            'orders' => [
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
+                'link' => ['order_id' => 'orderid'],
+            ]
         ];
     }
 }

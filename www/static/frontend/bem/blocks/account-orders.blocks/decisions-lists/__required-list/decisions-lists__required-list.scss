@@ -1,0 +1,11 @@
+.decisions-lists__required-list {
+  margin: 0 0 rem-calc(37);
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(35);
+  }
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(43);
+  }
+}

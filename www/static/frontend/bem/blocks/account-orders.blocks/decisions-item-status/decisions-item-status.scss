@@ -1,0 +1,11 @@
+.decisions-item-status {
+  font-weight: bold;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(16);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(13);
+  }
+}

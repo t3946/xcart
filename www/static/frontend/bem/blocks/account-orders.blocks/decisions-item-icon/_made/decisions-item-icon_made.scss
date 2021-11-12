@@ -1,0 +1,14 @@
+.decisions-item-icon_made {
+  width: rem-calc(15);
+  height: rem-calc(17);
+
+  @include breakpoint(md up) {
+    width: rem-calc(16);
+    height: rem-calc(19);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(13);
+    height: rem-calc(15);
+  }
+}

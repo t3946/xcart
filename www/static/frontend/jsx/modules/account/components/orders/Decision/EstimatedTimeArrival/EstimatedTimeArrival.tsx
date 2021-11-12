@@ -1,11 +1,11 @@
 import React from "react";
 import EstimatedTimeArrivalTable, {
   TableTypes,
-} from "@client/modules/account/components/orders/Decisions/EstimatedTimeArrival/Table";
+} from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/Table";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
-import AdviseList from "@client/modules/account/components/orders/Decisions/EstimatedTimeArrival/AdviseList";
+import AdviseList from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/AdviseList";
 
 const EstimatedTimeArrival: React.FC = () => {
   const mockData = [

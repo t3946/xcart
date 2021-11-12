@@ -63,7 +63,8 @@ import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
 import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
 import { EmailPage } from "@client/modules/account/pages/EmailPage";
 import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
-import Decision from "@client/modules/account/components/orders/Decisions/Decision";
+import Decision from "@client/modules/account/components/orders/Decision/Decision";
+import Decisions from "@client/modules/account/components/orders/Decisions/Decisions";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
@@ -356,6 +357,11 @@ export const AccountRouters = (): any => {
                   exact
                   path={route("account:orders")}
                   component={PageContainerHoc(<SideBarMenu />, <Decision />)}
+                />
+                <Route
+                  exact
+                  path={route("account:order-decisions-required")}
+                  component={PageContainerHoc(<SideBarMenu />, <Decisions />)}
                 />
                 <Route
                   exact

@@ -5,6 +5,8 @@ namespace Modules\Order\Controllers\Api;
 use Modules\Order\Models\DecisionModel;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Controller\Controller;
+use Xcart\App\Main\Xcart;
+use function Mindy\app;
 
 class DecisionController extends Controller
 {
@@ -19,7 +21,7 @@ class DecisionController extends Controller
     public function createEstimatedTimeArrivalDecisionAction()
     {
         $order_id = $this->data['order_id'];
-        $order =  OrderModel::objects()->filter(['orderid' => $order_id])->get();
+        $order = OrderModel::objects()->filter(['orderid' => $order_id])->get();
         $order_number = $order->getOrderNumber();
         $options = $this->data['options'];
         $options['order_number'] = $order_number;
@@ -37,6 +39,28 @@ class DecisionController extends Controller
 
     public function getDecisionsAction()
     {
-        $this->jsonResponse(DecisionModel::objects()->asArray()->all());
+        $user_id = $this->data['user_id'];
+        $this->jsonResponse(self::getDecisions($user_id));
+    }
+
+    public static function getDecisions($user_id, $resolved, $limit, $offset)
+    {
+        $filters = ['orders__user_id' => $user_id, 'resolved' => $resolved];
+        $qm = DecisionModel::objects()->filter($filters)->asArray();
+
+        if (isset($limit)) {
+            $qm->limit($limit);
+        }
+
+        if (isset($offset)) {
+            $qm->offset($offset);
+        }
+
+        $decisions = $qm->all();
+
+        return array_map(function ($decision) {
+            $decision['options'] = json_decode($decision['options']);
+            return $decision;
+        }, $decisions);
     }
 }

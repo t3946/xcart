@@ -12,6 +12,7 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\TotalProductReviewsModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
+use Modules\Order\Controllers\Api\DecisionController;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Sites\Helpers\StorageHelper;
@@ -86,6 +87,11 @@ class AccountController extends FrontendController
         StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
         StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
+
+        StorageHelper::push([
+            'resolved' => DecisionController::getDecisions($user['user_id'], 1, 3, 0),
+            'notResolved' => DecisionController::getDecisions($user['user_id'], 0, 3, 0),
+        ], null, 'decisions');
 
         AdminHelper::routesData();
     }
