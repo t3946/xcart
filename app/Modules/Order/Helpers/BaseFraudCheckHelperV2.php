@@ -271,7 +271,7 @@ class BaseFraudCheckHelperV2
         ];
     }
 
-    public static function scoreMANUAL_IS_FREIGHT_FORWARDER_FOUND(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreRF_MF(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
         $manual_action = 'N';
