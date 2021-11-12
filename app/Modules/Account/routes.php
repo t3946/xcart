@@ -140,7 +140,7 @@ return [
         'name' => 'order-change-address'
     ],
     [
-        'route' => '/orders/decisions-required',
+        'route' => '/orders/open-orders/decisions-required',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'order-decisions-required',
     ],

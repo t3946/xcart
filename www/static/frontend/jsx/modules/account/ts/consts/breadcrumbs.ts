@@ -1,5 +1,3 @@
-import { route } from "@client/jsx/utils/AppData";
-
 const newWindow: any = window;
 const routes = newWindow.appData.routes || {};
 
@@ -82,5 +80,20 @@ export const staticRoutes = [
   {
     name: "Password Assistance",
     path: routes["account:two-step-verification-recovery-password-assistance"],
+  },
+
+  {
+    name: "Orders",
+    path: routes["account:orders"],
+  },
+
+  {
+    name: "Open orders",
+    path: routes["account:open-orders"],
+  },
+
+  {
+    name: "Decisions required",
+    path: routes["account:order-decisions-required"],
   },
 ];
