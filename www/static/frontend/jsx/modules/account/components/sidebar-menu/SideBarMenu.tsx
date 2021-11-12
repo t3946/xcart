@@ -17,13 +17,13 @@ const SideBarMenu: React.FC = () => {
       label: "Orders",
       routerItems: [
         {
-          to: "account/orders",
+          to: route("account:order-decisions-required"),
           label: "Decisions required",
           badge: user.decisions_required_count,
         },
-        { to: "account/orders/open-orders", label: "Open orders" },
-        { to: "account/orders/canceled-orders", label: "Cancelled orders" },
-        { to: "account/orders/completed-orders", label: "Completed orders" },
+        { to: "/account/orders/open-orders", label: "Open orders" },
+        { to: "/account/orders/canceled-orders", label: "Cancelled orders" },
+        { to: "/account/orders/completed-orders", label: "Completed orders" },
         { to: route("account:orders"), label: "Buy again" },
       ],
     },
@@ -36,8 +36,8 @@ const SideBarMenu: React.FC = () => {
       to: "/account/payments",
       label: "Payments",
       routerItems: [
-        { to: "wallet", label: "Wallet" },
-        { to: "transactions", label: "Transactions" },
+        { to: "/account/payments/wallet", label: "Wallet" },
+        { to: "/account/payments/transactions", label: "Transactions" },
       ],
     },
     { to: "/account/login-and-security", label: "Login & security" },

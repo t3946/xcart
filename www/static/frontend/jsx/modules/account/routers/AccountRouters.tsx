@@ -355,7 +355,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={route("account:orders")}
+                  path={route("account:order-make-decision")}
                   component={PageContainerHoc(<SideBarMenu />, <Decision />)}
                 />
                 <Route

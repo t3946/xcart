@@ -1,6 +1,8 @@
 import React from "react";
 import Item from "@client/modules/account/components/orders/Decisions/Item";
 import classnames from "classnames";
+import { Link } from "react-router-dom";
+import { route } from "@client/jsx/utils/AppData";
 
 interface PropsInterface {
   decisions: Record<any, any>[];
@@ -13,9 +15,14 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
 
   for (const decision of decisions) {
     items.push(
-      <div className="row d-block m-sm-0">
-        <Item decision={decision} />
-      </div>
+      <Link
+        to={route("account:order-make-decision", decision.decision_id)}
+        className={"text-decoration-none"}
+      >
+        <div className="row d-block m-sm-0">
+          <Item decision={decision} />
+        </div>
+      </Link>
     );
   }
 

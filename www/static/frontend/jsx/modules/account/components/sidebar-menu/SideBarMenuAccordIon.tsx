@@ -65,12 +65,12 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
         className={"overflow-hidden common-transition"}
       >
         <div className="sidebar-menu-accordion-content">
-          {routerItems.map((e) => {
+          {routerItems.map((value) => {
             return (
               <SideBarMenuAccordIonItem
-                to={`${to}/${e.to}`}
-                label={e.label}
-                badge={e.badge}
+                to={value.to}
+                label={value.label}
+                badge={value.badge}
               />
             );
           })}

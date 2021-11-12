@@ -144,7 +144,11 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'order-decisions-required',
     ],
-
+    [
+        'route' => '/decision/{*:decision_id}',
+        'target' => [AccountController::class, 'actionIndex'],
+        'name' => 'order-make-decision',
+    ],
 
     [
         'route' => '/register',
