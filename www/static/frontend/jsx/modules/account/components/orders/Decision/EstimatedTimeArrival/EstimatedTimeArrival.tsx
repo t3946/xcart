@@ -72,6 +72,10 @@ const EstimatedTimeArrival: React.FC = () => {
               />
 
               <div className={"estimated-time-arrival-form-controls"}>
+                <div className={"fw-normal form-input-label"}>
+                  <b>Please advise</b> if you would like us to
+                </div>
+
                 <AdviseList
                   name={"advise"}
                   onChange={handleChange}
@@ -86,7 +90,7 @@ const EstimatedTimeArrival: React.FC = () => {
                   controlId="CommentFormEstimatedTimeArrivedDecision"
                   className={"estimated-time-arrival__comment"}
                 >
-                  <RBForm.Label className="auth-form-info form-input-label form-input-label__optional">
+                  <RBForm.Label className="form-input-label form-input-label__optional">
                     Comment
                   </RBForm.Label>
 

@@ -1,17 +1,3 @@
-.form-input-label{
-  font-weight: 700;
-  font-size: rem-calc(16);
-  text-transform: capitalize;
-
-  @include breakpoint(md up) {
-    font-size: rem-calc(18);
-  }
-
-  @include breakpoint(lg up) {
-    font-size: rem-calc(14);
-  }
-}
-
 .form-input-label-error{
  color: #f02a36;
 }
