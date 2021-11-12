@@ -12,4 +12,5 @@ export interface TableBaseQuestion {
   template: string;
   weight: string | number;
   type: string;
+  orderBy: number;
 }

@@ -18,6 +18,7 @@ export const BaseQuestionTable: React.FC = () => {
       weight: question.weight,
       template: question.template,
       type: question.type,
+      orderBy: question.orderBy,
     });
     setOpen(!open);
   };
@@ -51,6 +52,7 @@ export const BaseQuestionTable: React.FC = () => {
         state={{ get: open, set: setOpen }}
         form={{ get: form, set: setForm }}
         type="baseQuestions"
+        isBase
       />
     </Fragment>
   );

@@ -60,6 +60,7 @@ class FraudCheckController extends Controller
                 'template' => $question->question_template_body,
                 'weight' => $question->weight,
                 'type' => $question->type,
+                'orderBy' => $question->orderby,
             ];
         }
         return $ar_result;
@@ -139,6 +140,7 @@ class FraudCheckController extends Controller
         $update_data = json_decode(file_get_contents('php://input'), true);
         /** @var BaseFraudCheckModelV2 $question_model */
         $question_model = BaseFraudCheckModelV2::objects()->get(['question_id' => $update_data['questionId']]);
+        $question_model->orderby = $update_data['orderBy'];
         $question_model->question_template_body = $update_data['template'];
         $question_model->weight = $update_data['weight'];
         $this->jsonResponse(['update' => $question_model->save()]);

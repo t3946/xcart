@@ -9,6 +9,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -18,6 +19,7 @@ use Xcart\App\Orm\Model;
  * @property float|string weight
  * @property string type
  * @property int|string question_id
+ * @property int orderby
  */
 class BaseFraudCheckModelV2 extends Model
 {
@@ -73,7 +75,12 @@ class BaseFraudCheckModelV2 extends Model
                     self::FRAUD_TYPE_DIAGONAL,
                     self::FRAUD_TYPE_RED_FLAGS
                 ]
-            ]
+            ],
+            'orderby' => [
+                'class' => IntField::class,
+                'null' => false,
+                'default' => 0,
+            ],
         ];
     }
 

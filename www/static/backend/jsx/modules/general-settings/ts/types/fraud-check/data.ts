@@ -26,6 +26,7 @@ export interface SettingsList {
 export interface ChangeQuestionDataForm {
   weight: string | number;
   template: string;
+  orderBy: number;
   questionId: string | number;
   type: string;
 }

@@ -19,11 +19,13 @@ interface DialogTableEdit {
   state: { get: boolean; set: (newState: boolean) => void };
   form: { get: ChangeQuestionDataForm; set: (newState: any) => void };
   type: string;
+  isBase?: boolean;
 }
 export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   state,
   form,
   type,
+  isBase = null,
 }) => {
   const dispatch = useDispatch();
   const saveChangeQuestion = () => {
@@ -69,6 +71,20 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
                   onChange={onChangeField}
                 />
               </Form.Group>
+              {isBase && (
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label>Order by</Form.Label>
+                  <Form.Control
+                    value={form.get.orderBy}
+                    type="text"
+                    name="orderBy"
+                    onChange={onChangeField}
+                  />
+                </Form.Group>
+              )}
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlTextarea1"
