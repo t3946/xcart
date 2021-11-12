@@ -10,6 +10,11 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string latitude
+ * @property string longitude
+ * @property string ip
+ */
 class OrderExtraModel extends Model
 {
     public static function tableName()
@@ -54,10 +59,20 @@ class OrderExtraModel extends Model
                 'class' => CharField::class,
                 'null' => true,
             ],
+            'latitude' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
+            ],
+            'longitude' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
+            ]
         ];
     }
 
-    public function getIP():? string
+    public function getIP(): ?string
     {
         if (preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $this->ip, $match)) {
             return $match[0];

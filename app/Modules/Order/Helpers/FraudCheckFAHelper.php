@@ -91,6 +91,13 @@ class FraudCheckFAHelper
             $ip = $this->order_model->extra_model->getIP();
             if (!is_null($ip)) {
                 $this->ob_melissa->setMelissaIpInfo($ip);
+
+                if (!empty($this->ob_melissa->ip_data)) {
+                    $extra_model = $this->order_model->extra_model;
+                    $extra_model->longitude = $this->ob_melissa->ip_data['Longitude'];
+                    $extra_model->latitude = $this->ob_melissa->ip_data['Latitude'];
+                    $extra_model->save();
+                }
                 return;
             }
         }
@@ -98,7 +105,7 @@ class FraudCheckFAHelper
     }
 
     /* Address check */
-    public function scoreBaseAddress(FraudFAQuestionModel $fraud)
+    public function scoreBaseAddress(FraudFAQuestionModel $fraud): array
     {
         $result = 'negative';
         $outcome = $this->compareShippingBillingAddress();

@@ -7,7 +7,6 @@ export const FraudInfoBasement: React.FC = () => {
   const template = useSelector(
     (state: FraudCheckStore) => state.data.settings.template
   );
-
   return (
     <Fragment>
       <div className="basement-fraud-title-wrapper">

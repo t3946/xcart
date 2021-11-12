@@ -5,21 +5,28 @@ import MuiAlert, { Color } from "@material-ui/lab/Alert";
 
 export const SnackBar: React.FC = ({ children }) => {
   const [open, setOpen] = React.useState(false);
+  const [onAfterClose, setOnAfterClose] = React.useState(null);
 
   const [message, setMessage] = useState("");
 
   const [theme, setTheme] = useState<Color>("success");
 
-  const showSnackbar = (message, theme) => {
+  const showSnackbar = (message, theme, onAfterClose?: () => void) => {
     setMessage(message);
     setTheme(theme);
     setOpen(true);
+    if (typeof onAfterClose === "function") {
+      setOnAfterClose(() => onAfterClose);
+    }
   };
 
   const handleClose = (
     event: React.SyntheticEvent | React.MouseEvent,
     reason?: string
   ) => {
+    if (typeof onAfterClose === "function") {
+      onAfterClose();
+    }
     if (reason === "clickaway") {
       return;
     }

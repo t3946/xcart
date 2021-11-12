@@ -16,7 +16,6 @@ use Modules\Order\Models\OrderFraudFACheckModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\User\Models\UserModel;
 use Throwable;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Exceptions\UnknownPropertyException;
@@ -31,6 +30,7 @@ class OrderFraudCheckController extends Controller
      */
     public function getBaseSettings(int $order_id = null)
     {
+        /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
 
         $count_frauds = OrderBaseFraudCheckModelV2::objects()->filter(['order_id' => $order_model->orderid])->count();
@@ -43,7 +43,6 @@ class OrderFraudCheckController extends Controller
         $ar_settings = ['locked_orders' => false];
         $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
         $current_time = time();
-        /** @var OrderModel $order_model */
         $login_last_opened_or_saved = $order_model->login_last_opened_or_saved;
         $time_last_opened_or_saved = $order_model->time_last_opened_or_saved;
         $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
@@ -60,13 +59,9 @@ class OrderFraudCheckController extends Controller
         }
         $order_model->save();
         $time_unlock = $time_last_opened_or_saved + $time_for_order_in_mins * 60 + 60 * 60;
-        if (!$you_have_right_to_change_order) {
-            $operator_firstname = '';
-            if ($operator_on_order = UserModel::objects()->get(['login' => $login_last_opened_or_saved])) {
-                $operator_firstname = $operator_on_order->firstname ?: $operator_on_order->s_firstname ?: $operator_on_order->b_firstname;
-            }
-        } else {
-            $ar_settings = ['status' => true, 'timeUnlocked' => date("G:i", $time_unlock)];
+        if ($you_have_right_to_change_order) {
+
+            $ar_settings = ['lock' => true, 'timeUnlocked' => date("G:i", $time_unlock)];
             $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
             $count_locked_orders = OrderModel::objects()->filter(
                 [
@@ -79,8 +74,10 @@ class OrderFraudCheckController extends Controller
             }
         }
         $ar_settings['statusList'] = FraudStatusModel::objects()->order(['order_by'])->valuesList(['code', 'name']);
-        $ar_settings['order_prefix'] = $order_model->order_prefix;
-        $ar_settings['template'] = LanguageModel::objects()->get(['name' => 'lbl_fraud_check_expert_section'])->value;
+        $ar_settings['prefix'] = $order_model->order_prefix;
+        /** @var LanguageModel $template */
+        $template = LanguageModel::objects()->get(['name' => 'lbl_fraud_check_expert_section']);
+        $ar_settings['template'] = $template->value;
 
         $ar_response['settings'] = $ar_settings;
         $base_list = ['fraud_code', 'fraud_name', 'type', 'fraud_id', 'fraud_id'];
@@ -142,7 +139,7 @@ class OrderFraudCheckController extends Controller
         $sPaymentMethodReplaceText = '';
         if ($oTransaction && $oPaymentMethod = PaymentMethodModel::objects()->get(['paymentid' => $oTransaction->paymentid])) {
             $sTransactionLink = str_replace('{{trans-id}}', $oTransaction->transaction_id, $oPaymentMethod->transaction_id_link);
-            $sTransactionReplaceText = "<a target='_blank' href='{$sTransactionLink}' style='color:#1F08F8;'>Link to transaction</a>";
+            $sTransactionReplaceText = "<a target='_blank' href='$sTransactionLink' style='color:#1F08F8;'>Link to transaction</a>";
             $sPaymentMethodReplaceText = "$oPaymentMethod->payment_method ($oPaymentMethod->transaction_link_anchor)";
         }
         $avs_code = $brand_card = $name_card = '';
@@ -187,7 +184,7 @@ class OrderFraudCheckController extends Controller
                 'question_id' => $answer_item->question_id,
                 'question_code' => $answer_item->question->question_code,
                 'question_auto' => $answer_item->question->auto,
-                'question_weight' => $answer_item->question->weight
+                'question_weight' => (float)$answer_item->question->weight
             ]);
         }
         return $ar_payment_frauds;
@@ -205,9 +202,10 @@ class OrderFraudCheckController extends Controller
                 'fraud_score' => $fraud->fraud_score,
                 'f_fraud_name' => $fraud->question->f_fraud->fraud_name,
                 't_fraud_name' => $fraud->question->t_fraud->fraud_name,
-                'question_weight' => $fraud->question->weight,
+                'question_weight' => (float)$fraud->question->weight,
                 'template' => str_replace($replace_template, $replace_value, $fraud->question->template),
-                'outcome' => $fraud->outcome
+                'outcome' => (float)$fraud->outcome,
+                'type' => $fraud->question->f_fraud->type
 
             ];
             array_push($ar_answer[$fraud->question->f_fraud->type], $data);
@@ -357,7 +355,7 @@ HTML;
                 'fraud_score' => $answer->fraud_score,
                 'question_id' => $answer->question_id,
                 'question_auto' => $answer->question->auto,
-                'question_weight' => $answer->question->weight,
+                'question_weight' => (float)$answer->question->weight,
                 'manual_action' => $answer->manual_action ?? null
             ];
             array_push($ar_res_answer[$answer->question->type], $ar_answer);
@@ -369,15 +367,16 @@ HTML;
     {
         try {
             $post = json_decode(file_get_contents('php://input'));
+            /** @var OrderModel $orderModel */
             $orderModel = OrderModel::objects()->get(['orderid' => $post->orderId]);
             $orderModel->fraud_status = $post->code;
             $orderModel->save();
-            /** @var FraudStatusModel $fraud */
-            if ($fraud = FraudStatusModel::objects()->get(['code' => $post->code])) {
-                $this->jsonResponse(['code' => $fraud->code, 'name' => $fraud->name]);
+            /** @var FraudStatusModel $status */
+            if ($status = FraudStatusModel::objects()->get(['code' => $post->code])) {
+                $this->jsonResponse(['code' => $status->code, 'name' => $status->name]);
             }
         } catch (\Throwable $exception) {
-            $this->jsonResponse(['error' => $exception->getMessage()], 400);
+            $this->jsonResponse(['message' => $exception->getMessage()], 400);
         }
     }
 

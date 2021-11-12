@@ -4,6 +4,8 @@
 namespace Modules\Order\Helpers;
 
 
+use DateInterval;
+use DateTime;
 use Modules\Goods\Models\ProductHardResellModel;
 use Modules\Order\Models\BaseFraudCheckModelV2;
 use Modules\Order\Models\FraudStatusModel;
@@ -96,7 +98,8 @@ class BaseFraudCheckHelperV2
         $field = strtoupper($field);
         return $field;
     }
-    public static function scoreRF_CB(OrderModel $order, BaseFraudCheckModelV2 $fraud) : array
+
+    public static function scoreRF_CB(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'positive';
         $outcome = 1;
@@ -355,45 +358,27 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, ['Payer email' => $payer_email], $manual_action, $outcome];
     }
 
-    public static function scoreDC_FE(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
-    {
-
-        $email = $order->email;
-        $fraud_result = 'positive';
-        $outcome = 1;
-
-        /** @var SiteModel $site */
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $config = $site->getGlobalConfig();
-
-        if ($fraud_domains_free_email_provider_arr = explode(',', $config['fraud_domains_free_email_provider'])) {
-            foreach ($fraud_domains_free_email_provider_arr as $k => $v) {
-                $domain = '@' . trim($v);
-                if (stripos($email, $domain) !== false) {
-                    $fraud_result = 'negative';
-                    $outcome = 0;
-                    break;
-                }
-            }
-        }
-
-        return [$fraud_result, $fraud->weight, null, null, $outcome];
-    }
-
+    /** Проверяет, совпадает ли хотя бы один из 3-х имен указанных в заказе с адресом эл.почты
+     * @param OrderModel $order
+     * @param BaseFraudCheckModelV2 $fraud
+     * @return array
+     */
     public static function scoreDC_EN(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
     {
         $fraud_result = 'negative';
         $email_arr = explode('@', $order->email);
         $email_1 = strtoupper($email_arr[0]);
         $outcome = 0;
-
-        if ($email_1 && ($firstname_arr = explode(' ', self::correct($order->firstname)))) {
-            foreach ($firstname_arr as $k => $v) {
-                $name = trim($v);
-                if ($name && stripos($email_1, $name) !== false) {
-                    $fraud_result = 'positive';
-                    $outcome = 1;
-                    break;
+        $name_list = [$order->firstname ?? '', $order->s_firstname ?? '', $order->b_firstname ?? ''];
+        foreach ($name_list as $name_client) {
+            if ($email_1 && ($firstname_arr = explode(' ', self::correct($name_client)))) {
+                foreach ($firstname_arr as $k => $v) {
+                    $name = trim($v);
+                    if ($name && stripos($email_1, $name) !== false) {
+                        $fraud_result = 'positive';
+                        $outcome = 1;
+                        break;
+                    }
                 }
             }
         }
@@ -405,20 +390,20 @@ class BaseFraudCheckHelperV2
     {
         $fraud_result = 'negative';
         $outcome = 0;
+        $date = new DateTime();
+        $date->sub(new DateInterval('P3M'));
+        $time_condition = $date->getTimestamp();
+        $total_orders = OrderModel::objects()->filter(['email' => $order->email, 'date__lte' => $time_condition])
+            ->exclude(['fraud_status__in' => [
+                FraudStatusModel::STATUS_FRAUD_PURE,
+                FraudStatusModel::STATUS_FRAUD_CHARGEBACK,
+                FraudStatusModel::STATUS_FRAUD_PROBABLY,
+            ]])->order(['-orderid']);
 
-        $orders = OrderModel::objects()->filter(['email' => $order->email, 'groups__dc_status__in' => ['S', 'G'], 'date__lte' => $order->date])->group(['orderid'])->order(['-orderid']);
-        if (($total_items = $orders->count()) > 0) {
-            $additional_info = $orders->all();
-        }
-
-        $time_condition = $order->date - 60 * 60 * 24 * 1;
-        $orders = OrderModel::objects()->filter(['email' => $order->email, 'groups__dc_status__in' => ['S', 'G'], 'date__lte' => $time_condition])->group(['orderid'])->order(['-orderid']);
-
-        if (($total_items_min_day = $orders->count()) > 0) {
-            if (($total_items_min_day / $total_items) > 0) {
-                $fraud_result = 'positive';
-                $outcome = 1;
-            }
+        if ($total_orders->count() > 0) {
+            $additional_info = $total_orders->all();
+            $fraud_result = 'positive';
+            $outcome = 1;
         }
 
         return [$fraud_result, $fraud->weight, $additional_info ?? null, null, $outcome];
@@ -589,8 +574,7 @@ HTML;
         $fraud_result = 'negative';
         $code = self::getAVSCodeByOrderModel($order_model);
         $outcome = 0;
-        switch ($code)
-        {
+        switch ($code) {
             case 'Y':
             case 'X':
             case 'M':
@@ -598,10 +582,10 @@ HTML;
                 $outcome = 1;
                 break;
             case 'B':
-                $outcome = 5/6;
+                $outcome = 5 / 6;
                 break;
             case 'P':
-                $outcome = 4/6;
+                $outcome = 4 / 6;
                 break;
         }
         if (in_array($code, ['Y', 'X', 'M', 'D'])) {

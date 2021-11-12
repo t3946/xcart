@@ -1,4 +1,3 @@
-import { ResponseFraudAllSettings } from "@admin/modules/general-settings/ts/types/fraud-check/response";
 import {
   ChangeQuestionDataForm,
   FormDataFraud,

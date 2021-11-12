@@ -14,8 +14,11 @@ export const fetchForceFraudCheck = (orderId: number) => ({
 });
 export const unlockOrder = (orderId: number, all = false) => ({
   type: "UNLOCK_ORDER",
-  all,
   orderId,
+  all,
+});
+export const clearAlert = () => ({
+  type: "CLEAR_ALERT",
 });
 export const changeFraudCheckResult = (formChange: string) => ({
   type: "UPDATE_SCORE_RESULT",
@@ -38,5 +41,6 @@ export const changeFraudCheckStatus = (code: string) => ({
 });
 export const updateFraudCheckStatus = (orderId: number, code: string) => ({
   type: "UPDATE_FRAUD_CHECK_STATUS",
-  updateData: { orderId, code },
+  orderId,
+  code,
 });

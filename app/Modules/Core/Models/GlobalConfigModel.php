@@ -27,7 +27,8 @@ class GlobalConfigModel extends Model
             ],
             'defvalue' => [
                 'class' => TextField::class,
-                'null' => false
+                'null' => false,
+                'default' => ''
             ],
             'category' => [
                 'class' => CharField::class,
@@ -49,11 +50,13 @@ class GlobalConfigModel extends Model
             ],
             'variants' => [
                 'class' => TextField::class,
-                'null' => false
+                'null' => false,
+                'default' => '',
             ],
             'validation' => [
                 'class' => CharField::class,
-                'null' => false
+                'null' => false,
+                'default' => '',
             ],
             'orderby' => [
                 'class' => IntField::class,

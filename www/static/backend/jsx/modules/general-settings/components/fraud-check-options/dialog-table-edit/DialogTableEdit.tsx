@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment } from "react";
 import {
   Button,
   Dialog,
@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { Form } from "react-bootstrap";
-import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { useDispatch } from "react-redux";
 import {
   changeFraudBaseQuestionData,
@@ -27,7 +26,6 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   type,
 }) => {
   const dispatch = useDispatch();
-  const { showSnackbar } = useContext(SnackbarContext);
   const saveChangeQuestion = () => {
     switch (type) {
       case "faQuestions":
@@ -37,7 +35,6 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
         dispatch(changeFraudBaseQuestionData(form.get));
         break;
     }
-    showSnackbar("You have successfully update question data");
     state.set(!state.get);
   };
   const onChangeField = (event: React.ChangeEvent<HTMLInputElement>) => {

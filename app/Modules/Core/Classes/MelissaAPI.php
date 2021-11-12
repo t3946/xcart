@@ -64,7 +64,7 @@ class MelissaAPI
 
     public function setMelissaEmailInfo(string $email)
     {
-        $email_info = $this->fetchMellissaEmail($email);
+        $email_info = $this->fetchMelissaEmail($email);
         if (!isset($email_info['Value1'])) {
             $this->email_data = $email_info;
         }
@@ -105,7 +105,7 @@ class MelissaAPI
         return null;
     }
 
-    private function fetchMellissaEmail($email)
+    private function fetchMelissaEmail($email)
     {
         $params = [
             'emailAddress' => $email,

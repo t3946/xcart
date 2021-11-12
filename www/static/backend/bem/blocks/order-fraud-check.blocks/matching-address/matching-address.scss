@@ -1,0 +1,17 @@
+.matching-table{
+  width: 30% !important;
+  border-collapse: collapse;
+  border-style: hidden;
+  td {
+    border: 1px solid #c5c5c5;
+  }
+  th {
+    border: 1px solid #c5c5c5;
+  }
+  .value{
+    text-align: right;
+  }
+  .description {
+    text-align: left;
+  }
+}

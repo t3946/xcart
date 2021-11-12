@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { GeneralSettings } from "@admin/modules/general-settings/components/general-settings/general-settings";
 import { generalSettingsStore } from "@redux/stores/generalSettingsStore";
+import { SnackBar } from "@admin/modules/shared/components/snack-bar/SnackBar";
 
 (() => {
   const elem: HTMLElement = document.querySelector(".general-settings");
@@ -11,7 +12,9 @@ import { generalSettingsStore } from "@redux/stores/generalSettingsStore";
 
   ReactDOM.render(
     <Provider store={generalSettingsStore as any}>
-      <GeneralSettings />
+      <SnackBar>
+        <GeneralSettings />
+      </SnackBar>
     </Provider>,
     elem
   );

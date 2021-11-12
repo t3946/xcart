@@ -26,6 +26,7 @@ export const BaseQuestionTable: React.FC = () => {
       <table border="1">
         <tr>
           <th>Question code</th>
+          <th>Template</th>
           <th>Auto</th>
           <th>Weight</th>
           <th>Type</th>
@@ -36,6 +37,7 @@ export const BaseQuestionTable: React.FC = () => {
             <td className="base-question-table-item-code">
               {question.questionCode}
             </td>
+            <td>{question.template}</td>
             <td>{question.auto}</td>
             <td>{question.weight}</td>
             <td>{question.type}</td>

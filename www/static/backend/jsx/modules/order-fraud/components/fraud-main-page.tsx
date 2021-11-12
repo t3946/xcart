@@ -12,6 +12,7 @@ import { MatrixHistory } from "@admin/modules/order-fraud/components/matrix-hist
 import { useDispatch, useSelector } from "react-redux";
 import {
   changeFraudCheckResult,
+  clearAlert,
   fetchForceFraudCheck,
   fetchStartCheckData,
   setFraudCheckOrderId,
@@ -20,6 +21,7 @@ import {
 import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
 import { MatrixModal } from "@admin/modules/order-fraud/components/matrix-modal/matrix-modal";
 import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
+import { MatchingAddress } from "@admin/modules/order-fraud/components/matching-address/MatchingAddress";
 
 interface FraudMainPage {
   orderId: number | string;
@@ -49,28 +51,10 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
   }, []);
   useEffect(() => {
     if (alert.state) {
-      showSnackbar(alert.message, alert.status);
+      showSnackbar(alert.message, alert.status, () => dispatch(clearAlert()));
     }
   }, [alert.state]);
 
-  // const handlerFraudCheckInfo = () => {
-  //   api
-  //     .get(`/api/order/fraud-check/settings/${orderId}`)
-  //     .then((res: ResponseFraudCheckOrder) => {
-  //       setLoading(false);
-  //       if (res.status) {
-  //         if (res.settings) {
-  //           setSettingsFraud(res.settings);
-  //         }
-  //         if (res.answer) {
-  //           setAnswer(res.answer);
-  //         }
-  //         if (res.settings.manual_action) {
-  //           setFraudManual(res.settings.manual_action);
-  //         }
-  //       }
-  //     });
-  // };
   const onApplyFrauds = () => {
     dispatch(
       changeFraudCheckResult(
@@ -80,11 +64,12 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
   };
   const handleForceCheck = () => {
     dispatch(fetchForceFraudCheck(Number(orderId)));
-    if (!alert.state) {
-      console.log("FETCH START DATA");
+  };
+  useEffect(() => {
+    if (loading && noCheck === null) {
       dispatch(fetchStartCheckData(Number(orderId)));
     }
-  };
+  }, [noCheck, loading]);
 
   if (loading) {
     return (
@@ -122,6 +107,9 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
           direction="column"
         >
           <div className="table-wrapper__fraud-check-question">
+            <Typography variant="h6" align="left">
+              Full names: Information gathering
+            </Typography>
             <MatrixHistory historyColumn={data.legend.full_name} />
             <Typography variant="h6" align="left">
               Full names: Cross check matrix
@@ -133,7 +121,11 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             />
           </div>
           <div className="table-wrapper__fraud-check-question">
+            <Typography variant="h6" align="left">
+              Addresses: Information gathering
+            </Typography>
             <MatrixHistory historyColumn={data.legend.address} />
+            <MatchingAddress />
             <Typography variant="h6" align="left">
               Addresses: Cross check matrix
             </Typography>

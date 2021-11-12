@@ -20,12 +20,12 @@ export interface FraudCheckStore {
 }
 export interface FraudCheckData {
   settings: {
-    statusList: { code: string; name: string }[];
     timeUnlocked: string;
-    prefix: string;
     lock: boolean;
     locked_orders: boolean;
     template: string;
+    statusList: { code: string; name: string }[];
+    prefix: string;
   };
   legend: {
     full_name: ColumnLegendData[];

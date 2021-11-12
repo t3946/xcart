@@ -20,7 +20,6 @@ use Xcart\App\Orm\Model;
  * @property FraudCheckColumnModel t_fraud
  * @property mixed weight
  * @property string template
- * @property string type
  */
 class FraudFAQuestionModel extends Model
 {

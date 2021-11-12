@@ -14,7 +14,7 @@ function* fetchBaseCheckData(action: AnyAction): Generator {
       data,
     });
   } catch (error) {
-    if (error.response.status === 400) {
+    if (error.response.status === 404) {
       yield put({
         type: "SET_NO_CHECK",
       });
@@ -23,7 +23,7 @@ function* fetchBaseCheckData(action: AnyAction): Generator {
 }
 function* forceFraudCheck(action: AnyAction): Generator {
   try {
-    const data = axios
+    const data = yield axios
       .get(`/api/order/fraud-check/force-check/${action.orderId}`)
       .then((response) => response.data);
     yield put({
@@ -42,7 +42,7 @@ function* unlockOrder(action: AnyAction): Generator {
       ? "/api/order/fraud-check/unlock-all"
       : `/api/order/fraud-check/unlock/${action.orderId}`;
     const status = yield axios.get(url).then((response) => response.data);
-    yield put({ type: "UNLOCK_ORDER" });
+    yield put({ type: "SET_UNLOCK_ORDER" });
   } catch (e) {}
 }
 function* changeScoreResult(action: AnyAction): Generator {
@@ -55,13 +55,18 @@ function* changeScoreResult(action: AnyAction): Generator {
 }
 function* updateFraudCheckStatus(action: AnyAction): Generator {
   try {
-    const newStatus = yield api
-      .post("/api/order/fraud-status/update", JSON.stringify(action.updateData))
-      .then((response) => response);
+    const newStatus = yield axios
+      .post(
+        "/api/order/fraud-status/update",
+        JSON.stringify({ orderId: action.orderId, code: action.code })
+      )
+      .then((response) => response.data);
     yield put({ type: "SET_FRAUD_CHECK_STATUS", newStatus });
   } catch (e) {
-    console.log("ERROR", e);
-    console.log(e.response.data);
+    yield put({
+      type: "SET_ALERT_ERROR",
+      message: e.response.data.message,
+    });
   }
 }
 function* actionWatcher(): SagaIterator {

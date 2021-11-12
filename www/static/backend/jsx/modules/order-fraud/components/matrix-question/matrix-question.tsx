@@ -4,6 +4,7 @@ import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 import { getHeaderClassByName } from "@admin/modules/order-fraud/utils/add-color-column";
 import { useDispatch } from "react-redux";
 import { changeTemplateView } from "@redux/actions/fraudCheckActions";
+import { convertResult } from "@admin/modules/order-fraud/utils/convert-fraud-score";
 interface MatrixQuestion {
   columns: {
     fraud_code: string;
@@ -41,7 +42,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
         return (
           <tr>
             <td
-              className={`table-header-fraud ${getHeaderClassByName(
+              className={`table-header-fraud column-name ${getHeaderClassByName(
                 column.fraud_name
               )}`}
             >
@@ -64,7 +65,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
                       onClick={(e) => handleClickAnswer(e, answer)}
                       className="answer-matrix-detail-text"
                     >
-                      {answer.fraud_score}
+                      {convertResult(answer)}
                     </div>
                   </td>
                 );

@@ -1,10 +1,9 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
 import { Form, Row } from "react-bootstrap";
 import { SelectFraudStatus } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/select-fraud-status";
 import { InputFraudField } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/input-fraud-field";
 import { UsersFraudSelect } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/fields/users-fraud-select";
-import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { defaultStateForm } from "@admin/modules/general-settings/ts/consts/fraud-check/default-state";
 import { FormDataFraud } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +13,6 @@ import { changeFraudSettingsForm } from "@redux/actions/fraudSettingsActions";
 export const CheckSettingsForm: React.FC<any> = () => {
   const [formData, setFormData] = useState<FormDataFraud>(defaultStateForm);
   const dispatch = useDispatch();
-  const { showSnackbar } = useContext(SnackbarContext);
   const settings = useSelector(
     (state: StoreGeneralSettings) => state.fraudSettings.settings
   );
@@ -30,7 +28,6 @@ export const CheckSettingsForm: React.FC<any> = () => {
   };
   const onSaveForm = () => {
     dispatch(changeFraudSettingsForm(formData));
-    showSnackbar("You have successfully update data", "success");
   };
   return (
     <Grid
@@ -45,7 +42,7 @@ export const CheckSettingsForm: React.FC<any> = () => {
             <Typography variant="h5">Fraud Check thresholds</Typography>
             <Form.Group className="form__group_section" as={Row}>
               <Form.Label className="label-fraud-settings" column sm={2}>
-                Domains of free email providers
+                Domains of free email providers [DC_DN]
               </Form.Label>
               <InputFraudField
                 state={{
@@ -53,6 +50,18 @@ export const CheckSettingsForm: React.FC<any> = () => {
                   set: onInputChange,
                 }}
                 name="fraud_domains_free_email_provider"
+              />
+            </Form.Group>
+            <Form.Group className="form__group_section" as={Row}>
+              <Form.Label className="label-fraud-settings" column sm={2}>
+                Domains related to fraudulent orders [RF-EM]:
+              </Form.Label>
+              <InputFraudField
+                state={{
+                  get: formData.fraudulent_domains,
+                  set: onInputChange,
+                }}
+                name="fraudulent_domains"
               />
             </Form.Group>
             <Form.Group className="form__group_section" as={Row}>

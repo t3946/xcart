@@ -22,6 +22,11 @@ const fraudCheckReducer = (
         ...state,
         alert: { state: true, message: action.message, status: "error" },
       };
+    case "CLEAR_ALERT":
+      return {
+        ...state,
+        alert: { state: false, message: "", status: "success" },
+      };
     case "SET_SUCCESS_FORCE":
       return { ...state, noCheck: null };
     case "SET_CHECK_DATA":
@@ -36,10 +41,17 @@ const fraudCheckReducer = (
         ...state,
         data: changeResultAnswer(state.data, action.field, action.value),
       };
-    case "UNLOCK_ORDER":
+    case "SET_UNLOCK_ORDER":
       return {
         ...state,
-        data: { ...state.data, settings: null },
+        data: {
+          ...state.data,
+          settings: {
+            ...state.data.settings,
+            lock: false,
+            locked_orders: false,
+          },
+        },
       };
     case "SET_FRAUD_CHECK_STATUS":
       return {
@@ -47,6 +59,11 @@ const fraudCheckReducer = (
         data: {
           ...state.data,
           orderInfo: { ...state.data.orderInfo, fraudStatus: action.newStatus },
+        },
+        alert: {
+          state: true,
+          status: "success",
+          message: "You have successfully updated data",
         },
       };
     case "CHANGE_FRAUD_CHECK_STATUS":
@@ -69,6 +86,11 @@ const fraudCheckReducer = (
       return {
         ...state,
         data: changeScoreResult(state.data, action.data),
+        alert: {
+          status: "success",
+          message: "You have successfully updated data",
+          state: true,
+        },
       };
     default:
       return state;
