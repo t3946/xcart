@@ -24,9 +24,9 @@ export interface SettingsList {
   status: FraudStatus[];
 }
 export interface ChangeQuestionDataForm {
-  weight: string | number;
+  weight: number;
   template: string;
-  orderBy: number;
-  questionId: string | number;
+  orderBy?: number;
+  questionId: number;
   type: string;
 }

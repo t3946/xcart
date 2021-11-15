@@ -83,18 +83,18 @@ class SaveFilePrice
             if (!$ar_fields[$this->search_by[$table_index]]) {
                 throw new Exception("Field for order search absent in list update field in $table_index table");
             }
-                foreach ($ar_fields[$this->search_by[$table_index]] as $key => $code) {
-                    $search_value = "$this->dx_code-$code";
-                    if ($this->search_by[$table_index] !== 'productcode') {
-                        $search_value = $code;
-                    }
-                    $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
-                    if ($product instanceof ProductModel) {
-                        $this->sendProductData($product, $table_index, $key);
-                        $this->success_productcode[] = "$this->dx_code-$code";
-                    }
+            foreach ($ar_fields[$this->search_by[$table_index]] as $key => $code) {
+                $search_value = "$this->dx_code-$code";
+                if ($this->search_by[$table_index] !== 'productcode') {
+                    $search_value = $code;
+                }
+                $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
+                if ($product instanceof ProductModel) {
+                    $this->sendProductData($product, $table_index, $key);
+                    $this->success_productcode[] = "$this->dx_code-$code";
                 }
             }
+        }
         $this->time_exec = time() - $time_start;
     }
 
@@ -112,7 +112,7 @@ class SaveFilePrice
                 case 'cost_to_us':
                 case 'list_price':
                 case 'new_map_price':
-                    if (!in_array($field, $this->fields_image[$t_index], true)) {
+                    if ($item[$num_row]) {
                         $ar_field[$field] = str_replace(['$', ','], '', $item[$num_row]);
                     }
                     break;

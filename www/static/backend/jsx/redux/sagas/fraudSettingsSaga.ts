@@ -35,7 +35,7 @@ function* changeSettingsForm(action: AnyAction): Generator {
 }
 function* changeFAQuestionData(action: AnyAction): Generator {
   try {
-    const data = yield axios
+    yield axios
       .post(`/api/question/fa/update`, JSON.stringify(action.question))
       .then((response) => response);
     yield put({

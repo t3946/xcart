@@ -21,6 +21,12 @@ const alertReducer = (
         message: action.message,
         status: "success",
       };
+    case "CLEAR_ALERT":
+      return {
+        state: false,
+        message: "",
+        status: "success",
+      };
     default:
       return state;
   }
