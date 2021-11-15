@@ -306,6 +306,11 @@ class ProductModel extends Model implements ICartItem
                 'class' => CharField::class,
                 'default' => '2,3,4,6,8,12',
             ],
+            'discount_slope' => [
+                'class' => DecimalField::class,
+                'null' => false,
+                'default' => 0.6
+            ],
             'source_sfid' => [
                 'class' => IntField::class,
                 'null' => false,
