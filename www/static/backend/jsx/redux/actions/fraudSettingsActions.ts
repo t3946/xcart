@@ -24,3 +24,6 @@ export const changeFraudBaseQuestionData = (
   type: "CHANGE_BASE_QUESTION_DATA",
   question,
 });
+export const clearAlert = () => ({
+  type: "CLEAR_ALERT",
+});

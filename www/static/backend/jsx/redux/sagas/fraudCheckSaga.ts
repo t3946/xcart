@@ -23,11 +23,17 @@ function* fetchBaseCheckData(action: AnyAction): Generator {
 }
 function* forceFraudCheck(action: AnyAction): Generator {
   try {
-    const data = yield axios
+    /* Первый запрос отправляется для принудительной проверки заказа на fraud check, второй на получение результата */
+    yield axios
       .get(`/api/order/fraud-check/force-check/${action.orderId}`)
       .then((response) => response.data);
+    const data = yield axios
+      .get(`/api/order/fraud-check/settings/${action.orderId}`)
+      .then((response) => response.data);
+
     yield put({
-      type: "SET_SUCCESS_FORCE",
+      type: "SET_CHECK_DATA",
+      data,
     });
   } catch (e) {
     yield put({

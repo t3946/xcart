@@ -386,10 +386,11 @@ HTML;
             $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
             if ($order_model instanceof OrderModel) {
                 $order_model->orderFraudCheck();
+                sleep(3); // чтобы избежать быстрого перехода от одного запроса к другому
                 $this->jsonResponse(['status' => true]);
             }
         } catch (\Throwable $exception) {
-            $this->jsonResponse(['error' => $exception->getMessage()], 400);
+            $this->jsonResponse(['message' => $exception->getMessage()], 400);
         }
     }
 

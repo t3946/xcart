@@ -1,9 +1,6 @@
-import React, { useContext } from "react";
-import { FraudCheckOrderContext } from "@admin/modules/order-fraud/contexts/FraudCheckOrderContext";
+import React from "react";
 import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 import { getHeaderClassByName } from "@admin/modules/order-fraud/utils/add-color-column";
-import { useDispatch } from "react-redux";
-import { changeTemplateView } from "@redux/actions/fraudCheckActions";
 import { convertResult } from "@admin/modules/order-fraud/utils/convert-fraud-score";
 interface MatrixQuestion {
   columns: {

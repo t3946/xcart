@@ -96,18 +96,16 @@ class BaseFraudCheckModelV2 extends Model
 
     public function isPaypalPayment(OrderModel $order): bool
     {
-        /** @var OrderTransactionModel $oTransaction */
-        if ($oTransaction = $this->getFirstTransaction($order)) {
-            return ($oTransaction->payment_method_model->frontend_processor->processor_name === ProcessorModel::PAYMENT_NAME_PAYPAL);
+        if ($payment = $order->payment_method_model) {
+            return ($payment->frontend_processor->processor_name === ProcessorModel::PAYMENT_NAME_PAYPAL);
         }
         return false;
     }
 
     public function isStripePayment(OrderModel $order): bool
     {
-        /** @var OrderTransactionModel $transaction_model */
-        if ($transaction_model = $order->getFirstTransaction()) {
-            return ($transaction_model->payment_method_model->frontend_processor->processor_name === ProcessorModel::PAYMENT_NAME_STRIPE);
+        if ($payment = $order->payment_method_model) {
+            return $payment->frontend_processor->processor_name === ProcessorModel::PAYMENT_NAME_STRIPE;
         }
         return false;
     }
@@ -122,8 +120,9 @@ class BaseFraudCheckModelV2 extends Model
         $code_method = str_replace('-', '_', $this->question_code);
         $method = "score$code_method";
         /** Если PayPal|Stripe вопрос, то проверяется оплата заказа была ли через них сделана **/
-        if (in_array($this->type, [self::FRAUD_TYPE_PAY_PAL, self::FRAUD_TYPE_STRIPE])
-            && !($this->isStripePayment($order) || $this->isPaypalPayment($order))) {
+        if (($this->type === self::FRAUD_TYPE_PAY_PAL && !($this->isPaypalPayment($order)))
+            || ($this->type === self::FRAUD_TYPE_STRIPE && (!$this->isStripePayment($order)))
+        ) {
             return null;
         }
         if (method_exists(BaseFraudCheckHelperV2::class, $method)) {

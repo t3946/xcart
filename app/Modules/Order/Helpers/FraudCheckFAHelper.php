@@ -281,7 +281,7 @@ class FraudCheckFAHelper
         return false;
     }
 
-    private function compareTenantAddressByName(string $name_address, string $full_name)
+    private function compareTenantAddressByName(string $name_address, string $full_name): bool
     {
         if (!is_null($this->ob_melissa->melissa_address[$name_address]['address']['NameFull'])) {
             return $this->compareClientName($full_name, $this->ob_melissa->melissa_address[$name_address]['address']['NameFull']);
@@ -289,16 +289,36 @@ class FraudCheckFAHelper
         return false;
     }
 
+    private function compareTelephoneClientName(string $f_full_name, string $t_full_name): bool
+    {
+        $ar_f = explode(' ', $f_full_name);
+        $ar_t = explode(' ', $t_full_name);
+
+        $t_reverse = array_reverse(explode(' ', $t_full_name));
+        // Если имени в последнем параметр имени одинаковый с последним параметром перевернутого имени, то true
+        if (count($t_reverse) > 1) {
+            foreach ([$ar_t, $t_reverse] as $name) {
+                if ((strtoupper($ar_f[count($ar_f) - 1]) === strtoupper($name[count($name) - 1]))
+                    || soundex($ar_f[count($ar_f) - 1]) === soundex($name[count($name) - 1])) {
+                    return true;
+                }
+            }
+        }
+        return $this->compareClientName($f_full_name, $t_full_name);
+    }
+
     /** Парсит полное имя и сравнивает фамилию(последний элемент) в формате upperCase со вторым
      * @param string $f_full_name - Полное имя первого
      * @param string $t_full_name - Полное имя второго
      * @return bool
      */
-    private function compareClientName(string $f_full_name, string $t_full_name)
+    private function compareClientName(string $f_full_name, string $t_full_name): bool
     {
         $ar_f = explode(' ', $f_full_name);
         $ar_t = explode(' ', $t_full_name);
-        if (strtoupper($ar_f[count($ar_f) - 1]) === strtoupper($ar_t[count($ar_t) - 1])) {
+
+        if (strtoupper($ar_f[count($ar_f) - 1]) === strtoupper($ar_t[count($ar_t) - 1])
+            || soundex($ar_f[count($ar_f) - 1]) === soundex($ar_t[count($ar_t) - 1])) {
             return true;
         }
         return false;
@@ -309,9 +329,7 @@ class FraudCheckFAHelper
         $phone_data = $this->ob_melissa->phone_data;
         if (!empty($phone_data)) {
             if (!empty(trim($phone_data['CallerID']))) {
-                $phone_reverse = array_reverse(explode(' ', trim($this->ob_melissa->phone_data['CallerID'])));
-                $phone = implode(' ', $phone_reverse);
-                return $this->compareClientName($full_name, $phone);
+                return $this->compareTelephoneClientName($full_name, $phone_data['CallerID']);
             }
         }
         return false;

@@ -65,11 +65,6 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
   const handleForceCheck = () => {
     dispatch(fetchForceFraudCheck(Number(orderId)));
   };
-  useEffect(() => {
-    if (loading && noCheck === null) {
-      dispatch(fetchStartCheckData(Number(orderId)));
-    }
-  }, [noCheck, loading]);
 
   if (loading) {
     return (
@@ -125,6 +120,9 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               Addresses: Information gathering
             </Typography>
             <MatrixHistory historyColumn={data.legend.address} />
+            <Typography variant="h6" align="left">
+              Comparison of two addresses: Matching degrees
+            </Typography>
             <MatchingAddress />
             <Typography variant="h6" align="left">
               Addresses: Cross check matrix
