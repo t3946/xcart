@@ -30,83 +30,87 @@ class OrderFraudCheckController extends Controller
      */
     public function getBaseSettings(int $order_id = null)
     {
-        /** @var OrderModel $order_model */
-        $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+        try {
+            /** @var OrderModel $order_model */
+            $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
 
-        $count_frauds = OrderBaseFraudCheckModelV2::objects()->filter(['order_id' => $order_model->orderid])->count();
-        $count_fa_frauds = OrderFraudFACheckModel::objects()->filter(['order_id' => $order_model->orderid])->count();
+            $count_frauds = OrderBaseFraudCheckModelV2::objects()->filter(['order_id' => $order_model->orderid])->count();
+            $count_fa_frauds = OrderFraudFACheckModel::objects()->filter(['order_id' => $order_model->orderid])->count();
 
-        if (!($count_frauds && $count_fa_frauds)) {
-            $this->jsonResponse([], 404);
-            return;
-        }
-        $ar_settings = ['locked_orders' => false];
-        $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
-        $current_time = time();
-        $login_last_opened_or_saved = $order_model->login_last_opened_or_saved;
-        $time_last_opened_or_saved = $order_model->time_last_opened_or_saved;
-        $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
-        $you_have_right_to_change_order = true;
-        if ($login_last_opened_or_saved === Xcart::app()->user->login) {
-            $order_model->time_last_opened_or_saved = $current_time;
-            $time_last_opened_or_saved = $current_time;
-        } else if ($diff_time_in_mins > $time_for_order_in_mins) {
-            $order_model->login_last_opened_or_saved = Xcart::app()->user->login;
-            $order_model->time_last_opened_or_saved = $current_time;
-            $time_last_opened_or_saved = $current_time;
-        } else {
-            $you_have_right_to_change_order = false;
-        }
-        $order_model->save();
-        $time_unlock = $time_last_opened_or_saved + $time_for_order_in_mins * 60 + 60 * 60;
-        if ($you_have_right_to_change_order) {
-
-            $ar_settings = ['lock' => true, 'timeUnlocked' => date("G:i", $time_unlock)];
-            $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
-            $count_locked_orders = OrderModel::objects()->filter(
-                [
-                    'login_last_opened_or_saved' => Xcart::app()->user->login,
-                    'time_last_opened_or_saved__gt' => $tmp_diff_time
-                ]
-            )->count();
-            if ($count_locked_orders > 1) {
-                $ar_settings['locked_orders'] = true;
+            if (!($count_frauds && $count_fa_frauds)) {
+                $this->jsonResponse([], 404);
+                return;
             }
-        }
-        $ar_settings['statusList'] = FraudStatusModel::objects()->order(['order_by'])->valuesList(['code', 'name']);
-        $ar_settings['prefix'] = $order_model->order_prefix;
-        /** @var LanguageModel $template */
-        $template = LanguageModel::objects()->get(['name' => 'lbl_fraud_check_expert_section']);
-        $ar_settings['template'] = $template->value;
+            $ar_settings = ['locked_orders' => false];
+            $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
+            $current_time = time();
+            $login_last_opened_or_saved = $order_model->login_last_opened_or_saved;
+            $time_last_opened_or_saved = $order_model->time_last_opened_or_saved;
+            $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
+            $you_have_right_to_change_order = true;
+            if ($login_last_opened_or_saved === Xcart::app()->user->login) {
+                $order_model->time_last_opened_or_saved = $current_time;
+                $time_last_opened_or_saved = $current_time;
+            } else if ($diff_time_in_mins > $time_for_order_in_mins) {
+                $order_model->login_last_opened_or_saved = Xcart::app()->user->login;
+                $order_model->time_last_opened_or_saved = $current_time;
+                $time_last_opened_or_saved = $current_time;
+            } else {
+                $you_have_right_to_change_order = false;
+            }
+            $order_model->save();
+            $time_unlock = $time_last_opened_or_saved + $time_for_order_in_mins * 60 + 60 * 60;
+            if ($you_have_right_to_change_order) {
 
-        $ar_response['settings'] = $ar_settings;
-        $base_list = ['fraud_code', 'fraud_name', 'type', 'fraud_id', 'fraud_id'];
-        $ar_response['columns'] = [
-            'fullName' => FraudCheckColumnModel::objects()->filter(['type' => 'full_name'])->valuesList($base_list),
-            'address' => FraudCheckColumnModel::objects()->filter(['type' => 'address'])->valuesList($base_list)
-        ];
+                $ar_settings = ['lock' => true, 'timeUnlocked' => date("G:i", $time_unlock)];
+                $tmp_diff_time = time() - 60 * $time_for_order_in_mins;
+                $count_locked_orders = OrderModel::objects()->filter(
+                    [
+                        'login_last_opened_or_saved' => Xcart::app()->user->login,
+                        'time_last_opened_or_saved__gt' => $tmp_diff_time
+                    ]
+                )->count();
+                if ($count_locked_orders > 1) {
+                    $ar_settings['locked_orders'] = true;
+                }
+            }
+            $ar_settings['statusList'] = FraudStatusModel::objects()->order(['order_by'])->valuesList(['code', 'name']);
+            $ar_settings['prefix'] = $order_model->order_prefix;
+            /** @var LanguageModel $template */
+            $template = LanguageModel::objects()->get(['name' => 'lbl_fraud_check_expert_section']);
+            $ar_settings['template'] = $template->value;
 
-        $ar_answer = $this->getBaseAnswerOrder($order_model);
-        $ar_fa_answer = $this->getAnswerFAOrder($order_model);
-        if (!empty($ar_fa_answer) && !empty($ar_answer)) {
-            $ar_response['answer'] = array_merge($ar_answer, $ar_fa_answer);
-        }
-        $ar_payment_answer = $this->getAnswerPaymentFrauds($order_model);
-        if (!empty($ar_payment_answer)) {
-            $ar_response['answer'] = array_merge($ar_response['answer'] ?? [], ['payment' => $ar_payment_answer]);
-        }
-        $ar_response['legend'] = $this->getLenendInfo($order_model);
-        $ar_response['resultChange'] = $this->getManualAction($ar_answer);
-        $ar_response['orderInfo'] = [
-            'bareResult' => $order_model->bare_fraud_score_v2,
-            'overallResult' => $order_model->overall_fraud_score_v2,
-            'fraudStatus' => [
-                'name' => $order_model->fraud_status_model->name,
-                'code' => $order_model->fraud_status
-            ]
-        ];
+            $ar_response['settings'] = $ar_settings;
+            $base_list = ['fraud_code', 'fraud_name', 'type', 'fraud_id', 'fraud_id'];
+            $ar_response['columns'] = [
+                'fullName' => FraudCheckColumnModel::objects()->filter(['type' => 'full_name'])->valuesList($base_list),
+                'address' => FraudCheckColumnModel::objects()->filter(['type' => 'address'])->valuesList($base_list)
+            ];
 
-        $this->jsonResponse($ar_response);
+            $ar_answer = $this->getBaseAnswerOrder($order_model);
+            $ar_fa_answer = $this->getAnswerFAOrder($order_model);
+            if (!empty($ar_fa_answer) && !empty($ar_answer)) {
+                $ar_response['answer'] = array_merge($ar_answer, $ar_fa_answer);
+            }
+            $ar_payment_answer = $this->getAnswerPaymentFrauds($order_model);
+            if (!empty($ar_payment_answer)) {
+                $ar_response['answer'] = array_merge($ar_response['answer'] ?? [], ['payment' => $ar_payment_answer]);
+            }
+            $ar_response['legend'] = $this->getLenendInfo($order_model);
+            $ar_response['resultChange'] = $this->getManualAction($ar_answer);
+            $ar_response['orderInfo'] = [
+                'bareResult' => $order_model->bare_fraud_score_v2,
+                'overallResult' => $order_model->overall_fraud_score_v2,
+                'fraudStatus' => [
+                    'name' => $order_model->fraud_status_model->name,
+                    'code' => $order_model->fraud_status
+                ]
+            ];
+
+            $this->jsonResponse($ar_response);
+        } catch (\Throwable $exception) {
+            $this->jsonResponse(['message' => $exception->getMessage()]);
+        }
     }
 
 
