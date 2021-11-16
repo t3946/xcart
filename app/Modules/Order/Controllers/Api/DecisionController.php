@@ -64,7 +64,7 @@ class DecisionController extends Controller
             $this->data['solved'],
             self::LIMIT_SELECT_DECISIONS,
             $this->data['offset'],
-            $this->data['solved'] ? ['-created'] : ['-updated']
+            $this->data['solved'] ? ['-updated'] : ['-created']
         );
 
         $this->jsonResponse($decision);
@@ -106,5 +106,4 @@ class DecisionController extends Controller
             'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
         ]);
     }
-
 }
