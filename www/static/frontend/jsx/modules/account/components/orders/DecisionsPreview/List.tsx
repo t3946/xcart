@@ -20,7 +20,13 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
   const { decisions, className } = props;
   const items = [];
   const classes = {
-    list: [className, style["decisions-list-items"]],
+    list: [
+      className,
+      style["decisions-list-items"],
+      {
+        "overflow-hidden": decisions.length <= 3,
+      },
+    ],
   };
   const [isIntersecting, setIsIntersecting] = React.useState(false);
   const dispatch = useDispatch();
@@ -123,7 +129,6 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
         setIsIntersecting(!isLoading && entry.isIntersecting);
 
         if (entry.isIntersecting) {
-
           observer.unobserve(target);
         }
       });
