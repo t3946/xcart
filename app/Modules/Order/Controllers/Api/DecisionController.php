@@ -60,7 +60,7 @@ class DecisionController extends Controller
         $user = Xcart::app()->auth->getUser(true);
 
         $decision = DecisionController::getDecisions(
-            60,
+            $user['user_id'],
             $this->data['solved'],
             self::LIMIT_SELECT_DECISIONS,
             $this->data['offset'],
