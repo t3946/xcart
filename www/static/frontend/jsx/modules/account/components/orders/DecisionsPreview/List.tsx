@@ -14,10 +14,11 @@ interface PropsInterface {
   decisions: Record<any, any>[];
   className?: any;
   solved: boolean;
+  onAllLoaded?: () => void;
 }
 
 const List: React.FC<PropsInterface> = function (props: PropsInterface) {
-  const { decisions, className } = props;
+  const { decisions, className, onAllLoaded } = props;
   const items = [];
   const classes = {
     list: [
@@ -35,7 +36,10 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isAllLoaded, setIsAllLoaded] = React.useState(false);
 
-  if (isIntersecting && !isLoading && !isAllLoaded) {
+  if (
+    !isAllLoaded &&
+    (decisions.length === 0 || (isIntersecting && !isLoading))
+  ) {
     getMoreDecision();
     setIsIntersecting(false);
   }
@@ -55,6 +59,7 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
         success(res) {
           if (res.length === 0) {
             setIsAllLoaded(true);
+            onAllLoaded && onAllLoaded();
           }
 
           let actionData;
@@ -112,9 +117,9 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
 
   useEffect(function () {
     let reviewLoadedObserver = null;
-    const target = theLastItemRef.current.base;
+    const target = theLastItemRef.current?.base;
 
-    if (isLoading || isAllLoaded) {
+    if (!target || isLoading || isAllLoaded) {
       return;
     }
 

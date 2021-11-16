@@ -4,11 +4,13 @@ import { Row } from "react-bootstrap";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 const Decisions: React.FC = function () {
+  const [isPrintSolved, setIsPrintSolved] = React.useState(true);
+  const [isPrintNotSolved, setIsPrintNotSolved] = React.useState(true);
   const decisions = useSelectorAccount((state) => state.decisions);
 
   const lists = [];
 
-  if (decisions.notSolved.decisions.length) {
+  if (isPrintNotSolved) {
     lists.push(
       <>
         <h2 className={"decisions-list-header decisions-lists__header mt-md-0"}>
@@ -20,13 +22,18 @@ const Decisions: React.FC = function () {
             solved={false}
             decisions={decisions.notSolved.decisions}
             className={"decisions-lists__required-list px-0 common-scrollbar"}
+            onAllLoaded={() => {
+              if (decisions.notSolved.decisions.length === 0) {
+                setIsPrintNotSolved(false);
+              }
+            }}
           />
         </Row>
       </>
     );
   }
 
-  if (decisions.solved.decisions.length) {
+  if (isPrintSolved) {
     lists.push(
       <>
         <h2 className={"decisions-list-header decisions-lists__header"}>
@@ -38,6 +45,11 @@ const Decisions: React.FC = function () {
             solved={true}
             decisions={decisions.solved.decisions}
             className={"px-0 common-scrollbar"}
+            onAllLoaded={() => {
+              if (decisions.solved.decisions.length === 0) {
+                setIsPrintSolved(false);
+              }
+            }}
           />
         </Row>
       </>
