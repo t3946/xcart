@@ -17,7 +17,7 @@ class DecisionModel extends Model
 
     public static function tableName()
     {
-        return 'account_decision';
+        return 'account_decisions';
     }
 
     public static function getFields()
