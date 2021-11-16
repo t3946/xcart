@@ -20,10 +20,12 @@ interface PropsInterface {
   name: string;
   checked?: boolean;
   onChange: any;
+  disabled?: boolean;
 }
 
 const Advice: React.FC<PropsInterface> = (props: PropsInterface) => {
   const { type, className, value, name, checked, onChange } = props;
+  const disabled = props.disabled || false;
 
   function iconTemplate() {
     const iconClasses = [
@@ -69,7 +71,10 @@ const Advice: React.FC<PropsInterface> = (props: PropsInterface) => {
     ],
     marker: [
       "estimate-advise-radio-marker",
-      { "estimate-advise-radio-marker_checked": checked },
+      {
+        "estimate-advise-radio-marker_checked": checked,
+        "estimate-advise-radio-marker_disabled": disabled,
+      },
     ],
     button: [
       "estimate-advise-button",
@@ -96,6 +101,7 @@ const Advice: React.FC<PropsInterface> = (props: PropsInterface) => {
         onChange={onChange}
         className={"d-none"}
         checked={checked}
+        disabled={disabled}
       />
 
       <div className={classnames(classes.button)}>

@@ -12,6 +12,7 @@ interface PropsInterface {
   hasOutOfStock: boolean;
   hasDiscontinued: boolean;
   className?: any;
+  disabled?: boolean;
 }
 
 const AdviceList: React.FC<PropsInterface> = function (props: PropsInterface) {
@@ -24,6 +25,7 @@ const AdviceList: React.FC<PropsInterface> = function (props: PropsInterface) {
     hasDiscontinued,
     className,
   } = props;
+  const disabled = props.disabled || false;
   const printAdviseMap = {};
 
   printAdviseMap[AdviceTypes.replace] = hasOutOfStock;
@@ -44,6 +46,7 @@ const AdviceList: React.FC<PropsInterface> = function (props: PropsInterface) {
           name={name}
           checked={value === printAdviseMapKey}
           onChange={onChange}
+          disabled={disabled}
         />
       );
     }

@@ -20,6 +20,7 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
 ) => {
   const { onChange, decision } = props;
   const dispatch = useDispatch();
+  console.log("decision", decision);
   const mockData = [
     // {
     //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
@@ -42,8 +43,8 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
   ];
 
   const initialState = {
-    comment: "",
-    advice: "",
+    comment: decision.options.comment || "",
+    advice: decision.options.advice || "",
   };
 
   const validationSchema = yup.object().shape({
@@ -52,7 +53,6 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
   });
 
   function submit(values, { setSubmitting }) {
-    console.log("submit");
     setSubmitting(false);
     dispatch(
       solveDecisionAction({
@@ -66,6 +66,21 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
           setSubmitting(false);
         },
       })
+    );
+  }
+
+  function buttonTemplate(isSubmitting: boolean) {
+    if (decision.solved) {
+      return;
+    }
+
+    return (
+      <button
+        className={"form-button estimate-advise__submit-button w-md-auto"}
+        disabled={isSubmitting}
+      >
+        submit my decision
+      </button>
     );
   }
 
@@ -110,6 +125,7 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
                   hasOutOfStock={true}
                   hasDiscontinued={true}
                   className={"estimated-time-arrival__advices-list"}
+                  disabled={isSubmitting || decision.solved === 1}
                 />
 
                 <RBForm.Group
@@ -127,6 +143,7 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
                     onChange={handleChange}
                     className={"advice-comment form-input"}
                     isInvalid={!!errors.comment}
+                    disabled={isSubmitting || decision.solved === 1}
                   />
 
                   <RBForm.Control.Feedback type="invalid">
@@ -135,14 +152,7 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
                 </RBForm.Group>
 
                 <div className="estimate-advise-submit-button d-flex justify-content-md-center justify-content-lg-start">
-                  <button
-                    className={
-                      "form-button estimate-advise__submit-button w-md-auto"
-                    }
-                    disabled={isSubmitting}
-                  >
-                    submit my decision
-                  </button>
+                  {buttonTemplate(isSubmitting)}
                 </div>
               </div>
             </Form>
