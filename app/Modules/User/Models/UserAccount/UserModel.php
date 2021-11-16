@@ -151,6 +151,7 @@ class UserModel extends Model
             ],
             'decisions_required_count' => [
                 'class' => CharField::class,
+                'default' => 0,
             ],
         ];
     }
