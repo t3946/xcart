@@ -1,7 +1,7 @@
 import React from "react";
 import Navigation from "@client/modules/account/components/orders/Navigation/Navigation";
 import EstimatedTimeArrival from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
-import AppData, { route } from "@client/jsx/utils/AppData";
+import { route } from "@client/jsx/utils/AppData";
 import { useHistory } from "react-router-dom";
 import DecisionsInterface from "@client/modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
@@ -9,11 +9,12 @@ import {
   addAction,
   resetAction,
 } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 function getDecision() {
   const decisionId = parseInt(document.location.href.split("/").pop());
-  const { solved, notSolved } = AppData["decisions"];
-  const decisions = [...solved, ...notSolved];
+  const { solved, notSolved } = useSelectorAccount((e) => e.decisions);
+  const decisions = [...solved.decisions, ...notSolved.decisions];
 
   let decision;
   let i = 0;
@@ -37,6 +38,7 @@ const Decision: React.FC = () => {
 
   if (!decision) {
     history.push(route("account:order-decisions-required"));
+    return;
   }
 
   function onChangeDecision(decision: DecisionsInterface) {
