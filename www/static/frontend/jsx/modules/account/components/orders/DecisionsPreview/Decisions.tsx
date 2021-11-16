@@ -27,6 +27,7 @@ const Decisions: React.FC = function () {
                 setIsPrintNotSolved(false);
               }
             }}
+            key={"notSolved"}
           />
         </Row>
       </>
@@ -50,6 +51,7 @@ const Decisions: React.FC = function () {
                 setIsPrintSolved(false);
               }
             }}
+            key={"solved"}
           />
         </Row>
       </>
