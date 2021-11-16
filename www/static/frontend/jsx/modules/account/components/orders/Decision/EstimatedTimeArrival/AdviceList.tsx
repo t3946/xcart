@@ -1,7 +1,7 @@
 import React from "react";
-import Advise, {
-  AdviseTypes,
-} from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/Advise";
+import Advice, {
+  AdviceTypes,
+} from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
 import classnames from "classnames";
 
 interface PropsInterface {
@@ -14,7 +14,7 @@ interface PropsInterface {
   className?: any;
 }
 
-const AdviseList: React.FC<PropsInterface> = function (props: PropsInterface) {
+const AdviceList: React.FC<PropsInterface> = function (props: PropsInterface) {
   const {
     onChange,
     name,
@@ -26,10 +26,10 @@ const AdviseList: React.FC<PropsInterface> = function (props: PropsInterface) {
   } = props;
   const printAdviseMap = {};
 
-  printAdviseMap[AdviseTypes.replace] = hasOutOfStock;
-  printAdviseMap[AdviseTypes.ship] = hasInStock;
-  printAdviseMap[AdviseTypes.wait] = hasOutOfStock;
-  printAdviseMap[AdviseTypes.cancel] =
+  printAdviseMap[AdviceTypes.replace] = hasOutOfStock;
+  printAdviseMap[AdviceTypes.ship] = hasInStock;
+  printAdviseMap[AdviceTypes.wait] = hasOutOfStock;
+  printAdviseMap[AdviceTypes.cancel] =
     (hasInStock || hasOutOfStock) && (hasOutOfStock || hasDiscontinued);
 
   const options = [];
@@ -37,7 +37,7 @@ const AdviseList: React.FC<PropsInterface> = function (props: PropsInterface) {
   for (const printAdviseMapKey in printAdviseMap) {
     if (printAdviseMap[printAdviseMapKey]) {
       options.push(
-        <Advise
+        <Advice
           type={printAdviseMapKey}
           className={"advise-list__item"}
           value={printAdviseMapKey}
@@ -52,4 +52,4 @@ const AdviseList: React.FC<PropsInterface> = function (props: PropsInterface) {
   return <div className={classnames(className)}>{options}</div>;
 };
 
-export default AdviseList;
+export default AdviceList;

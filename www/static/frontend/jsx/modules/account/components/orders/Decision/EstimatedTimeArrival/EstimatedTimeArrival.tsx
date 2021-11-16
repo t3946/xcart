@@ -5,7 +5,7 @@ import EstimatedTimeArrivalTable, {
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
-import AdviseList from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/AdviseList";
+import AdviceList from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/AdviceList";
 import { solveDecisionAction } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 import DecisionsInterface from "@client/modules/account/ts/types/decision";
@@ -102,7 +102,7 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
                   <b>Please advise</b> if you would like us to
                 </div>
 
-                <AdviseList
+                <AdviceList
                   name={"advice"}
                   onChange={handleChange}
                   value={values.advice}

@@ -6,7 +6,7 @@ import Clock from "@client/modules/icon/components/account/clock/Clock";
 import classnames from "classnames";
 import { Form as RBForm } from "react-bootstrap";
 
-export enum AdviseTypes {
+export enum AdviceTypes {
   wait = "wait",
   ship = "ship",
   cancel = "cancel",
@@ -14,7 +14,7 @@ export enum AdviseTypes {
 }
 
 interface PropsInterface {
-  type: AdviseTypes | string;
+  type: AdviceTypes | string;
   className: any;
   value: string;
   name: string;
@@ -22,7 +22,7 @@ interface PropsInterface {
   onChange: any;
 }
 
-const Advise: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Advice: React.FC<PropsInterface> = (props: PropsInterface) => {
   const { type, className, value, name, checked, onChange } = props;
 
   function iconTemplate() {
@@ -32,13 +32,13 @@ const Advise: React.FC<PropsInterface> = (props: PropsInterface) => {
       "estimate-advise-icon_" + type,
     ];
     switch (type) {
-      case AdviseTypes.wait:
+      case AdviceTypes.wait:
         return <Clock className={classnames(iconClasses)} />;
-      case AdviseTypes.ship:
+      case AdviceTypes.ship:
         return <Truck className={classnames(iconClasses)} />;
-      case AdviseTypes.cancel:
+      case AdviceTypes.cancel:
         return <Ban className={classnames(iconClasses)} />;
-      case AdviseTypes.replace:
+      case AdviceTypes.replace:
         return <Replace className={classnames(iconClasses)} />;
     }
   }
@@ -75,12 +75,12 @@ const Advise: React.FC<PropsInterface> = (props: PropsInterface) => {
       "estimate-advise-button",
       "estimate-advise__button",
       {
-        "estimated-advise-button_wait": type === AdviseTypes.wait && checked,
-        "estimated-advise-button_ship": type === AdviseTypes.ship && checked,
+        "estimated-advise-button_wait": type === AdviceTypes.wait && checked,
+        "estimated-advise-button_ship": type === AdviceTypes.ship && checked,
         "estimated-advise-button_cancel":
-          type === AdviseTypes.cancel && checked,
+          type === AdviceTypes.cancel && checked,
         "estimated-advise-button_replace":
-          type === AdviseTypes.replace && checked,
+          type === AdviceTypes.replace && checked,
       },
     ],
   };
@@ -106,4 +106,4 @@ const Advise: React.FC<PropsInterface> = (props: PropsInterface) => {
   );
 };
 
-export default Advise;
+export default Advice;
