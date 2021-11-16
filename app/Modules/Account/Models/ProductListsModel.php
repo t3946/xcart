@@ -54,7 +54,7 @@ class ProductListsModel extends Model
                 'modelClass' => UserModel::class,
                 'through' => UserListModel::class
             ],
-             'user_list_roles' => [
+            'user_list_roles' => [
                 'class' => HasManyField::class,
                  'modelClass' => UserListModel::class,
                  'link' => ['product_list_id' => 'product_list_id']
