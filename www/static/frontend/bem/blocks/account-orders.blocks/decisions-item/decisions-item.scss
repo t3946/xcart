@@ -9,12 +9,10 @@
   font-size: rem-calc(18);
   padding: 0 rem-calc(21);
 
-  &:hover .decisions-item-text {
-    text-decoration: underline;
-  }
-
-  &:active .decisions-item-text {
-    text-decoration: none;
+  &:hover, &:active {
+    .decisions-item-text {
+      text-decoration: underline;
+    }
   }
 
   @include breakpoint(md up) {

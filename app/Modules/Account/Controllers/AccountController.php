@@ -89,8 +89,8 @@ class AccountController extends FrontendController
         StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
 
         StorageHelper::push([
-            'resolved' => DecisionController::getDecisions($user['user_id'], 1, 3, 0),
-            'notResolved' => DecisionController::getDecisions($user['user_id'], 0, 3, 0),
+            'notSolved' => DecisionController::getDecisions($user['user_id'], 0, 4, 0, ['-created']),
+            'solved' => DecisionController::getDecisions($user['user_id'], 1, 4, 0, ['-updated']),
         ], null, 'decisions');
 
         AdminHelper::routesData();

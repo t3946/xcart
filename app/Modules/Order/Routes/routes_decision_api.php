@@ -10,6 +10,13 @@ return [
         'target' => [ DecisionController::class, 'createEstimatedTimeArrivalDecisionAction' ],
         'name' => 'decisions_create',
     ],
+
+    [
+        'route' => '/make',
+        'target' => [ DecisionController::class, 'makeDecisionsAction' ],
+        'name' => 'decisions_make',
+    ],
+
     [
         'route' => '/get',
         'target' => [ DecisionController::class, 'getDecisionsAction' ],

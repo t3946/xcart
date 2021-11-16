@@ -4,6 +4,7 @@ import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/alert";
 import { List } from "@client/modules/account/ts/types/list.type";
 import PhotoSwipe from "@client/libs/photoswipe/dist/photoswipe";
+import DecisionsInterface from "@client/modules/account/ts/types/decision";
 
 export interface AccountStore {
   addresses: AccountAddressesStore;
@@ -140,6 +141,16 @@ interface StoreInterface {
   ordersStore?: {
     orders: any;
     ordersLoading: any;
+  };
+  decisions: {
+    solved: {
+      pagination_offset: number;
+      decisions: DecisionsInterface[];
+    };
+    notSolved: {
+      pagination_offset: number;
+      decisions: DecisionsInterface[];
+    };
   };
 }
 

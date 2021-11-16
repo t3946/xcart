@@ -3,11 +3,17 @@ import Navigation from "@client/modules/account/components/orders/Navigation/Nav
 import EstimatedTimeArrival from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
 import AppData, { route } from "@client/jsx/utils/AppData";
 import { useHistory } from "react-router-dom";
+import DecisionsInterface from "@client/modules/account/ts/types/decision";
+import { useDispatch } from "react-redux";
+import {
+  addAction,
+  resetAction,
+} from "@client/jsx/redux/actions/account-actions/DecisionsActions";
 
 function getDecision() {
   const decisionId = parseInt(document.location.href.split("/").pop());
-  const { resolved, notResolved } = AppData["decisions"];
-  const decisions = [...resolved, ...notResolved];
+  const { solved, notSolved } = AppData["decisions"];
+  const decisions = [...solved, ...notSolved];
 
   let decision;
   let i = 0;
@@ -25,20 +31,27 @@ function getDecision() {
 }
 
 const Decision: React.FC = () => {
+  const dispatch = useDispatch();
   const decision = getDecision();
+  const history = useHistory();
 
   if (!decision) {
-    const history = useHistory();
+    history.push(route("account:order-decisions-required"));
+  }
+
+  function onChangeDecision(decision: DecisionsInterface) {
+    dispatch(resetAction());
+    dispatch(addAction(decision));
     history.push(route("account:order-decisions-required"));
   }
 
   return (
     <div>
       <h1 className={"text-center fw-bold decision-header decision__header"}>
-        Order # {decision.options.order_number}
+        Order # {decision.order_number}
       </h1>
       <Navigation />
-      <EstimatedTimeArrival />
+      <EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />
     </div>
   );
 };

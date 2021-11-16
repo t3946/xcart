@@ -2,7 +2,10 @@
   "compileOnSave": true,
   "compilerOptions": {
     "target": "es5",
-    "lib": ["es2019", "dom"],
+    "lib": [
+      "es2019",
+      "dom"
+    ],
     "removeComments": true,
     "baseUrl": "./",
     "sourceMap": true,
@@ -11,13 +14,13 @@
     "paths": {
       //административная часть
       "@admin/icons/*": [
-        "backend/jsx/modules/common/components/icons/*",
+        "backend/jsx/modules/common/components/icons/*"
       ],
       "@admin/modules/*": [
-        "backend/jsx/modules/*",
+        "backend/jsx/modules/*"
       ],
       "@admin/*": [
-        "backend/jsx/*",
+        "backend/jsx/*"
       ],
       "@redux/*": [
         "backend/jsx/redux/*"
@@ -25,25 +28,26 @@
       "@s3stores-mail/*": [
         "backend/jsx/modules/s3stores-mail/*"
       ],
-
       //клиентская часть
       "@client/modules/*": [
         "frontend/jsx/modules/*"
       ],
-
       "@client/redux/*": [
         "frontend/redux/*"
       ],
-
       "@client/*": [
         "frontend/*"
       ],
-
       //common part
       "@local_modules/*": [
         "local_modules/*"
       ]
     },
-    "jsx": "react"
-  },
+    "jsx": "react",
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
+  }
 }

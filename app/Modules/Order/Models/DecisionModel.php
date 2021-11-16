@@ -2,6 +2,8 @@
 
 namespace Modules\Order\Models;
 
+use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\AutoField;
@@ -25,17 +27,12 @@ class DecisionModel extends Model
                 'class' => AutoField::class,
             ],
 
-            'order_id' => [
-                'class' => IntField::class,
-                'null' => false,
-            ],
-
             'type' => [
                 'class' => IntField::class,
                 'null' => false,
             ],
 
-            'resolved' => [
+            'solved' => [
                 'class' => BooleanField::class,
                 'null' => false,
                 'default' => false
@@ -45,10 +42,26 @@ class DecisionModel extends Model
                 'class' => JsonField::class,
             ],
 
-            'orders' => [
+            'order_number' => [
+                'class' => CharField::class,
+            ],
+
+            'created' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+            ],
+
+            'updated' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+            ],
+
+            'order' => [
+                'field' => 'order_id',
                 'class' => ForeignField::class,
                 'modelClass' => OrderModel::class,
                 'link' => ['order_id' => 'orderid'],
+                'null' => false
             ]
         ];
     }

@@ -6,41 +6,67 @@ import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import AdviseList from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/AdviseList";
+import { solveDecisionAction } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
+import { useDispatch } from "react-redux";
+import DecisionsInterface from "@client/modules/account/ts/types/decision";
 
-const EstimatedTimeArrival: React.FC = () => {
+interface PropsInterface {
+  onChange: (decision: DecisionsInterface) => any;
+  decision: DecisionsInterface;
+}
+
+const EstimatedTimeArrival: React.FC<PropsInterface> = (
+  props: PropsInterface
+) => {
+  const { onChange, decision } = props;
+  const dispatch = useDispatch();
   const mockData = [
-    {
-      name: "Cyprus Raw Umber Medium 4 Oz Vol",
-      sku: "461-4210",
-      amount: 2,
-      date: "15-Sep-2021",
-    },
-    {
-      name: "Cyprus Raw Umber Medium 4 Oz Vol",
-      sku: "461-4210",
-      amount: 2,
-      date: "15-Sep-2021",
-    },
-    {
-      name: "Cyprus Raw Umber Medium 4 Oz Vol",
-      sku: "461-4210",
-      amount: 2,
-      date: "15-Sep-2021",
-    },
+    // {
+    //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
+    //   sku: "461-4210",
+    //   amount: 2,
+    //   date: "15-Sep-2021",
+    // },
+    // {
+    //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
+    //   sku: "461-4210",
+    //   amount: 2,
+    //   date: "15-Sep-2021",
+    // },
+    // {
+    //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
+    //   sku: "461-4210",
+    //   amount: 2,
+    //   date: "15-Sep-2021",
+    // },
   ];
 
   const initialState = {
     comment: "",
-    advise: "",
+    advice: "",
   };
 
   const validationSchema = yup.object().shape({
     comment: yup.string(),
-    advise: yup.string().required(),
+    advice: yup.string().required(),
   });
 
-  function submit() {
+  function submit(values, { setSubmitting }) {
     console.log("submit");
+    setSubmitting(false);
+    dispatch(
+      solveDecisionAction({
+        data: {
+          type: decision.type,
+          decision_id: decision.decision_id,
+          options: values,
+        },
+        success(res: DecisionsInterface) {
+          onChange(res);
+          setSubmitting(false);
+        },
+      })
+    );
   }
 
   return (
@@ -77,9 +103,9 @@ const EstimatedTimeArrival: React.FC = () => {
                 </div>
 
                 <AdviseList
-                  name={"advise"}
+                  name={"advice"}
                   onChange={handleChange}
-                  value={values.advise}
+                  value={values.advice}
                   hasInStock={true}
                   hasOutOfStock={true}
                   hasDiscontinued={true}
@@ -99,7 +125,7 @@ const EstimatedTimeArrival: React.FC = () => {
                     name="comment"
                     value={values.comment}
                     onChange={handleChange}
-                    className={"advise-comment"}
+                    className={"advice-comment form-input"}
                     isInvalid={!!errors.comment}
                   />
 

@@ -1,0 +1,18 @@
+@import "node_modules/foundation-sites/scss/util/_unit.scss";
+@import "node_modules/foundation-sites/scss/util/_value.scss";
+@import "node_modules/foundation-sites/scss/util/_breakpoint.scss";
+
+$items-in-viewport: 3;
+
+.decisions-list-items {
+  overflow-y: scroll;
+  height: rem-calc(70*$items-in-viewport);
+
+  @include breakpoint(md up) {
+    height: rem-calc(75*$items-in-viewport);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(70*$items-in-viewport);
+  }
+}

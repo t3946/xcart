@@ -79,6 +79,19 @@ export const TSV = appData?.tsv || null;
 
 export const cartInitialValue = appData.cart;
 
+const { solved, notSolved } = appData.decisions;
+
+export const decisions = {
+  solved: {
+    pagination_offset: solved.length,
+    decisions: solved,
+  },
+  notSolved: {
+    pagination_offset: notSolved.length,
+    decisions: notSolved,
+  },
+};
+
 export const miniCartInitialValue = {
   isVisible: false,
 };
@@ -116,6 +129,7 @@ const storeInitialValue = {
   productsReviews: productsReviewsInitialValue,
   product: null,
   photoswipe: photoswipeInitialValue,
+  decisions,
 };
 
 export default storeInitialValue;

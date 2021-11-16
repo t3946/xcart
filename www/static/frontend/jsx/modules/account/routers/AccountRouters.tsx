@@ -64,7 +64,7 @@ import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage
 import { EmailPage } from "@client/modules/account/pages/EmailPage";
 import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
 import Decision from "@client/modules/account/components/orders/Decision/Decision";
-import Decisions from "@client/modules/account/components/orders/Decisions/Decisions";
+import Decisions from "@client/modules/account/components/orders/DecisionsPreview/Decisions";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
