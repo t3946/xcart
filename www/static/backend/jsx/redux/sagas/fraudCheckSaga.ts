@@ -4,6 +4,8 @@ import { ApiService } from "@admin/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import axios from "axios";
 const api = new ApiService();
+axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+
 function* fetchBaseCheckData(action: AnyAction): Generator {
   try {
     const data = yield axios
@@ -17,6 +19,11 @@ function* fetchBaseCheckData(action: AnyAction): Generator {
     if (error.response.status === 404) {
       yield put({
         type: "SET_NO_CHECK",
+      });
+    } else {
+      yield put({
+        type: "SET_ALERT_ERROR",
+        message: error.response.data.message,
       });
     }
   }
