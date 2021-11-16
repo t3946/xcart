@@ -79,7 +79,8 @@ export const TSV = appData?.tsv || null;
 
 export const cartInitialValue = appData.cart;
 
-const { solved, notSolved } = appData.decisions;
+const solved = appData.decisions?.solved || [];
+const notSolved = appData.decisions?.notSolved || [];
 
 export const decisions = {
   solved: {

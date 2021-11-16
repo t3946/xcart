@@ -48,6 +48,11 @@ class AccountController extends FrontendController
 
         if (!$user->getIsGuest()) {
             StorageHelper::push($user->toArray(), null, 'user');
+
+            StorageHelper::push([
+                'notSolved' => DecisionController::getDecisions($user['user_id'], 0, 4, 0, ['-created']),
+                'solved' => DecisionController::getDecisions($user['user_id'], 1, 4, 0, ['-updated']),
+            ], null, 'decisions');
         }
 
         $site = Xcart::app()->getModule('Sites')->getSite();
@@ -87,11 +92,6 @@ class AccountController extends FrontendController
         StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
         StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
-
-        StorageHelper::push([
-            'notSolved' => DecisionController::getDecisions($user['user_id'], 0, 4, 0, ['-created']),
-            'solved' => DecisionController::getDecisions($user['user_id'], 1, 4, 0, ['-updated']),
-        ], null, 'decisions');
 
         AdminHelper::routesData();
     }

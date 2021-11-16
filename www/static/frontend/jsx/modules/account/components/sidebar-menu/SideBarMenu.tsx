@@ -19,7 +19,7 @@ const SideBarMenu: React.FC = () => {
         {
           to: route("account:order-decisions-required"),
           label: "Decisions required",
-          badge: user.decisions_required_count,
+          badge: user?.decisions_required_count || 0,
         },
         { to: "/account/orders/open-orders", label: "Open orders" },
         { to: "/account/orders/canceled-orders", label: "Cancelled orders" },

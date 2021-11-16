@@ -15,7 +15,7 @@ const Navigation: React.FC = () => {
     {
       text: "Decisions required",
       path: "/",
-      badge: user.decisions_required_count,
+      badge: user?.decisions_required_count || 0,
       classes: {
         button: [
           "orders-navigation-button_theme_red_active",

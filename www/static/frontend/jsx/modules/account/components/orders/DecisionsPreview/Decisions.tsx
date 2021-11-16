@@ -6,33 +6,45 @@ import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount
 const Decisions: React.FC = function () {
   const decisions = useSelectorAccount((state) => state.decisions);
 
-  return (
-    <div className={"decisions-lists"}>
-      <h2 className={"decisions-list-header decisions-lists__header mt-md-0"}>
-        Order decisions required
-      </h2>
+  const lists = [];
 
-      <Row className={"m-sm-0"}>
-        <List
-          solved={false}
-          decisions={decisions.notSolved.decisions}
-          className={"decisions-lists__required-list px-0 common-scrollbar"}
-        />
-      </Row>
+  if (decisions.notSolved.decisions.length) {
+    lists.push(
+      <>
+        <h2 className={"decisions-list-header decisions-lists__header mt-md-0"}>
+          Order decisions required
+        </h2>
 
-      <h2 className={"decisions-list-header decisions-lists__header"}>
-        Order decisions made
-      </h2>
+        <Row className={"m-sm-0"}>
+          <List
+            solved={false}
+            decisions={decisions.notSolved.decisions}
+            className={"decisions-lists__required-list px-0 common-scrollbar"}
+          />
+        </Row>
+      </>
+    );
+  }
 
-      <Row className={"m-sm-0"}>
-        <List
-          solved={true}
-          decisions={decisions.solved.decisions}
-          className={"px-0 common-scrollbar"}
-        />
-      </Row>
-    </div>
-  );
+  if (decisions.solved.decisions.length) {
+    lists.push(
+      <>
+        <h2 className={"decisions-list-header decisions-lists__header"}>
+          Order decisions made
+        </h2>
+
+        <Row className={"m-sm-0"}>
+          <List
+            solved={true}
+            decisions={decisions.solved.decisions}
+            className={"px-0 common-scrollbar"}
+          />
+        </Row>
+      </>
+    );
+  }
+
+  return <div className={"decisions-lists"}>{lists}</div>;
 };
 
 export default Decisions;
