@@ -8,7 +8,6 @@ import Store from "../../redux/stores/Store";
 import {
   addProduct,
   deleteProduct,
-  getLists,
 } from "../../redux/actions/account-actions/ListsActions";
 
 // сколько вывести скелетов, когда нет продуктов
@@ -68,8 +67,6 @@ export default class ProductsList extends Component {
 
   loadData() {
     this.props.onBeginLoading(this.state.nextPage);
-
-    Store.dispatch(getLists());
 
     //end of pagination
     if (!this.props.catalogUrl) {

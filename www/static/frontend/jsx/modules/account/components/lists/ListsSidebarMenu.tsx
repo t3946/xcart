@@ -1,28 +1,16 @@
 import React, { useEffect } from "react";
-import { Button } from "@material-ui/core";
 import { useHistory } from "react-router";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { SideBarMenuItem } from "@client/modules/account/components/sidebar-menu/SideBarMenuItem";
-import { getLists } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { ListsSidebarLabel } from "@client/modules/account/components/lists/ListsSidebarLabel";
 
 export const ListsSidebarMenu: React.FC = () => {
   const history = useHistory();
-
   const createListDialog = useDialog();
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!lists) {
-      dispatch(getLists());
-    }
-  });
-
   const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
   const backOnAccount = () => {

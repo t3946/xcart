@@ -5,6 +5,7 @@ import Store from "@client/jsx/redux/stores/Store";
 import { AnyAction } from "redux";
 import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
+import { route } from "@client/jsx/utils/AppData";
 
 const api = new ApiService();
 
@@ -14,7 +15,7 @@ const getUser = () => {
 
 function* getLists(): Generator {
   const result: any = yield api
-    .get<any>(`/account/api/lists/get-lists`)
+    .get<any>(route("account:api:get-lists"))
     .then((response) => response);
 
   yield put({
@@ -26,7 +27,7 @@ function* getLists(): Generator {
 function* createList(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
-      `/account/api/lists/create-lists`,
+      route("account:api:create-lists"),
       JSON.stringify({
         name: action.name,
         user_id: getUser().id,
@@ -43,9 +44,10 @@ function* createList(action: AnyAction): Generator {
 }
 
 function* reorderList(action: AnyAction): Generator {
+
   yield api
     .post<any>(
-      `/account/api/lists/reorder-products`,
+      route("account:api:reorder-list"),
       JSON.stringify({
         productIds: action.listIds.map((e) => {
           return e.product_id;
@@ -58,7 +60,7 @@ function* reorderList(action: AnyAction): Generator {
 
 function* deleteList(action: AnyAction): Generator {
   yield api
-    .post<any>(`/account/api/lists/delete-list`, action.listId)
+    .post<any>(route("account:api:delete-list"), action.listId)
     .then((response) => response);
 
   yield action.callback();
@@ -203,6 +205,7 @@ function* editCommentInProduct(action: AnyAction): Generator {
 
   yield action.callback();
 }
+
 function* manageList(action: AnyAction): Generator {
   yield api
     .post<any>(

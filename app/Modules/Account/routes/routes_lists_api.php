@@ -5,7 +5,7 @@ use Modules\Account\Controllers\Api\AccountListsApi;
 return [
     [
         'route' => '/get-lists',
-        'target' => [AccountListsApi::class, 'getLists'],
+        'target' => [AccountListsApi::class, 'actionGetLists'],
         'name' => 'get-lists'
     ],
     [

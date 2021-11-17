@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
-import {
-  addProduct,
-  getLists,
-} from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import Store from "@client/jsx/redux/stores/Store";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
@@ -102,9 +99,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
 
   useEffect(() => {
     clickListener.startListen();
-    if (!lists) {
-      dispatch(getLists());
-    }
 
     return () => {
       clickListener.endListen();

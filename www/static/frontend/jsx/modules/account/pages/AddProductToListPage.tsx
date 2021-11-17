@@ -25,6 +25,7 @@ export const AddProductToListPage: React.FC = () => {
   useEffect(() => {
     if (!list) {
       dispatch(getLists());
+      console.log('getLists AddProductToListPage');
     }
   }, []);
 

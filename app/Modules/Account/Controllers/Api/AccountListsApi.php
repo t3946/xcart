@@ -9,26 +9,22 @@ use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Orm\Base;
 use Xcart\App\Main\Xcart;
 
 class AccountListsApi extends FrontendController
 {
-    public function getLists()
+    public static function getLists(UserModel $user): array
     {
-        $user = Xcart::app()->auth->getUser(true);
-
         $lists =  $user->lists->all();
-
         $items = [];
-
 
         foreach ($lists as $key => $list)
         {
             $items[$key] = $list->getAttributes();
             $items[$key]['products'] = $list->list_items->order(['order_by'])->all();
-
 
             foreach ( $items[$key]['products'] as $product_key => $product)
             {
@@ -58,7 +54,7 @@ class AccountListsApi extends FrontendController
             }
         }
 
-        $this->jsonResponse($items);
+        return $items;
     }
 
     public function createList()
@@ -303,6 +299,12 @@ class AccountListsApi extends FrontendController
         ListItemsModel::objects()->create($product);
 
         $this->jsonResponse(['success']);
+    }
+
+    public function actionGetLists(): void {
+        $user = Xcart::app()->auth->getUser(true);
+        $lists = $this->getLists($user);
+        $this->jsonResponse($lists);
     }
 }
 

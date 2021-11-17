@@ -8,8 +8,7 @@ import Store from "../../../redux/stores/Store";
 import {
   addProduct,
   deleteProduct,
-  getLists,
-} from "../../../redux/actions/account-actions/ListsActions";
+} from "@client/jsx/redux/actions/account-actions/ListsActions";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
@@ -38,20 +37,9 @@ export default class SliderProducts extends Component {
     Store.subscribe(() => {
       this.setState({
         ...this.state,
-        lists: Store
-          .getState()
-          .lists?.lists?.find((e, index) => index === 0),
+        lists: Store.getState().lists?.lists?.find((e, index) => index === 0),
       });
     });
-
-    this.getLists();
-  }
-
-  getLists() {
-    if (this.state.lists) {
-      return;
-    }
-    Store.dispatch(getLists());
   }
 
   onFlagClick(e, inList, productId) {

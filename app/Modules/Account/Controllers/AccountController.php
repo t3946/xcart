@@ -2,6 +2,7 @@
 
 namespace Modules\Account\Controllers;
 
+use Modules\Account\Controllers\Api\AccountListsApi;
 use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\AdminHelper;
@@ -53,6 +54,8 @@ class AccountController extends FrontendController
                 'notSolved' => DecisionController::getDecisions($user['user_id'], 0, 4, 0, ['-created']),
                 'solved' => DecisionController::getDecisions($user['user_id'], 1, 4, 0, ['-updated']),
             ], null, 'decisions');
+
+            StorageHelper::push(AccountListsApi::getLists($user), 'lists', 'user');
         }
 
         $site = Xcart::app()->getModule('Sites')->getSite();
