@@ -35,10 +35,10 @@ import t from "./i18n";
           collapsedHeight: 360,
           embedCSS: false,
           lessLink: `<a class='btn-description close-description' href="#">${t(
-            "Close description"
+            t("Close description")
           )}</a>`,
           moreLink: `<a class='btn-description open-description' href="#">${t(
-            "Read more description"
+            t("Read more description")
           )}</a>`,
           speed: 3,
           beforeToggle: (trigger, element, expanded) => {
@@ -46,7 +46,7 @@ import t from "./i18n";
               {
                 scrollTop: expanded
                   ? element.offset().top - 110 // -110 т.к навигатор занимает определённую часть
-                  : element.offset().top + element.outerHeight(),
+                  : element.offset().top - 110,
               },
               { duration: 600 }
             );
