@@ -3,7 +3,7 @@ import Item from "@client/modules/account/components/orders/DecisionsPreview/Ite
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
-import style from "@client/modules/account/components/orders/DecisionsPreview/list.module.scss";
+import style from "@client/modules/account/components/orders/DecisionsPreview/List.module.scss";
 import {
   loadMoreAction,
   addAction as addDecisionsAction,
