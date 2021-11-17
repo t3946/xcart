@@ -1,5 +1,5 @@
 import { ApiService } from "@client/modules/shared/services/api.service";
-import { memoize } from "lodash";
+import memoize from "lodash/memoize";
 
 const api = new ApiService();
 
@@ -9,6 +9,6 @@ function getOneOrder(id: string, func: (data: any) => void) {
   });
 }
 
-export function memoizeGetOneOrder(id: string, func: (data: any) => void) {
+export function memoizeGetOneOrder(id: string, func: (data: any) => void): any {
   return memoize(() => getOneOrder(id, func));
 }
