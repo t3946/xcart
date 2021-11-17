@@ -1,5 +1,4 @@
 .add-to-list-header{
-  padding: 13px 0 13px 13px;
   border-radius: 4px;
   border: 2px solid #FFB400;
   background: #FFFFFF;
@@ -12,14 +11,6 @@
   &:after{
     right: rem-calc(18);
   }
-}
-
-.add-to-list-label{
-  font-size: 18px;
-  font-weight: 700;
-  width: inherit;
-  display: flex;
-  justify-content: center;
 }
 
 .product-page-add-to-list-btn{

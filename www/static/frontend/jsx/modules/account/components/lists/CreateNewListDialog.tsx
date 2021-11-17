@@ -6,7 +6,7 @@ interface CreateNewListDialogProps {
   handleClose: () => void;
   open: boolean;
   productId?: string;
-  onProductAdded?: () => void;
+  onProductAdded?: (listInfo: any) => void;
   actionType?: "product" | "list";
 }
 
