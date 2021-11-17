@@ -22,6 +22,7 @@ export class ApiService {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
+        "X-Requested-With": "XMLHttpRequest",
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",
@@ -40,6 +41,7 @@ export class ApiService {
       referrerPolicy: "no-referrer",
       headers: {
         "Access-Control-Allow-Origin": "*",
+        "X-Requested-With": "XMLHttpRequest",
       },
       body: data,
     });
