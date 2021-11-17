@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
-import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
 import {
@@ -16,6 +15,9 @@ import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { List } from "@client/modules/account/ts/types/list.type";
 import Styles from "@client/modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
 import AppData from "@client/jsx/utils/AppData";
+import Medium from "@client/modules/icon/components/account/chevron-down/Medium";
+import StyleUtils from "@client/style-modules/style-utils.module.scss";
+import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
 
 interface IProps {
   items: List[];
@@ -27,29 +29,20 @@ interface IProps {
   product?: any;
 }
 
-export const AddToListSelectOnProductPage: React.FC<IProps> = ({
-  name,
-  label = "",
-  classes = undefined,
-  product,
-}) => {
+export const AddToListSelectOnProductPage: React.FC<IProps> = (
+  props: IProps
+) => {
+  const { name, label = "", product } = props;
   const lists = Store.getState().lists.lists;
-
   const productInfo = product || Object.keys(AppData?.products)[0];
-
-  const id = "1";
-
+  // const id = "1";
   const [open, setOpen] = useState(false);
-
   const [selectedList, setSelectedList] = useState(null);
-
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);
-
   const breakpoint = useBreakpoint();
-
   const addProductDialog = useDialog();
-
-  const clickListener = useCLickListener(setOpen, id);
+  const clickListener = useCLickListener(() => setOpen(false));
+  const buttonRef = React.useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch();
 
@@ -84,18 +77,22 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = ({
       showAddProductContent(listId);
       return;
     }
+
     setIsAlreadyInList(false);
+
     dispatch(
       addProduct(listId, productInfo.productid, null, () =>
         showAddProductContent(listId)
       )
     );
+
     setSelectedList(lists.find((e) => e.product_list_id === listId));
   };
 
   const onCreateList = (listInfo): void => {
     setSelectedList(listInfo);
     createListDialog.handleClose();
+
     dispatch(
       addProduct(listInfo.product_list_id, productInfo.productid, null, () =>
         showAddProductContent(listInfo.product_list_id)
@@ -114,65 +111,93 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = ({
     };
   }, []);
 
-  const value = {
-    value: undefined,
-    viewValue: "ADD TO LIST",
-  };
-
   const createListDialog = useDialog();
 
+  const classes = {
+    selectHeader: [
+      "d-flex",
+      "add-to-list-header",
+      "p-0",
+      "overflow-hidden",
+      props.classes?.selectHeader,
+      Styles.addToListHeader,
+      StyleUtils.cursorPointer,
+    ],
+
+    container: [
+      "align-items-center",
+      "justify-content-between",
+      "select",
+      "select-send",
+      {
+        open: open,
+      },
+    ],
+
+    label: ["bold", "text-center", Styles.addToListLabel],
+
+    arrowButton: [
+      "d-flex",
+      "align-items-center",
+      "justify-content-center",
+      Styles.addToListArrowBlock,
+    ],
+
+    arrowButtonIcon: [
+      Styles.addToListArrowBlockIcon,
+      {
+        [Styles.addToListArrowBlockIcon__flip]: open,
+      },
+    ],
+
+    createListButton: [
+      "d-flex",
+      "justify-content-center",
+      "align-items-center",
+      "w-100",
+      Styles.createListButton,
+      StyleUtils.cursorPointer,
+    ],
+  };
+
   return (
-    <Grid
-      className={classnames(
-        `select select-send  ${open && "open"}`,
-        classes?.group
-      )}
-      container
-      alignItems="center"
-      justifyContent="space-between"
-    >
+    <div className={classnames(classes.container)}>
       {label && (
         <label
-          className={classnames([
-            "form-input-label",
-            Styles.addToListLabel,
-            Styles.addToListLabel__red,
-          ])}
+          className={classnames(["form-input-label", Styles.addToListLabel])}
         >
           {label}
         </label>
       )}
+
       <div
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setOpen(!open);
         }}
-        id={id}
-        className={classnames("select-wrapper", classes?.input)}
+        className={classnames("select-wrapper", props.classes?.input)}
+        ref={buttonRef}
       >
         <input
-          value={value.value}
+          value={null}
           className="select__input"
           type="hidden"
           name={name}
         />
-        <div
-          id={id}
-          className={classnames(
-            classes?.selectHeader,
-            "form-select-head",
-            "add-to-list-header"
-          )}
-        >
-          <div id={id} className={Styles.addToListLabel}>
-            {value?.viewValue}
+
+        <div className={classnames(classes.selectHeader)}>
+          <div className={classnames(classes.label)}>ADD TO LIST</div>
+
+          <div className={classnames(classes.arrowButton)}>
+            <Medium className={classnames(classes.arrowButtonIcon)} />
           </div>
-          <div id={id} className="add-to-list-arrow-block" />
         </div>
+
         {open && (
           <ul
             className={classnames(
               "form-select-list add-to-list-select-list",
-              classes?.selectList
+              props.classes?.selectList
             )}
           >
             <div className="add-to-list-select-list-items">
@@ -189,6 +214,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = ({
                         "/static/frontend/images/icons/account/idea-logo.svg"
                       }
                     />
+
                     <div className="form-select-item-label">{item.name}</div>
                   </li>
                 );
@@ -197,16 +223,16 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = ({
 
             <div
               onClick={createList}
-              className="create-list-btn-container add-to-list-create-list"
+              className={classnames(classes.createListButton)}
             >
-              <div className="sidebar-list-cross add-to-list-create-list-cross">
-                <img src="/static/frontend/images/icons/account/plus.svg" />
-              </div>
-              <div className="create-list-label">create a list</div>
+              <Plus className={Styles.createListButtonIcon} />
+
+              <div className="create-list-label ms-4">create a list</div>
             </div>
           </ul>
         )}
       </div>
+
       <CreateNewListDialog
         open={createListDialog.open}
         handleClose={createListDialog.handleClose}
@@ -214,6 +240,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = ({
         onProductAdded={onCreateList}
         actionType={"product"}
       />
+
       <BootstrapDialogHOC
         show={addProductDialog.open}
         title={"Add to list"}
@@ -226,6 +253,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = ({
           isAlreadyInList={isAlreadyInList}
         />
       </BootstrapDialogHOC>
-    </Grid>
+    </div>
   );
 };
