@@ -25,6 +25,7 @@ config = {
       "@client/redux": path.resolve("./frontend/jsx/redux"),
       "@client": path.resolve("./frontend"),
       "@local_modules": path.resolve("./local_modules"),
+      "style-modules": path.resolve("./frontend/style-modules"),
     },
 
     modules: [
