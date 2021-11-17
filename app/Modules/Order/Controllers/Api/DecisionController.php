@@ -59,6 +59,11 @@ class DecisionController extends Controller
     {
         $user = Xcart::app()->auth->getUser(true);
 
+        if ($user->getIsGuest()) {
+            $this->jsonResponse([]);
+            return;
+        }
+
         $decision = DecisionController::getDecisions(
             $user['user_id'],
             $this->data['solved'],
