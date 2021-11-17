@@ -111,8 +111,18 @@ class FraudCheckFAHelper
         $outcome = $this->compareShippingBillingAddress();
         $info = $this->getInfoAddress(
             $fraud,
-            ['state' => $this->order_model->s_state, 'city' => $this->order_model->s_city, 'zipcode' => $this->order_model->s_zipcode],
-            ['state' => $this->order_model->b_state, 'city' => $this->order_model->b_city, 'zipcode' => $this->order_model->b_zipcode],
+            [
+                'state' => $this->order_model->s_state,
+                'city' => $this->order_model->s_city,
+                'zipcode' => $this->order_model->s_zipcode,
+                'country' => $this->order_model->s_country ?? ''
+            ],
+            [
+                'state' => $this->order_model->b_state,
+                'city' => $this->order_model->b_city,
+                'zipcode' => $this->order_model->b_zipcode,
+                'country' => $this->order_model->b_country ?? ''
+            ],
         );
         if ($outcome) {
             $result = 'positive';
@@ -173,7 +183,7 @@ class FraudCheckFAHelper
     public static function getStringAddressByArray(?array $address): ?string
     {
         if (isset($address['state'], $address['city'], $address['zipcode'])) {
-            return "{$address['city']}, {$address['state']}  {$address['zipcode']}";
+            return "{$address['city']}, {$address['state']}, {$address['zipcode']}, {$address['country']}";
         }
         return null;
     }
@@ -235,8 +245,8 @@ class FraudCheckFAHelper
         return [$result, $fraud->weight, $info, $outcome];
     }
 
-    /** Сравнивает два адреса по атрибутам, если они одинаковые то добавит значение к коэффиценту.
-     *  Коэффицент = Количество одинаковых атрибутов в адресе / Общее количество атрибутов
+    /** Сравнивает два адреса по атрибутам, если они одинаковые то добавит значение к коэффициенту.
+     *  Коэффициент = Количество одинаковых атрибутов в адресе / Общее количество атрибутов
      * @param array $compare_address - первый адрес в формате массива
      * @param array $addressData - второй адрес в формате массива
      * @return float

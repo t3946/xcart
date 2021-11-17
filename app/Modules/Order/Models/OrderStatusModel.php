@@ -64,6 +64,9 @@ class OrderStatusModel extends Model
     public const ORDER_BD_STATUS_PAID = 'Y';
     public const ORDER_BD_STATUS_INVOICED = 'X';
 
+    public const ORDER_PO_STATUS_CANADIAN_OFFICE = 'PC';
+    public const ORDER_PO_STATUS_USA_ADDRESS = 'PU';
+
     public const ORDER_FRAUD_CHECK_STATUS_CLEARED = 'C';
 
     public const ORDER_VN_STATUS_VERIFIED = 'PV';

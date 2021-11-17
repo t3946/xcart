@@ -87,7 +87,6 @@
             "app/include/func/func.db.php",
             "app/include/func/func.export.php",
             "app/include/func/func.files.php",
-            "app/include/func/func.fraud.php",
             "app/include/func/func.froogle.php",
             "app/include/func/func.gd.php",
             "app/include/func/func.http.php",

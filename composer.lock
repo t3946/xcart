@@ -163,16 +163,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.201.0",
+            "version": "3.203.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "d2bb0296a3fe62fbc975075d7b06c41002a6517d"
+                "reference": "63be45bbf3d2a325017f92fcad6764ebd98bb266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d2bb0296a3fe62fbc975075d7b06c41002a6517d",
-                "reference": "d2bb0296a3fe62fbc975075d7b06c41002a6517d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/63be45bbf3d2a325017f92fcad6764ebd98bb266",
+                "reference": "63be45bbf3d2a325017f92fcad6764ebd98bb266",
                 "shasum": ""
             },
             "require": {
@@ -248,9 +248,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.201.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.203.1"
             },
-            "time": "2021-11-09T19:28:28+00:00"
+            "time": "2021-11-16T19:23:28+00:00"
         },
         {
             "name": "calcinai/xero-php",
@@ -804,16 +804,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.1.3",
+            "version": "3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "96b0053775a544b4a6ab47654dac0621be8b4cf8"
+                "reference": "821b4f01a36ce63ed36c090ea74767b72db367e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/96b0053775a544b4a6ab47654dac0621be8b4cf8",
-                "reference": "96b0053775a544b4a6ab47654dac0621be8b4cf8",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/821b4f01a36ce63ed36c090ea74767b72db367e9",
+                "reference": "821b4f01a36ce63ed36c090ea74767b72db367e9",
                 "shasum": ""
             },
             "require": {
@@ -826,14 +826,14 @@
             "require-dev": {
                 "doctrine/coding-standard": "9.0.0",
                 "jetbrains/phpstorm-stubs": "2021.1",
-                "phpstan/phpstan": "0.12.99",
-                "phpstan/phpstan-strict-rules": "^0.12.11",
+                "phpstan/phpstan": "1.1.1",
+                "phpstan/phpstan-strict-rules": "^1",
                 "phpunit/phpunit": "9.5.10",
                 "psalm/plugin-phpunit": "0.16.1",
-                "squizlabs/php_codesniffer": "3.6.0",
+                "squizlabs/php_codesniffer": "3.6.1",
                 "symfony/cache": "^5.2|^6.0",
                 "symfony/console": "^2.0.5|^3.0|^4.0|^5.0|^6.0",
-                "vimeo/psalm": "4.10.0"
+                "vimeo/psalm": "4.12.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
@@ -893,7 +893,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.1.3"
+                "source": "https://github.com/doctrine/dbal/tree/3.1.4"
             },
             "funding": [
                 {
@@ -909,7 +909,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-02T16:15:05+00:00"
+            "time": "2021-11-15T16:44:33+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -1378,16 +1378,16 @@
         },
         {
             "name": "ezimuel/ringphp",
-            "version": "1.1.2",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezimuel/ringphp.git",
-                "reference": "0b78f89d8e0bb9e380046c31adfa40347e9f663b"
+                "reference": "92b8161404ab1ad84059ebed41d9f757e897ce74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezimuel/ringphp/zipball/0b78f89d8e0bb9e380046c31adfa40347e9f663b",
-                "reference": "0b78f89d8e0bb9e380046c31adfa40347e9f663b",
+                "url": "https://api.github.com/repos/ezimuel/ringphp/zipball/92b8161404ab1ad84059ebed41d9f757e897ce74",
+                "reference": "92b8161404ab1ad84059ebed41d9f757e897ce74",
                 "shasum": ""
             },
             "require": {
@@ -1395,9 +1395,12 @@
                 "php": ">=5.4.0",
                 "react/promise": "~2.0"
             },
+            "replace": {
+                "guzzlehttp/ringphp": "self.version"
+            },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~9.0"
             },
             "suggest": {
                 "ext-curl": "Guzzle will use specific adapters if cURL is present"
@@ -1426,9 +1429,9 @@
             ],
             "description": "Fork of guzzle/RingPHP (abandoned) to be used with elasticsearch-php",
             "support": {
-                "source": "https://github.com/ezimuel/ringphp/tree/1.1.2"
+                "source": "https://github.com/ezimuel/ringphp/tree/1.2.0"
             },
-            "time": "2020-02-14T23:51:21+00:00"
+            "time": "2021-11-16T11:51:30+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -1585,16 +1588,16 @@
         },
         {
             "name": "fenom/fenom",
-            "version": "2.12.0",
+            "version": "2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fenom-template/fenom.git",
-                "reference": "f0cb251843de469b453b15c158cf0d1589d4de6d"
+                "reference": "8fb0a703111189901291bea93b5558e2bcd7df21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fenom-template/fenom/zipball/f0cb251843de469b453b15c158cf0d1589d4de6d",
-                "reference": "f0cb251843de469b453b15c158cf0d1589d4de6d",
+                "url": "https://api.github.com/repos/fenom-template/fenom/zipball/8fb0a703111189901291bea93b5558e2bcd7df21",
+                "reference": "8fb0a703111189901291bea93b5558e2bcd7df21",
                 "shasum": ""
             },
             "require": {
@@ -1616,7 +1619,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -1633,9 +1636,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fenom-template/fenom/issues",
-                "source": "https://github.com/fenom-template/fenom/tree/2.12.0"
+                "source": "https://github.com/fenom-template/fenom/tree/2.12.1"
             },
-            "time": "2020-07-06T17:02:31+00:00"
+            "time": "2021-11-11T21:08:13+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -1917,16 +1920,16 @@
         },
         {
             "name": "gettext/languages",
-            "version": "2.8.1",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-gettext/Languages.git",
-                "reference": "4ad818b6341e177b7c508ec4c37e18932a7b788a"
+                "reference": "ed56dd2c7f4024cc953ed180d25f02f2640e3ffa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-gettext/Languages/zipball/4ad818b6341e177b7c508ec4c37e18932a7b788a",
-                "reference": "4ad818b6341e177b7c508ec4c37e18932a7b788a",
+                "url": "https://api.github.com/repos/php-gettext/Languages/zipball/ed56dd2c7f4024cc953ed180d25f02f2640e3ffa",
+                "reference": "ed56dd2c7f4024cc953ed180d25f02f2640e3ffa",
                 "shasum": ""
             },
             "require": {
@@ -1975,7 +1978,7 @@
             ],
             "support": {
                 "issues": "https://github.com/php-gettext/Languages/issues",
-                "source": "https://github.com/php-gettext/Languages/tree/2.8.1"
+                "source": "https://github.com/php-gettext/Languages/tree/2.9.0"
             },
             "funding": [
                 {
@@ -1987,7 +1990,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-14T15:03:58+00:00"
+            "time": "2021-11-11T17:30:39+00:00"
         },
         {
             "name": "google/apiclient",
@@ -2062,16 +2065,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.221.0",
+            "version": "v0.222.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "55fb77c4dcb7ec2b41128d41815b3aac65ddfadb"
+                "reference": "5a3a9a48b71a009a9dd973b01ca0c4c3ea6b13fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/55fb77c4dcb7ec2b41128d41815b3aac65ddfadb",
-                "reference": "55fb77c4dcb7ec2b41128d41815b3aac65ddfadb",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/5a3a9a48b71a009a9dd973b01ca0c4c3ea6b13fc",
+                "reference": "5a3a9a48b71a009a9dd973b01ca0c4c3ea6b13fc",
                 "shasum": ""
             },
             "require": {
@@ -2100,9 +2103,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.221.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.222.0"
             },
-            "time": "2021-11-06T11:26:11+00:00"
+            "time": "2021-11-14T12:26:33+00:00"
         },
         {
             "name": "google/auth",
@@ -2348,16 +2351,16 @@
         },
         {
             "name": "googleads/google-ads-php",
-            "version": "v12.0.0",
+            "version": "v12.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleads/google-ads-php.git",
-                "reference": "9fba9fb2d21eb6c87b2bb7000d0e5da8486899b3"
+                "reference": "689802805416213916db4a8e1e0b8293eda5d821"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleads/google-ads-php/zipball/9fba9fb2d21eb6c87b2bb7000d0e5da8486899b3",
-                "reference": "9fba9fb2d21eb6c87b2bb7000d0e5da8486899b3",
+                "url": "https://api.github.com/repos/googleads/google-ads-php/zipball/689802805416213916db4a8e1e0b8293eda5d821",
+                "reference": "689802805416213916db4a8e1e0b8293eda5d821",
                 "shasum": ""
             },
             "require": {
@@ -2370,14 +2373,18 @@
             "require-dev": {
                 "composer/composer": "^2.0",
                 "ext-bcmath": "*",
+                "ext-grpc": "*",
+                "ext-protobuf": "*",
                 "phpunit/phpunit": "^9.5",
                 "react/http": "^1.2.0",
                 "squizlabs/php_codesniffer": "^3.5",
                 "ulrichsg/getopt-php": "^3.4"
             },
             "suggest": {
+                "ext-grpc": "To be able to use the gRPC transport, use the C implementation of gRPC",
                 "ext-protobuf": "For better performance, use the C implementation of Protobuf",
                 "google/protobuf": "In case the C implementation of Protobuf is not suitable, use the PHP one",
+                "grpc/grpc": "In case the C implementation of gRPC is not suitable, use the PHP one to enable other transports",
                 "react/http": "To run the AuthenticateInWebApplication.php example"
             },
             "type": "library",
@@ -2401,9 +2408,9 @@
             "homepage": "https://github.com/googleads/google-ads-php",
             "support": {
                 "issues": "https://github.com/googleads/google-ads-php/issues",
-                "source": "https://github.com/googleads/google-ads-php/tree/v12.0.0"
+                "source": "https://github.com/googleads/google-ads-php/tree/v12.1.0"
             },
-            "time": "2021-09-28T16:13:09+00:00"
+            "time": "2021-11-12T16:21:34+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -3150,26 +3157,26 @@
         },
         {
             "name": "league/flysystem-cached-adapter",
-            "version": "1.1.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-cached-adapter.git",
-                "reference": "d1925efb2207ac4be3ad0c40b8277175f99ffaff"
+                "reference": "7bb5cd9d996904cf43d7da8ba45a724ff8c7ef14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-cached-adapter/zipball/d1925efb2207ac4be3ad0c40b8277175f99ffaff",
-                "reference": "d1925efb2207ac4be3ad0c40b8277175f99ffaff",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-cached-adapter/zipball/7bb5cd9d996904cf43d7da8ba45a724ff8c7ef14",
+                "reference": "7bb5cd9d996904cf43d7da8ba45a724ff8c7ef14",
                 "shasum": ""
             },
             "require": {
-                "league/flysystem": "~1.0",
-                "psr/cache": "^1.0.0"
+                "league/flysystem": "~1.0"
             },
             "require-dev": {
+                "henrikbjorn/phpspec-code-coverage": "~1.0@dev",
                 "mockery/mockery": "~0.9",
-                "phpspec/phpspec": "^3.4",
-                "phpunit/phpunit": "^5.7",
+                "phpspec/phpspec": "~2.1",
+                "phpunit/phpunit": "~4.1",
                 "predis/predis": "~1.0",
                 "tedivm/stash": "~0.12"
             },
@@ -3197,7 +3204,7 @@
                 "issues": "https://github.com/thephpleague/flysystem-cached-adapter/issues",
                 "source": "https://github.com/thephpleague/flysystem-cached-adapter/tree/master"
             },
-            "time": "2020-07-25T15:56:04+00:00"
+            "time": "2015-07-09T21:00:39+00:00"
         },
         {
             "name": "league/flysystem-ziparchive",
@@ -5642,20 +5649,20 @@
         },
         {
             "name": "psr/cache",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/cache.git",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
-                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=8.0.0"
             },
             "type": "library",
             "extra": {
@@ -5675,7 +5682,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for caching libraries",
@@ -5685,9 +5692,9 @@
                 "psr-6"
             ],
             "support": {
-                "source": "https://github.com/php-fig/cache/tree/master"
+                "source": "https://github.com/php-fig/cache/tree/2.0.0"
             },
-            "time": "2016-08-06T20:24:11+00:00"
+            "time": "2021-02-03T23:23:37+00:00"
         },
         {
             "name": "psr/http-client",
@@ -7671,16 +7678,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "5.10.1",
+            "version": "5.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "23dbb5d218707805b74c9fe4f1e2525bcd21e689"
+                "reference": "ef9962f1d40abbb80a4fd4f023151fd28f891a6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/23dbb5d218707805b74c9fe4f1e2525bcd21e689",
-                "reference": "23dbb5d218707805b74c9fe4f1e2525bcd21e689",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/ef9962f1d40abbb80a4fd4f023151fd28f891a6c",
+                "reference": "ef9962f1d40abbb80a4fd4f023151fd28f891a6c",
                 "shasum": ""
             },
             "type": "component",
@@ -7722,9 +7729,9 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.2"
             },
-            "time": "2021-11-03T03:57:12+00:00"
+            "time": "2021-11-17T04:34:27+00:00"
         },
         {
             "name": "true/punycode",

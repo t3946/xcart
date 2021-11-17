@@ -22,7 +22,7 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
           <td className={getHeaderClassByName(columnData.columnName)}>
             {columnData.columnName}
           </td>
-          <td>{columnData.frontendType}</td>
+          <td style={{ width: 200 }}>{columnData.frontendType}</td>
           <td>{columnData.provider}</td>
           <td>{columnData.inferredFrom}</td>
           <td>
@@ -44,44 +44,4 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
       ))}
     </table>
   );
-  // return (
-  //   <div className="history-column-info">
-  //     <Grid
-  //       container
-  //       alignItems="center"
-  //       justifyContent="center"
-  //       direction="column"
-  //     >
-  //       <div>
-  //         {historyColumn.map((columnData) => (
-  //           <div className="history-item-column">
-  //             <div
-  //               className={`${getHeaderClassByName(
-  //                 columnData.columnName
-  //               )} column-item-history`}
-  //             >
-  //               {columnData.columnName}
-  //             </div>
-  //             <div className="history-item-info">
-  //               <span className="description-item-history">
-  //                 {columnData.description}
-  //               </span>
-  //               <span className="link-google-info-history">
-  //                 {columnData.link ? (
-  //                   columnData.type === "full_name" ? (
-  //                     <a href={columnData.linkUrl}>{columnData.value}</a>
-  //                   ) : (
-  //                     <AddressHistoryText columnData={columnData} />
-  //                   )
-  //                 ) : (
-  //                   columnData.value
-  //                 )}
-  //               </span>
-  //             </div>
-  //           </div>
-  //         ))}
-  //       </div>
-  //     </Grid>
-  //   </div>
-  // );
 };
