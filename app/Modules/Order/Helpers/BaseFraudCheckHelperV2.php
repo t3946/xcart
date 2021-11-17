@@ -17,6 +17,8 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Manager;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class BaseFraudCheckHelperV2
 {
@@ -72,11 +74,11 @@ class BaseFraudCheckHelperV2
             }
             $b = array_map(static function ($e) {
                 $e = strtoupper($e);
-                return "\b{$e}\b";
+                return "\b$e\b";
             }, $a);
             $search = implode('|', $b);
             $replacement = '(' . implode('|', array_map('strtoupper', $a)) . ')';
-            $field = preg_replace("/{$search}/", $replacement, $field);
+            $field = preg_replace("/$search/", $replacement, $field);
         }
         return $field;
     }
@@ -86,8 +88,7 @@ class BaseFraudCheckHelperV2
         $field = trim($field);
         $field = preg_replace('/\s+/', ' ', $field);
         $field = preg_replace("/[^\w\s\[,.\-\/@_\]]/", '', $field);
-        $field = strtoupper($field);
-        return $field;
+        return strtoupper($field);
     }
 
     public static function correctAddress($field): string
@@ -95,8 +96,7 @@ class BaseFraudCheckHelperV2
         $field = trim($field);
         $field = preg_replace('/\s+/', ' ', $field);
         $field = preg_replace('/[\[,.-\/@_\]]/', '', $field);
-        $field = strtoupper($field);
-        return $field;
+        return strtoupper($field);
     }
 
     public static function scoreRF_CB(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
@@ -368,7 +368,6 @@ class BaseFraudCheckHelperV2
         $fraud_result = 'negative';
         $email_arr = explode('@', $order->email);
         $email_1 = strtoupper($email_arr[0]);
-        $outcome = 0;
         $name_list = [$order->firstname ?? '', $order->s_firstname ?? '', $order->b_firstname ?? ''];
         foreach ($name_list as $name_client) {
             if ($email_1 && ($firstname_arr = explode(' ', self::correct($name_client)))) {
@@ -376,12 +375,22 @@ class BaseFraudCheckHelperV2
                     $name = trim($v);
                     if ($name && stripos($email_1, $name) !== false) {
                         $fraud_result = 'positive';
-                        $outcome = 1;
                         break;
                     }
                 }
             }
         }
+        $company_list = [$order->b_company ?? '', $order->s_company ?? ''];
+        foreach ($company_list as $company) {
+            $normalize_company = strtolower($company);
+            foreach ($email_arr as $email_attr) {
+                if (soundex($email_attr) === soundex($normalize_company)) {
+                    $fraud_result = 'positive';
+                    break;
+                }
+            }
+        }
+        $outcome = intval($fraud_result === 'positive');
 
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
@@ -392,13 +401,20 @@ class BaseFraudCheckHelperV2
         $outcome = 0;
         $date = new DateTime();
         $date->sub(new DateInterval('P3M'));
-        $time_condition = $date->getTimestamp();
-        $total_orders = OrderModel::objects()->filter(['email' => $order->email, 'date__lte' => $time_condition])
-            ->exclude(['fraud_status__in' => [
-                FraudStatusModel::STATUS_FRAUD_PURE,
-                FraudStatusModel::STATUS_FRAUD_CHARGEBACK,
-                FraudStatusModel::STATUS_FRAUD_PROBABLY,
-            ]])->order(['-orderid']);
+        $date_receipt = new DateTime();
+        $date_receipt->sub(new DateInterval('P21D'));
+        // Оплаченный и доставленный заказы по данному email адресу более 3 месяцев(если обычная оплата) ИЛИ 3 недели(если оплата по чеку)
+        $total_orders = OrderModel::objects()->filter([
+            'email' => $order->email,
+            'groups__dc_status__in' => [OrderStatusModel::ORDER_DC_STATUS_SHIPPED, OrderStatusModel::ORDER_DC_STATUS_DELIVERED],
+            'groups__cb_status__in' => [OrderStatusModel::ORDER_BD_STATUS_PAID],
+            new QOr([
+                'date__lte' => $date->getTimestamp(),
+                new QAnd([
+                    'date__lte' => $date_receipt->getTimestamp(),
+                    'groups__po_status__in' => [OrderStatusModel::ORDER_PO_STATUS_CANADIAN_OFFICE, OrderStatusModel::ORDER_PO_STATUS_USA_ADDRESS]
+                ])])
+        ]);
 
         if ($total_orders->count() > 0) {
             $additional_info = $total_orders->all();
@@ -443,7 +459,9 @@ class BaseFraudCheckHelperV2
 
         [$shipping] = $order->getAddressInfo();
 
-        if (isset($shipping['address'][1]) || preg_match('/\bApartment\b|\bApt\b|\bSuite\b|\bSte\b|\bUnit\b|#|\d-\d/i', $shipping['address'][0])) {
+        if (!empty($shipping['address'][1])
+            || preg_match('/\bApartment\b|\bPO Box\b|\bApt\b|\bSuite\b|\bSte\b|\bUnit\b|#|\d-\d/i', $shipping['address'][0])
+            || preg_match('/-\d/', $shipping['address'][0])) {
             $fraud_result = 'negative';
             $outcome = 0;
         }
@@ -535,9 +553,8 @@ HTML;
 
     public static function scoreGC_CT(OrderModel $order_model, BaseFraudCheckModelV2 $fraud): array
     {
-        $fraud_result = 'positive';
+        $fraud_result = 'negative';
         $type_card = "Couldn't determine";
-        $outcome = 1;
         if (($oTransaction = $order_model->getFirstTransaction())) {
             switch ($oTransaction->payment_method_model->processor->processor_name) {
                 case 'BluePay':
@@ -546,26 +563,22 @@ HTML;
                         $card_type = $oTransaction->transaction_response['maskedCardData']['type'];
                     }
                     $type_card = $card_type;
-                    if ($card_type == 'AMEX') {
-                        $fraud_result = 'negative';
+                    if ($card_type !== 'AMEX') {
+                        $fraud_result = 'positive';
                     }
                     break;
                 case 'Stripe':
                     foreach ($oTransaction->transaction_response['charges']['data'] as $details) {
                         $type_card = $details['payment_method_details']['card']['brand'];
-                        if (in_array($details['payment_method_details']['card']['brand'], ['amex'])) {
-                            $fraud_result = 'negative';
+
+                        if ($details['payment_method_details']['card']['brand'] !== 'amex') {
+                            $fraud_result = 'positive';
                         }
                     }
                     break;
-                case 'PayPal':
-                    $fraud_result = 'negative';
-                    break;
             }
         }
-        if ($fraud_result === 'negative') {
-            $outcome = 0;
-        }
+        $outcome = intval($fraud_result === 'positive');
         return [$fraud_result, $fraud->weight, ['card_type' => $type_card], null, $outcome];
     }
 

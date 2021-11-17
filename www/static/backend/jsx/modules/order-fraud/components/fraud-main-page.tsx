@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Grid, Paper, Typography, CircularProgress } from "@material-ui/core";
+import { Paper, Typography, CircularProgress } from "@material-ui/core";
 import { FraudCheckHat } from "@admin/modules/order-fraud/components/fraud-check-hat/fraud-check-hat";
 import { FraudTableQuestion } from "@admin/modules/order-fraud/components/fraud-table-question/fraud-table-question";
 import { FraudInfoBasement } from "@admin/modules/order-fraud/components/fraud-info-basement/fraud-info-basement";
@@ -22,6 +22,8 @@ import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
 import { MatrixModal } from "@admin/modules/order-fraud/components/matrix-modal/matrix-modal";
 import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 import { MatchingAddress } from "@admin/modules/order-fraud/components/matching-address/MatchingAddress";
+import Divider from "@mui/material/Divider";
+import { Box, Grid } from "@mui/material";
 
 interface FraudMainPage {
   orderId: number | string;
@@ -100,30 +102,36 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
           alignItems="center"
           justifyContent="center"
           direction="column"
+          sx={{ p: 1 }}
         >
           <div className="table-wrapper__fraud-check-question">
             <Typography variant="h6" align="left">
               Full names: Information gathering
             </Typography>
             <MatrixHistory historyColumn={data.legend.full_name} />
-            <Typography variant="h6" align="left">
-              Full names: Cross check matrix
-            </Typography>
-            <MatrixQuestion
-              columns={data.columns.fullName}
-              answerList={data.answer.full_name}
-              handleClickAnswer={handleOpenPopper}
-            />
+            <Box sx={{ my: 1 }}>
+              <Typography variant="h6" align="left">
+                Full names: Cross check matrix
+              </Typography>
+              <MatrixQuestion
+                columns={data.columns.fullName}
+                answerList={data.answer.full_name}
+                handleClickAnswer={handleOpenPopper}
+              />
+            </Box>
           </div>
+          <Divider sx={{ width: "100%", my: 1 }} />
           <div className="table-wrapper__fraud-check-question">
             <Typography variant="h6" align="left">
               Addresses: Information gathering
             </Typography>
             <MatrixHistory historyColumn={data.legend.address} />
-            <Typography variant="h6" align="left">
-              Comparison of two addresses: Matching degrees
-            </Typography>
-            <MatchingAddress />
+            <Box sx={{ my: 1 }}>
+              <Typography variant="h6" align="left">
+                Comparison of two addresses: Matching degrees
+              </Typography>
+              <MatchingAddress />
+            </Box>
             <Typography variant="h6" align="left">
               Addresses: Cross check matrix
             </Typography>
@@ -133,6 +141,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               handleClickAnswer={handleOpenPopper}
             />
           </div>
+          <Divider sx={{ width: "100%", my: 1 }} />
           <div className="table-wrapper__fraud-check-question">
             <FraudTableQuestion
               title="Diagonal checks"

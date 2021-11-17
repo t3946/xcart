@@ -224,7 +224,6 @@ class OrderFraudCheckController extends Controller
         $code_list = [$answer->question->f_fraud->fraud_code, $answer->question->t_fraud->fraud_code];
         foreach ($code_list as $code) {
             $template = [];
-            $value = 'N/A';
             if ($answer->question->f_fraud->type === 'full_name') {
                 $value = $ar_info["value$code"]['full_name'] ?? $ar_info["value$code"];
             } else {
@@ -390,7 +389,6 @@ HTML;
             $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
             if ($order_model instanceof OrderModel) {
                 $order_model->orderFraudCheck();
-                sleep(3); // чтобы избежать быстрого перехода от одного запроса к другому
                 $this->jsonResponse(['status' => true]);
             }
         } catch (\Throwable $exception) {

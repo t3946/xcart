@@ -24,7 +24,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
   return (
     <table border={1} className="table-question-fraud-check">
       <tr>
-        <th className="table-header-code-text">code</th>
+        <th className="table-header-code-text">Code</th>
         {columns.map((column) => (
           <th
             className={`table-header-fraud ${getHeaderClassByName(
@@ -47,7 +47,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
             </td>
             {columns.map((col) => {
               if (col.fraud_id === column.fraud_id) {
-                return <td>&#10003;</td>;
+                return <td className="redundant-text">&#10003;</td>;
               }
               const answer = answerList.find((answer) => {
                 return (
@@ -67,7 +67,7 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
                   </td>
                 );
               } else {
-                return <td>Redundant</td>;
+                return <td className="redundant-text">Redundant</td>;
               }
             })}
           </tr>
