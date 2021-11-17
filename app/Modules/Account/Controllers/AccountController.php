@@ -231,9 +231,19 @@ class AccountController extends FrontendController
         return $attributes;
     }
 
-    public function actionReview(): void
+    public function createReviewAction($product_id): void
     {
-        $product_id = 16133;
+        $product = ProductModel::objects()->get(["productid" => $product_id]);
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($product === null) {
+            if ($user->getIsGuest()) {
+                $this->redirect("main:index");
+            } else {
+                $this->redirect("account:dashboard");
+            }
+        }
+
         $product = $this->getProduct($product_id);
         StorageHelper::push($product, 'product', 'review');
         $this->actionIndex();

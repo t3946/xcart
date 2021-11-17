@@ -1,13 +1,31 @@
 import React from "react";
 import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
 import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
-import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import { useDispatch } from "react-redux";
 import ArrowIcon from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
 import Reviews from "@client/modules/product/Components/Reviews";
+import AppData, { route } from "@client/jsx/utils/AppData";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+
+const WriteAReviewButton: React.FC = function () {
+  return (
+    <a
+      className="d-flex justify-content-center text-decoration-none"
+      href={route(
+        "account:create_review",
+        AppData.product_info.product.productid
+      )}
+    >
+      <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
+        <span className={"d-none d-md-block"}>write a customer review</span>
+        <span className={"d-md-none"}>write a review</span>
+      </button>
+    </a>
+  );
+};
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
@@ -34,9 +52,8 @@ const ProductReviews: React.FC = function () {
     document.location.pathname.match(/\/product\/(\d+)/)[1]
   );
 
-  const ratings = useSelector((e: StoreInterface) => e.productsRatings)[
-    productId
-  ];
+  const ratings = useSelectorAccount((e) => e.productsRatings)[productId];
+  const user = useSelectorAccount((e) => e.user);
 
   let totalRatingsNumber = 0;
 
@@ -98,6 +115,28 @@ const ProductReviews: React.FC = function () {
 
     return (
       <ul className={"product-rating list-unstyled m-0"}>{ratingElements}</ul>
+    );
+  }
+
+  function writeAReviewTemplate() {
+    if (!user) {
+      return;
+    }
+
+    return (
+      <>
+        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
+
+        <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
+          Review this product
+        </h4>
+
+        <p className={"product-reviews__share-your-thoughts"}>
+          Share your thoughts with other customers
+        </p>
+
+        <WriteAReviewButton />
+      </>
     );
   }
 
@@ -165,24 +204,7 @@ const ProductReviews: React.FC = function () {
 
           {featureRatingsTemplate()}
 
-          <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
-
-          <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
-            Review this product
-          </h4>
-
-          <p className={"product-reviews__share-your-thoughts"}>
-            Share your thoughts with other customers
-          </p>
-
-          <div className="d-flex justify-content-center">
-            <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
-              <span className={"d-none d-md-block"}>
-                write a customer review
-              </span>
-              <span className={"d-md-none"}>write a review</span>
-            </button>
-          </div>
+          {writeAReviewTemplate()}
         </div>
 
         <div className="col-12 col-lg product-reviews-right-column">

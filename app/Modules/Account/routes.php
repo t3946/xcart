@@ -21,9 +21,9 @@ return [
     ],
 
     [
-        'route' => '/review',
-        'target' => [AccountController::class, 'actionReview'],
-        'name' => 'review'
+        'route' => '/create-review/{*:product_id}',
+        'target' => [AccountController::class, 'createReviewAction'],
+        'name' => 'create_review'
     ],
 
     [

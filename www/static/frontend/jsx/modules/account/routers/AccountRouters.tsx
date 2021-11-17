@@ -350,7 +350,7 @@ export const AccountRouters = (): any => {
                 />
                 <Route
                   exact
-                  path={route("account:review")}
+                  path={route("account:create_review")}
                   component={PageContainerHoc(<SideBarMenu />, <ReviewForm />)}
                 />
                 <Route
