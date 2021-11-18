@@ -2,6 +2,7 @@ import React from "react";
 import List from "@client/modules/account/components/orders/DecisionsPreview/List";
 import { Row } from "react-bootstrap";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+import classnames from "classnames";
 
 const Decisions: React.FC = function () {
   const [isPrintSolved, setIsPrintSolved] = React.useState(true);
@@ -34,12 +35,20 @@ const Decisions: React.FC = function () {
     );
   }
 
+  const classes = {
+    header: [
+      "decisions-list-header",
+      "decisions-lists__header",
+      {
+        "mt-0": !isPrintNotSolved,
+      },
+    ],
+  };
+
   if (isPrintSolved) {
     lists.push(
       <>
-        <h2 className={"decisions-list-header decisions-lists__header"}>
-          Order decisions made
-        </h2>
+        <h2 className={classnames(classes.header)}>Order decisions made</h2>
 
         <Row className={"m-sm-0"}>
           <List

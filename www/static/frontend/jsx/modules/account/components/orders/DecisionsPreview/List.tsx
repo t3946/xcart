@@ -24,6 +24,7 @@ const List: React.FC<PropsInterface> = function (props: PropsInterface) {
     list: [
       className,
       style["decisions-list-items"],
+      "pe-lg-3",
       {
         "overflow-hidden": decisions.length <= 3,
       },
