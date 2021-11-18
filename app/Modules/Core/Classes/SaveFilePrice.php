@@ -91,7 +91,7 @@ class SaveFilePrice
                 $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
                 if ($product instanceof ProductModel) {
                     $this->sendProductData($product, $table_index, $key);
-                    $this->success_productcode[] = "$this->dx_code-$code";
+                    $this->success_productcode[] = $product->productcode;
                 }
             }
         }
