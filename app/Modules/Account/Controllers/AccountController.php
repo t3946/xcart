@@ -15,7 +15,9 @@ use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Controllers\Api\DecisionController;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Reviews\Models\ProductReviewsModel;
+use Modules\Order\Models\DecisionModel;
+use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
@@ -249,6 +251,46 @@ class AccountController extends FrontendController
 
         $product = $this->getProduct($product_id);
         StorageHelper::push($product, 'product', 'review');
+        $this->actionIndex();
+    }
+
+    public function actionDecisionEdit($decision_id): void
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            $this->actionIndex();
+        }
+
+        $decision = DecisionModel::objects()->get(['decision_id' => $decision_id]);
+        $order_id = $decision->getAttribute('order_id');
+        /**
+         * @var $order OrderModel
+         */
+        $order = OrderModel::objects()->get(['orderid' => $order_id]);
+        $products = $order->getProducts();
+        $details = $order->detail_models;
+        $order_products_with_amount = [];
+
+        /**
+         * @var $detail OrderDetailModel
+         * @var $product ProductModel
+         */
+        foreach ($details as $i => $detail) {
+            foreach ($products as $j => $product) {
+                if ($detail->productid !== $product->productid) {
+                    continue;
+                }
+
+                $order_products_with_amount[] = [
+                    'product' => $product->getAttributes(),
+                    'orderAmount' => $detail->getAttribute('amount'),
+                    'estimateTimeArrival' => $product->getETADate(),
+                ];
+            }
+        }
+
+        StorageHelper::push($order_products_with_amount, null, 'estimatedTimeArrivalProducts');
         $this->actionIndex();
     }
 }

@@ -146,7 +146,7 @@ return [
     ],
     [
         'route' => '/decision/{*:decision_id}',
-        'target' => [AccountController::class, 'actionIndex'],
+        'target' => [AccountController::class, 'actionDecisionEdit'],
         'name' => 'order-make-decision',
     ],
 

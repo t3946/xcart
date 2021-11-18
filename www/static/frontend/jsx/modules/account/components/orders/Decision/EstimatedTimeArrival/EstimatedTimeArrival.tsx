@@ -9,6 +9,8 @@ import AdviceList from "@client/modules/account/components/orders/Decision/Estim
 import { solveDecisionAction } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 import DecisionsInterface from "@client/modules/account/ts/types/decision";
+import AppData from "@client/jsx/utils/AppData";
+import { RowInterface } from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/TableRow";
 
 interface PropsInterface {
   onChange: (decision: DecisionsInterface) => any;
@@ -20,27 +22,6 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
 ) => {
   const { onChange, decision } = props;
   const dispatch = useDispatch();
-  console.log("decision", decision);
-  const mockData = [
-    // {
-    //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
-    //   sku: "461-4210",
-    //   amount: 2,
-    //   date: "15-Sep-2021",
-    // },
-    // {
-    //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
-    //   sku: "461-4210",
-    //   amount: 2,
-    //   date: "15-Sep-2021",
-    // },
-    // {
-    //   name: "Cyprus Raw Umber Medium 4 Oz Vol",
-    //   sku: "461-4210",
-    //   amount: 2,
-    //   date: "15-Sep-2021",
-    // },
-  ];
 
   const initialState = {
     comment: decision.options.comment || "",
@@ -84,6 +65,45 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
     );
   }
 
+  const productCategories: Record<string, RowInterface[]> = {
+    inStock: [],
+    outOfStock: [],
+    discontinued: [],
+  };
+
+  AppData.estimatedTimeArrivalProducts.forEach((value) => {
+    const { orderAmount, product } = value;
+    const outOfStockItemsNumber = Math.max(0, orderAmount - product.avail);
+    const tableRow = {
+      name: product.product,
+      sku: product.productcode,
+      amount: null,
+      date: null,
+    };
+
+    if (outOfStockItemsNumber === 0) {
+      tableRow.amount = orderAmount;
+      productCategories.inStock.push({ ...tableRow });
+    } else {
+      tableRow.amount = outOfStockItemsNumber;
+
+      if (value.estimateTimeArrival) {
+        const date = new Date(value.estimateTimeArrival.date);
+        const day = date.getDate();
+        const month = date.toLocaleDateString("en-US", { month: "short" });
+        const year = date.getFullYear();
+
+        tableRow.date = [day, month, year].join("-");
+        productCategories.outOfStock.push({ ...tableRow });
+      } else {
+        productCategories.discontinued.push({ ...tableRow });
+      }
+
+      tableRow.amount = orderAmount - outOfStockItemsNumber;
+      productCategories.inStock.push({ ...tableRow });
+    }
+  });
+
   return (
     <div>
       <Formik
@@ -99,18 +119,26 @@ const EstimatedTimeArrival: React.FC<PropsInterface> = (
                 ETA Decision
               </h1>
 
-              <EstimatedTimeArrivalTable
-                tableType={TableTypes.inStock}
-                items={mockData}
-              />
-              <EstimatedTimeArrivalTable
-                tableType={TableTypes.outOfStock}
-                items={mockData}
-              />
-              <EstimatedTimeArrivalTable
-                tableType={TableTypes.discontinued}
-                items={mockData}
-              />
+              {productCategories.inStock.length && (
+                <EstimatedTimeArrivalTable
+                  tableType={TableTypes.inStock}
+                  items={productCategories.inStock}
+                />
+              )}
+
+              {productCategories.outOfStock.length && (
+                <EstimatedTimeArrivalTable
+                  tableType={TableTypes.outOfStock}
+                  items={productCategories.outOfStock}
+                />
+              )}
+
+              {productCategories.discontinued.length && (
+                <EstimatedTimeArrivalTable
+                  tableType={TableTypes.discontinued}
+                  items={productCategories.discontinued}
+                />
+              )}
 
               <div className={"estimated-time-arrival-form-controls"}>
                 <div className={"fw-normal form-input-label"}>
