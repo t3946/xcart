@@ -2,7 +2,9 @@
 
 namespace Xcart\App\Validation\Traits;
 
+use Xcart\App\Form\Fields\Field;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Validation\Interfaces\IValidateObject;
 
 /**
  * Class ValidateObject
@@ -33,8 +35,8 @@ trait ValidateObject
 
         $this->clearErrors();
 
-        /* @var $field \Xcart\App\Orm\Fields\Field|\Xcart\App\Form\Fields\Field */
-        /* @var $this \Xcart\App\Validation\Interfaces\IValidateObject|\Xcart\App\Validation\Traits\ValidateObject */
+        /* @var $field \Xcart\App\Orm\Fields\Field|Field */
+        /* @var $this IValidateObject|ValidateObject */
         $fields = $this->getFieldsInit();
 
         // Fill cleaned data from form
@@ -129,8 +131,8 @@ trait ValidateObject
      */
     public function clearErrorsInternal($attribute = null)
     {
-        /* @var $field \Xcart\App\Orm\Fields\Field|\Xcart\App\Form\Fields\Field */
-        /* @var $this \Xcart\App\Validation\Interfaces\IValidateObject|\Xcart\App\Validation\Traits\ValidateObject */
+        /* @var $field \Xcart\App\Orm\Fields\Field|Field */
+        /* @var $this IValidateObject|ValidateObject */
         if ($attribute === null) {
             foreach ($this->getFieldsInit() as $field) {
                 $field->clearErrors();
@@ -151,7 +153,7 @@ trait ValidateObject
      */
     public function addError($attribute, $error)
     {
-        /* @var $this \Xcart\App\Validation\Interfaces\IValidateObject|\Xcart\App\Validation\Traits\ValidateObject */
+        /* @var $this IValidateObject|ValidateObject */
         $this->_errors[$attribute][] = $error;
         if ($this->hasField($attribute)) {
             $this->getField($attribute)->addError($error);

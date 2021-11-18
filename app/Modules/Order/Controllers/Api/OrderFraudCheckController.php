@@ -42,7 +42,7 @@ class OrderFraudCheckController extends Controller
                 return;
             }
             $ar_settings = ['locked_orders' => false];
-            $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
+            $time_for_order_in_mins = 10;
             $current_time = time();
             $login_last_opened_or_saved = $order_model->login_last_opened_or_saved;
             $time_last_opened_or_saved = $order_model->time_last_opened_or_saved;
