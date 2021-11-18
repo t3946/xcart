@@ -15,7 +15,7 @@
             {*            {dd(property_exists($admin, 'ownerPk'))}*}
             <table data-list-table
                    {if property_exists($admin, 'ownerPk')}data-owner-pk={$admin->ownerPk} {/if} {if $admin->sort}data-sorting{/if}
-                   style="white-space: nowrap; border-collapse: collapse;">
+                   style="border-collapse: collapse;">
                 <thead>
                 {var $cols = 0}
 
