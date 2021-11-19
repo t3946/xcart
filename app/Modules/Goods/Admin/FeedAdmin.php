@@ -24,7 +24,7 @@ class FeedAdmin extends Admin
 
     public function getModel(): SupplierFeedModel
     {
-        return new SupplierFeedModel;
+        return new SupplierFeedModel();
     }
 
     public function getListColumns() : array
@@ -93,10 +93,8 @@ class FeedAdmin extends Admin
 
     public function getItemProperty(Model $item, $property)
     {
-        if ($property === 'distributor') {
-            if ($distributor = $item->$property) {
-                return "<a href='{$distributor->getAdminUrl()}' target='_blank'>{$distributor->code}</a>";
-            }
+        if (($property === 'distributor') && $distributor = $item->$property) {
+            return "<a href='{$distributor->getAdminUrl()}' target='_blank'>$distributor->code</a>";
         }
         if ($property === 'last_update_items_count' && $item->$property > 0) {
             /** @var ProductModel $product */
@@ -120,7 +118,7 @@ class FeedAdmin extends Admin
             return "[$site->code] {$site->getName()}";
         }
         if ($property === 'last_update_time') {
-            $date = new DateTime;
+            $date = new DateTime();
             $date->setTimestamp($item->$property);
             return $date->format('Y-M-d H:i');
         }

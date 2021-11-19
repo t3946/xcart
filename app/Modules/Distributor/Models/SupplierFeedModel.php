@@ -5,6 +5,7 @@ namespace Modules\Distributor\Models;
 use DateTime;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Sites\Models\SiteModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -26,6 +27,8 @@ use Xcart\App\Orm\Model;
  * @property DistributorModel distributor
  * @property int last_update_time
  * @property bool $enabled
+ * @property int $storefront_id
+ * @property bool $run_force
  */
 class SupplierFeedModel extends Model
 {
@@ -142,7 +145,10 @@ class SupplierFeedModel extends Model
     {
         $cur_time = time();
         $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
-        $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time + $this->average_update_period));
+        $date2 = DateTime::createFromFormat(
+            'm-d-Y H:i:s',
+            date('m-d-Y H:i:s', $cur_time + $this->average_update_period)
+        );
         $interval = $date1->diff($date2);
         $years = (int)$interval->format('%y');
         $months = (int)$interval->format('%m');
@@ -171,5 +177,28 @@ class SupplierFeedModel extends Model
     public function __toString()
     {
         return (string)$this->feed_name;
+    }
+
+    public function getCode()
+    {
+        $dx = $this->distributor;
+        $code = str_replace('-', '_', $dx->code);
+        return $dx->feeds->count() === 1 ? $code : "{$code}__$this->storefront_id";
+    }
+
+    public function afterSave($owner, $isNew)
+    {
+        if ($this->enabled && $this->run_force) {
+            Xcart::app()->queue->send(
+                'feeds',
+                json_encode(
+                    [
+                        'code' => $this->getCode(),
+                        'run_force' => true
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
+            );
+        }
     }
 }

@@ -6,12 +6,8 @@ namespace Modules\Goods\Forms;
 
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
-use Modules\Goods\Admin\FeedAdmin;
-use Modules\Goods\Models\CategoryModel;
-use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
 
@@ -28,7 +24,7 @@ class FeedForm extends ModelForm
 
     public function getModel()
     {
-        return new SupplierFeedModel;
+        return new SupplierFeedModel();
     }
 
     public function getFields()
@@ -45,7 +41,7 @@ class FeedForm extends ModelForm
                 'choices' => static function () {
                     $res[] = '';
                     foreach (DistributorModel::objects()->order(['code']) as $dx) {
-                        $res[$dx->manufacturerid] = "[{$dx->code}] {$dx}";
+                        $res[$dx->manufacturerid] = "[$dx->code] $dx";
                     }
                     return $res ?? [];
                 },
