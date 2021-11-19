@@ -7,6 +7,8 @@ import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import AppData from "@client/jsx/utils/AppData";
+import Search from "@client/modules/icon/components/account/search/Search";
+import Styles from "@client/jsx/modules/account/components/hat/Hat.module.scss";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
@@ -104,12 +106,12 @@ const HatNavigation = (): any => {
                       />
                     </div>
 
-                    <div className="hat-navigation-item-wrapper">
-                      <a
-                        className="mobile__search-btn middle-inline-block hat-navigation-item"
-                        data-swich="search_container"
-                      />
-                    </div>
+                    <a
+                      className="d-flex align-items-center justify-content-center hat-navigation-item-wrapper"
+                      data-swich="search_container"
+                    >
+                      <Search className={Styles.searchIcon} />
+                    </a>
 
                     <div className="hat-navigation-item-wrapper">
                       <LoginButton />
