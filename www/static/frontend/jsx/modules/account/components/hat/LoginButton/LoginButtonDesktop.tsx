@@ -12,6 +12,7 @@ import classnames from "classnames";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
+import RotateStyles from "@client/style-modules/common/Rotate.module.scss";
 
 interface IProps {
   isStatic: boolean;
@@ -104,6 +105,7 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
     const classes = {
       username: ["hat-login-button-username"],
       iconArrow: [
+        isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
         "login-button-desktop__arrow",
         "login-button-desktop-arrow",
         {
@@ -123,6 +125,7 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
       >
         <UserIcon />
         <span className={classnames(classes.username)}>{user.name}</span>
+
         <ArrowIconMobileDesktop className={classnames(classes.iconArrow)} />
       </span>
     );
