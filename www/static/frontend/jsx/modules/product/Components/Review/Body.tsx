@@ -2,11 +2,11 @@ import React from "react";
 import classnames from "classnames";
 import ReadMore from "@client/modules/product/Components/Review/ReadMore";
 
-interface PropsInterface {
+interface IProps {
   content: string;
 }
 
-const Body: React.FC<PropsInterface> = function ({ content }: PropsInterface) {
+const Body: React.FC<IProps> = function ({ content }: IProps) {
   const refBodyContainer = React.useRef<HTMLDivElement>();
   const [bodyHeight, setBodyHeight] = React.useState(null);
   const [isFullBodyExpanded, setIsFullBodyExpanded] = React.useState(false);

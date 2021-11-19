@@ -12,13 +12,13 @@ import DecisionsInterface from "@client/modules/account/ts/types/decision";
 import AppData from "@client/jsx/utils/AppData";
 import { RowInterface } from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/TableRow";
 
-interface PropsInterface {
+interface IProps {
   onChange: (decision: DecisionsInterface) => any;
   decision: DecisionsInterface;
 }
 
-const EstimatedTimeArrival: React.FC<PropsInterface> = (
-  props: PropsInterface
+const EstimatedTimeArrival: React.FC<IProps> = (
+  props: IProps
 ) => {
   const { onChange, decision } = props;
   const dispatch = useDispatch();

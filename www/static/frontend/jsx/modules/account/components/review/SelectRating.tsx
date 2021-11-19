@@ -4,7 +4,7 @@ import StarStroked from "@client/jsx/modules/icon/components/account/rating/Star
 import { Form as RBForm } from "react-bootstrap";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   name: string;
   handleChange: (e: any) => any;
   value: number;
@@ -15,8 +15,8 @@ interface PropsInterface {
   reset: any;
 }
 
-const SelectRating: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const SelectRating: React.FC<IProps> = function (
+  props: IProps
 ) {
   const { handleChange, value, name, reset } = props;
   const maxRating = 5;

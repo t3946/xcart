@@ -10,14 +10,14 @@ import {
 } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 
-interface PropsInterface {
+interface IProps {
   decisions: Record<any, any>[];
   className?: any;
   solved: boolean;
   onAllLoaded?: () => void;
 }
 
-const List: React.FC<PropsInterface> = function (props: PropsInterface) {
+const List: React.FC<IProps> = function (props: IProps) {
   const { decisions, className, onAllLoaded } = props;
   const items = [];
   const classes = {

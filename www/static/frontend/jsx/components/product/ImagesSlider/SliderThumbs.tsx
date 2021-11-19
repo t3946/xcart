@@ -2,14 +2,14 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   items: Record<any, any>[];
   index: number;
   slideTo: (index: number) => void;
 }
 
-const SliderThumbs: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const SliderThumbs: React.FC<IProps> = function (
+  props: IProps
 ) {
   const { items, index, slideTo } = props;
   const buttonStyles = {

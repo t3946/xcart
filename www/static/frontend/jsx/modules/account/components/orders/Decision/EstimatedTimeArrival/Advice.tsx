@@ -13,7 +13,7 @@ export enum AdviceTypes {
   replace = "replace",
 }
 
-interface PropsInterface {
+interface IProps {
   type: AdviceTypes | string;
   className: any;
   value: string;
@@ -23,7 +23,7 @@ interface PropsInterface {
   disabled?: boolean;
 }
 
-const Advice: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Advice: React.FC<IProps> = (props: IProps) => {
   const { type, className, value, name, checked, onChange } = props;
   const disabled = props.disabled || false;
 

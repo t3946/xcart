@@ -7,7 +7,7 @@ import {
   VariantsEnum,
 } from "@client/modules/account/utils/alert";
 
-interface PropsInterface {
+interface IProps {
   show: boolean;
   variant: VariantsEnum;
   message: string;
@@ -17,7 +17,7 @@ interface PropsInterface {
   };
 }
 
-const Alert: React.FC<PropsInterface> = function (props: PropsInterface) {
+const Alert: React.FC<IProps> = function (props: IProps) {
   const { show, variant, message } = props;
   const classes = {
     container: props.classes?.container,

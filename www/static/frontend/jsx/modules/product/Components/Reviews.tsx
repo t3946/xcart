@@ -14,11 +14,11 @@ import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import AppData from "@client/jsx/utils/AppData";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   productId: number;
 }
 
-const Reviews: React.FC<any> = function (props: PropsInterface) {
+const Reviews: React.FC<any> = function (props: IProps) {
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
   const totalReviews = AppData.products[props.productId].total_reviews;

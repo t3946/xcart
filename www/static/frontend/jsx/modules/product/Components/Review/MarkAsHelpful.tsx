@@ -6,13 +6,13 @@ import {
 } from "@client/jsx/redux/actions/ProductActions";
 import { useDispatch } from "react-redux";
 
-interface PropsInterface {
+interface IProps {
   reviewId: number;
   isHelpful: boolean;
 }
 
-const MarkAsHelpful: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const MarkAsHelpful: React.FC<IProps> = function (
+  props: IProps
 ) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [markedAsHelpful, setMarkedAsHelpful] = React.useState(false);

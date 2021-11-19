@@ -4,7 +4,7 @@ import TransitionFade from "@client/modules/account/components/shared/Transition
 import useClickListener from "@client/modules/account/hooks/useClickListener";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   toggle: (isOpen: boolean) => any;
   items: any;
   onSelect?: (eventKey: string) => any;
@@ -16,7 +16,7 @@ interface PropsInterface {
   };
 }
 
-const Navigation: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Navigation: React.FC<IProps> = (props: IProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const { toggle, items, onSelect, active } = props;
   const outSideClickListener = useClickListener(setIsOpen);

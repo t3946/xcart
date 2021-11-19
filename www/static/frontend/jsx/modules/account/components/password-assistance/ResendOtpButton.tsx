@@ -1,13 +1,13 @@
 import React from "react";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   leftResendTime: number;
   decLeftResendTime: () => void;
   sendOneTimePassword: (any) => void;
 }
 
-const ResendOtpButton: React.FC<any> = function (props: PropsInterface) {
+const ResendOtpButton: React.FC<any> = function (props: IProps) {
   const { leftResendTime, decLeftResendTime, sendOneTimePassword } = props;
   const [disabled, setDisabled] = React.useState(false);
 

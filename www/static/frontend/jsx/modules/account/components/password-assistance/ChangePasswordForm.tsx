@@ -7,12 +7,12 @@ import { useDispatch } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
 import { useHistory } from "react-router-dom";
 
-interface PropsInterface {
+interface IProps {
   resetPasswordToken: string;
   goToLoginInput: () => void;
 }
 
-const ChangePasswordForm: React.FC<any> = function (props: PropsInterface) {
+const ChangePasswordForm: React.FC<any> = function (props: IProps) {
   const { resetPasswordToken, goToLoginInput } = props;
   const dispatch = useDispatch();
   const history = useHistory();

@@ -4,7 +4,7 @@ import DropDown from "@client/modules/account/hoc/DropDown";
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import Badge from "@client/modules/account/components/orders/Navigation/Badge";
 
-interface PropsInterface {
+interface IProps {
   menu: {
     text: string;
     path: string;
@@ -14,7 +14,7 @@ interface PropsInterface {
   className: any;
 }
 
-const Navigation: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Navigation: React.FC<IProps> = (props: IProps) => {
   const [active, setActive] = React.useState("0");
   const { menu, className } = props;
 

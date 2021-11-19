@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   beforePage?: React.ReactElement;
 
   header?: ReactNode;
@@ -19,7 +19,7 @@ interface PropsInterface {
   children?: any;
 }
 
-const InnerPage: React.FC<PropsInterface> = function (props: PropsInterface) {
+const InnerPage: React.FC<IProps> = function (props: IProps) {
   function headerTemplate() {
     if (props.header) {
       return (

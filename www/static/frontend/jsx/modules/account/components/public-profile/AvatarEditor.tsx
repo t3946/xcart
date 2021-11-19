@@ -1,14 +1,14 @@
 import React from "react";
 import Cropper from "react-cropper";
 
-interface PropsInterface {
+interface IProps {
   imageRaw: string;
   imageChange: (dataUrl: string) => void;
   preview: HTMLElement;
 }
 
-const AvatarEditor: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const AvatarEditor: React.FC<IProps> = function (
+  props: IProps
 ) {
   const { imageRaw, imageChange, preview } = props;
   const cropperRef = React.useRef<HTMLImageElement>(null);

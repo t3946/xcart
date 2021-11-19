@@ -1,11 +1,11 @@
 import React from "react";
 import classnames from "classnames";
 
-interface propsInterface {
+interface IProps {
   className?: any;
 }
 
-const Camera: React.FC<propsInterface> = (props: propsInterface) => {
+const Camera: React.FC<IProps> = (props: IProps) => {
   return (
     <svg
       width="31"

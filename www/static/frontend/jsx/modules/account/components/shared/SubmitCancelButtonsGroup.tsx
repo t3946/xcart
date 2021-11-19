@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 
-interface PropsInterfaced {
+interface IPropsd {
   submitText?: string;
   cancelText?: string;
 
@@ -18,7 +18,7 @@ interface PropsInterfaced {
   onConfirm?: () => void;
 }
 
-const SubmitCancelButtonsGroup: React.FC<PropsInterfaced> = function ({
+const SubmitCancelButtonsGroup: React.FC<IPropsd> = function ({
   submitText,
   cancelText,
   submitDisabled,

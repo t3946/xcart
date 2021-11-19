@@ -3,7 +3,7 @@ import StarFilled from "@client/jsx/modules/icon/components/account/rating/StarF
 import StarStroked from "@client/jsx/modules/icon/components/account/rating/StarStroked";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   rating: number;
   classes?: {
     icon?: any;
@@ -11,8 +11,8 @@ interface PropsInterface {
   };
 }
 
-export const RatingStars: React.FC<PropsInterface> = (
-  props: PropsInterface
+export const RatingStars: React.FC<IProps> = (
+  props: IProps
 ) => {
   const rating = Math.round(props.rating);
   const maxRating = 5;

@@ -6,12 +6,12 @@ import { useDispatch } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 
-interface PropsInterface {
+interface IProps {
   onClick?: () => void;
 }
 
-const LogoutButton: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const LogoutButton: React.FC<IProps> = function (
+  props: IProps
 ) {
   const history = useHistory();
   const dispatch = useDispatch();

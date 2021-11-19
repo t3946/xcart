@@ -11,7 +11,7 @@ interface Item {
   value: any;
 }
 
-interface PropsInterface {
+interface IProps {
   items: Item[] | SelectValue<any, any>[];
   onClick?: (item: Item) => any;
   value: any;
@@ -27,7 +27,7 @@ interface PropsInterface {
   id?: any;
 }
 
-export const FormSelect: React.FC<PropsInterface> = ({
+export const FormSelect: React.FC<IProps> = ({
   items,
   onClick,
   value,
@@ -36,7 +36,7 @@ export const FormSelect: React.FC<PropsInterface> = ({
   label = null,
   classes = undefined,
   id = undefined,
-}: PropsInterface) => {
+}: IProps) => {
   const selectedItem = value;
   const [open, setOpen] = useState(false);
 

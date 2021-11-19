@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import Files from "@client/jsx/modules/product/Components/Review/Files";
 
-interface PropsInterface {
+interface IProps {
   product_review_id: string;
   user_id: string;
   product_id: string;
@@ -27,7 +27,7 @@ interface PropsInterface {
   };
 }
 
-const Review: React.FC<PropsInterface> = function (props: PropsInterface) {
+const Review: React.FC<IProps> = function (props: IProps) {
   const rating = parseFloat(props.overall_rating);
   const classes = {
     header: [

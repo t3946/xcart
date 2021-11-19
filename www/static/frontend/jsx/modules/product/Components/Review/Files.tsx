@@ -12,14 +12,14 @@ import {
 } from "@client/modules/product/Components/PhotoSwipe/ts/const/VideoSize";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   files: {
     images: Record<any, any>[];
     videos: Record<any, any>[];
   };
 }
 
-const Files: React.FC<PropsInterface> = function (props: PropsInterface) {
+const Files: React.FC<IProps> = function (props: IProps) {
   const dispatch = useDispatch();
   const thumbsContainer = React.useRef<HTMLDivElement>();
 

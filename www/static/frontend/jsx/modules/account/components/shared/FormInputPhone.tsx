@@ -8,7 +8,7 @@ import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import classnames from "classnames";
 import InputMask from "react-input-mask";
 
-interface PropsInterface {
+interface IProps {
   handleChange: () => any;
   setFieldValue: (string, any) => void;
   touched: Record<any, any>;
@@ -25,7 +25,7 @@ interface PropsInterface {
   label: string;
 }
 
-const FormInputPhone: React.FC<any> = function (props: PropsInterface) {
+const FormInputPhone: React.FC<any> = function (props: IProps) {
   const {
     setFieldValue,
     handleChange,

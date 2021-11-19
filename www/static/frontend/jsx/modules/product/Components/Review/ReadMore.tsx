@@ -2,7 +2,7 @@ import React from "react";
 import ArrowIcon from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   setIsOpen: (isOpen: boolean) => void;
   isOpen: boolean;
   classes: {
@@ -10,8 +10,8 @@ interface PropsInterface {
   };
 }
 
-const ReadMore: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const ReadMore: React.FC<IProps> = function (
+  props: IProps
 ) {
   return (
     <div

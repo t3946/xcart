@@ -1,12 +1,12 @@
 import React from "react";
 
-interface PropsInterface {
+interface IProps {
   count: number;
 }
 
-const HelpfulCount: React.FC<PropsInterface> = function ({
+const HelpfulCount: React.FC<IProps> = function ({
   count,
-}: PropsInterface) {
+}: IProps) {
   if (count === 0) {
     return;
   }

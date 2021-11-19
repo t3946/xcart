@@ -2,7 +2,7 @@ import React from "react";
 import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   onClick?: any;
   text?: string;
   classes?: {
@@ -12,8 +12,8 @@ interface PropsInterface {
   };
 }
 
-const PlusPanelButton: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const PlusPanelButton: React.FC<IProps> = function (
+  props: IProps
 ) {
   const { onClick, text } = props;
   const classes = {

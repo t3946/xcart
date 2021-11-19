@@ -12,12 +12,12 @@ import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonDesktop";
 import AppData, { route } from "@client/jsx/utils/AppData";
 
-interface PropsInterface {
+interface IProps {
   isStatic?: boolean;
 }
 
-const HatSearchLine: React.FC<PropsInterface> = (
-  props: PropsInterface
+const HatSearchLine: React.FC<IProps> = (
+  props: IProps
 ): any => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();

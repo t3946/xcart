@@ -10,12 +10,12 @@ export enum TableTypes {
   discontinued = "discontinued",
 }
 
-interface PropsInterface {
+interface IProps {
   tableType: TableTypes;
   items: RowInterface[];
 }
 
-const Table: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Table: React.FC<IProps> = (props: IProps) => {
   const tableHeaders = {
     inStock: {
       itemNameSkuQty: "Item / SKU / Qty in stock",

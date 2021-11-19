@@ -3,7 +3,7 @@ import Film from "@client/jsx/modules/icon/components/font-awesome/film/Film";
 import PlusPanelButton from "@client/modules/account/components/common/PlusPanelButton";
 import ModalTimes from "@client/modules/icon/components/account/ModalTimes";
 
-interface PropsInterface {
+interface IProps {
   setFiles: any;
 }
 
@@ -14,7 +14,7 @@ interface FileInterface {
   file: any;
 }
 
-const Files: React.FC<PropsInterface> = function (props: PropsInterface) {
+const Files: React.FC<IProps> = function (props: IProps) {
   const inputFileRef = React.useRef<HTMLInputElement>();
   const [files, setFiles] = React.useState<FileInterface[]>([]);
 

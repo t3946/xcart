@@ -1,11 +1,11 @@
 import React from "react";
 import classnames from "classnames";
 
-interface propsInterface {
+interface IProps {
   className?: any;
 }
 
-const StarStroked: React.FC<propsInterface> = (props: propsInterface): any => {
+const StarStroked: React.FC<IProps> = (props: IProps): any => {
   return (
     <svg
       width="20"

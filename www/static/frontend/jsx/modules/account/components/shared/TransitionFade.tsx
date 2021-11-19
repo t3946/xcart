@@ -1,15 +1,15 @@
 import React from "react";
 import { Transition } from "react-transition-group";
 
-interface PropsInterface {
+interface IProps {
   show: boolean;
   durationMs?: number;
   children: React.ReactElement;
   styles?: Record<any, any>;
 }
 
-const TransitionFade: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const TransitionFade: React.FC<IProps> = function (
+  props: IProps
 ) {
   const { show, styles } = props;
   const defaultDurationMs = 150;

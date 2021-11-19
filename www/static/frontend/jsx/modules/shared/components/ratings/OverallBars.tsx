@@ -1,11 +1,11 @@
 import React from "react";
 
-interface PropsInterface {
+interface IProps {
   ratings: { rating: string; totalRates: string }[];
 }
 
-const OverallBars: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const OverallBars: React.FC<IProps> = function (
+  props: IProps
 ): any {
   const { ratings } = props;
   const minRating = 1;

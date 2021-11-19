@@ -1,12 +1,12 @@
 import React from "react";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   text?: string | number;
   className?: string;
 }
 
-const Badge: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Badge: React.FC<IProps> = (props: IProps) => {
   const { text, className } = props;
   const classes = [
     "sidebar-badge",

@@ -2,15 +2,15 @@ import React from "react";
 import { Transition } from "react-transition-group";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   show: boolean;
   duration?: number;
   children: React.ReactElement;
   containerClasses?: string;
 }
 
-const TransitionSlide: React.FC<PropsInterface> = function (
-  props: PropsInterface
+const TransitionSlide: React.FC<IProps> = function (
+  props: IProps
 ) {
   const { show, containerClasses } = props;
   let { duration } = props;

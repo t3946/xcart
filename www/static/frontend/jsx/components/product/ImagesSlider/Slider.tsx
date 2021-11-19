@@ -19,11 +19,11 @@ interface ItemsInterface {
   height: number;
 }
 
-interface PropsInterface {
+interface IProps {
   items: ItemsInterface[];
 }
 
-const Slider: React.FC<PropsInterface> = function (props: PropsInterface) {
+const Slider: React.FC<IProps> = function (props: IProps) {
   const [componentId] = React.useState(uuid());
   const [isVideo, setIsVideo] = React.useState(false);
   const [index, setIndex] = React.useState(0);

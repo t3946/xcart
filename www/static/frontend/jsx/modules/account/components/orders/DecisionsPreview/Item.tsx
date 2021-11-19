@@ -3,7 +3,7 @@ import AlertCheck from "@client/modules/icon/components/account/check/AlertCheck
 import SandClock from "@client/modules/icon/components/account/sand-clock/SandClock";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   decision: Record<any, any>;
   classes?: {
     container: any;
@@ -11,7 +11,7 @@ interface PropsInterface {
   ref?: any;
 }
 
-const Item: React.FC<PropsInterface> = function (props: PropsInterface) {
+const Item: React.FC<IProps> = function (props: IProps) {
   const { decision } = props;
   const decisionName = ["ETA"][decision.type];
 

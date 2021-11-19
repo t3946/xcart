@@ -1,12 +1,12 @@
 import React, { ReactElement } from "react";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   className?: any;
 }
 
-const ModalTimes: React.FC<PropsInterface> = (
-  props: PropsInterface
+const ModalTimes: React.FC<IProps> = (
+  props: IProps
 ): ReactElement => {
   return (
     <svg

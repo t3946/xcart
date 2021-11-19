@@ -3,7 +3,7 @@ import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import Badge from "@client/modules/account/components/orders/Navigation/Badge";
 
-interface PropsInterface {
+interface IProps {
   text: string;
   path: string;
   badge?: string | number;
@@ -14,7 +14,7 @@ interface PropsInterface {
   };
 }
 
-const Item: React.FC<PropsInterface> = (props: PropsInterface) => {
+const Item: React.FC<IProps> = (props: IProps) => {
   const { text, path, badge } = props;
   const classes = {
     button: [

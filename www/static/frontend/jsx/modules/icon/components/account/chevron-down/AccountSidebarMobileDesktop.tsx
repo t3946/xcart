@@ -1,12 +1,12 @@
 import React from "react";
 import classnames from "classnames";
 
-interface propsInterface {
+interface IProps {
   className?: any;
 }
 
-const AccountSidebarMobileDesktop: React.FC<propsInterface> = (
-  props: propsInterface
+const AccountSidebarMobileDesktop: React.FC<IProps> = (
+  props: IProps
 ): any => {
   return (
     <svg

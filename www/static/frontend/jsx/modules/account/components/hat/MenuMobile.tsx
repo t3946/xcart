@@ -7,11 +7,11 @@ import { hideAllMenu } from "@client/jsx/redux/actions/account-actions/MenuActio
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@client/jsx/utils/AppData";
 
-interface PropsInterface {
+interface IProps {
   isStatic: boolean;
 }
 
-const MenuMobile: React.FC<PropsInterface> = (props: PropsInterface) => {
+const MenuMobile: React.FC<IProps> = (props: IProps) => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);

@@ -1,12 +1,12 @@
 import React from "react";
 import classnames from "classnames";
 
-interface propsInterface {
+interface IProps {
   className: any;
 }
 
-const AlertExclamationTriangle: React.FC<propsInterface> = (
-  props: propsInterface
+const AlertExclamationTriangle: React.FC<IProps> = (
+  props: IProps
 ): any => {
   return (
     <svg

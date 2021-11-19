@@ -3,7 +3,7 @@ import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingSta
 import classnames from "classnames";
 import OverallBars from "@client/jsx/modules/shared/components/ratings/OverallBars";
 
-interface PropsInterface {
+interface IProps {
   ratings: any;
   classes?: {
     overallRating?: any;
@@ -14,7 +14,7 @@ interface PropsInterface {
   };
 }
 
-const OverallRating: React.FC<PropsInterface> = (props: PropsInterface) => {
+const OverallRating: React.FC<IProps> = (props: IProps) => {
   const { ratings } = props;
   const maxRating = 5;
 

@@ -4,7 +4,7 @@ import Advice, {
 } from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
 import classnames from "classnames";
 
-interface PropsInterface {
+interface IProps {
   value: string;
   onChange: any;
   name: string;
@@ -15,7 +15,7 @@ interface PropsInterface {
   disabled?: boolean;
 }
 
-const AdviceList: React.FC<PropsInterface> = function (props: PropsInterface) {
+const AdviceList: React.FC<IProps> = function (props: IProps) {
   const {
     onChange,
     name,

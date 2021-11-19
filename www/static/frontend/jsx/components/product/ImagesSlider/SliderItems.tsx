@@ -1,13 +1,13 @@
 import React from "react";
 import { SwiperSlide } from "swiper/react";
 
-interface PropsInterface {
+interface IProps {
   items: Record<any, any>[];
   isVideo: boolean;
   openImageViewer: () => void;
 }
 
-const SliderItems = function (props: PropsInterface): Record<any, any>[] {
+const SliderItems = function (props: IProps): Record<any, any>[] {
   const { items, openImageViewer } = props;
 
   const sliderItems = [];

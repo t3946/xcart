@@ -7,12 +7,12 @@ export interface RowInterface {
   date?: string;
 }
 
-interface propsInterface {
+interface IProps {
   row: RowInterface;
   qtyHeader: string;
 }
 
-const TableRow: React.FC<propsInterface> = (props: propsInterface) => {
+const TableRow: React.FC<IProps> = (props: IProps) => {
   const { row, qtyHeader } = props;
   const { name, sku, amount, date } = row;
 
