@@ -13,13 +13,30 @@ import LogoutButton from "@client/modules/account/components/sidebar-menu/Logout
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
 
-interface PropsInterface {
+interface IProps {
   isStatic: boolean;
 }
 
-const LoginButtonDesktop: React.FC<PropsInterface> = function (
-  props: PropsInterface
-) {
+const AccountLink: React.FC = function () {
+  const isStatic = !document.location.pathname.startsWith("/account");
+  const classes = [
+    "sidebar-menu-item",
+    "sidebar-menu_top-level-item",
+    "text-decoration-none",
+  ];
+
+  if (isStatic) {
+    return (
+      <a className={classnames(classes)} href={route("account:index")}>
+        Account
+      </a>
+    );
+  }
+
+  return;
+};
+
+const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const isStatic = props.isStatic || false;
@@ -61,8 +78,8 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
     dispatch(setVisibleShadowPanelAction(false));
   }
 
-  const CustomMenu = React.forwardRef((props: any, ref: any) => {
-    const { className, "aria-labelledby": labeledBy } = props;
+  const CustomMenu = React.forwardRef((menuProps: any, ref: any) => {
+    const { className, "aria-labelledby": labeledBy } = menuProps;
 
     return (
       <div
@@ -74,6 +91,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
         aria-labelledby={labeledBy}
       >
         <div className="sidebar-menu-wrapper">
+          <AccountLink />
           <LogoutButton onClick={logoutButtonClickHandler} />
         </div>
       </div>
