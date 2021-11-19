@@ -23,14 +23,12 @@ const LoginFormInputPassword = function (props: IProps): any {
   const inputRef = React.createRef<HTMLInputElement>();
   const { goToInputLogin, goToOTPInput, login } = props;
 
-  console.log("LoginFormInputPassword render");
-
   React.useEffect(() => {
     inputRef.current.focus();
   });
 
   const initialState = {
-    password: "123123123",
+    password: "",
     rememberMe: false,
   };
   const validationSchema = yup.object().shape({
