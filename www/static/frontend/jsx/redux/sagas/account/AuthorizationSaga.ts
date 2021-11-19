@@ -3,7 +3,6 @@ import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import { route } from "@client/jsx/utils/AppData";
-import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 
 const api = new ApiService();
 
@@ -61,14 +60,18 @@ function* checkUserLogin(action: AnyAction) {
 function* logout(action: AnyAction) {
   const { callback } = action.payload;
 
+  yield put({
+    type: "USER_CLEAR",
+  });
+
+  yield put({
+    type: "SET_LISTS",
+    lists: null,
+  });
+
   yield api.get(route("account:authorization_api:logout")).then((response) => {
     callback();
     return response;
-  });
-
-  yield yield put({
-    type: "SET_LISTS",
-    lists: null,
   });
 }
 
