@@ -7,17 +7,30 @@ import * as yup from "yup";
 import { useHistory, Link } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { useDispatch } from "react-redux";
+import { loginAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
+import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 
-const LoginFormInputPassword = function (props: Record<any, any>): any {
+interface IProps {
+  login: string;
+  goToInputLogin: () => void;
+  goToOTPInput: () => void;
+}
+
+const LoginFormInputPassword = function (props: IProps): any {
+  const dispatch = useDispatch();
   const history = useHistory();
   const inputRef = React.createRef<HTMLInputElement>();
+  const { goToInputLogin, goToOTPInput, login } = props;
+
+  console.log("LoginFormInputPassword render");
 
   React.useEffect(() => {
     inputRef.current.focus();
   });
 
   const initialState = {
-    password: "",
+    password: "123123123",
     rememberMe: false,
   };
   const validationSchema = yup.object().shape({
@@ -43,28 +56,40 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
     })();
   }
 
-  async function submit(values, actions) {
-    props.submit({
-      actions,
-      form: {
-        login: props.lastSentForm.login,
-        password: values.password,
-        remember_me: values.rememberMe,
-        fingerprint: await generateFp(),
-      },
+  function submit(values, actions) {
+    //function submit must be synchronous because need wrap async part
+    (async function wrapAsyncFunc() {
+      actions.setSubmitting(true);
 
-      success(res) {
-        if (!res.user) {
-          props.goToOTPInput();
-        } else {
-          history.push(route("account:index"));
-        }
-      },
+      dispatch(
+        loginAction({
+          form: {
+            login,
+            password: values.password,
+            remember_me: values.rememberMe,
+            fingerprint: await generateFp(),
+          },
 
-      error(err) {
-        actions.setErrors({ password: err.password[0] });
-      },
-    });
+          success(res) {
+            if (!res.user) {
+              goToOTPInput();
+            } else {
+              history.push(route("account:index"));
+            }
+
+            res.user && dispatch(userSetAction(res.user));
+          },
+
+          error(err) {
+            actions.setErrors({ password: err.password[0] });
+          },
+
+          complete() {
+            actions.setSubmitting(false);
+          },
+        })
+      );
+    })();
   }
 
   return (
@@ -75,7 +100,9 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
         onSubmit={submit}
         ref={React.useRef()}
       >
-        {({ isSubmitting, handleChange, values, errors }) => {
+        {(formikProps) => {
+          const { isSubmitting, handleChange, values, errors } = formikProps;
+
           return (
             <Form>
               <div className="px-12 px-sm-0">
@@ -84,13 +111,9 @@ const LoginFormInputPassword = function (props: Record<any, any>): any {
                     "auth-form-info d-flex justify-content-between mt-3 mb-3"
                   }
                 >
-                  <span>{props.lastSentForm.login}</span>
+                  <span>{login}</span>
 
-                  <a
-                    href="#"
-                    onClick={props.goToInputLogin}
-                    className="common-link"
-                  >
+                  <a href="#" onClick={goToInputLogin} className="common-link">
                     Change
                   </a>
                 </p>

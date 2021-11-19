@@ -22,7 +22,7 @@ const LoginForm: React.FC<any> = () => {
   const INPUT_PASSWORD_MODE = 1;
   const INPUT_OTP_MODE = 2;
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
-  const [lastSentForm, setLastSentForm] = React.useState({});
+  const [lastSentForm, setLastSentForm] = React.useState<any>({});
 
   function headerTemplate() {
     switch (mode) {
@@ -48,10 +48,9 @@ const LoginForm: React.FC<any> = () => {
       case INPUT_PASSWORD_MODE:
         return (
           <LoginFormInputPassword
-            lastSentForm={lastSentForm}
+            login={lastSentForm.login}
             goToInputLogin={goToInputLogin}
             goToOTPInput={goToOTPInput}
-            submit={submit}
           />
         );
       case INPUT_OTP_MODE:
@@ -95,7 +94,9 @@ const LoginForm: React.FC<any> = () => {
   }
 
   return (
-    <div className={classNames(noSidebarClasses, " account-auth-form-container")}>
+    <div
+      className={classNames(noSidebarClasses, "account-auth-form-container")}
+    >
       <div className="account-auth-form account_auth-form">
         <h1 className="account-form-header px-12 px-sm-0">
           {headerTemplate()}
