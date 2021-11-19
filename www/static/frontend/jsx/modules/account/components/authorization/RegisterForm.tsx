@@ -135,7 +135,7 @@ const RegisterForm: React.FC<any> = () => {
                     className={"form-input"}
                     isInvalid={touched.password && !!errors.password}
                     isValid={touched.password && !errors.password}
-                    placeholder={"At least 6 characters "}
+                    placeholder={"At least 8 characters "}
                   />
 
                   <RBForm.Control.Feedback type="invalid">
@@ -144,7 +144,7 @@ const RegisterForm: React.FC<any> = () => {
 
                   {!(touched.password && errors.password) && (
                     <RBForm.Text className={"auth-form-info_input-caption"}>
-                      {"Passwords must be at least 6 characters"}
+                      {"Passwords must be at least 8 characters"}
                     </RBForm.Text>
                   )}
                 </RBForm.Group>
