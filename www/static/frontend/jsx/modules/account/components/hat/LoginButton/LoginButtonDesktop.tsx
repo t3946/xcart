@@ -11,6 +11,7 @@ import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-a
 import classnames from "classnames";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
 
 interface PropsInterface {
   isStatic: boolean;
@@ -22,6 +23,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const isStatic = props.isStatic || false;
+  const className = "hat-login-button";
 
   function toggleMenu(isVisible) {
     HideAllMenu(dispatch);
@@ -31,25 +33,24 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
 
   if (!user) {
     const path = route("account:login");
-    const className = "hat-login-button";
     const text = "log in";
 
     if (isStatic) {
       return (
         <a href={path} className={className}>
-          {text}
+          <UserIcon />
+          <span className="hat-login-button-username">{text}</span>
         </a>
       );
     } else {
       return (
         <Link to={path} className={className}>
-          {text}
+          <UserIcon />
+          <span className="hat-login-button-username">{text}</span>
         </Link>
       );
     }
   }
-
-  const className = "hat-login-button";
 
   const isTabletMenuVisible = useSelector(
     (e: any) => e.mobileMenu.isTabletMenuVisible
@@ -84,7 +85,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
 
     const classes = {
       username: ["hat-login-button-username"],
-      icon: [
+      iconArrow: [
         "login-button-desktop__arrow",
         "login-button-desktop-arrow",
         {
@@ -102,8 +103,9 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
           onClick(e);
         }}
       >
+        <UserIcon />
         <span className={classnames(classes.username)}>{user.name}</span>
-        <ArrowIconMobileDesktop className={classnames(classes.icon)} />
+        <ArrowIconMobileDesktop className={classnames(classes.iconArrow)} />
       </span>
     );
   });
@@ -117,6 +119,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
       onClick={(e) => e.stopPropagation()}
     >
       <Dropdown.Toggle id="dropdown-basic" as={CustomToggle} />
+
       <TransitionFade show={isTabletMenuVisible}>
         <Dropdown.Menu as={CustomMenu} />
       </TransitionFade>

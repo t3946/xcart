@@ -1,6 +1,6 @@
 import React from "react";
-import LoginButtonMobile from "@client/jsx/modules/account/components/hat/LoginButtonMobile";
-import LoginButtonTablet from "@client/jsx/modules/account/components/hat/LoginButtonTablet";
+import LoginButtonMobile from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonMobile";
+import LoginButtonTablet from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonTablet";
 
 const LoginButton: React.FC = () => {
   return (

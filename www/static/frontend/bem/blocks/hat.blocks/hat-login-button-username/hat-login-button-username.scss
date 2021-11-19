@@ -4,4 +4,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(10);
+  }
 }

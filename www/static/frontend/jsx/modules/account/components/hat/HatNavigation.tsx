@@ -1,5 +1,5 @@
 import React from "react";
-import LoginButton from "./LoginButton";
+import LoginButton from "@client/jsx/modules/account/components/hat/LoginButton/LoginButton";
 import TopLine from "@client/modules/account/components/hat/TopLine";
 import { useDispatch, useSelector } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";

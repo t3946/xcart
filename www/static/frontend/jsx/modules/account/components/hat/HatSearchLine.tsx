@@ -10,7 +10,7 @@ import { route } from "@client/jsx/utils/AppData";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
-import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButtonDesktop";
+import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonDesktop";
 import AppData from "@client/jsx/utils/AppData";
 
 interface PropsInterface {
