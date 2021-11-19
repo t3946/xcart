@@ -33,7 +33,7 @@ class ManyToManyField extends RelatedField
      * @var null|string
      */
     public $through;
-
+    public bool $needClear = true;
     /**
      * Related model class
      * @var string
@@ -387,7 +387,9 @@ class ManyToManyField extends RelatedField
 
         $value = $this->preformatValue($value);
         $manager = $this->getManager();
-        $manager->clean();
+        if ($this->needClear) {
+            $manager->clean();
+        }
 
         foreach ($value as $linkModel) {
             if ($linkModel === '') {

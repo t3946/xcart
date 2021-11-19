@@ -11,7 +11,7 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
       <tr className="history-header">
         <th>Code</th>
         <th style={{ width: 140 }}>Type</th>
-        <th style={{ width: 140 }}>Provider</th>
+        <th style={{ width: 140 }}>Provided</th>
         <th style={{ width: 140 }}>Inferred from [Type]</th>
         <th>Value</th>
         <th style={{ width: 90 }}>Source type</th>
@@ -28,7 +28,9 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
           <td>
             {columnData.link ? (
               columnData.type === "full_name" ? (
-                <a href={columnData.linkUrl}>{columnData.value}</a>
+                <a className="value-link" href={columnData.linkUrl}>
+                  {columnData.value}
+                </a>
               ) : (
                 <AddressHistoryText columnData={columnData} />
               )

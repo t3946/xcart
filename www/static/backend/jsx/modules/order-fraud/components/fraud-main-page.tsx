@@ -110,7 +110,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             </Typography>
             <MatrixHistory historyColumn={data.legend.full_name} />
             <Box sx={{ my: 1 }}>
-              <Typography variant="h6" align="left">
+              <Typography variant="h6" align="center">
                 Full names: Cross check matrix
               </Typography>
               <MatrixQuestion
@@ -132,7 +132,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               </Typography>
               <MatchingAddress />
             </Box>
-            <Typography variant="h6" align="left">
+            <Typography variant="h6" align="center">
               Addresses: Cross check matrix
             </Typography>
             <MatrixQuestion

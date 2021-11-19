@@ -25,7 +25,6 @@ use Xcart\App\QueryBuilder\Q\QOr;
 class OrderFraudCheckController extends Controller
 {
     /**
-     * @throws UnknownPropertyException
      * @throws Exception
      */
     public function getBaseSettings(int $order_id = null)
@@ -42,7 +41,7 @@ class OrderFraudCheckController extends Controller
                 return;
             }
             $ar_settings = ['locked_orders' => false];
-            $time_for_order_in_mins = 10; //Setting: operators can be on this mage during this time.
+            $time_for_order_in_mins = 10;
             $current_time = time();
             $login_last_opened_or_saved = $order_model->login_last_opened_or_saved;
             $time_last_opened_or_saved = $order_model->time_last_opened_or_saved;
@@ -109,7 +108,9 @@ class OrderFraudCheckController extends Controller
 
             $this->jsonResponse($ar_response);
         } catch (\Throwable $exception) {
-            $this->jsonResponse(['message' => $exception->getMessage()]);
+            $log = "OrderID: $order_id. By get fraud check data";
+            Xcart::app()->logger->error($log, [$exception->getMessage()], 'fraud_check');
+            $this->jsonResponse(['message' => 'Error by get fraud check data, repeat operation later'], 400);
         }
     }
 
@@ -392,7 +393,9 @@ HTML;
                 $this->jsonResponse(['status' => true]);
             }
         } catch (\Throwable $exception) {
-            $this->jsonResponse(['message' => $exception->getMessage()], 400);
+            $log = "OrderID: $order_id. By force fraud check data";
+            Xcart::app()->logger->error($log, [$exception->getMessage()], 'fraud_check');
+            $this->jsonResponse(['message' => 'Error by force fraud check, repeat operation later'], 400);
         }
     }
 
@@ -411,10 +414,10 @@ HTML;
 
     public function changeFraudCheckResult(): void
     {
+        $post = json_decode(file_get_contents('php://input'));
+        $order_id = $post->orderId;
         try {
-            $post = json_decode(file_get_contents('php://input'));
             $field_change = $post->change;
-            $order_id = $post->orderId;
             /** @var OrderModel $order_model */
             $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
             $ar_answer = [];
@@ -455,19 +458,19 @@ HTML;
                 'answerList' => $ar_answer
             ]);
         } catch (Throwable $exception) {
-            $this->jsonResponse(['error' => true], 400);
+            $log = "OrderID: $order_id. By by change fraud check result";
+            Xcart::app()->logger->error($log, [$exception->getMessage()], 'fraud_check');
+            $this->jsonResponse(['message' => 'Error by change fraud check result, repeat operation later'], 400);
         }
     }
 
     public function unlockOrders(): void
     {
-        $ar_result = ['status' => true];
         try {
             OrderModel::objects()->filter(['login_last_opened_or_saved' => Xcart::app()->user->login])->update(['time_last_opened_or_saved' => 0]);
+            $this->jsonResponse(['status' => true]);
         } catch (Throwable $exception) {
-            $ar_result = ['status' => false, 'error' => $exception->getMessage()];
-        } finally {
-            $this->jsonResponse($ar_result);
+            $this->jsonResponse(['message' => 'Error by unlock orders, repeat operation later'], 400);
         }
     }
 

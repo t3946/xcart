@@ -21,7 +21,10 @@ export const FraudCheckHat: React.FC = () => {
           <div className="title-parent-order_fraud">
             <div className="title-fraud">
               Fraud check for&#160;
-              <a href={`/admin/order.php?orderid=${orderId}`}>
+              <a
+                style={{ color: "Blue" }}
+                href={`/admin/order.php?orderid=${orderId}`}
+              >
                 order # {`${settings.prefix}${orderId}`}
               </a>
             </div>

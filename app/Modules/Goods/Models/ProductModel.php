@@ -235,6 +235,7 @@ class ProductModel extends Model implements ICartItem
                 'class' => ManyToManyField::class,
                 'modelClass' => ProductImageModel::class,
                 'through' => ProductImagesModel::class,
+                'needClear' => false,
             ],
             'images' => [
                 'class' => HasManyField::class,
