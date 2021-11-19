@@ -199,6 +199,8 @@ class SupplierFeedModel extends Model
                     JSON_THROW_ON_ERROR
                 )
             );
+            $this->run_force = false;
+            $this->save();
         }
     }
 }
