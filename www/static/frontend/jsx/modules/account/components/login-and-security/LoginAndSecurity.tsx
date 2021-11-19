@@ -94,7 +94,7 @@ const LoginAndSecurity = (): any => {
     const phoneCountry = getCountryByCode(user.phone_country_code, countries);
 
     if (!phoneCountry) {
-      return;
+      return "N/A";
     }
 
     const countryPrefix = "+" + phoneCountry.phone_code;

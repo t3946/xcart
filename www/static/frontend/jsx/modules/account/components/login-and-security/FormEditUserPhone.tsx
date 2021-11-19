@@ -15,7 +15,12 @@ import FormInputPhone from "@client/modules/account/components/shared/FormInputP
 import InnerPage from "@client/modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 
-const FormEditUserPhone = (props): any => {
+interface IProps {
+  location: any;
+}
+
+const FormEditUserPhone = (props: IProps): any => {
+  const { location } = props;
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
@@ -31,9 +36,16 @@ const FormEditUserPhone = (props): any => {
   }
 
   const initialValues = {
-    phone: getPhoneNumberInnerPart(user.phone_country_code, user.phone),
+    phone: "",
     phoneCountryCode: user.phone_country_code,
   };
+
+  if (user.phone) {
+    initialValues.phone = getPhoneNumberInnerPart(
+      user.phone_country_code,
+      user.phone
+    );
+  }
 
   const validationSchema = yup.object().shape({
     phone: yup.string().required("Name is a required field"),
@@ -57,7 +69,7 @@ const FormEditUserPhone = (props): any => {
         success(res) {
           dispatch(userSetAction(res.user));
           const path =
-            props.location.state?.from || route("account:login-and-security");
+            location?.state?.from || route("account:login-and-security");
           history.push(path);
 
           dispatch(
