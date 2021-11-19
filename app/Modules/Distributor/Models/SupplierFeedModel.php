@@ -5,7 +5,6 @@ namespace Modules\Distributor\Models;
 use DateTime;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Sites\Models\SiteModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -184,23 +183,5 @@ class SupplierFeedModel extends Model
         $dx = $this->distributor;
         $code = str_replace('-', '_', $dx->code);
         return $dx->feeds->count() === 1 ? $code : "{$code}__$this->storefront_id";
-    }
-
-    public function afterSave($owner, $isNew)
-    {
-        if ($this->enabled && $this->run_force) {
-            Xcart::app()->queue->send(
-                'feeds',
-                json_encode(
-                    [
-                        'code' => $this->getCode(),
-                        'run_force' => true
-                    ],
-                    JSON_THROW_ON_ERROR
-                )
-            );
-            $this->run_force = false;
-            $this->save();
-        }
     }
 }

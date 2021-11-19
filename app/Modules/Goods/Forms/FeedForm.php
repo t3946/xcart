@@ -10,6 +10,7 @@ use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Main\Xcart;
 
 class FeedForm extends ModelForm
 {
@@ -96,6 +97,26 @@ class FeedForm extends ModelForm
     public function getName()
     {
         return 'Feed';
+    }
+
+    public function afterInstanceSave($instance)
+    {
+        parent::afterInstanceSave($instance);
+
+        if ($instance->enabled && $instance->run_force) {
+            Xcart::app()->queue->send(
+                'feeds',
+                json_encode(
+                    [
+                        'code' => $this->getCode(),
+                        'run_force' => true
+                    ],
+                    JSON_THROW_ON_ERROR
+                )
+            );
+            $instance->run_force = false;
+            $instance->save();
+        }
     }
 
 }
