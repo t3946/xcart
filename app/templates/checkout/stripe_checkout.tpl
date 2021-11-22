@@ -53,7 +53,7 @@
         </div>
     </section>
     <script>
-        var stripe = Stripe('{$public_key}');
+        var stripe = Stripe('{$public_key}', { locale: '{$site->lang->lang_code}' });
         var elements = stripe.elements();
         var form = document.getElementById('payment-form');
         var button = document.querySelector("button");
