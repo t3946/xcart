@@ -141,9 +141,6 @@ const Slider: React.FC<IProps> = function (props: IProps) {
 
       <Swiper
         spaceBetween={50}
-        style={{
-          marginBottom: 10,
-        }}
         longSwipesRatio={0.05}
         slidesPerView={1}
         loop={true}

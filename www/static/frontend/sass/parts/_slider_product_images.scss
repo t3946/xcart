@@ -30,7 +30,7 @@
     .slider-thumbs {
       width: rem-calc(54);
       height: 100%;
-      margin-right: rem-calc(5);
+      margin-right: rem-calc(10);
       overflow: hidden;
 
       display: flex;
@@ -317,11 +317,15 @@
 .images-slider {
   height: rem-calc(277);
 
-  @include breakpoint(medium up) {
+  @include breakpoint(md up) {
     height: rem-calc(600);
   }
 
-  @include breakpoint(ml up) {
+  @include breakpoint(lg up) {
     height: rem-calc(400);
   }
+}
+
+.link__group_root {
+  margin: rem-calc(15) 0 0;
 }

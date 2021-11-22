@@ -97,7 +97,7 @@ const SliderThumbs: React.FC<IProps> = function (
   }
 
   return (
-    <div className="slider-thumbs">
+    <div className="slider-thumbs d-none d-lg-flex">
       <button
         className={classnames(classes.navButton, classes.navButtonPrev)}
         onClick={prev}
@@ -118,15 +118,12 @@ const SliderThumbs: React.FC<IProps> = function (
       </button>
 
       <Swiper
-        style={{
-          marginBottom: 10,
-        }}
         spaceBetween={5}
         longSwipesRatio={0.05}
         slidesPerView={"auto"}
         effect={"coverflow"}
         direction={"vertical"}
-        className={"product-thumbs-slider swiper-container"}
+        className={"product-thumbs-slider swiper-container w-100"}
         navigation={{
           nextEl: ".product-thumbs-slider-next",
           prevEl: ".product-thumbs-slider-prev",

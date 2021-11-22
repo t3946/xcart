@@ -102,113 +102,105 @@
             </div>
         </section>
 
-        <section class="images_prices">
-            <div class="row">
-                <div class="col-12 col-md-6 block__image">
+        <section class="images_prices row row-cols-1 row-cols-lg-2">
+            <div class="col block__image mb-10">
+                <div class="product-slider-sticky-container">
                     <div class="product__images-slider">
-                        {add $site = $model->sites->limit(1)->get()}
+                    {add $site = $model->sites->limit(1)->get()}
 
-                        {if $model->isGroupRoot()}
-                            {set $images = []}
+                    {if $model->isGroupRoot()}
+                        {set $images = []}
 
-                            {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
-                            {foreach $childrens as $child}
-                                {set $images[] = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get()}
-                            {/foreach}
-                        {else}
-                            {set $images = $model->images->filter(['avail' => 'Y'])->order(['orderby'])->all()}
-                        {/if}
+                        {set $childrens = $model->getFrontendChilds()->limit(4)->all()}
+                        {foreach $childrens as $child}
+                            {set $images[] = $child->images->filter(['avail' => 'Y'])->order(['orderby'])->limit(1)->get()}
+                        {/foreach}
+                    {else}
+                        {set $images = $model->images->filter(['avail' => 'Y'])->order(['orderby'])->all()}
+                    {/if}
 
-                        {if $images}
-                            <div class="product-slider-sceleton-wrapper">
-                                <div class="product-slider-imgs-sceleton-wrapper">
-                                    <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                    <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                    <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                    <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                    <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                </div>
-                                <div class="sceleton product-slider-big-img-sceleton"></div>
+                    {if $images}
+                        <div class="product-slider-skeleton-wrapper">
+                            <div class="product-slider-images-skeleton-wrapper d-none d-lg-block">
+                                <div class="sceleton product-slider-images-skeleton-arrow"></div>
+
+                                {for $i=1 to=5}
+                                    <div class="sceleton product-slider-images-skeleton-thumb product-slider-skeleton-wrapper__thumb"></div>
+                                {/for}
+
+                                <div class="sceleton product-slider-images-skeleton-arrow"></div>
                             </div>
+                            <div class="sceleton product-slider-big-img-skeleton"></div>
+                        </div>
 
-                            <noscript>
-                                {foreach $images as $image}
-                                    {if $image}
-                                        <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
-                                             alt="{$model->getFrontendName()|escape}"/>
-                                    {/if}
-                                {/foreach}
-                            </noscript>
-                            <datalist>
-                                {foreach $images as $image}
-                                    {if $image}
-                                        <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
-                                                data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
-                                                data-preview="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
-                                                data-id="{$image->imageid}"
-                                                data-width="{$image->getAttribute('image_x')}"
-                                                data-height="{$image->getAttribute('image_y')}"
-                                                type="image">
-                                        </option>
-                                    {/if}
-                                {/foreach}
-
-                                {if $videos}
-                                    {foreach $videos as $video}
-                                        <option data-video='{json_encode($video)}'
-                                                type="video">
-                                        </option>
-                                    {/foreach}
+                        <noscript>
+                            {foreach $images as $image}
+                                {if $image}
+                                    <img src="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
+                                         alt="{$model->getFrontendName()|escape}"/>
                                 {/if}
-                            </datalist>
-                        {else}
-                            <div class="not-avail-thumb">
-                                <p>{t 'Image not available'}</p>
-                            </div>
-                        {/if}
+                            {/foreach}
+                        </noscript>
+                        <datalist>
+                            {foreach $images as $image}
+                                {if $image}
+                                    <option value="//cdn.{$site->getBaseDomain()}{$image->getUrl()}"
+                                            data-thumb="//cdn.{$site->getBaseDomain()}{$image->getUrl(50)}"
+                                            data-preview="//cdn.{$site->getBaseDomain()}{$image->getUrl(520)}"
+                                            data-id="{$image->imageid}"
+                                            data-width="{$image->getAttribute('image_x')}"
+                                            data-height="{$image->getAttribute('image_y')}"
+                                            type="image">
+                                    </option>
+                                {/if}
+                            {/foreach}
 
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 block__title_price">
-
-                    <div class="notifications show-for-ml product_notifications">
-                        <div class="row align-middle ml-collapse notifications-info">
-                            <div class="column shrink">
-                                {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
-                            </div>
-                        </div>
-                    </div>
-
-                    {if $model->descr}
-                        <div class="highlights show-for-ml">
-                            {raw $model->descr}
+                            {if $videos}
+                                {foreach $videos as $video}
+                                    <option data-video='{json_encode($video)}'
+                                            type="video">
+                                    </option>
+                                {/foreach}
+                            {/if}
+                        </datalist>
+                    {else}
+                        <div class="not-avail-thumb">
+                            <p>{t 'Image not available'}</p>
                         </div>
                     {/if}
-                        {if !$model->isGroupRoot()}
-                            <div class="prices">
-                                {include "product/price/_table_prices.tpl" model=$model form=$form}
 
-                                {if $model->isGroupChild()}
-                                    {set $parent = $model->parent}
-                                    {if $parent}
-                                        <div class="link__group_root">
-                                            <a href="{$parent->getAbsoluteUrl()}">
-                                                {t 'Full'} {$parent->getFrontendName()} {t 'product line'}
-                                            </a>
-                                        </div>
-                                    {/if}
-                                {/if}
-                            </div>
-                        {else}
-                            <div class="full_line__group_root buttons">
-                                <a {ignore}onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"{/ignore}
-                                 class="button yellow waves waves-orange waves-effect default-style">{t 'Full product line'}</a>
-                                 <div class="info">{t 'Click here to see full product line'}</div>
-                            </div>
-                        {/if}
                     </div>
                 </div>
-            </section>
+            </div>
+
+            <div class="col block__title_price">
+
+                <div class="notifications show-for-ml product_notifications">
+                    <div class="row align-middle ml-collapse notifications-info">
+                        <div class="column shrink">
+                            {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
+                        </div>
+                    </div>
+                </div>
+
+                {if $model->descr}
+                    <div class="highlights show-for-ml">
+                        {raw $model->descr}
+                    </div>
+                {/if}
+                    {if !$model->isGroupRoot()}
+                        <div class="prices">
+                            {include "product/price/_table_prices.tpl" model=$model form=$form}
+                        </div>
+                    {else}
+                        <div class="full_line__group_root buttons">
+                            <a {ignore}onclick="$('html, body').animate({scrollTop: $('#products').offset().top}, 1000);"{/ignore}
+                             class="button yellow waves waves-orange waves-effect default-style">{t 'Full product line'}</a>
+                             <div class="info">{t 'Click here to see full product line'}</div>
+                        </div>
+                    {/if}
+                </div>
+        </section>
 
         {include 'product/_tabs.tpl' model=$model}
 
