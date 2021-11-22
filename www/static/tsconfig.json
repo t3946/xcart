@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "es2019",
+      "esnext",
       "dom"
     ],
     "removeComments": true,
