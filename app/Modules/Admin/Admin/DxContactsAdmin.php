@@ -50,6 +50,21 @@ class DxContactsAdmin extends Admin
         ];
     }
 
+    public function getAvailableListColumns()
+    {
+        return [
+            'phone' => [
+                'class' => 'nowrap',
+            ],
+            'fax' => [
+                'class' => 'nowrap',
+            ],
+            'utility' => [
+                'class' => 'nowrap',
+            ],
+        ];
+    }
+
     public function isAjaxCreate(): bool
     {
         return true;

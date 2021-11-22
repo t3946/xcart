@@ -244,9 +244,17 @@
             vertical-align: middle;
             background-clip: padding-box !important;
 
+            &:nth-child(1){
+              width: 1%;
+            }
+
+            &.nowrap {
+              white-space: nowrap;
+            }
+
             &.actions {
-              //width: 130px;
               text-align: center;
+              white-space: nowrap;
 
               a {
                 font-size: 15px;
