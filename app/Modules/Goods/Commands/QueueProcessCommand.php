@@ -94,9 +94,13 @@ class QueueProcessCommand extends Command
                                 $product->setMainCategory($site->base_category);
                             }
                         }
-                        if ($is_manual_feed) {
+
+                        if (!$is_manual_feed) {
                             $product->group_root = null;
-                            $product->forsale =  (float)$data['cost_to_us'] > 0 ? 'Y' : 'N';
+                        }
+
+                        if ($is_manual_feed) {
+                            $product->forsale = (float)$data['cost_to_us'] > 0 ? 'Y' : 'N';
                         }
 
                         $changed = SupplierFeedHelper::getChanged($product);
