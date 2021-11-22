@@ -53,7 +53,7 @@ export const ImageCard: React.FC<ImageCard> = ({
           }
         })()}
 
-        {isNew && !isSale (
+        {isNew && !isSale && (
           <span className="splash image-splash image-splash__new show-for-large image_splash">
             New
           </span>
