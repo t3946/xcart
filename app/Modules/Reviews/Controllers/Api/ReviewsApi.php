@@ -31,7 +31,7 @@ class ReviewsApi extends FrontendController
     public const SORT_HAS_VIDEOS = 'has-videos';
     public const SORT_NEW = 'most-recent';
     private const SORT_DEFAULT = self::SORT_TOP;
-    private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'png'];
+    private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'jpeg', 'png'];
     private const SUPPORTED_VIDEO_FORMATS = ['mp4'];
 
     public function __construct($request)
