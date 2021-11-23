@@ -1,7 +1,8 @@
 import documentReady from "../../utils/documentReady";
 
 import { render } from "preact";
-import Catalog from "@/components/catalog/Catalog";
+import Catalog from "@client/jsx/components/catalog/Catalog";
+import Labels from "@client/jsx/modules/product/Components/Labels/Labels";
 
 (() => {
   let page = document.querySelector(".product-page");
@@ -123,4 +124,10 @@ import Catalog from "@/components/catalog/Catalog";
       elem
     );
   }
+})();
+
+(() => {
+  const target = document.getElementById("product-labels-target");
+
+  render(<Labels />, target);
 })();

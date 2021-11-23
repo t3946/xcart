@@ -174,14 +174,7 @@
             </div>
 
             <div class="col block__title_price">
-
-                <div class="notifications show-for-ml product_notifications">
-                    <div class="row align-middle ml-collapse notifications-info">
-                        <div class="column shrink">
-                            {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
-                        </div>
-                    </div>
-                </div>
+                <div id="product-labels-target"></div>
 
                 {if $model->descr}
                     <div class="highlights show-for-ml">

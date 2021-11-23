@@ -106,6 +106,11 @@ class AccountController extends FrontendController
         $product = ProductModel::objects()->filter(['productcode' => $sku])->get();
         StorageHelper::push([
             "product" => $product->getAttributes(),
+            "flags" => [
+                "isOutOfStockFrontend" => $product->isOutOfStockFrontend(),
+                "isFreeShipping" => $product->isFreeShipping(),
+                "isFlatRate" => $product->isFlatRate(),
+            ],
         ], null, 'product_info');
 
         $this->actionIndex();

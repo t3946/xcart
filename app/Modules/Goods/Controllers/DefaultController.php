@@ -179,12 +179,23 @@ class DefaultController extends FrontendController
             $this->setCanonical($model);
         }
 
-        $product = $model->getAttributes();
-        $product['image'] = (string) $model->getMainImage();
+        StorageHelper::push([
+            'product' => $model->getAttributes(),
+            'image' => (string) $model->getMainImage(),
+            'brand' => $model->brand,
+            'distributor' => $model->distributor,
+            'flags' => [
+                'isGroupRoot' => $model->isGroupRoot(),
+                'isOutOfStockFrontend' => $model->isOutOfStockFrontend(),
+                'isFreeShipping' => $model->isFreeShipping(),
+                'isFlatRate' => $model->isFlatRate(),
+                'isEarlyChildhoodResources' => $model->manufacturerid === 85,
+            ],
+        ], null, 'product_info');
 
         StorageHelper::push([
-            "product" => $product,
-        ], null, 'product_info');
+            'time' => time(),
+        ], null, 'server');
 
         $this->display('product/product.tpl', $params);
     }

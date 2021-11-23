@@ -8,6 +8,7 @@
             {set $lbl}{t 'Free Shipping within contiguous U.S.'}{/set}
             {include "product/messages/_p_label.tpl" containerClass=$class type="free-shipping"  text=$lbl}
         {/if}
+
         {if $model->isFlatRate()}
             {set $lbl}{t '$8.99 flat rate shipping within contiguous U.S.'}{/set}
             {include "product/messages/_p_label.tpl" containerClass=$class type="flat-shipping" text=$lbl}
@@ -44,12 +45,14 @@
                 {include "product/messages/_p_label.tpl" containerClass=$class type="last-items" text=$lbl}
             {/if}
         {/if}
+
         {if $model->eta_date_mm_dd_yyyy && $model->eta_date_mm_dd_yyyy > time()}
             {if $dx->dx_eta_date}
                 {set $lbl}{t 'Warehouse is closed until'}{/set}
             {else}
                 {set $lbl}{t 'Expected availability'}:{/set}
             {/if}
+
             {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl ~ " {$model->eta_date_mm_dd_yyyy|date_format:"%d %b %Y"}"}
         {/if}
     {else}
@@ -73,6 +76,7 @@
             {/if}
         {/if}
     {/if}
+
     {if $model->manufacturerid == 85}
         {set $lbl}{t 'All sales are final. No returns or exchanges are allowed.'}{/set}
         {include "product/messages/_p_label.tpl" containerClass=$class type="out-of-stock" text=$lbl}
