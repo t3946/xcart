@@ -4,9 +4,7 @@ interface IProps {
   ratings: { rating: string; totalRates: string }[];
 }
 
-const OverallBars: React.FC<IProps> = function (
-  props: IProps
-): any {
+const OverallBars: React.FC<IProps> = function (props: IProps): any {
   const { ratings } = props;
   const minRating = 1;
   const maxRating = 5;
