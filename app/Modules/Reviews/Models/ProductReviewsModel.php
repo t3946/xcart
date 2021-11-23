@@ -9,7 +9,6 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
-use Modules\Reviews\Models\HelpfulReviewsModel;
 
 class ProductReviewsModel extends Model
 {
