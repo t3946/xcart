@@ -7,7 +7,7 @@ import appData from "@client/jsx/utils/AppData";
 import SelectRating from "@client/modules/account/components/review/SelectRating";
 import { Form as RBForm } from "react-bootstrap";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
-import Camera from "@client/jsx/modules/icon/components/account/camera/Camera";
+
 import {
   createReviewAction,
   getVideoHeaderAction,
@@ -90,7 +90,7 @@ const ReviewForm = (): any => {
       createReviewAction({
         form,
 
-        success(res) {
+        success() {
           setIsSubmitting(false);
         },
       })
@@ -269,10 +269,6 @@ const ReviewForm = (): any => {
                   </p>
 
                   <Files setFiles={setFiles} />
-
-                  <div className="d-md-none form-review-add-file-button_mobile d-flex align-items-center justify-content-center">
-                    <Camera />
-                  </div>
 
                   <RBForm.Group
                     controlId="videoLink"

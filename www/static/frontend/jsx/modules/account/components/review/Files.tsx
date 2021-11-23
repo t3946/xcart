@@ -2,6 +2,7 @@ import React from "react";
 import Film from "@client/jsx/modules/icon/components/font-awesome/film/Film";
 import PlusPanelButton from "@client/modules/account/components/common/PlusPanelButton";
 import ModalTimes from "@client/modules/icon/components/account/ModalTimes";
+import Camera from "@client/modules/icon/components/account/camera/Camera";
 
 interface IProps {
   setFiles: any;
@@ -141,6 +142,13 @@ const Files: React.FC<IProps> = function (props: IProps) {
         }}
         onClick={() => inputFileRef.current.click()}
       />
+
+      <div
+        className="d-md-none form-review-add-file-button_mobile d-flex align-items-center justify-content-center"
+        onClick={() => inputFileRef.current.click()}
+      >
+        <Camera />
+      </div>
 
       <input
         type="file"
