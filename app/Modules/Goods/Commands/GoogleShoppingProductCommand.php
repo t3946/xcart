@@ -236,26 +236,28 @@ class GoogleShoppingProductCommand extends Command
                         }
                         if ($image_model = $product->getMainImage()) {
                             $image_url = $image_model->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL);
-                            //TODO remove after image updated
-                            if ($site->pk == '83') {
-                                $image_url .= '?origin=google';
-                            }
                             $batch->setImageLink($image_url);
                         }
                         if ($product->mult_order_quantity && $product->min_amount > 1) {
                             $batch->setMultipack($product->min_amount);
                         }
-                        if (($m_order_amount = $dX->getMinimalAmount()) && (float)$product->getFrontendPrice() < $m_order_amount) {
+
+                        $min_order_valid = true;
+                        $m_order_amount = $dX->getMinimalAmount();
+
+                        if ($m_order_amount && $product->getFrontendPrice() < $m_order_amount) {
                             $m_order_amount = number_format($m_order_amount, 2);
                             $batch->setShippingLabel("Minimum order value $m_order_amount {$price->getCurrency()}");
+                            $min_order_valid = false;
                         }
 
                         $entry = new ProductsCustomBatchRequestEntry();
 
-                        if ($shippingValues &&
-                            ProductHelper::isGoogleShoppingEnabled($product) &&
-                            $batch->getShippingWeight() < self::MAX_WEIGHT &&
-                            $batch->getPrice() < self::MAX_PRICE) {
+                        if ($min_order_valid
+                            && $shippingValues
+                            && ProductHelper::isGoogleShoppingEnabled($product)
+                            && $batch->getShippingWeight() < self::MAX_WEIGHT
+                            && $batch->getPrice() < self::MAX_PRICE) {
                             $method = 'insert';
                         } else {
                             $method = 'delete';
