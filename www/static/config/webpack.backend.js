@@ -1,8 +1,8 @@
 const baseConfig = require("./webpack.frontend");
-const _ = require("lodash");
+const _merge = require("lodash/merge");
 const path = require("path");
 
-const config = _.merge(baseConfig, {
+const config = _merge(baseConfig, {
   entry: "./backend/jsx/main.jsx",
   output: {
     path: path.resolve("./backend/dist/js"),
@@ -14,7 +14,9 @@ const config = _.merge(baseConfig, {
       "@": path.resolve("./backend"),
       "@redux": path.resolve("./backend/jsx/redux"),
       "@s3stores-mail": path.resolve("./backend/jsx/modules/s3stores-mail"),
-      "@admin/icons": path.resolve("./backend/jsx/modules/common/components/icons"),
+      "@admin/icons": path.resolve(
+        "./backend/jsx/modules/common/components/icons"
+      ),
       "@admin/modules": path.resolve("./backend/jsx/modules"),
       "@admin": path.resolve("./backend/jsx"),
     },

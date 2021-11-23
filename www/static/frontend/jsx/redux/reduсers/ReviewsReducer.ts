@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { productsRatingsInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
-import { unset } from "lodash";
+import _unset from "lodash/unset";
 
 const ReviewsReducer = (
   store: Record<number, any> = productsRatingsInitialValue,
@@ -40,7 +40,7 @@ const ReviewsReducer = (
       return { ...store };
 
     case "CLEAR_REVIEWS":
-      unset(store, action.payload.productId);
+      _unset(store, action.payload.productId);
       return { ...store };
 
     default:
