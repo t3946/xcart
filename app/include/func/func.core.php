@@ -299,7 +299,7 @@ function func_manufacturerid_for_group($shipping_freight, $product_manufactureri
 #
 # Convert price to "XXXXX.XX" format
 #
-function price_format($price)
+function price_format($price): string
 {
     return sprintf("%.2f", round((double)$price + 0.00000000001, 2));
 }
