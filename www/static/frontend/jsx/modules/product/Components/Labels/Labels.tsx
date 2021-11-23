@@ -177,7 +177,7 @@ function getLabelsData(): ILabelProps[] {
     });
   }
 
-  return [...labelListData, ...labelListData];
+  return labelListData;
 }
 
 const Labels: React.FC = function () {
