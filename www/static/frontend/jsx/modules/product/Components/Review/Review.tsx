@@ -20,7 +20,7 @@ interface IProps {
   overall_rating: string;
   user_public_name: string;
   user_avatar: string;
-  helpful_count: string;
+  helpful_total: string;
   marked_helpful: boolean;
   files: {
     images: Record<any, any>[];
@@ -41,7 +41,7 @@ const Review: React.FC<IProps> = function (props: IProps) {
       },
     ],
   };
-  const helpful_count = parseInt(props.helpful_count);
+  const helpful_total = parseInt(props.helpful_total);
 
   function formatDate(dateTime: string): string {
     const dateObject = dateTimeToDate(dateTime);
@@ -108,7 +108,7 @@ const Review: React.FC<IProps> = function (props: IProps) {
       <Files files={props.files} />
 
       <div>
-        <HelpfulCount count={helpful_count} />
+        <HelpfulCount count={helpful_total} />
 
         {markAsHelpfulTemplate()}
       </div>

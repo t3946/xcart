@@ -203,7 +203,6 @@ class ReviewsApi extends FrontendController
         $select_fields = [
             '*',
             'helpful__user_id',
-            new Count('helpful__user_id', 'helpful_count'),
             'overall_rating' => 'rating__rating',
             'user_public_name' => 'user__public_name',
             'user_avatar' => 'user__avatar_image',

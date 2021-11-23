@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class ProductReviewsModel extends Model
@@ -56,6 +57,10 @@ class ProductReviewsModel extends Model
                 'class' => ForeignField::class,
                 'modelClass' => HelpfulReviewsModel::class,
                 'link' => ['product_review_id' => 'review_id'],
+            ],
+            'helpful_total' => [
+                'class' => IntField::class,
+                'default' => 0,
             ],
             'images' => [
                 'class' => ForeignField::class,
