@@ -73,7 +73,7 @@ class ReviewsApi extends FrontendController
                         'rating__rating__isnull' => false,
                         'rating__rating__gt' => 0,
                     ])
-                    ->group(['rating__rating', 'rating__rating_id', 'user_id'])
+                    ->group(['rating__rating', 'rating__rating_id'])
                     ->asArray()
                     ->all();
 
