@@ -227,11 +227,7 @@ class ReviewsApi extends FrontendController
 
         // select user marked helpful if user authorised
         if ($user_id) {
-            $select_fields['marked_helpful'] = new Expression("IF($ratings_alias.user_id, true, false)");
-            $filter_fields[] = new QOr([
-                'helpful__user_id' => $user_id,
-                'helpful__user_id__isnull' => true,
-            ]);
+            $select_fields['marked_helpful'] = new Expression("IF($ratings_alias.user_id = $user_id, true, false)");
         }
 
         $query_set = ProductReviewsModel::objects()
