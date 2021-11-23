@@ -22,19 +22,19 @@ class DxPriceFileAdmin extends Admin
     public string $allTemplate = 'admin/distributor/dx-price.tpl';
     public $ownerPk;
 
-    public function getForm() : DistributorPriceForm
+    public function getForm(): DistributorPriceForm
     {
         return new DistributorPriceForm();
     }
 
-    public function getSearchColumns()
+    public function getSearchColumns(): array
     {
         return [];
     }
 
-    public static function getName()
+    public static function getName(): string
     {
-        return 'Communication with distributor';
+        return 'Upload file lists';
     }
 
 
@@ -42,7 +42,6 @@ class DxPriceFileAdmin extends Admin
     {
         $this->ownerPk = $pk;
         $this->setBreadcrumbs();
-        $search = isset($_GET['search']) ? $_GET['search'] : null;
 
         $form = $this->getForm();
         $dx = DistributorModel::objects()->get(['pk' => $this->ownerPk]);
@@ -59,14 +58,17 @@ class DxPriceFileAdmin extends Admin
 
     public function getBreadcrumbs(): array
     {
-        return [[AdminModule::t('Distributors'), '/admin/manufacturers.php?&word=num'],
+        return [[AdminModule::t('Distributors'), Xcart::app()->router->url('admin:list', [
+            'module' => 'Distributor',
+            'admin' => 'DistributorAdmin'
+        ])],
             [static::getName(), Xcart::app()->router->url('admin:section', [
                 'mid' => $this->ownerPk,
                 'section' => 50,
             ])]];
     }
 
-    public function getInfoUrl($pk = null)
+    public function getInfoUrl($pk = null): string
     {
         return Xcart::app()->router->url('admin:info_dx', [
             'module' => static::getModuleName(),
@@ -75,11 +77,5 @@ class DxPriceFileAdmin extends Admin
             'dx' => $this->ownerPk,
         ]);
     }
-
-/*    public function info($pk, $dx)
-    {
-        $this->ownerPk = $dx;
-        parent::info($pk);
-    }*/
 
 }

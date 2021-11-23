@@ -10,7 +10,6 @@ export const TablePrice: React.FC<ITablePrice> = ({
   indexTable,
   checked,
   activeField,
-  needSend,
 }) => {
   const [pop, setPop] = useState("");
 
@@ -49,29 +48,6 @@ export const TablePrice: React.FC<ITablePrice> = ({
         />
         <Typography variant="body2">UPC</Typography>
       </Grid>
-      <div>
-        <Typography variant="h5" align="center">
-          Need send to active products?
-        </Typography>
-        <Grid
-          alignItems="center"
-          justifyContent="center"
-          container
-          direction="row"
-        >
-          <Typography variant="body2">No</Typography>
-          <Switch
-            checked={needSend.get === true}
-            onChange={(event) => needSend.set(event.target.checked)}
-            name="checked"
-            inputProps={{
-              "aria-label": "secondary checkbox",
-              "data-index": indexTable,
-            }}
-          />
-          <Typography variant="body2">Yes</Typography>
-        </Grid>
-      </div>
 
       <table className="table__dx-price" id="somethingUnique" cellSpacing="0">
         <thead>

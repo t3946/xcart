@@ -3,8 +3,11 @@
 namespace Modules\Distributor\Helpers;
 
 
+use League\Flysystem\FileNotFoundException;
+use Modules\Core\Classes\GoogleDrive;
 use Modules\Core\Models\CountryModel;
 use Modules\Distributor\Models\DistributorModel;
+use Xcart\App\Exceptions\Exception;
 
 class DistributorHelper
 {
@@ -35,5 +38,20 @@ class DistributorHelper
         $to = array_unique(array_map('trim', $to));
 
         return $to;
+    }
+
+    /**
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
+    public static function getResourceGooglePriceFile(string $path): array
+    {
+        $google_drive = new GoogleDrive();
+        $file = $google_drive->file_system->readStream($path);
+        if (!is_resource($file)) {
+            throw new Exception('Failed read file with google drive');
+        }
+        $info_file = $google_drive->file_system->getMetadata($path);
+        return [$file, $info_file];
     }
 }

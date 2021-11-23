@@ -3,35 +3,41 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import LoadingDialog from "@admin/modules/distributor/components/dialog-table-price/loading";
 import { ApiService } from "@admin/modules/shared/services/api.service";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { TabsPanelTable } from "@admin/modules/distributor/components/tabs-table/tabs-panel-table";
 import { TabContext } from "@material-ui/lab";
 import { TabListTable } from "@admin/modules/distributor/components/tabs-table/tab-list-table";
+import Divider from "@mui/material/Divider";
 import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
+import {
+  ResponsePricesSettings,
+  Site,
+} from "@admin/modules/distributor/ts/types/table-price.types";
+import { Stack } from "@mui/material";
+import { StorefrontSelect } from "@admin/modules/distributor/components/storefront-select/StorefrontSelect";
+import { SwitchActionProducts } from "@admin/modules/distributor/components/switch-action-products/SwitchActionProducts";
 
 interface IDialogTablePrice {
+  pathFile: string;
+  arTable: any[];
   state: { get: any; set: any };
-  arTable: [];
-  file: { get: any; set: any };
   dx: number;
-  arTableName: [];
-}
-interface IResponse {
-  countUpdate: number;
-  error?: string;
-  status: boolean;
+  arTableName: string[];
+  folderDx: string;
+  closeHandle: () => void;
 }
 
 export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   state,
   arTable,
-  file,
+  pathFile,
   dx,
   arTableName,
+  closeHandle,
 }) => {
   const api = new ApiService();
   const [select, setSelect] = useState<any>({});
@@ -39,17 +45,27 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   const [tabIndex, setTabIndex] = useState(`0`);
   const [mainCheck, setMainCheck] = useState<any>({});
   const [valueActive, setValueActive] = useState({});
+  const [sites, setSites] = useState<Site[]>(null);
   const [needSend, setNeedSend] = useState(false);
+  const [storefront, setStorefront] = useState("");
+  const [create, setCreate] = useState(false);
   const { showSnackbar } = useContext(SnackbarContext);
 
   const onSaveHandler = () => {
-    const data = new FormData();
-    data.append("file", file.get);
-    data.append("select", JSON.stringify(select));
-    data.append("dx", dx);
-    data.append("active_value", JSON.stringify(valueActive));
-    data.append("checkField", JSON.stringify(mainCheck));
-    data.append("need_send", needSend);
+    if (storefront === "") {
+      showSnackbar("Please, select storefront", "info");
+      return;
+    }
+    const data = JSON.stringify({
+      select,
+      dx,
+      valueActive,
+      checkField: mainCheck,
+      needSend,
+      storefront,
+      pathFile,
+      create,
+    });
     setLoading(true);
     axios
       .post("/api/dx/products-price/save", data)
@@ -100,12 +116,11 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
     }
   }, [arTable]);
   useEffect(() => {
-    api
-      .get(`/api/dx/column/get/${dx}`)
-      .then((res: { column: any; for_sale_value: any }) => {
-        setSelect(res.column);
-        setValueActive(res.for_sale_value);
-      });
+    api.get(`/api/dx/column/get/${dx}`).then((res: ResponsePricesSettings) => {
+      setSelect(res.column);
+      setValueActive(res.for_sale_value);
+      setSites(res.sites);
+    });
   }, []);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setTabIndex(newValue);
@@ -126,11 +141,6 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
     }));
   };
 
-  const onCloseDialog = () => {
-    file.set(null);
-    state.set(false);
-  };
-
   return (
     <Dialog
       fullWidth={true}
@@ -140,16 +150,33 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
     >
       <TabContext value={tabIndex}>
         <div className="close-dialog__button">
-          <CloseIcon
-            cursor="pointer"
-            fontSize="medium"
-            onClick={onCloseDialog}
-          />
+          <CloseIcon cursor="pointer" fontSize="medium" onClick={closeHandle} />
         </div>
-        <Typography align="center" variant="h6">
-          Price List
-        </Typography>
+        {!loading && (
+          <Stack justifyContent="center">
+            {sites && (
+              <StorefrontSelect
+                sites={sites}
+                handleChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setStorefront(e.target.value)
+                }
+                storefront={storefront}
+              />
+            )}
+            <SwitchActionProducts
+              state={create}
+              onChange={(e) => setCreate(e.target.checked)}
+              text="Create new products?"
+            />
+            <SwitchActionProducts
+              state={needSend}
+              onChange={(e) => setNeedSend(e.target.checked)}
+              text="Disable active products?"
+            />
+          </Stack>
+        )}
         <DialogContent>
+          <Divider />
           {!loading && arTable.length ? (
             <TabsPanelTable
               arTable={arTable}

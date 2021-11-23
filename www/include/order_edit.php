@@ -1,5 +1,8 @@
 <?php
 
+use Modules\Cart\Helpers\CouponOldCart;
+use Modules\Cart\Models\CouponKitModel;
+use Modules\Cart\Models\CouponOrderModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\AccountsPayableForm;
 use Modules\Order\Forms\PurchaseOrderDetailsForm;
@@ -8,12 +11,17 @@ use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderExtraModel;
+use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
+use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
+use Xcart\App\Main\Xcart;
 use Xcart\OrderGroupInvoices;
 use Xcart\Manufacturer;
+use Xcart\Product;
+use Xcart\Shipping;
 
 global $order, $order_data, $xcart_dir, $active_modules, $user_account, $orderid, $login, $add_amount, $config, $REQUEST_METHOD, $mode, $save_additional_vt, $top_message, $mail_smarty;
 
@@ -551,7 +559,7 @@ if ($REQUEST_METHOD === 'POST')
                     $order['shipping_groups'][$m_id]['real_shipping_method'] = $v['real_shipping_method'];
                 }
 
-                if ($user_account['flag'] === 'FS' && !\in_array($v['dc_status'], ['C', 'S'])) {
+                if ($user_account['flag'] === 'FS' && !in_array($v['dc_status'], ['C', 'S'])) {
                     $v['dc_status'] = 'C';
                 }
 
@@ -572,7 +580,7 @@ if ($REQUEST_METHOD === 'POST')
                         define('TRACKING_ADDED', 1);
                     }
                 } catch (Exception $e) {
-                    \Xcart\App\Main\Xcart::app()->flash->error($e->getMessage());
+                    Xcart::app()->flash->error($e->getMessage());
                 }
 
                 $log                          = '';
@@ -957,9 +965,9 @@ if ($REQUEST_METHOD === 'POST')
                     $purchasingManagerForm = new PurchasingManagerForm();
                     $accountsPayableForm = new AccountsPayableForm();
 
-                    $orderDetailsForm->populate(['PurchaseOrderDetailsForm' => \Xcart\App\Main\Xcart::app()->request->post->all()]);
-                    $purchasingManagerForm->populate(['PurchasingManagerForm' => \Xcart\App\Main\Xcart::app()->request->post->all()]);
-                    $accountsPayableForm->populate(['AccountsPayableForm' => \Xcart\App\Main\Xcart::app()->request->post->all()]);
+                    $orderDetailsForm->populate(['PurchaseOrderDetailsForm' => Xcart::app()->request->post->all()]);
+                    $purchasingManagerForm->populate(['PurchasingManagerForm' => Xcart::app()->request->post->all()]);
+                    $accountsPayableForm->populate(['AccountsPayableForm' => Xcart::app()->request->post->all()]);
 
                     /** @var OrderExtraModel $extra */
                     [$extra] = OrderExtraModel::objects()->getOrNew(['order_id' => $order['orderid']]);
@@ -968,7 +976,7 @@ if ($REQUEST_METHOD === 'POST')
                         $orderDetailsForm->getAttributes(),
                         $purchasingManagerForm->getAttributes(),
                         $accountsPayableForm->getAttributes(),
-                        ['purchase_order_received_status' => \Xcart\App\Main\Xcart::app()->request->post->get('purchase_order_received_status')]
+                        ['purchase_order_received_status' => Xcart::app()->request->post->get('purchase_order_received_status')]
                     );
 
                     $extra->save();
@@ -1017,19 +1025,19 @@ if ($REQUEST_METHOD === 'POST')
         }
 
         if (!empty($order['coupon']) || (empty($order['coupon']) && $coupon_admin)) {
-            if (empty($order['coupon']) && $ckmodel = \Modules\Cart\Models\CouponKitModel::objects()->get(['code' => $coupon_admin])) {
+            if (empty($order['coupon']) && $ckmodel = CouponKitModel::objects()->get(['code' => $coupon_admin])) {
                 $cart_tmp['coupon'] = $coupon_admin;
 
-                \Modules\Cart\Models\CouponOrderModel::objects()->getOrCreate([
+                CouponOrderModel::objects()->getOrCreate([
                     'order_id' => $orderid,
                     'login' => $order['login'],
-                    'created_at' => new \DateTime(),
+                    'created_at' => new DateTime(),
                     'coupon_id' => $ckmodel->pk,
                 ]);
             }
         }
 
-        \Modules\Cart\Helpers\CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
+        CouponOldCart::getInstance()->setOrderId($orderid)->setLogin($order['login']);
 
         func_oe_update_order($cart_tmp, $order["shipping_groups"], $order_data["products"]);
 
@@ -1168,7 +1176,7 @@ if ($REQUEST_METHOD === 'POST')
             {
                 if (!empty($sRetailTrustSKU))
                 {
-                    $oProduct = \Xcart\Product::getProductBySKU($sRetailTrustSKU);
+                    $oProduct = Product::getProductBySKU($sRetailTrustSKU);
 
                     if ($oProduct->getProductId())
                     {
@@ -1316,7 +1324,7 @@ if ($REQUEST_METHOD === 'POST')
                         }
                     }
                     catch (Exception $e) {
-                        \Xcart\App\Main\Xcart::app()->flash->error( $e->getMessage());
+                        Xcart::app()->flash->error( $e->getMessage());
                     }
                 }
 
@@ -1493,9 +1501,9 @@ if ($REQUEST_METHOD === 'POST')
 
                             func_array2update("order_group_memos", $group_memos, "orderid='$orderid' AND manufacturerid='$certain_mid' AND memo_number='$memo_number'");
 
-                            if ($memo_model = \Modules\Order\Models\OrderGroupMemoModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'memo_number' => $memo_number])) {
+                            if ($memo_model = OrderGroupMemoModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'memo_number' => $memo_number])) {
                                 $t_invdate = trim($groups[$certain_mid]["memo_date"][$memo_number]);
-                                $t_invdate = empty($t_invdate) ? new \DateTime() : \DateTime::createFromFormat('m/d/Y', $t_invdate);
+                                $t_invdate = empty($t_invdate) ? new DateTime() : DateTime::createFromFormat('m/d/Y', $t_invdate);
                                 $memo_model->memo_date = $t_invdate;
                                 $memo_model->save();
                                 if ($t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["memo_date"]) {
@@ -1632,7 +1640,7 @@ if ($REQUEST_METHOD === 'POST')
                                     if (!empty($invoice_data["add_extra_value_string"][$key])) {
                                         $params['product_id'] = null;
                                         if ($invoice_data["add_extra_value_type"][$key] == 1) {
-                                            $pModel = \Modules\Goods\Models\ProductModel::objects()->get(['productcode' => $invoice_data["add_extra_value_string"][$key]]);
+                                            $pModel = ProductModel::objects()->get(['productcode' => $invoice_data["add_extra_value_string"][$key]]);
                                             if ($pModel) {
                                                 $params['product_id'] = $pModel->productid;
                                             }
@@ -1806,7 +1814,7 @@ if ($REQUEST_METHOD === 'POST')
                         $invoice_total                   = price_format(floatval($products_total) + floatval($shipping_total) + floatval($HST_charged));
                         $group_invoices["invoice_total"] = $invoice_total;
 
-                        if ($order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["status"] != "R") {
+                        if ($order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["status"] !== "R") {
                             $group_invoices["status"]   = "U";
                             $update_invoices_table_flag = true;
                         }
@@ -1814,9 +1822,9 @@ if ($REQUEST_METHOD === 'POST')
                         if ($update_invoices_table_flag) {
                             func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
 
-                            if ($invoice_model = \Modules\Order\Models\OrderGroupInvoiceModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'invoice_number' => $invoice_number])) {
+                            if ($invoice_model = OrderGroupInvoiceModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'invoice_number' => $invoice_number])) {
                                 $t_invdate = trim($groups[$certain_mid]["invoice_date"][$invoice_number]);
-                                $t_invdate = empty($t_invdate) ? new \DateTime() : \DateTime::createFromFormat('m/d/Y', $t_invdate);
+                                $t_invdate = empty($t_invdate) ? new DateTime() : DateTime::createFromFormat('m/d/Y', $t_invdate);
                                 $invoice_model->invoice_date = $t_invdate;
                                 $invoice_model->save();
                                 if ($t_invdate && $t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"]) {
@@ -1825,7 +1833,7 @@ if ($REQUEST_METHOD === 'POST')
                             }
 
                             $oManufacturer = new Manufacturer(['manufacturerid' => $certain_mid]);
-                            if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') == 'Y') {
+                            if ($oManufacturer->getField('distributor_charges_for_each_order_twice_and_split_invoices') === 'Y') {
                                 $oGroupInvoices = new OrderGroupInvoices();
                                 $oInvoices      = $oGroupInvoices->getOrderGroupInvoices(['orderid' => $orderid, 'manufacturerid' => $certain_mid]);
                                 if ($oInvoices->countOrderGroupInvoices() == 1) {
@@ -1897,7 +1905,7 @@ if ($REQUEST_METHOD === 'POST')
                 }
             }
 
-            if ($mode == "accounting_apply" && $user_account["flag"] != "FS") {
+            if ($mode === "accounting_apply" && $user_account["flag"] !== "FS") {
 
                 $current_tracking_all_filled = func_query_first_cell("SELECT tracking_all_filled FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
@@ -1961,11 +1969,11 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
             $order["shipping_groups"][$k]["shipping_code"] = $shipping_code;
         }
 
-        if ($v["cb_status"] == "IO" || $v["cb_status"] == "O") {
+        if ($v["cb_status"] === "IO" || $v["cb_status"] === "O") {
             $convert_to_regular_order_show_button = true;
         }
 
-        if ($v["dc_status"] == "DP" && $v["all_distributor_info"]["allow_dispatch_off_working_hours"] == "Y") {
+        if ($v["dc_status"] === "DP" && $v["all_distributor_info"]["allow_dispatch_off_working_hours"] === "Y") {
             $order["shipping_groups"][$k]["allow_dispatch_off_working_hours_functionality_enabled"] = "Y";
             $order["allow_dispatch_off_working_hours_functionality_enabled_found"]                  = "Y";
         }
@@ -1973,7 +1981,7 @@ if (!empty($order["shipping_groups"]) && is_array($order["shipping_groups"])) {
         if ($v["products"] && is_array($v["products"])) {
             foreach ($v["products"] as $kk => $vv) {
 
-                if ($order["lng_order_contains_FBA_items"] == "N" && $vv["amazon_fba_avail"] > 0 && !in_array($order["amazon_fulfillment_channel"], ["AFN", "MFN"])) {
+                if ($order["lng_order_contains_FBA_items"] === "N" && $vv["amazon_fba_avail"] > 0 && !in_array($order["amazon_fulfillment_channel"], ["AFN", "MFN"])) {
                     $order["lng_order_contains_FBA_items"] = "Y";
                 }
 
@@ -1995,7 +2003,7 @@ $oOrder = OrderModel::objects()->get(['orderid' => $orderid]);
 $smarty->assign("oOrder", $oOrder);
 $mail_smarty->assign('oOrder', $oOrder);
 
-$oShippings             = new Xcart\Shipping();
+$oShippings             = new Shipping();
 $aAmazonShippingMethods = $oShippings->getShippingMethodsByCode('Amazon');
 $aAmazonShippings       = [];
 

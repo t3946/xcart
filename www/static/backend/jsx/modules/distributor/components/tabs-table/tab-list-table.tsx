@@ -4,7 +4,7 @@ import { TabList } from "@material-ui/lab";
 interface TabListTable {
   tabValue: string;
   handleChange(event: React.ChangeEvent<{}>, newValue: string): void;
-  arTableName: [];
+  arTableName: string[];
 }
 
 export const TabListTable: React.FC<TabListTable> = ({

@@ -1,6 +1,8 @@
 <?php
 
 use Modules\Order\Models\OrderDetailModel;
+use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\UserModel;
 
@@ -164,8 +166,9 @@ function func_oe_update_prices($products, $customer_info)
     foreach ($products as $k => $v)
     {
         $products[$k]["price_deducted_tax"] = "Y";
+        $products[$k]['extra_data'] = [];
 
-        if ($real_taxes == "Y") {
+        if ($real_taxes === "Y") {
             $_taxes = func_get_product_taxes($products[$k], $customer_info["login"], false);
         }
         else {
@@ -185,7 +188,7 @@ function func_oe_recalculate_totals($cart)
 {
     global $active_modules, $real_taxes, $order_data, $config, $global_store;
 
-    if ($real_taxes == "Y") {
+    if ($real_taxes === "Y") {
         #
         # Calculate taxes etc depending on the current store settings
         #
@@ -202,7 +205,7 @@ function func_oe_recalculate_totals($cart)
         unset($active_modules["Special_Offers"]);
     }
 
-    if ($cart['use_discount_alt'] == 'Y') {
+    if ($cart['use_discount_alt'] === 'Y') {
 
         if (!defined('XAOM_WO_DISCOUNT_DATA') && !empty($cart['extra']['discount_info']) && !empty($cart['extra']['discount_info']['discount'])) {
             define('XAOM_WO_DISCOUNT_DATA', 1);
@@ -218,7 +221,7 @@ function func_oe_recalculate_totals($cart)
         ];
     }
 
-    if (!empty($cart['use_coupon_discount_alt']) && $cart['use_coupon_discount_alt'] == 'Y') {
+    if (!empty($cart['use_coupon_discount_alt']) && $cart['use_coupon_discount_alt'] === 'Y') {
         $global_store['discount_coupons'] = [[
             "__override"  => true,
             "coupon"      => "Order#" . $cart['orderid'],
@@ -260,7 +263,7 @@ function func_oe_recalculate_totals($cart)
     if ($uinfo["b_state"] . $uinfo["b_country"] . $uinfo["b_county"] != $order_data["userinfo"]["b_state"] . $order_data["userinfo"]["b_country"] . $order_data["userinfo"]["b_county"]) {
         $uinfo["b_statename"]   = $uinfo["b_state_text"] = func_get_state($uinfo["b_state"], $uinfo["b_country"]);
         $uinfo["b_countryname"] = $uinfo["b_country_text"] = func_get_country($uinfo["b_country"]);
-        if ($config["General"]["use_counties"] == "Y") {
+        if ($config["General"]["use_counties"] === "Y") {
             $uinfo["b_countyname"] = $uinfo["b_county_text"] = func_get_county($uinfo["b_county"]);
         }
     }
@@ -269,7 +272,7 @@ function func_oe_recalculate_totals($cart)
     if ($uinfo["s_state"] . $uinfo["s_country"] . $uinfo["s_county"] != $order_data["userinfo"]["s_state"] . $order_data["userinfo"]["s_country"] . $order_data["userinfo"]["s_county"]) {
         $uinfo["s_statename"]   = $uinfo["s_state_text"] = func_get_state($uinfo["s_state"], $uinfo["s_country"]);
         $uinfo["s_countryname"] = $uinfo["s_country_text"] = func_get_country($uinfo["s_country"]);
-        if ($config["General"]["use_counties"] == "Y") {
+        if ($config["General"]["use_counties"] === "Y") {
             $uinfo["s_countyname"] = $uinfo["s_county_text"] = func_get_county($uinfo["s_county"]);
         }
     }
@@ -303,7 +306,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
     #
     # Update stock level
     #
-    if (in_array($cart["status"], ["AP", "Q", "I", "P", "C"]) && $config["General"]["unlimited_products"] != "Y") {
+    if (in_array($cart["status"], ["AP", "Q", "I", "P", "C"]) && $config["General"]["unlimited_products"] !== "Y") {
 
         $_products = $_old_products = [];
 
@@ -317,14 +320,14 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                     $product["amount"] = 0;
                 }
 
-                if ($product["stock_update"] == "Y") {
+                if ($product["stock_update"] === "Y") {
                     $amount_orig   = (is_array($old_products) && $old_products[$k]["amount"]) ? $old_products[$k]["amount"] : 0;
                     $amount_ret    = ($active_modules["RMA"] && $product["returned_to_stock"]) ? $product["returned_to_stock"] : 0;
                     $amount_change = $amount_orig - $product["amount"] - $amount_ret;
 
                     if ($amount_change) {
                         $product["amount"] = abs($amount_change);
-                        if (@$user_account["flag"] != "FS") {
+                        if (@$user_account["flag"] !== "FS") {
                             func_update_quantity([$product], $amount_change > 0);
                         }
                     }
@@ -354,8 +357,10 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
     $userinfo["s_address"] .= "\n" . $userinfo["s_address_2"];
 
     $count_userinfo_additional_fields   = count($userinfo["additional_fields"]);
-    $count_cart_extra_additional_fields = count($cart["extra"]["additional_fields"]);
-    $count_additional_fields            = max($count_userinfo_additional_fields, $count_cart_extra_additional_fields);
+    if ($cart["extra"]["additional_fields"]) {
+        $count_cart_extra_additional_fields = count($cart["extra"]["additional_fields"]);
+    }
+    $count_additional_fields            = max($count_userinfo_additional_fields, $count_cart_extra_additional_fields ?? 0);
 
     $log                          = "";
     $insert_additional_fields_log = false;
@@ -444,7 +449,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
     }
     if (!empty($extra['additional_fields'])) {
         foreach ($extra['additional_fields'] as $aAddFiled) {
-            if ($aAddFiled['title'] == 'Company') {
+            if ($aAddFiled['title'] === 'Company') {
                 $sFiledCompany = strtolower($aAddFiled['section']) . '_company';
                 if (!empty($sFiledCompany)) {
                     $query_data[$sFiledCompany] = $aAddFiled['value'];
@@ -455,7 +460,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
 
     $query_data = func_array_map("addslashes", $query_data);
 
-    if (@$user_account["flag"] != "FS") {
+    if (@$user_account["flag"] !== "FS") {
 
         $log = "";
 
@@ -494,7 +499,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             }
         }
 
-        $order_model = \Modules\Order\Models\OrderModel::objects()->get(['pk' => $cart['orderid']]);
+        $order_model = OrderModel::objects()->get(['pk' => $cart['orderid']]);
         $order_model->setAttributes( func_array_map('stripcslashes', $query_data) );
         $order_model->save();
 //        func_array2update("orders", $query_data, "orderid='$cart[orderid]'");
@@ -696,7 +701,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
 
             $query_data['profit_margin'] = $v['profit_margin'];
 
-            if (!empty($v["new"]) && @$user_account["flag"] != "FS")
+            if (!empty($v["new"]) && @$user_account["flag"] !== "FS")
             {
                 $query_data['orderid']                            = $cart['orderid'];
                 $query_data['manufacturerid']                     = $mid;
@@ -704,7 +709,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 $status_type                                      = func_get_order_status_type($status);
                 $query_data[strtolower($status_type) . '_status'] = $status;
 
-                if (!empty($query_data["cb_status"]) && $query_data["cb_status"] == "P") {
+                if (!empty($query_data["cb_status"]) && $query_data["cb_status"] === "P") {
                     $query_data["paid_date"] = time();
                 }
 
@@ -718,13 +723,13 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 func_log_order_groups($query_data, $cart["orderid"], $mid, 'X', $login);
 
 //                func_array2insert('order_groups', $query_data);
-                $order_group = new \Modules\Order\Models\OrderGroupModel(func_array_map('stripcslashes', $query_data));
+                $order_group = new OrderGroupModel(func_array_map('stripcslashes', $query_data));
                 $order_group->save();
 
                 $last_status_change = $status;
             }
             else {
-                if (@$user_account["flag"] != "FS") {
+                if (@$user_account["flag"] !== "FS") {
                     $query_data['shippingid'] = $v['shippingid'];
 
                     if (isset($v['shipping'])) {
@@ -754,19 +759,19 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 $query_data['d2a_status'] = $v['d2a_status'];
 
                 // Update D2C dispatched time
-                if ($old_statuses['dc_status'] != 'C' && $v['dc_status'] == 'C' && empty($v['dc_dispatched_time'])) {
+                if ($old_statuses['dc_status'] !== 'C' && $v['dc_status'] === 'C' && empty($v['dc_dispatched_time'])) {
                     $query_data['dc_dispatched_time'] = time() - $config["Appearance"]["timezone_offset"];
                 }
 
                 $query_data['tracking'] = addslashes(serialize($v['tracking']));
 
-                if (!empty($query_data["cb_status"]) && $query_data["cb_status"] == "P" && $old_statuses["cb_status"] != "P") {
+                if (!empty($query_data["cb_status"]) && $query_data["cb_status"] === "P" && $old_statuses["cb_status"] !== "P") {
                     $query_data["paid_date"] = time();
                 }
 
                 func_log_order_groups($query_data, $cart["orderid"], $mid, 'X', $login);
 
-                $order_group = \Modules\Order\Models\OrderGroupModel::objects()->get(['orderid' => $cart['orderid'], 'manufacturerid' => $mid]);
+                $order_group = OrderGroupModel::objects()->get(['orderid' => $cart['orderid'], 'manufacturerid' => $mid]);
                 $order_group->setAttributes( func_array_map('stripcslashes', $query_data) );
                 $order_group->save();
 
@@ -809,7 +814,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             $query_data["total_$dn"]          = $_extra['total'][$dn];
         }
 
-        if (@$user_account["flag"] != "FS") {
+        if (@$user_account["flag"] !== "FS") {
             func_array2update("orders", $query_data, "orderid='$cart[orderid]'");
         }
     }
@@ -884,7 +889,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
 
         if (!empty($_POST['ref_groups']) && is_array($_POST['ref_groups'])) {
             foreach ($_POST['ref_groups'] as $kp => $vp) {
-                if ($vp["delete"] == "Y") {
+                if ($vp["delete"] === "Y") {
                     $_POST['ref_groups'][$kp]["ref_ship"] = 0;
                 }
             }
@@ -931,7 +936,7 @@ function func_get_refund_values($val, $type = '')
         return false;
     }
 
-    if ($type == 'S') {
+    if ($type === 'S') {
         $pattern = '/[R|r]([0-9]+\.*[0-9]*)(,([0-9]*))?/';
     }
     else {
@@ -948,8 +953,8 @@ function func_get_refund_values($val, $type = '')
 
         $result = [
             'is_refunded' => true,
-            'amount'      => ($type == 'Q') ? intval($match[1]) : floatval($match[1]),
-            'fee'         => ($type == 'Q') ? $match[3] : 0,
+            'amount'      => ($type === 'Q') ? intval($match[1]) : floatval($match[1]),
+            'fee'         => ($type === 'Q') ? $match[3] : 0,
         ];
 
         return $result;
@@ -1208,35 +1213,35 @@ function func_manage_refund_group(&$group, $ref_notify_mode = false)
         {
             $query_data['refund_status'] = $refund_status;
 
-            if ($refund_status == 'F')
+            if ($refund_status === 'F')
             {
                 if ($ref_notify_mode) {
-                    if ($_POST["mode"] == "ref_notify") {
+                    if ($_POST["mode"] === "ref_notify") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'R');
                     }
 
 
-                    elseif ($_POST["mode"] == "order_edit_apply" && !empty($group["total"]["gross"]) && $group["total"]["gross"] > 0 && $group["total"]["gross"] == $order["shipping_groups"][$group["manufacturerid"]]["total"]["gross"] && $order["shipping_groups"][$group["manufacturerid"]]["cb_status"] == "3") {
+                    elseif ($_POST["mode"] === "order_edit_apply" && !empty($group["total"]["gross"]) && $group["total"]["gross"] > 0 && $group["total"]["gross"] == $order["shipping_groups"][$group["manufacturerid"]]["total"]["gross"] && $order["shipping_groups"][$group["manufacturerid"]]["cb_status"] == "3") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'V');
                     }
                 }
                 else {
-                    if ($_POST["mode"] != "ref_notify") {
+                    if ($_POST["mode"] !== "ref_notify") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'V');
                     }
                 }
             }
-            elseif ($refund_status == 'P') {
+            elseif ($refund_status === 'P') {
                 if ($ref_notify_mode) {
-                    if ($_POST["mode"] == "ref_notify") {
+                    if ($_POST["mode"] === "ref_notify") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'H');
                     }
-                    elseif ($_POST["mode"] == "order_edit_apply" && !empty($group["total"]["gross"]) && $group["total"]["gross"] > 0 && $group["total"]["gross"] == $order["shipping_groups"][$group["manufacturerid"]]["total"]["gross"] && $order["shipping_groups"][$group["manufacturerid"]]["cb_status"] == "3") {
+                    elseif ($_POST["mode"] === "order_edit_apply" && !empty($group["total"]["gross"]) && $group["total"]["gross"] > 0 && $group["total"]["gross"] == $order["shipping_groups"][$group["manufacturerid"]]["total"]["gross"] && $order["shipping_groups"][$group["manufacturerid"]]["cb_status"] == "3") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'V');
                     }
                 }
                 else {
-                    if ($_POST["mode"] != "ref_notify") {
+                    if ($_POST["mode"] !== "ref_notify") {
 
                         $set_statuse = "3";
 
@@ -1276,28 +1281,28 @@ function func_manage_refund_group(&$group, $ref_notify_mode = false)
         {
             $query_data['refund_status'] = $refund_status;
 
-            if ($refund_status == 'F')
+            if ($refund_status === 'F')
             {
                 if ($ref_notify_mode)
                 {
-                    if ($_POST["mode"] == "ref_notify") {
+                    if ($_POST["mode"] === "ref_notify") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'R');
                     }
                 }
                 else {
-                    if ($_POST["mode"] != "ref_notify") {
+                    if ($_POST["mode"] !== "ref_notify") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'V');
                     }
                 }
             }
-            elseif ($refund_status == 'P') {
+            elseif ($refund_status === 'P') {
                 if ($ref_notify_mode) {
-                    if ($_POST["mode"] == "ref_notify") {
+                    if ($_POST["mode"] === "ref_notify") {
                         func_change_order_group_status($group['orderid'], $group['manufacturerid'], 'H');
                     }
                 }
                 else {
-                    if ($_POST["mode"] != "ref_notify") {
+                    if ($_POST["mode"] !== "ref_notify") {
 
                         $set_statuse = "3";
 
@@ -1438,12 +1443,12 @@ function func_delete_refund_group($mid, $orderid, $full = false)
 
         $current_cb_status = func_query_first_cell("SELECT cb_status FROM $sql_tbl[order_groups] WHERE orderid = '$orderid' AND manufacturerid='$mid'");
 
-        if ($current_cb_status != "AP")
+        if ($current_cb_status !== "AP")
         {
             $current_cb_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_cb_status'");
             $code                    = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mid'");
 
-            if ($current_cb_status != "P")
+            if ($current_cb_status !== "P")
             {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
                 $log       = "<B>" . $code . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_value;
@@ -1496,7 +1501,7 @@ function func_define_refund_status(&$group)
 
     $refund_status = '';
 
-    if (isset($group['manufacturerid']) && $group["cb_status"] != "AP")
+    if (isset($group['manufacturerid']) && $group["cb_status"] !== "AP")
     {
         if (!empty($group['total']['gross']))
         {

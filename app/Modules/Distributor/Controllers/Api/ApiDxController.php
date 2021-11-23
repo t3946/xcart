@@ -4,26 +4,31 @@
 namespace Modules\Distributor\Controllers\Api;
 
 
-use Cron\CronExpression;
+use Exception;
 use Modules\Core\Classes\GoogleDrive;
 use Modules\Core\Classes\SaveFilePrice;
 use Modules\Core\Helpers\CoreHelper;
+use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Distributor\Models\ColumnTableSaveModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Sites\Models\SiteModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Throwable;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Main\Xcart;
+use Xcart\App\Helpers\Paths;
 
 class ApiDxController extends Controller
 {
     private const COUNT_ITEMS_TABLE = 30;
+
+    /**
+     * @throws Exception
+     */
     public function getDxInfo($code, $sfId = null): void
     {
         /** @var DistributorModel $dx */
         /** @var SupplierFeedModel $feed */
-
         if ($dx = DistributorModel::objects()->get(['code' => $code])) {
             $feedData = [];
             if ($sfId !== null) {
@@ -62,128 +67,165 @@ class ApiDxController extends Controller
         }
     }
 
-
-    public function savePriceListFile()
+    public function getFilesList(int $dx)
     {
-        $post = Xcart::app()->request->post;
-        $dx = DistributorModel::objects()->get(['manufacturerid' => $post['dx']]);
-        $output = ['status' => false];
+        /** @var DistributorModel $dx */
+        $dx = DistributorModel::objects()->get(['manufacturerid' => $dx]);
+
+        $google_drive = new GoogleDrive();
+        $folder_list = $google_drive->getContentByPath();
+        $dx_folder = null;
+        foreach ($folder_list as $folder) {
+            if ($folder['type'] === 'dir' && $folder['filename'] === $dx->code) {
+                $dx_folder = $folder['path'];
+                break;
+            }
+        }
+        if (!$dx_folder) {
+            $this->jsonResponse(['message' => 'Not found folder in google drive']);
+            return;
+        }
+        $folder_dx_content = $google_drive->getContentByPath($dx_folder);
+        $file_list = null;
+        foreach ($folder_dx_content as $content) {
+            if ($content['type'] === 'file') {
+                $file_list[] = ['id' => $content['path'], 'name' => $content['filename']];
+            }
+        }
+        $this->jsonResponse(['files' => $file_list, 'folderId' => $dx_folder]);
+    }
+
+    public function loadFile()
+    {
+        $post = json_decode(file_get_contents('php://input'));
+        $file_id = $post->fileId;
         try {
+            [$file, $info_file] = DistributorHelper::getResourceGooglePriceFile("$post->folderId/$file_id");
+            $file_name = md5($info_file['name']);
+            $path_save = Paths::get('runtime') . "/tmp/$file_name.{$info_file['extension']}";
+            $file_save = file_put_contents($path_save, $file);
+            if (!$file_save) {
+                $this->jsonResponse(['message' => 'Failed save file to server with google drive'], 400);
+            }
 
-            $google_drive = new GoogleDrive();
-            $code = strtoupper($dx->code);
-            $ar_file = $google_drive->uploadFile($code, $_FILES['d_price_list']); // load file to google drive folder
-
-            if (!empty($ar_file)) {
-                $link = $google_drive->getLink($ar_file['dirname']);
-                $dx->d_price_list = $link;
-                if ($dx->save()) {
-                    $reader = IOFactory::createReaderForFile($_FILES['d_price_list']['tmp_name']);
-                    $excel_obj = $reader->load($_FILES['d_price_list']['tmp_name']);
-                    $ar_data = [];
-                    $ar_tables = [];
-                    $counter_table = 0;
-                    /* looking from excel file first 30 rows which not empty */
-                    for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
-                        $ar_excel = $excel_obj->getSheet($t)->toArray();
-                        for ($i = 0; $i < count($ar_excel); $i++) {
-                            $count_good = 0; // count not empty field
-                            $row = $ar_excel[$i];
-                            for ($d = 0; $d < count($row); $d++) {
-                                if (!empty($row[$d]) && !is_null($row[$d])) {
-                                    $count_good++;
-                                }
-                            }
-                            if ($count_good > (count($row) / 100) * 20) { // if count not empty column in row > 30%
-                                $ar_data[$counter_table][] = $row;
-                            }
-                            if (!empty($ar_data[$counter_table]) && count($ar_data[$counter_table]) === self::COUNT_ITEMS_TABLE) {
-                                break;
-                            }
-                        }
-                        if (!empty($ar_data[$counter_table])) {
-                            $counter_table++;
-                            $ar_tables[] = $excel_obj->getSheetNames()[$t];
+            $reader = IOFactory::createReaderForFile($path_save);
+            $excel_obj = $reader->load($path_save);
+            $ar_data = [];
+            $ar_tables = [];
+            $counter_table = 0;
+            /* looking from excel file first 30 rows which not empty */
+            for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
+                $ar_excel = $excel_obj->getSheet($t)->toArray();
+                foreach ($ar_excel as $iValue) {
+                    $count_good = 0; // count not empty field
+                    $row = $iValue;
+                    foreach ($row as $dValue) {
+                        if (!empty($dValue)) {
+                            $count_good++;
                         }
                     }
-                    $output = [
-                        'status' => true,
-                        'data' => $ar_data,
-                        'tableNames' => $ar_tables,
-                    ];
+                    if ($count_good > (count($row) / 100) * 20) { // if count not empty column in row > 30%
+                        $ar_data[$counter_table][] = $row;
+                    }
+                    if (!empty($ar_data[$counter_table]) && count($ar_data[$counter_table]) === self::COUNT_ITEMS_TABLE) {
+                        break;
+                    }
+                }
+                if (!empty($ar_data[$counter_table])) {
+                    $counter_table++;
+                    $ar_tables[] = $excel_obj->getSheetNames()[$t];
                 }
             }
-        } catch (\Throwable $exception) {
-            $output['error'] = $exception->getMessage();
-        } finally {
+            $output = [
+                'contentFile' => $ar_data,
+                'tableNames' => $ar_tables,
+            ];
             $this->jsonResponse($output);
+        } catch (Throwable $exception) {
+            $this->jsonResponse(['message' => $exception->getMessage()], 400);
+        } finally {
+            if (isset($path_save) && file_exists($path_save)) {
+                unlink($path_save);
+            }
         }
     }
 
-    /* Update products by rows from excel file */
-    public function updateProductsFromPriceList()
+    /* Update products by rows from Excel file */
+    public function updateProductsFromPriceList(): void
     {
-        set_time_limit(0);
-        $post = Xcart::app()->request->post;
-        $select = json_decode($post->select, true);
-        $file = $_FILES['file'];
-        $result = ['status' => false, 'countUpdate' => 0];
-        $search_by = json_decode($post->checkField, true);
-        $active_products = json_decode($post->active_value, true);
+        $post = json_decode(file_get_contents('php://input'));
+        $select = $post->select;
+        $search_by = $post->checkField;
+        $active_products = $post->valueActive;
+        /** @var DistributorModel $dx */
         $dx = DistributorModel::objects()->get(['manufacturerid' => $post->dx]);
-
-        $reader = IOFactory::createReaderForFile($file['tmp_name']);
-        $excel_obj = $reader->load($file['tmp_name']);
-        $ar_save = [];
-        for ($i = 0; $i < $excel_obj->getSheetCount(); $i++) {
-            foreach ($excel_obj->getSheet($i)->toArray() as $column) {
-                $ar_save[$i][] = $column;
-            }
+        if (!$dx) {
+            $this->jsonResponse(['message' => 'Fail found distributor'], 400);
         }
-        if ($dx instanceof DistributorModel) {
-            $ob_save_price = new SaveFilePrice($dx, $search_by);
-            try {
-                $ob_save_price->active_for_sale_value = $active_products;
-                $ob_save_price->collectField($select, $ar_save);
-                $ob_save_price->savePrice();
-                if (filter_var($post->need_send, FILTER_VALIDATE_BOOLEAN)) {
-                    $ob_save_price->sendStats();
+        try {
+            [$file, $info_file] = DistributorHelper::getResourceGooglePriceFile($post->pathFile);
+            $file_name = md5($info_file['name']);
+            $path_save = Paths::get('runtime') . "/tmp/$file_name.{$info_file['extension']}";
+            $file_save = file_put_contents($path_save, $file);
+            if (!$file_save) {
+                $this->jsonResponse(['message' => 'Failed save file to server with google drive'], 400);
+            }
+            $reader = IOFactory::createReaderForFile($path_save);
+            $excel_obj = $reader->load($path_save);
+            $ar_save = [];
+            for ($i = 0; $i < $excel_obj->getSheetCount(); $i++) {
+                foreach ($excel_obj->getSheet($i)->toArray() as $column) {
+                    $ar_save[$i][] = $column;
                 }
-                $this->jsonResponse(['countUpdate' => $ob_save_price->count_update]);
-            } catch (\Throwable $exception) {
-                $this->jsonResponse(['message' => $exception->getMessage()], 400);
-            } finally {
-                // overwriting column order in Excel table
-                $id_list = ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx->pk])->valuesList(['id'], true);
-                if ($id_list) {
-                    ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
+            }
+            $ob_save_price = new SaveFilePrice($dx, (array)$search_by);
+            $ob_save_price->active_for_sale_value = $active_products;
+            $ob_save_price->storefront = $post->storefront;
+            $ob_save_price->need_create = $post->create;
+            $ob_save_price->collectField((array)$select, $ar_save);
+            $ob_save_price->need_send = $post->needSend;
+            $ob_save_price->savePrice();
+            $ob_save_price->sendStats();
+            $this->jsonResponse(['countUpdate' => $ob_save_price->count_update]);
+        } catch (Throwable $exception) {
+            $this->jsonResponse(['message' => $exception->getMessage()], 400);
+        } finally {
+            if (isset($path_save) && file_exists($path_save)) {
+                unlink($path_save);
+            }
+            // overwriting column order in Excel table
+            $id_list = ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx->pk])->valuesList(['id'], true);
+            if ($id_list) {
+                ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
+            }
+            foreach ($select as $table_index => $fields) {
+                foreach ($fields as $key => $field) {
+                    $column = new ColumnTableSaveModel();
+                    $column->num_column = $key;
+                    $column->option_name = $field;
+                    $column->manufacture = $dx;
+                    $column->num_table = $table_index;
+                    $column->save();
                 }
-                foreach ($select as $table_index => $fields) {
-                    foreach ($fields as $key => $field) {
-                        $column = new ColumnTableSaveModel();
-                        $column->num_column = $key;
-                        $column->option_name = $field;
-                        $column->manufacture = $dx;
-                        $column->num_table = $table_index;
-                        $column->save();
-                    }
-                }
-                if (!empty($active_products)) {
-                    foreach ($active_products as $table_index => $value) {
-                        $column = new ColumnTableSaveModel();
-                        $column->num_table = $table_index;
-                        $column->is_for_sale_value = true;
-                        $column->manufacture = $dx;
-                        $column->option_name = $value;
-                        $column->save();
-                    }
+            }
+            if (!empty($active_products)) {
+                foreach ($active_products as $table_index => $value) {
+                    $column = new ColumnTableSaveModel();
+                    $column->num_table = $table_index;
+                    $column->is_for_sale_value = true;
+                    $column->manufacture = $dx;
+                    $column->option_name = $value;
+                    $column->save();
                 }
             }
         }
     }
 
-    /* Get order columns by manufacturerid */
-    public function getColumnByDx(int $dx) : void
+    /* Get order columns by dx id */
+    /**
+     * @throws Exception
+     */
+    public function getColumnByDx(int $dx): void
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
         $ar_column = [];
@@ -196,7 +238,14 @@ class ApiDxController extends Controller
             }
             $ar_column[$column->num_table][$column->num_column] = $column->option_name;
         }
-        $this->jsonResponse(['column' => $ar_column, 'for_sale_value' => $ar_for_sale_value]);
+        $ar_site = [['storefrontid' => '', 'domain' => 'Select storefront']];
+        foreach (SiteModel::getAllEnabled() as $site) {
+            $ar_site[] = [
+                'storefrontid' => $site->pk,
+                'domain' => $site->domain,
+            ];
+        }
+        $this->jsonResponse(['column' => $ar_column, 'for_sale_value' => $ar_for_sale_value, 'sites' => $ar_site]);
     }
 
 }
