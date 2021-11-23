@@ -7,6 +7,7 @@ import Body from "@client/modules/product/Components/Review/Body";
 import { useSelector } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import Files from "@client/jsx/modules/product/Components/Review/Files";
+import dateTimeToDate from "@client/jsx/utils/dateTimeToDate";
 
 interface IProps {
   product_review_id: string;
@@ -42,12 +43,13 @@ const Review: React.FC<IProps> = function (props: IProps) {
   };
   const helpful_count = parseInt(props.helpful_count);
 
-  function formatDate(date: string) {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  function formatDate(dateTime: string): string {
+    const dateObject = dateTimeToDate(dateTime);
+    const date = dateObject.getDate();
+    const month = dateObject.toLocaleDateString("en-US", { month: "long" });
+    const year = dateObject.getFullYear();
+
+    return `${month} ${date}, ${year}`;
   }
 
   function getLocation() {
@@ -72,6 +74,8 @@ const Review: React.FC<IProps> = function (props: IProps) {
       />
     );
   }
+
+  console.log("created", props.created);
 
   return (
     <div className={"reviews__review review"}>
