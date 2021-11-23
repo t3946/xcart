@@ -75,8 +75,6 @@ const Review: React.FC<IProps> = function (props: IProps) {
     );
   }
 
-  console.log("created", props.created);
-
   return (
     <div className={"reviews__review review"}>
       <div>
