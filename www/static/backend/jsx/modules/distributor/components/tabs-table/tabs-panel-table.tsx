@@ -8,7 +8,6 @@ export const TabsPanelTable: React.FC<IListTablePrice> = ({
   select,
   checked,
   activeField,
-  needSend,
 }) => {
   return (
     <Fragment>
@@ -20,7 +19,6 @@ export const TabsPanelTable: React.FC<IListTablePrice> = ({
             select={select}
             checked={checked}
             activeField={activeField}
-            needSend={needSend}
           />
         </TabPanel>
       ))}

@@ -31,6 +31,16 @@ return [
         'name' => 'save_products_price'
     ],
     [
+        'route' => 'dx/get-file-list/{:dx}',
+        'target' => [ApiDxController::class, 'getFilesList'],
+        'name' => 'get_dx_file_List'
+    ],
+    [
+        'route' => 'dx/load-file',
+        'target' => [ApiDxController::class, 'loadFile'],
+        'name' => 'load_dx_file'
+    ],
+    [
         'route' => 'dx/{slug:code}/{i:sfId}',
         'target' => [ApiDxController::class, 'getDxInfo'],
         'name' => 'dx_sf_info'
