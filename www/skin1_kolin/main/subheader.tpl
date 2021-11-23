@@ -49,7 +49,7 @@
                             </td>
                             <td class="ButtonsRow buttons-row" align="right" style="padding-right: 0px; padding-left: 12px;">
                                 <a target="_blank" style="color: blue; font-weight: bold;"
-                                   href="{$xcartApp->router->url('order:api:export',['order_id' => $order.orderid])}">Export</a>
+                                   href="{$xcartApp->router->url('order:api:export',['order_id' => $oOrder->orderid])}">Export</a>
                             </td>
                             {if $active_modules.RMA ne '' && $current_membership_flag ne 'FS'}
                                 {if ($usertype eq 'A' || ($usertype eq 'P' && $active_modules.Simple_Mode)) && $return_products ne ''}

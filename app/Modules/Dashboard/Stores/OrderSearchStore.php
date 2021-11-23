@@ -308,7 +308,7 @@ class OrderSearchStore extends BaseStore
             if (!empty($data['order']['po_transit_status']) || $this->checkNot('order.po_transit_status')) {
                 $qs->join('inner join', 'xcart_order_groups', ['orderid' => 'group.orderid'], 'group');
 
-                $val = ($data['order']['po_transit_status']) ? $data['order']['po_transit_status'] : [''];
+                $val = ($data['order']['po_transit_status']) ?: [''];
 
                 $this->getQ(['group.po_status__in' => $val], 'order.po_transit_status');
             }
