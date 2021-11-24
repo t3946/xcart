@@ -91,18 +91,15 @@ class FraudCheckCommand extends Command
 
             $order->fraud_status = $new_fraud_status->code;
 
-            (new OrderLogModel([
-                'orderid' => $order->orderid,
-                'type' => OrderLogModel::LOG_TYPE_XCART,
-                'login' => '',
-                'log' => $log
-            ])
-            )->save();
+            OrderLogModel::createLog(
+                $order->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                $log
+            );
 
             $order->groups->update(['acc_paymentid' => $order->paymentid]);
 
             $order->save();
-            //$order->recalculateAccounting();
         }
     }
 }

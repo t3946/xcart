@@ -54,12 +54,12 @@ class OrderLogHelper
         /** @var AttentionTagModel $model */
 
         $subj = "{$order->getOrderNumber()} note: {$message}";
-        (new OrderLogModel([
-            'orderid' => $order->orderid,
-            'type' => OrderLogModel::LOG_TYPE_XCART,
-            'log' => $message,
-            'login' => Xcart::app()->user->login
-        ]))->save();
+
+        OrderLogModel::createLog(
+            $order->orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            $message
+        );
 
         $site_model = $order->site;
         $config = $site_model->getGlobalConfig();

@@ -74,13 +74,11 @@ class OrderEventHelper
                 $log_message[] = "<b>Discount time:</b> {$d_min} min. \n";
             }
 
-            (new OrderLogModel([
-                    'orderid' => $model->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
-                    'login' => Xcart::app()->user->login,
-                    'log' => nl2br(implode(PHP_EOL, $log_message))
-                ])
-            )->save();
+            OrderLogModel::createLog(
+                $model->orderid,
+                OrderLogModel::LOG_TYPE_CUSTOMER,
+                nl2br(implode(PHP_EOL, $log_message))
+            );
 
             $surf_path = SurfPathModel::objects()
                 ->filter([

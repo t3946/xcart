@@ -288,12 +288,11 @@ class PaymentController extends Controller
                                 $invoice->status = OrderCxInvoiceModel::STATUS_PAID;
                                 $invoice->save();
 
-                                (new OrderLogModel([
-                                    'orderid' => $order->orderid,
-                                    'type' => OrderLogModel::LOG_TYPE_SYSTEM,
-                                    'log' => "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
-                                ])
-                                )->save();
+                                OrderLogModel::createLog(
+                                    $order->orderid,
+                                    OrderLogModel::LOG_TYPE_SYSTEM,
+                                    "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
+                                );
 
                                 if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() == 0) {
                                     $app->event->trigger('order:paid', ['model' => $order]);

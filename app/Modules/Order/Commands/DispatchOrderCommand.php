@@ -60,14 +60,11 @@ class DispatchOrderCommand extends Command
             ]);
             $group->save();
 
-            (new OrderLogModel(
-                [
-                    'orderid' => $group->order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'login' => '',
-                    'log' => nl2br($log),
-                ]
-            ))->save();
+            OrderLogModel::createLog(
+                $group->order->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                nl2br($log)
+            );
 
             $log_text = "<a href='{$order->getAdminUrl()}' target='_blank' style='color: blue;'>{$order->getOrderNumber()}</a>, {$dx->code} - dispatched by cron";
             func_backprocess_log("Auto_dispatch_cron", $log_text);

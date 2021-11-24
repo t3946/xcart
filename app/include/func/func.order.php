@@ -1540,7 +1540,12 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
             }
 
             $log .= "<br /><B>REMOTE_ADDR:</B> " . $ip_info;
-            \Xcart\Logs::_log('orders', $orderid, \Xcart\Logs::LOG_TYPE_CLIENT, $log, $userinfo['login']);
+
+            OrderLogModel::createLog(
+                $orderid,
+                OrderLogModel::LOG_TYPE_CUSTOMER,
+                $log
+            );
 
             $insert_data = [];
 

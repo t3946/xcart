@@ -41,11 +41,13 @@ class AbandonedOrderCommand extends Command
                     $order->groups->update(['cb_status' => $status]);
                     $order->cb_status = $status;
                     $order->save();
-                    (new OrderLogModel([
-                        'orderid' => $order->orderid,
-                        'type' => OrderLogModel::LOG_TYPE_XCART,
-                        'log' => 'Abandoned: The order has been declined',
-                    ]))->save();
+
+                    OrderLogModel::createLog(
+                        $order->orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        'Abandoned: The order has been declined'
+                    );
+
                     echo "Abandoned: The order {$order->getOrderNumber()} has been declined\n";
                     continue;
             }
@@ -53,11 +55,13 @@ class AbandonedOrderCommand extends Command
             $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_UNPAID]);
             $order->cb_status = OrderStatusModel::ORDER_STATUS_UNPAID;
             $order->save();
-            (new OrderLogModel([
-                'orderid' => $order->orderid,
-                'type' => OrderLogModel::LOG_TYPE_XCART,
-                'log' => 'Abandoned: Unpaid notification sent to Cx',
-            ]))->save();
+
+            OrderLogModel::createLog(
+                $order->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                'Abandoned: Unpaid notification sent to Cx'
+            );
+
             echo "Abandoned: Unpaid notification sent to Cx {$order->getOrderNumber()}\n";
 
             OrderInvoiceHelper::sendOrderStatusNotification($order, false);

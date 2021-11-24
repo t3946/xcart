@@ -61,14 +61,11 @@ class RequestAvailabilityCommand extends Command
                 $group->setAttributes(['notify_sent' => true, 'dc_status' => OrderStatusModel::ORDER_DC_STATUS_PENDING_AVAIL_CHECK]);
                 $group->save();
 
-                (new OrderLogModel(
-                    [
-                        'orderid' => $group->order->orderid,
-                        'type' => OrderLogModel::LOG_TYPE_SYSTEM,
-                        'login' => '',
-                        'log' => nl2br($log),
-                    ]
-                ))->save();
+                OrderLogModel::createLog(
+                    $group->order->orderid,
+                    OrderLogModel::LOG_TYPE_SYSTEM,
+                    nl2br($log)
+                );
             }
         }
         print"Done!\n";

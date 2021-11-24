@@ -472,7 +472,13 @@ function sendPayPalRequest($aParams = [])
     $aResult['result'] = false;
     if (!empty($aParams['send_request_orderid'])) {
         $iOrderId = (int)$aParams['send_request_orderid'];
-        Xcart\Logs::_log('orders', $iOrderId, 'X', "'Send request' at 'Paypal Payment request' pressed");
+
+        OrderLogModel::createLog(
+            $iOrderId,
+            OrderLogModel::LOG_TYPE_XCART,
+            "'Send request' at 'Paypal Payment request' pressed"
+        );
+
         try {
             $oPaypal = (new Paypal());
             $oInv = $oPaypal->sendPaypalRequest($aParams);
@@ -488,12 +494,15 @@ function sendPayPalRequest($aParams = [])
                     'amount' => $aParams['paypal_request_amount'],
                     'currency' => $aParams['paypal_request_currency'],
                 ]);
-                Xcart\Logs::_log('orders', $iOrderId, OrderLogModel::LOG_TYPE_SYSTEM,
-                    "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent");
+                OrderLogModel::createLog(
+                    $iOrderId,
+                    OrderLogModel::LOG_TYPE_SYSTEM,
+                    "Paypal Cx invoice # <a target='_blank' href='https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$oInv->getId()}'>{$oInv->getId()}</a> has been sent"
+                );
                 $aResult['result'] = true;
             }
         } catch (\Exception $e) {
-            Xcart\Logs::_log('orders', $iOrderId, 'X', $e->getMessage());
+            OrderLogModel::createLog($iOrderId, OrderLogModel::LOG_TYPE_XCART, $e->getMessage());
         }
     }
     print(json_encode($aResult));

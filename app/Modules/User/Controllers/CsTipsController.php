@@ -60,19 +60,15 @@ class CsTipsController extends FrontendController
         $ststus_id = $globalConfigModel->value;
         OrderTagEventHelper::orderTagEvent($ststus_id, $request->post->get('order'));
 
-        $order_log_model = new OrderLogModel();
-
-        $order_log_model->orderid = $csTipsModel->order_id;
-        $order_log_model->type = 'C';
-        $order_log_model->date = time();
-        $order_log_model->login = Xcart::app()->user->login;
-        $order_log_model->log = "Customer gives {$request->post->get('cash')} dollars";
-
-        $order_log_model->save();
+        OrderLogModel::createLog(
+            $csTipsModel->order_id,
+            OrderLogModel::LOG_TYPE_CUSTOMER,
+            $log = "Customer gives {$request->post->get('cash')} dollars"
+        );
 
         echo $this->render('cs_tips_done.tpl', [
-            'order_id' => $order_log_model->login,
-            'tips' => $order_log_model->log,
+            'order_id' => Xcart::app()->user->login,
+            'tips' => $log,
             'ga_script' => self::getGoogleAnalitycsScript()
         ]);
     }

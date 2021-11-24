@@ -1287,13 +1287,12 @@ if ($REQUEST_METHOD === "POST") {
                     'reconciliation_id' => 0,
                 ]);
                 $invoice_group->save();
-                (new OrderLogModel([
-                    'orderid' => $orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'login' => Xcart::app()->user->login,
-                    'log' => "Invoice #{$invoice_group} status <b>Tentatively paid</b> -> <b>Updated</b>",
-                ])
-                )->save();
+
+                OrderLogModel::createLog(
+                    $orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "Invoice #{$invoice_group} status <b>Tentatively paid</b> -> <b>Updated</b>"
+                );
             }
             Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
         }
