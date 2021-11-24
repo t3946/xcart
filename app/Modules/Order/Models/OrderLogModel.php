@@ -74,8 +74,8 @@ class OrderLogModel extends Model
             'orderid' => $order_id,
             'type' => $type,
             'date' => time(),
-            'login' => addslashes($login),
-            'log' => addslashes($log_text)
+            'login' => $login,
+            'log' => $log_text
         ]);
     }
 }
