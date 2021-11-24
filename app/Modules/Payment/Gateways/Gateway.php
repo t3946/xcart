@@ -48,7 +48,7 @@ abstract class Gateway implements GatewayInterface
      */
     public static function getGateway($model): ?Gateway
     {
-        if ($model && class_exists($class = "Modules\\Payment\\Gateways\\" . $model->processor_name)) {
+        if ($model && class_exists($class = 'Modules\\Payment\\Gateways\\' . $model->processor_name)) {
             $gateway = new $class($model);
         }
         return $gateway ?? null;
