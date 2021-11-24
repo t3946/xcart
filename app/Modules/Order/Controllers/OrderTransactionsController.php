@@ -5,6 +5,7 @@ namespace Modules\Order\Controllers;
 
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -51,8 +52,7 @@ class OrderTransactionsController extends PrototypeAdminController
                 $store->$mode();
                 $order_log .= $store->log;
             }
-
-            func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
+            OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
         }
 
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
@@ -76,7 +76,7 @@ class OrderTransactionsController extends PrototypeAdminController
                 if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT !== 'Y')) {
 
                     $order_log .= $f_order = 'Error: First transaction in order exception';
-                    func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
+                    OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
 
                     $top_message = [
                         'type' => 'E',
@@ -119,8 +119,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
 
         }
-
-        func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
+        OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
 
         if (!$this->getRequest()->getIsAjax()) {
             Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
@@ -186,9 +185,9 @@ class OrderTransactionsController extends PrototypeAdminController
 
             OrderTransactionStore::lookupSelf($model);
 
-            func_log_order($order_id, 'PP', $order_log, Xcart::app()->user->login);
+            OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
 
-            Xcart::app()->request->redirect("/admin/order.php?orderid={$orderModel->orderid}&tab=y#main_order_tabs-VT");
+            Xcart::app()->request->redirect("/admin/order.php?orderid=$orderModel->orderid&tab=y#main_order_tabs-VT");
         }
     }
 }

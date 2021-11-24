@@ -1,9 +1,14 @@
 <?php
 
+use Modules\Core\Helpers\Cache;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
+use Xcart\Product;
 
 #
 # Use this function to load code of functions on demand (include/func/func.*.php)
@@ -273,7 +278,7 @@ function func_get_state($state_code, $country_code)
 
     $state_name = func_query_first_cell("SELECT state FROM $sql_tbl[states] WHERE country_code='$country_code' AND code='" . addslashes($state_code) . "'");
 
-    return ($state_name ? $state_name : $state_code);
+    return ($state_name ?: $state_code);
 }
 
 #
@@ -286,13 +291,11 @@ function func_get_country($country_code, $force_code = '')
     $code         = (empty($force_code) ? $shop_language : $force_code);
     $country_name = func_query_first_cell("SELECT value as country FROM $sql_tbl[languages] WHERE name='country_$country_code' AND code = '$code'");
 
-    return ($country_name ? $country_name : $country_code);
+    return ($country_name ?: $country_code);
 }
 
 function func_manufacturerid_for_group($shipping_freight, $product_manufacturerid)
 {
-    global $artss_manufacturerid;
-
     return $product_manufacturerid;
 }
 
@@ -338,7 +341,6 @@ function func_is_cart_empty($cart)
 function func_get_langvar_by_name($lang_name, $replace_to = null, $force_code = false, $force_output = false, $cancel_wm = false)
 {
     global $sql_tbl, $current_area, $config, $shop_language, $editor_mode;
-    global $smarty, $user_agent;
     global $predefined_lng_variables;
 
     $language_code = $shop_language;
@@ -658,7 +660,7 @@ function func_display_cached($tpl, $cache_id = null, $cache_lifetime = true)
 
     if ($cache_id) {
         $templater->caching = 2;
-        $templater->cache_lifetime = is_numeric($cache_lifetime) ? $cache_lifetime : \Modules\Core\Helpers\Cache::CACHE_HOUR;
+        $templater->cache_lifetime = is_numeric($cache_lifetime) ? $cache_lifetime : Cache::CACHE_HOUR;
     }
 
     return func_display($tpl, $templater, true, $cache_id);
@@ -1348,13 +1350,13 @@ function func_data_cache_get($name, $params = [], $force_rebuild = false)
         && defined("USE_DATA_CACHE")
         && constant("USE_DATA_CACHE")
         && !$no_save
-        && $data = \Xcart\App\Main\Xcart::app()->cache->get($name) )
+        && $data = Xcart::app()->cache->get($name) )
     {
         return $data;
     }
     else {
         $data = call_user_func_array($data_caches[$name]['func'], $params);
-        \Xcart\App\Main\Xcart::app()->cache->set($name, $data);
+        Xcart::app()->cache->set($name, $data);
 
         return $data;
     }
@@ -1365,7 +1367,7 @@ function func_data_cache_get($name, $params = [], $force_rebuild = false)
 #
 function func_data_cache_clear($name = false)
 {
-    \Xcart\App\Main\Xcart::app()->cache->set($name, null);
+    Xcart::app()->cache->set($name, null);
 
     return true;
 }
@@ -2204,17 +2206,6 @@ function my_array_sort($array, $on, $order = SORT_ASC)
     return $new_array;
 }
 
-function func_log_order($orderid, $type, $log, $ulogin = "")
-{
-    global $sql_tbl;
-    global $login;
-    if (empty($ulogin)) $ulogin = $login;
-
-    if (!empty($log)) {
-        db_query("INSERT INTO $sql_tbl[order_logs] (orderid, type, date, login, log) VALUES ('$orderid', '$type', '" . time() . "', '" . addslashes($ulogin) . "', '" . addslashes($log) . "')");
-    }
-}
-
 function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $login = "")
 {
     global $sql_tbl;
@@ -2259,7 +2250,7 @@ function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $l
                     $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$new_value'");
                 }
 
-                if ($field_in_db == "acc_paymentid") {
+                if ($field_in_db === "acc_paymentid") {
                     $current   = func_query_first_cell("SELECT payment_method FROM $sql_tbl[payment_methods] WHERE paymentid='$current'");
                     $new_value = func_query_first_cell("SELECT payment_method FROM $sql_tbl[payment_methods] WHERE paymentid='$new_value'");
                 }
@@ -2271,7 +2262,7 @@ function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $l
     }
 
     if ($insert_log) {
-        func_log_order($orderid, $type, $log, $login);
+        OrderLogModel::createLog($orderid, $type, $log);
     }
 }
 
@@ -2297,7 +2288,7 @@ function func_log_order_refunded_groups($query_data, $orderid, $manufacturerid, 
     }
 
     if ($insert_log) {
-        func_log_order($orderid, $type, $log, $login);
+        OrderLogModel::createLog($orderid, $type, $log);
     }
 }
 
@@ -2794,8 +2785,7 @@ SQL;
             if (!$tag_added_flag) {
                 $log .= "'" . $tag_name . "' attention tag NOT SET based on rules";
             }
-
-            func_log_order($orderid, 'X', $log, 'OTRS');
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log, 'OTRS');
             print("OK");
         }
     }
@@ -3248,7 +3238,7 @@ function func_backprocess_log($process_id = "", $log_text = "")
 
 function func_product_availability($productid = false, $product = false)
 {
-    /** @var \Xcart\Product $model */
+    /** @var Product $model */
     $model = null;
 
     $availability = "out of stock";
@@ -3623,10 +3613,9 @@ if (!function_exists("array_column")) {
 }
 function func_check_comma_in_field($orderid, $value, $sFieldName)
 {
-    global $login, $top_message;
     if (strpos($value, ',') !== false) {
         $sLog = "Comma in field <b>$sFieldName</b>: " . $value;
-        func_log_order($orderid, 'X', $sLog, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $sLog, 'OTRS');
 
         return true;
     }

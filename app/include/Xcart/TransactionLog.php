@@ -1,6 +1,8 @@
 <?php
 namespace Xcart;
 
+use Modules\Order\Models\OrderLogModel;
+
 class TransactionLog extends Data
 {
     private $aLogLines = [];
@@ -53,10 +55,9 @@ class TransactionLog extends Data
 
     public function insertOrderLog($orderid)
     {
-        global $login;
         if (!empty($this->aLogLines))
         {
-            func_log_order($orderid, 'PP', $this->getLogText(), $login);
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $this->getLogText());
         }
     }
 

@@ -34,6 +34,8 @@
 # $Id: get_language.php,v 1.70.2.8 2007/01/22 11:00:52 max Exp $
 #
 
+use Modules\Core\Models\LanguageModel;
+
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
 define("GET_LANGUAGE", 1);
@@ -156,7 +158,7 @@ x_session_register("editor_mode");
 if ($login)
 	db_query ("UPDATE $sql_tbl[customers] SET language='$shop_language' WHERE login='$login'");
 
-if (@$current_area == "C" || @$current_area == "B") {
+if (@$current_area === "C" || @$current_area === "B") {
 	#
 	# Set cookies
 	#
@@ -176,7 +178,7 @@ if (@$current_area == "C" || @$current_area == "B") {
 $all_languages = func_data_cache_get("languages", array($shop_language));
 
 if (empty($all_languages)) {
-	$def_language = ($current_area == 'C' ? $config["default_customer_language"] : $config["default_admin_language"]);
+	$def_language = ($current_area === 'C' ? $config["default_customer_language"] : $config["default_admin_language"]);
 	$all_languages = func_data_cache_get("languages", array($def_language));
 	if (empty($all_languages) && !empty($e_langs) && is_array($e_langs)) {
 		$all_languages = func_data_cache_get("languages", array(key($e_langs)));
@@ -195,7 +197,7 @@ if ($all_languages) {
 }
 
 if (
-	($current_area == "C" || $current_area == "B") &&
+	($current_area === "C" || $current_area === "B") &&
 	!empty($_GET['sl']) &&
 	!defined('IS_ROBOT') &&
 	!preg_match('/\.html?($|\?)|\/$/s', $l_redirect)
@@ -208,18 +210,23 @@ $all_languages = $n_langs;
 $smarty->assign ("all_languages", $all_languages);
 $smarty->assign ("store_language", @$store_language);
 $smarty->assign ("shop_language", @$shop_language);
-$smarty->assign ("all_languages_cnt", sizeof($all_languages));
+$smarty->assign ("all_languages_cnt", count($all_languages));
 
-$config["Company"]["location_country_name"] = func_get_country($config["Company"]["location_country"]);
+$code = $config["Company"]["location_country"];
+
+$config["Company"]["location_country_name"] = LanguageModel::getCountry($code);
+
 $config["Company"]["location_state_name"] = func_get_state($config["Company"]["location_state"], $config["Company"]["location_country"]);
 $config["Company"]["location_country_has_states"] = func_query_first_cell("SELECT display_states FROM $sql_tbl[countries] WHERE code = '".$config["Company"]["location_country"]."'") == 'Y';
 
 $smarty->assign("config",$config);
 $mail_smarty->assign("config",$config);
 
-if (!empty($config['r2l_languages'][$shop_language]))
+if (!empty($config['r2l_languages'][$shop_language])) {
 	$smarty->assign('reading_direction_tag', ' dir="RTL"');
-else
+
+} else {
 	$smarty->assign('reading_direction_tag', '');
+}
 
 ?>

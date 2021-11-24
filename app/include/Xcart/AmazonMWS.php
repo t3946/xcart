@@ -57,6 +57,7 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Goods\Helpers\ProductHelper;
@@ -942,9 +943,9 @@ SQL;
             );
         }
         $oOrderGroup->_refresh();
-        if ($oOrderGroup->getOrderGroupStatusCB() != 'P') {
+        if ($oOrderGroup->getOrderGroupStatusCB() !== 'P') {
             $log .= "Shipping order by Amazon - failed. Order group status not Paid.\n";
-            func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);
+            OrderLogModel::createLog($oOrderGroup->getOrderId(), OrderLogModel::LOG_TYPE_XCART, nl2br($log));
             return false;
         }
 
@@ -1024,7 +1025,7 @@ SQL;
                 $log .= "ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n";
             }
 
-            func_log_order($oOrderGroup->getOrderId(), 'X', nl2br($log), $login);
+            OrderLogModel::createLog($oOrderGroup->getOrderId(), OrderLogModel::LOG_TYPE_XCART, nl2br($log));
         }
         return true;
     }

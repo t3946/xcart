@@ -1,6 +1,7 @@
 <?php
 namespace Xcart;
 
+use Modules\Order\Models\OrderLogModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAndNot;
 use Xcart\App\QueryBuilder\QueryBuilder;
@@ -211,8 +212,10 @@ class Product extends Data
                         $oVerificationStatusNew = new ProductVerificationStatus($iStatusId);
                         $oVerificationStatusOld = new ProductVerificationStatus($this->getField('verification_statusid'));
                         $sLogMessage = "<b>" . $this->getField('productcode') . "</b> product verification status: " . $oVerificationStatusOld->getField('name') . " -> " . $oVerificationStatusNew->getField('name') . "\n";
-                        if (!empty($sNote)) $sLogMessage .= 'Problem/fix description: ' . $sNote;
-                        func_log_order($iOrderId, 'X', nl2br($sLogMessage));
+                        if (!empty($sNote)) {
+                            $sLogMessage .= 'Problem/fix description: ' . $sNote;
+                        }
+                        OrderLogModel::createLog($iOrderId, OrderLogModel::LOG_TYPE_XCART, nl2br($sLogMessage));
                     }
                 }
                 $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);

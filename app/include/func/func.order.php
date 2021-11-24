@@ -11,6 +11,7 @@ use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
@@ -1948,13 +1949,12 @@ function func_check_and_send_request_availability_email($orderid, $sent_by = '')
                 db_query_param(/** @lang MySQL */
                     "UPDATE xcart_order_groups SET notify_sent = 'Y', dc_status='K' WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
                 $order_notes .= date('l jS \of F Y h:i:s A') . ": Request availability email was sent automatically to '" . $mv["manufacturer"] . "' distributor";
-                if ($sent_by == 'CRON') {
+                if ($sent_by === 'CRON') {
                     $order_notes .= ", by CRON";
                 } else {
                     $order_notes .= ", when order was placed by customer. ";
                 }
-
-                func_log_order($orderid, 'S', $order_notes);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_SYSTEM, $order_notes);
                 func_backprocess_log('cron_request_availability', "Order #{$orderid}: " . $order_notes);
 
                 $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
@@ -2513,7 +2513,7 @@ function func_change_order_status($orderids, $status, $advinfo = "", $manufactur
 
             if ($current_details != $new_details) {
                 $log = str_replace("\n", "<br />", $new_details);
-                func_log_order($orderid, 'C', $log, $order["login"]);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_CUSTOMER, $log, $order["login"]);
             }
         }
 
@@ -3791,7 +3791,7 @@ function func_change_order_group_status($orderid, $mid, $status)
             $code                 = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mid'");
             $log                  = "<B>" . $code . ":</B> " . $status_column . ": " . $current_status_value . " -> " . $new_status_value;
             global $login;
-            func_log_order($orderid, 'X', $log, $login);
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
         }
 
         /** @var OrderGroupModel $order_group_m */

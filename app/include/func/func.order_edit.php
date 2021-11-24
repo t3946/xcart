@@ -2,29 +2,12 @@
 
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\UserModel;
 
 x_load('cart', 'mail', 'order', 'product', 'taxes');
-
-function func_check_tracking_number($linkid, $tracknum)
-{
-    global $sql_tbl;
-
-    $carrier_id = func_query_first_cell("SELECT carrier_id FROM $sql_tbl[tracking_links] WHERE linkid='$linkid'");
-    $link       = func_query_first_cell("SELECT link FROM $sql_tbl[tracking_links_carrier] WHERE carrier_id='$carrier_id'");
-
-    if (empty($link)) {
-        return false;
-    }
-
-    if (preg_match('/(http|https).*/', $link) && empty($tracknum)) {
-        return false;
-    }
-
-    return true;
-}
 
 function func_recalculate_accounting(&$group, $all_processors = [], $apply_per_trans = false, $refund = false)
 {
@@ -382,7 +365,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
     }
 
     if ($insert_additional_fields_log) {
-        func_log_order($cart["orderid"], 'X', $log, $login);
+        OrderLogModel::createLog($cart["orderid"], OrderLogModel::LOG_TYPE_XCART, $log, $login);
     }
 
     #
@@ -465,18 +448,18 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
         $log = "";
 
         $log_name = ["membership", "title", "firstname", "lastname", "company", "tax_number", "tax_exempt", "b_title", "b_firstname", "b_lastname", "b_address", "b_city", "b_county", "b_state", "b_country", "b_zipcode", "s_title", "s_firstname", "s_lastname", "s_address", "s_city", "s_county", "s_state", "s_country", "s_zipcode", "phone", "phone_ext", "fax", "email", "url"];
-
+        $order_model = OrderModel::objects()->get(['orderid' => $cart['orderid']]);
         $insert_log = false;
         foreach ($log_name as $field_in_db) {
-            $current = func_query_first_cell("SELECT $field_in_db  FROM $sql_tbl[orders] WHERE orderid='$cart[orderid]'");
-            if ($current != $userinfo[$field_in_db]) {
+            $current = $order_model->$field_in_db;
+            if ($current !== $userinfo[$field_in_db]) {
                 $log .= $field_in_db . ": " . $current . " -> " . $userinfo[$field_in_db] . "<br />";
                 $insert_log = true;
             }
         }
 
         if ($insert_log) {
-            func_log_order($cart["orderid"], 'X', $log, $login);
+            OrderLogModel::createLog($cart["orderid"], OrderLogModel::LOG_TYPE_XCART, $log, $login);
         }
 
         if (!empty($userinfo)) {
@@ -541,7 +524,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
             if ($product['deleted']) {
                 $dm->delete();
                 $log = "<b>Deleted:</b> {$product['productcode']}";
-                func_log_order($dm->orderid, 'X', $log, $login);
+                OrderLogModel::createLog($cart["orderid"], OrderLogModel::LOG_TYPE_XCART, $log, $login);
             }
 
             if ($shipping_groups[$product['manufacturerid']]['cb_status'] === 'P') {
@@ -581,7 +564,7 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                 }
             }
             if ($insert_log) {
-                func_log_order($cart['orderid'], 'X', $log, $login);
+                OrderLogModel::createLog($cart["orderid"], OrderLogModel::LOG_TYPE_XCART, $log, $login);
             }
             $dm->save();
 
@@ -1413,7 +1396,7 @@ function func_update_refunded_products($products, $orderid)
                         }
 
                         if ($insert_log) {
-                            func_log_order($orderid, 'X', $log, $operator_login);
+                            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                         }
 
                         func_array2update('refunded_products', $query_data, $where);
@@ -1453,7 +1436,7 @@ function func_delete_refund_group($mid, $orderid, $full = false)
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='P'");
                 $log       = "<B>" . $code . ":</B> cb_status: " . $current_cb_status_value . " -> " . $new_value;
                 global $login;
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             }
 
             db_query("UPDATE $sql_tbl[order_groups] SET cb_status='P' WHERE orderid='$orderid' AND manufacturerid='$mid'");

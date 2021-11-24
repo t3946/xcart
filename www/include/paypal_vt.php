@@ -1,6 +1,7 @@
 <?php
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -144,10 +145,9 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
         if ($transactionLog->isValid()) {
             $transactionLog->save();
         }
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $log);
 
-        func_log_order($orderid, 'PP', $log, $login);
-
-        if (!($mode == "authorize" && $AJAX_SUBMIT == "Y")) {
+        if (!($mode === "authorize" && $AJAX_SUBMIT === "Y")) {
             func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-VT");
         }
     }

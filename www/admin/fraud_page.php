@@ -4,6 +4,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\FraudCheckModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderFraudCheckModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\User\Models\UserModel;
@@ -197,9 +198,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
             }
         }
 
-        if ($log) {
-            func_log_order($orderid, 'X', $log, Xcart::app()->user->login);
-        }
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
     }
 
     $top_message['content'] = 'Done.';

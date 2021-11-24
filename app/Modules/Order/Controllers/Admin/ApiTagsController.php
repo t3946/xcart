@@ -4,6 +4,7 @@ namespace Modules\Order\Controllers\Admin;
 
 use Modules\Admin\Controllers\BackendController;
 use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Models\OrderLogModel;
 use Xcart\App\Main\Xcart;
 
 class ApiTagsController extends BackendController
@@ -78,7 +79,7 @@ class ApiTagsController extends BackendController
 
 
                 $log = "'" . $status_name . "' attention tag has been removed";
-                func_log_order($order_id, 'X', $log, $login);
+                OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_XCART, $log);
 
                 $this->jsonResponse([
                     'content' => 'Attn tag has been removed',
