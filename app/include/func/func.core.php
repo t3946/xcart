@@ -6,7 +6,6 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Product;
 
@@ -3201,7 +3200,7 @@ function func_get_signature($sfid = false, $products = false, $order = null)
         }
     }
     else {
-        $use_storefrontid = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
+        $use_storefrontid = Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
     }
 
     $cur_storefront_info = SiteModel::objects()->get(["storefrontid" => $use_storefrontid]);

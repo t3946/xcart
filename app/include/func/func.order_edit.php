@@ -452,8 +452,8 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
         $insert_log = false;
         foreach ($log_name as $field_in_db) {
             $current = $order_model->$field_in_db;
-            if ($current !== $userinfo[$field_in_db]) {
-                $log .= $field_in_db . ": " . $current . " -> " . $userinfo[$field_in_db] . "<br />";
+            if ($current != $userinfo[$field_in_db]) {
+                $log .= "$field_in_db: $current -> $userinfo[$field_in_db]<br />";
                 $insert_log = true;
             }
         }
