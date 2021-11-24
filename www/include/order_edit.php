@@ -15,6 +15,7 @@ use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupMemoModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Main\Xcart;
@@ -136,8 +137,7 @@ if ($REQUEST_METHOD === 'POST')
                 $log .= "<br /><b>{$v['all_distributor_info']['code']}:</b> cb_status: {$current_cb_status_value} -> {$new_cb_status_value}";
             }
         }
-
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
         func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-customer_info");
     }
@@ -157,7 +157,7 @@ if ($REQUEST_METHOD === 'POST')
         }
         $po_order->save();
         unset($po_order);
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
         func_header_location("order.php?orderid={$orderid}&tab=y#main_order_tabs-customer_info");
     }
     elseif ($mode === 'order_edit_apply') {
@@ -235,7 +235,7 @@ if ($REQUEST_METHOD === 'POST')
                 $product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$v[productid]'");
                 if ($ref_values['is_refunded'] == '1') {
                     $log = "<b>{$product_code}</b>: amount: {$v["amount"]}";
-                    func_log_order($orderid, 'X', $log, $login);
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                 }
 
                 if (!empty($ref_values) && $ref_values['is_refunded'] || !is_numeric($v['amount'])) {
@@ -317,10 +317,10 @@ if ($REQUEST_METHOD === 'POST')
                 if (($current_eta_date_mm_dd_yyyy !== false) && !empty($v['eta_date_mm_dd_yyyy']) && $current_eta_date_mm_dd_yyyy != $v['eta_date_mm_dd_yyyy']) {
                     /** @var ProductModel $pModel */
                     if ($pModel = ProductModel::objects()->get(['productid' => $productid])) {
-                        $log = "<b>{$product_code}</b> ETA date: {$current_eta_date_mm_dd_yyyy} -> {$v['eta_date_mm_dd_yyyy']}";
-                        func_log_order($orderid, 'X', $log, $login);
                         $pModel->eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time;
                         $pModel->save();
+                        $log = "<b>{$product_code}</b> ETA date: {$current_eta_date_mm_dd_yyyy} -> {$v['eta_date_mm_dd_yyyy']}";
+                        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                     }
                 }
                 ### LOG: END
@@ -497,10 +497,10 @@ if ($REQUEST_METHOD === 'POST')
                     $log .= "<b>{$code}: </b>Actual shipping cost net: {$current_actual_shipping_net} -> {$tmp_actual_shipping_cost_net}";
                 }
 
-                if ($log !== '') {
-                    $set_type = $save_additional_vt ? 'S': 'X';
-                    func_log_order($orderid, $set_type, $log, $login);
-                }
+                $set_type = $save_additional_vt
+                    ? OrderLogModel::LOG_TYPE_SYSTEM
+                    : OrderLogModel::LOG_TYPE_XCART;
+                OrderLogModel::createLog($orderid, $set_type, $log);
 
                 $v['actual_shipping_cost_net'] = preg_replace("/[^0-9\.]/S", '', $v['actual_shipping_cost_net']);
 
@@ -538,7 +538,7 @@ if ($REQUEST_METHOD === 'POST')
 
                 if ($ref_values['is_refunded'] == '1') {
                     $log = "<b>{$code}</b>: shipping_cost_net: {$v['shipping_cost_net']}";
-                    func_log_order($orderid, 'X', $log, $login);
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                 }
                 if (!empty($ref_values) && $ref_values['is_refunded']) {
                     $v['shipping_cost_net'] = $v['shipping_cost_net_orig'];
@@ -597,9 +597,7 @@ if ($REQUEST_METHOD === 'POST')
                     if ($group_model = OrderGroupModel::objects()->get(['manufacturerid' => $m_id,'orderid' => $orderid])) {
                         $order['shipping_groups'][$m_id]['cb_status'] = $group_model->cb_status;
                     }
-                    if ($log) {
-                        func_log_order($orderid, 'X', $log, $login);
-                    }
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                 }
 
                 if (in_array($v['dc_status'], [
@@ -727,7 +725,7 @@ if ($REQUEST_METHOD === 'POST')
                 if (!empty($prd))
                 {
                     $log = "<b>Add product:</b> {$sku} x {$amount}";
-                    func_log_order($orderid, 'X', $log, $operator_login);
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
                     $prd['provider'] = (!empty($config['General']['default_provider_name'])) ? $config['General']['default_provider_name'] : $prd['provider'];
 
@@ -890,10 +888,7 @@ if ($REQUEST_METHOD === 'POST')
         }
 
         $cart_tmp['additional_fee'] = $additional_fee;
-
-        if (!empty($log)) {
-            func_log_order($orderid, 'X', $log, $login);
-        }
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
         $login = $operator_login;
 
@@ -989,7 +984,7 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "{$attribute}: {$old_po[$attribute]}  ->  {$extra->purchase_order[$attribute]} <br />";
                         }
                     }
-                    func_log_order($order["orderid"], 'C', $log, $login);
+                    OrderLogModel::createLog($order["orderid"], OrderLogModel::LOG_TYPE_CUSTOMER, $log);
                 }
             }
         }
@@ -1513,8 +1508,8 @@ if ($REQUEST_METHOD === 'POST')
                         }
                     } // foreach ($manufacturer_memos_data[$certain_mid] as $memo_number => $memo_data)
 
-                    if ($log != "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
-                        func_log_order($orderid, 'X', $log, $login);
+                    if ($log !== "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
+                        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                     }
 
                     if ($order['shipping_groups'][$m_id]['accounting'][4]["net"] != price_format($SUM_ref_to_us)) {
@@ -1881,8 +1876,8 @@ if ($REQUEST_METHOD === 'POST')
 
                 $update = func_add_accounting_fields($update, '', '', '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
 
-                if ($log != "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
-                    func_log_order($orderid, 'X', $log, $login);
+                if ($log !== "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                 }
 
                 func_log_order_groups($update, $orderid, $m_id, 'X', $login);

@@ -8,6 +8,7 @@ use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\GroundMapModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
@@ -16,11 +17,15 @@ use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Stores\OrderStore;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
+use Modules\PBX\Helpers\AnveoAssignCalls;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Customer;
+use Xcart\OrderCxInvoice;
+use Xcart\SQLBuilder;
 
 global $smarty, $xcart_dir, $orderid, $REQUEST_METHOD, $mode, $sql_tbl, $config;
 
@@ -365,7 +370,7 @@ if ($REQUEST_METHOD === "GET")
         }
 
         $log = 'This order has been cloned from <a style="color: #1411FF;" href="order.php?orderid=' . $orderid . '" target="_blank">' . $order_table['order_prefix'] . $orderid . '</a>';
-        func_log_order($new_orderid, 'S', $log, $login);
+        OrderLogModel::createLog($new_orderid, OrderLogModel::LOG_TYPE_SYSTEM, $log);
 
         $date_sent    = date("j-M-Y_H-i-s");
         $order_prefix = $order_table['order_prefix'];
@@ -404,7 +409,7 @@ if ($REQUEST_METHOD === "POST")
                     $order->update(['shipping_cost' => $new_shipping_cost]);
 
                     $log = "<b>Deleted:</b> {$group->manufacturer->code}";
-                    func_log_order($orderid, 'X', $log, $login);
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
                     $group->delete();
 
@@ -560,7 +565,7 @@ if ($REQUEST_METHOD === "POST" && $mode === "note_is_taken_care_of") {
 
     $log = "'Customer notes' removed<br /><B>Customer notes:</B> ";
     $log .= func_query_first_cell("SELECT customer_notes FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     db_query("UPDATE $sql_tbl[orders] SET customer_notes='', note_is_taken_care_of='Y' WHERE orderid='$orderid'");
     func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-");
@@ -619,7 +624,7 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 }
 
 
-\Xcart\App\Main\Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
+Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 
 require "./gi-find.php";
 
@@ -631,8 +636,7 @@ if (empty($ticket_resolver_link)) {
 if ($REQUEST_METHOD === "POST") {
 
     if ($mode === 'submit_message' && $type === 'empty') {
-
-        func_log_order($orderid, 'EL', '  ', Xcart::app()->user->login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_END_LINE, '  ');
     }
 
     if ($mode === 'submit_message' && !empty($notes) && !empty($orderid))
@@ -671,19 +675,18 @@ if ($REQUEST_METHOD === "POST") {
             }
 
             $subj .= " (posted on {$date_sent})";
-            func_log_order($orderid, 'X', $log1, $user->login);
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log1);
         }
         else {
             $log2 = "<b>$subject_line</b><br/>{$notes}";
         }
-
-        func_log_order($orderid, 'S', $log2, $user->login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_SYSTEM, $log2);
 
         $body = "{$notes}\n\nposted by {$user} ({$user->login})";
         $from = $user . '<helpdesk@s3stores.com>';
         $to   = 'orders@s3stores.com';
 
-        $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+        $oMail = Xcart::app()->oldMail;
         $oMail->init();
         $oMail->to = $to;
         $oMail->from = $from;
@@ -694,7 +697,7 @@ if ($REQUEST_METHOD === "POST") {
         $oMail->sendEmail();
 
         /** @var SiteModel $site_model */
-        $site_model = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+        $site_model = Xcart::app()->getModule('Sites')->getSite();
         $config = $site_model->getGlobalConfig();
         if (!in_array($user->id, explode(',', $config['order_note_tag_users'])) && $config['order_note_tag']) {
             OrderHelper::setOrderTag($orderid, $config['order_note_tag']);
@@ -727,14 +730,14 @@ if ($REQUEST_METHOD === "POST") {
         }
 
         x_session_save("section_name");
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
         if (!empty($items) && is_array($items) && !empty($orderid)) {
             foreach ($items as $k => $v) {
                 if ($order_detail_model = OrderDetailModel::objects()->get(['itemid' => $k])) {
                     $p_op = [];
 
-                    if ($v['classid_optionid'] && \is_array($v['classid_optionid'])) {
+                    if ($v['classid_optionid'] && is_array($v['classid_optionid'])) {
                         foreach ($v['classid_optionid'] as $option => $value) {
                             if (($opt_model = ProductOptionModel::objects()->get(['id' => $option]))
                                 && $o_value_model = ProductOptionVariantModel::objects()->get(['id' => $value]))
@@ -754,7 +757,7 @@ if ($REQUEST_METHOD === "POST") {
 
             if ($current_orig_po != $orig_po) {
                 $log = "orig_po: " . $current_orig_po . " -> " . $orig_po;
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
                 db_query("UPDATE $sql_tbl[orders] SET orig_po='" . addslashes($orig_po) . "' WHERE orderid='$orderid'");
             }
@@ -765,7 +768,7 @@ if ($REQUEST_METHOD === "POST") {
 
             if ($current_total_shipping_charge_on_orig_po != $total_shipping_charge_on_orig_po) {
                 $log = "total_shipping_charge_on_orig_po: " . $current_total_shipping_charge_on_orig_po . " -> " . $total_shipping_charge_on_orig_po;
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
                 db_query("UPDATE $sql_tbl[orders] SET total_shipping_charge_on_orig_po='" . addslashes($total_shipping_charge_on_orig_po) . "' WHERE orderid='$orderid'");
             }
@@ -776,16 +779,16 @@ if ($REQUEST_METHOD === "POST") {
 
             if ($current_po_issued_to != $po_issued_to) {
                 $log = "po_issued_to: " . $po_issued_to_arr[$current_po_issued_to] . " -> " . $po_issued_to_arr[$po_issued_to];
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
                 db_query("UPDATE $sql_tbl[orders] SET po_issued_to='" . addslashes($po_issued_to) . "' WHERE orderid='$orderid'");
             }
         }
     }
-    elseif ($mode == "accounting_apply") {
+    elseif ($mode === "accounting_apply") {
 
         $log = "'Update' at 'Accounting' pressed";
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
@@ -832,7 +835,7 @@ if ($REQUEST_METHOD === "POST") {
 
                         if (!empty($links_diff)) {
                             $log = "<B>" . $code . ":</B><br />" . $log;
-                            func_log_order($orderid, 'X', $log, $login);
+                            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                         }
 
                         unset($current_links_for_diff);
@@ -884,7 +887,7 @@ if ($REQUEST_METHOD === "POST") {
 
                         if (!empty($links_diff)) {
                             $log = "<B>" . $code . ":</B><br />" . $log;
-                            func_log_order($orderid, 'X', $log, $login);
+                            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                         }
 
                         unset($current_links_for_diff);
@@ -933,7 +936,7 @@ if ($REQUEST_METHOD === "POST") {
             }
 
             if (!empty($log)) {
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             }
         }
 
@@ -963,13 +966,13 @@ if ($REQUEST_METHOD === "POST") {
             }
 
             if (!empty($log)) {
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             }
         }
     }
     elseif ($mode === "table_accounting_apply") {
         $log = "'Update' at 'Accounting' pressed";
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
     }
@@ -1037,7 +1040,7 @@ if ($REQUEST_METHOD === "POST") {
 
             ### LOG: START
             $log = "'" . $status_name . "' attention tag removed";
-            func_log_order($orderid, 'X', $log, $login);
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             ### LOG: END
 
             $top_message["content"] = "Done.";
@@ -1358,7 +1361,7 @@ if ($mode === 'pending_order_message2_done_clicked' && !empty($notify_mid))
 
     $section_name = "main_order_tabs-order_details";
     x_session_save("section_name");
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $top_message = [
         'type'    => 'I',
@@ -1373,19 +1376,21 @@ if ($mode === 'pending_order_message2_done_clicked' && !empty($notify_mid))
 
 if ($mode === 'ref_notify')
 {
-    if ($ref_notify_button_clicked === "Update_C2B_status") {
-        $log = "'Update C2B status' at 'Refund'";
-    }
-    elseif ($ref_notify_button_clicked === "Send_refund_notification") {
-        $log = "'Send refund notification' at 'Refund'";
-    }
-    else {
-        $log = "'Update C2B status and Send refund notification' at 'Refund'";
+    switch ($ref_notify_button_clicked) {
+        case 'Update_C2B_status':
+            $log = "'Update C2B status' at 'Refund'";
+            break;
+        case 'Send_refund_notification':
+            $log = "'Send refund notification' at 'Refund'";
+            break;
+        default:
+            $log = "'Update C2B status and Send refund notification' at 'Refund'";
+            break;
     }
 
     $section_name = "main_order_tabs-order_details";
     x_session_save("section_name");
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     if (!empty($order['refund_groups'][$notify_mid])) {
         $order['refund_groups'][$notify_mid]['notify_status'] = 'S';
@@ -1456,11 +1461,11 @@ if ($mode === 'ref_notify')
                             $error_message = 'Refund error. ' . $order_log;
                         }
 
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $error_message = 'Refund error. ' . $e->getMessage();
                     }
                     if ($error_message) {
-                        func_log_order($orderid, 'PP', $error_message, $login);
+                        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $error_message);
                         $top_message = [
                             'content' => $error_message,
                             'type' => 'E',
@@ -1471,7 +1476,7 @@ if ($mode === 'ref_notify')
                     }
                 } else {
                     $error_message = 'This transaction(s) has already been refunded.';
-                    func_log_order($orderid, 'PP', $error_message, $login);
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $error_message);
                 }
             }
         }
@@ -1526,7 +1531,7 @@ if ($mode === 'ref_notify')
                             // Copy to Orders Department
                             $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
                             $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+                            $oMail = Xcart::app()->oldMail;
                             $oMail->init();
                             $oMail->to = $config['Company']['orders_department'];
                             $oMail->from = $config['Company']['orders_department'];
@@ -1591,12 +1596,12 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
     if ($mode === "cidev_send_email_to_operator") {
         $log = "'Submit to order entry operator' at '" . $manufacturer_name . ": Order entry'";
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
     }
 
     if ($mode === "mnf_notify" && $set_status_K === "Y") {
         $log = "'Send (Request availability)' at '" . $manufacturer_name . ": Request availability'";
-        func_log_order($orderid, 'X', $log, $login);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
     }
 
     if ($mode === 'mnf_notify')
@@ -1648,8 +1653,8 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             else {
                 db_query("INSERT INTO $sql_tbl[off_hours_messages] (orderid, manufacturerid, message) VALUES ('$orderid', '$mnf_id', '" . addslashes($mnf_body_to_db) . "')");
             }
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
-            func_log_order($orderid, 'X', $log, $login);
 
             if (!isset($top_message["content"])) {
                 $top_message["content"] = "";
@@ -1666,7 +1671,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         }
         else {
             $log .= "'Send (Dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
-            func_log_order($orderid, 'X', $log, $login);
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
         }
     }
 
@@ -1726,7 +1731,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         if ($submit_to_operator === 'through_distributor_website') {
             $mail_smarty->assign('order', $order);
             $mail_smarty->assign('mnf_operator_notify', 'Y');
-            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+            $oMail = Xcart::app()->oldMail;
             $oMail->init();
             $oMail->to = $mnf_to;
             $oMail->from = $config['Company']['orders_department'];
@@ -1738,7 +1743,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             //func_send_mail($mnf_to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid);
 
             $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-            func_log_order($orderid, 'X', $log, $login);
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
             $mail_smarty->assign('mnf_operator_notify', 'N');
         }
@@ -1758,7 +1763,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
                 $mail_smarty->assign('order', $order_after_refund);
 
-                $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+                $oMail = Xcart::app()->oldMail;
                 $oMail->init();
                 $oMail->to = $mnf_to;
                 $oMail->from = $config['Company']['orders_department'];
@@ -1769,7 +1774,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
                 $oMail->sendEmail();
                 //func_send_mail($mnf_to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
                 $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             }
         }
 
@@ -1790,7 +1795,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             if ($current_dc_status !== "K") {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='K'");
                 $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             }
 
             OrderGroupModel::objects()
@@ -1808,7 +1813,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             if ($current_dc_status !== "C") {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='C'");
                 $log       = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value;
-                func_log_order($orderid, 'X', $log, $login);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
                 $current_dc_dispatched_time = func_query_first_cell("SELECT dc_dispatched_time FROM $sql_tbl[order_groups] WHERE manufacturerid='$mnf_id' AND orderid='$orderid'");
 
@@ -1852,7 +1857,7 @@ elseif ($mode === 'request_additional_shipping_charge') {
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
     $log = "'Send (Request additional shipping charge)' at '" . $manufacturer_name . ": Request additional shipping charge'";
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $mnf_body = func_eol2br(stripslashes($mnf_body));
     $mail_smarty->assign('message_body', $mnf_body);
@@ -1861,7 +1866,7 @@ elseif ($mode === 'request_additional_shipping_charge') {
     $mail_smarty->assign('cidev_hide_invoice', 'Y');
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+    $oMail = Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
@@ -1875,7 +1880,7 @@ elseif ($mode === 'request_additional_shipping_charge') {
     $top_message = ["content" => "Sent."];
 
     $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     func_header_location("order.php?orderid=" . $orderid);
 }
@@ -1884,7 +1889,7 @@ elseif ($mode === 'request_missing_information')
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
     $log = "'Send (Request missing information)' at 'Request missing information'";
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $mnf_body = func_eol2br(stripslashes($mnf_body));
     $mail_smarty->assign('message_body', $mnf_body);
@@ -1893,7 +1898,7 @@ elseif ($mode === 'request_missing_information')
     $mail_smarty->assign('cidev_hide_invoice', 'Y');
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+    $oMail = Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
@@ -1907,7 +1912,7 @@ elseif ($mode === 'request_missing_information')
     $top_message = ["content" => "Sent."];
 
     $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     func_header_location("order.php?orderid=" . $orderid);
 }
@@ -1916,7 +1921,7 @@ elseif ($mode === 'backorder_decision_request') {
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
     $log = "'Send (Backorder decision request)' at 'Backorder decision request'";
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $mnf_body = func_eol2br(stripslashes($mnf_body));
     $mail_smarty->assign('message_body', $mnf_body);
@@ -1925,7 +1930,7 @@ elseif ($mode === 'backorder_decision_request') {
     $mail_smarty->assign('cidev_hide_invoice', 'Y');
     $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
 
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
+    $oMail = Xcart::app()->oldMail;
     $oMail->init();
     $oMail->to = $mnf_to;
     $oMail->from = $config['Company']['orders_department'];
@@ -1939,7 +1944,7 @@ elseif ($mode === 'backorder_decision_request') {
     $top_message = ["content" => "Sent."];
 
     $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     func_header_location("order.php?orderid=" . $orderid);
 }
@@ -1951,14 +1956,13 @@ elseif ($mode === 'waive') {
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
     $log = "'Waive' at '" . $manufacturer_name . ": Request additional shipping charge'";
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $current_additional_shipping_status = $order["shipping_groups"][$mnf_id]["additional_shipping_status"];
 
     if ($current_additional_shipping_status !== "W") {
         $log = "<B>" . $code . ":</B> additional_shipping_status: " . $additional_shipping_statuses[$current_additional_shipping_status] . " -> Waive";
-        func_log_order($orderid, 'X', $log, $login);
-
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
         OrderGroupModel::objects()
             ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
             ->setAttribute('additional_shipping_status', 'W')
@@ -1977,7 +1981,7 @@ elseif ($mode === 'mode_info_request_survey') {
     $section_name = "main_order_tabs-stock_request";
     x_session_save("section_name");
     $log = "'Update the order' at '" . $manufacturer_name . ": Stock request'";
-    func_log_order($orderid, 'X', $log, $login);
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $log = "";
 
@@ -2247,11 +2251,8 @@ elseif ($mode === 'mode_info_request_survey') {
         ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
         ->setAttribute('dc_status', 'M')
         ->save();
-//    db_query("UPDATE $sql_tbl[order_groups] SET dc_status='M' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
 
-    if (!empty($log)) {
-        func_log_order($orderid, 'X', $log, $login);
-    }
+    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
     $top_message = ["content" => "Done."];
     func_header_location("order.php?orderid=" . $orderid);
@@ -2754,11 +2755,11 @@ $order_tabs[0]["title"]   = "All logs and messages";
 $order_tabs[0]["section"] = "all_logs_and_messages";
 $order_tabs[0]["anchor"]  = "0";
 
-$order_tabs[1]["title"]   = "Calls" .  \Modules\PBX\Helpers\AnveoAssignCalls::addToTitleName($orderid);
+$order_tabs[1]["title"]   = "Calls" .  AnveoAssignCalls::addToTitleName($orderid);
 $order_tabs[1]["section"] = "order_calls";
 $order_tabs[1]["anchor"]  = "1";
 
-$calls_log_data = \Modules\PBX\Helpers\AnveoAssignCalls::getResource($orderid);
+$calls_log_data = AnveoAssignCalls::getResource($orderid);
 
 $smarty->assign('calls_log_data', $calls_log_data);
 $smarty->assign('order_tabs', $order_tabs);
@@ -2774,7 +2775,7 @@ $type_names = [
 ];
 $smarty->assign('type_names', $type_names);
 
-$order_logs = \Modules\Order\Helpers\OrderLogHelper::getOrderLogs($orderid);
+$order_logs = OrderLogHelper::getOrderLogs($orderid);
 
 if (!empty($order_logs) && is_array($order_logs)) {
 
@@ -2987,7 +2988,7 @@ if (!empty($order["refund_groups"])) {
 }
 
 if (!empty($orderid)) {
-    $smarty->assign('cx_invoices', \Xcart\OrderCxInvoice::model()->findAll(\Xcart\SQLBuilder::getInstance()->addCondition('orderid = ' . $orderid)->addOrderBy('invoice_order_number')));
+    $smarty->assign('cx_invoices', OrderCxInvoice::model()->findAll(SQLBuilder::getInstance()->addCondition('orderid = ' . $orderid)->addOrderBy('invoice_order_number')));
 }
 
 # Assign the current location line
@@ -2995,8 +2996,8 @@ $smarty->assign("location", $location);
 
 $smarty->assign('authorise_url', Xcart::app()->router->url('order:authorise', ['order_id' => $orderid]));
 $smarty->assign('manual_url', Xcart::app()->router->url('order:manual_transaction', ['order_id' => $orderid]));
-$smarty->assign('order_store', new \Modules\Order\Stores\OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
-$smarty->assign('voided_reasons', \Modules\Order\Helpers\OrderHelper::getVoidedReasons());
+$smarty->assign('order_store', new OrderStore(OrderModel::objects()->get(['orderid' => $orderid])));
+$smarty->assign('voided_reasons', OrderHelper::getVoidedReasons());
 
 @include $xcart_dir . "/modules/gold_display.php";
 func_display("admin/home.tpl", $smarty);

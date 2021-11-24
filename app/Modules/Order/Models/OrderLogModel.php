@@ -2,6 +2,8 @@
 
 namespace Modules\Order\Models;
 
+use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
@@ -16,6 +18,8 @@ class OrderLogModel extends Model
     public const LOG_TYPE_CUSTOMER = 'C';
     public const LOG_TYPE_XCART = 'X';
     public const LOG_TYPE_SYSTEM = 'S';
+    public const LOG_TYPE_PAYMENT_PROCESS = 'PP';
+    public const LOG_TYPE_END_LINE = 'EL';
 
     public static function tableName()
     {
@@ -55,5 +59,23 @@ class OrderLogModel extends Model
                 'null' => false,
             ]
         ];
+    }
+    public static function createLog(int $order_id, string $type, string $log_text, string $login = null): bool
+    {
+        if (!$log_text) {
+            return false;
+        }
+        if (!$login) {
+            /** @var UserModel $user_model */
+            $login = Xcart::app()->user->login;
+        }
+
+        return static::objects()->create([
+            'orderid' => $order_id,
+            'type' => $type,
+            'date' => time(),
+            'login' => $login,
+            'log' => $log_text
+        ]);
     }
 }

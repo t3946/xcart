@@ -26,6 +26,7 @@ class AuthorizeRequest extends AbstractRequest
 
         $additionalParams = [
             'currency',
+            'dynamicCallbackUrl',
             'failUrl',
             'description',
             'language',
@@ -119,6 +120,19 @@ class AuthorizeRequest extends AbstractRequest
     public function setPageView($value)
     {
         return $this->setParameter('pageView', $value);
+    }
+
+    /**
+     * @param $value
+     * @return AuthorizeRequest
+     */
+    public function setDynamicCallbackUrl($value): AuthorizeRequest
+    {
+        return $this->setParameter('dynamicCallbackUrl', $value);
+    }
+    public function getDynamicCallbackUrl()
+    {
+        return $this->getParameter('dynamicCallbackUrl');
     }
 
     /**
@@ -248,7 +262,7 @@ class AuthorizeRequest extends AbstractRequest
             ],
             $data
         );
-
+        file_put_contents('/var/www/app/Modules/testick.txt', json_encode($data, true));
         $httpResponse = $this->httpClient->request(
             $this->getHttpMethod(),
             $url,

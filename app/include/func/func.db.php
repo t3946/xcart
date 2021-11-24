@@ -1,26 +1,32 @@
 <?php
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Schema\Column;
+use Modules\Core\Helpers\Cache;
+use Xcart\Connection;
+
 /**
  * @param $query
  * @param int|bool|null $cache
  *
- * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @return ResultStatement|mixed|null
+ * @throws \Doctrine\DBAL\Exception
  * @deprecated
  */
 function db_query($query, $cache = null)
 {
     $qcp = null;
 
-    if ($cache && \Xcart\Connection::getInstance()->getConfiguration()->getResultCacheImpl()) {
+    if ($cache && Connection::getInstance()->getConfiguration()->getResultCacheImpl()) {
         if (is_bool($cache)) {
-            $cache = \Modules\Core\Helpers\Cache::CACHE_HOUR;
+            $cache = Cache::CACHE_HOUR;
         }
 
         $qcp = new Doctrine\DBAL\Cache\QueryCacheProfile($cache);
     }
 
-    return \Xcart\Connection::getInstance()->executeQuery($query, [] ,[], $qcp);
+    return Connection::getInstance()->executeQuery($query, [] ,[], $qcp);
 }
 
 /**
@@ -28,14 +34,14 @@ function db_query($query, $cache = null)
  * @param array $params ['val1' => $val1, 'val2' => $val2, 'id' => $id]
  * @param array $types  \PDO Param type [\PDO::PARAM_NULL, \PDO::PARAM_SRT, \PDO::PARAM_INT]
  *
- * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @return ResultStatement|mixed|null
+ * @throws DBALException
  */
 function db_query_param($query, array $params, array $types = [])
 {
     list($query, $params) = db_prepare_params($query, $params);
 
-    return \Xcart\Connection::getInstance()->executeQuery($query, $params, $types);
+    return Connection::getInstance()->executeQuery($query, $params, $types);
 }
 
 function db_result($result, $offset)
@@ -74,7 +80,7 @@ function db_num_fields($result)
 
 function db_insert_id()
 {
-    return \Xcart\Connection::getInstance()->lastInsertId();
+    return Connection::getInstance()->lastInsertId();
 }
 
 function db_affected_rows($result)
@@ -84,7 +90,7 @@ function db_affected_rows($result)
 
 function db_mysql_get_server_info()
 {
-    return \Xcart\Connection::getInstance()->getWrappedConnection()->getServerVersion();
+    return Connection::getInstance()->getWrappedConnection()->getServerVersion();
 }
 
 function db_prepare_params($query, array $params = [])
@@ -191,8 +197,8 @@ function db_prepare_query($query, $params)
  * @param $query
  * @param array $params
  *
- * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @return ResultStatement|mixed|null
+ * @throws DBALException
  * @deprecated
  */
 function db_exec($query, $params = [])
@@ -209,8 +215,8 @@ function db_exec($query, $params = [])
  * @param array $params
  * @param array $types
  *
- * @return \Doctrine\DBAL\Driver\ResultStatement|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @return ResultStatement|mixed|null
+ * @throws DBALException
  */
 function db_exec_param($query, array $params, array $types = [])
 {
@@ -224,7 +230,7 @@ function db_exec_param($query, array $params, array $types = [])
  * @param $query
  *
  * @return array|bool
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  * @deprecated
  */
 function func_query($query, $cache = null)
@@ -247,7 +253,7 @@ function func_query($query, $cache = null)
  * @param array $types  \PDO Param type [\PDO::PARAM_NULL, \PDO::PARAM_SRT, \PDO::PARAM_INT]
  *
  * @return array|bool
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  */
 function func_query_param($query, array $params, array $types = [])
 {
@@ -271,7 +277,7 @@ function func_query_param($query, array $params, array $types = [])
  * @param $query
  *
  * @return array|mixed
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  * @deprecated
  */
 function func_query_first($query, $cache = null)
@@ -292,7 +298,7 @@ function func_query_first($query, $cache = null)
  * @param array $types
  *
  * @return array|mixed
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  *
  */
 function func_query_first_param($query, array $param, array $types = [])
@@ -311,7 +317,7 @@ function func_query_first_param($query, array $param, array $types = [])
  * @param $query
  *
  * @return bool|mixed
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  * @deprecated use func_query_first_cell_param
  */
 function func_query_first_cell($query, $cache = null)
@@ -330,7 +336,7 @@ function func_query_first_cell($query, $cache = null)
  * @param array $types
  *
  * @return bool|mixed
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  */
 function func_query_first_cell_param($query, array $params, array $types = [])
 {
@@ -347,7 +353,7 @@ function func_query_first_cell_param($query, array $params, array $types = [])
  * @param int $column
  *
  * @return array
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  * @deprecated use func_query_column_param
  */
 function func_query_column($query, $column = 0, $cache = false)
@@ -374,7 +380,7 @@ function func_query_column($query, $column = 0, $cache = false)
  * @param int $column
  *
  * @return array
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  */
 function func_query_column_param($query, array $params, array $types = [], $column = 0)
 {
@@ -402,7 +408,7 @@ function func_query_column_param($query, array $params, array $types = [], $colu
  * @param bool $is_ignore
  *
  * @return bool|string
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  * @deprecated
  */
 function func_array2insert($tbl, $arr, $is_replace = false, $is_ignore = false)
@@ -461,7 +467,7 @@ function func_array2insert($tbl, $arr, $is_replace = false, $is_ignore = false)
  * @param bool $is_ignore
  *
  * @return bool|null|string
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  */
 function func_array2insert_new($tbl, array $data, $is_replace = false, $is_ignore = false)
 {
@@ -492,7 +498,7 @@ function func_array2insert_new($tbl, array $data, $is_replace = false, $is_ignor
 
 //    $data = func_init_default_values($tbl, $data);
 
-    $connection = \Xcart\Connection::getInstance();
+    $connection = Connection::getInstance();
 
     $columnList = [];
     $paramPlaceholders = [];
@@ -526,8 +532,8 @@ function func_array2insert_new($tbl, array $data, $is_replace = false, $is_ignor
  * @param $arr
  * @param string $where
  *
- * @return bool|\Doctrine\DBAL\Driver\ResultStatement|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @return bool|ResultStatement|mixed|null
+ * @throws DBALException
  * @deprecated
  */
 function func_array2update($tbl, $arr, $where = '')
@@ -563,8 +569,8 @@ function func_array2update($tbl, $arr, $where = '')
  * @param $arr
  * @param string $where
  *
- * @return bool|\Doctrine\DBAL\Driver\ResultStatement|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @return bool|ResultStatement|mixed|null
+ * @throws DBALException
  * @deprecated
  */
 function func_array2update_nullable($tbl, $arr, $where = '')
@@ -605,7 +611,7 @@ function func_array2update_nullable($tbl, $arr, $where = '')
  * @param string|array $where string statimern or associative array - implement as col AND col
  *
  * @return bool|int|mixed|null
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  */
 function func_array2update_new($tbl, $data, $where = '')
 {
@@ -653,20 +659,20 @@ function func_array2update_new($tbl, $data, $where = '')
     }
 
 //    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues);
-    return \Xcart\Connection::getInstance()->executeUpdate($sql, $paramValues, $paramTypes);
+    return Connection::getInstance()->executeUpdate($sql, $paramValues, $paramTypes);
 }
 
 function func_get_sql_type($value)
 {
     if (is_null($value)) {
-        return \PDO::PARAM_NULL;
+        return PDO::PARAM_NULL;
     }
 
     if (is_numeric($value)) {
-        return \PDO::PARAM_INT;
+        return PDO::PARAM_INT;
     }
 
-    return \PDO::PARAM_STR;
+    return PDO::PARAM_STR;
 }
 
 /**
@@ -676,7 +682,7 @@ function func_get_sql_type($value)
  * @param bool $only_first
  *
  * @return array
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  * @deprecated
  */
 function func_query_hash($query, $column = false, $is_multirow = true, $only_first = false, $cache = null)
@@ -839,7 +845,7 @@ function func_build_join($jname, $join)
  * @param $fields
  *
  * @return bool
- * @throws \Doctrine\DBAL\DBALException
+ * @throws DBALException
  */
 function func_check_tbl_fields($tbl, $fields)
 {
@@ -871,9 +877,9 @@ function func_check_tbl_fields($tbl, $fields)
 
         if (!isset($storage[$t])) {
             $storage[$t] = array_map(function ($field) {
-                /** @var \Doctrine\DBAL\Schema\Column $field */
+                /** @var Column $field */
                 return $field->getName();
-            }, \Xcart\Connection::getInstance()->getSchemaManager()->listTableColumns($t)
+            }, Connection::getInstance()->getSchemaManager()->listTableColumns($t)
             );
 
             if (empty($storage[$t])) {
@@ -908,7 +914,7 @@ function func_init_default_values($tbl, $data)
     }
 
     if (!isset($storage_fields[$tbl])) {
-        $storage_fields[$tbl] = \Xcart\Connection::getInstance()->getSchemaManager()->listTableColumns($tbl);
+        $storage_fields[$tbl] = Connection::getInstance()->getSchemaManager()->listTableColumns($tbl);
 
         if (empty($storage_fields[$tbl])) {
             return false;
@@ -916,7 +922,7 @@ function func_init_default_values($tbl, $data)
     }
 
     if (!empty($storage_fields[$tbl])) {
-        /** @var \Doctrine\DBAL\Schema\Column $field */
+        /** @var Column $field */
         foreach ($storage_fields[$tbl] as $field) {
             if (!isset($data[$field->getName()]) || (is_null($data[$field->getName()]) && $field->getNotnull())) {
 

@@ -38,6 +38,11 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
         return array_key_exists('orderId', $this->data) ? $this->data['orderId'] : null;
     }
 
+    public function getTransactionReference()
+    {
+        return $this->getOrderId() ?? null;
+    }
+
     /**
      * @return string
      */

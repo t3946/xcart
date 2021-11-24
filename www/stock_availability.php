@@ -1,4 +1,7 @@
 <?php
+
+use Modules\Order\Models\OrderLogModel;
+
 require "./top.inc.php";
 $search_all_website = true;
 $current_area = 'C';
@@ -232,10 +235,7 @@ if ($secure_check == $om && !empty($s) && !empty($o) && !empty($m)){
         	}
 
 		db_query("UPDATE $sql_tbl[order_groups] SET dc_status='M' WHERE orderid = '$o' AND manufacturerid='$m'");
-
-	        if (!empty($log)){
-        	        func_log_order($o, 'X', $log, 'Distributor: '.$code);
-	        }
+			OrderLogModel::createLog($o, OrderLogModel::LOG_TYPE_XCART, $log, 'Distributor: '.$code);
 
 
 	    } else {

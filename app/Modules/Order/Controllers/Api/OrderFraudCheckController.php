@@ -362,7 +362,7 @@ HTML;
                 'question_weight' => (float)$answer->question->weight,
                 'manual_action' => $answer->manual_action ?? null
             ];
-            array_push($ar_res_answer[$answer->question->type], $ar_answer);
+            $ar_res_answer[$answer->question->type][] = $ar_answer;
         }
         return $ar_res_answer;
     }

@@ -5,6 +5,7 @@ namespace Modules\Order\Commands;
 
 
 use DateTime;
+use Modules\Order\Models\OrderLogModel;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Forms\Helpers\SnippetHelper;
@@ -97,7 +98,7 @@ class ThankYouEmailCommand extends Command
                             $orderModel->save();
 
                             $log = 'Thank you email sent by system <br />';
-                            func_log_order($orderModel->orderid, 'X', $log);
+                            OrderLogModel::createLog($orderModel->orderid, OrderLogModel::LOG_TYPE_XCART, $log);
                         }
                     }
                 }

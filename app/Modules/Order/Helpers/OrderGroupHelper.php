@@ -5,7 +5,7 @@ namespace Modules\Order\Helpers;
 
 use DateTime;
 use DateTimeZone;
-use Xcart\App\Exceptions\Exception;
+use Modules\Order\Models\OrderLogModel;
 use Xcart\App\QueryBuilder\Q\QOrNot;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderModel;
@@ -131,7 +131,7 @@ class OrderGroupHelper
     public static function dispatchError($order_model, $section_name_top_message, $log): void
     {
         $log .= '<br />' . $section_name_top_message['content'];
-        func_log_order($order_model->orderid, 'X', $log, Xcart::app()->user->login);
+        OrderLogModel::createLog($order_model->orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
         Xcart::app()->request->session->add('section_name_top_message', $section_name_top_message);
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_model->orderid}");

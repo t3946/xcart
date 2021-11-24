@@ -4,6 +4,7 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Core\Models\GlobalConfigModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\SiteConfigModel;
 use TheIconic\Tracking\GoogleAnalytics\Analytics;
@@ -40,7 +41,7 @@ class OrderAnalyticsHelper
                     ->setClientId($clientId)
                     ->sendEvent();
             } catch (\Exception $e) {
-                func_log_order($model->orderid, 'X', 'GA Error: ' . $e->getMessage(), Xcart::app()->user->login);
+                OrderLogModel::createLog($model->orderid, OrderLogModel::LOG_TYPE_XCART, 'GA Error: ' . $e->getMessage());
             }
         }
     }

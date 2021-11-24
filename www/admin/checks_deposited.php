@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Amazon\Models\AmazonReorderBatchModel;
+use Modules\Order\Models\OrderLogModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
@@ -172,7 +173,7 @@ if ($REQUEST_METHOD === 'POST') {
             foreach ($checks_deposited_orders as $k => $v) {
 
                 $log = "checks_deposited_orders_{$current_time}";
-                func_log_order($v['orderid'], 'S', $log, $login);
+                OrderLogModel::createLog($v['orderid'], OrderLogModel::LOG_TYPE_SYSTEM, $log);
 
                 $grand_total_currency = func_query_first("SELECT total, currency FROM $sql_tbl[orders] WHERE orderid='$v[orderid]'");
 
@@ -233,10 +234,7 @@ if ($REQUEST_METHOD === 'POST') {
                             $orders_NOT_marked_as_paid[] = $v['orderid'];
                         }
                     }
-
-                    if ($log != '') {
-                        func_log_order($v['orderid'], 'X', $log, $login);
-                    }
+                    OrderLogModel::createLog($v['orderid'], OrderLogModel::LOG_TYPE_XCART, $log);
                 }
 
             }

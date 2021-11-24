@@ -4,6 +4,7 @@ namespace Xcart;
 use Modules\Cart\Models\CouponOrderModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\ReferrerModel;
@@ -236,7 +237,7 @@ class Order extends Data
         if ($oNewStatus->getField('code') !== $oOldStatus->getField('code')) {
             $this->updateField('vn_status', $sNewStatus);
             $log = "vn_status: {$oOldStatus->getField('name')} -> {$oNewStatus->getField('name')}";
-            func_log_order($this->getOrderId(), 'X', $log);
+            OrderLogModel::createLog($this->getOrderId(), OrderLogModel::LOG_TYPE_XCART, $log);
             if ($sNewStatus === self::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED) {
                 $this->submitOrderEntry();
             }

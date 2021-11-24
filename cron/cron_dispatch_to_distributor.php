@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Order\Models\OrderLogModel;
+
 define("CIDEV_CRON_START", "CRON");
 
 require __DIR__ . DIRECTORY_SEPARATOR . "../www/top.inc.php";
@@ -78,8 +80,7 @@ while ($order = db_fetch_array($orders)) {
                 $log .= "<br />dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
                 db_query("UPDATE $sql_tbl[order_groups] SET dc_status='C', dc_dispatched_time='" . time() . "' WHERE orderid = '$order[orderid]' AND manufacturerid='$order[manufacturerid]'");
             }
-
-            func_log_order($order["orderid"], 'X', $log);
+            OrderLogModel::createLog($order['orderid'], OrderLogModel::LOG_TYPE_XCART, $log);
         }
     }
 }

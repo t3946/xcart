@@ -6,7 +6,12 @@
 
 //!defined('AREA_TYPE') ?: define('AREA_TYPE', null);
 
-use Modules\Core\Components\Profiler;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Modules\Core\Models\GlobalConfigModel;
+use Modules\Sites\Models\SiteModel;
+use Xcart\App\Cli\Cli;
+use Xcart\App\Main\Xcart;
+use Xcart\Connection;
 
 if (!defined('XCART_START')) {
     header("Location: index.php");
@@ -18,7 +23,6 @@ if (empty($_SERVER['SERVER_NAME']) && !empty($_SERVER['HTTP_HOST'])) {
     $_SERVER['SERVER_NAME'] = $s_name_a[0];
 }
 
-Profiler::getInstance()->addPoint();
 
 @require_once $xcart_dir . "/prepare.php";
 
@@ -37,7 +41,6 @@ if (!@is_readable($xcart_dir . "/config.php")) {
     exit;
 }
 
-Profiler::getInstance()->addPoint();
 
 @require_once $xcart_dir . "/config.php";
 
@@ -48,7 +51,7 @@ if (empty($XCART_APP_CONFIG)) {
         $settings_path = $xcart_dir .'/../app/config/settings.php';
     }
 
-    if (\Xcart\App\Cli\Cli::isCli()) {
+    if (Cli::isCli()) {
         $settings_path = $xcart_dir .'/../app/config/settings_console.php';
     }
 
@@ -58,12 +61,10 @@ else {
     $app_settings = $XCART_APP_CONFIG;
 }
 
-Profiler::getInstance()->addPoint();
 
-\Xcart\App\Main\Xcart::init($app_settings);
-\Xcart\App\Main\Xcart::app()->beforeRun();
+Xcart::init($app_settings);
+Xcart::app()->beforeRun();
 
-Profiler::getInstance()->addPoint('xcart initialized');
 
 if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
 
@@ -76,7 +77,6 @@ if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
     }
 }
 
-Profiler::getInstance()->addPoint();
 
 #
 # Initialize logging
@@ -87,18 +87,17 @@ $dieError = "Sorry, the shop is inaccessible temporarily. Please try again later
 global $sql_tbl;
 
 try {
-    Xcart\Connection::getInstanceFromApp()->connect();
+    Connection::getInstanceFromApp()->connect();
 }
-catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+catch (ConnectionException $e) {
     x_log_add('SQL', $e->getMessage(), true);
     die($dieError);
 }
-catch (\Exception $e) {
+catch (Exception $e) {
     x_log_add('php', $e->getMessage(), true);
     die($dieError);
 }
 
-Profiler::getInstance()->addPoint();
 
 $file_temp_dir = $var_dirs["tmp"];
 
@@ -123,7 +122,6 @@ $artss_code           = 'ART';
 #
 //error_reporting($x_error_reporting);
 
-Profiler::getInstance()->addPoint();
 
 #
 # Multi Storefront
@@ -132,21 +130,12 @@ if (!empty($current_storefront)) {
     @include_once $xcart_dir . 'modules/Multiple_Storefronts/sf_config.php';
 }
 
-Profiler::getInstance()->addPoint();
 
 #
 # Include functions
 #
 
 include_once($xcart_dir . "/include/bench.php");
-
-#
-# Connect to database
-#
-/*$db_connect_limit = 5;
-while ($db_connect_limit-- > 0 && !@db_connect($sql_host, $sql_user, $sql_password)) { }
-db_select_db($sql_db) || die("Sorry, the shop is inaccessible temporarily. Please try again later.");*/
-
 
 if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
     define("X_MYSQL_VERSION", $match[1]);
@@ -166,13 +155,13 @@ if (preg_match("/^(\d+\.\d+\.\d+)/", db_mysql_get_server_info(), $match)) {
     }
 }
 
-Profiler::getInstance()->addPoint();
 
 #
 ## Set the session name here
 ###
 
-$cidev_tmp_storefrontid = func_query_first_cell("SELECT storefrontid FROM xcart_storefronts WHERE domain='{$_SERVER['HTTP_HOST']}'");
+$storefront = SiteModel::objects()->get(['domain' => $_SERVER['HTTP_HOST']]);
+$cidev_tmp_storefrontid = $storefront->pk;
 
 if (empty($cidev_tmp_storefrontid)) {
     $cidev_tmp_storefrontid = '0';
@@ -252,7 +241,6 @@ $var_dirs_rules = [
         ".htaccess" => "Deny from all",
     ],
 ];
-Profiler::getInstance()->addPoint();
 
 foreach ($var_dirs as $k => $v) {
     if (!file_exists($v) || !is_dir($v)) {
@@ -287,9 +275,8 @@ if (!@include $xcart_dir . "/smarty.php") {
     exit;
 }
 
-Profiler::getInstance()->addPoint();
 
-$smarty->assign('xcartApp',\Xcart\App\Main\Xcart::app());
+$smarty->assign('xcartApp', Xcart::app());
 #
 # Init miscellaneous vars
 #
@@ -344,44 +331,22 @@ $smarty->assign("files_location", $files_dir_name);
 
 $templates_repository = $xcart_dir . $templates_repository_dir;
 
-#
-# Set MySQL variable 'max_join_size'
-#
-//$mjsize = func_query_first("SHOW VARIABLES LIKE 'max_join_size'");
-//if (intval($mjsize['Value']) < 1073741824) {
-//    db_query("SET OPTION SQL_MAX_JOIN_SIZE=1073741824");
-//}
-//unset($mjsize);
-Profiler::getInstance()->addPoint();
-#
-# Read config variables from Database
-# This variables are used inside php scripts, not in smarty templates
-#
-
-Profiler::getInstance()->addPoint();
-
-$c_result = db_query("SELECT name, value, category FROM $sql_tbl[config] WHERE type != 'separator'", false);
+$config_items = GlobalConfigModel::objects()->exclude(['type' => 'separator'])->valuesList(['name', 'value', 'category']);
 $config   = [];
-Profiler::getInstance()->addPoint();
-if ($c_result) {
-    while ($row = db_fetch_row($c_result)) {
-        if (!empty($row[2])) {
-            $config[$row[2]][$row[0]] = $row[1];
-        }
-        else {
-            $config[$row[0]] = $row[1];
-        }
+/** @var GlobalConfigModel $config_item */
+foreach ($config_items as $config_item) {
+    if (!empty($config_item['category'])) {
+        $config[$config_item['category']][$config_item['name']] = $config_item['value'];
+    } else {
+        $config[$config_item['name']] = $config_item['value'];
     }
 }
-db_free_result($c_result);
-Profiler::getInstance()->addPoint();
 $config["Sessions"]["session_length"] = $use_session_length;
 
 #
 # Include data cache functionality
 #
 @include_once($xcart_dir . "/include/data_cache.php");
-Profiler::getInstance()->addPoint();
 #
 # Timezone offset (sec) = N hours x 60 minutes x 60 seconds
 #
@@ -430,11 +395,8 @@ if (!defined("QUICK_START")) {
 #
 # Prepare session
 #
-Profiler::getInstance()->addPoint();
 @include_once $xcart_dir . "/include/sessions.php";
-Profiler::getInstance()->addPoint();
 @include_once $xcart_dir . "/include/unallowed_request.php";
-Profiler::getInstance()->addPoint();
 
 if (!defined('QUICK_START')) {
     @include_once($xcart_dir . "/include/blowfish.php");
@@ -447,7 +409,6 @@ if (!defined('QUICK_START')) {
 
 $search_all_website = isset($search_all_website) ? $search_all_website : false;
 
-Profiler::getInstance()->addPoint();
 
 $t                      = parse_url($config['Search_All']['search_all_website_url']);
 $search_all_website_url = $t['host'];
@@ -548,7 +509,7 @@ if (!defined("QUICK_START")) {
         'department'  => ['avail' => 'Y', 'required' => 'Y'],
     ];
 
-    if ($config["General"]["use_counties"] != "Y") {
+    if ($config["General"]["use_counties"] !== "Y") {
         #
         # Disable county usage
         #
@@ -582,15 +543,6 @@ if (!defined("QUICK_START")) {
 
     $smarty->assign("card_types", $config["card_types"]);
 
-    #
-    # Include webmaster mode
-    #
-//    @include_once($xcart_dir . "/include/webmaster.php");
-//
-//    x_session_register("editor_mode");
-//    if ($config["General"]["enable_debug_console"] == "Y" || $editor_mode == 'editor') {
-//        $smarty->debugging = true;
-//    }
 
     #
     # IP addresses
@@ -614,7 +566,6 @@ if (!defined("QUICK_START")) {
     #
     @include_once($xcart_dir . "/include/adaptives.php");
 }
-Profiler::getInstance()->addPoint();
 #
 # Read Modules and put in into $active_modules
 #
@@ -624,7 +575,6 @@ $active_modules       = func_data_cache_get("modules");
 $addons        = [];
 $body_onload   = "";
 $tbl_demo_data = $tbl_keys = [];
-Profiler::getInstance()->addPoint();
 if ($active_modules) {
     if (!empty($active_modules['Multiple_Storefronts'])) {
         if (file_exists($xcart_dir . '/modules/Multiple_Storefronts/config.php')) {
@@ -635,23 +585,8 @@ if ($active_modules) {
             include $xcart_dir . '/modules/Multiple_Storefronts/func.php';
         }
     }
-    Profiler::getInstance()->addPoint();
     foreach ($active_modules as $active_module => $tmp) {
-        if ($active_module != 'Multiple_Storefronts') {
-
-            if ($active_module == "Xcart_Mobile") {
-
-                if (empty($cidev_tmp_storefrontid)) {
-                    $cidev_tmp_Enable_Mobile_skin = $config["Appearance"]["Enable_Mobile_skin"];
-                }
-                else {
-                    $cidev_tmp_Enable_Mobile_skin = func_query_first_cell("SELECT value FROM $sql_tbl[storefronts_config] WHERE name='Enable_Mobile_skin' AND storefrontid='$cidev_tmp_storefrontid'");
-                }
-
-                if ($cidev_tmp_Enable_Mobile_skin != "Y") {
-                    continue;
-                }
-            }
+        if ($active_module !== 'Multiple_Storefronts') {
 
             if (file_exists($xcart_dir . "/modules/" . $active_module . "/config.php")) {
                 include $xcart_dir . "/modules/" . $active_module . "/config.php";
@@ -662,19 +597,17 @@ if ($active_modules) {
             }
         }
 
-        Profiler::getInstance()->addPoint("config: {$active_module}");
     }
 }
 
 
-if (empty($active_modules["CIDEV_Best_Search_Filter"]) && $current_area != 'C') {
+if (empty($active_modules["CIDEV_Best_Search_Filter"]) && $current_area !== 'C') {
     include $xcart_dir . "/modules/CIDEV_Best_Search_Filter/config.php";
 }
 
 $smarty->assignByRef("active_modules", $active_modules);
 $mail_smarty->assignByRef("active_modules", $active_modules);
 
-Profiler::getInstance()->addPoint();
 /* speed optimizations */
 $config['setup_images'] = func_data_cache_get("setup_images");
 foreach ($config['available_images'] as $k => $v) {
@@ -698,14 +631,6 @@ if (empty($active_modules['Image_Verification'])) {
     x_session_unregister("antibot_validation_val");
 }
 
-/** Временно отключили для ускорения отдачи категории ботам */
-//if (
-//    $is_robot == "Y"
-//    || defined("IS_ROBOT")
-//    || (empty($$XCART_SESSION_NAME) && empty($XCARTSESSID))
-//) {
-//    $config["Appearance"]["products_per_page"] = 100;
-//}
 
 if (!defined("QUICK_START")) {
 
@@ -723,14 +648,13 @@ if (!defined("QUICK_START")) {
     $smarty->assign("rdelim", "}");
     $mail_smarty->assign("rdelim", "}");
 
-    if ((isset($_GET['delimiter']) && $_GET['delimiter'] == 'tab') || (isset($_POST['delimiter']) && $_POST['delimiter'] == 'tab')) {
+    if ((isset($_GET['delimiter']) && $_GET['delimiter'] === 'tab') || (isset($_POST['delimiter']) && $_POST['delimiter'] === 'tab')) {
         $delimiter = "\t";
     }
 
     // Assign email regular expression
     $smarty->assign('clean_url_validation_regexp', func_clean_url_validation_regexp());
 }
-Profiler::getInstance()->addPoint();
 #
 # Init modules
 #
@@ -738,13 +662,11 @@ if (is_array($active_modules)) {
     foreach ($active_modules as $__k => $__v) {
         if (file_exists($xcart_dir . "/modules/" . $__k . "/init.php")) {
             include $xcart_dir . "/modules/" . $__k . "/init.php";
-            Profiler::getInstance()->addPoint("init: {$__k}");
         }
     }
 }
-Profiler::getInstance()->addPoint();
 
-if (defined('CIDEV_CRON_START') && CIDEV_CRON_START == "CRON") {
+if (defined('CIDEV_CRON_START') && CIDEV_CRON_START === "CRON") {
 
     if (empty($_SERVER['HTTP_HOST'])) {
         $_SERVER['SERVER_NAME'] = $_SERVER['HTTP_HOST'] = MAIN_SF_DOMAIN;
@@ -826,7 +748,6 @@ $smarty->assign('FROOGLE_TITLE_LENGTH', FROOGLE_TITLE_LENGTH);
 #
 $smarty->assign('map_bridge_mouseover_text', str_replace("\r", '<br />', $config['Product_Page']['map_bridge_mouseover_text']));
 
-Profiler::getInstance()->addPoint();
 #
 # Remember visitor for a long time period
 #
@@ -841,17 +762,6 @@ $linked_out_category_indexes = ["1", "2", "3", "4", "5", "6"];
 $smarty->assign("linked_out_category_indexes", $linked_out_category_indexes);
 $bench2 = func_microtime();
 
-if (false && !function_exists('fn_shutdown')) {
-    function fn_shutdown()
-    {
-        $error = error_get_last();
-        x_log_flag('log_debug_messages', 'debug', $error['message'] . ' in file ' . $error['file'], true, 1);
-    }
-
-    register_shutdown_function('fn_shutdown');
-}
-
-Profiler::getInstance()->addPoint();
 
 $smarty->registerPlugin('function','getBanners', ['Xcart\Helpers\Banners', 'getBannerSmarty']);
 $smarty->registerPlugin('function','getSliderData', ['Xcart\Helpers\SliderData', 'getSliderDataSmarty']);
