@@ -1,13 +1,31 @@
 import React from "react";
+import mbToB from "@client/jsx/utils/mbToB";
+
+export interface ICustomFormatProps {
+  maxSizeMB: number;
+  formats: string[];
+}
 
 /**
  * validate files from input file on max file size
  */
 export default function validatorMaxFileSize(
   inputRef: React.MutableRefObject<Record<any, any>>,
-  maxSizeMB: number
+  size: number | ICustomFormatProps[]
 ): (value: any, testContext: any) => boolean {
-  const maxSizeB = maxSizeMB * 1024 * 1024;
+  function getMaxSizeB(file) {
+    if (typeof size === "number") {
+      return mbToB(size);
+    } else {
+      for (let i = 0; i < size.length; i++) {
+        const { formats, maxSizeMB } = size[i];
+
+        if (formats.includes(file.type)) {
+          return mbToB(maxSizeMB);
+        }
+      }
+    }
+  }
 
   return function (): boolean {
     const files = inputRef.current.files;
@@ -16,7 +34,7 @@ export default function validatorMaxFileSize(
     for (let i = 0; i < filesNumber; i++) {
       const file = files[i];
 
-      if (file.size > maxSizeB) {
+      if (file.size > getMaxSizeB(file)) {
         return false;
       }
     }

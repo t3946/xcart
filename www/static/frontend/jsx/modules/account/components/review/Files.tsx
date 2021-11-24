@@ -3,9 +3,16 @@ import Film from "@client/jsx/modules/icon/components/font-awesome/film/Film";
 import PlusPanelButton from "@client/modules/account/components/common/PlusPanelButton";
 import ModalTimes from "@client/modules/icon/components/account/ModalTimes";
 import Camera from "@client/modules/icon/components/account/camera/Camera";
+import mbToB from "@client/jsx/utils/mbToB";
 
 interface IProps {
   setFiles: any;
+  inputRef: any;
+  handleChange: any;
+  imagesFormats: string[];
+  videosFormats: string[];
+  maxImageSize: number;
+  maxVideoSize: number;
 }
 
 interface FileInterface {
@@ -16,7 +23,14 @@ interface FileInterface {
 }
 
 const Files: React.FC<IProps> = function (props: IProps) {
-  const inputFileRef = React.useRef<HTMLInputElement>();
+  const {
+    inputRef,
+    handleChange,
+    imagesFormats,
+    videosFormats,
+    maxImageSize,
+    maxVideoSize,
+  } = props;
   const [files, setFiles] = React.useState<FileInterface[]>([]);
 
   function updateFilesList(newFiles) {
@@ -37,19 +51,37 @@ const Files: React.FC<IProps> = function (props: IProps) {
     updateFilesList(newFiles);
   }
 
-  function changeInputFile() {
-    const inputFiles = inputFileRef.current.files;
-    const reader = new FileReader();
+  function changeInputFile(e) {
+    handleChange(e);
 
-    reader.readAsDataURL(inputFiles[0]);
+    const inputFiles = inputRef.current.files;
 
     for (let i = 0; i < inputFiles.length; i++) {
       const file = inputFiles[i];
       const reader = new FileReader();
 
+      console.log("Files validation");
+
+      //incorrect format
       if (
-        file.type.indexOf("image") === -1 &&
-        file.type.indexOf("video") === -1
+        !imagesFormats.includes(file.type) &&
+        !videosFormats.includes(file.type)
+      ) {
+        continue;
+      }
+
+      //incorrect image size
+      if (
+        imagesFormats.includes(file.type) &&
+        file.size > mbToB(maxImageSize)
+      ) {
+        continue;
+      }
+
+      //incorrect video size
+      if (
+        videosFormats.includes(file.type) &&
+        file.size > mbToB(maxVideoSize)
       ) {
         continue;
       }
@@ -137,15 +169,15 @@ const Files: React.FC<IProps> = function (props: IProps) {
 
       <PlusPanelButton
         classes={{
-          container: "form-review-add-file-button d-none d-md-flex mb-20",
+          container: "form-review-add-file-button d-none d-md-flex",
           icon: "form-review-add-file-button-icon",
         }}
-        onClick={() => inputFileRef.current.click()}
+        onClick={() => inputRef.current.click()}
       />
 
       <div
         className="d-md-none form-review-add-file-button_mobile d-flex align-items-center justify-content-center"
-        onClick={() => inputFileRef.current.click()}
+        onClick={() => inputRef.current.click()}
       >
         <Camera />
       </div>
@@ -153,9 +185,10 @@ const Files: React.FC<IProps> = function (props: IProps) {
       <input
         type="file"
         onChange={changeInputFile}
-        ref={inputFileRef}
+        ref={inputRef}
         multiple={true}
         className={"d-none"}
+        name={"files"}
       />
     </div>
   );

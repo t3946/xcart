@@ -7,12 +7,14 @@ import appData from "@client/jsx/utils/AppData";
 import SelectRating from "@client/modules/account/components/review/SelectRating";
 import { Form as RBForm } from "react-bootstrap";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
-
+import classnames from "classnames";
 import {
   createReviewAction,
   getVideoHeaderAction,
 } from "@client/jsx/redux/actions/account-actions/ReviewActions";
 import Files from "@client/jsx/modules/account/components/review/Files";
+import validatorMaxFileSize from "@client/jsx/utils/yup/validatorMaxFileSize";
+import validatorFileFormat from "@client/jsx/utils/yup/validatorFileFormat";
 
 const ReviewForm = (): any => {
   const product = appData.review.product;
@@ -25,13 +27,47 @@ const ReviewForm = (): any => {
     textBody: "",
     publicName: user.public_name,
     videoLink: "",
+    files: null,
   };
+
+  const supportedFormats = {
+    images: ["image/jpg", "image/jpeg", "image/png"],
+    videos: ["video/mp4", "video/ogg", "video/webm"],
+  };
+  const inputFileRef = React.useRef<HTMLInputElement>();
+  const maxImageSizeMB = 20;
+  const maxVideoSizeMB = 100;
+
   const validationSchema = yup.object().shape({
     overall: yup.number(),
     headLine: yup.string().required("Headline is a required field"),
     textBody: yup.string().required("Review text line is a required field"),
     publicName: yup.string(),
     videoLink: yup.string().nullable(true),
+    files: yup
+      .mixed()
+      .test(
+        "fileSize",
+        `Maximum uploaded file size: ${maxImageSizeMB} MB for images and ${maxVideoSizeMB} MB for videos`,
+        validatorMaxFileSize(inputFileRef, [
+          {
+            formats: supportedFormats.images,
+            maxSizeMB: maxImageSizeMB,
+          },
+          {
+            formats: supportedFormats.videos,
+            maxSizeMB: maxVideoSizeMB,
+          },
+        ])
+      )
+      .test(
+        "fileType",
+        "Unsupported file format",
+        validatorFileFormat(inputFileRef, [
+          ...supportedFormats.images,
+          ...supportedFormats.videos,
+        ])
+      ),
   });
   const ratings = appData.ratings.ratings;
   const [isCheckFileLink, setIsCheckFileLink] = React.useState(false);
@@ -62,7 +98,7 @@ const ReviewForm = (): any => {
     );
   }
 
-  function submit(values) {
+  function submit(values, actions) {
     const form = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -90,7 +126,11 @@ const ReviewForm = (): any => {
       createReviewAction({
         form,
 
-        success() {
+        success(res) {
+          if (res.errors) {
+            actions.setErrors(res.errors);
+          }
+
           setIsSubmitting(false);
         },
       })
@@ -100,7 +140,7 @@ const ReviewForm = (): any => {
   function featuresRatingsTemplate(values, handleChange, setValues) {
     const templates = [];
 
-    ratings.features.forEach(function (e) {
+    ratings.features.forEach(function (e, i) {
       templates.push(
         <div className={"form-review__feature-rating"}>
           <div className={"form-review-feature-title mb-1"}>{e.name}</div>
@@ -117,6 +157,7 @@ const ReviewForm = (): any => {
               star: "form-review-star form-review-star_feature",
               container: "form-review-rating-container",
             }}
+            key={i}
           />
         </div>
       );
@@ -262,13 +303,32 @@ const ReviewForm = (): any => {
                   <h2 className={"account-inner-page-header-2 mb-1"}>
                     Add a photo or video
                   </h2>
-
                   <p className={"form-review-comment"}>
                     Shoppers find images and videos more helpful than text
                     alone.
                   </p>
 
-                  <Files setFiles={setFiles} />
+                  <RBForm.Group
+                    controlId="videoLink"
+                    className={"w-100 form-group_full-width mb-20"}
+                  >
+                    <Files
+                      handleChange={handleChange}
+                      setFiles={setFiles}
+                      inputRef={inputFileRef}
+                      imagesFormats={supportedFormats.images}
+                      videosFormats={supportedFormats.videos}
+                      maxImageSize={maxImageSizeMB}
+                      maxVideoSize={maxVideoSizeMB}
+                    />
+
+                    <RBForm.Control.Feedback
+                      type="invalid"
+                      className={classnames({ "d-block": !!errors.files })}
+                    >
+                      {errors.files}
+                    </RBForm.Control.Feedback>
+                  </RBForm.Group>
 
                   <RBForm.Group
                     controlId="videoLink"
