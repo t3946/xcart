@@ -129,5 +129,9 @@ import Labels from "@client/jsx/modules/product/Components/Labels/Labels";
 (() => {
   const target = document.getElementById("product-labels-target");
 
+  if (!target) {
+    return;
+  }
+
   render(<Labels />, target);
 })();
