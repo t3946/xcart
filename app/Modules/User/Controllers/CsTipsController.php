@@ -46,14 +46,11 @@ class CsTipsController extends FrontendController
 
         if (empty($request->post->get('cash'))) {
 
-            $order_log_model = new OrderLogModel();
-            $order_log_model->orderid = $csTipsModel->order_id;
-            $order_log_model->type = 'C';
-            $order_log_model->date = time();
-            $order_log_model->login = Xcart::app()->user->login;
-            $order_log_model->log = "Customer left no tips";
-
-            $order_log_model->save();
+            OrderLogModel::createLog(
+                $csTipsModel->order_id,
+                OrderLogModel::LOG_TYPE_CUSTOMER,
+                'Customer left no tips'
+            );
 
             $this->getRequest()->redirect("/");
         }
