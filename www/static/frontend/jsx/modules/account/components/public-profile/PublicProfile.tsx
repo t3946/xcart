@@ -16,6 +16,8 @@ import StoreInterface from "@client/modules/account/ts/types/store.type";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import AvatarEditor from "@client/modules/account/components/public-profile/AvatarEditor";
 import dataURItoBlob from "@client/jsx/utils/dataURItoBlob";
+import validatorMaxFileSize from "@client/jsx/utils/yup/validatorMaxFileSize";
+import validatorFileFormat from "@client/jsx/utils/yup/validatorFileFormat";
 
 const PublicProfile = (): any => {
   const dispatch = useDispatch();
@@ -30,7 +32,6 @@ const PublicProfile = (): any => {
   const [show, setShow] = React.useState(alert !== null);
   const alertShowTimeMs = 3000;
   const maxMB = 10;
-  const FILE_SIZE_B = maxMB * 1024 * 1024;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
     "/static/frontend/images/pages/account/default-avatar.svg";
@@ -46,6 +47,9 @@ const PublicProfile = (): any => {
   };
 
   const nameRegex = /^[A-Za-z][A-Za-z0-9 .\-']+$/;
+  const inputFileRef = React.useRef<HTMLInputElement>();
+  const imageRef = React.useRef<HTMLImageElement>();
+  const imagePreviewRef = React.useRef<HTMLDivElement>();
 
   const validationSchema = yup.object().shape({
     publicName: yup
@@ -57,31 +61,17 @@ const PublicProfile = (): any => {
     location: yup.string(),
     avatar_image: yup
       .mixed()
-      .test("fileSize", `Maximum uploaded file size: ${maxMB} MB`, function () {
-        const fileInput: Record<any, any> =
-          document.getElementById("avatar_image");
-
-        if (!fileInput.files[0]) {
-          return true;
-        }
-
-        return fileInput.files[0].size <= FILE_SIZE_B;
-      })
-      .test("fileType", "Unsupported File Format", function () {
-        const fileInput: Record<any, any> =
-          document.getElementById("avatar_image");
-
-        if (!fileInput.files[0]) {
-          return true;
-        }
-
-        return SUPPORTED_FORMATS.includes(fileInput.files[0].type);
-      }),
+      .test(
+        "fileSize",
+        `Maximum uploaded file size: ${maxMB} MB`,
+        validatorMaxFileSize(inputFileRef, maxMB)
+      )
+      .test(
+        "fileType",
+        "Unsupported File Format",
+        validatorFileFormat(inputFileRef, SUPPORTED_FORMATS)
+      ),
   });
-
-  const inputFileRef = React.useRef<HTMLInputElement>();
-  const imageRef = React.useRef<HTMLImageElement>();
-  const imagePreviewRef = React.useRef<HTMLDivElement>();
 
   function submit(values, actions) {
     const formData = new FormData();
