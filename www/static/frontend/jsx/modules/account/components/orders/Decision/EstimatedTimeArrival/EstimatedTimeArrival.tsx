@@ -17,9 +17,7 @@ interface IProps {
   decision: DecisionsInterface;
 }
 
-const EstimatedTimeArrival: React.FC<IProps> = (
-  props: IProps
-) => {
+const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
   const { onChange, decision } = props;
   const dispatch = useDispatch();
 
@@ -119,21 +117,21 @@ const EstimatedTimeArrival: React.FC<IProps> = (
                 ETA Decision
               </h1>
 
-              {productCategories.inStock.length && (
+              {!!productCategories.inStock.length && (
                 <EstimatedTimeArrivalTable
                   tableType={TableTypes.inStock}
                   items={productCategories.inStock}
                 />
               )}
 
-              {productCategories.outOfStock.length && (
+              {!!productCategories.outOfStock.length && (
                 <EstimatedTimeArrivalTable
                   tableType={TableTypes.outOfStock}
                   items={productCategories.outOfStock}
                 />
               )}
 
-              {productCategories.discontinued.length && (
+              {!!productCategories.discontinued.length && (
                 <EstimatedTimeArrivalTable
                   tableType={TableTypes.discontinued}
                   items={productCategories.discontinued}
