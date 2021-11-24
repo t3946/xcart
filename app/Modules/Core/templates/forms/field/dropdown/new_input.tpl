@@ -1,10 +1,13 @@
 <span class='select-holder'>
+    {if !$field->empty}
         <input type="hidden" name="{$name}"/>
+    {/if}
+    {set $chioces = $field->getChoices()}
         <select data-form='{$field->getForm()|get_class}' name="{$name}" id="{$id}_{$field->getForm()->getInstance()->pk}" {raw $html}>
             {if $field->empty}
                 <option {if !$field->getSelected()}selected="selected"{/if} value="{$field->empty}">{$field->empty}</option>
             {/if}
-            {foreach $field->getChoices() as $key => $field_name}
+            {foreach $chioces as $key => $field_name}
                 <option value="{$key}"
                         {if $key in list $field->getSelected()}selected="selected"{/if} {if $key in list $field->disabled}disabled{/if}>{$field_name}</option>
             {/foreach}
