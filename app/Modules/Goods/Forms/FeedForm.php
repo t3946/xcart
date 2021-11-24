@@ -77,7 +77,7 @@ class FeedForm extends ModelForm
                     'brand_normalized' => 'Brand normalized',
                     'r_avail' => 'Avail',
                 ],
-                'selected' => $feed->dont_update_fields,
+                'selected' => $feed->dont_update_fields ?? [],
                 'html' => [
                     'style' => 'width:300px;',
                 ],
