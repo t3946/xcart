@@ -50,6 +50,7 @@ class Sberbank extends Gateway
                 'amount' => $params['amount'],
                 'returnUrl' => $params['returnUrl'],
                 'description' => $params['description'],
+                'dynamicCallbackUrl' => $params['notifyUrl']
             ]
         )->setTwoStage(true)->setUserName($params['processor_model']->param01)->setPassword($params['processor_model']->param02)->send();
     }
