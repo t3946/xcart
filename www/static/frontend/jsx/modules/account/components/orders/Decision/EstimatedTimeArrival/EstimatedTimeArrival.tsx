@@ -1,7 +1,7 @@
 import React from "react";
 import EstimatedTimeArrivalTable, {
   TableTypes,
-} from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/Table";
+} from "@client/modules/account/components/orders/Decision/Table";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
@@ -10,7 +10,7 @@ import { solveDecisionAction } from "@client/jsx/redux/actions/account-actions/D
 import { useDispatch } from "react-redux";
 import DecisionsInterface from "@client/modules/account/ts/types/decision";
 import AppData from "@client/jsx/utils/AppData";
-import { RowInterface } from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/TableRow";
+import { RowInterface } from "@client/modules/account/components/orders/Decision/TableRow";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;

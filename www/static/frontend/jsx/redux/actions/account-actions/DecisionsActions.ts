@@ -16,3 +16,8 @@ export const loadMoreAction = (payload: Record<any, any>): any => ({
   type: "LOAD_MORE_DECISION",
   payload,
 });
+
+export const uploadLicense = (payload: Record<any, any>): any => ({
+  type: "UPLOAD_LICENSE_DECISION",
+  payload,
+});

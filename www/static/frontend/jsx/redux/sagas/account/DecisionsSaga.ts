@@ -25,7 +25,18 @@ function* loadMore(action): Generator {
     });
 }
 
+function* uploadLicense(action): Generator {
+  const { success, data } = action.payload;
+  console.log(data);
+  yield api
+    .post<any>(route("order:api:decisions_get"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
+  yield takeLatest("UPLOAD_LICENSE_DECISION", uploadLicense);
 }

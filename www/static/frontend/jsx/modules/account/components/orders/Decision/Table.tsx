@@ -2,12 +2,13 @@ import React from "react";
 import classnames from "classnames";
 import TableRow, {
   RowInterface,
-} from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/TableRow";
+} from "@client/modules/account/components/orders/Decision/TableRow";
 
 export enum TableTypes {
   inStock = "inStock",
   outOfStock = "outOfStock",
   discontinued = "discontinued",
+  licenseRequired = "licenseRequired",
 }
 
 interface IProps {
@@ -32,6 +33,11 @@ const Table: React.FC<IProps> = (props: IProps) => {
       qty: "Qty discontinued",
       qtyDesktop: "Quantity discontinued",
     },
+    licenseRequired: {
+      itemNameSkuQty: "Item / SKU",
+      qty: "Qty",
+      qtyDesktop: "Quantity",
+    },
   };
   const { tableType, items } = props;
   const classes = {
@@ -55,6 +61,9 @@ const Table: React.FC<IProps> = (props: IProps) => {
       hatModifier = "estimate-table-hat_theme_red";
       tableCaption =
         "All items you ordered are currently discontinued / 'out of stock' without definite re-stocking date:";
+    case TableTypes.licenseRequired:
+      hatModifier = "estimate-table-hat_theme_grey";
+      tableCaption = "You have ordered the following items:";
   }
 
   classes.hat.push(hatModifier);
@@ -70,6 +79,8 @@ const Table: React.FC<IProps> = (props: IProps) => {
           break;
         case TableTypes.discontinued:
           date = "Unknown";
+        case TableTypes.licenseRequired:
+          date = "";
       }
 
       return (
@@ -79,6 +90,12 @@ const Table: React.FC<IProps> = (props: IProps) => {
         />
       );
     });
+  }
+
+  function dateColumnTemplate(type: TableTypes) {
+    if ([TableTypes.outOfStock, TableTypes.discontinued].includes(type)) {
+      return <span>ETA date</span>;
+    }
   }
 
   return (
@@ -100,7 +117,7 @@ const Table: React.FC<IProps> = (props: IProps) => {
           {tableHeaders[tableType].qty}
         </span>
 
-        {tableType !== TableTypes.inStock && <span>ETA date</span>}
+        {dateColumnTemplate(tableType)}
       </div>
 
       {rowsTemplates()}
