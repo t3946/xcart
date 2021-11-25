@@ -10,7 +10,10 @@ function* sendOneTimePassword(action: AnyAction) {
   const { form, success, error, complete } = action.payload;
 
   yield api
-    .post<any>(route("account:api:send-one-time-password"), JSON.stringify(form))
+    .post<any>(
+      route("account:api:send-one-time-password"),
+      JSON.stringify(form)
+    )
     .then((res) => {
       res.errors ? error(res.errors) : success(res);
 
