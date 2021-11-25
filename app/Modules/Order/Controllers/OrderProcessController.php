@@ -32,11 +32,13 @@ class OrderProcessController extends FrontendController
                 $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_FAILED]);
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_FAILED;
                 $order->save();
-                ( new OrderLogModel( [
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => 'Abandoned: The order has been canceled',
-                ] ) )->save();
+
+                OrderLogModel::createLog(
+                    $order->orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    'Abandoned: The order has been canceled'
+                );
+
                 OrderInvoiceHelper::sendOrderStatusNotification( $order, false );
             }
             else {

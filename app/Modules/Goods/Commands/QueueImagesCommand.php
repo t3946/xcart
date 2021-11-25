@@ -70,7 +70,6 @@ class QueueImagesCommand extends Command
                 }
             } else {
                 echo "nack\n";
-                print_r($data);
                 $message->nack();
                 return;
             }

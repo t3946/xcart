@@ -46,6 +46,8 @@ class QueueProcessCommand extends Command
                 $feed =  null;
                 $data = array_filter($data, static fn($v) => $v !== null);
 
+                $is_manual_feed = $data['source'] === 'manual';
+
                 if ($data['storefront'] !== null) {
                     $site = SiteModel::objects()->get(['storefrontid' => $data['storefront']]);
                     /** @var SupplierFeedModel $feed */
@@ -56,7 +58,7 @@ class QueueProcessCommand extends Command
 
                 $data['source'] ??= 'feed';
 
-                if ($data['source'] !== 'manual' && (!$feed || !$feed->enabled)) {
+                if (!$is_manual_feed && (!$feed || !$feed->enabled)) {
                     echo "Feed is not active\n";
                     return;
                 }
@@ -79,7 +81,7 @@ class QueueProcessCommand extends Command
                         return;
                     }
 
-                    if ($data['source'] === 'manual' || $product->hash_product !== $data['hash_product']) {
+                    if ($is_manual_feed || $product->hash_product !== $data['hash_product']) {
                         $product->setAttributes($data);
                         if ($data['eta_date_mm_dd_yyyy']) {
                             $product->eta_date_mm_dd_yyyy = strtotime($data['eta_date_mm_dd_yyyy']);
@@ -92,14 +94,20 @@ class QueueProcessCommand extends Command
                                 $product->setMainCategory($site->base_category);
                             }
                         }
-                        if ($data['source'] !== 'manual') {
+
+                        if (!$is_manual_feed) {
                             $product->group_root = null;
+                        }
+
+                        if ($is_manual_feed) {
+                            $product->forsale = (float)$data['cost_to_us'] > 0 ? 'Y' : 'N';
                         }
 
                         $changed = SupplierFeedHelper::getChanged($product);
                         $product->save();
-                        if ($data['attributes'] && $site) {
-                            ProductHelper::setProductAttributes($product, $data['attributes'], $site);
+
+                        if ($site && !$is_manual_feed) {
+                            ProductHelper::setProductAttributes($product, $data['attributes'] ?? [], $site);
                         }
                         SupplierFeedHelper::feedFiles($product, $data);
                         SupplierFeedHelper::getVideos($product);

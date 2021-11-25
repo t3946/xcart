@@ -65,6 +65,7 @@ use Xcart\Manufacturer;
  * @property bool avail
  * @property string $d_website_search_for_sku_url
  * @property float $max_extra_margin
+ * @property SupplierFeedModel[]|Manager $feeds
  */
 class DistributorModel extends Model
 {

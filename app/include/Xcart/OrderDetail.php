@@ -2,6 +2,7 @@
 namespace Xcart;
 
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderLogModel;
 
 class OrderDetail extends Data
 {
@@ -139,7 +140,11 @@ class OrderDetail extends Data
     {
         $fRetailTrust = $this->calculateRetailTrustPrice();
         $this->updateFields(['retail_trust_item' => 'N', 'retail_trust_price' => 0]);
-        Logs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Removed', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
+        OrderLogModel::createLog(
+            $this->getOrderId(),
+            OrderLogModel::LOG_TYPE_XCART,
+            sprintf('Retail Trust $%s for %s - Removed', $fRetailTrust, $this->getOrderDetailProduct()->getSKU())
+        );
     }
 
     public function addRetailTrust()
@@ -147,7 +152,12 @@ class OrderDetail extends Data
         if (!$this->isRetailTrustEnabled() && $this->getOrderDetailProduct()->isRetailTrustEnabled() && $this->getOrderInstance()->getPaymentMethodInstance()->getMaximumReAuthorizationMultiplier() > 1) {
             $fRetailTrust = $this->calculateRetailTrustPrice();
             $this->updateFields(['retail_trust_item' => 'Y', 'retail_trust_price' => $fRetailTrust]);
-            Logs::_log('orders', $this->getOrderId(), 'X', sprintf('Retail Trust $%s for %s - Added', $fRetailTrust, $this->getOrderDetailProduct()->getSKU()));
+
+            OrderLogModel::createLog(
+                $this->getOrderId(),
+                OrderLogModel::LOG_TYPE_XCART,
+                sprintf('Retail Trust $%s for %s - Added', $fRetailTrust, $this->getOrderDetailProduct()->getSKU())
+            );
         }
     }
 

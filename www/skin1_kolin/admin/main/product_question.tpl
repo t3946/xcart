@@ -159,7 +159,7 @@ $(function() {ldelim}
             <td>
                 {if $mImage}
                     <a href="{$productModel->getAdminUrl()}" target="_blank">
-                        <img src="{$mImage->getCdnURL(200)}"/>
+                        <img src="{$mImage}"/>
                     </a>
                 {/if}
             </td>

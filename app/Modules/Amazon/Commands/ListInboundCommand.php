@@ -108,13 +108,12 @@ class ListInboundCommand extends Command
 
                 echo "Create order # {$order->getOrderNumber()}\n";
                 $log_message = "<a style=\"color: #1411FF;\" href=\"https://sellercentral.amazon.com/gp/fba/inbound-shipment-workflow/index.html/ref=ag_fbaisw_name_fbasqs#{$shipment->shipment_id}\" target=\"_blank\">Amazon FBA Shipment # {$shipment->shipment_name}</a>";
-                (new OrderLogModel([
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_SYSTEM,
-                    'login' => '',
-                    'log' => $log_message
-                ])
-                )->save();
+
+                OrderLogModel::createLog(
+                    $order->orderid,
+                    OrderLogModel::LOG_TYPE_SYSTEM,
+                    $log_message
+                );
             }
 
             $groups = [];
@@ -174,13 +173,11 @@ class ListInboundCommand extends Command
             $shipment->order_id = $order->orderid;
             $shipment->save();
 
-            if ($log) {
-                (new OrderLogModel([
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => nl2br($log),
-                ]))->save();
-            }
+            OrderLogModel::createLog(
+                $order->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                nl2br($log)
+            );
         }
 
 //Xcart\Config::model(['name' => LOG_CATEGORY])->setValue('N')->_update();

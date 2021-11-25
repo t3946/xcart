@@ -6,7 +6,6 @@ use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Sites\Models\SiteModel;
-use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Product;
 
@@ -2231,7 +2230,6 @@ function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $l
     $order_statuses_arr = ["bd_status", "cb_status", "dc_status", "po_status", "ru_status"];
     $code               = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
-    $insert_log = false;
     foreach ($log_name as $field_in_db) {
         if (isset($query_data[$field_in_db])) {
             $current = func_query_first_cell("SELECT $field_in_db FROM $sql_tbl[order_groups] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid'");
@@ -2254,14 +2252,9 @@ function func_log_order_groups($query_data, $orderid, $manufacturerid, $type, $l
                     $new_value = func_query_first_cell("SELECT payment_method FROM $sql_tbl[payment_methods] WHERE paymentid='$new_value'");
                 }
 
-                $log .= "<B>" . $code . ":</B> " . $field_in_db . ": " . $current . " -> " . $new_value . "<br />";
-                $insert_log = true;
+                OrderLogModel::createLog($orderid, $type, "<b>$code:</b> $field_in_db: $current -> $new_value");
             }
         }
-    }
-
-    if ($insert_log) {
-        OrderLogModel::createLog($orderid, $type, $log);
     }
 }
 
@@ -2269,25 +2262,17 @@ function func_log_order_refunded_groups($query_data, $orderid, $manufacturerid, 
 {
     global $sql_tbl;
 
-    $log      = "";
     $log_name = ["shipping_net", "shippingid", "shipping", "ref_ship"];
     $code     = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
-    $insert_log = false;
     foreach ($log_name as $field_in_db) {
         if (isset($query_data[$field_in_db])) {
             $current = func_query_first_cell("SELECT $field_in_db FROM $sql_tbl[refund_groups] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid'");
             if ($current != $query_data[$field_in_db]) {
                 $new_value = $query_data[$field_in_db];
-
-                $log .= "<B>" . $code . ":</B> (refund) " . $field_in_db . ": " . $current . " -> " . $new_value . "<br />";
-                $insert_log = true;
+                OrderLogModel::createLog($orderid, $type, "<b>$code:</b> (refund) $field_in_db: $current -> $new_value");
             }
         }
-    }
-
-    if ($insert_log) {
-        OrderLogModel::createLog($orderid, $type, $log);
     }
 }
 
@@ -2722,7 +2707,7 @@ function func_new_mail_notification($v_arr)
 {
     global $sql_tbl;
 
-    Xcart\App\Main\Xcart::app()->logger->info("OTRS notifications", $v_arr ?: $_REQUEST ?: [], 'otrs');
+    Xcart::app()->logger->info("OTRS notifications", $v_arr ?: $_REQUEST ?: [], 'otrs');
 
     if (!empty($v_arr["OrderLink"]) || !empty($v_arr["AmazonOrderLink"])) {
 
@@ -2759,7 +2744,12 @@ SQL;
                 }
             }
 
-            $log = "New OTRS message notification.<br />";
+            OrderLogModel::createLog(
+                $orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "New OTRS message notification.",
+                'OTRS'
+            );
 
             $tag_added_flag = false;
 
@@ -2769,22 +2759,43 @@ SQL;
                         case 'Include':
                             Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($status_id, $orderid, false);
 
-                            $log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
-                            $log .= "'" . $tag_name . "' attention tag SET based on rules";
+                            OrderLogModel::createLog(
+                                $orderid,
+                                OrderLogModel::LOG_TYPE_XCART,
+                                "RuleID:{$aRule['rule_id']}; CB:{$aRule['cb_name']}, DC:{$aRule['dc_name']}, BD:{$aRule['bd_name']}",
+                                'OTRS'
+                            );
+                            OrderLogModel::createLog(
+                                $orderid,
+                                OrderLogModel::LOG_TYPE_XCART,
+                                "'$tag_name' attention tag SET based on rules",
+                                'OTRS'
+                            );
                             $tag_added_flag = true;
                             break;
                         case 'Exclude':
-                            $log .= "RuleID:$aRule[rule_id]; CB:$aRule[cb_name], DC:$aRule[dc_name], BD:$aRule[bd_name]<br />";
+                            OrderLogModel::createLog(
+                                $orderid,
+                                OrderLogModel::LOG_TYPE_XCART,
+                                "RuleID:{$aRule['rule_id']}; CB:{$aRule['cb_name']}, DC:{$aRule['dc_name']}, BD:{$aRule['bd_name']}",
+                                'OTRS'
+                            );
                             break;
                     }
-                    if ($tag_added_flag) break;
+                    if ($tag_added_flag) {
+                        break;
+                    }
                 }
             }
 
             if (!$tag_added_flag) {
-                $log .= "'" . $tag_name . "' attention tag NOT SET based on rules";
+                OrderLogModel::createLog(
+                    $orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "'$tag_name' attention tag NOT SET based on rules",
+                    'OTRS'
+                );
             }
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log, 'OTRS');
             print("OK");
         }
     }
@@ -3613,8 +3624,12 @@ if (!function_exists("array_column")) {
 function func_check_comma_in_field($orderid, $value, $sFieldName)
 {
     if (strpos($value, ',') !== false) {
-        $sLog = "Comma in field <b>$sFieldName</b>: " . $value;
-        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $sLog, 'OTRS');
+        OrderLogModel::createLog(
+            $orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            "Comma in field <b>$sFieldName</b>: $value",
+            'OTRS'
+        );
 
         return true;
     }

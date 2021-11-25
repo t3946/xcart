@@ -1533,7 +1533,13 @@ SQL;
 
 
                                 $log = '<a style="color: #1411FF;" href="https://sellercentral.amazon.com/gp/orders-v2/details/ref=ag_orddet_cont_myo?ie=UTF8&orderID=' . $sAmazonOrderId . '" target="_blank">Amazon order # ' . $sAmazonOrderId . '</a><br />Grand total: $' . $product_total;
-                                Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $log, 'Amazon');
+
+                                OrderLogModel::createLog(
+                                    $oOrder->getOrderId(),
+                                    OrderLogModel::LOG_TYPE_SYSTEM,
+                                    $log,
+                                    'Amazon'
+                                );
 
                                 $statuses = func_query_hash('SELECT code, name, type FROM xcart_order_statuses ORDER BY orderby', array('type', 'code'), false, true);
 
@@ -1624,7 +1630,12 @@ SQL;
                                 }
                             }
                             if (!empty($sLog))
-                                Logs::model()->_log('orders', $oOrder->getOrderId(), 'S', $sLog, 'Amazon');
+                                OrderLogModel::createLog(
+                                    $oOrder->getOrderId(),
+                                    OrderLogModel::LOG_TYPE_SYSTEM,
+                                    $sLog,
+                                    'Amazon'
+                                );
                         }
                     }
 

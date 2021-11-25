@@ -924,11 +924,21 @@ class Order extends Data
                 $oMail->sendEmail();
 
                 $log = "The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $d_order_entry_operator_email . "<br /><B>Subject: </B>" . $oMail->getSubject();
-                Logs::model()->_log('orders', $this->getOrderId(), 'S', $log, $login);
+
+                OrderLogModel::createLog(
+                    $this->getOrderId(),
+                    OrderLogModel::LOG_TYPE_SYSTEM,
+                    $log
+                );
 
                 if ($oOrderGroup->getOrderGroupStatusDC() !== OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY) {
                     $log = "<B>" . $oOrderGroup->getManufacturerEntity()->getManufacturerCode() . ":</B> dc_status: " . $oOrderGroup->getOrderGroupStatusDC() . " -> " . \Xcart\OrderStatus::model(['code' => OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY])->getName();
-                    Logs::model()->_log('orders', $this->getOrderId(), 'X', $log, $login);
+
+                    OrderLogModel::createLog(
+                        $this->getOrderId(),
+                        OrderLogModel::LOG_TYPE_XCART,
+                        $log
+                    );
                 }
 
                 $oOrderGroup->updateField('dc_status', OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY);

@@ -101,31 +101,33 @@ class OrderTrackingModel extends Model
                 $log .= "<b>{$current_dc_status->manufacturer->code}:</b> dc_status: {$current_dc_status_value} -> {$new_value}\n";
                 $current_dc_status->save();
             }
-            (new OrderLogModel([
-                'orderid' => $current_dc_status,
-                'type' => OrderLogModel::LOG_TYPE_XCART,
-                'login' => Xcart::app()->user->login,
-                'log' => nl2br($log),
-            ]))->save();
+
+            OrderLogModel::createLog(
+                $current_dc_status->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                nl2br($log)
+            );
+
             OrderHelper::checkOrderTrackedAll($current_dc_status->order);
+
             if (($r = OrderTrackingHelper::trackAfterShip($owner)) && isset($r['data']['tracking']['id'])) {
                 $this->aftership_id = $r['data']['tracking']['id'];
                 $this->update(['aftership_id']);
-            } else {
-                //set AttentionTag
             }
         }
     }
     public function afterDelete($owner) {
         parent::afterDelete($owner);
+
         $log = "<b>Tracking numbers:</b>\n<b>Deleted:</b> ";
-        $log .= "{$owner->carrier->carrier} {$owner->link->shipping}: {$owner->tracknum}\n";
-        (new OrderLogModel([
-            'orderid' => $owner->order_group->orderid,
-            'type' => OrderLogModel::LOG_TYPE_XCART,
-            'login' => Xcart::app()->user->login,
-            'log' => nl2br($log),
-        ]))->save();
+        $log .= "{$owner->carrier->carrier} {$owner->link->shipping}: $owner->tracknum\n";
+
+        OrderLogModel::createLog(
+            $owner->order_group->orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            nl2br($log)
+        );
+
         OrderHelper::checkOrderTrackedAll($this->order_group->order);
         OrderTrackingHelper::deleteAfterShip($owner);
     }

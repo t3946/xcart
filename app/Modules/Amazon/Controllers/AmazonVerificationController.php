@@ -149,16 +149,15 @@ class AmazonVerificationController extends Controller
                           $log .= <<<HTML
  Inventory file has been successfully created <a href="https://sellercentral.amazon.com/listing/status?reference_id={$FeedSubmissionId}#{$FeedSubmissionId}" target="_blank">Feed: {$FeedSubmissionId}</a>
 HTML;
-                        (new OrderLogModel([
-                            'orderid' => $order->orderid,
-                            'type' => OrderLogModel::LOG_TYPE_XCART,
-                            'login' => Xcart::app()->user->login,
-                            'log' => nl2br($log),
-                        ]))->save();
-
                         $model->save();
 
-                        echo json_encode(['status' => 'ok']);
+                        OrderLogModel::createLog(
+                            $order->orderid,
+                            OrderLogModel::LOG_TYPE_XCART,
+                            nl2br($log)
+                        );
+
+                        echo json_encode(['status' => 'ok'], JSON_THROW_ON_ERROR);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 <?php
 namespace Xcart;
 
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
@@ -123,7 +124,11 @@ class Paypal
                     $invoice = null;
                 }
             } catch (\Exception $e) {
-                Logs::_log('orders', (int)$aParams['send_request_orderid'], 'X', $e->getMessage());
+                OrderLogModel::createLog(
+                    (int)$aParams['send_request_orderid'],
+                    OrderLogModel::LOG_TYPE_XCART,
+                    $e->getMessage()
+                );
                 $invoice = null;
             }
         }

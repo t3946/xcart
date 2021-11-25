@@ -6,14 +6,11 @@ namespace Modules\Goods\Forms;
 
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
-use Modules\Goods\Admin\FeedAdmin;
-use Modules\Goods\Models\CategoryModel;
-use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Form\Fields\CharField;
-use Xcart\App\Form\Fields\NumberField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\ModelForm;
+use Xcart\App\Main\Xcart;
 
 class FeedForm extends ModelForm
 {
@@ -28,7 +25,7 @@ class FeedForm extends ModelForm
 
     public function getModel()
     {
-        return new SupplierFeedModel;
+        return new SupplierFeedModel();
     }
 
     public function getFields()
@@ -45,7 +42,7 @@ class FeedForm extends ModelForm
                 'choices' => static function () {
                     $res[] = '';
                     foreach (DistributorModel::objects()->order(['code']) as $dx) {
-                        $res[$dx->manufacturerid] = "[{$dx->code}] {$dx}";
+                        $res[$dx->manufacturerid] = "[$dx->code] $dx";
                     }
                     return $res ?? [];
                 },
@@ -80,7 +77,7 @@ class FeedForm extends ModelForm
                     'brand_normalized' => 'Brand normalized',
                     'r_avail' => 'Avail',
                 ],
-                'selected' => $feed->dont_update_fields,
+                'selected' => $feed->dont_update_fields ?? [],
                 'html' => [
                     'style' => 'width:300px;',
                 ],
@@ -100,6 +97,27 @@ class FeedForm extends ModelForm
     public function getName()
     {
         return 'Feed';
+    }
+
+    public function afterInstanceSave($instance)
+    {
+        parent::afterInstanceSave($instance);
+
+        if ($instance->enabled && $instance->run_force) {
+            Xcart::app()->queue->send(
+                'feeds',
+                json_encode(
+                    [
+                        'code' => $this->getCode(),
+                        'run_force' => true
+                    ],
+                    JSON_THROW_ON_ERROR
+                ),
+                true
+            );
+            $instance->run_force = false;
+            $instance->save();
+        }
     }
 
 }

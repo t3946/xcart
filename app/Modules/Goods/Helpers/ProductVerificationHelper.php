@@ -64,14 +64,12 @@ class ProductVerificationHelper
                     if ($note) {
                         $log .= "Problem/fix description: {$note}";
                     }
-                    (new OrderLogModel(
-                        [
-                            'orderid' => $order->orderid,
-                            'type' => OrderLogModel::LOG_TYPE_XCART,
-                            'login' => Xcart::app()->user->login,
-                            'log' => nl2br($log),
-                        ]
-                    ))->save();
+
+                    OrderLogModel::createLog(
+                        $order->orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        nl2br($log)
+                    );
                 }
                 $order->updateVerificationStatus();
             }

@@ -1,6 +1,7 @@
 <?php
 namespace Modules\Cart\Models;
 
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Cli\Cli;
@@ -82,7 +83,11 @@ class CouponOrderModel extends Model
         if (!Cli::isCli()) {
             Xcart::app()->request->session->remove('coupon_code');
 
-            Logs::_log('orders', $this->order_id, Logs::LOG_TYPE_XCART, "Add coupon: {$this->coupon->code}", Xcart::app()->user->login);
+            OrderLogModel::createLog(
+                $this->order_id,
+                OrderLogModel::LOG_TYPE_XCART,
+                "Add coupon: {$this->coupon->code}"
+            );
         }
     }
 }

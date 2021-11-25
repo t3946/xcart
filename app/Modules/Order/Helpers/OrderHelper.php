@@ -430,12 +430,11 @@ HTML;
             [, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
             $message = "Attention tag added: " . $model->status;
             if ($isLog && $created) {
-                (new OrderLogModel([
-                    'orderid' => $orderId,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => $message,
-                    'login' => Xcart::app()->user->login
-                ]))->save();
+                OrderLogModel::createLog(
+                    $orderId,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    $message
+                );
                 return $model;
             }
         }
@@ -528,14 +527,11 @@ HTML;
 The order is AUTOMATICALLY sent to operator for order entry on distributor's website.<br /><b>From: </b>{$config['orders_department']}<br /><b>To: </b>{$dx->d_order_entry_operator_email}<br /><b>Subject: </b>{$subject}
 HTML;
 
-                (new OrderLogModel(
-                    [
-                        'orderid' => $order->orderid,
-                        'type' => OrderLogModel::LOG_TYPE_SYSTEM,
-                        'log' => $log,
-                        'login' => Xcart::app()->user->login
-                    ]
-                ))->save();
+                OrderLogModel::createLog(
+                    $order->orderid,
+                    OrderLogModel::LOG_TYPE_SYSTEM,
+                    $log
+                );
 
                 $params = ['from' => $config['orders_department']];
 
@@ -551,14 +547,12 @@ HTML;
                 /** @var OrderStatusModel $new_status */
                 $new_status = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY]);
                 $log = "<b>{$dx->code}:</b> dc_status: {$group->dc_status_model} -> {$new_status}";
-                (new OrderLogModel(
-                    [
-                        'orderid' => $order->orderid,
-                        'type' => OrderLogModel::LOG_TYPE_XCART,
-                        'log' => $log,
-                        'login' => Xcart::app()->user->login
-                    ]
-                ))->save();
+
+                OrderLogModel::createLog(
+                    $order->orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    $log
+                );
 
                 $group->dc_status = OrderStatusModel::ORDER_STATUS_PENDING_ORDER_ENTRY;
                 $group->save();
@@ -623,14 +617,13 @@ HTML;
         if ($new && $old && $new->code !== $old->code) {
             $order->vn_status = $new->code;
             $order->save();
-            (new OrderLogModel(
-                [
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => "Verification status: {$old->name} -> {$new->name}",
-                    'login' => Xcart::app()->user->login
-                ]
-            ))->save();
+
+            OrderLogModel::createLog(
+                $order->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "Verification status: {$old->name} -> {$new->name}"
+            );
+
             if ($new_status === OrderModel::ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED && self::isAllowSendToOrderEntry($order)) {
                 self::submitOrderEntry($order);
             }

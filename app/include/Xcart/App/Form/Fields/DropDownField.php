@@ -23,7 +23,7 @@ class DropDownField extends Field
      * @var array
      */
     public $choices = [];
-    private $_selected = [];
+    private array $_selected = [];
     public array $depends = [];
     /**
      * Span tag needed because: http://stackoverflow.com/questions/23920990/firefox-30-is-not-hiding-select-box-arrows-anymore
@@ -44,7 +44,7 @@ class DropDownField extends Field
      * @var array
      */
     public $disabled = [];
-    public $selected = [];
+    public array $selected = [];
 
     public function getCommonData()
     {
@@ -53,7 +53,7 @@ class DropDownField extends Field
         ];
     }
 
-    public function getSelected()
+    public function getSelected(): array
     {
         return $this->_selected;
     }
@@ -128,7 +128,6 @@ class DropDownField extends Field
                     }
                 } elseif (is_a($field, ManyToManyField::class)) {
                     $this->multiple = true;
-
                     $selectedTmp = $field->getManager()->all();
                     foreach ($selectedTmp as $model) {
                         $selected[] = $model->pk;

@@ -74,7 +74,7 @@ class EventManager
         }
 
         foreach ($this->_events as $event) {
-            if ($event['name'] == $name) {
+            if ($event['name'] === $name) {
                 $receiver = $event['sender'];
                 if ($sender && $receiver) {
                     if (\is_string($sender) &&

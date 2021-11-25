@@ -29,11 +29,12 @@ class AfterShipController extends Controller
                 $group->save();
                 $new_value = $group->dc_status_model->name;
                 $log = "<b>{$group->manufacturer->code}:</b> dc_status: {$current_dc_status_value} -> {$new_value}\n";
-                (new OrderLogModel([
-                    'orderid' => $order->orderid,
-                    'type' => OrderLogModel::LOG_TYPE_XCART,
-                    'log' => $log,
-                ]))->save();
+
+                OrderLogModel::createLog(
+                    $order->orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    $log
+                );
 
             }
             if ($order->groups->exclude(['dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED])->count() === 0) {

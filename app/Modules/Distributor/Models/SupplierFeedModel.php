@@ -26,6 +26,8 @@ use Xcart\App\Orm\Model;
  * @property DistributorModel distributor
  * @property int last_update_time
  * @property bool $enabled
+ * @property int $storefront_id
+ * @property bool $run_force
  */
 class SupplierFeedModel extends Model
 {
@@ -142,7 +144,10 @@ class SupplierFeedModel extends Model
     {
         $cur_time = time();
         $date1 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time));
-        $date2 = DateTime::createFromFormat('m-d-Y H:i:s', date('m-d-Y H:i:s', $cur_time + $this->average_update_period));
+        $date2 = DateTime::createFromFormat(
+            'm-d-Y H:i:s',
+            date('m-d-Y H:i:s', $cur_time + $this->average_update_period)
+        );
         $interval = $date1->diff($date2);
         $years = (int)$interval->format('%y');
         $months = (int)$interval->format('%m');
@@ -171,5 +176,22 @@ class SupplierFeedModel extends Model
     public function __toString()
     {
         return (string)$this->feed_name;
+    }
+
+    public function getCode()
+    {
+        $dx = $this->distributor;
+        $code = str_replace('-', '_', $dx->code);
+        return $dx->feeds->count() === 1 ? $code : "{$code}__$this->storefront_id";
+    }
+
+    public function getLastUpdateDates(): int
+    {
+        $last_update_date = (new DateTime())->setTimestamp($this->last_update_time);
+        $days =  $last_update_date->diff(new DateTime('now'))->days;
+        if ($days === false) {
+            return 10000;
+        }
+        return $days;
     }
 }

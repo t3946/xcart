@@ -79,11 +79,8 @@ class PagesForm extends ModelForm
                 'multiple' => true,
                 'choices' => function() {
                     $mass = [];
-                    /** @var SiteModel $model */
-                    foreach (SiteModel::objects()->all() as $model) {
-                        if ($model->isWork()) {
-                            $mass[ $model->storefrontid ] = (string) $model;
-                        }
+                    foreach (SiteModel::getAllEnabled() as $model) {
+                        $mass[ $model->pk ] = (string) $model;
                     }
                     return $mass;
                 },
