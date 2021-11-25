@@ -13,12 +13,31 @@ use Xcart\App\Orm\Model;
  */
 class ImagesModel extends Model
 {
+    private const UPLOAD_PATH = '';
+    private const MAX_UPLOAD_SIZE_MB = 20;
+
     public static string $upload_to = '';
     public static string $max_size = '';
 
     static function tableName()
     {
         return 'xcart_images';
+    }
+
+    /**
+     * override this for change size
+     */
+    protected static function getMaxUploadSizeMB(): int
+    {
+        return self::MAX_UPLOAD_SIZE_MB;
+    }
+
+    /**
+     * override this for change path
+     */
+    protected static function getUploadPath(): string
+    {
+        return self::UPLOAD_PATH;
     }
 
     static function getFields()
@@ -32,8 +51,8 @@ class ImagesModel extends Model
                 'required' => false,
                 'null' => true,
                 'adapterName' => 'www',
-                'uploadTo' => self::$upload_to . '/%Y/%m/%d',
-                'maxSize' => self::$max_size,
+                'uploadTo' => rtrim(static::getUploadPath(), '/') . '/%Y/%m/%d',
+                'maxSize' => static::getMaxUploadSizeMB() . 'M',
             ],
             'width' => [
                 'class' => IntField::class,
@@ -47,5 +66,4 @@ class ImagesModel extends Model
             ],
         ];
     }
-
 }

@@ -11,20 +11,34 @@ use Xcart\App\Orm\Model;
 
 class VideosModel extends Model
 {
-    const ACCEPTABLE_FORMATS = [
+    private const MAX_UPLOAD_SIZE_MB = 100;
+    private const UPLOAD_PATH = '';
+
+    public const ACCEPTABLE_FORMATS = [
         'mp4',
         'ogg',
         'webm',
     ];
-    const YOUTUBE_PROVIDER = 'youtube';
-    const YOUTUBE_VIMEO = 'vimeo';
-
-    public static string $upload_to = '';
-    private static int $max_size_mb = 100;
+    public const YOUTUBE_PROVIDER = 'youtube';
+    public const YOUTUBE_VIMEO = 'vimeo';
 
     public static function tableName()
     {
         return 'xcart_videos';
+    }
+
+    /**
+     * override this method for change path
+     */
+    protected static function getUploadPath(): string {
+        return self::UPLOAD_PATH;
+    }
+
+    /**
+     * override this method for change size
+     */
+    protected static function getMaxUploadSizeMB(): int {
+        return self::MAX_UPLOAD_SIZE_MB;
     }
 
     public static function getFields()
@@ -45,8 +59,8 @@ class VideosModel extends Model
                 'null' => false,
                 'required' => false,
                 'adapterName' => 'www',
-                'uploadTo' => self::$upload_to . '/%Y/%m/%d',
-                'maxSize' => self::$max_size_mb . 'M',
+                'uploadTo' => static::getUploadPath() . '/%Y/%m/%d',
+                'maxSize' => static::getMaxUploadSizeMB() . 'M',
             ],
 
             'provider' => [
@@ -67,14 +81,6 @@ class VideosModel extends Model
                 'default' => null,
             ],
         ];
-    }
-
-    /**
-     * @return int
-     */
-    public static function getMaxSizeMb(): int
-    {
-        return self::$max_size_mb;
     }
 
     public function getThumbs(): array

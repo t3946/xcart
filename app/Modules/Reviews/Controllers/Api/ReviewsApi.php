@@ -5,16 +5,16 @@ namespace Modules\Reviews\Controllers\Api;
 use Modules\Account\Controllers\AccountController;
 
 use Modules\Core\Models\CountryModel;
-use Modules\Media\Models\VideosModel;
+use Modules\Reviews\Models\Videos\VideosModel;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\Models\ReviewRatingsModel;
-use Modules\Reviews\Models\ReviewsImagesModel;
-use Modules\Reviews\Models\ReviewsVideosModel;
+use Modules\Reviews\Models\Images\ReviewsImagesModel;
+use Modules\Reviews\Models\Videos\ReviewsVideosModel;
 use Modules\Reviews\Models\TotalProductRatingsModel;
 use Modules\Reviews\Models\HelpfulReviewsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
-use Modules\Goods\Models\TotalProductReviewsModel;
+use Modules\Reviews\ReviewsModule;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Aggregation\Count;
@@ -128,6 +128,18 @@ class ReviewsApi extends FrontendController
             $this->createRating($review_id, $slug, $rating);
         }
 
+        //check on attachments limit
+        $max_attachments = ReviewsModule::MAX_ATTACHMENTS_NUMBER;
+        $passed_attachments = count($_FILES['files']['name']);
+
+        if ($_POST['videoLink']) {
+            $passed_attachments += 1;
+        }
+
+        if ($passed_attachments > $max_attachments) {
+            return;
+        }
+
         //save files
         for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
             $files = $_FILES['files'];
@@ -174,7 +186,7 @@ class ReviewsApi extends FrontendController
         if ($video_file_url) {
             $errors = $this->checkVideoFile($video_file_url)['errors'];
 
-            if (count($errors) === 0){
+            if (count($errors) === 0) {
                 $file = new RemoteFile($video_file_url);
 
                 (new ReviewsVideosModel())->saveVideo($review_id, [
@@ -293,12 +305,6 @@ class ReviewsApi extends FrontendController
         ]);
     }
 
-    private function getTotalReviews()
-    {
-        $product_id = $this->data['productId'];
-        return TotalProductReviewsModel::objects()->asArray()->get(['product_id' => $product_id])['total'];
-    }
-
     public function getReviewsAndRatingsAction()
     {
         $product_id = $this->data['productId'];
@@ -313,7 +319,6 @@ class ReviewsApi extends FrontendController
             'ratings' => $this->getTotalRatings(),
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
             'country' => CountryModel::objects()->get(['code' => $location])->name,
-            'totalReviews' => $this->getTotalReviews(),
             'product' => AccountController::getProduct($this->data['productId']),
         ]);
     }
@@ -360,7 +365,7 @@ class ReviewsApi extends FrontendController
 
         $fileSizeB = $headers['Content-Length'];
         $fileSizeMB = round($fileSizeB / 1024 / 1024, 2);
-        $maxFileSizeMB = VideosModel::getMaxSizeMb();
+        $maxFileSizeMB = VideosModel::getMaxUploadSizeMB();
 
         if ($fileSizeMB > $maxFileSizeMB) {
             $err = sprintf('This file has %sMB size. ', $fileSizeMB) .

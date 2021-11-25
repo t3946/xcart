@@ -1,14 +1,12 @@
 <?php
 
-namespace Modules\Reviews\Models;
+namespace Modules\Reviews\Models\Videos;
 
-use Modules\Media\Models\VideosModel;
-use Modules\Media\Interfaces\LinkVideo;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
-class ReviewsVideosModel extends Model implements LinkVideo
+class ReviewsVideosModel extends Model
 {
     public static function tableName()
     {
@@ -33,13 +31,7 @@ class ReviewsVideosModel extends Model implements LinkVideo
         ];
     }
 
-    function getUploadTo(): string
-    {
-        return 'media/reviews/';
-    }
-
     public function saveVideo(int $linked_entity_id, array $video_attributes) {
-        VideosModel::$upload_to = $this->getUploadTo();
         $video = new VideosModel($video_attributes);
         $video->save();
 

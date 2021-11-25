@@ -1,14 +1,12 @@
 <?php
 
-namespace Modules\Reviews\Models;
+namespace Modules\Reviews\Models\Images;
 
-use Modules\Images\Interfaces\LinkImage;
-use Modules\Images\Models\ImagesModel;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
-class ReviewsImagesModel extends Model implements LinkImage
+class ReviewsImagesModel extends Model
 {
     public static function tableName()
     {
@@ -34,23 +32,11 @@ class ReviewsImagesModel extends Model implements LinkImage
         ];
     }
 
-    public function getUploadTo(): string
-    {
-        return 'images/reviews/';
-    }
-
-    public function getMaxSize(): string
-    {
-        return '20M';
-    }
-
     /**
      * save image and link
      */
     public function saveImage(int $linked_entity_id, array $image_attributes)
     {
-        ImagesModel::$upload_to = $this->getUploadTo();
-        ImagesModel::$max_size = $this->getMaxSize();
         $image = new ImagesModel($image_attributes);
         $image->save();
 

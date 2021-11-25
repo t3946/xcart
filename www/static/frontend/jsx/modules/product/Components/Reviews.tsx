@@ -21,6 +21,7 @@ interface IProps {
 const Reviews: React.FC<any> = function (props: IProps) {
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
+
   const totalReviews = AppData.products[props.productId].total_reviews;
   const ReviewsContainerRef = React.useRef<any>();
   const { reviews, country } =
@@ -34,6 +35,8 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const [sort, setSort] = React.useState(orders[0]);
   const breakpoint = useBreakpoint();
   const [isIntersecting, setIsIntersecting] = React.useState(false);
+
+  console.log({ isLoading });
 
   //load first reviews
   if (!isAllLoaded && !isLoading) {
@@ -198,7 +201,15 @@ const Reviews: React.FC<any> = function (props: IProps) {
       "d-md-flex",
       "justify-content-between",
       "align-items-center",
-      { "skeleton-box": !country },
+      { "skeleton-box": totalReviews > 0 && !country },
+    ],
+    container: [
+      "reviews-container",
+      "product-reviews__reviews-container",
+      "common-scrollbar",
+      {
+        "d-none": totalReviews === 0,
+      },
     ],
   };
 
@@ -213,7 +224,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
         ])}
       >
         <div
-          className="reviews-container product-reviews__reviews-container common-scrollbar"
+          className={classnames(classes.container)}
           ref={ReviewsContainerRef}
         >
           {reviewsTemplate()}

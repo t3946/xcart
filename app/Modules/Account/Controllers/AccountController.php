@@ -10,7 +10,6 @@ use Modules\Core\Helpers\CoreHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Goods\Models\ProductModel;
-use Modules\Goods\Models\TotalProductReviewsModel;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Controllers\Api\DecisionController;
@@ -230,10 +229,8 @@ class AccountController extends FrontendController
      */
     public static function getProduct($product_id): array
     {
-        $total_reviews = TotalProductReviewsModel::objects()->get(['product_id' => $product_id])['total'];
         $product = ProductModel::objects()->get(['productid' => $product_id]);
         $attributes = $product->getAttributes();
-        $attributes["total_reviews"] = $total_reviews;
         $image = $product->getMainImage();
         $image_url = (string)$image;
         $attributes['image'] = $image_url;

@@ -10,6 +10,8 @@ use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
+use Modules\Reviews\Models\Images\ReviewsImagesModel;
+use Modules\Reviews\Models\Videos\ReviewsVideosModel;
 
 class ProductReviewsModel extends Model
 {
