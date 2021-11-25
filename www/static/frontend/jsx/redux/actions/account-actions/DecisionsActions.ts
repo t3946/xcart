@@ -16,3 +16,8 @@ export const loadMoreAction = (payload: Record<any, any>): any => ({
   type: "LOAD_MORE_DECISION",
   payload,
 });
+
+export const getEtaProductsAction = (payload: Record<any, any>): any => ({
+  type: "GET_ETA_PRODUCTS_DECISION",
+  payload,
+});

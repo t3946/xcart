@@ -2,7 +2,9 @@
 
 namespace Modules\Order\Controllers\Api;
 
+use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\DecisionModel;
+use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Controller\Controller;
 use Modules\Order\Forms\Decision\ETADecisionForm;
@@ -110,5 +112,35 @@ class DecisionController extends Controller
             'notSolved' => DecisionController::getDecisions($user['user_id'], 0, self::LIMIT_SELECT_DECISIONS, 0, ['-created']),
             'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
         ]);
+    }
+
+    public function getEtaProductsAction($order_id) {
+        /**
+         * @var $order OrderModel
+         */
+        $order = OrderModel::objects()->get(['orderid' => $order_id]);
+        $products = $order->getProducts();
+        $details = $order->detail_models;
+        $order_products_with_amount = [];
+
+        /**
+         * @var $detail OrderDetailModel
+         * @var $product ProductModel
+         */
+        foreach ($details as $i => $detail) {
+            foreach ($products as $j => $product) {
+                if ($detail->productid !== $product->productid) {
+                    continue;
+                }
+
+                $order_products_with_amount[] = [
+                    'product' => $product->getAttributes(),
+                    'orderAmount' => $detail->getAttribute('amount'),
+                    'estimateTimeArrival' => $product->getETADate(),
+                ];
+            }
+        }
+
+        $this->jsonResponse($order_products_with_amount);
     }
 }

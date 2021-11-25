@@ -6,10 +6,12 @@ import * as yup from "yup";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import AdviceList from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/AdviceList";
-import { solveDecisionAction } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
+import {
+  getEtaProductsAction,
+  solveDecisionAction,
+} from "@client/jsx/redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 import DecisionsInterface from "@client/modules/account/ts/types/decision";
-import AppData from "@client/jsx/utils/AppData";
 import { RowInterface } from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/TableRow";
 
 interface IProps {
@@ -69,38 +71,54 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
     discontinued: [],
   };
 
-  AppData.estimatedTimeArrivalProducts.forEach((value) => {
-    const { orderAmount, product } = value;
-    const outOfStockItemsNumber = Math.max(0, orderAmount - product.avail);
-    const tableRow = {
-      name: product.product,
-      sku: product.productcode,
-      amount: null,
-      date: null,
-    };
+  //если переходить из списка -- продуктов нет, их надо загружать по ajax
 
-    if (outOfStockItemsNumber === 0) {
-      tableRow.amount = orderAmount;
-      productCategories.inStock.push({ ...tableRow });
-    } else {
-      tableRow.amount = outOfStockItemsNumber;
+  const [products, setProducts] = React.useState(null);
 
-      if (value.estimateTimeArrival) {
-        const date = new Date(value.estimateTimeArrival.date);
-        const day = date.getDate();
-        const month = date.toLocaleDateString("en-US", { month: "short" });
-        const year = date.getFullYear();
+  if (products === null) {
+    dispatch(
+      getEtaProductsAction({
+        orderId: decision.order_id,
 
-        tableRow.date = [day, month, year].join("-");
-        productCategories.outOfStock.push({ ...tableRow });
+        success(res) {
+          setProducts(res);
+        },
+      })
+    );
+  } else {
+    products.forEach((value) => {
+      const { orderAmount, product } = value;
+      const outOfStockItemsNumber = Math.max(0, orderAmount - product.avail);
+      const tableRow = {
+        name: product.product,
+        sku: product.productcode,
+        amount: null,
+        date: null,
+      };
+
+      if (outOfStockItemsNumber === 0) {
+        tableRow.amount = orderAmount;
+        productCategories.inStock.push({ ...tableRow });
       } else {
-        productCategories.discontinued.push({ ...tableRow });
-      }
+        tableRow.amount = outOfStockItemsNumber;
 
-      tableRow.amount = orderAmount - outOfStockItemsNumber;
-      productCategories.inStock.push({ ...tableRow });
-    }
-  });
+        if (value.estimateTimeArrival) {
+          const date = new Date(value.estimateTimeArrival.date);
+          const day = date.getDate();
+          const month = date.toLocaleDateString("en-US", { month: "short" });
+          const year = date.getFullYear();
+
+          tableRow.date = [day, month, year].join("-");
+          productCategories.outOfStock.push({ ...tableRow });
+        } else {
+          productCategories.discontinued.push({ ...tableRow });
+        }
+
+        tableRow.amount = orderAmount - outOfStockItemsNumber;
+        productCategories.inStock.push({ ...tableRow });
+      }
+    });
+  }
 
   return (
     <div>

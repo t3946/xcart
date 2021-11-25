@@ -22,4 +22,10 @@ return [
         'target' => [ DecisionController::class, 'getDecisionsAction' ],
         'name' => 'decisions_get',
     ],
+
+    [
+        'route' => '/get-eta-products/{*:order_id}',
+        'target' => [ DecisionController::class, 'getEtaProductsAction' ],
+        'name' => 'get-eta-products',
+    ]
 ];

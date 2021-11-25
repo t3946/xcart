@@ -25,7 +25,18 @@ function* loadMore(action): Generator {
     });
 }
 
+function* getEtaProductsDecision(action): Generator {
+  const { success, orderId, data } = action.payload;
+
+  yield api
+    .get<any>(route("order:api:get-eta-products", orderId))
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
+  yield takeLatest("GET_ETA_PRODUCTS_DECISION", getEtaProductsDecision);
 }

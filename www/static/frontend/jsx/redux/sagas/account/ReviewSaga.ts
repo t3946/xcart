@@ -19,7 +19,7 @@ function* createReview(action): Generator {
   const { form, success } = action.data;
 
   yield api
-    .post<any>(route("reviews:api:create"), form, {})
+    .post<any>(route("reviews:api:create"), form)
     .then(function (res) {
       success(res);
     });
