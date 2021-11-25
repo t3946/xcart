@@ -112,7 +112,8 @@ class FeedForm extends ModelForm
                         'run_force' => true
                     ],
                     JSON_THROW_ON_ERROR
-                )
+                ),
+                true
             );
             $instance->run_force = false;
             $instance->save();

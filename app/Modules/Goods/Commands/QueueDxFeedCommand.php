@@ -24,7 +24,8 @@ class QueueDxFeedCommand extends Command
                 json_encode([
                     'code' => $feed->getCode(),
                     'run_force' => false
-                ], JSON_THROW_ON_ERROR)
+                ], JSON_THROW_ON_ERROR),
+                true
             ),
             $feeds
         );
