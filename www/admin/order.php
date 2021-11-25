@@ -408,8 +408,11 @@ if ($REQUEST_METHOD === "POST")
 
                     $order->update(['shipping_cost' => $new_shipping_cost]);
 
-                    $log = "<b>Deleted:</b> {$group->manufacturer->code}";
-                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+                    OrderLogModel::createLog(
+                        $orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        "<b>Deleted:</b> {$group->manufacturer->code}"
+                    );
 
                     $group->delete();
 
@@ -706,12 +709,12 @@ if ($REQUEST_METHOD === "POST") {
         func_header_location("order.php?orderid=" . $orderid);
     }
 
-    if ($mode == "order_edit_apply")
+    if ($mode === 'order_edit_apply')
     {
         if (!empty($customer_info) && is_array($customer_info)) {
             $section_name = "main_order_tabs-customer_info";
 
-            if ($send_email == "Y") {
+            if ($send_email === 'Y') {
                 $log = "'Apply changes and Send emails' at 'Customer info'";
             }
             else {
@@ -721,7 +724,7 @@ if ($REQUEST_METHOD === "POST") {
         else {
             $section_name = "main_order_tabs-order_details";
 
-            if ($send_email == "Y") {
+            if ($send_email === 'Y') {
                 $log = "'Apply changes and Send emails' at 'Order info'";
             }
             else {
@@ -756,8 +759,7 @@ if ($REQUEST_METHOD === "POST") {
             $current_orig_po = func_query_first_cell("SELECT orig_po FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
             if ($current_orig_po != $orig_po) {
-                $log = "orig_po: " . $current_orig_po . " -> " . $orig_po;
-                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, "orig_po: $current_orig_po -> $orig_po");
 
                 db_query("UPDATE $sql_tbl[orders] SET orig_po='" . addslashes($orig_po) . "' WHERE orderid='$orderid'");
             }
@@ -767,8 +769,11 @@ if ($REQUEST_METHOD === "POST") {
             $current_total_shipping_charge_on_orig_po = func_query_first_cell("SELECT total_shipping_charge_on_orig_po FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
             if ($current_total_shipping_charge_on_orig_po != $total_shipping_charge_on_orig_po) {
-                $log = "total_shipping_charge_on_orig_po: " . $current_total_shipping_charge_on_orig_po . " -> " . $total_shipping_charge_on_orig_po;
-                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+                OrderLogModel::createLog(
+                    $orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "total_shipping_charge_on_orig_po: " . $current_total_shipping_charge_on_orig_po . " -> " . $total_shipping_charge_on_orig_po
+                );
 
                 db_query("UPDATE $sql_tbl[orders] SET total_shipping_charge_on_orig_po='" . addslashes($total_shipping_charge_on_orig_po) . "' WHERE orderid='$orderid'");
             }
@@ -778,8 +783,11 @@ if ($REQUEST_METHOD === "POST") {
             $current_po_issued_to = func_query_first_cell("SELECT po_issued_to FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 
             if ($current_po_issued_to != $po_issued_to) {
-                $log = "po_issued_to: " . $po_issued_to_arr[$current_po_issued_to] . " -> " . $po_issued_to_arr[$po_issued_to];
-                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+                OrderLogModel::createLog(
+                    $orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "po_issued_to: $po_issued_to_arr[$current_po_issued_to] -> $po_issued_to_arr[$po_issued_to]"
+                );
 
                 db_query("UPDATE $sql_tbl[orders] SET po_issued_to='" . addslashes($po_issued_to) . "' WHERE orderid='$orderid'");
             }
@@ -787,8 +795,7 @@ if ($REQUEST_METHOD === "POST") {
     }
     elseif ($mode === "accounting_apply") {
 
-        $log = "'Update' at 'Accounting' pressed";
-        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, "'Update' at 'Accounting' pressed");
 
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
@@ -819,7 +826,7 @@ if ($REQUEST_METHOD === "POST") {
 
                         $new_links_for_diff = [];
                         if (!empty($v) && is_array($v)) {
-                            $log = "<B>Before:</B><br />" . $log . "<B>Now:</B><br />";
+                            $log = "<b>Before:</b>\n $log <b>Now:</b>\n";
                             foreach ($v as $kk => $vv) {
                                 $link_to_distributor_invoice = $vv["link_to_distributor_invoice"];
                                 if (!empty($link_to_distributor_invoice)) {
@@ -834,8 +841,7 @@ if ($REQUEST_METHOD === "POST") {
                         $links_diff = array_diff($current_links_for_diff, $new_links_for_diff);
 
                         if (!empty($links_diff)) {
-                            $log = "<B>" . $code . ":</B><br />" . $log;
-                            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+                            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, "<b>$code:</b>\n $log");
                         }
 
                         unset($current_links_for_diff);
@@ -926,7 +932,9 @@ if ($REQUEST_METHOD === "POST") {
                         $current_part_of_total_transaction_in_amount_of = func_query_first_cell("SELECT part_of_total_transaction_in_amount_of FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
 
                         if ($current_part_of_total_transaction_in_amount_of != $new_part_of_total_transaction_in_amount_of) {
-                            if (empty($log)) $log = "This invoice is a part of the total transaction in the amount of: <br />";
+                            if (empty($log)) {
+                                $log = "This invoice is a part of the total transaction in the amount of: <br />";
+                            }
                             $log .= "invoice_number_" . $invoice_number . " <B>" . $code . ":</B> " . $current_part_of_total_transaction_in_amount_of . " -> " . $new_part_of_total_transaction_in_amount_of . "<br />";
                         }
 
@@ -956,7 +964,9 @@ if ($REQUEST_METHOD === "POST") {
                         $current_ref_to_us_part_of_transaction = func_query_first_cell("SELECT ref_to_us_part_of_transaction FROM $sql_tbl[order_group_memos] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND memo_number='$memo_number'");
 
                         if ($current_ref_to_us_part_of_transaction != $new_ref_to_us_part_of_transaction) {
-                            if (empty($log)) $log = "This memo is a part of the total transaction in the amount of: <br />";
+                            if (empty($log)) {
+                                $log = "This memo is a part of the total transaction in the amount of: <br />";
+                            }
                             $log .= "memo_number_" . $memo_number . " <B>" . $code . ":</B> " . $current_ref_to_us_part_of_transaction . " -> " . $new_ref_to_us_part_of_transaction . "<br />";
                         }
 
@@ -971,8 +981,7 @@ if ($REQUEST_METHOD === "POST") {
         }
     }
     elseif ($mode === "table_accounting_apply") {
-        $log = "'Update' at 'Accounting' pressed";
-        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, "'Update' at 'Accounting' pressed");
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
     }
@@ -1038,10 +1047,7 @@ if ($REQUEST_METHOD === "POST") {
 
             db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE status_id='$del_status_id' AND orderid='$orderid'");
 
-            ### LOG: START
-            $log = "'" . $status_name . "' attention tag removed";
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
-            ### LOG: END
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, "'$status_name' attention tag removed");
 
             $top_message["content"] = "Done.";
             $top_message["type"]    = "I";
@@ -1291,7 +1297,7 @@ if ($REQUEST_METHOD === "POST") {
                 OrderLogModel::createLog(
                     $orderid,
                     OrderLogModel::LOG_TYPE_XCART,
-                    "Invoice #{$invoice_group} status <b>Tentatively paid</b> -> <b>Updated</b>"
+                    "Invoice #$invoice_group status <b>Tentatively paid</b> -> <b>Updated</b>"
                 );
             }
             Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
@@ -1349,7 +1355,7 @@ require $xcart_dir . "/include/order_transactions.php";
 
 if ($mode === 'pending_order_message2_done_clicked' && !empty($notify_mid))
 {
-    $log = "'Done' clicked. <br /><B>" . $order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"] . "</B>: order_entry_flag: " . $order["shipping_groups"][$notify_mid]["order_entry_flag"] . " -> D";
+    $log = "'Done' clicked. <br /><B>{$order["shipping_groups"][$notify_mid]["all_distributor_info"]["code"]}</B>: order_entry_flag: {$order["shipping_groups"][$notify_mid]["order_entry_flag"]} -> D";
 
     OrderGroupModel::objects()
         ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
@@ -1594,13 +1600,19 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
     $manufacturer_name = func_query_first_cell("SELECT manufacturer FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
 
     if ($mode === "cidev_send_email_to_operator") {
-        $log = "'Submit to order entry operator' at '" . $manufacturer_name . ": Order entry'";
-        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+        OrderLogModel::createLog(
+            $orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            "'Submit to order entry operator' at '$manufacturer_name: Order entry'"
+        );
     }
 
     if ($mode === "mnf_notify" && $set_status_K === "Y") {
-        $log = "'Send (Request availability)' at '" . $manufacturer_name . ": Request availability'";
-        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+        OrderLogModel::createLog(
+            $orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            "'Send (Request availability)' at '$manufacturer_name: Request availability'"
+        );
     }
 
     if ($mode === 'mnf_notify')
@@ -1634,7 +1646,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
             if ($current_dc_status !== 'DP') {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='DP'");
-                $log .= "<br/><B>{$code}:</B> dc_status: {$current_dc_status_value} -> {$new_value}";
+                $log .= "<br/><b>$code:</b> dc_status: $current_dc_status_value -> $new_value";
 
                 OrderGroupModel::objects()
                     ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
@@ -1669,7 +1681,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             func_header_location("order.php?orderid=" . $orderid);
         }
         else {
-            $log .= "'Send (Dispatch to distributor)' at '" . $manufacturer_name . ": Dispatch to distributor'";
+            $log .= "'Send (Dispatch to distributor)' at '{$manufacturer_name}: Dispatch to distributor'";
             OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
         }
     }
