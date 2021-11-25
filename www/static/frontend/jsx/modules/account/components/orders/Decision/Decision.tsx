@@ -1,6 +1,6 @@
 import React from "react";
 import Navigation from "@client/modules/account/components/orders/Navigation/Navigation";
-import EstimatedTimeArrival from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
+import LicenseRequire from "@client/modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
 import { route } from "@client/jsx/utils/AppData";
 import { useHistory } from "react-router-dom";
 import DecisionsInterface from "@client/modules/account/ts/types/decision";
@@ -53,7 +53,8 @@ const Decision: React.FC = () => {
         Order # {decision.order_number}
       </h1>
       <Navigation />
-      <EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />
+      {/*<EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />*/}
+      <LicenseRequire onChange={onChangeDecision} decision={decision} />
     </div>
   );
 };

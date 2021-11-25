@@ -21,3 +21,8 @@ export const getEtaProductsAction = (payload: Record<any, any>): any => ({
   type: "GET_ETA_PRODUCTS_DECISION",
   payload,
 });
+
+export const uploadLicense = (payload: Record<any, any>): any => ({
+  type: "UPLOAD_LICENSE_DECISION",
+  payload,
+});
