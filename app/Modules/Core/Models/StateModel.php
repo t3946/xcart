@@ -32,12 +32,19 @@ class StateModel extends Model
             ],
             'timezone' => [
                 'class' => CharField::class
-            ]
+            ],
+            'code' => CharField::class,
+            'country_code' => CharField::class,
         ];
     }
 
     public function __toString(): string
     {
-        return (string) $this->state;
+        return $this->state;
+    }
+    public static function getState(string $country_code, string $code_state): ?string
+    {
+        $state_model = static::objects()->get(['country_code' => $country_code, 'code' => $code_state]);
+        return $state_model->state ?? null;
     }
 }

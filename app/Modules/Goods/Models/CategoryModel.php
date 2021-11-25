@@ -1,6 +1,10 @@
 <?php
+
 namespace Modules\Goods\Models;
 
+use Xcart\App\Orm\Fields\BooleanCharField;
+use Xcart\App\Orm\Fields\DecimalField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Sites\Models\SiteModel;
@@ -15,6 +19,7 @@ use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\TreeModel;
+use Xcart\App\Storage\FileNameHasher\MD5FileContentHasher;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\App\Traits\SlugifyTrait;
 use Xcart\Category;
@@ -48,18 +53,23 @@ class CategoryModel extends TreeModel
 
     public static function getFields()
     {
-        return array_replace_recursive(
+        return array_merge(
             parent::getFields(),
-             [
-                 'parent' => [
-                     'field' => 'parentid'
-                 ],
-
-                 'products' => [
-                     'class' => ManyToManyField::class,
-                     'modelClass' => ProductModel::class,
-                     'through' => ProductCategoriesModel::class,
-                 ],
+            [
+                'avail' => [
+                    'class' => CharField::class,
+                    'verboseName' => 'Availability',
+                    'default' => 'Y',
+                    'choices' => [
+                        'Y' => 'Enabled',
+                        'N' => 'Disabled'
+                    ]
+                ],
+                'products' => [
+                    'class' => ManyToManyField::class,
+                    'modelClass' => ProductModel::class,
+                    'through' => ProductCategoriesModel::class,
+                ],
 
                 'site' => [
                     'field' => 'storefrontid',
@@ -75,11 +85,6 @@ class CategoryModel extends TreeModel
                     'null' => false,
                 ],
 
-                'parentid' => [
-                    'class' => IntField::class,
-                    'default' => 0,
-                ],
-
                 'description' => [
                     'class' => CharField::class,
                     'null' => false,
@@ -87,19 +92,90 @@ class CategoryModel extends TreeModel
                 ],
                 'google_product_category' => [
                     'class' => CharField::class,
+                    'verboseName' => 'Google product category',
                     'null' => false,
                     'default' => '',
                 ],
-                 'SEO_h2' => [
-                     'class' => CharField::class,
-                     'null' => false,
-                     'default' => '',
-                 ],
-                 'icon' => [
-                     'class' => HasToOneField::class,
-                     'modelClass' => ImageCModel::class,
-                     'link' => ['categoryid' => 'id']
-                 ],
+                'SEO_h2' => [
+                    'verboseName' => 'SEO Description Category',
+                    'class' => CharField::class,
+                    'null' => false,
+                    'default' => '',
+                ],
+                'icon_path' => [
+                    'verboseName' => 'Icon',
+                    'class' => ImageField::class,
+                    'adapterName' => 's3',
+                    'uploadTo' => "categories/icons/%Y%m",
+                    'nameHasher' => MD5FileContentHasher::class,
+                    'null' => true,
+                    'default' => null
+                ],
+                'picture_path' => [
+                    'verboseName' => 'Main picture',
+                    'class' => ImageField::class,
+                    'adapterName' => 's3',
+                    'uploadTo' => "categories/picture/%Y%m",
+                    'nameHasher' => MD5FileContentHasher::class,
+                    'null' => true,
+                    'default' => null
+                ],
+                'is_bold' => [
+                    'verboseName' => 'Bold',
+                    'class' => CharField::class,
+                    'choices' => [
+                        'Y' => 'Yes',
+                        'N' => 'No'
+                    ]
+                ],
+                'supplemental_category' => [
+                    'verboseName' => 'Supplemental category',
+                    'class' => BooleanCharField::class,
+                    'default' => false
+                ],
+                'pc_ready_to_classify' => [
+                    'verboseName' => 'Ready to classify',
+                    'class' => BooleanCharField::class,
+                    'default' => false
+                ],
+                'prevent_index_products' => [
+                    'verboseName' => 'Prevent index products',
+                    'class' => BooleanCharField::class,
+                    'default' => false
+                ],
+                'prevent_index_category_page' => [
+                    'verboseName' => 'Prevent index category page',
+                    'class' => BooleanCharField::class,
+                    'default' => false
+                ],
+                'title_tag' => [
+                    'class' => CharField::class,
+                    'verboseName' => htmlentities('Title (<title>)')
+                ],
+                'SEO_category_name' => [
+                    'class' => CharField::class,
+                    'verboseName' => htmlentities('SEO category name (<H1>)')
+                ],
+                'meta_keywords' => [
+                    'class' => CharField::class,
+                    'verboseName' => 'META keywords',
+                    'default' => '',
+                ],
+                'meta_descr' => [
+                    'class' => CharField::class,
+                    'verboseName' => 'META description',
+                    'default' => '',
+                ],
+                'pc_category_weight' => [
+                    'class' => DecimalField::class,
+                    'verboseName' => 'Category classify weight',
+                    'default' => 0,
+                ],
+                'pc_z' => [
+                    'class' => DecimalField::class,
+                    'verboseName' => 'Category Z parameter',
+                    'default' => 0
+                ],
             ]
         );
     }
@@ -108,7 +184,7 @@ class CategoryModel extends TreeModel
     {
         $code = '';
         if ($st = $this->site) {
-            $code .=  $st->code .":";
+            $code .= $st->code . ":";
         }
 
         $code .= $this->pk;
@@ -120,12 +196,11 @@ class CategoryModel extends TreeModel
     {
         $bread = new Breadcrumbs();
 
-        if ($parents = $this->getObjects()->ancestors(true)->order(['lft'])->all())
-        {
+        if ($parents = $this->getObjects()->ancestors(true)->order(['lft'])->all()) {
             /** @var self $model */
             foreach ($parents as $model) {
                 $url = $model->getAbsoluteUrl(true);
-                $bread->add($model->category, $url ?'https:'.$url : '');
+                $bread->add($model->category, $url ? 'https:' . $url : '');
             }
         }
 
@@ -171,8 +246,8 @@ class CategoryModel extends TreeModel
     public function getSubcategories($withProductCount = true, $level = 1, $tree = false, $cache = true)
     {
         $qs = $this->objects()
-                    ->descendants(false, $level)
-                    ->filter([ 'avail' => 'Y' ]);
+            ->descendants(false, $level)
+            ->filter(['avail' => 'Y']);
 
         if ($withProductCount) {
             $qs->filter(['active_product_count__gt' => 0,]);

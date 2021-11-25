@@ -9,6 +9,7 @@ use Exception;
 use UnexpectedValueException;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Orm\Fields\DateField;
+use Xcart\App\Orm\TreeManager;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Admin\Models\AdminConfig;
@@ -455,7 +456,7 @@ abstract class Admin
         return $qs;
     }
 
-    public function handleFilter(QuerySet $qs, $form): QuerySet
+    public function handleFilter($qs, $form)
     {
 
         foreach ($form->getAttributes() as $key => $value) {
@@ -566,9 +567,9 @@ abstract class Admin
     }
 
     /**
-     * @param $qs QuerySet|Manager
+     * @param $qs QuerySet|Manager|TreeManager
      * @return QuerySet|Manager
-     * @throws DBALException
+     * @throws Exception
      */
     public function fixSort($qs)
     {
@@ -970,7 +971,7 @@ abstract class Admin
             foreach ($list as $model) {
                 $main_model = $model->{$ar_sort[0]}->get([$this->through_field => $_POST['ownerPk']]);
                 if ($main_model) {
-                    array_push($positions, $main_model->{$ar_sort[1]});
+                    $positions[] = $main_model->{$ar_sort[1]};
                 }
             }
             asort($positions);

@@ -36,6 +36,8 @@
 # Functions for Product options module
 #
 
+use Modules\Goods\Models\ProductTaxesModel;
+
 if ( !defined('XCART_START') ) { header("Location: home.php"); die("Access denied"); }
 
 #
@@ -44,13 +46,12 @@ if ( !defined('XCART_START') ) { header("Location: home.php"); die("Access denie
 function func_get_product_classes($productid, $is_tax = NULL, $area = false) {
 	global $sql_tbl, $current_area, $shop_language, $login;
 
-	x_load('taxes');
-
 	if ($area === false)
 		$area = $current_area;
 
-	if (is_null($is_tax))
-		$is_tax = (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[product_taxes] WHERE productid = '$productid'") > 0);
+	if (!$is_tax) {
+		$is_tax = ProductTaxesModel::objects()->filter(['productid' => $productid])->count() > 0;
+	}
 
 	# Get classes
 	$where = "";
@@ -109,7 +110,6 @@ function func_get_product_classes($productid, $is_tax = NULL, $area = false) {
 function func_get_product_variants($productid, $membershipid = 0, $area = false) {
 	global $sql_tbl, $current_area, $shop_language, $keys, $cart, $user_account, $active_modules;
 
-	x_load('files','taxes');
 
 	$membershipid = intval($membershipid);
 	$keys = func_get_hash_options($productid);
