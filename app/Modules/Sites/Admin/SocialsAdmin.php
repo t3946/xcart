@@ -31,7 +31,6 @@ class SocialsAdmin extends Admin
         switch ($property) {
             case 'logo_path':
                 return "<div style='text-align: center'><img src=\"{$item->getLogoPath()}\" title=\"{$item}\" width='60' alt='Logo $item->type'/></div>";
-                break;
         }
 
         return parent::getItemProperty($item, $property);
