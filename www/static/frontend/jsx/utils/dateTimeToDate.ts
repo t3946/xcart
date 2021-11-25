@@ -5,7 +5,7 @@ export default function (dateTime: string): Date {
 
   return new Date(
     parseInt(year),
-    parseInt(month),
+    parseInt(month) - 1,
     parseInt(date),
     parseInt(hour),
     parseInt(minutes),
