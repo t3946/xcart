@@ -5,6 +5,7 @@ use Exception;
 use Modules\Cart\Components\XCart;
 use Modules\Mail\Components\MailComponent;
 use Modules\Mail\Components\Mailer;
+use Modules\Order\Components\OrderLogger;
 use Modules\User\Models\UserModel;
 use Xcart\App\Cache\Cache;
 use Xcart\App\Cli\Cli;
@@ -51,6 +52,7 @@ use Xcart\App\Template\TemplateManager;
  * @property XCart $cart Cart
  *
  * @property UserModel $user
+ * @property OrderLogger $order_logger
  * 
  * @package Xcart\App\Application
  */
@@ -314,7 +316,7 @@ class Application
                 $action = isset($match['target'][1]) ? $match['target'][1] : null;
             }
             elseif (is_string($match['target']) && strpos($match['target'], ':') !== -1) {
-                list($controllerClass, $action) = explode(':', $match['target']);
+                [$controllerClass, $action] = explode(':', $match['target']);
             }
 
             $params = $match['params'];
@@ -335,7 +337,7 @@ class Application
     {
         /** @var CliRequest $request */
         $request = $this->request;
-        list($module, $command, $action, $arguments) = $request->parse();
+        [$module, $command, $action, $arguments] = $request->parse();
 
         if ($module && $command)
         {

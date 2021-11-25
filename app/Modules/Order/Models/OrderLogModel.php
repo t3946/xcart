@@ -60,22 +60,15 @@ class OrderLogModel extends Model
             ]
         ];
     }
+
     public static function createLog(int $order_id, string $type, string $log_text, string $login = null): bool
     {
         if (!$log_text) {
             return false;
         }
-        if (!$login) {
-            /** @var UserModel $user_model */
-            $login = Xcart::app()->user->login;
-        }
 
-        return static::objects()->create([
-            'orderid' => $order_id,
-            'type' => $type,
-            'date' => time(),
-            'login' => $login,
-            'log' => $log_text
-        ]);
+        Xcart::app()->order_logger->add($order_id, $type, $log_text, $login);
+
+        return true;
     }
 }

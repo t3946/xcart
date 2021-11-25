@@ -1,6 +1,7 @@
 <?php
 
 use Aws\S3\S3Client;
+use Modules\Order\Components\OrderLogger;
 use Xcart\App\Main\ErrorHandler;
 use Modules\User\Components\Auth;
 use Modules\Mail\Components\Mailer;
@@ -101,6 +102,7 @@ return array_replace_recursive([
        'breadcrumbs' => ['class' => Breadcrumbs::class],
        'flash' => ['class' => Flash::class],
        'finder' => ['class' => FinderFactory::class],
+       'order_logger' => ['class' => OrderLogger::class],
 
        'middleware' => [
            'class' => MiddlewareManager::class,
