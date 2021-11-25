@@ -47,5 +47,6 @@ class OrderLogger
                 }
             }
         }
+        $this->messages = [];
     }
 }
