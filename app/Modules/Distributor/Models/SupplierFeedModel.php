@@ -184,4 +184,14 @@ class SupplierFeedModel extends Model
         $code = str_replace('-', '_', $dx->code);
         return $dx->feeds->count() === 1 ? $code : "{$code}__$this->storefront_id";
     }
+
+    public function getLastUpdateDates(): int
+    {
+        $last_update_date = (new DateTime())->setTimestamp($this->last_update_time);
+        $days =  $last_update_date->diff(new DateTime('now'))->days;
+        if ($days === false) {
+            return 10000;
+        }
+        return $days;
+    }
 }
