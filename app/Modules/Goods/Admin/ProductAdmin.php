@@ -200,4 +200,16 @@ class ProductAdmin extends Admin
             'new' => $new
         ]);
     }
+
+    public function getAvailableListColumns()
+    {
+        return [
+            'product' => [
+                'class' => 'nowrap',
+            ],
+            'add_date' => [
+                'class' => 'nowrap',
+            ],
+        ];
+    }
 }

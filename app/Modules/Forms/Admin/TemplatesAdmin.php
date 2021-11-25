@@ -116,4 +116,16 @@ class TemplatesAdmin extends Admin
         }
         return $qs;
     }
+
+    public function getAvailableListColumns()
+    {
+        return [
+            'template_name' => [
+                'class' => 'nowrap',
+            ],
+            'subject_line' => [
+                'class' => 'nowrap',
+            ],
+        ];
+    }
 }

@@ -103,11 +103,16 @@ class PBXAdmin extends Admin
 
     public function getAvailableListColumns()
     {
-        return array_merge(parent::getAvailableListColumns(), [
-            'start_at' => [
-                'title' => 'Start Time <br/> Duration',
-            ],
-        ]);
+        return
+            [
+                'start_at' => [
+                    'title' => 'Start Time <br/> Duration',
+                    'class' => 'nowrap',
+                ],
+                'e164' => [
+                    'class' => 'nowrap',
+                ]
+            ];
     }
 
     public function applyOrder($qs)

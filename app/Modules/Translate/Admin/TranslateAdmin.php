@@ -28,7 +28,6 @@ use Xcart\App\Pagination\Pagination;
 class TranslateAdmin extends Admin
 {
     public string $allList = '_list.tpl';
-    public string $listRowTemplate = '_tr.tpl';
 
     /**
      * describe list of fields that need print in table
@@ -267,16 +266,15 @@ class TranslateAdmin extends Admin
     {
         return [
             'lang_code' => [
-                'template' => $this->columnDefaultTemplate,
                 'title' => 'Language',
             ],
             'msgctxt' => [
-                'template' => $this->columnDefaultTemplate,
                 'title' => 'Text',
+                'class' => 'nowrap',
             ],
             'msgstr' => [
-                'template' => $this->columnDefaultTemplate,
                 'title' => 'Translate',
+                'class' => 'nowrap',
             ],
         ];
     }

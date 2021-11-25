@@ -25,18 +25,16 @@ class SnippetsAdmin extends Admin
         return [
             'id' => [
                 'title' => 'ID',
-                'template' => $this->columnDefaultTemplate,
                 'order' => 'id'
             ],
             'code' => [
                 'title' => 'Code',
-                'template' => $this->columnDefaultTemplate,
                 'order' => 'code'
             ],
             'name' => [
                 'title' => 'Name',
-                'template' => $this->columnDefaultTemplate,
-                'order' => 'name'
+                'order' => 'name',
+                'class' => 'nowrap'
             ],
         ];
     }
