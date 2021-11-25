@@ -12,18 +12,25 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\Field;
+use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Orm\Fields\ModelFieldInterface;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
 /**
+ * @property int id
+ * @property string transaction_currency
+ * @property string login
  * @property OrderModel order
  * @property mixed transaction_id
  * @property mixed paymentid
  * @property PaymentMethodModel payment_method_model
- * @property mixed|\Xcart\App\Orm\Fields\Field|\Xcart\App\Orm\Fields\FileField|\Xcart\App\Orm\Fields\ModelFieldInterface|null transaction_response
+ * @property mixed|Field|FileField|ModelFieldInterface|null transaction_response
+ * @property string transaction_status
  * @property mixed date
  */
 class OrderTransactionModel extends Model
