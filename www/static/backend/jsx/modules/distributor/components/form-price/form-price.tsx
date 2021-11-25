@@ -14,8 +14,7 @@ import {
   FilesInfo,
 } from "@admin/modules/distributor/ts/types/table-price.types";
 import Divider from "@mui/material/Divider";
-import { CircularProgress } from "@mui/material";
-
+import { CircularProgress, Typography } from "@mui/material";
 interface IFormPrice {
   distributorId: number;
 }
@@ -66,6 +65,13 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
       showSnackbar("An error has occurred, please try again", "error");
     }
   };
+  if (!files) {
+    return (
+      <Typography variant="h6" align="center">
+        Not found files
+      </Typography>
+    );
+  }
   return (
     <Grid
       container

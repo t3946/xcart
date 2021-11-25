@@ -145,7 +145,7 @@ class PBXAdmin extends Admin
         return new CallsFilterForm();
     }
 
-    public function handleFilter(QuerySet $qs, $form): QuerySet
+    public function handleFilter($qs, $form)
     {
         if (($order_field = $form->getField('orders'))
             && ($order = $order_field->getValue())

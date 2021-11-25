@@ -60,7 +60,7 @@ class TemplatesAdmin extends Admin
         return new TemplateFilterForm();
     }
 
-    public function handleFilter(QuerySet $qs, $form): QuerySet
+    public function handleFilter($qs, $form)
     {
         if ($form->category->getValue() === $form->category->empty) {
             $form->category->setValue(null);
