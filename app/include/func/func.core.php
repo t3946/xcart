@@ -1338,7 +1338,7 @@ function func_build_quick_prices($id = false, $tick = 0)
 #
 function func_data_cache_get($name, $params = [], $force_rebuild = false)
 {
-    global $data_caches, $var_dirs, $xcart_dir, $data_caches_no_save;
+    global $data_caches;
 
     if (!isset($data_caches[$name]) || empty($data_caches[$name]['func']) || !function_exists($data_caches[$name]['func'])) {
         return false;
@@ -1354,12 +1354,11 @@ function func_data_cache_get($name, $params = [], $force_rebuild = false)
     {
         return $data;
     }
-    else {
-        $data = call_user_func_array($data_caches[$name]['func'], $params);
-        Xcart::app()->cache->set($name, $data);
 
-        return $data;
-    }
+    $data = call_user_func_array($data_caches[$name]['func'], $params);
+    Xcart::app()->cache->set($name, $data);
+
+    return $data;
 }
 
 #
@@ -3201,7 +3200,7 @@ function func_get_signature($sfid = false, $products = false, $order = null)
         }
     }
     else {
-        $use_storefrontid = Xcart\App\Main\Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
+        $use_storefrontid = Xcart::app()->getModule('Sites')->getSelectedSite()->storefrontid;
     }
 
     $cur_storefront_info = SiteModel::objects()->get(["storefrontid" => $use_storefrontid]);

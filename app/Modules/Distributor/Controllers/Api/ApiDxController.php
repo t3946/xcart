@@ -95,7 +95,7 @@ class ApiDxController extends Controller
         $this->jsonResponse(['files' => $file_list, 'folderId' => $dx_folder]);
     }
 
-    public function loadFile()
+    public function loadFile(): void
     {
         $post = json_decode(file_get_contents('php://input'));
         $file_id = $post->fileId;
@@ -110,35 +110,38 @@ class ApiDxController extends Controller
 
             $reader = IOFactory::createReaderForFile($path_save);
             $excel_obj = $reader->load($path_save);
-            $ar_data = [];
             $ar_tables = [];
-            $counter_table = 0;
-            /* looking from excel file first 30 rows which not empty */
+            $table_rows = [];
+
             for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
-                $ar_excel = $excel_obj->getSheet($t)->toArray();
-                foreach ($ar_excel as $iValue) {
-                    $count_good = 0; // count not empty field
-                    $row = $iValue;
-                    foreach ($row as $dValue) {
-                        if (!empty($dValue)) {
-                            $count_good++;
-                        }
-                    }
-                    if ($count_good > (count($row) / 100) * 20) { // if count not empty column in row > 30%
-                        $ar_data[$counter_table][] = $row;
-                    }
-                    if (!empty($ar_data[$counter_table]) && count($ar_data[$counter_table]) === self::COUNT_ITEMS_TABLE) {
-                        break;
+                $row_iterator = $excel_obj->getSheet($t)->getRowIterator();
+                $cells = [];
+                foreach ($row_iterator->current()->getCellIterator() as $key => $val) {
+                    $cells[] = $key;
+                }
+                $count_column = count($excel_obj->getSheet($t)->toArray()) > 100 ?: 100;
+                $cells_values = [];
+                foreach ($cells as $cell) {
+                    for ($i = 0; $i < $count_column; $i++) {
+                        $cells_values[$cell][] = $row_iterator->current()->getWorksheet()->getCell($cell . $i)->getValue();
                     }
                 }
-                if (!empty($ar_data[$counter_table])) {
-                    $counter_table++;
+                $cells_values = array_map(static fn(array $cells) => array_filter($cells), $cells_values);
+                $cells_values = array_filter($cells_values);
+                foreach ($cells_values as $cell_values) {
+                    for ($i = 0; $i < $count_column; $i++) {
+                        if (count($table_rows[$t]) !== self::COUNT_ITEMS_TABLE) {
+                            $table_rows[$i][] = $cell_values[$i] ?? null;
+                        }
+                    }
+                }
+                if (!empty($table_rows[$t])) {
                     $ar_tables[] = $excel_obj->getSheetNames()[$t];
                 }
             }
             $output = [
-                'contentFile' => $ar_data,
-                'tableNames' => $ar_tables,
+                'contentFile' => $table_rows,
+                'tableNames' => $ar_tables
             ];
             $this->jsonResponse($output);
         } catch (Throwable $exception) {
@@ -151,7 +154,8 @@ class ApiDxController extends Controller
     }
 
     /* Update products by rows from Excel file */
-    public function updateProductsFromPriceList(): void
+    public
+    function updateProductsFromPriceList(): void
     {
         $post = json_decode(file_get_contents('php://input'));
         $select = $post->select;
@@ -225,7 +229,8 @@ class ApiDxController extends Controller
     /**
      * @throws Exception
      */
-    public function getColumnByDx(int $dx): void
+    public
+    function getColumnByDx(int $dx): void
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
         $ar_column = [];
