@@ -13,6 +13,8 @@ interface IProps {
   videosFormats: string[];
   maxImageSize: number;
   maxVideoSize: number;
+  maxFiles: number;
+  setAttachmentsNumber: any;
 }
 
 interface FileInterface {
@@ -30,6 +32,8 @@ const Files: React.FC<IProps> = function (props: IProps) {
     videosFormats,
     maxImageSize,
     maxVideoSize,
+    maxFiles,
+    setAttachmentsNumber,
   } = props;
   const [files, setFiles] = React.useState<FileInterface[]>([]);
 
@@ -56,11 +60,14 @@ const Files: React.FC<IProps> = function (props: IProps) {
 
     const inputFiles = inputRef.current.files;
 
+    // check max attachments limit
+    if (files.length + inputFiles.length > maxFiles) {
+      return;
+    }
+
     for (let i = 0; i < inputFiles.length; i++) {
       const file = inputFiles[i];
       const reader = new FileReader();
-
-      console.log("Files validation");
 
       //incorrect format
       if (
@@ -100,6 +107,7 @@ const Files: React.FC<IProps> = function (props: IProps) {
 
         setFiles([...files]);
         updateFilesList([...files]);
+        setAttachmentsNumber(files.length);
       };
 
       reader.readAsDataURL(file);

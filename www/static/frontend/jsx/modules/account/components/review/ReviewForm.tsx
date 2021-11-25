@@ -15,11 +15,17 @@ import {
 import Files from "@client/jsx/modules/account/components/review/Files";
 import validatorMaxFileSize from "@client/jsx/utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@client/jsx/utils/yup/validatorFileFormat";
+import AppData from "@client/jsx/utils/AppData";
 
 const ReviewForm = (): any => {
   const product = appData.review.product;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreInterface) => e.user);
+
+  if (!user) {
+    return;
+  }
+
   const [files, setFiles] = React.useState([]);
   const initialValues = {
     overall: 0,
@@ -35,8 +41,11 @@ const ReviewForm = (): any => {
     videos: ["video/mp4", "video/ogg", "video/webm"],
   };
   const inputFileRef = React.useRef<HTMLInputElement>();
-  const maxImageSizeMB = 20;
-  const maxVideoSizeMB = 100;
+  const { maxImageSizeMB, maxVideoSizeMB, maxAttachments } =
+    AppData.reviews.limits;
+
+  console.log({ maxImageSizeMB, maxVideoSizeMB, maxAttachments });
+  const [attachmentsNumber, setAttachmentsNumber] = React.useState(0);
 
   const validationSchema = yup.object().shape({
     overall: yup.number(),
@@ -67,7 +76,13 @@ const ReviewForm = (): any => {
           ...supportedFormats.images,
           ...supportedFormats.videos,
         ])
-      ),
+      )
+      .test("maxFiles", `Maximum ${maxAttachments} attachments`, function () {
+        const newAttachmentsNumber =
+          attachmentsNumber + inputFileRef.current.files.length;
+
+        return newAttachmentsNumber <= maxAttachments;
+      }),
   });
   const ratings = appData.ratings.ratings;
   const [isCheckFileLink, setIsCheckFileLink] = React.useState(false);
@@ -320,6 +335,8 @@ const ReviewForm = (): any => {
                       videosFormats={supportedFormats.videos}
                       maxImageSize={maxImageSizeMB}
                       maxVideoSize={maxVideoSizeMB}
+                      setAttachmentsNumber={setAttachmentsNumber}
+                      maxFiles={maxAttachments}
                     />
 
                     <RBForm.Control.Feedback

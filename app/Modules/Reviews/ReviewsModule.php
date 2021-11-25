@@ -40,6 +40,12 @@ class ReviewsModule extends Module
             ],
         ], 'orders', 'reviews');
 
+        StorageHelper::push([
+            'maxImageSizeMB' => self::MAX_IMAGE_SIZE_MB,
+            'maxVideoSizeMB' => self::MAX_VIDEOS_SIZE_MB,
+            'maxAttachments' => self::MAX_ATTACHMENTS_NUMBER,
+        ], 'limits', 'reviews');
+
         $ratings_models = RatingsModel::objects()->asArray()->all();
         $ratings = ['overall' => null, 'features' => []];
 
