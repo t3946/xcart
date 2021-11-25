@@ -63,22 +63,28 @@ class OrderEventHelper
             ]);
             $order_extra_model->save();
 
-            $log_message[] = "<b>Customer IP:</b> {$ip}\n";
+            OrderLogModel::createLog(
+                $model->orderid,
+                OrderLogModel::LOG_TYPE_CUSTOMER,
+                "<b>Customer IP:</b> $ip"
+            );
 
             if (!empty($model->customer_notes)) {
-                $log_message[] = "<b>Customer notes:</b>\n{$model->customer_notes}\n\n";
+                OrderLogModel::createLog(
+                    $model->orderid,
+                    OrderLogModel::LOG_TYPE_CUSTOMER,
+                    "<b>Customer notes:</b>\n$model->customer_notes\n"
+                );
             }
 
             $d_min = DiscountHelper::getDiscountMinutes();
             if ($d_min !== null) {
-                $log_message[] = "<b>Discount time:</b> {$d_min} min. \n";
+                OrderLogModel::createLog(
+                    $model->orderid,
+                    OrderLogModel::LOG_TYPE_CUSTOMER,
+                    "<b>Discount time:</b> {$d_min} min."
+                );
             }
-
-            OrderLogModel::createLog(
-                $model->orderid,
-                OrderLogModel::LOG_TYPE_CUSTOMER,
-                nl2br(implode(PHP_EOL, $log_message))
-            );
 
             $surf_path = SurfPathModel::objects()
                 ->filter([
