@@ -10,7 +10,7 @@ function* savePublicProfile(action: AnyAction) {
   const { data, success, error, complete } = action.payload;
 
   yield api
-    .post<any>(route("account:profile_api:save_public_profile"), data, {})
+    .post<any>(route("account:profile_api:save_public_profile"), data)
     .then((res) => {
       res.errors ? error(res) : success(res);
       complete();
