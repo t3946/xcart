@@ -71,8 +71,6 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
     discontinued: [],
   };
 
-  //если переходить из списка -- продуктов нет, их надо загружать по ajax
-
   const [products, setProducts] = React.useState(null);
 
   if (products === null) {
