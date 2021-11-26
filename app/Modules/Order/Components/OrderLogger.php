@@ -7,7 +7,7 @@ use Xcart\App\Main\Xcart;
 
 class OrderLogger
 {
-    public array $messages = [];
+    private array $messages = [];
 
     public function __construct()
     {
@@ -47,5 +47,6 @@ class OrderLogger
                 }
             }
         }
+        $this->messages = [];
     }
 }

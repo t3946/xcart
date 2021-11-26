@@ -251,16 +251,14 @@ class CheckoutController extends FrontendController
             }
         }
 
-        $cart_number = $cart->getCartNumber();
-
-        if (!$cart_number || $cart->getIsEmpty()) {
-            $this->redirect('cart:list');
-        }
-
-        $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart_number]);
+        $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart->getCartNumber(), ]);
 
         if ($order && !$app->request->getIsPost()) {
             $shippingForm->setAttributes($order->getAttributes());
+        }
+
+        if (!$cart->getCartNumber() || $cart->getIsEmpty()) {
+            $this->redirect('cart:list');
         }
 
         $this->display('checkout/shipping.tpl', [
