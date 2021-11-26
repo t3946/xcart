@@ -6,6 +6,7 @@ import StoreInterface, {
   AccountStore,
 } from "@client/modules/account/ts/types/store.type";
 import NavigationMobile from "@client/modules/account/components/orders/Navigation/NavigationMobile";
+import { route } from "@client/jsx/utils/AppData";
 
 const Navigation: React.FC = () => {
   useSelector((store: AccountStore) => store.main.breakpoint);
@@ -14,7 +15,7 @@ const Navigation: React.FC = () => {
   const menu = [
     {
       text: "Decisions required",
-      path: "/",
+      path: route("account:order-decisions-required"),
       badge: user?.decisions_required_count || 0,
       classes: {
         button: [
