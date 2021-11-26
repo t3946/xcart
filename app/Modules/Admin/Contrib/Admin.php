@@ -212,11 +212,11 @@ abstract class Admin
                 'success' => $success,
                 'message' => $message
             ]);
-            Xcart::app()->end();
-        } else {
-            $flash->add($message, $success ? 'success' : 'error');
-            $request->redirect($this->getAllUrl());
+            exit();
         }
+
+        $flash->add($message, $success ? 'success' : 'error');
+        $request->redirect($this->getAllUrl());
     }
 
     public function getListDropDownGroupActions()

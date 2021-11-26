@@ -316,7 +316,7 @@ if (isset($_GET['checks_deposited_id'])) {
     $smarty->assign('content', $content);
 
     func_display('admin/home.tpl', $smarty);
-    Xcart::app()->end();
+    exit();
 }
 
 $deposite_statuses = array(

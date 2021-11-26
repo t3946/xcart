@@ -70,7 +70,7 @@ abstract class ListViewAdmin extends Admin
                     } else {
                         if (isset($_POST['popup'])) {
                             echo $this->render('admin/popup_close.tpl');
-                            Xcart::app()->end();
+                            exit();
                         }
                         if ($next === 'save') {
                             $request->redirect($this->getAllUrl());
@@ -118,7 +118,7 @@ abstract class ListViewAdmin extends Admin
                     } else {
                         if (isset($_POST['popup'])) {
                             echo $this->render('admin/popup_close.tpl');
-                            Xcart::app()->end();
+                            exit();
                         }
                         if ($next === 'save') {
                             $request->redirect($this->getAllUrl());

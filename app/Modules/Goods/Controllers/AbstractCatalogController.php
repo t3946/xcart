@@ -41,7 +41,7 @@ abstract class AbstractCatalogController extends FrontendController
         if ( $this->getRequest()->getIsPost() && !empty($_POST['sort'])) {
             $this->getRequest()->session->add('category_sort', $_POST['sort']);
             echo 'OK';
-            Xcart::app()->end();
+            exit();
         }
 
 //        $this->sort = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);

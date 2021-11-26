@@ -602,7 +602,7 @@ class ErrorHandler
 
         echo $output;
 
-        Xcart::app()->end();
+        exit();
     }
 
     /**
