@@ -18,6 +18,12 @@ return [
     ],
 
     [
+        'route' => '/make-license',
+        'target' => [ DecisionController::class, 'makeLicenseDecisionsAction' ],
+        'name' => 'make-license',
+    ],
+
+    [
         'route' => '/get',
         'target' => [ DecisionController::class, 'getDecisionsAction' ],
         'name' => 'decisions_get',
@@ -27,5 +33,5 @@ return [
         'route' => '/get-eta-products/{*:order_id}',
         'target' => [ DecisionController::class, 'getEtaProductsAction' ],
         'name' => 'get-eta-products',
-    ]
+    ],
 ];

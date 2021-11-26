@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Order\Models;
+namespace Modules\Order\Models\Decisions;
 
+use Modules\Order\Models\OrderModel;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\JsonField;
@@ -13,7 +13,8 @@ use Xcart\App\Orm\Model;
 
 class DecisionModel extends Model
 {
-    public const DECISION_TYPE_ESTIMATED_TIME_ARRIVAL = 0;
+    public const DECISION_TYPE_ESTIMATED_TIME_ARRIVAL = 'eta';
+    public const DECISION_LICENSE_REQUIRED = 'license';
 
     public static function tableName()
     {
@@ -28,7 +29,7 @@ class DecisionModel extends Model
             ],
 
             'type' => [
-                'class' => IntField::class,
+                'class' => CharField::class,
                 'null' => false,
             ],
 

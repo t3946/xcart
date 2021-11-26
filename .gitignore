@@ -19,6 +19,7 @@ package-lock.json
 /www/media/
 /www/files/
 /www/product_files/
+/www/user_files/
 /**/.idea/
 /www/verificator/cookies/*
 /www/include/system/

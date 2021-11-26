@@ -39,7 +39,7 @@ function* uploadLicense(action): Generator {
   const { success, data } = action.payload;
 
   yield api
-    .post<any>(route("order:api:decisions_get"), data)
+    .post<any>(route("order:api:make-license"), data)
     .then(function (res) {
       success(res);
     });

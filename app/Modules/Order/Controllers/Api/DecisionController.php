@@ -3,11 +3,14 @@
 namespace Modules\Order\Controllers\Api;
 
 use Modules\Goods\Models\ProductModel;
-use Modules\Order\Models\DecisionModel;
+use Modules\Order\Models\Decisions\DecisionModel;
+use Modules\Order\Models\Decisions\DecisionLicenseModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Controller\Controller;
 use Modules\Order\Forms\Decision\ETADecisionForm;
+use Modules\Order\Forms\Decision\LicenseRequiredForm;
 use Xcart\App\Main\Xcart;
 
 class DecisionController extends Controller
@@ -15,6 +18,7 @@ class DecisionController extends Controller
     private $data;
 
     private const LIMIT_SELECT_DECISIONS = 5;
+    private const SUPPORTED_LICENSE_FORMATS = ['jpg', 'jpeg', 'png', 'pdf'];
 
     public function __construct($request)
     {
@@ -77,6 +81,54 @@ class DecisionController extends Controller
         $this->jsonResponse($decision);
     }
 
+    public function makeLicenseDecisionsAction()
+    {
+        $decision = DecisionModel::objects()->get(['decision_id' => $_POST['decision_id']]);
+
+        //already solved
+        if ($decision->solved === true) {
+            return;
+        }
+
+        //incorrect decision
+        if ($decision->type !== DecisionModel::DECISION_LICENSE_REQUIRED) {
+            return;
+        }
+
+        $form = new LicenseRequiredForm();
+        $form->populate($_POST, $_FILES);
+
+        if (!$form->isValid()) {
+            return;
+        }
+
+        $files = $_FILES['LicenseRequiredForm'];
+        $extension = pathinfo($files['name']['license'])['extension'];
+
+        //unsupported file
+        if (!in_array($extension, self::SUPPORTED_LICENSE_FORMATS)) {
+            return;
+        }
+
+        $uploaded_file = new UploadedFile(
+            $files['tmp_name']['license'],
+            $files['name']['license'],
+            $files['type']['license'],
+            (int)$files['size']['license'],
+            (int)$files['error']['license'],
+        );
+
+        $decision_license =  new DecisionLicenseModel([
+            'path' => $uploaded_file,
+            'decision_id' => $_POST['decision_id'],
+        ]);
+
+        $decision_license->save();
+        $decision->setAttribute('solved', '1');
+        $decision->update();
+        $this->jsonResponse($decision_license->getAttributes());
+    }
+
     public function makeDecisionsAction()
     {
         switch ($this->data['type']) {
@@ -114,7 +166,8 @@ class DecisionController extends Controller
         ]);
     }
 
-    public function getEtaProductsAction($order_id) {
+    public function getEtaProductsAction($order_id)
+    {
         /**
          * @var $order OrderModel
          */
