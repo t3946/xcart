@@ -10,7 +10,10 @@ import EstimatedTimeArrivalTable, {
 } from "@client/modules/account/components/orders/Decision/Table";
 import validatorMaxFileSize from "@client/jsx/utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@client/jsx/utils/yup/validatorFileFormat";
-import { uploadLicense } from "@client/jsx/redux/actions/account-actions/DecisionsActions";
+import {
+  getEtaProductsAction,
+  uploadLicense,
+} from "@client/jsx/redux/actions/account-actions/DecisionsActions";
 import dataURItoBlob from "@client/jsx/utils/dataURItoBlob";
 import { useDispatch } from "react-redux";
 
@@ -20,20 +23,13 @@ interface IProps {
 }
 
 const LicenseRequire: React.FC<IProps> = (props: IProps) => {
-  const mockData: RowInterface[] = [
-    {
-      sku: "STSB",
-      amount: 2,
-      name: "banjira Banjira Sitar Sympathetic Bridge",
-    },
-  ];
   const { onChange, decision } = props;
   const initialState = {
     file: null,
   };
+  const [tableRows, setTableRows] = React.useState<RowInterface[]>([]);
   const inputFileRef = React.useRef<HTMLInputElement>();
   const imageRef = React.useRef<string>();
-
   const maxMB = 10;
   const SUPPORTED_FORMATS = [
     "image/jpg",
@@ -56,6 +52,33 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
         validatorFileFormat(inputFileRef, SUPPORTED_FORMATS)
       ),
   });
+  const [products, setProducts] = React.useState(null);
+
+  if (products === null) {
+    dispatch(
+      getEtaProductsAction({
+        orderId: decision.order_id,
+
+        success(res) {
+          setProducts(res);
+
+          const newTableRows = [];
+
+          res.forEach((value) => {
+            const { orderAmount, product } = value;
+
+            newTableRows.push({
+              name: product.product,
+              sku: product.productcode,
+              amount: orderAmount,
+              date: null,
+            });
+          });
+          setTableRows(newTableRows);
+        },
+      })
+    );
+  }
 
   function submit(values, { setSubmitting }) {
     setSubmitting(false);
@@ -63,7 +86,6 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
     // if (imageRef.current) {
     const formData = new FormData();
     // const blob = dataURItoBlob(imageRef.current);
-    console.log("files", inputFileRef.current.files);
     // const documentFile = new File([blob], "filename");
 
     formData.append(
@@ -115,7 +137,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
             </h1>
             <EstimatedTimeArrivalTable
               tableType={TableTypes.licenseRequired}
-              items={mockData}
+              items={tableRows}
             />
 
             <div className={Styles.description}>
