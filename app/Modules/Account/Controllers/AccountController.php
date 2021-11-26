@@ -14,6 +14,7 @@ use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Controllers\Api\DecisionController;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
@@ -260,6 +261,9 @@ class AccountController extends FrontendController
         if ($user->getIsGuest()) {
             $this->actionIndex();
         }
+
+        $stripeSettings = ProcessorModel::objects()->asArray()->get(['processor_name' => 'Stripe']);
+        StorageHelper::push($stripeSettings['param01'], 'publicKey', 'stripeSettings');
 
         $this->actionIndex();
     }
