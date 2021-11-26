@@ -91,22 +91,28 @@ class OrderTrackingModel extends Model
         parent::afterSave($owner, $isNew);
         if ($isNew) {
             $current_dc_status = $this->order_group;
-            $log = "<b>Tracking numbers:</b>\n<b>Added:</b> ";
-            $log .= "{$owner->carrier->carrier} {$owner->link->shipping}: {$owner->tracknum}\n";
+            OrderLogModel::createLog(
+                $current_dc_status->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "<b>Tracking numbers:</b>"
+            );
+            OrderLogModel::createLog(
+                $current_dc_status->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "<b>Added:</b> {$owner->carrier->carrier} {$owner->link->shipping}: $owner->tracknum"
+            );
 
             if (!in_array($current_dc_status->dc_status, [OrderStatusModel::ORDER_DC_STATUS_SHIPPED, OrderStatusModel::ORDER_DC_STATUS_DELIVERED], true)) {
                 $current_dc_status_value = $current_dc_status->dc_status_model->name;
                 $current_dc_status->dc_status = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
                 $new_value = $current_dc_status->dc_status_model->name;
-                $log .= "<b>{$current_dc_status->manufacturer->code}:</b> dc_status: {$current_dc_status_value} -> {$new_value}\n";
                 $current_dc_status->save();
+                OrderLogModel::createLog(
+                    $current_dc_status->orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "<b>{$current_dc_status->manufacturer->code}:</b> dc_status: $current_dc_status_value -> $new_value"
+                );
             }
-
-            OrderLogModel::createLog(
-                $current_dc_status->orderid,
-                OrderLogModel::LOG_TYPE_XCART,
-                nl2br($log)
-            );
 
             OrderHelper::checkOrderTrackedAll($current_dc_status->order);
 
@@ -119,13 +125,15 @@ class OrderTrackingModel extends Model
     public function afterDelete($owner) {
         parent::afterDelete($owner);
 
-        $log = "<b>Tracking numbers:</b>\n<b>Deleted:</b> ";
-        $log .= "{$owner->carrier->carrier} {$owner->link->shipping}: $owner->tracknum\n";
-
         OrderLogModel::createLog(
             $owner->order_group->orderid,
             OrderLogModel::LOG_TYPE_XCART,
-            nl2br($log)
+            "<b>Tracking numbers:</b>"
+        );
+        OrderLogModel::createLog(
+            $owner->order_group->orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            "<b>Deleted:</b>{$owner->carrier->carrier} {$owner->link->shipping}: $owner->tracknum"
         );
 
         OrderHelper::checkOrderTrackedAll($this->order_group->order);
