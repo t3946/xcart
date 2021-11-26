@@ -34,7 +34,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
   const inputFileRef = React.useRef<HTMLInputElement>();
   const imageRef = React.useRef<string>();
 
-  const maxMB = 20;
+  const maxMB = 10;
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -60,25 +60,29 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
   function submit(values, { setSubmitting }) {
     setSubmitting(false);
 
-    if (imageRef.current) {
-      const formData = new FormData();
-      const blob = dataURItoBlob(imageRef.current);
-      const documentFile = new File([blob], "filename");
+    // if (imageRef.current) {
+    const formData = new FormData();
+    // const blob = dataURItoBlob(imageRef.current);
+    console.log("files", inputFileRef.current.files);
+    // const documentFile = new File([blob], "filename");
 
-      formData.append("license", documentFile);
-      formData.append("type", decision.type.toString());
-      formData.append("decision_id", decision.decision_id.toString());
+    formData.append(
+      "LicenseRequiredForm[license]",
+      inputFileRef.current.files[0]
+    );
+    formData.append("type", decision.type.toString());
+    formData.append("decision_id", decision.decision_id.toString());
 
-      dispatch(
-        uploadLicense({
-          data: formData,
-          success(res: DecisionsInterface) {
-            onChange(res);
-            setSubmitting(false);
-          },
-        })
-      );
-    }
+    dispatch(
+      uploadLicense({
+        data: formData,
+        success(res: DecisionsInterface) {
+          onChange(res);
+          setSubmitting(false);
+        },
+      })
+    );
+    // }
   }
 
   return (
@@ -89,7 +93,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
     >
       {({ handleChange }) => {
         function inputFileChangeHandler(e) {
-          handleChange(e);
+          /*          handleChange(e);
 
           const file = inputFileRef.current.files[0];
           const fr = new FileReader();
@@ -102,7 +106,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
 
           if (file) {
             fr.readAsDataURL(file);
-          }
+          }*/
         }
         return (
           <Form>
