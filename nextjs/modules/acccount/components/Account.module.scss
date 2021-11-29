@@ -1,0 +1,20 @@
+@import "styles/utils/Utils.module.scss";
+
+.counter {
+  color: deeppink;
+  font-weight: bold;
+  font-size: pxToRem(24);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(36);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(12);
+  }
+}
+
+.unusedClass {
+  color: red;
+  background: blue;
+}

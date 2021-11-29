@@ -1,0 +1,34 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "start:dev": "NODE_ENV='development' node server.js",
+    "build": "next build && next export",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@next/bundle-analyzer": "^12.0.4",
+    "bootstrap": "^4.5.3",
+    "classnames": "^2.3.1",
+    "colors": "^1.4.0",
+    "lodash": "^4.17.21",
+    "next": "10.0.3",
+    "react": "17.0.1",
+    "react-bootstrap": "^1.4.0",
+    "react-dom": "17.0.1",
+    "sass": "^1.43.5"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.27.1",
+    "prettier": "^2.5.0",
+    "typescript": "^4.5.2"
+  }
+}
