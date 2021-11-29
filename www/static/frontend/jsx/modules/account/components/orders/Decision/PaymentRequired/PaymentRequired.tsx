@@ -12,6 +12,7 @@ import _merge from "lodash/merge";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import cn from "classnames";
+import SliderSwitchButton from "@client/jsx/modules/ui/SliderSwitchButton";
 
 interface IStripeProps extends CardElementProps {
   afterInit: (e: any) => any;
@@ -159,6 +160,8 @@ const Checkout: React.FC = function () {
             >
               Pay
             </button>
+
+            <SliderSwitchButton />
           </Form>
         );
       }}
