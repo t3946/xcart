@@ -20,7 +20,10 @@ class Sberbank extends Gateway
         [$order_id, $time_payment] = explode('_', $order_info);
         /** @var OrderTransactionModel txn */
         if ($this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $transaction_id, 'orderid' => $order_id])) {
-            Xcart::app()->logger->debug('Success find transaction', [$this->txn->transaction_id], 'sberbank_response');
+            $data = "amount;{$this->txn->transaction_amount};mdOrder;{$this->txn->transaction_id};operation;{$params['operation']};orderNumber;{$order_info};status;{$params['status']};";
+            $key = "np0tlf460u8o0nsfisfd0tasti";
+            $hmac = hash_hmac ( 'sha256' , $data , $key);
+            Xcart::app()->logger->debug('Symmetrical cryptography', ["[$hmac]\n", $hmac], 'sberbank_response');
             $this->txn->setAttributes([
                 'transaction_response' => $params,
                 'transaction_id' => $transaction_id,
