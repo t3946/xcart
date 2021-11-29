@@ -680,4 +680,13 @@ HTML;
         }
         return $list ?? [];
     }
+
+    public static function decreaseOrderProductsQuantity(OrderModel $order): void
+    {
+        foreach ($order->detail_models as $detail) {
+            $product = $detail->product_model;
+            $product->r_avail -= $detail->amount;
+            $product->save(['r_avail']);
+        }
+    }
 }

@@ -197,6 +197,8 @@ class OrderEventHelper
         OrderInvoiceHelper::sendOrderStatusNotification($model);
 
         $model->updateVerificationStatus();
+
+        OrderHelper::decreaseOrderProductsQuantity($model);
     }
 
     public static function orderShippedEvent(OrderModel $model): void
