@@ -9,28 +9,18 @@ import {
 } from "@stripe/react-stripe-js";
 import AppData from "@client/jsx/utils/AppData";
 import _merge from "lodash/merge";
-import * as stripe from "stripe";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import cn from "classnames";
 
-interface IStripeProps {
+interface IStripeProps extends CardElementProps {
   afterInit: (e: any) => any;
-  cardElementProps?: CardElementProps;
 }
 
 const StripeField: React.FC<IStripeProps> = function (props: IStripeProps) {
   const stripe = useStripe();
   const elements = useElements();
   const cardRef = React.useRef<any>();
-
-  React.useEffect(function () {
-    props.afterInit({
-      stripe,
-      elements,
-    });
-  });
-
   const defaultProps = {
     options: {
       classes: {
@@ -39,12 +29,29 @@ const StripeField: React.FC<IStripeProps> = function (props: IStripeProps) {
     },
     ref: cardRef,
   };
+  const cardElementProps = _merge(defaultProps);
+  const [hasErrors, setHasErrors] = React.useState(false);
+  const classes = {
+    stripeWrapper: [
+      "form-input",
+      "d-flex",
+      "align-items-center",
+      {
+        "form-input_error": hasErrors,
+      },
+    ],
+  };
 
-  const cardElementProps = _merge(defaultProps, props.cardElementProps);
+  React.useEffect(function () {
+    props.afterInit({
+      stripe,
+      elements,
+    });
+  });
 
   return (
     <div
-      className="form-input d-flex align-items-center"
+      className={cn(classes.stripeWrapper)}
       onClick={() => {
         if (!cardRef.current) {
           return;
@@ -53,7 +60,16 @@ const StripeField: React.FC<IStripeProps> = function (props: IStripeProps) {
         cardRef.current.base.click();
       }}
     >
-      <CardElement {...cardElementProps} />
+      <CardElement
+        {...cardElementProps}
+        onChange={(e) => {
+          props.onChange && props.onChange(e);
+          setHasErrors(!!e.error);
+        }}
+        onReady={(e) => {
+          props.onReady && props.onReady(e);
+        }}
+      />
     </div>
   );
 };
@@ -65,6 +81,7 @@ const Checkout: React.FC = function () {
   const [stripe, setStripe] = React.useState<any>(null);
   const [elements, setElements] = React.useState<any>(null);
   const [stripeReady, setStripeReady] = React.useState(false);
+  const [stripeError, setStripeError] = React.useState("");
 
   const handleSubmit = async (event) => {
     console.log("handleSubmit", {
@@ -95,8 +112,6 @@ const Checkout: React.FC = function () {
     console.log("submit");
   }
 
-  const [stripeError, setStripeError] = React.useState("");
-
   return (
     <Formik
       initialValues={initialValues}
@@ -105,7 +120,8 @@ const Checkout: React.FC = function () {
       ref={React.useRef()}
     >
       {({ errors, values }) => {
-        const stripeCardElemProps: CardElementProps = {
+        const stripeCardElemProps = {
+          afterInit: stripeInitHandler,
           onReady: () => setStripeReady(true),
           onChange: function (e) {
             const errorMessage = e.error ? e.error.message : "";
@@ -123,10 +139,7 @@ const Checkout: React.FC = function () {
                 Your Credit Card
               </RBForm.Label>
 
-              <StripeField
-                afterInit={stripeInitHandler}
-                cardElementProps={stripeCardElemProps}
-              />
+              <StripeField {...stripeCardElemProps} />
 
               <RBForm.Control.Feedback
                 type="invalid"
