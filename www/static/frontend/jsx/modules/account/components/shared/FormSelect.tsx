@@ -87,7 +87,7 @@ export const FormSelect: React.FC<IProps> = ({
             className={classnames(
               classes?.selectHeader,
               "form-select-head",
-              `${errorMessage && "form-input-error"}`
+              `${errorMessage && "form-input_error"}`
             )}
           >
             {selectedItem?.previewValue || selectedItem?.viewValue}

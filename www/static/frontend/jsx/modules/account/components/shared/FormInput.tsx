@@ -80,7 +80,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
                   placeholder={placeholder}
                   className={classnames(
                     "form-input",
-                    `${error && "form-input-error"}`
+                    `${error && "form-input_error"}`
                   )}
                   name={name}
                   id={id}
@@ -96,7 +96,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
               placeholder={placeholder}
               className={classnames(
                 "form-input",
-                `${error && "form-input-error"}`,
+                `${error && "form-input_error"}`,
                 classes?.textArea
               )}
               name={name}

@@ -130,7 +130,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
                   <input
                     placeholder="(___) ___-____"
                     className={classnames("form-input", {
-                      "form-input-error": !!errors[name],
+                      "form-input_error": !!errors[name],
                     })}
                     name={name}
                     id={name}

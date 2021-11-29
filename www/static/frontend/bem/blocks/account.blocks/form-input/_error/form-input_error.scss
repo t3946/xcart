@@ -1,0 +1,9 @@
+.form-input_error {
+  $color: #f02a36;
+  border: 1px solid $color;
+  color: $color;
+
+  &:focus {
+    box-shadow: 0 0 0 rem-calc(2) rgba(246, 47, 54, 0.52);
+  }
+}
