@@ -7,8 +7,8 @@ class DataPriorityQueue extends DataQueue
     {
         $this->data[] = ['data' => $data, 'priority' => $priority];
 
-        // TODO refactoring sort algorithm
-        //usort is not stable sort algorithm
+        // TODO test after upgrade to 8.0
+        //usort is not stable sort algorithm in php 7.4
         /*usort($this->data, static function($a, $b){
             if ($a['priority'] === $b['priority']) {
                 return 0;
