@@ -13,6 +13,7 @@ use Modules\Distributor\Models\ColumnTableSaveModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Sites\Models\SiteModel;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Throwable;
 use Xcart\App\Controller\Controller;
@@ -111,36 +112,53 @@ class ApiDxController extends Controller
             $reader = IOFactory::createReaderForFile($path_save);
             $excel_obj = $reader->load($path_save);
             $ar_tables = [];
-            $table_rows = [];
+            $table_sheets = [];
+            $table = [];
 
             for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
-                $row_iterator = $excel_obj->getSheet($t)->getRowIterator();
+                $worksheet = $excel_obj->getSheet($t);
+                $row_iterator = $worksheet->getRowIterator();
+
                 $cells = [];
                 foreach ($row_iterator->current()->getCellIterator() as $key => $val) {
                     $cells[] = $key;
                 }
-                $count_column = count($excel_obj->getSheet($t)->toArray()) > 100 ?: 100;
+
                 $cells_values = [];
                 foreach ($cells as $cell) {
-                    for ($i = 0; $i < $count_column; $i++) {
-                        $cells_values[$cell][] = $row_iterator->current()->getWorksheet()->getCell($cell . $i)->getValue();
+                    for ($i = 0; $i < 100; $i++) {
+                        $cell_item = $worksheet->getCell($cell . $i);
+                        $cell_value = $cell_item->getDataType() === DataType::TYPE_FORMULA ? $cell_item->getCalculatedValue() : $cell_item->getValue();
+                        $cells_values[$cell][] = is_numeric($cell_value) ? round($cell_value, 2) : $cell_value;
                     }
                 }
+
                 $cells_values = array_map(static fn(array $cells) => array_filter($cells), $cells_values);
                 $cells_values = array_filter($cells_values);
                 foreach ($cells_values as $cell_values) {
-                    for ($i = 0; $i < $count_column; $i++) {
-                        if (count($table_rows[$t]) !== self::COUNT_ITEMS_TABLE) {
-                            $table_rows[$i][] = $cell_values[$i] ?? null;
+                    for ($i = 0; $i < 100; $i++) {
+                        $table_sheets[$t][$i][] = $cell_values[$i] ?? null;
+                    }
+                }
+
+                foreach ($table_sheets as $sheet => $table_sheet) {
+                    foreach ($table_sheet as $row) {
+                        $active_cell = array_filter($row);
+                        if (count($active_cell) >= count($row) * 30 / 100) {
+                            $table[$sheet][] = $row;
+                        }
+
+                        if (isset($table[$sheet]) && count($table[$sheet]) === self::COUNT_ITEMS_TABLE) {
+                            break;
                         }
                     }
                 }
-                if (!empty($table_rows[$t])) {
+                if (!empty($table[$t])) {
                     $ar_tables[] = $excel_obj->getSheetNames()[$t];
                 }
             }
             $output = [
-                'contentFile' => $table_rows,
+                'contentFile' => $table,
                 'tableNames' => $ar_tables
             ];
             $this->jsonResponse($output);
@@ -154,8 +172,7 @@ class ApiDxController extends Controller
     }
 
     /* Update products by rows from Excel file */
-    public
-    function updateProductsFromPriceList(): void
+    public function updateProductsFromPriceList(): void
     {
         $post = json_decode(file_get_contents('php://input'));
         $select = $post->select;
