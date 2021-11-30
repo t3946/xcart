@@ -33,7 +33,7 @@ const HatNavigation: React.FC = () => {
       const item = menu[i];
 
       items.push(
-        <li className="main-menu_item">
+        <li className="main-menu_item" key={i}>
           <a href={item.url} className={"main-menu-link"}>
             {item.name}
           </a>

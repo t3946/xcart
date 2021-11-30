@@ -246,69 +246,9 @@ return [
         'name' => 'public-profile'
     ],
 
-    //api
     [
-        'route' => '/api/authorization',
-        'path' => 'Modules.Account.routes.routes_authorization_api',
-        'namespace' => 'authorization_api'
-    ],
-
-    [
-        'route' => '/api/profile',
-        'path' => 'Modules.Account.routes.routes_profile_api',
-        'namespace' => 'profile_api'
-    ],
-
-    [
-        'route' => '/api/addresses',
-        'path' => 'Modules.Account.routes.routes_addresses_api',
-        'namespace' => 'addresses_api'
-    ],
-
-    [
-        'route' => '/api',
+        'route' => '/api/account',
         'path' => 'Modules.Account.routes.routes_api',
-        'namespace' => 'api'
-    ],
-
-    [
-        'route' => '/api/wallet',
-        'path' => 'Modules.Account.routes.routes_wallet_api',
-        'namespace' => 'api'
-    ],
-
-    [
-        'route' => '/api/login-and-security',
-        'path' => 'Modules.Account.routes.routes_login-and-securities_api',
-        'namespace' => 'api',
-    ],
-
-    [
-        'route' => '/api/tsv',
-        'path' => 'Modules.Account.routes.routes_tsv_api',
-        'namespace' => 'api',
-    ],
-
-    [
-        'route' => '/api/lists',
-        'path' => 'Modules.Account.routes.routes_lists_api',
-        'namespace' => 'api',
-    ],
-
-    [
-        'route' => '/api/reset-password',
-        'path' => 'Modules.Account.routes.routes_reset-password_api',
-        'namespace' => 'api',
-    ],
-
-    [
-        'route' => '/api/review',
-        'path' => 'Modules.Account.routes.routes_review_api',
-        'namespace' => 'api',
-    ],
-    [
-        'route' => '/api/orders',
-        'path' => 'Modules.Account.routes.routes_orders_api',
-        'namespace' => 'api',
+        'namespace' => 'api:account'
     ],
 ];

@@ -53,6 +53,6 @@ class AccountApi extends FrontendController
     }
 
     public function getRoutesList() {
-        $this->jsonResponse(AdminHelper::routesData());
+        $this->jsonResponse(AdminHelper::getRoutesMap());
     }
 }

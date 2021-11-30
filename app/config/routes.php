@@ -3,6 +3,10 @@ $admin_routes = include 'routes_admin.php';
 return array_merge($admin_routes, [
     [
         'route' => '',
+        'path' => 'Modules.Account.routes',
+    ],
+    [
+        'route' => '',
         'path' => 'Modules.Order.routes_api'
     ],
     [
@@ -121,11 +125,6 @@ return array_merge($admin_routes, [
         'route' => '/subscribe',
         'path' => 'Modules.Subscribe.routes',
         'namespace' => 'subscribe'
-    ],
-    [
-        'route' => '/account',
-        'path' => 'Modules.Account.routes',
-        'namespace' => 'account'
     ],
     [
         'route' => '/reviews',
