@@ -43,7 +43,8 @@ class PaymentController extends Controller
             $order->save();
 
             try {
-
+                $timestamp = time();
+                $order_number = "{$order->pk}_$timestamp";
                 $params = [
                     'cancelUrl' => Xcart::app()->router->absoluteUrl('payment:cancel', ['gateway' => strtolower($pm->processor_name)]),
                     'returnUrl' => Xcart::app()->router->absoluteUrl('payment:return', [
@@ -56,7 +57,8 @@ class PaymentController extends Controller
                     'order' => $order,
                     'currency' => $order->currency,
                     'description' => $order->getTransactionDescription(),
-                    'processor_model' => $pm
+                    'processor_model' => $pm,
+                    'orderNumber' => $order_number
                 ];
 
                 if ($gw->purchase($params)) {
@@ -65,7 +67,8 @@ class PaymentController extends Controller
                         'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
                         'amount' => $order->total,
                         'currency' => $order->currency,
-                        'payment_method_model' => $order->payment_method_model
+                        'payment_method_model' => $order->payment_method_model,
+                        'uniqueOrderNumber' => $order_number
                     ];
 
                     $transaction = new OrderTransactionModel(array_merge(

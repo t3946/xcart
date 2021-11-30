@@ -31,6 +31,7 @@ use Xcart\App\Orm\Model;
  * @property PaymentMethodModel payment_method_model
  * @property mixed|Field|FileField|ModelFieldInterface|null transaction_response
  * @property string transaction_status
+ * @property float transaction_amount
  * @property mixed date
  */
 class OrderTransactionModel extends Model
