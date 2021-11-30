@@ -8,7 +8,7 @@ const api = new ApiService();
 
 function* getAddresses(action): Generator {
   const result: any = yield api
-    .post<any>(`/account/api/addresses/get-addresses`, action.userId)
+    .post<any>(`/api/account/addresses/get-addresses`, action.userId)
     .then((response) => response)
     .catch((error) => console.log(error));
 
@@ -25,7 +25,7 @@ function* getAddresses(action): Generator {
 function* changeDefaultAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
-      `/account/api/addresses/change-default-address`,
+      `/api/account/addresses/change-default-address`,
       JSON.stringify({
         user: action.userId,
         addressId: action.id,
@@ -49,7 +49,7 @@ function* changeDefaultAddress(action: AnyAction): Generator {
 function* removeAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
-      `/account/api/addresses/remove-address`,
+      `/api/account/addresses/remove-address`,
       JSON.stringify({
         addressId: action.id,
         user: Store.getState().user.id,
@@ -73,7 +73,7 @@ function* removeAddress(action: AnyAction): Generator {
 function* addAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
-      `/account/api/addresses/add-address`,
+      `/api/account/addresses/add-address`,
       JSON.stringify({
         user: action.userId,
         address: action.address,
@@ -98,7 +98,7 @@ function* addAddress(action: AnyAction): Generator {
 function* editAddress(action: AnyAction): Generator {
   const result: any = yield api
     .post<any>(
-      `/account/api/addresses/edit-address`,
+      `/api/account/addresses/edit-address`,
       JSON.stringify({
         address: action.address,
         user: Store.getState().user.id,

@@ -6,7 +6,7 @@ const api = new ApiService();
 
 function* getTerritory(): Generator {
   const result: any = yield api
-    .get<any>(`/account/api/get-territory`)
+    .get<any>(`/api/account/get-territory`)
     .then((response) => response);
 
   yield put({
