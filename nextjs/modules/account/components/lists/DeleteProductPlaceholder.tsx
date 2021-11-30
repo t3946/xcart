@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { undoDeleteProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { ListItem } from "@client/modules/account/ts/types/list.type";
+import { undoDeleteProduct } from "@redux/actions/account-actions/ListsActions";
+import { ListItem } from "@modules/account/ts/types/list.type";
 
 interface DeleteProductPlaceholderProps {
   name: string;

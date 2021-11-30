@@ -2,20 +2,20 @@ import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
-import appData from "@client/jsx/utils/AppData";
-import SelectRating from "@client/modules/account/components/review/SelectRating";
+import InnerPage from "@modules/account/components/shared/InnerPage";
+import appData from "@utils/AppData";
+import SelectRating from "@modules/account/components/review/SelectRating";
 import { Form as RBForm } from "react-bootstrap";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
 import classnames from "classnames";
 import {
   createReviewAction,
   getVideoHeaderAction,
-} from "@client/jsx/redux/actions/account-actions/ReviewActions";
-import Files from "@client/jsx/modules/account/components/review/Files";
-import validatorMaxFileSize from "@client/jsx/utils/yup/validatorMaxFileSize";
-import validatorFileFormat from "@client/jsx/utils/yup/validatorFileFormat";
-import AppData from "@client/jsx/utils/AppData";
+} from "@redux/actions/account-actions/ReviewActions";
+import Files from "@modules/account/components/review/Files";
+import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
+import validatorFileFormat from "@utils/yup/validatorFileFormat";
+import AppData from "@utils/AppData";
 
 const ReviewForm = (): any => {
   const product = appData.review.product;

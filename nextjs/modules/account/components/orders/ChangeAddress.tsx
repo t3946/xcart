@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { BillingAddressList } from "@client/modules/account/components/wallet/BillingAddressList";
+import { BillingAddressList } from "@modules/account/components/wallet/BillingAddressList";
 import { Button } from "@material-ui/core";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
-import { AddAddressForm } from "@client/modules/account/components/addresses/AddAddressForm";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { AccountStore } from "@modules/account/ts/types/store.type";
+import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { useHistory, useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
-import { ApiService } from "@client/modules/shared/services/api.service";
-import Store from "@client/jsx/redux/stores/Store";
-import { setOrders } from "@client/jsx/redux/actions/account-actions/OrdersActions";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
+import { ApiService } from "@modules/shared/services/api.service";
+import Store from "@redux/stores/Store";
+import { setOrders } from "@redux/actions/account-actions/OrdersActions";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface ChangeAddressProps {
   handleClose?: () => void;

@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
@@ -9,10 +9,10 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import {
   editEmailAction,
   setAlertAction,
-} from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+} from "@redux/actions/account-actions/LoginAndSecurityActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import InnerPage from "@modules/account/components/shared/InnerPage";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 
 const FormEditUserEmail = (): any => {
   const history = useHistory();

@@ -6,7 +6,7 @@ import { TransactionAddresses } from "./TransactionAddresses";
 import { TransactionItems } from "./TransactionItems";
 import { useAccordion } from "../../hooks/useAccordion";
 import { useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
 
 export const TransactionItemRefund = ({ transactionInfo, first }) => {
   const accordion = useAccordion(500);

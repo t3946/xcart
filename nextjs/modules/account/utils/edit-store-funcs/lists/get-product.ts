@@ -1,4 +1,4 @@
-import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
+import { IndexesValues } from "@modules/account/ts/types/get-indexes-values";
 
 export function GetListAndProductIndexes(
   items,

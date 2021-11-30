@@ -2,20 +2,20 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { IconButton } from "@material-ui/core";
 import { AttachFile } from "@material-ui/icons";
-import { FileDrop } from "@client/modules/account/components/shared/FileDrop";
-import { OrdersEmailItem } from "@client/modules/account/components/orders/OrdersEmailItem";
+import { FileDrop } from "@modules/account/components/shared/FileDrop";
+import { OrdersEmailItem } from "@modules/account/components/orders/OrdersEmailItem";
 import {
   addStyleToViewed,
   emailStyle,
-} from "@client/modules/account/utils/set-email-item-style";
-import { FileItem } from "@client/modules/account/components/orders/FileItem";
+} from "@modules/account/utils/set-email-item-style";
+import { FileItem } from "@modules/account/components/orders/FileItem";
 import { useHistory, useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 import { useDispatch, useSelector } from "react-redux";
-import { sendEmail } from "@client/jsx/redux/actions/account-actions/OrdersActions";
-import Store from "@client/jsx/redux/stores/Store";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { sendEmail } from "@redux/actions/account-actions/OrdersActions";
+import Store from "@redux/stores/Store";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 
 interface OrderCommunicationPageProps {
   orderItem?: any;

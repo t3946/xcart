@@ -1,17 +1,17 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
-import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
-import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
-import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import TransitionFade from "@modules/account/components/shared/TransitionFade";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import { setTabletMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import classnames from "classnames";
-import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
-import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
-import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
+import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
+import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 import RotateStyles from "@client/style-modules/common/Rotate.module.scss";
 
 interface IProps {

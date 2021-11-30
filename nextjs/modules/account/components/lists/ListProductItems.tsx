@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import { NoItemsBlock } from "@client/modules/account/components/lists/NoItemsBlock";
-import { ListProductItem } from "@client/modules/account/components/lists/ListProductItem";
+import { NoItemsBlock } from "@modules/account/components/lists/NoItemsBlock";
+import { ListProductItem } from "@modules/account/components/lists/ListProductItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import {
@@ -9,16 +9,16 @@ import {
   reorderList,
   setLists,
 } from "../../../../redux/actions/account-actions/ListsActions";
-import { reorderMass } from "@client/modules/account/utils/reorder-mass";
-import { AccountListProductActionEnum } from "@client/modules/account/ts/types/account-list-product-action";
-import { MovedProductPlaceholder } from "@client/modules/account/components/lists/MovedProductPlaceholder";
-import Store from "@client/jsx/redux/stores/Store";
-import { DeleteProductPlaceholder } from "@client/modules/account/components/lists/DeleteProductPlaceholder";
-import { ListProductIdeaItem } from "@client/modules/account/components/lists/ListProductIdeaItem";
-import { ListItemTypeEnum } from "@client/modules/account/ts/consts/list-item-type.enum";
-import { ListItem } from "@client/modules/account/ts/types/list.type";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { reorderMass } from "@modules/account/utils/reorder-mass";
+import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
+import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
+import Store from "@redux/stores/Store";
+import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
+import { ListProductIdeaItem } from "@modules/account/components/lists/ListProductIdeaItem";
+import { ListItemTypeEnum } from "@modules/account/ts/consts/list-item-type.enum";
+import { ListItem } from "@modules/account/ts/types/list.type";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 export const ListProductItems = ({ info, path, edit }) => {
   useEffect(() => {

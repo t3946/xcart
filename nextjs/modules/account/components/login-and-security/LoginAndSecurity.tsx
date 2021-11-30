@@ -1,20 +1,20 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import classnames from "classnames";
-import { getCountryByCode } from "@client/jsx/utils/Countries";
-import Alert from "@client/modules/account/components/shared/Alert";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { setAlertAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import { getCountryByCode } from "@utils/Countries";
+import Alert from "@modules/account/components/shared/Alert";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { setAlertAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
+import InnerPage from "@modules/account/components/shared/InnerPage";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
-} from "@client/jsx/redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+} from "@redux/actions/account-actions/MobileMenuActions";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 const LoginAndSecurity = (): any => {
   const dispatch = useDispatch();

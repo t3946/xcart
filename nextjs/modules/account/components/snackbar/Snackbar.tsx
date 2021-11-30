@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import UISnackbar from "@material-ui/core/Snackbar";
 import classnames from "classnames";
-import FaCheckLight from "@client/modules/icon/components/font-awesome/check/Light";
-import FaExclamationTriangleLight from "@client/modules/icon/components/font-awesome/exclamation-triangle/Light";
+import FaCheckLight from "@modules/icon/components/font-awesome/check/Light";
+import FaExclamationTriangleLight from "@modules/icon/components/font-awesome/exclamation-triangle/Light";
 
 const Snackbar: React.FC = ({ children }) => {
   const [open, setOpen] = React.useState(false);

@@ -1,7 +1,7 @@
-import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
-import { GetListAndProductIndexes } from "@client/modules/account/utils/edit-store-funcs/lists/get-product";
-import { EditCommentRequestData } from "@client/modules/account/ts/types/edit-comment-request-data";
-import { List } from "@client/modules/account/ts/types/list.type";
+import { IndexesValues } from "@modules/account/ts/types/get-indexes-values";
+import { GetListAndProductIndexes } from "@modules/account/utils/edit-store-funcs/lists/get-product";
+import { EditCommentRequestData } from "@modules/account/ts/types/edit-comment-request-data";
+import { List } from "@modules/account/ts/types/list.type";
 
 export function EditCommentDataOnProduct(
   items: List[],

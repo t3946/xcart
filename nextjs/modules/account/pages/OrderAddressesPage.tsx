@@ -1,10 +1,10 @@
 import React from "react";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { ChangeAddress } from "@modules/account/components/orders/ChangeAddress";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useHistory, useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 
 interface OrderAddressesPageProps {
   orderItem?: any;

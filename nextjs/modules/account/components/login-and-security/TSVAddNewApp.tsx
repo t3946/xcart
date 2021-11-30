@@ -2,14 +2,14 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
-import { confirmCodeAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { confirmCodeAction } from "@redux/actions/account-actions/TSVActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { Link } from "react-router-dom";
 
 const TSVAddNewApp = (): any => {

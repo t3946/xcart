@@ -1,27 +1,27 @@
 import React, { useContext, useState } from "react";
-import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
-import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
-import { Tooltip } from "@client/modules/account/components/shared/Tooltip";
-import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
+import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
+import RatingStars from "@modules/shared/components/ratings/RatingStars";
+import { Tooltip } from "@modules/account/components/shared/Tooltip";
+import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import { ListProductItemBtns } from "./ListProductItemBtns";
-import { ListProductItemComment } from "@client/modules/account/components/lists/ListProductItemComment";
-import { EditComment } from "@client/modules/account/components/lists/EditComment";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
-import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
+import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
+import { EditComment } from "@modules/account/components/lists/EditComment";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { useHistory } from "react-router-dom";
-import { ListProductInfo } from "@client/modules/account/ts/types/list.type";
-import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
+import { ListProductInfo } from "@modules/account/ts/types/list.type";
+import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "../../../../redux/reduсers/appCartReducer";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { CountInput } from "@client/modules/account/components/shared/CountInput";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { CountInput } from "@modules/account/components/shared/CountInput";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint, {
   getBreakpointsFlags,
-} from "@client/modules/account/hooks/useBreakpoint";
-import Store from "@client/jsx/redux/stores/Store";
-import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
+} from "@modules/account/hooks/useBreakpoint";
+import Store from "@redux/stores/Store";
+import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,

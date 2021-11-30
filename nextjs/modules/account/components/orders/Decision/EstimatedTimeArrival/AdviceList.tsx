@@ -1,7 +1,7 @@
 import React from "react";
 import Advice, {
   AdviceTypes,
-} from "@client/modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
+} from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
 import classnames from "classnames";
 
 interface IProps {

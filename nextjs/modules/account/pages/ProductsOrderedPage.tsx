@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { ProductsOrderedItem } from "@client/modules/account/components/orders/ProductsOrderedItem";
-import Store from "@client/jsx/redux/stores/Store";
-import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
-import { getBreakpointsFlags } from "@client/modules/account/hooks/useBreakpoint";
+import { ProductsOrderedItem } from "@modules/account/components/orders/ProductsOrderedItem";
+import Store from "@redux/stores/Store";
+import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
+import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
 
 interface ProductsOrderedPageProps {
   orderItem?: any;

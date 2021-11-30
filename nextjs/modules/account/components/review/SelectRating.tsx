@@ -1,6 +1,6 @@
 import React from "react";
-import StarFilled from "@client/jsx/modules/icon/components/account/rating/StarFilled";
-import StarStroked from "@client/jsx/modules/icon/components/account/rating/StarStroked";
+import StarFilled from "@modules/icon/components/account/rating/StarFilled";
+import StarStroked from "@modules/icon/components/account/rating/StarStroked";
 import { Form as RBForm } from "react-bootstrap";
 import classnames from "classnames";
 

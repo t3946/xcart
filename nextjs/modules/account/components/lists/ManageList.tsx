@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FormInput } from "@client/modules/account/components/shared/FormInput";
+import { FormInput } from "@modules/account/components/shared/FormInput";
 import { Grid } from "@material-ui/core";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
-import { FormCheckBox } from "@client/modules/account/components/shared/FormCheckBox";
-import Store from "@client/jsx/redux/stores/Store";
-import { getValuesForSelect } from "@client/modules/account/utils/edit-store-funcs/getValuesForSelect";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
+import Store from "@redux/stores/Store";
+import { getValuesForSelect } from "@modules/account/utils/edit-store-funcs/getValuesForSelect";
 import classnames from "classnames";
-import { fillingMassForMonths } from "@client/modules/account/utils/filling-mass-for-months";
-import { getDaysForSelect } from "@client/modules/account/utils/get-days-for-select";
+import { fillingMassForMonths } from "@modules/account/utils/filling-mass-for-months";
+import { getDaysForSelect } from "@modules/account/utils/get-days-for-select";
 import { useDispatch, useSelector } from "react-redux";
-import { manageList } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { convertManageListFormDataToRequest } from "@client/modules/account/utils/convert-manage-list-form-data-to-request";
-import { ManageListFormData } from "@client/modules/account/ts/types/manage-list-form.types";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
-import { List } from "@client/modules/account/ts/types/list.type";
+import { manageList } from "@redux/actions/account-actions/ListsActions";
+import { convertManageListFormDataToRequest } from "@modules/account/utils/convert-manage-list-form-data-to-request";
+import { ManageListFormData } from "@modules/account/ts/types/manage-list-form.types";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import { List } from "@modules/account/ts/types/list.type";
 
 interface ManageListProps {
   info: List;

@@ -1,11 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-import SidebarMenu from "@client/jsx/modules/account/components/sidebar-menu/SideBarMenu";
+import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import { Link } from "react-router-dom";
-import { hideAllMenu } from "@client/jsx/redux/actions/account-actions/MenuActions";
+import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 
 interface IProps {
   isStatic: boolean;

@@ -1,7 +1,7 @@
 import React from "react";
-import List from "@client/modules/account/components/orders/DecisionsPreview/List";
+import List from "@modules/account/components/orders/DecisionsPreview/List";
 import { Row } from "react-bootstrap";
-import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import classnames from "classnames";
 
 const Decisions: React.FC = function () {

@@ -1,19 +1,17 @@
 import React from "react";
-import { logoutAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
-import { userClearAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { useHistory } from "react-router-dom";
+import { logoutAction } from "@redux/actions/account-actions/AutorizationActions";
+import { userClearAction } from "@redux/actions/account-actions/UserActions";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
-import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import { route } from "@utils/AppData";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
 
 interface IProps {
   onClick?: () => void;
 }
 
-const LogoutButton: React.FC<IProps> = function (
-  props: IProps
-) {
-  const history = useHistory();
+const LogoutButton: React.FC<IProps> = function (props: IProps) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   function logout() {
@@ -24,8 +22,8 @@ const LogoutButton: React.FC<IProps> = function (
         callback() {
           dispatch(userClearAction());
 
-          if (history) {
-            history.push(route("account:login"));
+          if (navigate) {
+            navigate(route("account:login"));
           }
         },
       })

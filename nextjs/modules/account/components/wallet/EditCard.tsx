@@ -9,14 +9,14 @@ import { fillMassToSelect } from "../../utils/fill-mass-to-select";
 import { convertDataToEditCardForm } from "../../utils/convert-data-to-edit-card-form";
 import { useDispatch, useSelector } from "react-redux";
 import { editCard } from "../../../../redux/actions/account-actions/PaymentsActions";
-import Store from "@client/jsx/redux/stores/Store";
+import Store from "@redux/stores/Store";
 import { CardHeader } from "./CardHeader";
 import { editCardFormValidationSchema } from "../../ts/consts/add-card-form";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import { onCardActionsEnd } from "@client/modules/account/utils/on-card-actions-end";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import { onCardActionsEnd } from "@modules/account/utils/on-card-actions-end";
 import { useHistory } from "react-router-dom";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface EditCardProps {
   cardInfo: CardItemDto;

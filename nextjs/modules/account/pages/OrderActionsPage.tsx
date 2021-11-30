@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import { CancelItems } from "@client/modules/account/components/orders/CancelItems";
-import { ReturnOrReplaceItems } from "@client/modules/account/components/orders/ReturnOrReplaceItems";
-import { ProblemWithOrder } from "@client/modules/account/components/orders/ProblemWithOrder";
-import { useAccordion } from "@client/modules/account/hooks/useAccordion";
-import { getBreakpointsFlags } from "@client/modules/account/hooks/useBreakpoint";
-import Store from "@client/jsx/redux/stores/Store";
-import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
+import { CancelItems } from "@modules/account/components/orders/CancelItems";
+import { ReturnOrReplaceItems } from "@modules/account/components/orders/ReturnOrReplaceItems";
+import { ProblemWithOrder } from "@modules/account/components/orders/ProblemWithOrder";
+import { useAccordion } from "@modules/account/hooks/useAccordion";
+import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
+import Store from "@redux/stores/Store";
+import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 
 const plus = (
   <svg

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+import { AccountStore } from "@modules/account/ts/types/store.type";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 
 interface DeleteAddressProps {
   onCancelClick: () => void;

@@ -5,11 +5,11 @@ import { NavLink, useHistory } from "react-router-dom";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { useDispatch, useSelector } from "react-redux";
 import { Form as RBForm } from "react-bootstrap";
-import { registerAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { route } from "@client/jsx/utils/AppData";
+import { registerAction } from "@redux/actions/account-actions/AutorizationActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { route } from "@utils/AppData";
 import classNames from "classnames";
-import { noSidebarClasses } from "@client/modules/account/ts/consts/no-sidebar-classes";
+import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes";
 
 const RegisterForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);

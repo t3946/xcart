@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import useCLickListener from "@client/modules/account/hooks/useClickListener";
+import useCLickListener from "@modules/account/hooks/useClickListener";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
-import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import Store from "@client/jsx/redux/stores/Store";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
-import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import { List } from "@client/modules/account/ts/types/list.type";
-import Styles from "@client/modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
-import AppData from "@client/jsx/utils/AppData";
-import Medium from "@client/modules/icon/components/account/chevron-down/Medium";
+import { addProduct } from "@redux/actions/account-actions/ListsActions";
+import Store from "@redux/stores/Store";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
+import { AddProductToList } from "@modules/account/components/lists/AddProductToList";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { List } from "@modules/account/ts/types/list.type";
+import Styles from "@modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
+import AppData from "@utils/AppData";
+import Medium from "@modules/icon/components/account/chevron-down/Medium";
 import StyleUtils from "@client/style-modules/style-utils.module.scss";
-import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
+import Plus from "@modules/icon/components/account/plus/Plus";
 
 interface IProps {
   items: List[];

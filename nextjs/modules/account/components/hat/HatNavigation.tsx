@@ -1,16 +1,16 @@
 import React from "react";
-import LoginButton from "@client/jsx/modules/account/components/hat/LoginButton/LoginButton";
-import TopLine from "@client/modules/account/components/hat/TopLine";
+import LoginButton from "@modules/account/components/hat/LoginButton/LoginButton";
+import TopLine from "@modules/account/components/hat/TopLine";
 import { useDispatch, useSelector } from "react-redux";
-import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
-import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import AppData from "@client/jsx/utils/AppData";
-import Search from "@client/modules/icon/components/account/search/Search";
-import Styles from "@client/jsx/modules/account/components/hat/Hat.module.scss";
+import { setDepartmentsMenuMobileIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuMobileActions";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import AppData from "@utils/AppData";
+import Search from "@modules/icon/components/account/search/Search";
+import Styles from "@modules/account/components/hat/Hat.module.scss";
 
-const HatNavigation = (): any => {
+const HatNavigation: React.FC = () => {
   const dispatch = useDispatch();
   const cart = useSelector((e: StoreInterface) => e.cart);
 
@@ -18,14 +18,14 @@ const HatNavigation = (): any => {
     (e: StoreInterface) => e.departmentsMenuMobile.isVisible
   );
 
-  function toggleMobileDepartmentsMenu(e) {
+  function toggleMobileDepartmentsMenu(e: any) {
     e.stopPropagation();
     HideAllMenu(dispatch);
     dispatch(setDepartmentsMenuMobileIsVisibleAction(!isVisibleMenu));
     dispatch(setVisibleShadowPanelAction(!isVisibleMenu));
   }
 
-  function mainMenuTemplate() {
+  function mainMenuTemplate(): any {
     const items = [];
     const menu = AppData.mainMenu;
 

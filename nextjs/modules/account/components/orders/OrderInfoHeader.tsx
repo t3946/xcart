@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 
 interface OrderInfoHeaderProps {
   orderItem: any;

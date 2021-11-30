@@ -2,11 +2,11 @@ import React from "react";
 import { CardItem } from "./CardItem";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingContainer } from "../shared/LoadingContainer";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { changeDefaultCard } from "@client/jsx/redux/actions/account-actions/PaymentsActions";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { changeDefaultCard } from "@redux/actions/account-actions/PaymentsActions";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import { useHistory } from "react-router";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface CardsListProps {
   cards: CardItemDto[];

@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { List } from "@client/modules/account/ts/types/list.type";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { List } from "@modules/account/ts/types/list.type";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 interface ListMobileMenuProps {
   lists: List[];

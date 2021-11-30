@@ -1,5 +1,5 @@
 import React from "react";
-import { Sceleton } from "@client/modules/shared/components/sceleton/Sceleton";
+import { Sceleton } from "@modules/shared/components/sceleton/Sceleton";
 
 export const ListProductItemSkeleton: React.FC = () => {
   return (

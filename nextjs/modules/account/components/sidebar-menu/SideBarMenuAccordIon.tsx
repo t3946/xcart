@@ -1,11 +1,11 @@
 import React from "react";
-import { SidebarItem } from "@client/modules/account/ts/types/sidebar-item.type";
+import { SidebarItem } from "@modules/account/ts/types/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
 import { useAccordion } from "../../hooks/useAccordion";
 import classnames from "classnames";
-import ArrowIconTablet from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
-import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import ArrowIconTablet from "@modules/icon/components/account/chevron-down/AccountSidebarTablet";
+import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface sideBarMenuItemPropsDto extends SidebarItem {
   routerItems: SidebarItem[];

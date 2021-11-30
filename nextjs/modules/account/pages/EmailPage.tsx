@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EmailHeader } from "@client/modules/account/components/orders/EmailHeader";
-import { EmailBody } from "@client/modules/account/components/orders/EmailBody";
+import { EmailHeader } from "@modules/account/components/orders/EmailHeader";
+import { EmailBody } from "@modules/account/components/orders/EmailBody";
 import { useParams } from "react-router-dom";
 
 interface EmailPageProps {

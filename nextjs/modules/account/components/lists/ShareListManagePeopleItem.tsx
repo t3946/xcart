@@ -1,14 +1,14 @@
 import React from "react";
-import Store from "@client/jsx/redux/stores/Store";
-import { ShareListManagePeopleSelect } from "@client/modules/account/components/lists/ShareListManagePeopleSelect";
-import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
-import { viewUserListRight } from "@client/modules/account/utils/view-user-list-right";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
-import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
-import { ListProductUser } from "@client/modules/account/ts/types/list.type";
+import Store from "@redux/stores/Store";
+import { ShareListManagePeopleSelect } from "@modules/account/components/lists/ShareListManagePeopleSelect";
+import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
+import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
+import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
+import { ListProductUser } from "@modules/account/ts/types/list.type";
 
 interface ShareListManagePeopleItem {
   userListInfo: ListProductUser;

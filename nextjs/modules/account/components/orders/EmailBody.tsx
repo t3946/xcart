@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Grid, Paper } from "@material-ui/core";
 import moment from "moment";
-import { EmailAttachmentItem } from "@client/modules/account/components/orders/EmailAttachmentItem";
-import { Iframe } from "@client/modules/account/components/shared/Ifame";
+import { EmailAttachmentItem } from "@modules/account/components/orders/EmailAttachmentItem";
+import { Iframe } from "@modules/account/components/shared/Ifame";
 
 interface EmailBodyProps {
   emailInfo: any;

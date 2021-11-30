@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
-import { ShowSharedStatusEnum } from "@client/modules/account/ts/types/show-shared-status.enum";
+import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
+import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
 
 interface ShareListInviteSection {
   onCopyLinkFunc: (value: ShowSharedStatusEnum) => void;

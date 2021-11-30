@@ -1,5 +1,5 @@
-import { GetListAndProductIndexes } from "@client/modules/account/utils/edit-store-funcs/lists/get-product";
-import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
+import { GetListAndProductIndexes } from "@modules/account/utils/edit-store-funcs/lists/get-product";
+import { IndexesValues } from "@modules/account/ts/types/get-indexes-values";
 
 export function editNameOnList(
   lists: Array<any>,

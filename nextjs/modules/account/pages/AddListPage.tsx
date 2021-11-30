@@ -1,9 +1,9 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { CreateNewList } from "@client/modules/account/components/lists/CreateNewList";
-import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { CreateNewList } from "@modules/account/components/lists/CreateNewList";
+import { addProduct } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 interface AddListPageURLParams {
   productId: string;

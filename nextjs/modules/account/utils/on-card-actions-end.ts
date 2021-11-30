@@ -1,4 +1,4 @@
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useHistory } from "react-router-dom";
 
 export function onCardActionsEnd(handleClose: () => void): void {

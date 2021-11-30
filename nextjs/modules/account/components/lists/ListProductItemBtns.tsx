@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
 import { useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import classnames from "classnames";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 interface ListProductItemBtnsProps {
   onMoveClick: (value: SelectValue<string, string>) => void;

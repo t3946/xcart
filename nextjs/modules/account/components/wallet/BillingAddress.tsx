@@ -8,9 +8,9 @@ import {
   addCard,
   addDataFromSubmitCardForm,
 } from "../../../../redux/actions/account-actions/PaymentsActions";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
 import { CardItemDto } from "../../ts/types/wallet.type";
-import { AddressTypeEnum } from "@client/modules/account/ts/consts/address-type.const";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 
 interface BillingAddressProps {
   cardInfo: CardItemDto;

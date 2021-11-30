@@ -1,6 +1,6 @@
 import React from "react";
-import AlertCheck from "@client/modules/icon/components/account/check/AlertCheck";
-import SandClock from "@client/modules/icon/components/account/sand-clock/SandClock";
+import AlertCheck from "@modules/icon/components/account/check/AlertCheck";
+import SandClock from "@modules/icon/components/account/sand-clock/SandClock";
 import classnames from "classnames";
 
 interface IProps {

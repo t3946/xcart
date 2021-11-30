@@ -5,7 +5,7 @@ import { AddBillingAddressForm } from "./AddBillingAddressForm";
 import { BillingAddress } from "./BillingAddress";
 import { AddCardForm } from "./AddCardForm";
 import { EditCard } from "./EditCard";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 
 interface CardActionProps {
   contentType: BillingAddressFormEnum;

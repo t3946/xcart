@@ -1,17 +1,17 @@
 import React from "react";
-import { ListItemMovableArea } from "@client/modules/account/components/lists/ListItemMovableArea";
-import { ListProductItemBtns } from "@client/modules/account/components/lists/ListProductItemBtns";
-import { EditIdea } from "@client/modules/account/components/lists/EditIdea";
-import { ListProductItemComment } from "@client/modules/account/components/lists/ListProductItemComment";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { EditComment } from "@client/modules/account/components/lists/EditComment";
+import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
+import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
+import { EditIdea } from "@modules/account/components/lists/EditIdea";
+import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { EditComment } from "@modules/account/components/lists/EditComment";
 import { useDialog } from "../../hooks/useDialog";
-import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
+import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
 import { useHistory } from "react-router-dom";
-import { ListProductItemProps } from "@client/modules/account/ts/types/list-product-item-props.type";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   info,

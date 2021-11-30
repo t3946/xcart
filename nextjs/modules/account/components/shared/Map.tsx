@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 
 const fromIconFile = require("../../../../../images/icons/account/shipping-from.png");
 const toIconFile = require("../../../../../images/icons/account/shipping-to.png");

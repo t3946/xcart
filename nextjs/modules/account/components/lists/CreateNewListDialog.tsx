@@ -1,6 +1,6 @@
 import React from "react";
-import { CreateNewList } from "@client/modules/account/components/lists/CreateNewList";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { CreateNewList } from "@modules/account/components/lists/CreateNewList";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 
 interface CreateNewListDialogProps {
   handleClose: () => void;

@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
-import Badge from "@client/modules/account/components/orders/Navigation/Badge";
+import Badge from "@modules/account/components/orders/Navigation/Badge";
 
 interface IProps {
   text: string;

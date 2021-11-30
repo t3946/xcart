@@ -1,11 +1,11 @@
 import React from "react";
-import LoginInputForm from "@client/modules/account/components/password-assistance/LoginInputForm";
-import OneTimePasswordInputForm from "@client/modules/account/components/password-assistance/OneTimePasswordInputForm";
-import ChangePasswordForm from "@client/modules/account/components/password-assistance/ChangePasswordForm";
+import LoginInputForm from "@modules/account/components/password-assistance/LoginInputForm";
+import OneTimePasswordInputForm from "@modules/account/components/password-assistance/OneTimePasswordInputForm";
+import ChangePasswordForm from "@modules/account/components/password-assistance/ChangePasswordForm";
 import { useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 
 const PasswordAssistance: React.FC<any> = function () {
   const INPUT_LOGIN_MODE = 0;

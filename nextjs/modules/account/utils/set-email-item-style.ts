@@ -1,7 +1,7 @@
 import {
   EmailPersonType,
   EmailType,
-} from "@client/modules/account/ts/types/email-type.const";
+} from "@modules/account/ts/types/email-type.const";
 
 export function emailStyle(send: boolean, emailType?: string): string {
   if (emailType === EmailType.NOTE) {

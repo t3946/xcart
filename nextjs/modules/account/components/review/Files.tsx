@@ -1,9 +1,9 @@
 import React from "react";
-import Film from "@client/jsx/modules/icon/components/font-awesome/film/Film";
-import PlusPanelButton from "@client/modules/account/components/common/PlusPanelButton";
-import ModalTimes from "@client/modules/icon/components/account/ModalTimes";
-import Camera from "@client/modules/icon/components/account/camera/Camera";
-import mbToB from "@client/jsx/utils/mbToB";
+import Film from "@modules/icon/components/font-awesome/film/Film";
+import PlusPanelButton from "@modules/account/components/common/PlusPanelButton";
+import ModalTimes from "@modules/icon/components/account/ModalTimes";
+import Camera from "@modules/icon/components/account/camera/Camera";
+import mbToB from "@utils/mbToB";
 
 interface IProps {
   setFiles: any;

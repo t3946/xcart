@@ -1,13 +1,13 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FormInput } from "@client/modules/account/components/shared/FormInput";
+import { FormInput } from "@modules/account/components/shared/FormInput";
 import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
-import { priorityProductSelectValuesConst } from "@client/modules/account/ts/consts/priority-product-select-values.const";
-import { editCommentInProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/priority-product-select-values.const";
+import { editCommentInProduct } from "@redux/actions/account-actions/ListsActions";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
   const dispatch = useDispatch();

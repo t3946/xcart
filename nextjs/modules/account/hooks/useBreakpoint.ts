@@ -1,6 +1,6 @@
-import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
-import breakpoints from "@client/modules/account/ts/consts/breakpoints";
-import Store from "@client/jsx/redux/stores/Store";
+import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
+import breakpoints from "@modules/account/ts/consts/breakpoints";
+import Store from "@redux/stores/Store";
 
 function resizeHandler() {
   Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));

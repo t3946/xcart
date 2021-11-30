@@ -1,11 +1,11 @@
 import React from "react";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
-import { deleteProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
+import { deleteProduct } from "@redux/actions/account-actions/ListsActions";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import Store from "@client/jsx/redux/stores/Store";
-import { List } from "@client/modules/account/ts/types/list.type";
+import Store from "@redux/stores/Store";
+import { List } from "@modules/account/ts/types/list.type";
 
 interface DeleteProductPageURLParams {
   listId: string;

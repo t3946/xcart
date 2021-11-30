@@ -1,16 +1,16 @@
 import React from "react";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import { useSelector } from "react-redux";
-import LoginFormInputLogin from "@client/modules/account/components/authorization/LoginFormInputLogin";
-import LoginFormInputPassword from "@client/modules/account/components/authorization/LoginFormInputPassword";
-import LoginFormInputOTP from "@client/modules/account/components/authorization/LoginFormInputOTP";
+import LoginFormInputLogin from "@modules/account/components/authorization/LoginFormInputLogin";
+import LoginFormInputPassword from "@modules/account/components/authorization/LoginFormInputPassword";
+import LoginFormInputOTP from "@modules/account/components/authorization/LoginFormInputOTP";
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import classNames from "classnames";
-import { noSidebarClasses } from "@client/modules/account/ts/consts/no-sidebar-classes";
-import { loginAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
+import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes";
+import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { useDispatch } from "react-redux";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 
 const LoginForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);

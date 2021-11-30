@@ -3,7 +3,7 @@ import { CardAction } from "../../account/components/wallet/CardAction";
 import { useLocation } from "react-router-dom";
 import { BillingAddressFormEnum } from "../ts/consts/billing-address-form-types";
 import { CardItemDto } from "../ts/types/wallet.type";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 interface LocationCardState {
   cardInfo: CardItemDto;

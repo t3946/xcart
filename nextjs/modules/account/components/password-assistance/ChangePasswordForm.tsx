@@ -2,9 +2,9 @@ import React from "react";
 import { Form, Formik } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import { resetPasswordAction } from "@client/jsx/redux/actions/account-actions/ResetPasswordActions";
+import { resetPasswordAction } from "@redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import { useHistory } from "react-router-dom";
 
 interface IProps {

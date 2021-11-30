@@ -1,4 +1,4 @@
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 export function getValuesForSelect<A, T>(
   mass,

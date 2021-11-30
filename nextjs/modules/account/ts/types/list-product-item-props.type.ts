@@ -1,5 +1,5 @@
-import { List, ListItem } from "@client/modules/account/ts/types/list.type";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { List, ListItem } from "@modules/account/ts/types/list.type";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 export interface ListProductItemProps {
   info: ListItem;

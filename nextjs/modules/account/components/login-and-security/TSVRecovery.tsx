@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import InnerPage from "@modules/account/components/shared/InnerPage";
 
 const TSVRecovery: React.FC<any> = function () {
   return (

@@ -2,15 +2,15 @@ import React from "react";
 import classnames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import DepartmentsMenu from "./DepartmentsMenu";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
-import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { setDepartmentsMenuDesktopIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuDesktopActions";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
-import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
+import MiniCart from "@modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
-import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonDesktop";
-import AppData, { route } from "@client/jsx/utils/AppData";
+import LoginButtonDesktop from "@modules/account/components/hat/LoginButton/LoginButtonDesktop";
+import AppData, { route } from "@utils/AppData";
 
 interface IProps {
   isStatic?: boolean;

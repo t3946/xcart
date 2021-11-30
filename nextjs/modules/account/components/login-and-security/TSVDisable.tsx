@@ -1,11 +1,11 @@
 import React from "react";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import InnerPage from "@modules/account/components/shared/InnerPage";
 import { Form as RBForm } from "react-bootstrap";
-import { disableAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { disableAction } from "@redux/actions/account-actions/TSVActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";

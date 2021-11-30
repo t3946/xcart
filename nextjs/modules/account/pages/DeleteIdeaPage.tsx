@@ -1,6 +1,6 @@
 import React from "react";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
-import { deleteProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
+import { deleteProduct } from "@redux/actions/account-actions/ListsActions";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";

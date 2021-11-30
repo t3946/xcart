@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAccordion } from "@client/modules/account/hooks/useAccordion";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { useAccordion } from "@modules/account/hooks/useAccordion";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 
 interface OrderItemProps {
   order: any;

@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { Link, useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 
 const LoginFormInputOTP = function (props: Record<any, any>): any {
   const history = useHistory();

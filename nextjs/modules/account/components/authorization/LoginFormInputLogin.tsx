@@ -6,7 +6,7 @@ import { Form as RBForm } from "react-bootstrap";
 import { NavLink, Link } from "react-router-dom";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 
 const LoginFormInputLogin: React.FC<any> = (props: any) => {
   const dispatch = useDispatch();

@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
 import { useHistory, useParams } from "react-router-dom";
-import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
-import { moveProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import Store from "@client/jsx/redux/stores/Store";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
+import { moveProduct } from "@redux/actions/account-actions/ListsActions";
+import Store from "@redux/stores/Store";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 
 interface MoveProductPageURLProps {
   productId: string;

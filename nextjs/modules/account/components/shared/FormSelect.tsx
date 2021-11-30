@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 import { FormikErrors } from "formik";
 
 interface Item {

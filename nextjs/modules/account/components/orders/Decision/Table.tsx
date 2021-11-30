@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import TableRow, {
   RowInterface,
-} from "@client/modules/account/components/orders/Decision/TableRow";
+} from "@modules/account/components/orders/Decision/TableRow";
 
 export enum TableTypes {
   inStock = "inStock",

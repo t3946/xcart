@@ -15,9 +15,9 @@ import {
   addCard,
   addDataFromSubmitCardForm,
 } from "../../../../redux/actions/account-actions/PaymentsActions";
-import Store from "@client/jsx/redux/stores/Store";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import Store from "@redux/stores/Store";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 
 interface AddBillingAddressFormProps {
   edit: boolean;

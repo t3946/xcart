@@ -2,9 +2,9 @@ import classNames from "classnames";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { setMobileMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
-import HideAllMenu from "@client/jsx/modules/account/utils/hide-all-menu";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import { setMobileMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 
 const MobileTemplate: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);

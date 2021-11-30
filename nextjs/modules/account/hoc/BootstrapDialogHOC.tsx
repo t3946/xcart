@@ -1,5 +1,5 @@
 import Modal from "react-bootstrap/Modal";
-import ModalTimes from "@client/modules/icon/components/account/ModalTimes";
+import ModalTimes from "@modules/icon/components/account/ModalTimes";
 import React from "react";
 import classnames from "classnames";
 

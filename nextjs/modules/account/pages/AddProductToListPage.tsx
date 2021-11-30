@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
+import { AddProductToList } from "@modules/account/components/lists/AddProductToList";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getLists } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { getLists } from "@redux/actions/account-actions/ListsActions";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 interface AddProductToListPageURLParams {
   listId: string;

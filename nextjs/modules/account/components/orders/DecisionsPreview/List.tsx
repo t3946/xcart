@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import Item from "@client/modules/account/components/orders/DecisionsPreview/Item";
+import Item from "@modules/account/components/orders/DecisionsPreview/Item";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
-import style from "@client/modules/account/components/orders/DecisionsPreview/List.module.scss";
+import { route } from "@utils/AppData";
+import style from "@modules/account/components/orders/DecisionsPreview/List.module.scss";
 import {
   loadMoreAction,
   addAction as addDecisionsAction,
-} from "@client/jsx/redux/actions/account-actions/DecisionsActions";
+} from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 
 interface IProps {

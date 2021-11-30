@@ -1,4 +1,4 @@
-import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
+import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 
 export function viewUserListRight(role: UserPrivateVariantsEnum): string {
   switch (role) {

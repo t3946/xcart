@@ -1,9 +1,9 @@
-import { UserPrivateVariantsEnum } from "@client/modules/account/ts/consts/user-private-variants.enum";
-import { PriorityProductEnum } from "@client/modules/account/ts/consts/priority-product.enum";
-import { ListItemTypeEnum } from "@client/modules/account/ts/consts/list-item-type.enum";
-import { User } from "@client/modules/account/ts/types/user.type";
-import { AccountListProductActionEnum } from "@client/modules/account/ts/types/account-list-product-action";
-import { ListPrivateEnum } from "@client/modules/account/ts/consts/list-private.enum";
+import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
+import { PriorityProductEnum } from "@modules/account/ts/consts/priority-product.enum";
+import { ListItemTypeEnum } from "@modules/account/ts/consts/list-item-type.enum";
+import { User } from "@modules/account/ts/types/user.type";
+import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
+import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 export interface List {
   address_id: number;

@@ -1,8 +1,8 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Store from "@client/jsx/redux/stores/Store";
-import { DeleteList } from "@client/modules/account/components/lists/DeleteList";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import Store from "@redux/stores/Store";
+import { DeleteList } from "@modules/account/components/lists/DeleteList";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 interface ManageListPageURLParams {
   listHash: string;

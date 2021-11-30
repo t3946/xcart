@@ -1,5 +1,5 @@
 import React from "react";
-import { ListPrivateEnum } from "@client/modules/account/ts/consts/list-private.enum";
+import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 interface ListsSidebarLabelProps {
   label: string;

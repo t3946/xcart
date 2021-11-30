@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { OrderInfoHeader } from "@client/modules/account/components/orders/OrderInfoHeader";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { OrderInfoHeader } from "@modules/account/components/orders/OrderInfoHeader";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { ApiService } from "@client/modules/shared/services/api.service";
+import { ApiService } from "@modules/shared/services/api.service";
 import { CircularProgress } from "@material-ui/core";
-import { setOrders } from "@client/jsx/redux/actions/account-actions/OrdersActions";
+import { setOrders } from "@redux/actions/account-actions/OrdersActions";
 
 export const OrderInfoContainerPage: React.FC<any> = ({
   children,

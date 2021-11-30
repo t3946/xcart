@@ -1,8 +1,8 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { AddIdea } from "@client/modules/account/components/lists/AddIdea";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
-import Store from "@client/jsx/redux/stores/Store";
+import { AddIdea } from "@modules/account/components/lists/AddIdea";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
+import Store from "@redux/stores/Store";
 
 interface AddIdeaPageURLParams {
   listHash: string;

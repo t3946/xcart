@@ -1,7 +1,7 @@
 import {
   ManageListFormData,
   ManageListRequestData,
-} from "@client/modules/account/ts/types/manage-list-form.types";
+} from "@modules/account/ts/types/manage-list-form.types";
 
 export function convertManageListFormDataToRequest(
   data: ManageListFormData

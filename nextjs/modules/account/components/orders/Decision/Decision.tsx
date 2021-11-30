@@ -1,16 +1,16 @@
 import React from "react";
-import Navigation from "@client/modules/account/components/orders/Navigation/Navigation";
-import LicenseRequire from "@client/modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
-import PaymentRequired from "@client/modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
-import { route } from "@client/jsx/utils/AppData";
+import Navigation from "@modules/account/components/orders/Navigation/Navigation";
+import LicenseRequire from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
+import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
+import { route } from "@utils/AppData";
 import { useHistory } from "react-router-dom";
-import DecisionsInterface from "@client/modules/account/ts/types/decision";
+import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
   addAction,
   resetAction,
-} from "@client/jsx/redux/actions/account-actions/DecisionsActions";
-import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+} from "@redux/actions/account-actions/DecisionsActions";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 function getDecision() {
   const decisionId = parseInt(document.location.href.split("/").pop());

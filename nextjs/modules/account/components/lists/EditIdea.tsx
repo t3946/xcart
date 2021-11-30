@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Button } from "@material-ui/core";
-import { FormInput } from "@client/modules/account/components/shared/FormInput";
+import { FormInput } from "@modules/account/components/shared/FormInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { editIdeaName } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { ListItem } from "@client/modules/account/ts/types/list.type";
+import { editIdeaName } from "@redux/actions/account-actions/ListsActions";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { ListItem } from "@modules/account/ts/types/list.type";
 
 interface EditIdeaProps {
   info: ListItem;

@@ -1,72 +1,132 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
-import { Addresses } from "../pages/Addresses";
-import { Transactions } from "../pages/Transactions";
-import { Wallet } from "../pages/Wallet";
+// import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
-import Store from "@client/jsx/redux/stores/Store";
-import LoginForm from "../../account/components/authorization/LoginForm";
-import RegisterForm from "../../account/components/authorization/RegisterForm";
-import { AddAddressPage } from "../pages/AddAddressPage";
-import { getTerritory } from "../../../redux/actions/account-actions/MainActions";
-import HatNavigation from "../components/hat/HatNavigation";
-import HatSearchLine from "../components/hat/HatSearchLine";
-import MenuMobile from "@client/jsx/modules/account/components/hat/MenuMobile";
-import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
-import { getAddresses } from "../../../redux/actions/account-actions/AddressActions";
-import PublicProfile from "../components/public-profile/PublicProfile";
-import { setBreadcrumbsAddresses } from "../../../redux/actions/account-actions/BreadcrumbsActions";
-import { staticRoutes } from "../ts/consts/breadcrumbs";
-import ShadowPanel from "@client/modules/account/components/shared/ShadowPanel";
-import LoginAndSecurity from "@client/modules/account/components/login-and-security/LoginAndSecurity";
-import FormEditUserName from "@client/modules/account/components/login-and-security/FormEditUserName";
-import FormEditUserEmail from "@client/modules/account/components/login-and-security/FormEditUserEmail";
-import FormEditUserPhone from "@client/modules/account/components/login-and-security/FormEditUserPhone";
-import FormChangePassword from "@client/modules/account/components/login-and-security/FormChangePassword";
-import Snackbar from "@client/jsx/modules/account/components/snackbar/Snackbar";
-import { route } from "@client/jsx/utils/AppData";
-import { ListsSidebarMenu } from "../components/lists/ListsSidebarMenu";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { ListsPage } from "../pages/ListsPage";
-import DepartmentsMenuMobile from "@client/modules/account/components/hat/DepartmentsMenuMobile";
-import TSVSettings from "@client/modules/account/components/login-and-security/TSVSettings";
-import TSVAddNewApp from "@client/modules/account/components/login-and-security/TSVAddNewApp";
-import { EditCard } from "@client/modules/account/pages/EditCard";
-import { AddCard } from "@client/modules/account/pages/AddCard";
-import { RemoveCardPage } from "@client/modules/account/pages/RemoveCardPage";
-import { PageContainerHoc } from "@client/modules/account/hoc/PageContainerHoc";
-import { InvitationPage } from "../pages/InvitationPage";
-import TSVDisable from "@client/modules/account/components/login-and-security/TSVDisable";
-import TSVChangePreferredMethod from "@client/modules/account/components/login-and-security/TSVChangePreferredMethod";
-import TSVRecovery from "@client/modules/account/components/login-and-security/TSVRecovery";
-import PasswordAssistance from "@client/modules/account/components/password-assistance/PasswordAssistance";
-import AlertMobile from "@client/modules/account/components/shared/AlertMobile";
-import { EditInfoInListProductPage } from "@client/modules/account/pages/EditInfoInListProductPage";
-import { ManageListPage } from "@client/modules/account/pages/ManageListPage";
-import { ShareListPage } from "@client/modules/account/pages/ShareListPage";
-import { DeleteListPage } from "@client/modules/account/pages/DeleteListPage";
-import { AddListPage } from "@client/modules/account/pages/AddListPage";
-import { AddIdeaPage } from "@client/modules/account/pages/AddIdeaPage";
-import { AddProductToListPage } from "@client/modules/account/pages/AddProductToListPage";
-import { MoveProductPage } from "@client/modules/account/pages/MoveProductPage";
-import { DashboardPage } from "@client/modules/account/pages/DashboardPage";
-import ReviewForm from "@client/jsx/modules/account/components/review/ReviewForm";
-import { DeleteProductPage } from "@client/modules/account/pages/DeleteProductPage";
-import { OrdersPage } from "@client/modules/account/pages/OrdersPage";
-import { OrderInfoContainerPage } from "@client/modules/account/hoc/OrderInfoContainerPage";
-import { OrderTrackingPage } from "@client/modules/account/pages/OrderTrackingPage";
-import { ProductsOrderedPage } from "@client/modules/account/pages/ProductsOrderedPage";
-import { OrderAddressesPage } from "@client/modules/account/pages/OrderAddressesPage";
-import { OrderCommunicationPage } from "@client/modules/account/pages/OrderCommunicationPage";
-import { OrderLogPage } from "@client/modules/account/pages/OrderLogPage";
-import { OrderActionsPage } from "@client/modules/account/pages/OrderActionsPage";
-import { EmailPage } from "@client/modules/account/pages/EmailPage";
-import { ChangeAddress } from "@client/modules/account/components/orders/ChangeAddress";
-import Decision from "@client/modules/account/components/orders/Decision/Decision";
-import Decisions from "@client/modules/account/components/orders/DecisionsPreview/Decisions";
+import Store from "@redux/stores/Store";
+import { getTerritory } from "@redux/actions/account-actions/MainActions";
+import HatNavigation from "@modules/account/components/hat/HatNavigation";
+// import HatSearchLine from "../components/hat/HatSearchLine";
+// import MenuMobile from "@modules/account/components/hat/MenuMobile";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
+import { setBreadcrumbsAddresses } from "@redux/actions/account-actions/BreadcrumbsActions";
+import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
+// import ShadowPanel from "@modules/account/components/shared/ShadowPanel";
+import Snackbar from "@modules/account/components/snackbar/Snackbar";
+import StoreInterface from "@modules/account/ts/types/store.type";
+// import DepartmentsMenuMobile from "@modules/account/components/hat/DepartmentsMenuMobile";
+// import AlertMobile from "@modules/account/components/shared/AlertMobile";
+// import {PageContainerHoc} from "../../../../www/static/frontend/jsx/modules/account/hoc/PageContainerHoc";
+// import SideBarMenu from "../../../../www/static/frontend/jsx/modules/account/components/sidebar-menu/SideBarMenu";
+// import {DashboardPage} from "../../../../www/static/frontend/jsx/modules/account/pages/DashboardPage";
+// import {Addresses} from "../../../../www/static/frontend/jsx/modules/account/pages/Addresses";
+// import {AddAddressPage} from "../../../../www/static/frontend/jsx/modules/account/pages/AddAddressPage";
+// import {Wallet} from "../../../../www/static/frontend/jsx/modules/account/pages/Wallet";
+// import {EditCard} from "../../../../www/static/frontend/jsx/modules/account/pages/EditCard";
+// import {AddCard} from "../../../../www/static/frontend/jsx/modules/account/pages/AddCard";
+// import {RemoveCardPage} from "../../../../www/static/frontend/jsx/modules/account/pages/RemoveCardPage";
+// import {Transactions} from "../../../../www/static/frontend/jsx/modules/account/pages/Transactions";
+// import {ListsSidebarMenu} from "../../../../www/static/frontend/jsx/modules/account/components/lists/ListsSidebarMenu";
+// import {DeleteProductPage} from "../../../../www/static/frontend/jsx/modules/account/pages/DeleteProductPage";
+// import {EditInfoInListProductPage} from "../../../../www/static/frontend/jsx/modules/account/pages/EditInfoInListProductPage";
+// import {ManageListPage} from "../../../../www/static/frontend/jsx/modules/account/pages/ManageListPage";
+// import {ShareListPage} from "../../../../www/static/frontend/jsx/modules/account/pages/ShareListPage";
+// import {DeleteListPage} from "../../../../www/static/frontend/jsx/modules/account/pages/DeleteListPage";
+// import {AddListPage} from "../../../../www/static/frontend/jsx/modules/account/pages/AddListPage";
+// import {MoveProductPage} from "../../../../www/static/frontend/jsx/modules/account/pages/MoveProductPage";
+// import {AddIdeaPage} from "../../../../www/static/frontend/jsx/modules/account/pages/AddIdeaPage";
+// import {InvitationPage} from "../../../../www/static/frontend/jsx/modules/account/pages/InvitationPage";
+// import {ListsPage} from "../../../../www/static/frontend/jsx/modules/account/pages/ListsPage";
+// import {AddProductToListPage} from "../../../../www/static/frontend/jsx/modules/account/pages/AddProductToListPage";
+// import {route} from "../../../../www/static/frontend/jsx/utils/AppData";
+// import LoginForm from "../../../../www/static/frontend/jsx/modules/account/components/authorization/LoginForm";
+// import RegisterForm from "../../../../www/static/frontend/jsx/modules/account/components/authorization/RegisterForm";
+// import PublicProfile from "../../../../www/static/frontend/jsx/modules/account/components/public-profile/PublicProfile";
+// import LoginAndSecurity
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/LoginAndSecurity";
+// import FormEditUserName
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/FormEditUserName";
+// import FormEditUserEmail
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/FormEditUserEmail";
+// import FormEditUserPhone
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/FormEditUserPhone";
+// import FormChangePassword
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/FormChangePassword";
+// import TSVSettings from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/TSVSettings";
+// import TSVAddNewApp
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/TSVAddNewApp";
+// import TSVDisable from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/TSVDisable";
+// import TSVChangePreferredMethod
+//   from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/TSVChangePreferredMethod";
+// import TSVRecovery from "../../../../www/static/frontend/jsx/modules/account/components/login-and-security/TSVRecovery";
+// import PasswordAssistance
+//   from "../../../../www/static/frontend/jsx/modules/account/components/password-assistance/PasswordAssistance";
+// import ReviewForm from "../../../../www/static/frontend/jsx/modules/account/components/review/ReviewForm";
+// import Decision from "../../../../www/static/frontend/jsx/modules/account/components/orders/Decision/Decision";
+// import Decisions
+//   from "../../../../www/static/frontend/jsx/modules/account/components/orders/DecisionsPreview/Decisions";
+// import {OrdersPage} from "../../../../www/static/frontend/jsx/modules/account/pages/OrdersPage";
+// import {OrderInfoContainerPage} from "../../../../www/static/frontend/jsx/modules/account/hoc/OrderInfoContainerPage";
+// import {OrderTrackingPage} from "../../../../www/static/frontend/jsx/modules/account/pages/OrderTrackingPage";
+// import {ProductsOrderedPage} from "../../../../www/static/frontend/jsx/modules/account/pages/ProductsOrderedPage";
+// import {OrderAddressesPage} from "../../../../www/static/frontend/jsx/modules/account/pages/OrderAddressesPage";
+// import {OrderCommunicationPage} from "../../../../www/static/frontend/jsx/modules/account/pages/OrderCommunicationPage";
+// import {OrderLogPage} from "../../../../www/static/frontend/jsx/modules/account/pages/OrderLogPage";
+// import {OrderActionsPage} from "../../../../www/static/frontend/jsx/modules/account/pages/OrderActionsPage";
+// import {EmailPage} from "../../../../www/static/frontend/jsx/modules/account/pages/EmailPage";
+// import {ChangeAddress} from "../../../../www/static/frontend/jsx/modules/account/components/orders/ChangeAddress";
+// import { Addresses } from "../pages/Addresses";
+// import { Transactions } from "../pages/Transactions";
+// import { Wallet } from "../pages/Wallet";
+// import LoginForm from "../../account/components/authorization/LoginForm";
+// import RegisterForm from "../../account/components/authorization/RegisterForm";
+// import { AddAddressPage } from "../pages/AddAddressPage";
+// import SideBarMenu from "../components/sidebar-menu/SideBarMenu";
+// import PublicProfile from "../components/public-profile/PublicProfile";
+// import LoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity";
+// import FormEditUserName from "@modules/account/components/login-and-security/FormEditUserName";
+// import FormEditUserEmail from "@modules/account/components/login-and-security/FormEditUserEmail";
+// import FormEditUserPhone from "@modules/account/components/login-and-security/FormEditUserPhone";
+// import FormChangePassword from "@modules/account/components/login-and-security/FormChangePassword"
+// import { route } from "@utils/AppData";
+// import { ListsSidebarMenu } from "../components/lists/ListsSidebarMenu";
+// import { ListsPage } from "../pages/ListsPage";
+// import TSVSettings from "@modules/account/components/login-and-security/TSVSettings";
+// import TSVAddNewApp from "@modules/account/components/login-and-security/TSVAddNewApp";
+// import { EditCard } from "@modules/account/pages/EditCard";
+// import { AddCard } from "@modules/account/pages/AddCard";
+// import { RemoveCardPage } from "@modules/account/pages/RemoveCardPage";
+// import { PageContainerHoc } from "@modules/account/hoc/PageContainerHoc";
+// import { InvitationPage } from "../pages/InvitationPage";
+// import TSVDisable from "@modules/account/components/login-and-security/TSVDisable";
+// import TSVChangePreferredMethod from "@modules/account/components/login-and-security/TSVChangePreferredMethod";
+// import TSVRecovery from "@modules/account/components/login-and-security/TSVRecovery";
+// import PasswordAssistance from "@modules/account/components/password-assistance/PasswordAssistance";
+// import { EditInfoInListProductPage } from "@modules/account/pages/EditInfoInListProductPage";
+// import { ManageListPage } from "@modules/account/pages/ManageListPage";
+// import { ShareListPage } from "@modules/account/pages/ShareListPage";
+// import { DeleteListPage } from "@modules/account/pages/DeleteListPage";
+// import { AddListPage } from "@modules/account/pages/AddListPage";
+// import { AddIdeaPage } from "@modules/account/pages/AddIdeaPage";
+// import { AddProductToListPage } from "@modules/account/pages/AddProductToListPage";
+// import { MoveProductPage } from "@modules/account/pages/MoveProductPage";
+// import { DashboardPage } from "@modules/account/pages/DashboardPage";
+// import ReviewForm from "@modules/account/components/review/ReviewForm";
+// import { DeleteProductPage } from "@modules/account/pages/DeleteProductPage";
+// import { OrdersPage } from "@modules/account/pages/OrdersPage";
+// import { OrderInfoContainerPage } from "@modules/account/hoc/OrderInfoContainerPage";
+// import { OrderTrackingPage } from "@modules/account/pages/OrderTrackingPage";
+// import { ProductsOrderedPage } from "@modules/account/pages/ProductsOrderedPage";
+// import { OrderAddressesPage } from "@modules/account/pages/OrderAddressesPage";
+// import { OrderCommunicationPage } from "@modules/account/pages/OrderCommunicationPage";
+// import { OrderLogPage } from "@modules/account/pages/OrderLogPage";
+// import { OrderActionsPage } from "@modules/account/pages/OrderActionsPage";
+// import { EmailPage } from "@modules/account/pages/EmailPage";
+// import { ChangeAddress } from "@modules/account/components/orders/ChangeAddress";
+// import Decision from "@modules/account/components/orders/Decision/Decision";
+// import Decisions from "@modules/account/components/orders/DecisionsPreview/Decisions";
 
 export const AccountRouters = (): any => {
+  console.log('routers is i am');
   const dispatch = useDispatch();
   const user = useSelector((e: StoreInterface) => e.user);
 
@@ -82,395 +142,9 @@ export const AccountRouters = (): any => {
 
   return (
     <>
-      <ShadowPanel />
+      {/*<ShadowPanel />*/}
       <Snackbar>
-        <BrowserRouter>
-          <DepartmentsMenuMobile />
-          <HatNavigation />
-          <HatSearchLine isStatic={true} />
-          <MenuMobile isStatic={false} />
-          <AlertMobile />
-
-          <div className={"container"}>
-            {user && <BreadCrumbs />}
-
-            <div className="row mt-lg-20">
-              <Switch>
-                <Route
-                  exact
-                  path="/account"
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <DashboardPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/addresses"
-                  component={PageContainerHoc(<SideBarMenu />, <Addresses />)}
-                />
-                <Route
-                  exact
-                  path="/account/addresses/add"
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <AddAddressPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/addresses/edit"
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <AddAddressPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/payments/wallet"
-                  component={PageContainerHoc(<SideBarMenu />, <Wallet />)}
-                />
-                <Route
-                  exact
-                  path="/account/payments/wallet/edit"
-                  component={PageContainerHoc(<SideBarMenu />, <EditCard />)}
-                />
-                <Route
-                  exact
-                  path="/account/payments/wallet/add"
-                  component={PageContainerHoc(<SideBarMenu />, <AddCard />)}
-                />
-                <Route
-                  exact
-                  path="/account/payments/wallet/remove"
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <RemoveCardPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/payments/transactions"
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <Transactions />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/delete-product/:type/:listId/:productId/"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <DeleteProductPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/edit-list-product-info/:listHash/:productId"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <EditInfoInListProductPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/manage-list/:listHash"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <ManageListPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/:id/share-list"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <ShareListPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/:listHash/delete-list"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <DeleteListPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/add-list/:productId?"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <AddListPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/move-product/:productId/:listId"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <MoveProductPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/add-idea/:listHash"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <AddIdeaPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/invite/*"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <InvitationPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists/:id"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <ListsPage />
-                  )}
-                />
-
-                <Route
-                  exact
-                  path="/account/your-lists/add-product-to-list/:isAdded/:listId/:sku"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <AddProductToListPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path="/account/your-lists"
-                  component={PageContainerHoc(
-                    <ListsSidebarMenu />,
-                    <ListsPage />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:login")}
-                  component={LoginForm}
-                />
-                <Route
-                  exact
-                  path={route("account:register")}
-                  component={RegisterForm}
-                />
-                <Route
-                  exact
-                  path={route("account:public-profile")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <PublicProfile />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:login-and-security")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <LoginAndSecurity />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:edit-name")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <FormEditUserName />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:edit-email")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <FormEditUserEmail />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:edit-phone")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <FormEditUserPhone />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:edit-password")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <FormChangePassword />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:two-step-verification-settings")}
-                  component={PageContainerHoc(<SideBarMenu />, <TSVSettings />)}
-                />
-                <Route
-                  exact
-                  path={route("account:two-step-verification-add-new")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <TSVAddNewApp />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:two-step-verification-settings-disable")}
-                  component={TSVDisable}
-                />
-                <Route
-                  exact
-                  path={route(
-                    "account:two-step-verification-settings-preferred-method"
-                  )}
-                  component={TSVChangePreferredMethod}
-                />
-                <Route
-                  exact
-                  path={route("account:two-step-verification-recovery")}
-                  component={TSVRecovery}
-                />
-                <Route
-                  exact
-                  path={route(
-                    "account:two-step-verification-recovery-password-assistance"
-                  )}
-                  component={PasswordAssistance}
-                />
-                <Route
-                  exact
-                  path={route("account:create_review")}
-                  component={PageContainerHoc(<SideBarMenu />, <ReviewForm />)}
-                />
-                <Route
-                  exact
-                  path={route("account:order-make-decision")}
-                  component={PageContainerHoc(<SideBarMenu />, <Decision />)}
-                />
-                <Route
-                  exact
-                  path={route("account:order-decisions-required")}
-                  component={PageContainerHoc(<SideBarMenu />, <Decisions />)}
-                />
-                <Route
-                  exact
-                  path={route("account:open-orders")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrdersPage label={"Open orders"} type={"open"} />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:canceled-orders")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrdersPage label={"Cancelled orders"} type={"cancelled"} />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:completed-orders")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrdersPage label={"Completed orders"} type={"completed"} />
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-info-tracking")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <OrderTrackingPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-info-products")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <ProductsOrderedPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-info-addresses")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <OrderAddressesPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-info-communication")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <OrderCommunicationPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-info-log")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <OrderLogPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-info-actions")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <OrderActionsPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-email")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage>
-                      <EmailPage />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-                <Route
-                  exact
-                  path={route("account:order-change-address")}
-                  component={PageContainerHoc(
-                    <SideBarMenu />,
-                    <OrderInfoContainerPage showMenu={false}>
-                      <ChangeAddress />
-                    </OrderInfoContainerPage>
-                  )}
-                />
-              </Switch>
-            </div>
-          </div>
-        </BrowserRouter>
+        <HatNavigation />
       </Snackbar>
     </>
   );

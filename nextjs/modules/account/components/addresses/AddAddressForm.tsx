@@ -15,9 +15,9 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { getStates } from "../../utils/get-states";
-import Store from "@client/jsx/redux/stores/Store";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import Store from "@redux/stores/Store";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,

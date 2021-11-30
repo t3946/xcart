@@ -1,5 +1,5 @@
 import React from "react";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { Form as RBForm } from "react-bootstrap";
 
 interface propsDto {

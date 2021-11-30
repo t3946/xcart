@@ -3,8 +3,8 @@ import { Dialog } from "@material-ui/core";
 import { DialogHeader } from "../dialog/DialogHeader";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { CardAction } from "./CardAction";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 
 interface CardDialogProps {
   handleClose: () => void;

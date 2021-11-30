@@ -1,7 +1,7 @@
 const _merge = require("lodash/merge");
 const path = require("path");
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
 });
 const colors = require("colors");
 
@@ -9,7 +9,12 @@ const colors = require("colors");
 console.log();
 console.log("ENV VARS:");
 console.log("NODE_ENV=" + colors.cyan(colors.bold(process.env.NODE_ENV)));
-console.log("ANALYZE=" + (process.env.ANALYZE === 'true' ? colors.green('enabled') : colors.red('disabled')));
+console.log(
+  "ANALYZE=" +
+    (process.env.ANALYZE === "true"
+      ? colors.green("enabled")
+      : colors.red("disabled"))
+);
 console.log();
 
 module.exports = withBundleAnalyzer({
@@ -19,12 +24,14 @@ module.exports = withBundleAnalyzer({
         alias: {
           "@modules": path.resolve("modules/"),
           "@pages": path.resolve("pages/"),
-          "styles": path.resolve("styles/"),
+          "@redux": path.resolve("redux/"),
+          "@utils": path.resolve("utils/"),
+          styles: path.resolve("styles/"),
         },
       },
-    }
+    };
 
     return _merge(config, extendConfig);
   },
-  basePath: '/account'
-})
+  basePath: "/account",
+});

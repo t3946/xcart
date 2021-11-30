@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import { useHistory } from "react-router-dom";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import { ShareListDialog } from "@client/modules/account/components/lists/ShareListDialog";
-import { ManageList } from "@client/modules/account/components/lists/ManageList";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
-import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@client/modules/account/components/lists/MobileMenuForList";
-import { List } from "@client/modules/account/ts/types/list.type";
-import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
+import { ManageList } from "@modules/account/components/lists/ManageList";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
+import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
+import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { List } from "@modules/account/ts/types/list.type";
+import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 
 interface ListHeaderProps {
   label: string;

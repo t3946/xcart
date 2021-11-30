@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
 import { useHistory, Link } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { useDispatch } from "react-redux";
-import { loginAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 
 interface IProps {
   login: string;

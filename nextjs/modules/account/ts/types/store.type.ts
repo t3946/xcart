@@ -1,10 +1,9 @@
 import { AddressItemDto } from "./address-item.type";
 import { SelectValue } from "./select-value.type";
 import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
-import { VariantsEnum as AlertVariants } from "@client/modules/account/utils/alert";
-import { List } from "@client/modules/account/ts/types/list.type";
-import PhotoSwipe from "@client/libs/photoswipe/dist/photoswipe";
-import DecisionsInterface from "@client/modules/account/ts/types/decision";
+import { VariantsEnum as AlertVariants } from "@modules/account/utils/alert";
+import { List } from "@modules/account/ts/types/list.type";
+import DecisionsInterface from "@modules/account/ts/types/decision";
 
 export interface AccountStore {
   addresses: AccountAddressesStore;
@@ -99,15 +98,6 @@ export interface AccountPublicProfileStore {
   alert: Record<any, any>;
 }
 
-export interface PhotoSwipeStore {
-  items: [];
-  gallery: PhotoSwipe;
-  thumb: HTMLElement;
-  thumbs: HTMLElement[];
-  index: number;
-  ownerId: string;
-}
-
 interface StoreInterface {
   addresses: AccountAddressesStore;
   main: AccountMainStore;
@@ -137,7 +127,6 @@ interface StoreInterface {
   productsRatings: any;
   productsReviews: any;
   product: any;
-  photoswipe: PhotoSwipeStore;
   ordersStore?: {
     orders: any;
     ordersLoading: any;

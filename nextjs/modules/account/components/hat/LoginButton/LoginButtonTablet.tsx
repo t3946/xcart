@@ -1,14 +1,14 @@
 import classNames from "classnames";
 import React from "react";
-import SidebarMenu from "@client/jsx/modules/account/components/sidebar-menu/SideBarMenu";
+import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
+import { setTabletMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
-import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
-import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import TransitionFade from "@modules/account/components/shared/TransitionFade";
+import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 
 const LoginButtonTablet: React.FC<any> = () => {
   const dispatch = useDispatch();

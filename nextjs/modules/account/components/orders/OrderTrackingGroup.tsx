@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Map } from "@client/modules/account/components/shared/Map";
-import { OrderTrackingAddressCard } from "@client/modules/account/components/orders/OrderTrackingAddressCard";
-import { OrderTrackingItem } from "@client/modules/account/components/orders/OrderTrackingItem";
-import { ApiService } from "@client/modules/shared/services/api.service";
+import { Map } from "@modules/account/components/shared/Map";
+import { OrderTrackingAddressCard } from "@modules/account/components/orders/OrderTrackingAddressCard";
+import { OrderTrackingItem } from "@modules/account/components/orders/OrderTrackingItem";
+import { ApiService } from "@modules/shared/services/api.service";
 
 interface OrderTrackingGroupProps {
   orderGroupInfo: any;

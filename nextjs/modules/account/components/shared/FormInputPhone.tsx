@@ -1,10 +1,10 @@
 import React from "react";
 import { Form as RBForm } from "react-bootstrap";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
 import { useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { getCountryByCode } from "@client/jsx/utils/Countries";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { getCountryByCode } from "@utils/Countries";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import classnames from "classnames";
 import InputMask from "react-input-mask";
 

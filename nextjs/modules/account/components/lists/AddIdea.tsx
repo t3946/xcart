@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { FormInput } from "@modules/account/components/shared/FormInput";
+import { addProduct } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import Store from "@client/jsx/redux/stores/Store";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
-import { ListItem } from "@client/modules/account/ts/types/list.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import Store from "@redux/stores/Store";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import { ListItem } from "@modules/account/ts/types/list.type";
 
 interface AddIdeaProps {
   onCancelBtnClick: () => void;

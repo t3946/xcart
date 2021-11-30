@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrders } from "@client/jsx/redux/actions/account-actions/OrdersActions";
-import { OrdersListHeader } from "@client/modules/account/components/orders/OrdersListHeader";
-import { OrderItem } from "@client/modules/account/components/orders/OrderItem";
+import { getOrders } from "@redux/actions/account-actions/OrdersActions";
+import { OrdersListHeader } from "@modules/account/components/orders/OrdersListHeader";
+import { OrderItem } from "@modules/account/components/orders/OrderItem";
 import { CircularProgress } from "@material-ui/core";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 
 interface OrdersPageProps {
   label: string;

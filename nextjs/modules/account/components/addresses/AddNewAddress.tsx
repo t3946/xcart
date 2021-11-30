@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import PlusPanelButton from "@client/jsx/modules/account/components/common/PlusPanelButton";
+import PlusPanelButton from "@modules/account/components/common/PlusPanelButton";
 
 export const AddNewAddress = ({ onClick }) => {
   return (

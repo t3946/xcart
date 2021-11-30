@@ -21,6 +21,12 @@
       ],
       "@pages/*": [
         "pages/*"
+      ],
+      "@redux/*": [
+        "redux/*"
+      ],
+      "@utils/*": [
+        "utils/*"
       ]
     }
   },

@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useContext, useState } from "react";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
-import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { fillArrayItemsOnOrderActions } from "@client/modules/account/utils/fill-array-items-order-actions";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormInput } from "@modules/account/components/shared/FormInput";
+import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
-import { ApiService } from "@client/modules/shared/services/api.service";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
+import { ApiService } from "@modules/shared/services/api.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 

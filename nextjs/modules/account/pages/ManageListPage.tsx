@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory, useParams } from "react-router-dom";
-import Store from "@client/jsx/redux/stores/Store";
-import { ManageList } from "@client/modules/account/components/lists/ManageList";
+import Store from "@redux/stores/Store";
+import { ManageList } from "@modules/account/components/lists/ManageList";
 
 interface ManageListPageURLParams {
   listHash: string;

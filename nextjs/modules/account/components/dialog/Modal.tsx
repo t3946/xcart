@@ -1,8 +1,8 @@
 import Modal from "react-bootstrap/Modal";
-import ModalTimes from "@client/modules/icon/components/account/ModalTimes";
+import ModalTimes from "@modules/icon/components/account/ModalTimes";
 import { Form as RBForm } from "react-bootstrap";
 import React from "react";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
+import { useDialog } from "@modules/account/hooks/useDialog";
 
 const BootstrapModal = function () {
   const dialog = useDialog();

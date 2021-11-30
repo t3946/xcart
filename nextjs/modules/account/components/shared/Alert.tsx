@@ -1,11 +1,11 @@
-import TransitionSlide from "@client/modules/account/components/shared/TransitionSlide";
+import TransitionSlide from "@modules/account/components/shared/TransitionSlide";
 import classnames from "classnames";
 import { Alert as BAlert } from "react-bootstrap";
 import React from "react";
 import {
   alertIconTemplate,
   VariantsEnum,
-} from "@client/modules/account/utils/alert";
+} from "@modules/account/utils/alert";
 
 interface IProps {
   show: boolean;

@@ -1,8 +1,8 @@
 import React from "react";
-import { EditComment } from "@client/modules/account/components/lists/EditComment";
+import { EditComment } from "@modules/account/components/lists/EditComment";
 import { useHistory, useParams } from "react-router-dom";
-import Store from "@client/jsx/redux/stores/Store";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import Store from "@redux/stores/Store";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 interface EditInfoInListProductPageURLParams {
   productId: string;

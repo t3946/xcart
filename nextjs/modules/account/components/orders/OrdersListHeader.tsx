@@ -1,9 +1,9 @@
 import React from "react";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
-import { ordersHeaderSelectValues } from "@client/modules/account/ts/consts/orders-header-select-values";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { ordersHeaderSelectValues } from "@modules/account/ts/consts/orders-header-select-values";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 import { useDispatch } from "react-redux";
-import { changeTimeGap } from "@client/jsx/redux/actions/account-actions/OrdersActions";
+import { changeTimeGap } from "@redux/actions/account-actions/OrdersActions";
 
 interface OrdersListHeaderProps {
   label: string;

@@ -1,14 +1,14 @@
 import React from "react";
 import { TransactionHeader } from "./TransactionHeader";
-import { useAccordion } from "@client/modules/account/hooks/useAccordion";
+import { useAccordion } from "@modules/account/hooks/useAccordion";
 import { TransactionItemTopBlock } from "./TransactionItemTopBlock";
 import { TransactionItemContactBlock } from "./TransactionItemContactBlock";
-import { TransactionAddresses } from "@client/modules/account/components/wallet-transactions/TransactionAddresses";
+import { TransactionAddresses } from "@modules/account/components/wallet-transactions/TransactionAddresses";
 import { TransactionItems } from "./TransactionItems";
 import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import StoreInterface from "@modules/account/ts/types/store.type";
 
 export const TransactionItem = ({ transactionInfo, first }) => {
   const accordion = useAccordion(500);

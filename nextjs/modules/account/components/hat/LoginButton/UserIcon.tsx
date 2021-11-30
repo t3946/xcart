@@ -1,8 +1,8 @@
 import React from "react";
-import SVGUserIcon from "@client/modules/icon/components/account/user/User";
+import SVGUserIcon from "@modules/icon/components/account/user/User";
 import classnames from "classnames";
-import Styles from "@client/jsx/modules/account/components/hat/LoginButton/LoginButton.module.scss";
-import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+import Styles from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const UserIcon: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);

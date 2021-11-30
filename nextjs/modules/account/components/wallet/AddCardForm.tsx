@@ -14,9 +14,9 @@ import {
 import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "../../utils/detect-card-type";
-import Store from "@client/jsx/redux/stores/Store";
+import Store from "@redux/stores/Store";
 import { useHistory } from "react-router";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 export const AddCardForm: React.FC = () => {
   const monthsValues = fillMassToSelect(1, 12);

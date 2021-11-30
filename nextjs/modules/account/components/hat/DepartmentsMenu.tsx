@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import classnames from "classnames";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
+import TransitionFade from "@modules/account/components/shared/TransitionFade";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;

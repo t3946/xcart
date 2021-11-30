@@ -1,12 +1,12 @@
 import React from "react";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
+import InnerPage from "@modules/account/components/shared/InnerPage";
 import { Form, Formik } from "formik";
-import { getCountryByCode } from "@client/jsx/utils/Countries";
-import { editPhoneAction } from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
+import { getCountryByCode } from "@utils/Countries";
+import { editPhoneAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 
 const TSVChangePreferredMethod: React.FC<any> = function () {
   const countries = useSelector((e: StoreInterface) => e.countries);

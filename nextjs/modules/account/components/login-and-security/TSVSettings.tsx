@@ -3,16 +3,16 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import { useHistory, NavLink } from "react-router-dom";
-import { disableAction } from "@client/jsx/redux/actions/account-actions/TSVActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
+import { disableAction } from "@redux/actions/account-actions/TSVActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import ModalTSVDisable from "@client/modules/account/components/login-and-security/ModalTSVDisable";
-import InnerPage from "@client/jsx/modules/account/components/shared/InnerPage";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import ModalTSVDisable from "@modules/account/components/login-and-security/ModalTSVDisable";
+import InnerPage from "@modules/account/components/shared/InnerPage";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import StoreInterface from "@modules/account/ts/types/store.type";
 
 const TSVSettings = (): any => {
   const breakpoint = useBreakpoint();

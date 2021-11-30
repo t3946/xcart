@@ -1,8 +1,8 @@
 import React from "react";
 import classnames from "classnames";
-import DropDown from "@client/modules/account/hoc/DropDown";
-import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
-import Badge from "@client/modules/account/components/orders/Navigation/Badge";
+import DropDown from "@modules/account/hoc/DropDown";
+import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import Badge from "@modules/account/components/orders/Navigation/Badge";
 
 interface IProps {
   menu: {

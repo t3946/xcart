@@ -1,5 +1,5 @@
-import { PriorityProductEnum } from "@client/modules/account/ts/consts/priority-product.enum";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { PriorityProductEnum } from "@modules/account/ts/consts/priority-product.enum";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 export const priorityProductSelectValuesConst: SelectValue<
   PriorityProductEnum,

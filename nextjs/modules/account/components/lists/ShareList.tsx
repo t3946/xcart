@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-import { ShowSharedStatusEnum } from "@client/modules/account/ts/types/show-shared-status.enum";
+import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
 import { useDispatch } from "react-redux";
-import { encryptUrl } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { ShareListInviteSection } from "@client/modules/account/components/lists/ShareListInviteSection";
-import { ShareListManagePeople } from "@client/modules/account/components/lists/ShareListManagePeople";
+import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
+import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
 import { useParams } from "react-router-dom";
-import Store from "@client/jsx/redux/stores/Store";
-import { List } from "@client/modules/account/ts/types/list.type";
+import Store from "@redux/stores/Store";
+import { List } from "@modules/account/ts/types/list.type";
 
 interface ShareListProps {
   onClose: () => void;

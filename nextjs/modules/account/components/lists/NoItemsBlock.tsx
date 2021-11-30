@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useHistory } from "react-router-dom";
-import { List } from "@client/modules/account/ts/types/list.type";
+import { List } from "@modules/account/ts/types/list.type";
 
 interface NoItemsBlockProps {
   listInfo: List;

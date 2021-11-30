@@ -3,8 +3,8 @@ import { Dialog } from "@material-ui/core";
 import { DialogHeader } from "../dialog/DialogHeader";
 import { RemoveCard } from "./RemoveCard";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 
 interface RemoveCardDialogProps {
   handleClose: () => void;

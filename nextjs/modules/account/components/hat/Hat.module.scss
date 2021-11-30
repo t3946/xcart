@@ -1,11 +1,11 @@
-@import "~style-modules/sass-utils";
+@import "styles/utils/Utils.module.scss";
 
 .searchIcon {
-  width: rem-calc(28);
+  width: pxToRem(28);
   height: auto;
   color: #122933;
 
-  @include breakpoint(md up) {
-    width: rem-calc(48);
+  @include breakpoint(md) {
+    width: pxToRem(48);
   }
 }

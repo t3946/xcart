@@ -1,7 +1,7 @@
 import React from "react";
 import { CardAction } from "../components/wallet/CardAction";
 import { BillingAddressFormEnum } from "../ts/consts/billing-address-form-types";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 export const AddCard: React.FC = () => {
   return (

@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { Form, Formik } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { sendOneTimePasswordAction } from "@client/jsx/redux/actions/account-actions/ResetPasswordActions";
+import { sendOneTimePasswordAction } from "@redux/actions/account-actions/ResetPasswordActions";
 
 const LoginInputForm: React.FC<any> = function (props) {
   const firstInputRef = React.createRef<HTMLInputElement>();

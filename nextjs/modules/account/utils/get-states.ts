@@ -1,4 +1,4 @@
-import { StatesDto } from "@client/modules/account/ts/types/states.type";
+import { StatesDto } from "@modules/account/ts/types/states.type";
 
 export const getStates = (
   states: StatesDto[],

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ApiService } from "@client/modules/shared/services/api.service";
-import { OrderTrackingGroup } from "@client/modules/account/components/orders/OrderTrackingGroup";
-import { setBreakpoint } from "@client/jsx/redux/actions/account-actions/MainActions";
-import Store from "@client/jsx/redux/stores/Store";
-import { getBreakpointsFlags } from "@client/modules/account/hooks/useBreakpoint";
+import { ApiService } from "@modules/shared/services/api.service";
+import { OrderTrackingGroup } from "@modules/account/components/orders/OrderTrackingGroup";
+import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
+import Store from "@redux/stores/Store";
+import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
 
 interface OrderTrackingPageProps {
   orderItem?: any;

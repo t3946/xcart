@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
-import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { problemsWithOrderSelectValue } from "@client/modules/account/ts/consts/order-actions-select.const";
-import { ApiService } from "@client/modules/shared/services/api.service";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormInput } from "@modules/account/components/shared/FormInput";
+import { problemsWithOrderSelectValue } from "@modules/account/ts/consts/order-actions-select.const";
+import { ApiService } from "@modules/shared/services/api.service";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@client/modules/account/ts/types/order-page-url-params.type";
-import { AddressItemDto } from "@client/modules/account/ts/types/address-item.type";
-import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
+import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
+import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
+import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 
 interface ProblemWithOrderProps {}
 

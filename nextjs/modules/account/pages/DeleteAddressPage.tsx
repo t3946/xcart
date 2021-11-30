@@ -1,5 +1,5 @@
 import React from "react";
-import { DeleteAddress } from "@client/modules/account/components/addresses/DeleteAddress";
+import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
 import { useHistory, useLocation } from "react-router-dom";
 
 export const DeleteAddressPage: React.FC = () => {

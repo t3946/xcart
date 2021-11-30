@@ -6,9 +6,9 @@ import Accordion from "react-bootstrap/Accordion";
 import AccordionContext from "react-bootstrap/AccordionContext";
 import { useAccordionButton } from "react-bootstrap/AccordionButton";
 import Card from "react-bootstrap/Card";
-import PlusIcon from "@client/modules/icon/components/font-awesome/plus/Light";
-import MinusIcon from "@client/modules/icon/components/font-awesome/minus/Light";
-import ChevronRightIcon from "@client/modules/icon/components/font-awesome/chevron-right/Light";
+import PlusIcon from "@modules/icon/components/font-awesome/plus/Light";
+import MinusIcon from "@modules/icon/components/font-awesome/minus/Light";
+import ChevronRightIcon from "@modules/icon/components/font-awesome/chevron-right/Light";
 
 const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
   const departmentsMenu = useSelector(

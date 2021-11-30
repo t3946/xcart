@@ -1,4 +1,4 @@
-import { ApiService } from "@client/modules/shared/services/api.service";
+import { ApiService } from "@modules/shared/services/api.service";
 import memoize from "lodash/memoize";
 
 const api = new ApiService();

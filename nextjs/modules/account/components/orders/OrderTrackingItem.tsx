@@ -1,8 +1,8 @@
 import React from "react";
-import { getDataToTracking } from "@client/modules/account/utils/get-data-to-tracking";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { getDataToTracking } from "@modules/account/utils/get-data-to-tracking";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useSelector } from "react-redux";
-import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { AccountStore } from "@modules/account/ts/types/store.type";
 
 interface OrderTrackingItemProps {
   orderInfo: any;

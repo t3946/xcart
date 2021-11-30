@@ -1,8 +1,8 @@
 import React from "react";
-import Replace from "@client/modules/icon/components/account/replace/Replace";
-import Truck from "@client/modules/icon/components/account/truck/Truck";
-import Ban from "@client/modules/icon/components/account/ban/Ban";
-import Clock from "@client/modules/icon/components/account/clock/Clock";
+import Replace from "@modules/icon/components/account/replace/Replace";
+import Truck from "@modules/icon/components/account/truck/Truck";
+import Ban from "@modules/icon/components/account/ban/Ban";
+import Clock from "@modules/icon/components/account/clock/Clock";
 import classnames from "classnames";
 import { Form as RBForm } from "react-bootstrap";
 

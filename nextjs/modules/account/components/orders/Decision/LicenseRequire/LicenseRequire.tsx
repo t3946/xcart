@@ -1,20 +1,20 @@
 import React from "react";
-import Styles from "@client/jsx/modules/account/components/orders/Decision/LicenseRequire/LicenseRequire.module.scss";
+import Styles from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire.module.scss";
 import cn from "classnames";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
-import DecisionsInterface from "@client/modules/account/ts/types/decision";
-import { RowInterface } from "@client/modules/account/components/orders/Decision/TableRow";
+import DecisionsInterface from "@modules/account/ts/types/decision";
+import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
 import EstimatedTimeArrivalTable, {
   TableTypes,
-} from "@client/modules/account/components/orders/Decision/Table";
-import validatorMaxFileSize from "@client/jsx/utils/yup/validatorMaxFileSize";
-import validatorFileFormat from "@client/jsx/utils/yup/validatorFileFormat";
+} from "@modules/account/components/orders/Decision/Table";
+import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
+import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import {
   getEtaProductsAction,
   uploadLicense,
-} from "@client/jsx/redux/actions/account-actions/DecisionsActions";
-import dataURItoBlob from "@client/jsx/utils/dataURItoBlob";
+} from "@redux/actions/account-actions/DecisionsActions";
+import dataURItoBlob from "@utils/dataURItoBlob";
 import { useDispatch } from "react-redux";
 
 interface IProps {

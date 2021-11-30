@@ -1,6 +1,6 @@
 import React from "react";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
-import { List } from "@client/modules/account/ts/types/list.type";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import { List } from "@modules/account/ts/types/list.type";
 
 interface AddProductToListProps {
   info: List;

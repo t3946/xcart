@@ -1,12 +1,12 @@
 import React from "react";
-import Item from "@client/modules/account/components/orders/Navigation/Item";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import Item from "@modules/account/components/orders/Navigation/Item";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useSelector } from "react-redux";
 import StoreInterface, {
   AccountStore,
-} from "@client/modules/account/ts/types/store.type";
-import NavigationMobile from "@client/modules/account/components/orders/Navigation/NavigationMobile";
-import { route } from "@client/jsx/utils/AppData";
+} from "@modules/account/ts/types/store.type";
+import NavigationMobile from "@modules/account/components/orders/Navigation/NavigationMobile";
+import { route } from "@utils/AppData";
 
 const Navigation: React.FC = () => {
   useSelector((store: AccountStore) => store.main.breakpoint);

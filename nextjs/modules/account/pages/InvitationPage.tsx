@@ -1,12 +1,12 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { acceptInvite } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import { acceptInvite } from "@redux/actions/account-actions/ListsActions";
 import { useHistory } from "react-router";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { viewUserListRight } from "@client/modules/account/utils/view-user-list-right";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
-import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackBtn";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
 export const InvitationPage: React.FC = () => {
   const dispatch = useDispatch();

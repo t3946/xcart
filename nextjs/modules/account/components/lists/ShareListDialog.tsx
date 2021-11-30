@@ -1,6 +1,6 @@
 import React from "react";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { ShareList } from "@client/modules/account/components/lists/ShareList";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { ShareList } from "@modules/account/components/lists/ShareList";
 
 interface ShareListDialogProps {
   open: boolean;

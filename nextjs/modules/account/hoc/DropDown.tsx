@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown } from "react-bootstrap";
-import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
-import useClickListener from "@client/modules/account/hooks/useClickListener";
+import TransitionFade from "@modules/account/components/shared/TransitionFade";
+import useClickListener from "@modules/account/hooks/useClickListener";
 import classnames from "classnames";
 
 interface IProps {

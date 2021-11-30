@@ -2,14 +2,14 @@ import React from "react";
 import { Form, Formik } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import ChevronDownLight from "@client/jsx/modules/icon/components/font-awesome/chevron-down/Light";
+import ChevronDownLight from "@modules/icon/components/font-awesome/chevron-down/Light";
 import classnames from "classnames";
 import {
   sendOneTimePasswordAction,
   verifyOneTimePasswordAction,
-} from "@client/jsx/redux/actions/account-actions/ResetPasswordActions";
+} from "@redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
-import ResendOtpButton from "@client/modules/account/components/password-assistance/ResendOtpButton";
+import ResendOtpButton from "@modules/account/components/password-assistance/ResendOtpButton";
 
 const OneTimePasswordInputForm: React.FC<any> = function (props) {
   const {

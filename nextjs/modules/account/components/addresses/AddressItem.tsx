@@ -6,13 +6,13 @@ import {
 } from "../../../../redux/actions/account-actions/AddressActions";
 import { useHistory } from "react-router-dom";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
-import Store from "@client/jsx/redux/stores/Store";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { AddAddressForm } from "@client/modules/account/components/addresses/AddAddressForm";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
-import { DeleteAddress } from "@client/modules/account/components/addresses/DeleteAddress";
+import Store from "@redux/stores/Store";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;

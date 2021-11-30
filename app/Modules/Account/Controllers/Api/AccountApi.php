@@ -4,9 +4,12 @@
 namespace Modules\Account\Controllers\Api;
 
 
+use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
+use Modules\Main\Helpers\WorkingTimeHelper;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Main\Xcart;
 
 class AccountApi extends FrontendController
 {
@@ -36,5 +39,20 @@ class AccountApi extends FrontendController
             $states[$key]['countryCode'] = $state->model_country_code;
         }
         return$states;
+    }
+
+    public function getSitePropertiesAction()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
+        $this->jsonResponse([
+            "code" => strtolower($site->code),
+            "shortName" => $site->short_name,
+            "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
+        ]);
+    }
+
+    public function getRoutesList() {
+        $this->jsonResponse(AdminHelper::routesData());
     }
 }

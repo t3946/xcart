@@ -2,13 +2,13 @@ import React, { useContext } from "react";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
-import Store from "@client/jsx/redux/stores/Store";
+import Store from "@redux/stores/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { removeCard } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { CardHeader } from "./CardHeader";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface RemoveCardProps {
   cardInfo: CardItemDto;

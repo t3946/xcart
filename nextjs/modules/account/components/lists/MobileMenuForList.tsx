@@ -1,6 +1,6 @@
 import React from "react";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { MobileMenuForListItem } from "@client/modules/account/ts/types/MobileMenuForListItem";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 
 interface MobileMenuForListProps {
   items: MobileMenuForListItem[];

@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { route } from "@client/jsx/utils/AppData";
+import { route } from "@utils/AppData";
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
@@ -8,12 +8,12 @@ import { StoreDto } from "@s3stores-mail/ts/types";
 import {
   editPhoneAction,
   setAlertAction,
-} from "@client/jsx/redux/actions/account-actions/LoginAndSecurityActions";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
-import { getCountryByCode } from "@client/jsx/utils/Countries";
-import FormInputPhone from "@client/modules/account/components/shared/FormInputPhone";
-import InnerPage from "@client/modules/account/components/shared/InnerPage";
-import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
+} from "@redux/actions/account-actions/LoginAndSecurityActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { getCountryByCode } from "@utils/Countries";
+import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import InnerPage from "@modules/account/components/shared/InnerPage";
+import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 
 interface IProps {
   location: any;

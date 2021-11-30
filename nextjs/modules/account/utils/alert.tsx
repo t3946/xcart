@@ -1,5 +1,5 @@
-import AlertCheck from "@client/modules/icon/components/account/check/AlertCheck";
-import AlertExclamationTriangle from "@client/modules/icon/components/account/exclamation-triangle/AlertExclamationTriangle";
+import AlertCheck from "@modules/icon/components/account/check/AlertCheck";
+import AlertExclamationTriangle from "@modules/icon/components/account/exclamation-triangle/AlertExclamationTriangle";
 import React from "react";
 
 export enum VariantsEnum {

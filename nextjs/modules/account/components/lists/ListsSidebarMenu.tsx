@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
 import { useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { SideBarMenuItem } from "@client/modules/account/components/sidebar-menu/SideBarMenuItem";
-import { ListsSidebarLabel } from "@client/modules/account/components/lists/ListsSidebarLabel";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { SideBarMenuItem } from "@modules/account/components/sidebar-menu/SideBarMenuItem";
+import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSidebarLabel";
 
 export const ListsSidebarMenu: React.FC = () => {
   const history = useHistory();

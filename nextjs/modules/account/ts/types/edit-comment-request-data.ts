@@ -1,4 +1,4 @@
-import { PriorityProductEnum } from "@client/modules/account/ts/consts/priority-product.enum";
+import { PriorityProductEnum } from "@modules/account/ts/consts/priority-product.enum";
 
 export interface EditCommentRequestData {
   comment: string;

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
 import { Grid } from "@material-ui/core";
 import classnames from "classnames";
-import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
-import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
+import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
+import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 interface ShareListManagePeopleSelectProps {
   items: SelectValue<UserRightsActionsEnum, string>[];

@@ -7,8 +7,8 @@ import { RemoveCardDialog } from "./RemoveCardDialog";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 import { CardHeader } from "./CardHeader";
-import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface CardItemProps {
   cardInfo: CardItemDto;

@@ -1,12 +1,12 @@
 import React from "react";
-import { priorityProductSelectValuesConst } from "@client/modules/account/ts/consts/priority-product-select-values.const";
-import { List, ListItem } from "@client/modules/account/ts/types/list.type";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { ConfirmDelete } from "@client/modules/account/components/lists/ConfirmDelete";
+import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/priority-product-select-values.const";
+import { List, ListItem } from "@modules/account/ts/types/list.type";
+import { useDialog } from "@modules/account/hooks/useDialog";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
-import { editCommentInProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import { PriorityProductEnum } from "@client/modules/account/ts/consts/priority-product.enum";
+import { editCommentInProduct } from "@redux/actions/account-actions/ListsActions";
+import { PriorityProductEnum } from "@modules/account/ts/consts/priority-product.enum";
 
 interface ListProductItemCommentProps {
   info: ListItem;

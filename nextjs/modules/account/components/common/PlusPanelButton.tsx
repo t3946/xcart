@@ -1,5 +1,5 @@
 import React from "react";
-import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
+import Plus from "@modules/icon/components/account/plus/Plus";
 import classnames from "classnames";
 
 interface IProps {

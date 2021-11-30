@@ -1,13 +1,13 @@
 import React from "react";
-import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { useDispatch, useSelector } from "react-redux";
-import TimesIcon from "@client/modules/icon/components/account/ModalTimes";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import TimesIcon from "@modules/icon/components/account/ModalTimes";
+import StoreInterface from "@modules/account/ts/types/store.type";
 import classnames from "classnames";
 import {
   alertIconTemplate,
   VariantsEnum,
-} from "@client/modules/account/utils/alert";
+} from "@modules/account/utils/alert";
 
 const AlertMobile: React.FC = function () {
   const dispatch = useDispatch();

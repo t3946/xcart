@@ -1,4 +1,4 @@
-import { AddressTypeEnum } from "@client/modules/account/ts/consts/address-type.const";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 
 export interface AddressItemDto {
   address_id?: number;

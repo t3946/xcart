@@ -1,7 +1,7 @@
 import React, { Dispatch } from "react";
 import { BillingAddressListItem } from "./BillingAddressListItem";
 import { AddressItemDto } from "../../ts/types/address-item.type";
-import { RadioBtn } from "@client/modules/account/components/shared/RadioBtn";
+import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 
 interface BillingAddressListProps {
   addresses: AddressItemDto[];
