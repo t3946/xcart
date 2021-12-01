@@ -56,14 +56,4 @@ class CategoryAdmin extends NestedAdmin
     {
         return "Categories";
     }
-
-    public function isAjaxUpdate(): bool
-    {
-        return true;
-    }
-
-    public function isAjaxCreate(): bool
-    {
-        return true;
-    }
 }

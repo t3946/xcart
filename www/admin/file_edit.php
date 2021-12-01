@@ -87,7 +87,7 @@ if(empty($dir)) {
 # Obtain languages list for compiling facility
 #
 
-	$smarty->assign("languages", $avail_languages);
+	$smarty->assign("languages", $all_languages);
 }
 
 #

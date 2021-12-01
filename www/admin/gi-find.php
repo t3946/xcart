@@ -1,4 +1,6 @@
 <?PHP
+
+use Xcart\App\Main\Xcart;
 use Xcart\OrderToTicketResolver;
 
 if ( !defined('XCART_SESSION_START') ) { header('Location: ../'); die('Access denied'); }
@@ -46,7 +48,6 @@ if (!empty($orderid)){
 	$order_prefix = func_query_first_cell("SELECT order_prefix FROM $sql_tbl[orders] WHERE orderid='$orderid'");
 	$ticket_resolver = $resolver->fetch_ticket_info($order_prefix.$orderid);
 
-//func_print_r($ticket_resolver);
 
 	if (!empty($ticket_resolver[0]["url"])){
 		$ticket_resolver_link = $ticket_resolver[0]["url"];
@@ -54,11 +55,10 @@ if (!empty($orderid)){
 		if (!empty($ticket_resolver[0]["messages"])){
 
 			$ticket_resolver_messages = $ticket_resolver[0]["messages"];
-//			$ticket_resolver_link .= "&messages=".$ticket_resolver_messages;
 
-            $t_arr = \Xcart\App\Main\Xcart::app()->cache->get('ticket_resolver_messages', []);
+            $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
             $t_arr [$orderid] = $ticket_resolver_messages;
-            \Xcart\App\Main\Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
+            Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
 
 			$smarty->assign('ticket_resolver_messages', $ticket_resolver_messages);
 		}
@@ -72,7 +72,6 @@ if (!empty($prefix_product_question_id)){
 
         $ticket_resolver = $resolver->fetch_ticket_info($prefix_product_question_id);
 
-//func_print_r($ticket_resolver);
 
         if (!empty($ticket_resolver[0]["url"])){
                 $ticket_resolver_link = $ticket_resolver[0]["url"];
@@ -80,7 +79,6 @@ if (!empty($prefix_product_question_id)){
                 if (!empty($ticket_resolver[0]["messages"])){
 
                         $ticket_resolver_messages = $ticket_resolver[0]["messages"];
-//                      $ticket_resolver_link .= "&messages=".$ticket_resolver_messages;
 
                         $smarty->assign('ticket_resolver_messages', $ticket_resolver_messages);
                 }

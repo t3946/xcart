@@ -5,6 +5,7 @@ namespace Modules\Goods\Models;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ImageField;
+use Xcart\App\Orm\Fields\TreeForeignField;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\Helpers\CategoryCalculateHelper;
 use Modules\Sites\Models\SiteModel;
@@ -14,8 +15,6 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\HasToOneField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\TreeModel;
@@ -175,6 +174,12 @@ class CategoryModel extends TreeModel
                     'class' => DecimalField::class,
                     'verboseName' => 'Category Z parameter',
                     'default' => 0
+                ],
+                'parent' => [
+                    'class' => TreeForeignField::class,
+                    'null' => true,
+                    'modelClass' => self::class,
+                    'field' => 'parentid',
                 ],
             ]
         );

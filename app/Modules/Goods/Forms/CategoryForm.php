@@ -3,6 +3,7 @@
 namespace Modules\Goods\Forms;
 
 use Modules\Editor\Fields\EditorField;
+use Modules\Goods\Admin\ProductAdmin;
 use Modules\Goods\Models\CategoryModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
@@ -49,12 +50,15 @@ class CategoryForm extends ModelForm
                 'meta_keywords',
                 'meta_descr',
                 'google_product_category',
+                'parent',
             ],
         ];
     }
 
     public function getFields()
     {
+        /** @var CategoryModel $product */
+        $category = $this->getInstance();
         return [
             'icon_path' => ImageField::class,
             'picture_path' => ImageField::class,
@@ -106,6 +110,25 @@ class CategoryForm extends ModelForm
             ],
             'meta_keywords' => TextAreaField::class,
             'meta_descr' => TextAreaField::class,
+            'parent' => [
+                'inputTemplate' => 'forms/field/dropdown/input_nested.tpl',
+                'class' => Select2Field::class,
+                'html' => [
+                    'style' => 'width: 70%',
+                    'data-url' => (new ProductAdmin())->getSuggestionUrl('category'),
+                ],
+                'value' => $category->parentid ?? null,
+                'choices' => $category->parent
+                    ? [
+                        $category->parentid => implode(
+                            '/',
+                            array_map(
+                                static fn($a) => $a['name'],
+                                $category->parent->getBreadcrumbs()->get()
+                            )
+                        )]
+                    : [],
+            ],
         ];
     }
 }

@@ -157,8 +157,6 @@ $smarty->assign ('default_charset', $e_langs[$shop_language]);
 
 x_session_register("editor_mode");
 
-if ($login)
-	db_query ("UPDATE $sql_tbl[customers] SET language='$shop_language' WHERE login='$login'");
 
 if (@$current_area === "C" || @$current_area === "B") {
 	#
