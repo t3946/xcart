@@ -15,7 +15,7 @@ RUN apt-get update
 RUN apt-get install -y msmtp
 
 # Install extensions
-RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis protobuf grpc
+RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
