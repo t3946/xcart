@@ -3,6 +3,8 @@
 namespace Xcart;
 
 
+use Modules\Core\Classes\SoapClientTimeout;
+
 class OrderToTicketResolver {
     protected $user;
     protected $pass;
@@ -20,13 +22,14 @@ class OrderToTicketResolver {
         $this->title_pattern = $title_pattern;
         $this->url_pattern = $url_pattern;
 
-        $this->soap = new \SoapClient(null, array(
+        $this->soap = new SoapClientTimeout(null, array(
             'location'      => $this->url,
             'uri'           => $this->ns,
             'trace'         => 1,
             'style'         => SOAP_RPC,
             'use'           => SOAP_ENCODED,
         ));
+        $this->soap->setTimeout(1000);
     }
 
     public function get_last_request_xml() {

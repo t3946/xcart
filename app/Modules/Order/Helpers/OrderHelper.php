@@ -285,48 +285,32 @@ class OrderHelper
 
     public static function getOTRSMessages(OrderModel $model): int
     {
-        $ticket_resolver_messages = 0;
-        $url = 'http://helpdesk.s3stores.com/otrs/index.pl';
-        $TicketConnector_link = 'http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector';
-
-        if ($model) {
-            $curl_err = false;
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1000);
-            curl_exec($ch);
-
-            if (curl_errno($ch) != 0 || curl_getinfo($ch, CURLINFO_HTTP_CODE) !== 200) {
-                $curl_err = true;
-            }
-            curl_close($ch);
-
-            if (!$curl_err) {
-                $resolver = new OrderToTicketResolver(
-                    'xcart', '@Pp6Lcg^VNMC',
-                    $TicketConnector_link,
-                    'otrs-soap',
-                    '%s',
-                    'http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d'
-                );
-                $ticket_resolver = $resolver->fetch_ticket_info($model->getOrderNumber());
-                if (!empty($ticket_resolver[0]['url'])) {
-                    $ticket_resolver_link = $ticket_resolver[0]['url'];
-
-                    if (!empty($ticket_resolver[0]['messages'])) {
-                        $ticket_resolver_messages = $ticket_resolver[0]['messages'];
-
-                        $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
-                        $t_arr[$model->orderid] = $ticket_resolver_messages;
-                        Xcart::app()->cache->set('ticket_resolver_messages', $t_arr);
-                    }
-                    $model->update(['otrs_ticket' => $ticket_resolver_link]);
-                    $model->save();
-                }
-            }
+        $model->pk = 304905;
+        $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
+        if (isset($t_arr[$model->pk])) {
+            return $t_arr[$model->pk];
         }
-        return $ticket_resolver_messages;
+
+        $resolver = new OrderToTicketResolver(
+            'xcart', '@Pp6Lcg^VNMC',
+            'http://helpdesk.s3stores.com/otrs/nph-genericinterface.pl/Webservice/TicketConnector',
+            'otrs-soap',
+            '%s',
+            'http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d'
+        );
+
+        $ticket = $resolver->fetch_ticket_info('KS-304905')[0];
+
+        if (isset($ticket['url'])) {
+            $model->otrs_ticket = $ticket['url'];
+            $model->save(['otrs_ticket']);
+        }
+        if (isset($ticket['messages'])) {
+            $t_arr[$model->pk] = $ticket['messages'];
+            Xcart::app()->cache->set('ticket_resolver_messages', $t_arr, 300);
+        }
+
+        return $ticket['messages'] ?? 0;
     }
 
     public static function getCartOrder(): ?OrderModel
