@@ -194,20 +194,37 @@ class ProductQuestionForm extends FrontendModelForm
         $product = $instance->product;
         $brand = $product->brand;
 
-        $text = str_replace(['{{mpn}}', '{{supplier_internal_id}}'], [
-            $product->getMPN(),
-            $product->supplier_internal_id
-        ], $text);
-        $text = str_replace("{{productname}}", $product->product, $text);
-        $text = str_replace("{{brand_email}}", $brand->customer_service_email, $text);
-        $text = str_replace("{{brand_phone}}", $brand->customer_service_phone, $text);
-        $text = str_replace("{{question}}", $instance->question, $text);
-        $text = str_replace("{{customer_phone}}", $instance->createPhone(), $text);
-        $text = str_replace("{{product_link}}", 'https:' . $product->getAbsoluteUrl(true), $text);
-        $text = str_replace("{{customer_email}}", $instance->email, $text);
-        $text = str_replace("{{prqnid}}", $this->prefixProductQuestionId($instance->id), $text);
-        $text = str_replace("{{signature}}", $this->getSignature($product->sites->limit(1)->get(), $config), $text);
-        $text = str_replace("{{customer_name}}", $instance->name, $text);
+        $text = str_replace(
+            [
+                '{{mpn}}',
+                '{{supplier_internal_id}}',
+                "{{productname}}",
+                "{{brand_email}}",
+                "{{brand_phone}}",
+                "{{question}}",
+                "{{customer_phone}}",
+                "{{product_link}}",
+                "{{customer_email}}",
+                "{{prqnid}}",
+                "{{signature}}",
+                "{{customer_name}}"
+            ],
+            [
+                $product->getMPN(),
+                $product->supplier_internal_id,
+                $product->product,
+                $brand->customer_service_email,
+                $brand->customer_service_phone,
+                $instance->question,
+                $instance->createPhone(),
+                'https:' . $product->getAbsoluteUrl(true),
+                $instance->email,
+                $this->prefixProductQuestionId($instance->id),
+                $this->getSignature($product->sites->limit(1)->get(), $config),
+                $instance->name
+            ],
+            $text
+        );
 
         return $text;
     }

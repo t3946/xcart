@@ -107,7 +107,7 @@ function func_import_get_pb_cache($values, $type, $add_key = "", $force_save = f
 #
 # Save data to import cache (product signature based)
 #
-function func_import_save_pb_cache($values, $type, $add_key = NULL, $value, $force_save = false) {
+function func_import_save_pb_cache($values, $type, $add_key, $value, $force_save = false) {
 	if (empty($type) || (empty($values['productid']) && empty($values['productcode']) && empty($values['product'])))
 	return NULL;
 

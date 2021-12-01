@@ -8,6 +8,7 @@ use Xcart\App\Form\Fields\DeleteInlineField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\Field;
 use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
@@ -47,7 +48,7 @@ class ModelForm extends MixinBaseForm
         $this->_fields = $this->_fields ?: [];
 
         foreach ($instance->getFieldsInit() as $name => $field) {
-            /** @var \Xcart\App\Orm\Fields\Field $field */
+            /** @var Field $field */
             if ($field->editable === false || is_a($field, AutoField::class) || in_array($name, $this->getExclude())) {
                 continue;
             }
@@ -276,7 +277,7 @@ class ModelForm extends MixinBaseForm
 
     /**
      * @return Model
-     *@throws \Exception
+     *@throws Exception
      */
     public function getModel()
     {

@@ -11,7 +11,7 @@
 <tr>
 	<td colspan="3" align="right" valign="middle">{$lng.lbl_language}:
 	<select name="offer_lng_code" onchange="self.location='offers.php?mode=promo&offerid={$offerid}&offer_lng_code='+document.wizardform.offer_lng_code.value;">
-{foreach from=$avail_languages item=ol}
+{foreach from=$all_languages item=ol}
 		<option value="{$ol.code}"{if $ol.code eq $offer_lng_code} selected="selected"{/if}>{$ol.language}</option>
 {/foreach}
 	</select>

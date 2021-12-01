@@ -45,7 +45,7 @@ class LanguageModel extends Model
     {
         return (string)$this->value;
     }
-    public static function getCountry(string $code)
+    public static function getCountry(string $code): string
     {
         global $shop_language;
         /** @var SiteModel $site */

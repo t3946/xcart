@@ -133,32 +133,32 @@ abstract class TreeModel extends Model
         }
 
         $pid_name = $this->getField('parent')->getAttributeName();
-        $changed_values = $this->getChangedAttributes($fields);
+//        $changed_values = $this->getChangedAttributes($fields);
 
-        if (in_array($pid_name, array_keys($changed_values))) {
-
-            if ($saved = parent::save($fields))
-            {
-                if ($this->parent) {
-                    $this->moveAsLast($this->parent);
-                }
-                elseif ($this->isRoot() == false) {
-                    $this->moveAsRoot();
-                }
-
-                /** @var array $parent */
-                $parent = $this->objects()->asArray()->get(['pk' => $this->pk]);
-
-                if ($parent !== null) {
-                    $this->setAttributes($parent);
-                    $this->setIsNewRecord(false);
-                }
-
-                return $saved;
-            }
-
-            return $saved;
-        }
+//        if (in_array($pid_name, array_keys($changed_values))) {
+//
+//            if ($saved = parent::save($fields))
+//            {
+//                if ($this->parent) {
+//                    $this->moveAsLast($this->parent);
+//                }
+//                elseif ($this->isRoot() == false) {
+//                    $this->moveAsRoot();
+//                }
+//
+//                /** @var array $parent */
+//                $parent = $this->objects()->asArray()->get(['pk' => $this->pk]);
+//
+//                if ($parent !== null) {
+//                    $this->setAttributes($parent);
+//                    $this->setIsNewRecord(false);
+//                }
+//
+//                return $saved;
+//            }
+//
+//            return $saved;
+//        }
 
         return parent::save($fields);
     }

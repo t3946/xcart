@@ -13,6 +13,7 @@ use Modules\Distributor\Models\ColumnTableSaveModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Sites\Models\SiteModel;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Throwable;
 use Xcart\App\Controller\Controller;
@@ -95,7 +96,7 @@ class ApiDxController extends Controller
         $this->jsonResponse(['files' => $file_list, 'folderId' => $dx_folder]);
     }
 
-    public function loadFile()
+    public function loadFile(): void
     {
         $post = json_decode(file_get_contents('php://input'));
         $file_id = $post->fileId;
@@ -110,35 +111,55 @@ class ApiDxController extends Controller
 
             $reader = IOFactory::createReaderForFile($path_save);
             $excel_obj = $reader->load($path_save);
-            $ar_data = [];
             $ar_tables = [];
-            $counter_table = 0;
-            /* looking from excel file first 30 rows which not empty */
+            $table_sheets = [];
+            $table = [];
+
             for ($t = 0; $t < $excel_obj->getSheetCount(); $t++) {
-                $ar_excel = $excel_obj->getSheet($t)->toArray();
-                foreach ($ar_excel as $iValue) {
-                    $count_good = 0; // count not empty field
-                    $row = $iValue;
-                    foreach ($row as $dValue) {
-                        if (!empty($dValue)) {
-                            $count_good++;
-                        }
-                    }
-                    if ($count_good > (count($row) / 100) * 20) { // if count not empty column in row > 30%
-                        $ar_data[$counter_table][] = $row;
-                    }
-                    if (!empty($ar_data[$counter_table]) && count($ar_data[$counter_table]) === self::COUNT_ITEMS_TABLE) {
-                        break;
+                $worksheet = $excel_obj->getSheet($t);
+                $row_iterator = $worksheet->getRowIterator();
+
+                $cells = [];
+                foreach ($row_iterator->current()->getCellIterator() as $key => $val) {
+                    $cells[] = $key;
+                }
+
+                $cells_values = [];
+                foreach ($cells as $cell) {
+                    for ($i = 0; $i < 100; $i++) {
+                        $cell_item = $worksheet->getCell($cell . $i);
+                        $cell_value = $cell_item->getDataType() === DataType::TYPE_FORMULA ? $cell_item->getCalculatedValue() : $cell_item->getValue();
+                        $cells_values[$cell][] = is_numeric($cell_value) ? round($cell_value, 2) : $cell_value;
                     }
                 }
-                if (!empty($ar_data[$counter_table])) {
-                    $counter_table++;
+
+                $cells_values = array_map(static fn(array $cells) => array_filter($cells), $cells_values);
+                $cells_values = array_filter($cells_values);
+                foreach ($cells_values as $cell_values) {
+                    for ($i = 0; $i < 100; $i++) {
+                        $table_sheets[$t][$i][] = $cell_values[$i] ?? null;
+                    }
+                }
+
+                foreach ($table_sheets as $sheet => $table_sheet) {
+                    foreach ($table_sheet as $row) {
+                        $active_cell = array_filter($row);
+                        if (count($active_cell) >= count($row) * 30 / 100) {
+                            $table[$sheet][] = $row;
+                        }
+
+                        if (isset($table[$sheet]) && count($table[$sheet]) === self::COUNT_ITEMS_TABLE) {
+                            break;
+                        }
+                    }
+                }
+                if (!empty($table[$t])) {
                     $ar_tables[] = $excel_obj->getSheetNames()[$t];
                 }
             }
             $output = [
-                'contentFile' => $ar_data,
-                'tableNames' => $ar_tables,
+                'contentFile' => $table,
+                'tableNames' => $ar_tables
             ];
             $this->jsonResponse($output);
         } catch (Throwable $exception) {
@@ -225,7 +246,8 @@ class ApiDxController extends Controller
     /**
      * @throws Exception
      */
-    public function getColumnByDx(int $dx): void
+    public
+    function getColumnByDx(int $dx): void
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
         $ar_column = [];

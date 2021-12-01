@@ -14,14 +14,14 @@ import {
   FilesInfo,
 } from "@admin/modules/distributor/ts/types/table-price.types";
 import Divider from "@mui/material/Divider";
-import { CircularProgress } from "@mui/material";
-
+import { CircularProgress, Typography } from "@mui/material";
+import { initialFiles } from "@admin/modules/distributor/ts/initial/form-price.initial";
 interface IFormPrice {
   distributorId: number;
 }
 
 export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
-  const [files, setFiles] = useState<FilesInfo>(null);
+  const [files, setFiles] = useState<FilesInfo>(initialFiles);
   const [selectedFile, setSelectedFile] = useState<FileItem>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [table, setTable] = useState([]);
@@ -66,6 +66,13 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
       showSnackbar("An error has occurred, please try again", "error");
     }
   };
+  if (Array.isArray(files.files) && !files.files.length) {
+    return (
+      <Typography variant="h6" align="center">
+        Not found files
+      </Typography>
+    );
+  }
   return (
     <Grid
       container
@@ -73,7 +80,7 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
       justifyContent="center"
       alignItems="center"
     >
-      {files ? (
+      {files.files ? (
         <List>
           {files.files.map((file) => (
             <Fragment>

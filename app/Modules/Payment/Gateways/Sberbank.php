@@ -4,11 +4,13 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
+use Modules\Order\Stores\OrderTransactionStore;
+use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Main\Xcart;
 
 class Sberbank extends Gateway
 {
-    public static function getProcessorName()
+    public static function getProcessorName(): string
     {
         return 'Sberbank';
     }
@@ -20,7 +22,11 @@ class Sberbank extends Gateway
         [$order_id, $time_payment] = explode('_', $order_info);
         /** @var OrderTransactionModel txn */
         if ($this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $transaction_id, 'orderid' => $order_id])) {
-            Xcart::app()->logger->debug('Success find transaction', [$this->txn->transaction_id], 'sberbank_response');
+            $data = "amount;{$this->txn->transaction_amount};mdOrder;{$this->txn->transaction_id};operation;{$params['operation']};orderNumber;{$order_info};status;{$params['status']};";
+            $key = "np0tlf460u8o0nsfisfd0tasti";
+            $hmac = hash_hmac('sha256', $data, $key);
+            Xcart::app()->logger->debug('Symmetrical cryptography', ["[$hmac]\n", $hmac], 'sberbank_response');
+            $params['links'] = $this->getLinkByMode('success');
             $this->txn->setAttributes([
                 'transaction_response' => $params,
                 'transaction_id' => $transaction_id,
@@ -50,38 +56,54 @@ class Sberbank extends Gateway
         parent::success($params);
     }
 
-    public function __construct($model)
-    {
-        parent::__construct($model);
-    }
-
     public function refund($params)
     {
-        // TODO: Implement refund() method.
+        $transaction_id = $params['orderTransaction']->transaction_id;
+        /** @var ProcessorModel $processor_model */
+        $processor_model = $params['processor'];
+        $this->gateway->setTestMode(true);
+        $this->result = $this->gateway->refund([
+            'orderId' => $transaction_id,
+            'amount' => (float)$params['amount']
+        ])->setUserName($processor_model->param01)->setPassword($processor_model->param02)->send();
+        return $this->result->isSuccessful();
     }
 
     public function void($params)
     {
-        // TODO: Implement void() method.
+        $transaction_id = $params['orderTransaction']->transaction_id;
+        /** @var ProcessorModel $processor_model */
+        $processor_model = $params['processor'];
+        $this->gateway->setTestMode(true);
+        $this->result = $this->gateway->void(
+            [
+                'orderId' => $transaction_id,
+                'amount' => (float)$params['amount']
+            ]
+        )->setUserName($processor_model->param01)->setPassword($processor_model->param02)->send();
+        return $this->result->isSuccessful();
     }
 
     public function capture($params)
     {
-        // TODO: Implement capture() method.
-    }
-
-    public function lookup($params)
-    {
-        // TODO: Implement lookup() method.
+        $transaction_id = $params['orderTransaction']->transaction_id;
+        /** @var ProcessorModel $processor_model */
+        $processor_model = $params['processor'];
+        $this->gateway->setTestMode(true);
+        $this->result = $this->gateway->capture([
+            'orderId' => $transaction_id,
+            'amount' => (float)$params['amount'],
+        ])->setUserName($processor_model->param01)->setPassword($processor_model->param02)->send();
+        return $this->result->isSuccessful();
     }
 
     public function authorize($params)
     {
         $this->gateway->setTestMode(true);
-        $timestamp = time();
+
         $this->result = $this->gateway->authorize(
             [
-                'orderNumber' => "{$params['order']->pk}_$timestamp",
+                'orderNumber' => $params['orderNumber'],
                 'amount' => $params['amount'],
                 'returnUrl' => $params['returnUrl'],
                 'description' => $params['description'],
@@ -99,7 +121,30 @@ class Sberbank extends Gateway
     {
         $this->authorize($params);
         return $this->result->isSuccessful();
-        // TODO: Implement purchase() method.
+    }
+
+    public function getLinkByMode(string $mode)
+    {
+        switch ($mode) {
+            case 'refund':
+            case 'void':
+                return [];
+            case 'success':
+                return [
+                    ['rel' => 'capture', 'method' => 'POST'],
+                    ['rel' => 'void', 'method' => 'POST'],
+                    ['rel' => 'reauthorize', 'method' => 'POST']
+                ];
+            case 'authorization':
+                return null;
+            case 'capture':
+                return [
+                    [
+                        'rel' => 'refund',
+                        'method' => 'POST'
+                    ],
+                ];
+        }
     }
 
     public function complete($params)
@@ -109,6 +154,15 @@ class Sberbank extends Gateway
 
     public function getState($mode)
     {
-        // TODO: Implement getState() method.
+        if (!$this->result->isSuccessful()){
+            return OrderTransactionModel::STATUS_FAILED;
+        }
+        $method = OrderTransactionStore::$gatewayMethods[$mode];
+        return $method['status'] ?? OrderTransactionModel::STATUS_FAILED;
+    }
+
+    public function lookup($params)
+    {
+        // TODO: Implement lookup() method.
     }
 }

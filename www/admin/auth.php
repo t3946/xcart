@@ -100,16 +100,22 @@ if (!empty($login)){
 	$membership_name = func_query_first_cell("SELECT $sql_tbl[memberships].membership FROM $sql_tbl[memberships] LEFT JOIN $sql_tbl[customers] ON $sql_tbl[customers].membershipid=$sql_tbl[memberships].membershipid WHERE $sql_tbl[customers].login='$login'");
 
 	$membership_name = strtoupper(trim($membership_name));
-
-	if ($membership_name == "CUSTOMER SERVICE"){
-		$membership_code = "ADMIN_CUSTOMER_SERVICE";
-	} elseif ($membership_name == "CUSTOMER SERVICE & PRODUCT MANAGER"){
-		$membership_code = "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER";
-	} elseif ($membership_name == "PRODUCT MANAGER"){
-		$membership_code = "ADMIN_PRODUCT_MANAGER";
-	} elseif ($membership_name == "TRACKING NUMBER ENTRY OPERATOR"){
-        	$membership_code = "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR";
-	}
+	$membership_code = '';
+    switch ($membership_name)
+    {
+        case 'CUSTOMER SERVICE':
+            $membership_code = 'ADMIN_CUSTOMER_SERVICE';
+                break;
+        case "CUSTOMER SERVICE & PRODUCT MANAGER":
+            $membership_code = "ADMIN_CUSTOMER_SERVICE_AND_PRODUCT_MANAGER";
+            break;
+        case 'PRODUCT MANAGER':
+            $membership_code = 'ADMIN_PRODUCT_MANAGER';
+            break;
+        case "TRACKING NUMBER ENTRY OPERATOR":
+            $membership_code = "ADMIN_TRACKING_NUMBER_ENTRY_OPERATOR";
+            break;
+    }
 
 	$smarty->assign('membership_code', $membership_code);
 //func_print_r($membership_code);

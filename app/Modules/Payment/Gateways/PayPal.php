@@ -2,12 +2,10 @@
 
 namespace Modules\Payment\Gateways;
 
-use Modules\Core\Models\GlobalConfigModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Sites\Models\SiteModel;
-use PayPal\Api\CreditCard;
-use Xcart\OrderTransaction;
+use Xcart\App\Main\Xcart;
 
 class PayPal extends Gateway
 {
@@ -26,7 +24,7 @@ class PayPal extends Gateway
         parent::init();
 
         /** @var SiteModel $site */
-        $site = \Xcart\App\Main\Xcart::app()->getModule('Sites')->getSite();
+        $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getConfig();
         if (!isset($config['sandbox_client_id'], $config['sandbox_secret_key'], $config['live_client_id'], $config['live_secret_key'])) {
             $config = $site->getGlobalConfig();
@@ -106,7 +104,7 @@ class PayPal extends Gateway
     {
         $state = null;
 
-        if (!$this->result->isSuccessful()){
+        if (!$this->result->isSuccessful()) {
             return OrderTransactionModel::STATUS_FAILED;
         }
 
@@ -122,20 +120,16 @@ class PayPal extends Gateway
                 switch ($data['intent']) {
                     case 'authorize':
                         return OrderTransactionModel::STATUS_AUTHORIZED;
-                        break;
                     case 'capture':
                         return OrderTransactionModel::STATUS_COMPLETED;
-                        break;
                 }
             }
         }
-            switch ($data['name']) {
+        switch ($data['name']) {
             case 'AUTHORIZATION_EXPIRED' :
                 return OrderTransactionModel::STATUS_EXPIRED;
-                break;
             case 'AUTHORIZATION_ALREADY_COMPLETED' :
                 return OrderTransactionModel::STATUS_COMPLETED;
-                break;
         }
         return $state;
     }

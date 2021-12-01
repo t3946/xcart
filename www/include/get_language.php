@@ -34,7 +34,9 @@
 # $Id: get_language.php,v 1.70.2.8 2007/01/22 11:00:52 max Exp $
 #
 
+use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\LanguageModel;
+use Modules\Core\Models\StateModel;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
@@ -155,8 +157,6 @@ $smarty->assign ('default_charset', $e_langs[$shop_language]);
 
 x_session_register("editor_mode");
 
-if ($login)
-	db_query ("UPDATE $sql_tbl[customers] SET language='$shop_language' WHERE login='$login'");
 
 if (@$current_area === "C" || @$current_area === "B") {
 	#
@@ -174,26 +174,11 @@ if (@$current_area === "C" || @$current_area === "B") {
 		}
 	}
 }
-
-$all_languages = func_data_cache_get("languages", array($shop_language));
-
-if (empty($all_languages)) {
-	$def_language = ($current_area === 'C' ? $config["default_customer_language"] : $config["default_admin_language"]);
-	$all_languages = func_data_cache_get("languages", array($def_language));
-	if (empty($all_languages) && !empty($e_langs) && is_array($e_langs)) {
-		$all_languages = func_data_cache_get("languages", array(key($e_langs)));
-		reset($e_langs);
-	}
-}
-
-$n_langs = array ();
-
-if ($all_languages) {
-	$avail_languages = $all_languages;
-	foreach ($all_languages as $value) {
-		if (!in_array($value["code"], $d_langs))
-			$n_langs [] = $value;
-	}
+$avail_languages = CountryModel::objects()->filter(['code' => $shop_language])->cache(300)->asArray()->all();
+if ($avail_languages) {
+	$avail_languages = array_map(static function ($el) {
+		return array_merge($el, ['country' => 'United States', 'language' => 'English']);
+	}, $avail_languages);
 }
 
 if (
@@ -205,19 +190,18 @@ if (
 	func_header_location($l_redirect);
 }
 
-$all_languages = $n_langs;
-
-$smarty->assign ("all_languages", $all_languages);
+$smarty->assign ("all_languages", $avail_languages);
 $smarty->assign ("store_language", @$store_language);
 $smarty->assign ("shop_language", @$shop_language);
-$smarty->assign ("all_languages_cnt", count($all_languages));
+$smarty->assign ("all_languages_cnt", count($avail_languages));
 
 $code = $config["Company"]["location_country"];
+/** @var CountryModel $country_model */
+$country_model = CountryModel::objects()->get(['code' => $code]);
 
 $config["Company"]["location_country_name"] = LanguageModel::getCountry($code);
-
-$config["Company"]["location_state_name"] = func_get_state($config["Company"]["location_state"], $config["Company"]["location_country"]);
-$config["Company"]["location_country_has_states"] = func_query_first_cell("SELECT display_states FROM $sql_tbl[countries] WHERE code = '".$config["Company"]["location_country"]."'") == 'Y';
+$config["Company"]["location_state_name"] = StateModel::getState($config["Company"]["location_country"], $config["Company"]["location_state"]);
+$config["Company"]["location_country_has_states"] = $country_model->display_states === 'Y';
 
 $smarty->assign("config",$config);
 $mail_smarty->assign("config",$config);

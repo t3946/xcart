@@ -29,6 +29,13 @@ class OrderTransactionHelper
                     'currency' => $params['currency']
                 ];
         }
+        if ($gw->model->processor_name === 'Sberbank')
+        {
+            $links = $gw->getLinkByMode($params['mode']);
+            if (is_array($links)) {
+                $result['links'] = $links;
+            }
+        }
 
         if ($params['mode'] === 'refund_transaction') {
             $result['amount']['total'] = -abs($result['amount']['total']);
@@ -46,7 +53,7 @@ class OrderTransactionHelper
 
         $response = array_merge($response,
             [
-                'transaction_id' => $gw->result->getTransactionReference(),
+                'transaction_id' => $gw->result->getTransactionReference() ?? $params['transactionReference'],
                 'transaction_status' => $gw->getState($params['mode']),
                 'transaction_currency' => $result['amount']['currency'],
                 'transaction_amount' => $result['amount']['total'],

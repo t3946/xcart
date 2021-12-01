@@ -13,12 +13,13 @@ use Xcart\App\Orm\QuerySet;
 class BrandAdmin extends Admin
 {
     public ?string $order = 'brand';
+
     public function getForm(): BrandForm
     {
         return new BrandForm();
     }
 
-    public function getListColumns() : array
+    public function getListColumns(): array
     {
         return [
             'brand',
@@ -58,16 +59,17 @@ class BrandAdmin extends Admin
         }
         return parent::getItemProperty($item, $property);
     }
+
     public function getFilterForm(): ?Form
     {
         return new BrandFilterForm();
     }
-    public function handleFilter(QuerySet $qs, $form): QuerySet
+
+    public function handleFilter($qs, $form)
     {
         $filter = parent::handleFilter($qs, $form);
         foreach ($form->getAttributes() as $key => $value) {
-            if ($value)
-            {
+            if ($value) {
                 switch ($key) {
                     case 'manufacture':
                         $params_filter = 'products__manufacturerid';

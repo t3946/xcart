@@ -196,8 +196,10 @@ class DropDownField extends Field
                 if (($value = $this->getValue()) !== null) {
                     $selected[] = $value instanceof Model ? $value->{$to} : $value;
                 }
-                foreach ($qs->all() as $item) {
-                    $data[$item->{$to}] = (string)$item;
+                if(empty($this->_attributes['data-url'])) {
+                    foreach ($qs->all() as $item) {
+                        $data[$item->{$to}] = (string)$item;
+                    }
                 }
             } else {
                 $data = $this->getValue();
@@ -219,12 +221,11 @@ class DropDownField extends Field
             if ($admin instanceof ListViewAdmin) {
                 $field_parent = $admin->through_field;
                 $parent_model = $child_model->{$ar_name[0]}->get([$field_parent => $admin->ownerPk]);
-                $selected = [intval($parent_model->{$ar_name[1]})];
+                $selected = [(int)$parent_model->{$ar_name[1]}];
             }
         }
 
         $this->_selected = $this->selected ?: $selected;
-
         return $data;
     }
 }
