@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import classnames from "classnames";
 
 interface sideBarMenuItemProps {
@@ -29,26 +29,10 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
     );
   }
 
-  if (document.location.pathname.indexOf("/account") !== -1) {
-    return (
-      <NavLink
-        to={to}
-        exact={true}
-        activeClassName="active-route"
-        className={classnames(
-          "sidebar-menu-item text-decoration-none",
-          className
-        )}
-        onClick={onClick}
-      >
-        {label}
-        {badgeTemplate()}
-      </NavLink>
-    );
-  } else {
-    return (
+  //todo: у старого роутера был класс activeClassName="active-route"
+  return (
+    <Link href={to}>
       <a
-        href={to}
         className={classnames(
           "sidebar-menu-item text-decoration-none",
           className
@@ -58,6 +42,6 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
         {label}
         {badgeTemplate()}
       </a>
-    );
-  }
+    </Link>
+  );
 };

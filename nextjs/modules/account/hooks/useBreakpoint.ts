@@ -7,6 +7,10 @@ function resizeHandler() {
 }
 
 export default function useBreakpoint(): (actions: ActionsInterface) => any {
+  //todo: не ясно как это будет работать
+  if (typeof window === "undefined") {
+    return () => {};
+  }
   window.removeEventListener("resize", resizeHandler);
   window.addEventListener("resize", resizeHandler);
 

@@ -53,14 +53,16 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   function groupItemsTemplate(group: Record<any, any>): any {
     const groupItems = [];
 
-    for (const item of group.items) {
+    for (const key in group.items) {
+      const { link, name } = group.items[key];
+
       groupItems.push(
-        <li className="category-menu-group-item">
+        <li className="category-menu-group-item" key={key}>
           <a
-            href={item.link}
+            href={link}
             className="category-menu-link category-menu-link__level-3"
           >
-            {item.name}
+            {name}
           </a>
         </li>
       );
@@ -80,7 +82,8 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
     const groups = [];
 
-    for (const group of selectedCategory.groups) {
+    for (const i in selectedCategory.groups) {
+      const group = selectedCategory.groups[i];
       const headerClasses = [
         "category-menu-link-level-2-header",
         {
@@ -89,7 +92,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
       ];
 
       const item = (
-        <div className="group-links-column mb-3">
+        <div className="group-links-column mb-3" key={i}>
           <h4 className={classnames(headerClasses)}>
             <a
               href={group.link}
@@ -98,6 +101,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
               {group.name}
             </a>
           </h4>
+
           {groupItemsTemplate(group)}
         </div>
       );
@@ -116,7 +120,8 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     const items = [];
     const categories = departmentsMenu.slice(0, MAX_CATEGORIES_NUMBER);
 
-    for (const category of categories) {
+    for (const key in categories) {
+      const category = categories[key];
       const linkClasses = [
         "category-menu-link category-menu-link__top-level",
         {
@@ -128,7 +133,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
       ];
 
       items.push(
-        <li className="category-menu-item has-child">
+        <li className="category-menu-item has-child" key={key}>
           <a
             href={category.url}
             className={classnames(linkClasses)}

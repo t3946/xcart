@@ -5,9 +5,7 @@ interface IProps {
   className?: any;
 }
 
-const AccountSidebarMobileDesktop: React.FC<IProps> = (
-  props: IProps
-): any => {
+const AccountSidebarMobileDesktop: React.FC<IProps> = (props: IProps): any => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

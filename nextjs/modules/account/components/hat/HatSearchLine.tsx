@@ -6,7 +6,7 @@ import StoreInterface from "@modules/account/ts/types/store.type";
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
-import SearchSuggestion from "@client/jsx/components/SearchSuggestion";
+import SearchSuggestion from "@modules/old-components/SearchSuggestion";
 import MiniCart from "@modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@modules/account/components/hat/LoginButton/LoginButtonDesktop";

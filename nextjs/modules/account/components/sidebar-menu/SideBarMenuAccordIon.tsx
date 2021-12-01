@@ -36,6 +36,8 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
   };
 
   function iconTemplate(): any {
+    return <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />;
+
     return breakpoint({
       xs: (
         <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />
@@ -65,12 +67,13 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
         className={"overflow-hidden common-transition"}
       >
         <div className="sidebar-menu-accordion-content">
-          {routerItems.map((value) => {
+          {routerItems.map((value, index) => {
             return (
               <SideBarMenuAccordIonItem
                 to={value.to}
                 label={value.label}
                 badge={value.badge}
+                key={index}
               />
             );
           })}

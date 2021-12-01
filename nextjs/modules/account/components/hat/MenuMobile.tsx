@@ -2,9 +2,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import Link from "next/link";
 import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@utils/AppData";
 
 interface IProps {
@@ -14,7 +14,7 @@ interface IProps {
 const MenuMobile: React.FC<IProps> = (props: IProps) => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelector((e: any) => e.user);
   const mobileMenuIsVisible = useSelector(
     (e: any) => e.mobileMenu.isMobileMenuVisible
   );
@@ -33,12 +33,13 @@ const MenuMobile: React.FC<IProps> = (props: IProps) => {
         );
       } else {
         return (
-          <Link
-            to={route("account:dashboard")}
-            className="common-link text-decoration-none ms-3 mobile-menu-user-name"
-            onClick={() => dispatch(hideAllMenu())}
-          >
-            <b>{user.name}</b>
+          <Link href={route("account:dashboard")}>
+            <a
+              className="common-link text-decoration-none ms-3 mobile-menu-user-name"
+              onClick={() => dispatch(hideAllMenu())}
+            >
+              <b>{user.name}</b>
+            </a>
           </Link>
         );
       }

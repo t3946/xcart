@@ -58,7 +58,7 @@ const SideBarMenu: React.FC = () => {
 
   return (
     <div className="sidebar-menu-wrapper">
-      {menuItems.map((value: Record<any, any>) => {
+      {menuItems.map((value: Record<any, any>, index) => {
         if (!value.routerItems) {
           return (
             <SideBarMenuItem
@@ -67,6 +67,7 @@ const SideBarMenu: React.FC = () => {
               badge={value.badge}
               className={"sidebar-menu_top-level-item"}
               onClick={value.onClick}
+              key={index}
             />
           );
         }
@@ -77,6 +78,7 @@ const SideBarMenu: React.FC = () => {
             label={value.label}
             routerItems={value.routerItems}
             classes={{ handlerClass: "sidebar-menu_top-level-item" }}
+            key={index}
           />
         );
       })}

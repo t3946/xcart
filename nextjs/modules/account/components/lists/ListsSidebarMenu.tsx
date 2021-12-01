@@ -40,6 +40,7 @@ export const ListsSidebarMenu: React.FC = () => {
               />
             }
             className={"sidebar-menu-item__lists"}
+            key={index}
           />
         );
       })}

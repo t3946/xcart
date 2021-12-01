@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import { route } from "@utils/AppData";
 import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
@@ -12,7 +11,7 @@ import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
-import RotateStyles from "@client/style-modules/common/Rotate.module.scss";
+import RotateStyles from "styles/Rotate.module.scss";
 
 interface IProps {
   isStatic: boolean;
@@ -39,7 +38,7 @@ const AccountLink: React.FC = function () {
 
 const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelector((e: any) => e.user);
   const isStatic = props.isStatic || false;
   const className = "hat-login-button";
 

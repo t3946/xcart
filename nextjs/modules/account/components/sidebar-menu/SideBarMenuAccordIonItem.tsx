@@ -1,6 +1,7 @@
+//todo: исправить опечатку в имени файла
 import React from "react";
 import { SidebarItem } from "@modules/account/ts/types/sidebar-item.type";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 import { useDispatch } from "react-redux";
 
@@ -23,29 +24,16 @@ export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
     );
   }
 
-  if (document.location.pathname.indexOf("/account") !== -1) {
-    return (
-      <NavLink
-        to={to}
-        className="sidebar-menu-item sidebar-menu-item__accordion text-decoration-none"
-        activeClassName="sidebar-menu-item__accordion-current"
-        exact={true}
-        onClick={() => dispatch(hideAllMenu())}
-      >
-        {label}
-        {badgeTemplate()}
-      </NavLink>
-    );
-  } else {
-    return (
+  //todo: у старого роутера был класс activeClassName="sidebar-menu-item__accordion-current"
+  return (
+    <Link href={to}>
       <a
-        href={to}
         className="sidebar-menu-item sidebar-menu-item__accordion text-decoration-none"
         onClick={() => dispatch(hideAllMenu())}
       >
         {label}
         {badgeTemplate()}
       </a>
-    );
-  }
+    </Link>
+  );
 };

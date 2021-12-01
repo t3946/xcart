@@ -1,16 +1,14 @@
 import { createStore, applyMiddleware } from "redux";
-import { createLogger } from "redux-logger";
 import thunkMiddleware from "redux-thunk";
-import ajax from "../../utils/ajax";
-import trigger from "../../utils/trigger";
-import ls from "../../utils/localStorage/storage";
-
+import ajax from "@utils/ajax";
+import trigger from "@utils/trigger";
+import ls from "@utils/localStorage/storage";
 import storeApp from "./StoreApp";
 
 const _INIT_ACTION_TYPE = "@@redux/INIT";
-const ls_key = storeApp.getState().options.session_key + "__store_cart_state";
-
-const loggerMiddleware = createLogger();
+// todo: из глобальной переменной app.options.session_key
+// const ls_key = storeApp.getState().options.session_key + "__store_cart_state";
+const ls_key = "xid0" + "__store_cart_state";
 
 let ACTIONS = {
   SET: (state, action) => {

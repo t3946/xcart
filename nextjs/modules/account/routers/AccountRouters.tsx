@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 // import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import Store from "@redux/stores/Store";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import HatNavigation from "@modules/account/components/hat/HatNavigation";
-// import HatSearchLine from "../components/hat/HatSearchLine";
-// import MenuMobile from "@modules/account/components/hat/MenuMobile";
+import HatSearchLine from "@modules/account/components/hat/HatSearchLine";
+import MenuMobile from "@modules/account/components/hat/MenuMobile";
 import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import { setBreadcrumbsAddresses } from "@redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
@@ -126,7 +125,6 @@ import StoreInterface from "@modules/account/ts/types/store.type";
 // import Decisions from "@modules/account/components/orders/DecisionsPreview/Decisions";
 
 export const AccountRouters = (): any => {
-  console.log('routers is i am');
   const dispatch = useDispatch();
   const user = useSelector((e: StoreInterface) => e.user);
 
@@ -145,6 +143,8 @@ export const AccountRouters = (): any => {
       {/*<ShadowPanel />*/}
       <Snackbar>
         <HatNavigation />
+        <HatSearchLine isStatic={true} />
+        <MenuMobile isStatic={false} />
       </Snackbar>
     </>
   );
