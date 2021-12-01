@@ -29,8 +29,10 @@ class OrderTransactionHelper
                     'currency' => $params['currency']
                 ];
         }
-        if ($gw->model->processor_name === 'Sberbank')
-        {
+        if ($gw->model->processor_name === 'Sberbank') {
+            if (!empty($params['uniqueOrderNumber'])) {
+                $result['uniqueOrderNumber'] = $params['uniqueOrderNumber'];
+            }
             $links = $gw->getLinkByMode($params['mode']);
             if (is_array($links)) {
                 $result['links'] = $links;
@@ -141,8 +143,7 @@ class OrderTransactionHelper
                     OrderTransactionModel::STATUS_FAILED,
                     OrderTransactionModel::STATUS_VOIDED,
                     OrderTransactionModel::STATUS_DECLINED,
-                ], true))
-            {
+                ], true)) {
                 $value = $model->getAvailAmount();
 
                 if ($value < $model->transaction_amount &&
@@ -173,10 +174,10 @@ class OrderTransactionHelper
         /** @var bool $result */
         $result = true;
 
-        foreach($models as $model) {
+        foreach ($models as $model) {
             $result = $result & Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled();
         }
-        return $result ;
+        return $result;
     }
 
     public static function getRefunded($models)
