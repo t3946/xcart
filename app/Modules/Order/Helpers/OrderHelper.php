@@ -285,7 +285,6 @@ class OrderHelper
 
     public static function getOTRSMessages(OrderModel $model): int
     {
-        $model->pk = 304905;
         $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
         if (isset($t_arr[$model->pk])) {
             return $t_arr[$model->pk];
@@ -299,7 +298,7 @@ class OrderHelper
             'http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d'
         );
 
-        $ticket = $resolver->fetch_ticket_info('KS-304905')[0];
+        $ticket = $resolver->fetch_ticket_info($model->getOrderNumber())[0];
 
         if (isset($ticket['url'])) {
             $model->otrs_ticket = $ticket['url'];
