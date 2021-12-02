@@ -23,9 +23,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN usermod -u ${USER_ID} www-data && groupmod -g ${GROUP_ID} www-data
 
-# Change current user to www
-#USER www
+USER "${USER_ID}:${GROUP_ID}"
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
