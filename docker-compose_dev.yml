@@ -50,14 +50,10 @@ services:
       - ./docker/nginx/configs/:/etc/nginx/configs/
       - ./docker/nginx/sites/:/etc/nginx/sites-enabled.d/
       - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
 
   php:
     build:
       context: .
-      args:
-        - USER_ID=1000
-        - GROUP_ID=1000
       dockerfile: Dockerfile
     container_name: php
     restart: unless-stopped
@@ -118,15 +114,18 @@ services:
     depends_on:
       - nginx
     tty: true
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM;
+    certbot certonly -n --cert-name s3stores --dns-route53 --agree-tos --email romann@s3stores.com --staging
+    -d s3stores.com
+    -d www.s3stores.com;
+    while :; do certbot renew; sleep 24h & wait $${!}; done;'"
     volumes:
       - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
     environment:
       AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
       AWS_SECRET_ACCESS_KEY: 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
 
-#  elasticsearch:
+      #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
 #    container_name: elasticsearch
 #    restart: unless-stopped
