@@ -23,72 +23,73 @@ services:
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf
-  smtp:
-    restart: always
-    container_name: smtp
-    image: bambucha/exim-relay
-    user: exim
-    ports:
-      - "2525:25"
-    volumes:
-      - ./docker/smtp/resolv.conf:/etc/resolv.conf
-    hostname: mail.s3stores.com
-    networks:
-      - frontend
-      - backend
-    environment:
-      - RELAY_FROM_HOSTS=10.0.0.0/8:172.16.0.0/12:192.168.0.0/16
-      - DKIM_KEY_SIZE=1024
-      - DKIM_SELECTOR=dkim
-      - DKIM_SIGN_HEADERS=Date:From:To:Subject:Message-ID
-      - DKIM_DOMAINS=s3stores.com
+      - ./docker/mysql/slave.cnf:/etc/my.cnf.d/repl.cnf
+#  smtp:
+#    restart: always
+#    container_name: smtp
+#    image: bambucha/exim-relay
+#    user: exim
+#    ports:
+#      - "2525:25"
+#    volumes:
+#      - ./docker/smtp/resolv.conf:/etc/resolv.conf
+#    hostname: mail.s3stores.com
+#    networks:
+#      - frontend
+#      - backend
+#    environment:
+#      - RELAY_FROM_HOSTS=10.0.0.0/8:172.16.0.0/12:192.168.0.0/16
+#      - DKIM_KEY_SIZE=1024
+#      - DKIM_SELECTOR=dkim
+#      - DKIM_SIGN_HEADERS=Date:From:To:Subject:Message-ID
+#      - DKIM_DOMAINS=s3stores.com
 
-  pmm-server:
-    container_name: pmm
-    image: percona/pmm-server:latest
-    restart: always
-    networks:
-      - backend
-    ports:
-      - "4443:443"
-    environment:
-      SERVER_USER: pmm
-      SERVER_PASSWORD: pmm
-  pmm-client-ps:
-    container_name: pmm-client
-    image: perconalab/pmm-client:latest
-    restart: always
-    networks:
-      - backend
-    environment:
-      PMM_SERVER: pmm-server:443
-      PMM_USER: pmm
-      PMM_PASSWORD: pmm
-      DB_TYPE: mysql
-      DB_HOST: percona-server
-      DB_PORT: 3306
-      DB_USER: root
-      DB_PASSWORD: 8Ap6dvSWVJ7r8U8x
+#  pmm-server:
+#    container_name: pmm
+#    image: percona/pmm-server:latest
+#    restart: always
+#    networks:
+#      - backend
+#    ports:
+#      - "4443:443"
+#    environment:
+#      SERVER_USER: pmm
+#      SERVER_PASSWORD: pmm
+#  pmm-client-ps:
+#    container_name: pmm-client
+#    image: perconalab/pmm-client:latest
+#    restart: always
+#    networks:
+#      - backend
+#    environment:
+#      PMM_SERVER: pmm-server:443
+#      PMM_USER: pmm
+#      PMM_PASSWORD: pmm
+#      DB_TYPE: mysql
+#      DB_HOST: percona-server
+#      DB_PORT: 3306
+#      DB_USER: root
+#      DB_PASSWORD: 8Ap6dvSWVJ7r8U8x
 
-  backup:
-    container_name: backup
-    image: databack/mysql-backup
-    restart: always
-    networks:
-      - backend
-    volumes:
-      - ./docker/mysql/backup/data:/db
-    environment:
-      DB_DUMP_TARGET: s3://backup-xcart/dumps
-      DB_USER: root
-      DB_PASS: 8Ap6dvSWVJ7r8U8x
-      DB_DUMP_FREQ: 1440
-      DB_DUMP_BEGIN: 0200
-      DB_SERVER: mysql
-      DB_PORT: 3306
-      AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
-      AWS_SECRET_ACCESS_KEY: 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
-      AWS_DEFAULT_REGION: us-east-1
+#  backup:
+#    container_name: backup
+#    image: databack/mysql-backup
+#    restart: always
+#    networks:
+#      - backend
+#    volumes:
+#      - ./docker/mysql/backup/data:/db
+#    environment:
+#      DB_DUMP_TARGET: s3://backup-xcart/dumps
+#      DB_USER: root
+#      DB_PASS: 8Ap6dvSWVJ7r8U8x
+#      DB_DUMP_FREQ: 1440
+#      DB_DUMP_BEGIN: 0200
+#      DB_SERVER: mysql
+#      DB_PORT: 3306
+#      AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
+#      AWS_SECRET_ACCESS_KEY: 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
+#      AWS_DEFAULT_REGION: us-east-1
 
   # Nginx
   nginx:
@@ -142,34 +143,34 @@ services:
       - ./docker/redis/data:/data
     restart: always
 
-  node:
-    container_name: node
-    image: "node:14"
-    user: "node"
-    working_dir: /home/node/app/www/static
-    tty: true
-    networks:
-      - frontend
-    #environment:
-    #  - NODE_ENV=production
-    volumes:
-      - ./:/home/node/app
+#  node:
+#    container_name: node
+#    image: "node:14"
+#    user: "node"
+#    working_dir: /home/node/app/www/static
+#    tty: true
+#    networks:
+#      - frontend
+#    #environment:
+#    #  - NODE_ENV=production
+#    volumes:
+#      - ./:/home/node/app
 
-  certbot:
-    container_name: certbot
-    image: certbot/dns-route53
-    networks:
-      - frontend
-    depends_on:
-      - nginx
-    tty: true
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    volumes:
-      - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
-    environment:
-      AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
-      AWS_SECRET_ACCESS_KEY: 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
+#  certbot:
+#    container_name: certbot
+#    image: certbot/dns-route53
+#    networks:
+#      - frontend
+#    depends_on:
+#      - nginx
+#    tty: true
+#    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+#    volumes:
+#      - ./docker/certbot/conf:/etc/letsencrypt
+#      - ./docker/certbot/www:/var/www/certbot
+#    environment:
+#      AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
+#      AWS_SECRET_ACCESS_KEY: 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
 
 
 networks:
