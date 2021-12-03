@@ -42,3 +42,4 @@ node_modules
 !/skin1_kolin/
 /docker/mysql/data/
 /docker/redis/data/
+notes.md
