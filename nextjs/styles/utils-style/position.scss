@@ -1,0 +1,5 @@
+@each $positionValue in (static, relative, absolute, fixed, sticky) {
+  .position-#{$positionValue} {
+    position: $positionValue!important;
+  }
+}

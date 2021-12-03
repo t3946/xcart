@@ -1,13 +1,7 @@
 @import "bem.css";
+@import "styles/fonts/lato";
+@import "styles/utils-style/utils-style";
 
-.text-start {
-  text-align: left;
-}
-
-.text-end {
-  text-align: right;
-}
-
-.text-center {
-  text-align: center;
+* {
+  font-family: Lato, sans-serif;
 }

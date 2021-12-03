@@ -1,0 +1,5 @@
+@each $textAlignName, $textAlignValue in (start: left, end: right, center: center) {
+  .text-#{$textAlignName} {
+    text-align: $textAlignValue!important;
+  }
+}
