@@ -68,11 +68,10 @@ class ApiDxController extends Controller
         }
     }
 
-    public function getFilesList(int $dx)
+    public function getFilesList(int $dx): void
     {
         /** @var DistributorModel $dx */
         $dx = DistributorModel::objects()->get(['manufacturerid' => $dx]);
-
         $google_drive = new GoogleDrive();
         $folder_list = $google_drive->getContentByPath();
         $dx_folder = null;
@@ -87,12 +86,18 @@ class ApiDxController extends Controller
             return;
         }
         $folder_dx_content = $google_drive->getContentByPath($dx_folder);
-        $file_list = null;
+        $file_list = [];
         foreach ($folder_dx_content as $content) {
             if ($content['type'] === 'file') {
-                $file_list[] = ['id' => $content['path'], 'name' => $content['filename']];
+                $file_list[] = ['id' => $content['path'], 'name' => $content['filename'], 'dateCreate' => $content['timestamp']];
             }
         }
+        usort($file_list, static function($curr, $prev) {
+            if ($curr['id'] === $prev['id']) {
+                return 0;
+            }
+            return ($curr['dateCreate'] > $prev['dateCreate']) ? -1 : 1;
+        });
         $this->jsonResponse(['files' => $file_list, 'folderId' => $dx_folder]);
     }
 
