@@ -1,7 +1,6 @@
 import React from "react";
 import { logoutAction } from "@redux/actions/account-actions/AutorizationActions";
 import { userClearAction } from "@redux/actions/account-actions/UserActions";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { route } from "@utils/AppData";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
@@ -11,7 +10,6 @@ interface IProps {
 }
 
 const LogoutButton: React.FC<IProps> = function (props: IProps) {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   function logout() {
@@ -21,10 +19,10 @@ const LogoutButton: React.FC<IProps> = function (props: IProps) {
       logoutAction({
         callback() {
           dispatch(userClearAction());
-
-          if (navigate) {
-            navigate(route("account:login"));
-          }
+          // todo: редирект больше не будета работать
+          // if (navigate) {
+          //   navigate(route("account:login"));
+          // }
         },
       })
     );

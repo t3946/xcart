@@ -1,5 +1,5 @@
 import React from "react";
-import classnames from "classnames";
+import cn from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import DepartmentsMenu from "./DepartmentsMenu";
 import StoreInterface from "@modules/account/ts/types/store.type";
@@ -11,14 +11,14 @@ import MiniCart from "@modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@modules/account/components/hat/LoginButton/LoginButtonDesktop";
 import AppData, { route } from "@utils/AppData";
+import Styles from "@modules/account/components/hat/HatSearchLine.module.scss";
+import Magnifier from "@modules/icon/components/common/magnifier/Light";
 
 interface IProps {
   isStatic?: boolean;
 }
 
-const HatSearchLine: React.FC<IProps> = (
-  props: IProps
-): any => {
+const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
   const isVisibleDepartmentsMenu = useSelector(
@@ -26,6 +26,25 @@ const HatSearchLine: React.FC<IProps> = (
   );
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
+  const inputSuggestionsClass = "input-search";
+  const containerSuggestionsClass = "search-form-container_suggestion";
+  const classes = {
+    container: [
+      "d-none",
+      "d-lg-block",
+      "p-0",
+      Styles.mainContainer,
+      containerSuggestionsClass,
+    ],
+    buttonSearch: [
+      Styles.buttonSearch,
+      Styles.searchForm__buttonSearch,
+      "d-flex",
+      "align-items-center",
+      "justify-content-center",
+    ],
+    inputSearch: [inputSuggestionsClass, Styles.inputSearch],
+  };
 
   function searchTemplate() {
     return (
@@ -36,12 +55,13 @@ const HatSearchLine: React.FC<IProps> = (
           itemProp="potentialAction"
           itemScope
           itemType="https://schema.org/SearchAction"
+          className={Styles.searchForm}
         >
           <div className={"pos-relative"}>
             <input
               type="text"
               name="q"
-              className="input-search"
+              className={cn(classes.inputSearch)}
               placeholder={AppData.config.cidev_header_code}
               value={AppData.params.get.q}
               itemProp="query-input"
@@ -55,12 +75,15 @@ const HatSearchLine: React.FC<IProps> = (
             />
 
             <a
-              className={classnames("button-clear", {
+              className={cn("button-clear", {
                 active: AppData.params.get.q,
               })}
             />
           </div>
-          <button className="button-search show-for-large" />
+
+          <button className={cn(classes.buttonSearch)}>
+            <Magnifier />
+          </button>
         </form>
       </div>
     );
@@ -79,68 +102,63 @@ const HatSearchLine: React.FC<IProps> = (
     setDepartmentsMenuButtonHover(false);
   }
 
+  const [suggestionsWasInit, setSuggestionsWasInit] = React.useState(false);
+
   React.useEffect(() => {
-    new SearchSuggestion(".input-search", {
-      container: "search-form-container_suggestion",
-    });
+    if (!suggestionsWasInit) {
+      new SearchSuggestion(`.${inputSuggestionsClass}`, {
+        container: containerSuggestionsClass,
+      });
+
+      setSuggestionsWasInit(true);
+    }
   });
 
   return (
-    <div className="sticky-menu-container">
-      <div className="sticky def-zi2">
-        <div
-          id="search_container"
-          className="desktop_menu_search_cart show-for-large position-relative"
-          data-toggler="show-for-large"
-        >
-          <DepartmentsMenu
-            className={"search-line_departments-menu"}
-            isVisible={isVisibleDepartmentsMenu}
-            buttonHover={departmentsMenuButtonHover}
-            closeMenu={closeDepartmentsMenu}
-          />
+    <div className={cn(classes.container)} id="search_container">
+      <DepartmentsMenu
+        className={"search-line_departments-menu"}
+        isVisible={isVisibleDepartmentsMenu}
+        buttonHover={departmentsMenuButtonHover}
+        closeMenu={closeDepartmentsMenu}
+      />
 
-          <div className="container">
-            <div className="row">
-              <HoverIntent
-                onMouseOver={() => {
-                  setDepartmentsMenuButtonHover(true);
-                  openDepartmentsMenu();
-                }}
-                onMouseOut={() => {
-                  setDepartmentsMenuButtonHover(false);
-                }}
-                sensitivity={10}
-                interval={250}
-                timeout={250}
-              >
-                <div className="account-page-left-column col pe-0 d-none d-lg-block">
-                  <div className="category-menu-container">
-                    <div
-                      className={classnames(
-                        "category-menu category-menu__new",
-                        {
-                          "is-active": isVisibleDepartmentsMenu,
-                        }
-                      )}
-                    >
-                      <span className="menu-icon" />
-                      <span className="category-menu-title">Departments</span>
-                    </div>
-                  </div>
+      <div className="container">
+        <div className="row">
+          <HoverIntent
+            onMouseOver={() => {
+              setDepartmentsMenuButtonHover(true);
+              openDepartmentsMenu();
+            }}
+            onMouseOut={() => {
+              setDepartmentsMenuButtonHover(false);
+            }}
+            sensitivity={10}
+            interval={250}
+            timeout={250}
+          >
+            <div className="account-page-left-column col pe-0 d-none d-lg-block">
+              <div className={Styles.categoryMenuContainer}>
+                <div
+                  className={cn("category-menu category-menu__new", {
+                    "is-active": isVisibleDepartmentsMenu,
+                  })}
+                >
+                  <span className="menu-icon" />
+                  <span className="category-menu-title">Departments</span>
                 </div>
-              </HoverIntent>
+              </div>
+            </div>
+          </HoverIntent>
 
-              <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
-                {searchTemplate()}
+          <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
+            {searchTemplate()}
 
-                <div className={"d-none d-lg-flex search-line_buttons"}>
-                  <LoginButtonDesktop isStatic={isStatic} />
+            <div className={"d-none d-lg-flex search-line_buttons"}>
+              <LoginButtonDesktop isStatic={isStatic} />
 
-                  <div className="ms-12">
-                    <MiniCart />
-                  </div>
-                </div>
+              <div className="ms-12">
+                <MiniCart />
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { route } from "@utils/AppData";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Dropdown } from "react-bootstrap";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
@@ -12,10 +12,8 @@ import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton"
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 import RotateStyles from "styles/Rotate.module.scss";
-
-interface IProps {
-  isStatic: boolean;
-}
+import Styles from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
+import cn from "classnames";
 
 const AccountLink: React.FC = function () {
   const isStatic = !document.location.pathname.startsWith("/account");
@@ -36,11 +34,33 @@ const AccountLink: React.FC = function () {
   return;
 };
 
-const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
+const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
   const user = useSelector((e: any) => e.user);
-  const isStatic = props.isStatic || false;
-  const className = "hat-login-button";
+  const isTabletMenuVisible = useSelector(
+    (e: any) => e.mobileMenu.isTabletMenuVisible
+  );
+  const classes = {
+    button: [
+      Styles.hatLoginButton,
+      "d-flex",
+      "align-items-center",
+      "justify-content-center",
+      "position-relative",
+      "cursor-pointer",
+    ],
+
+    username: ["hat-login-button-username"],
+
+    iconArrow: [
+      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
+      "login-button-desktop__arrow",
+      "login-button-desktop-arrow",
+      {
+        "login-button-desktop-arrow__flip": isTabletMenuVisible,
+      },
+    ],
+  };
 
   function toggleMenu(isVisible) {
     HideAllMenu(dispatch);
@@ -52,26 +72,15 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
     const path = route("account:login");
     const text = "log in";
 
-    if (isStatic) {
-      return (
-        <a href={path} className={className}>
+    return (
+      <Link href={path}>
+        <a className={cn(classes.button)}>
           <UserIcon />
           <span className="hat-login-button-username">{text}</span>
         </a>
-      );
-    } else {
-      return (
-        <Link to={path} className={className}>
-          <UserIcon />
-          <span className="hat-login-button-username">{text}</span>
-        </Link>
-      );
-    }
+      </Link>
+    );
   }
-
-  const isTabletMenuVisible = useSelector(
-    (e: any) => e.mobileMenu.isTabletMenuVisible
-  );
 
   function logoutButtonClickHandler() {
     HideAllMenu(dispatch);
@@ -101,21 +110,9 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
   const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
 
-    const classes = {
-      username: ["hat-login-button-username"],
-      iconArrow: [
-        isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-        "login-button-desktop__arrow",
-        "login-button-desktop-arrow",
-        {
-          "login-button-desktop-arrow__flip": isTabletMenuVisible,
-        },
-      ],
-    };
-
     return (
       <span
-        className={className}
+        className={cn(classes.button)}
         title={user.name}
         ref={ref}
         onClick={(e) => {

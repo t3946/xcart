@@ -1,0 +1,16 @@
+@import "styles/utils/Utils.module";
+
+.suggestionsTitle {
+  height: pxToRem(22);
+  font-size: pxToRem(12);
+  color: #616161;
+  padding: pxToRem(3) pxToRem(12);
+}
+
+.item {
+  cursor: pointer;
+
+  &:hover {
+    background-color: #edf0f2;
+  }
+}

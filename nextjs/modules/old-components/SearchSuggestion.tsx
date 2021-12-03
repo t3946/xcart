@@ -30,7 +30,7 @@ export default class SearchSuggestion {
     if (this.elements["search"].length > 0) {
       this.elements["parent"] = this.elements["search"].parent();
       this.elements["clear"] = this.elements["parent"].find(".button-clear");
-      this.elements["container"] = $("<dev />").addClass(
+      this.elements["container"] = $("<div />").addClass(
         "suggestion-container"
       );
       this._bind();
@@ -128,12 +128,11 @@ export default class SearchSuggestion {
     ReactDOM.render(
       <SuggestionsListForAll
         suggestions={data}
-        search={search}
+        searchString={search}
         parent={this.elements["parent"][0]}
         classes={classes}
       />,
-      this.elements["container"][0],
-      this.elements["container"][0].firstChild
+      this.elements["container"][0]
     );
     this.show();
     this.suggestionsCreated = true;

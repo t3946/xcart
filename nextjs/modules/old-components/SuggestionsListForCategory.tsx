@@ -1,14 +1,19 @@
 import map from "lodash/map";
 import renderToStringr from "preact-render-to-string";
-import SuggestionsListForPhrase from "./SuggestionsListForPhrase";
 
-export default class SuggestionsListForCategory extends SuggestionsListForPhrase {
+const SuggestionsListForCategory: React.FC = function () {
+  return "SuggestionsListForCategory";
+};
+
+export default SuggestionsListForCategory;
+
+class SuggestionsListForCategory_OLD {
   initState(props) {
-    let regExp = new RegExp(
+    const regExp = new RegExp(
       "(" + props.search.split(" ").join("|") + ")",
       "gi"
     );
-    let suggestions = map(props.suggestions, (item, n) => {
+    const suggestions = map(props.suggestions, (item, n) => {
       return {
         // экранирует спецсимволы если они были в строке
         value: renderToStringr(item.name),
@@ -24,9 +29,9 @@ export default class SuggestionsListForCategory extends SuggestionsListForPhrase
   }
 
   renderListItem(item, regExp) {
-    let name = renderToStringr(item.name);
-    let href = item.link;
-    let label = name.replace(regExp, "<b>$1</b>");
+    const name = renderToStringr(item.name);
+    const href = item.link;
+    const label = name.replace(regExp, "<b>$1</b>");
 
     return renderToStringr(
       <a href={href} dangerouslySetInnerHTML={{ __html: label }}></a>

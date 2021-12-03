@@ -8,7 +8,8 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import StoreInterface from "@modules/account/ts/types/store.type";
 import AppData from "@utils/AppData";
 import Search from "@modules/icon/components/account/search/Search";
-import Styles from "@modules/account/components/hat/Hat.module.scss";
+import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
+import cn from "classnames";
 
 const HatNavigation: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,15 @@ const HatNavigation: React.FC = () => {
   function mainMenuTemplate(): any {
     const items = [];
     const menu = AppData.mainMenu;
+    const classes = {
+      menu: [
+        "m-0",
+        "d-flex",
+        "justify-content-between",
+        "flex-grow-1",
+        "list-unstyled",
+      ],
+    };
 
     for (let i = 0; i < menu.length; i++) {
       const item = menu[i];
@@ -40,11 +50,8 @@ const HatNavigation: React.FC = () => {
         </li>
       );
     }
-    return (
-      <ul className="list-unstyled m-0 d-flex justify-content-between flex-grow-1">
-        {items}
-      </ul>
-    );
+
+    return <ul className={cn(classes.menu)}>{items}</ul>;
   }
 
   return (

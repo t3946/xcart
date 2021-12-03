@@ -1,0 +1,50 @@
+@import "styles/utils/Utils.module.scss";
+
+.mainContainer {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0d2431;
+  height: pxToRem(50);
+}
+
+
+.buttonSearch {
+  height: pxToRem(36);
+  width: pxToRem(36);
+  color: #154159;
+  padding: pxToRem(5);
+  cursor: pointer;
+}
+
+
+.searchForm {
+  position: relative;
+}
+
+.searchForm__buttonSearch {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+
+.inputSearch {
+  height: pxToRem(36);
+  font-size: pxToRem(14);
+  width: 100%;
+  padding: 0 pxToRem(36) 0 pxToRem(10);
+  border-top: none;
+  border-bottom: none;
+  border-left: 1px solid #0d2431;
+  border-right: 1px solid #0d2431;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+
+.categoryMenuContainer {
+  color: #ffffff;
+}

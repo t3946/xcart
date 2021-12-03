@@ -150,7 +150,7 @@ class UserModel extends Model
                 'through' => UserListModel::class
             ],
             'decisions_required_count' => [
-                'class' => CharField::class,
+                'class' => IntField::class,
                 'default' => 0,
             ],
         ];

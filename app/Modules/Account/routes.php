@@ -15,7 +15,7 @@ return [
         'name' => 'add-list',
     ],
     [
-        'route' => '/',
+        'route' => '/account/',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'index'
     ],

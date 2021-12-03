@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import classnames from "classnames";
 import { route } from "@utils/AppData";
+import Styles from "@modules/mini-cart/components/MiniCartInfo.module.scss";
 
 const MiniCartInfo: React.FC = () => {
   const cart = useSelector((e: StoreInterface) => e.cart);
@@ -24,7 +25,7 @@ const MiniCartInfo: React.FC = () => {
   };
 
   return (
-    <div className="minicart" ref={buttonRef}>
+    <div className={Styles.miniCart} ref={buttonRef}>
       <a className={classnames(classes.button)} href={route("cart:list")}>
         <span className="count">
           <span id="desktop-cart-quantity" className="mc_count">

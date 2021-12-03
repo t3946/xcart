@@ -16,7 +16,7 @@ const LoginForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);
   const dispatch = useDispatch();
 
-  user && useHistory().push(route("account:index"));
+  // user && useHistory().push(route("account:index"));
 
   const INPUT_LOGIN_MODE = 0;
   const INPUT_PASSWORD_MODE = 1;

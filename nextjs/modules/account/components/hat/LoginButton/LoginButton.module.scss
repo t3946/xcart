@@ -18,3 +18,16 @@
     width: pxToRem(30);
   }
 }
+
+.hatLoginButton {
+  position: relative;
+  background: #145f8b;
+  color: #ffffff;
+  height: pxToRem(50);
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.15s ease-out;
+  text-decoration: none;
+  padding: 0 pxToRem(26);
+  width: pxToRem(180);
+}
