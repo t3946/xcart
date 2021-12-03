@@ -16,6 +16,7 @@ export const route = function (
 
   if (!path) {
     console.error("Unknown path " + slug);
+    return "";
   }
 
   const interpolations = path.match(/{.+?:.+?}/gi);
