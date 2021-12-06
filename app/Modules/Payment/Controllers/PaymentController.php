@@ -105,13 +105,11 @@ class PaymentController extends Controller
     {
         $params = Xcart::app()->request->request->all();
 
-        //Xcart::app()->logger->debug("{$gateway} callback action", $params, 'payment');
-
         /** @var ProcessorModel $pm */
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
             if ($gw = Gateway::getGateway($pm)) {
                 try {
-
+                    Xcart::app()->logger->debug("{$gateway} callback action", $params, 'payment');
                     $gw->success($params);
 
                 } catch (Exception $e) {
