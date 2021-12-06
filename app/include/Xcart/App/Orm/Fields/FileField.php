@@ -286,6 +286,9 @@ class FileField extends CharField
         elseif ($value instanceof File) {
             $value = $this->saveFile($value);
         }
+        elseif (is_null($value)) {
+            $this->deleteOld();
+        }
 
         if ($value === false) {
             $value = null;

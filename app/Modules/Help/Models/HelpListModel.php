@@ -1,13 +1,13 @@
 <?php
 namespace Modules\Help\Models;
 
-use Modules\Sites\Models\SiteModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\Fields\HasManyField;
+use Xcart\App\Storage\FileNameHasher\MD5FileContentHasher;
 
 class HelpListModel extends Model
 {
@@ -23,10 +23,20 @@ class HelpListModel extends Model
                 'class' => AutoField::class,
             ],
             'icon' => [
-                'class' => CharField::class,
+                'class' => ImageField::class,
+                'adapterName' => 's3',
+                'uploadTo' => "help-menu/icons/%Y%m",
+                'nameHasher' => MD5FileContentHasher::class,
+                'null' => false,
+                'default' => ''
             ],
             'active_icon' => [
-                'class' => CharField::class,
+                'class' => ImageField::class,
+                'adapterName' => 's3',
+                'uploadTo' => "help-menu/active-icons/%Y%m",
+                'nameHasher' => MD5FileContentHasher::class,
+                'null' => false,
+                'default' => '',
                 'verboseName' => 'Active icon'
             ],
             'title' => [
