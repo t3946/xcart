@@ -41,14 +41,17 @@ class QueueDiscontinueCommand extends Command
 
             if ($data['active_sku']) {
                 $dis_count = 0;
+                $i = 0;
 
-                foreach(ProductModel::without_group()
+                while ($products = ProductModel::without_group()
                     ->filter($filter)
-                    ->exclude(['productcode__in' => $data['active_sku']]) as $product) {
-                    /** @var ProductModel $product */
-                    $product->setAttributes(['forsale' => 'N', 'hash_product' => null]);
-                    $product->save(['forsale', 'hash_product']);
-                    $dis_count++;
+                    ->exclude(['productcode__in' => $data['active_sku']])->paginate(++$i, 1000)) {
+                    foreach($products as $product) {
+                        /** @var ProductModel $product */
+                        $product->setAttributes(['forsale' => 'N', 'hash_product' => null]);
+                        $product->save(['forsale', 'hash_product']);
+                        $dis_count++;
+                    }
                 }
 
                 echo "Discontinued {$data['dx_code']}: $dis_count products\n";
