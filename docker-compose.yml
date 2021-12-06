@@ -146,8 +146,6 @@ services:
       - backend
     ports:
       - "6379:6379"
-    volumes:
-      - ./docker/redis/data:/data
     restart: always
 
 #  node:

@@ -40,6 +40,8 @@ services:
       - php
     tty: true
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
       - "443:443"
@@ -88,8 +90,6 @@ services:
       - backend
     ports:
       - "6379:6379"
-    volumes:
-      - ./docker/redis/data:/data
     restart: always
     privileged: true
 

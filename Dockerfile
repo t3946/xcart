@@ -15,7 +15,7 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get install -y msmtp
+RUN apt-get install -y msmtp git
 
 # Install extensions
 RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis

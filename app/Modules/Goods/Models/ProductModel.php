@@ -107,7 +107,6 @@ use Xcart\Product;
  * @property string $pc_classify_status
  * @property bool $is_group_root
  *
- * @method bool isForSale
  * @method static Manager showed($instance = null)
  * @method static Manager forsale($instance = null)
  * @method static Manager without_group($instance = null)
@@ -660,6 +659,11 @@ class ProductModel extends Model implements ICartItem
             return true;
         }
         return $this->isOutOfStockFrontend();
+    }
+
+    public function isForSale()
+    {
+        return $this->forsale === 'Y';
     }
 
     public function isOutOfStockFrontend(): bool
