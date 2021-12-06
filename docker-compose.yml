@@ -113,7 +113,6 @@ services:
       - ./docker/nginx/configs/:/etc/nginx/configs/
       - ./docker/nginx/sites/:/etc/nginx/sites-enabled.d/
       - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
 
   php:
     build:
@@ -170,10 +169,9 @@ services:
       - nginx
     tty: true
     entrypoint: "/bin/sh -c 'trap exit TERM;
-     certbot certonly -n --cert-name s3stores --dns-route53 --agree-tos --email romann@s3stores.com --staging
-     -d s3stores.com
-     -d www.s3stores.com;
-     while :; do certbot renew; sleep 24h & wait $${!}; done;'"
+       openssl dhparam -out /etc/letsencrypt/ssl-dhparams.pem 2048;
+       certbot certonly -v -n --cert-name s3stores --dns-route53 --agree-tos --email romann@s3stores.com -d s3stores.com,www.s3stores.com,artistsupplysource.com,www.artistsupplysource.com;
+       while :; do certbot renew; sleep 24h & wait $${!}; done;'"
     volumes:
       - ./docker/certbot/conf:/etc/letsencrypt
     environment:
