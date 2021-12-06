@@ -1,5 +1,4 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Grid } from "@material-ui/core";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import axios from "axios";
 import { DialogTablePrice } from "@admin/modules/distributor/components/dialog-table-price/dialog-table-price";
@@ -14,8 +13,9 @@ import {
   FilesInfo,
 } from "@admin/modules/distributor/ts/types/table-price.types";
 import Divider from "@mui/material/Divider";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 import { initialFiles } from "@admin/modules/distributor/ts/initial/form-price.initial";
+import moment from "moment";
 interface IFormPrice {
   distributorId: number;
 }
@@ -89,7 +89,10 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
                   <ListItemIcon>
                     <InsertDriveFileIcon />
                   </ListItemIcon>
-                  <ListItemText primary={file.name} />
+                  <ListItemText
+                    primary={file.name}
+                    secondary={moment.unix(file.dateCreate).format("LL")}
+                  />
                 </ListItemButton>
               </ListItem>
               <Divider />

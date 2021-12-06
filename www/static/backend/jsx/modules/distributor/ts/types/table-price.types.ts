@@ -19,6 +19,7 @@ export interface FilesInfo {
 export interface FileItem {
   id: string;
   name: string;
+  dateCreate: number;
 }
 export interface Site {
   storefrontid: number;

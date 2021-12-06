@@ -25,37 +25,39 @@ class Sberbank extends Gateway
             $transaction_response = $this->txn->transaction_response;
             $amount = $this->txn->transaction_amount * 100;
             $data = "amount;$amount;mdOrder;{$this->txn->transaction_id};operation;{$params['operation']};orderNumber;{$transaction_response['uniqueOrderNumber']};status;{$params['status']};";
-            Xcart::app()->logger->debug('collect sberbank data', [$data], 'sberbank_response');
-            $key = "np0tlf460u8o0nsfisfd0tasti";
+            $key = $this->txn->payment_method_model->frontend_processor->param03;
             $hmac = hash_hmac('sha256', $data, $key);
-            Xcart::app()->logger->debug('Symmetrical cryptography', ["[$hmac]\n", $hmac], 'sberbank_response');
-            $params['links'] = $this->getLinkByMode('success');
-            $this->txn->setAttributes([
-                'transaction_response' => $params,
-                'transaction_id' => $transaction_id,
-            ]);
-            $this->txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
-            $this->txn->save();
+            Xcart::app()->logger->debug('sberbank response', [strtoupper($hmac), $params['checksum'], $params], 'sberbank_response');
 
-            $transactionLog = new TransactionLogModel(
-                [
-                    'orderid' => $this->txn->orderid,
-                    'paymentid' => $this->txn->paymentid,
-                    'order_transaction_id' => $this->txn->id,
-                    'transaction_id' => $this->txn->transaction_id,
-                    'transaction_status' => $this->txn->transaction_status,
-                    'transaction_total' => $this->txn->transaction_amount,
-                    'transaction_currency' => $this->txn->transaction_currency,
-                    'login' => $this->txn->login,
-                    'transaction_log' => $this->txn->transaction_response
-                ]
-            );
+            if (strtoupper($hmac) === $params['checksum']) {
+                Xcart::app()->logger->debug('Symmetrical cryptography', ["[$hmac]\n", $hmac], 'sberbank_response');
+                $params['links'] = $this->getLinkByMode('success');
+                $this->txn->setAttributes([
+                    'transaction_response' => $params,
+                    'transaction_id' => $transaction_id,
+                ]);
+                $this->txn->transaction_status = OrderTransactionModel::STATUS_AUTHORIZED;
+                $this->txn->save();
 
-            if ($transactionLog->isValid()) {
-                $transactionLog->save();
+                $transactionLog = new TransactionLogModel(
+                    [
+                        'orderid' => $this->txn->orderid,
+                        'paymentid' => $this->txn->paymentid,
+                        'order_transaction_id' => $this->txn->id,
+                        'transaction_id' => $this->txn->transaction_id,
+                        'transaction_status' => $this->txn->transaction_status,
+                        'transaction_total' => $this->txn->transaction_amount,
+                        'transaction_currency' => $this->txn->transaction_currency,
+                        'login' => $this->txn->login,
+                        'transaction_log' => $this->txn->transaction_response
+                    ]
+                );
+
+                if ($transactionLog->isValid()) {
+                    $transactionLog->save();
+                }
             }
         }
-        Xcart::app()->logger->debug('Response from sberbank', [json_encode($params, true)], 'sberbank_response');
         parent::success($params);
     }
 
@@ -64,7 +66,7 @@ class Sberbank extends Gateway
         $transaction_id = $params['orderTransaction']->transaction_id;
         /** @var ProcessorModel $processor_model */
         $processor_model = $params['processor'];
-        $this->gateway->setTestMode(true);
+        $this->gateway->setTestMode($processor_model->getTestMode());
         $this->result = $this->gateway->refund([
             'orderId' => $transaction_id,
             'amount' => (float)$params['amount']
@@ -77,7 +79,7 @@ class Sberbank extends Gateway
         $transaction_id = $params['orderTransaction']->transaction_id;
         /** @var ProcessorModel $processor_model */
         $processor_model = $params['processor'];
-        $this->gateway->setTestMode(true);
+        $this->gateway->setTestMode($processor_model->getTestMode());
         $this->result = $this->gateway->void(
             [
                 'orderId' => $transaction_id,
@@ -92,7 +94,7 @@ class Sberbank extends Gateway
         $transaction_id = $params['orderTransaction']->transaction_id;
         /** @var ProcessorModel $processor_model */
         $processor_model = $params['processor'];
-        $this->gateway->setTestMode(true);
+        $this->gateway->setTestMode($processor_model->getTestMode());
         $this->result = $this->gateway->capture([
             'orderId' => $transaction_id,
             'amount' => (float)$params['amount'],
@@ -102,7 +104,9 @@ class Sberbank extends Gateway
 
     public function authorize($params)
     {
-        $this->gateway->setTestMode(true);
+        /** @var ProcessorModel $processor_model */
+        $processor_model = $params['processor_model'];
+        $this->gateway->setTestMode($processor_model->getTestMode());
 
         $this->result = $this->gateway->authorize(
             [
@@ -157,7 +161,7 @@ class Sberbank extends Gateway
 
     public function getState($mode)
     {
-        if (!$this->result->isSuccessful()){
+        if (!$this->result->isSuccessful()) {
             return OrderTransactionModel::STATUS_FAILED;
         }
         $method = OrderTransactionStore::$gatewayMethods[$mode];
