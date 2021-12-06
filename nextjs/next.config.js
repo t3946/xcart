@@ -26,6 +26,7 @@ module.exports = withBundleAnalyzer({
           "@pages": path.resolve("pages/"),
           "@redux": path.resolve("redux/"),
           "@utils": path.resolve("utils/"),
+          "@services": path.resolve("services/"),
           styles: path.resolve("styles/"),
         },
       },

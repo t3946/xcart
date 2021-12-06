@@ -1,11 +1,10 @@
 import { AnyAction } from "redux";
-import { UserStore } from "../../../modules/account/ts/types/user-store.type";
-import { accountUserInitialValue } from "../../../modules/account/ts/consts/store-initial-value";
+import { UserStore } from "@modules/account/ts/types/user-store.type";
 
 const UserReducer = (
-  state: UserStore = accountUserInitialValue,
+  state: UserStore | null = null,
   action: AnyAction
-): UserStore => {
+): UserStore | null => {
   switch (action.type) {
     case "USER_CLEAR":
       return null;

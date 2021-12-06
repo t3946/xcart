@@ -2,7 +2,7 @@ import { AnyAction } from "redux";
 import { departmentsMenuDesktop } from "@modules/account/ts/consts/store-initial-value";
 
 const DepartmentsDesktopMenuReducer = (
-  store: Record<any, any> = departmentsMenuDesktop,
+  store: { isVisible: boolean } = departmentsMenuDesktop,
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {

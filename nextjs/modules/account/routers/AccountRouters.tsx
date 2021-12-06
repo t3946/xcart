@@ -144,7 +144,7 @@ export const AccountRouters = (): any => {
       <Snackbar>
         <HatNavigation />
         <HatSearchLine isStatic={true} />
-        <MenuMobile isStatic={false} />
+        {/*<MenuMobile isStatic={false} />*/}
       </Snackbar>
     </>
   );

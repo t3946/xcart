@@ -10,9 +10,9 @@ return [
     ],
 
     [
-        'route' => '/get-routes',
-        'target' => [AccountApi::class, 'getRoutesList'],
-        'name' => 'get-routes-list',
+        'route' => '/get-initial-data',
+        'target' => [AccountApi::class, 'getInitialDataAction'],
+        'name' => 'get-initial-data'
     ],
 
     [

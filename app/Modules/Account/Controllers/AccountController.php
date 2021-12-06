@@ -25,7 +25,7 @@ use Sonata\GoogleAuthenticator\GoogleQrUrl;
 
 class AccountController extends FrontendController
 {
-    private static function getCountryPhoneCodes(): array
+    public static function getCountryPhoneCodes(): array
     {
         $codes = [];
 

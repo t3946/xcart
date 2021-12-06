@@ -113,26 +113,6 @@ class UserModel extends Model
                 'null' => true,
                 'unique' => false,
             ],
-            'addresses' => [
-                'class' => HasManyField::class,
-                'modelClass' => AddressesModel::class,
-                'link' => ['user_id' => 'user_id']
-            ],
-            'orders' => [
-                'class' => HasManyField::class,
-                'modelClass' => OrderModel::class,
-                'link' => ['user_id' => 'user_id']
-            ],
-            'cards' => [
-                'class' => HasManyField::class,
-                'modelClass' => CreditCardsModel::class,
-                'link' => ['user_id' => 'user_id']
-            ],
-            'transactions' => [
-                'class' => HasManyField::class,
-                'modelClass' => TransactionsModel::class,
-                'link' => ['user_id' => 'user_id']
-            ],
             'cart_number' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -152,6 +132,27 @@ class UserModel extends Model
             'decisions_required_count' => [
                 'class' => IntField::class,
                 'default' => 0,
+            ],
+            //foreign
+            'orders' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderModel::class,
+                'link' => ['user_id' => 'user_id']
+            ],
+            'addresses' => [
+                'class' => HasManyField::class,
+                'modelClass' => AddressesModel::class,
+                'link' => ['user_id' => 'user_id']
+            ],
+            'cards' => [
+                'class' => HasManyField::class,
+                'modelClass' => CreditCardsModel::class,
+                'link' => ['user_id' => 'user_id']
+            ],
+            'transactions' => [
+                'class' => HasManyField::class,
+                'modelClass' => TransactionsModel::class,
+                'link' => ['user_id' => 'user_id']
             ],
         ];
     }

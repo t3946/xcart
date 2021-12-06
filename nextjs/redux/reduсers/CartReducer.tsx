@@ -1,8 +1,7 @@
 import { AnyAction } from "redux";
-import { cartInitialValue } from "@modules/account/ts/consts/store-initial-value";
 
 const CartReducer = (
-  store: Record<any, any> = cartInitialValue,
+  store: { quantity: number; checkoutUrl: string },
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {
