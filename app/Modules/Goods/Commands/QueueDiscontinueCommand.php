@@ -45,7 +45,9 @@ class QueueDiscontinueCommand extends Command
 
                 while ($products = ProductModel::without_group()
                     ->filter($filter)
-                    ->exclude(['productcode__in' => $data['active_sku']])->paginate(++$i, 1000)) {
+                    ->exclude(['productcode__in' => $data['active_sku']])
+                    ->paginate(++$i, 1000)
+                    ->all()) {
                     foreach($products as $product) {
                         /** @var ProductModel $product */
                         $product->setAttributes(['forsale' => 'N', 'hash_product' => null]);
