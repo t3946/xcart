@@ -30,6 +30,9 @@
       ],
       "@services/*": [
         "services/*"
+      ],
+      "@styles/*": [
+        "styles/*"
       ]
     }
   },

@@ -1,4 +1,4 @@
-import "../styles/globals.scss";
+import "@styles/globals.scss";
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import App from "next/app";
 import getInitialState from "../services/axios/Account";
