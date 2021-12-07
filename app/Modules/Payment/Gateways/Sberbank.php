@@ -20,6 +20,7 @@ class Sberbank extends Gateway
         $transaction_id = $params['mdOrder'];
         $order_info = $params['orderNumber'];
         [$order_id, $time_payment] = explode('_', $order_info);
+        Xcart::app()->logger->debug('sberbank', ['in success func'], 'sberbank_response');
         /** @var OrderTransactionModel txn */
         if ($this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $transaction_id, 'orderid' => $order_id])) {
             $transaction_response = $this->txn->transaction_response;
