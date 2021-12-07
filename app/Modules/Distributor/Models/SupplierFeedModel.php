@@ -28,6 +28,7 @@ use Xcart\App\Orm\Model;
  * @property bool $enabled
  * @property int $storefront_id
  * @property bool $run_force
+ * @property array $dont_update_fields
  */
 class SupplierFeedModel extends Model
 {
