@@ -243,18 +243,13 @@ class DashboardController extends PrototypeAdminController
                     }
                 }
                 if ( $is_super_user) {
+                    $qs = UserFiltersLinkModel::objects()
+                        ->filter(['filter_id' => $id]);
                     if ($user_ids) {
-                        UserFiltersLinkModel::objects()
-                            ->exclude(['user_id__in' => $user_ids])
-                            ->filter(['filter_id' => $id])
-                            ->delete();
-                    } else {
-                        UserFiltersLinkModel::objects()
-                            ->filter(['filter_id' => $id])
-                            ->delete();
+                        $qs->exclude(['user_id__in' => $user_ids]);
                     }
+                    $qs->delete();
                 }
-
             }
 
             $users = [];
