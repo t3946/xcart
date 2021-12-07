@@ -229,7 +229,7 @@ class DashboardController extends PrototypeAdminController
     public function subscription($id): void
     {
         $user = Xcart::app()->user;
-        $super_user = ['pavel','sergey2', 'roman_n'];
+        $super_user = ['pavel','sergey2', 'roman_n', 'zouhair'];
         $is_super_user = in_array($user->login, $super_user, true);
         $class = UserModel::classNameShort();
 
