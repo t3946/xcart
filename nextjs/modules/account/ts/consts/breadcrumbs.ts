@@ -1,98 +1,99 @@
-import { route } from "@utils/AppData";
+//todo: breadcrumbs has broken. you need to specify any path again
+const needSpecifyPath = "need specify path";
 
 export const staticRoutes = [
   {
     name: "Add",
-    path: route("account:addresses-add"),
+    path: needSpecifyPath,
   },
   {
     name: "Edit",
-    path: route("account:addresses-edit"),
+    path: needSpecifyPath,
   },
   {
     name: "Shipping lists",
-    path: route("account:your-lists"),
+    path: needSpecifyPath,
   },
 
-  { name: "Account", path: route("account:index") },
+  { name: "Account", path: "/account" },
 
   {
     name: "Addresses",
-    path: route("account:addresses"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Wallet",
-    path: route("account:wallet"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Public Profile",
-    path: route("account:public-profile"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Login & security",
-    path: route("account:login-and-security"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Change your name",
-    path: route("account:edit-name"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Change your email address",
-    path: route("account:edit-email"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Change mobile phone number",
-    path: route("account:edit-phone"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Change password",
-    path: route("account:edit-password"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Two-Step Verification (2SV) Settings",
-    path: route("account:two-step-verification-settings"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Disable",
-    path: route("account:two-step-verification-settings-disable"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Add New App",
-    path: route("account:two-step-verification-add-new"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Change Preferred Method",
-    path: route("account:two-step-verification-settings-preferred-method"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Password Assistance",
-    path: route("account:two-step-verification-recovery-password-assistance"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Orders",
-    path: route("account:orders"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Open orders",
-    path: route("account:open-orders"),
+    path: needSpecifyPath,
   },
 
   {
     name: "Decisions required",
-    path: route("account:order-decisions-required"),
+    path: needSpecifyPath,
   },
 ];

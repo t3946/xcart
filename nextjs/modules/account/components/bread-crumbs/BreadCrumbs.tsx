@@ -1,14 +1,22 @@
 import React from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@modules/account/ts/types/store.type";
 
-export const BreadCrumbs: React.FC = () => {
-  useLocation();
+const BreadCrumbs: React.FC = () => {
   const breadcrumbsStore = useSelector((e: AccountStore) => e.breadcrumbs);
   const breadcrumbsList = [];
-  const subPathsList = window.location.pathname.split("/");
+
+  let path;
+
+  if (process.browser) {
+    path = window.location.pathname;
+  } else {
+    path = process.next.url;
+  }
+
+  const subPathsList = path.split("/");
 
   for (let i = 0, path = ""; i < subPathsList.length; i++) {
     const subPath = subPathsList[i];
@@ -51,17 +59,17 @@ export const BreadCrumbs: React.FC = () => {
         if (!last) {
           return (
             <SwiperSlide key={i} className="breadcrumb-slide">
-              <NavLink
-                to={item.path}
-                className="breadcrumb-link"
-                itemScope
-                itemType="https://schema.org/Thing"
-                itemProp="item"
-                id={item.path}
-                href={item.path}
-              >
-                <span itemProp="name">{item.name}</span>
-              </NavLink>
+              <Link href={item.path}>
+                <a
+                  className="breadcrumb-link"
+                  itemScope
+                  itemType="https://schema.org/Thing"
+                  itemProp="item"
+                  id={item.path}
+                >
+                  <span itemProp="name">{item.name}</span>
+                </a>
+              </Link>
               <meta itemProp="position" content={(i + 1).toString()} />
             </SwiperSlide>
           );
@@ -84,3 +92,5 @@ export const BreadCrumbs: React.FC = () => {
     </Swiper>
   );
 };
+
+export default BreadCrumbs;
