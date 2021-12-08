@@ -9,7 +9,7 @@ use Modules\Core\Models\FraudCheckColumnModel;
 use Modules\Core\Models\LanguageModel;
 use Modules\Order\Helpers\BaseFraudCheckHelperV2;
 use Modules\Order\Helpers\FraudCheckFAHelper;
-use Modules\Order\Models\BaseFraudCheckModelV2;
+use Modules\Order\Models\FraudCheckBaseQuestionModel;
 use Modules\Order\Models\FraudStatusModel;
 use Modules\Order\Models\OrderBaseFraudCheckModelV2;
 use Modules\Order\Models\OrderFraudFACheckModel;
@@ -80,7 +80,7 @@ class OrderFraudCheckController extends Controller
             $ar_settings['template'] = $template->value;
 
             $ar_response['settings'] = $ar_settings;
-            $base_list = ['fraud_code', 'fraud_name', 'type', 'fraud_id', 'fraud_id'];
+            $base_list = ['code', 'name', 'type', 'fraud_id', 'fraud_id'];
             $ar_response['columns'] = [
                 'fullName' => FraudCheckColumnModel::objects()->filter(['type' => 'full_name'])->valuesList($base_list),
                 'address' => FraudCheckColumnModel::objects()->filter(['type' => 'address'])->valuesList($base_list)
@@ -95,7 +95,7 @@ class OrderFraudCheckController extends Controller
             if (!empty($ar_payment_answer)) {
                 $ar_response['answer'] = array_merge($ar_response['answer'] ?? [], ['payment' => $ar_payment_answer]);
             }
-            $ar_response['legend'] = $this->getLenendInfo($order_model);
+            $ar_response['legend'] = $this->getLegendInfo($order_model);
             $ar_response['resultChange'] = $this->getManualAction($ar_answer);
             $ar_response['orderInfo'] = [
                 'bareResult' => $order_model->bare_fraud_score_v2,
@@ -105,6 +105,7 @@ class OrderFraudCheckController extends Controller
                     'code' => $order_model->fraud_status
                 ]
             ];
+            $ar_response['addressesLocation'] = $order_model->getAddressesGeoLocation();
 
             $this->jsonResponse($ar_response);
         } catch (\Throwable $exception) {
@@ -137,7 +138,7 @@ class OrderFraudCheckController extends Controller
         $ar_payment_frauds = ['general_payment' => [], 'stripe' => [], 'pay_pal' => []];
         $frauds_payment = OrderBaseFraudCheckModelV2::objects()->filter([
             'order_id' => $order_model->orderid,
-            'question__type__in' => [BaseFraudCheckModelV2::FRAUD_TYPE_PAY_PAL, BaseFraudCheckModelV2::FRAUD_TYPE_STRIPE, BaseFraudCheckModelV2::FRAUD_TYPE_GENERAL_PAYMENT]
+            'question__type__in' => [FraudCheckBaseQuestionModel::FRAUD_TYPE_PAY_PAL, FraudCheckBaseQuestionModel::FRAUD_TYPE_STRIPE, FraudCheckBaseQuestionModel::FRAUD_TYPE_GENERAL_PAYMENT]
         ]);
         $oTransaction = $order_model->getFirstTransaction();
         $sTransactionReplaceText = '';
@@ -182,7 +183,7 @@ class OrderFraudCheckController extends Controller
                 ],
                 $answer_item->question->question_template_body
             );
-            array_push($ar_payment_frauds[$answer_item->question->type], [
+            $ar_payment_frauds[$answer_item->question->type][] = [
                 'template' => $template,
                 'fraud_result' => $answer_item->fraud_result,
                 'fraud_score' => $answer_item->fraud_score,
@@ -190,7 +191,7 @@ class OrderFraudCheckController extends Controller
                 'question_code' => $answer_item->question->question_code,
                 'question_auto' => $answer_item->question->auto,
                 'question_weight' => (float)$answer_item->question->weight
-            ]);
+            ];
         }
         return $ar_payment_frauds;
     }
@@ -205,15 +206,15 @@ class OrderFraudCheckController extends Controller
                 'question_id' => $fraud->question_id,
                 'fraud_result' => $fraud->fraud_result,
                 'fraud_score' => $fraud->fraud_score,
-                'f_fraud_name' => $fraud->question->f_fraud->fraud_name,
-                't_fraud_name' => $fraud->question->t_fraud->fraud_name,
+                'f_fraud_name' => $fraud->question->f_fraud->name,
+                't_fraud_name' => $fraud->question->t_fraud->name,
                 'question_weight' => (float)$fraud->question->weight,
                 'template' => str_replace($replace_template, $replace_value, $fraud->question->template),
                 'outcome' => (float)$fraud->outcome,
                 'type' => $fraud->question->f_fraud->type
 
             ];
-            array_push($ar_answer[$fraud->question->f_fraud->type], $data);
+            $ar_answer[$fraud->question->f_fraud->type][] = $data;
         }
         return $ar_answer;
     }
@@ -222,7 +223,7 @@ class OrderFraudCheckController extends Controller
     {
         $ar_info = $answer->additional_info;
         $result = [];
-        $code_list = [$answer->question->f_fraud->fraud_code, $answer->question->t_fraud->fraud_code];
+        $code_list = [$answer->question->f_fraud->code, $answer->question->t_fraud->code];
         foreach ($code_list as $code) {
             $template = [];
             if ($answer->question->f_fraud->type === 'full_name') {
@@ -425,27 +426,39 @@ HTML;
                 /** @var OrderBaseFraudCheckModelV2 $order_answer */
                 $order_answer = OrderBaseFraudCheckModelV2::objects()->get(['question__question_code' => $code, 'order_id' => $order_id]);
                 if ($order_answer->manual_action !== $value) {
+                    $weight = $order_answer->question->weight;
+                    $is_red_flag = $order_answer->question->type === FraudCheckBaseQuestionModel::FRAUD_TYPE_RED_FLAGS;
+                    if ($is_red_flag) {
+                        $weight = -$weight;
+                    }
                     switch ($value) {
                         case 'Y':
-                            $order_answer->fraud_result = 'positive';
-                            $order_answer->fraud_score = $order_answer->question->weight;
-                            $order_answer->manual_action = 'Y';
-
-                            $order_model->overall_fraud_score_v2 += $order_answer->question->weight;
-                            $order_model->bare_fraud_score_v2 += $order_answer->question->weight;
+                            $result = 'positive';
+                            $score = $order_answer->question->weight;
+                            if ($is_red_flag) {
+                                $result = 'negative';
+                                $score = 0.00;
+                            }
+                            $order_model->bare_fraud_score_v2 += $weight;
                             break;
                         case 'N':
-                            $order_answer->fraud_result = 'negative';
-                            $order_answer->fraud_score = 0.00;
-                            $order_model->overall_fraud_score_v2 -= $order_answer->question->weight;
-                            $order_model->bare_fraud_score_v2 -= $order_answer->question->weight;
+                            $result = 'negative';
+                            $score = 0.00;
+                            if ($is_red_flag) {
+                                $result = 'positive';
+                                $score = $order_answer->question->weight;
+                            }
+                            $order_model->bare_fraud_score_v2 -= $weight;
                             break;
                     }
+                    $order_answer->fraud_result = $result;
+                    $order_answer->fraud_score = $score;
                     $order_answer->manual_action = $value;
+
                     $order_answer->save();
                     $ar_answer[] = [
-                        'fraud_result' => $order_answer->fraud_result,
-                        'fraud_score' => $order_answer->fraud_score,
+                        'fraud_result' => $result,
+                        'fraud_score' => $score,
                         'question_code' => $order_answer->question->question_code,
                     ];
 
@@ -454,7 +467,6 @@ HTML;
             $order_model->save();
             $this->jsonResponse([
                 'bareResult' => $order_model->bare_fraud_score_v2,
-                'overallResult' => $order_model->overall_fraud_score_v2,
                 'answerList' => $ar_answer
             ]);
         } catch (Throwable $exception) {
@@ -474,7 +486,7 @@ HTML;
         }
     }
 
-    public function getLenendInfo(OrderModel $order_model): array
+    public function getLegendInfo(OrderModel $order_model): array
     {
         $ar_history = ['full_name' => [], 'address' => []];
         /** @var FraudCheckColumnModel $column */
@@ -490,7 +502,7 @@ HTML;
             ])->limit(1)->get();
             if ($fraud_model instanceof OrderFraudFACheckModel) {
                 $value_text = '';
-                $value = $fraud_model->additional_info["value$column->fraud_code"];
+                $value = $fraud_model->additional_info["value$column->code"];
                 if ($column->type === 'full_name') {
                     $value_str = $value['full_name'] ?? $value;
                     $value_text = $value_str;
@@ -506,25 +518,23 @@ HTML;
                 }
                 $link = '';
                 if (isset($value_str) && $value_str !== 'N/A') {
-                    $link = 'https://www.google.com/search?q=';
-                    foreach (explode(' ', $value_str) as $attr_value) {
-                        $link .= "$attr_value+";
-                    }
+                    $link = 'https://www.google.com/search?';
+                    $full_link = $link . http_build_query(['q' => trim($value_str)]);
                 }
 
-                array_push($ar_history[$column->type], [
+                $ar_history[$column->type][] = [
                     'value' => $value_text,
                     'link' => !empty($link),
-                    'columnName' => $column->fraud_name,
+                    'columnName' => $column->name,
                     'description' => $column->description,
-                    'linkUrl' => $link,
+                    'linkUrl' => $full_link ?? '',
                     'type' => $column->type,
                     'frontendType' => $column->frontend_type,
                     'provider' => $column->frontend_provider,
                     'isMelissa' => $column->is_melissa_data,
                     'sourceType' => $column->source_type,
                     'inferredFrom' => $column->inferred_from,
-                ]);
+                ];
             }
         }
         return $ar_history;

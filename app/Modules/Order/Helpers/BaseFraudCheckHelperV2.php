@@ -7,9 +7,8 @@ namespace Modules\Order\Helpers;
 use DateInterval;
 use DateTime;
 use Modules\Goods\Models\ProductHardResellModel;
-use Modules\Order\Models\BaseFraudCheckModelV2;
+use Modules\Order\Models\FraudCheckBaseQuestionModel;
 use Modules\Order\Models\FraudStatusModel;
-use Modules\Order\Models\OrderBaseFraudCheckModelV2;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -99,7 +98,7 @@ class BaseFraudCheckHelperV2
         return strtoupper($field);
     }
 
-    public static function scoreRF_CB(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreRF_CB(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'positive';
         $outcome = 1;
@@ -122,7 +121,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, $additional_info, null, $outcome];
     }
 
-    public static function scoreDC_DN(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreDC_DN(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'positive';
         $outcome = 1;
@@ -140,7 +139,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, $manual_action, $outcome];
     }
 
-    public static function scoreRF_EM(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreRF_EM(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'positive';
         $outcome = 1;
@@ -152,7 +151,7 @@ class BaseFraudCheckHelperV2
 
     }
 
-    public static function scoreST_DC(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreST_DC(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
@@ -180,7 +179,7 @@ class BaseFraudCheckHelperV2
         return false;
     }
 
-    public static function scoreST_CVV(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreST_CVV(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
@@ -194,7 +193,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreST_ST(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreST_ST(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
@@ -208,7 +207,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreST_ZIP(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreST_ZIP(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
@@ -222,12 +221,12 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreDC_AU(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreDC_AU(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         return self::scoreDC_DN($order, $fraud);
     }
 
-    public static function scorePP_SASA(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scorePP_SASA(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         /** @var OrderTransactionModel $oTransaction */
@@ -249,7 +248,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, ['o_address' => $o_address, 'p_address' => $p_address], $manual_action, $outcome];
     }
 
-    public static function scorePP_SASA_C(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scorePP_SASA_C(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $manual_action = 'N';
@@ -271,56 +270,21 @@ class BaseFraudCheckHelperV2
         ];
     }
 
-    public static function scoreRF_MF(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreRF_MF(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
-        $manual_action = 'N';
         $outcome = 0;
-
-        /** @var OrderBaseFraudCheckModelV2 $orderFraudShipping */
-        if ($orderFraudShipping = OrderBaseFraudCheckModelV2::objects()->get(['order_id' => $order->orderid, 'question__question_code' => 'MANUAL_GOOGLE_SHIPPING_1'])) {
-            $r = $orderFraudShipping->fraud_result;
-            if ($r === 'positive') {
-                $fraud_result = $r;
-                $manual_action = 'Y';
-            }
-        }
-        /** @var OrderBaseFraudCheckModelV2 $orderFraudBilling */
-        if ($orderFraudBilling = OrderBaseFraudCheckModelV2::objects()->get(['order_id' => $order->orderid, 'question__question_code' => 'MANUAL_GOOGLE_BILLING_1'])) {
-            $r2 = $orderFraudBilling->fraud_result;
-            if ($r2 === 'positive') {
-                $fraud_result = $r2;
-                $manual_action = 'Y';
-            }
-        }
-
-        if (($info = $orderFraudShipping->additional_info) && $info['Commercial_Mail_Receiving_Agency']) {
-            $fraud_result = 'negative';
-            $manual_action = 'N';
-        }
-
-        if ($fraud_result !== 'negative' && ($info = $orderFraudBilling->additional_info) && $info['Commercial_Mail_Receiving_Agency']) {
-            $fraud_result = 'negative';
-            $manual_action = 'N';
-        }
-        if ($fraud_result === 'positive') {
-            $outcome = 1;
-        }
 
         return [
             $fraud_result,
             $fraud->weight,
-            [
-                'MANUAL_GOOGLE_SHIPPING_1' => $r ?? '',
-                'MANUAL_GOOGLE_BILLING_1' => $r2 ?? '',
-                'Commercial_Mail_Receiving_Agency' => $info['Commercial_Mail_Receiving_Agency']
-            ],
-            $manual_action,
+            null,
+            null,
             $outcome
         ];
     }
 
-    public static function scorePP_VER(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scorePP_VER(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
@@ -340,7 +304,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, ['Payer status' => $payer_status], $manual_action, $outcome];
     }
 
-    public static function scorePP_EE(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scorePP_EE(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $manual_action = 'N';
@@ -358,12 +322,12 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, ['Payer email' => $payer_email], $manual_action, $outcome];
     }
 
-    /** Проверяет, совпадает ли хотя бы один из 3-х имен указанных в заказе с адресом эл.почты
+    /** Проверяет, совпадает ли хотя бы один из 3-х имен указанных в заказе с адресом почты
      * @param OrderModel $order
-     * @param BaseFraudCheckModelV2 $fraud
+     * @param FraudCheckBaseQuestionModel $fraud
      * @return array
      */
-    public static function scoreDC_EN(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreDC_EN(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $email_arr = explode('@', $order->email);
@@ -371,11 +335,11 @@ class BaseFraudCheckHelperV2
         $name_list = [$order->firstname ?? '', $order->s_firstname ?? '', $order->b_firstname ?? ''];
         foreach ($name_list as $name_client) {
             if ($email_1 && ($firstname_arr = explode(' ', self::correct($name_client)))) {
-                foreach ($firstname_arr as $k => $v) {
+                foreach ($firstname_arr as $v) {
                     $name = trim($v);
-                    if ($name && stripos($email_1, $name) !== false) {
+                    if ($name && strlen($name) > 2 && stripos($email_1, $name) !== false) {
                         $fraud_result = 'positive';
-                        break;
+                        goto result;
                     }
                 }
             }
@@ -386,16 +350,17 @@ class BaseFraudCheckHelperV2
             foreach ($email_arr as $email_attr) {
                 if (soundex($email_attr) === soundex($normalize_company)) {
                     $fraud_result = 'positive';
-                    break;
+                    goto result;
                 }
             }
         }
-        $outcome = intval($fraud_result === 'positive');
+        result:
+        $outcome = (int)($fraud_result === 'positive');
 
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreDC_PC(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreDC_PC(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
@@ -425,7 +390,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, $additional_info ?? null, null, $outcome];
     }
 
-    public static function scoreDC_GT(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreDC_GT(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $total = $order->total;
         $order_total_div = 50 / $total;
@@ -451,7 +416,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreDC_SA(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreDC_SA(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
 
         $fraud_result = 'positive';
@@ -469,12 +434,12 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreRF_PO(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreRF_PO(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $outcome = 0;
 
-        if ((int)$order->paymentid === 2) {
+        if ($order->paymentid === 2) {
             $fraud_result = 'positive';
             $outcome = 1;
         }
@@ -482,7 +447,7 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
 
-    public static function scoreRF_RP(OrderModel $order, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreRF_RP(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $maxOrderPriceAmount = 0;
@@ -495,6 +460,7 @@ class BaseFraudCheckHelperV2
                         $hard[] = 'positive';
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_NO:
+                    case ProductHardResellModel::HARD_TO_RESELL_UNKNOWN:
                         $hard[] = 'negative';
                         break;
                 }
@@ -507,13 +473,14 @@ class BaseFraudCheckHelperV2
         if (!(($order->total > 50) || ($maxOrderPriceAmount > 10))) {
             $fraud_result = 'positive';
         }
+        // TODO: Поменял местами
         switch ($fraud_result) {
             case 'positive':
-                $manual = 'Y';
+                $manual = 'N';
                 $outcome = 1;
                 break;
             case 'negative':
-                $manual = 'N';
+                $manual = 'Y';
                 break;
         }
 
@@ -533,7 +500,7 @@ HTML;
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_YES:
                         $aProductLinks[] = <<<HTML
-<span style='background-color: #D9EAD3;'>{$detailModel->productcode}</span> HARD TO RESELL
+<span>{$detailModel->productcode}</span> HARD TO RESELL
 HTML;
                         break;
                     case ProductHardResellModel::HARD_TO_RESELL_NO:
@@ -551,7 +518,7 @@ HTML;
         return $aProductLinks ?? [];
     }
 
-    public static function scoreGC_CT(OrderModel $order_model, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreGC_CT(OrderModel $order_model, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $type_card = "Couldn't determine";
@@ -578,11 +545,11 @@ HTML;
                     break;
             }
         }
-        $outcome = intval($fraud_result === 'positive');
+        $outcome = (int)$fraud_result === 'positive';
         return [$fraud_result, $fraud->weight, ['card_type' => $type_card], null, $outcome];
     }
 
-    public static function scoreGC_AVS(OrderModel $order_model, BaseFraudCheckModelV2 $fraud): array
+    public static function scoreGC_AVS(OrderModel $order_model, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
         $code = self::getAVSCodeByOrderModel($order_model);

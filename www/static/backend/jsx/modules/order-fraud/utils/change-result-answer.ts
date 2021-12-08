@@ -39,7 +39,6 @@ export const changeScoreResult = (
     orderInfo: {
       ...state.orderInfo,
       bareResult: data.bareResult,
-      overallResult: data.overallResult,
     },
   };
 };

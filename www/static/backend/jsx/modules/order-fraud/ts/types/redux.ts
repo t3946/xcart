@@ -51,4 +51,11 @@ export interface FraudCheckData {
       name: string;
     };
   };
+  addressesLocation: AddressGeolocation[];
+}
+export interface AddressGeolocation {
+  typeId: number;
+  longitude: number;
+  latitude: number;
+  type: string;
 }

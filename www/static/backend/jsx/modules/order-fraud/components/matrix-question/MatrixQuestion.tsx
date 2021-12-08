@@ -4,8 +4,8 @@ import { getHeaderClassByName } from "@admin/modules/order-fraud/utils/add-color
 import { convertResult } from "@admin/modules/order-fraud/utils/convert-fraud-score";
 interface MatrixQuestion {
   columns: {
-    fraud_code: string;
-    fraud_name: string;
+    code: string;
+    name: string;
     type: string;
     fraud_id: string | number;
   }[];
@@ -28,10 +28,10 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
         {columns.map((column) => (
           <th
             className={`table-header-fraud ${getHeaderClassByName(
-              column.fraud_name
+              column.name
             )}`}
           >
-            {column.fraud_name}
+            {column.name}
           </th>
         ))}
       </tr>
@@ -40,10 +40,10 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
           <tr>
             <td
               className={`table-header-fraud column-name ${getHeaderClassByName(
-                column.fraud_name
+                column.name
               )}`}
             >
-              {column.fraud_name}
+              {column.name}
             </td>
             {columns.map((col) => {
               if (col.fraud_id === column.fraud_id) {
@@ -51,8 +51,8 @@ export const MatrixQuestion: React.FC<MatrixQuestion> = ({
               }
               const answer = answerList.find((answer) => {
                 return (
-                  answer.f_fraud_name === column.fraud_name &&
-                  answer.t_fraud_name === col.fraud_name
+                  answer.f_fraud_name === column.name &&
+                  answer.t_fraud_name === col.name
                 );
               });
               if (answer) {

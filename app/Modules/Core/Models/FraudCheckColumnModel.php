@@ -12,8 +12,8 @@ use Xcart\App\Orm\Model;
  * Class FraudCheckColumnModel
  * @package Modules\Core\Models
  * @property string type
- * @property string fraud_code
- * @property string fraud_name
+ * @property string name
+ * @property string code
  * @property string description
  * @property int fraud_id
  * @property string frontend_type
@@ -36,12 +36,12 @@ class FraudCheckColumnModel extends Model
 				'primary' => true,
 				'null' => false,
 			],
-			'fraud_code' => [
+			'code' => [
 				'class' => CharField::class,
 				'default' => null,
 				'null' => true,
 			],
-			'fraud_name' => [
+			'name' => [
 				'class' => CharField::class,
 				'default' => null,
 				'null' => true,

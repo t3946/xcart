@@ -8,21 +8,28 @@
     color: black;
   }
 }
-.table-wrapper__fraud-check-question{
+
+.table-wrapper__fraud-check-question {
   width: 95%;
   margin: 10px 0;
+
   table {
     border: #c5c5c5;
     width: 100%;
   }
+
   .value-link {
+    line-height: 20px;
     color: blue;
+    border-bottom: 1px solid blue;
+    text-decoration: none !important;
   }
 }
-.fraud-check-button-appply{
-  margin-top: 10px;
+
+.fraud-info-status-block {
   margin-bottom: 15px;
 }
-.fraud-info-status-block{
-  margin-bottom: 15px;
+
+.fraud-check-button-apply {
+  margin-bottom: 24px;
 }

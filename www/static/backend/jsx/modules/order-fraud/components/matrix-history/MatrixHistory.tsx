@@ -28,7 +28,11 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
           <td>
             {columnData.link ? (
               columnData.type === "full_name" ? (
-                <a className="value-link" href={columnData.linkUrl}>
+                <a
+                  target="_blank"
+                  className="value-link"
+                  href={columnData.linkUrl}
+                >
                   {columnData.value}
                 </a>
               ) : (

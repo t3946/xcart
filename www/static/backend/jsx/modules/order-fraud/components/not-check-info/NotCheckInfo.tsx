@@ -1,17 +1,10 @@
 import React from "react";
-import { Button, Grid, Paper } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { fetchForceFraudCheck } from "@redux/actions/fraudCheckActions";
+import { Grid, Paper } from "@mui/material";
+import { Button } from "react-bootstrap";
 interface NotCheckInfo {
-  orderId: number;
   handleForceCheck: () => void;
 }
-export const NotCheckInfo: React.FC<NotCheckInfo> = ({
-  orderId,
-  handleForceCheck,
-}) => {
-  const dispatch = useDispatch();
-
+export const NotCheckInfo: React.FC<NotCheckInfo> = ({ handleForceCheck }) => {
   return (
     <div className="not-answer-fraud-check">
       <Paper elevation={1} className="paper-wrapper">
@@ -26,7 +19,7 @@ export const NotCheckInfo: React.FC<NotCheckInfo> = ({
             'Authorized' or 'Unpaid: PO'
           </span>
           <div className="fraud-force-check-button">
-            <Button variant="contained" onClick={handleForceCheck}>
+            <Button onClick={handleForceCheck} variant="secondary">
               Force Basic Fraud Check
             </Button>
           </div>

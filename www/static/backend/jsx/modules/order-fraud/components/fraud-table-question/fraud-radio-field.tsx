@@ -4,12 +4,8 @@ import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
 import { changeAnswerResult } from "@redux/actions/fraudCheckActions";
 interface FraudRadioField {
   fraudCode: string;
-  // section: string;
 }
-export const FraudRadioField: React.FC<FraudRadioField> = ({
-  fraudCode,
-  // section,
-}) => {
+export const FraudRadioField: React.FC<FraudRadioField> = ({ fraudCode }) => {
   const dispatch = useDispatch();
   const fraudResultChange = useSelector(
     (state: FraudCheckStore) => state.data.resultChange
@@ -18,23 +14,21 @@ export const FraudRadioField: React.FC<FraudRadioField> = ({
     <Fragment>
       <input
         type="radio"
-        checked={fraudResultChange[fraudCode] === "Y"}
-        value="Y"
-        // data-section={section}
-        data-field={fraudCode}
-        onChange={(e) => dispatch(changeAnswerResult(e))}
-      />
-      Yes
-      <br />
-      <input
-        type="radio"
-        // data-section={section}
         data-field={fraudCode}
         checked={fraudResultChange[fraudCode] === "N"}
         onChange={(e) => dispatch(changeAnswerResult(e))}
         value="N"
       />
       No
+      <br />
+      <input
+        type="radio"
+        checked={fraudResultChange[fraudCode] === "Y"}
+        value="Y"
+        data-field={fraudCode}
+        onChange={(e) => dispatch(changeAnswerResult(e))}
+      />
+      Yes
     </Fragment>
   );
 };
