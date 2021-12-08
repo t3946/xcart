@@ -1,8 +1,7 @@
 import React from "react";
 import cn from "classnames";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import DepartmentsMenu from "./DepartmentsMenu";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
@@ -10,9 +9,10 @@ import SearchSuggestion from "@modules/old-components/SearchSuggestion";
 import MiniCart from "@modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@modules/account/components/hat/LoginButton/LoginButtonDesktop";
-import AppData, { route } from "@utils/AppData";
+import AppData from "@utils/AppData";
 import Styles from "@modules/account/components/hat/HatSearchLine.module.scss";
 import Magnifier from "@modules/icon/components/common/magnifier/Light";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   isStatic?: boolean;
@@ -21,9 +21,10 @@ interface IProps {
 const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
-  const isVisibleDepartmentsMenu = useSelector(
-    (e: StoreInterface) => e.departmentsMenuDesktop.isVisible
+  const isVisibleDepartmentsMenu = useSelectorAccount(
+    (e) => e.departmentsMenuDesktop.isVisible
   );
+  const routes = useSelectorAccount((e) => e.routes);
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
   const inputSuggestionsClass = "input-search";
@@ -50,7 +51,7 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
     return (
       <div className="search-form-container flex-grow-1">
         <form
-          action={route("catalog:search")}
+          action={routes["catalog:search"]}
           method="get"
           itemProp="potentialAction"
           itemScope
@@ -65,13 +66,13 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
               placeholder={AppData.config.cidev_header_code}
               value={AppData.params.get.q}
               itemProp="query-input"
-              data-suggestion-url={route("catalog:search:suggestion")}
+              data-suggestion-url={routes["catalog:search:suggestion"]}
               autoComplete="off"
             />
 
             <meta
               itemProp="target"
-              content={route("catalog:search") + "?q={query}"}
+              content={routes["catalog:search"] + "?q={query}"}
             />
 
             <a
@@ -155,7 +156,7 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
             {searchTemplate()}
 
             <div className={"d-none d-lg-flex search-line_buttons"}>
-              <LoginButtonDesktop isStatic={isStatic} />
+              <LoginButtonDesktop />
 
               <div className="ms-12">
                 <MiniCart />

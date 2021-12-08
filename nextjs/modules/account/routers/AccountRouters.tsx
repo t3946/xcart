@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 // import { BreadCrumbs } from "../components/bread-crubms/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Store from "@redux/stores/Store";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import HatNavigation from "@modules/account/components/hat/HatNavigation";
@@ -126,13 +127,13 @@ import StoreInterface from "@modules/account/ts/types/store.type";
 
 export const AccountRouters = (): any => {
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreInterface) => e.user);
+  const user = useSelectorAccount((e) => e.user);
 
   useEffect(() => {
     dispatch(getTerritory());
 
-    if (Store.getState().user) {
-      dispatch(getAddresses(Store.getState().user.id));
+    if (user) {
+      dispatch(getAddresses(user.user_id));
     }
   }, []);
 
@@ -144,7 +145,7 @@ export const AccountRouters = (): any => {
       <Snackbar>
         <HatNavigation />
         <HatSearchLine isStatic={true} />
-        {/*<MenuMobile isStatic={false} />*/}
+        <MenuMobile />
       </Snackbar>
     </>
   );

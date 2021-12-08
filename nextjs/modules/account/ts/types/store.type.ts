@@ -99,6 +99,7 @@ export interface AccountPublicProfileStore {
 }
 
 interface StoreInterface {
+  routes: any;
   addresses: AccountAddressesStore;
   main: AccountMainStore;
   user: any;

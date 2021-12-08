@@ -1,10 +1,15 @@
 import { AnyAction } from "redux";
-import { departmentsMenuMobile } from "@modules/account/ts/consts/store-initial-value";
+
+const initialState = {
+  isVisible: false,
+};
 
 const DepartmentsMobileMenuReducer = (
-  store: { isVisible: boolean } = departmentsMenuMobile,
+  store: { isVisible: boolean } | null = initialState,
   action: AnyAction
-): Record<any, any> => {
+): Record<any, any> | null => {
+  if (store === null) return store;
+
   switch (action.type) {
     case "DEPARTMENTS_MENU_MOBILE_SET_VISIBLE":
       store.isVisible = action.isVisible;

@@ -1,10 +1,9 @@
 import { AnyAction } from "redux";
-import { departmentsMenu } from "@modules/account/ts/consts/store-initial-value";
 
 const DepartmentsMenuReducer = (
-  store: Record<any, any>[] = departmentsMenu,
+  store: Record<any, any>[] | null = null,
   action: AnyAction
-): Record<any, any>[] => {
+): Record<any, any>[] | null => {
   switch (action.type) {
     default:
       return store;

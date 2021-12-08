@@ -69,8 +69,6 @@ class AccountApi extends FrontendController
             $user = null;
         }
 
-        $user = UserModel::objects()->get(["user_id" => 60])->toArray();
-
         $initial_data = [
             'user' => $user,
             'routes' => AdminHelper::getRoutesMap(),

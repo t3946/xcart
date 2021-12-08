@@ -10,17 +10,18 @@ import UserReducer from "../reduсers/account/UserReduсer";
 // import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
 // import accountMainReducer from "../reduсers/account/MainReduсer";
 // import WalletReducer from "../reduсers/account/PaymentsReducer";
-// import MenuReducer from "../reduсers/account/MenuReducer";
+import MenuReducer from "../reduсers/account/MenuReducer";
+import RoutesReducer from "../reduсers/RoutesReducer";
 // import BreadcrumbsReducer from "../reduсers/account/BreadcrumbsReducer";
 // import ShadowPanelReducer from "@redux/reduсers/account/ShadowPanelReducer";
 // import CountriesReducer from "@redux/reduсers/account/CountriesReducer";
 // import ListsReducer from "@redux/reduсers/account/ListsReducer";
-// import DepartmentsMenuReducer from "@redux/reduсers/account/DepartmentsMenuReducer";
-// import DepartmentsMenuMobileReducer from "@redux/reduсers/account/DepartmentsMenuMobileReducer";
-// import DepartmentsMenuDesktopReducer from "@redux/reduсers/account/DepartmentsMenuDesktopReducer";
+import DepartmentsMenuReducer from "@redux/reduсers/account/DepartmentsMenuReducer";
+import DepartmentsMenuMobileReducer from "@redux/reduсers/account/DepartmentsMenuMobileReducer";
+import DepartmentsMenuDesktopReducer from "@redux/reduсers/account/DepartmentsMenuDesktopReducer";
 // import LoginAndSecurityReducer from "@redux/reduсers/account/LoginAndSecurityReducer";
 // import MobileAlertReducer from "@redux/reduсers/account/MobileAlertReducer";
-// import CartReducer from "@redux/reduсers/CartReducer";
+import CartReducer from "@redux/reduсers/CartReducer";
 // import MiniCartReducer from "@redux/reduсers/MiniCartReducer";
 // import PublicProfileReducer from "@redux/reduсers/account/PublicProfileReducer";
 // import OrdersReducer from "@redux/reduсers/account/OrdersReducer";
@@ -30,39 +31,60 @@ import UserReducer from "../reduсers/account/UserReduсer";
 // import PhotoSwipeReducer from "@redux/reduсers/PhotoSwipeReducer";
 // import DecisionsReducer from "@redux/reduсers/account/DecisionsReducer";
 
-export default function getStore(storeInitialValue: any): any {
-  const sagaMiddleware = createSagaMiddleware();
-  const store = createStore(
-    combineReducers({
-      user: UserReducer,
-      // addresses: accountAddressesReducer,
-      // main: accountMainReducer,
-      // payments: WalletReducer,
-      // mobileMenu: MenuReducer,
-      // breadcrumbs: BreadcrumbsReducer,
-      // shadowPanel: ShadowPanelReducer,
-      // countries: CountriesReducer,
-      // lists: ListsReducer,
-      // departmentsMenu: DepartmentsMenuReducer,
-      // departmentsMenuMobile: DepartmentsMenuMobileReducer,
-      // departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
-      // loginAndSecurity: LoginAndSecurityReducer,
-      // mobileAlert: MobileAlertReducer,
-      // cart: CartReducer,
-      // miniCart: MiniCartReducer,
-      // publicProfile: PublicProfileReducer,
-      // ordersStore: OrdersReducer,
-      // productsRatings: RatingsReducer,
-      // productsReviews: ReviewsReducer,
-      // product: ProductReducer,
-      // decisions: DecisionsReducer,
-      // photoswipe: PhotoSwipeReducer,
-    }),
-    storeInitialValue,
+const sagaMiddleware = createSagaMiddleware();
+let clientPreloadedState;
+
+if (process.browser) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  clientPreloadedState = window.__PRELOADED_STATE__;
+  console.log("__PRELOADED_STATE__", clientPreloadedState);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  delete window.__PRELOADED_STATE__;
+}
+
+const reducers = combineReducers({
+  user: UserReducer,
+  routes: RoutesReducer,
+  // addresses: accountAddressesReducer,
+  // main: accountMainReducer,
+  // payments: WalletReducer,
+  mobileMenu: MenuReducer,
+  // breadcrumbs: BreadcrumbsReducer,
+  // shadowPanel: ShadowPanelReducer,
+  // countries: CountriesReducer,
+  // lists: ListsReducer,
+  departmentsMenu: DepartmentsMenuReducer,
+  departmentsMenuMobile: DepartmentsMenuMobileReducer,
+  departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
+  // loginAndSecurity: LoginAndSecurityReducer,
+  // mobileAlert: MobileAlertReducer,
+  cart: CartReducer,
+  // miniCart: MiniCartReducer,
+  // publicProfile: PublicProfileReducer,
+  // ordersStore: OrdersReducer,
+  // productsRatings: RatingsReducer,
+  // productsReviews: ReviewsReducer,
+  // product: ProductReducer,
+  // decisions: DecisionsReducer,
+  // photoswipe: PhotoSwipeReducer,
+});
+
+const store = createStore(
+  reducers,
+  clientPreloadedState,
+  composeWithDevTools(applyMiddleware(sagaMiddleware))
+);
+
+sagaMiddleware.run(accountRootSaga);
+
+export default store;
+
+export const getServerStore = function (serverPreloadedState: any) {
+  return createStore(
+    reducers,
+    serverPreloadedState,
     composeWithDevTools(applyMiddleware(sagaMiddleware))
   );
-
-  sagaMiddleware.run(accountRootSaga);
-
-  return store;
-}
+};

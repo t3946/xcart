@@ -2,12 +2,13 @@ import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
 import { useSelector } from "react-redux";
-import { route } from "@utils/AppData";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const SideBarMenu: React.FC = () => {
+  const routes = useSelectorAccount((e) => e.routes);
   const breakpoint = useBreakpoint();
   const user = useSelector((e: StoreInterface) => e.user);
   const menuItems = [
@@ -17,14 +18,14 @@ const SideBarMenu: React.FC = () => {
       label: "Orders",
       routerItems: [
         {
-          to: route("account:order-decisions-required"),
+          to: "/orders/open-orders/decisions-required",
           label: "Decisions required",
           badge: user?.decisions_required_count || 0,
         },
         { to: "/account/orders/open-orders", label: "Open orders" },
         { to: "/account/orders/canceled-orders", label: "Cancelled orders" },
         { to: "/account/orders/completed-orders", label: "Completed orders" },
-        { to: route("account:orders"), label: "Buy again" },
+        { to: "/orders", label: "Buy again" },
       ],
     },
     {

@@ -1,12 +1,18 @@
 import "@styles/globals.scss";
 import "bootstrap/dist/css/bootstrap-grid.min.css";
-import App from "next/app";
-import getInitialState from "../services/axios/Account";
 import { Provider } from "react-redux";
-import getStore from "@redux/stores/Store";
+import clientStore, { getServerStore } from "@redux/stores/Store";
+import App from "next/app";
+import getInitialState from "@services/axios/Account";
 
-function MyApp({ Component, pageProps }) {
-  const store = getStore(pageProps.initialState);
+function MyApp({ Component, pageProps, state }) {
+  let store;
+
+  if (process.browser === false) {
+    store = getServerStore(state);
+  } else {
+    store = clientStore;
+  }
 
   return (
     <Provider store={store}>
@@ -15,12 +21,16 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-MyApp.getInitialProps = async (appContext) => {
-  const appProps = await App.getInitialProps(appContext);
+MyApp.getInitialProps = async function (ctx) {
+  const initialProps = App.getInitialProps(ctx);
 
-  appProps.pageProps.initialState = await getInitialState();
+  if (process.browser === false) {
+    console.log("MyApp.getInitialProps");
+    initialProps.state = await getInitialState();
+    process.initialState = initialProps.state;
+  }
 
-  return { ...appProps };
+  return { ...initialProps };
 };
 
 export default MyApp;

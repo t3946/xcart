@@ -1,22 +1,21 @@
 import React from "react";
 import LoginButton from "@modules/account/components/hat/LoginButton/LoginButton";
 import TopLine from "@modules/account/components/hat/TopLine";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuMobileActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import AppData from "@utils/AppData";
 import Search from "@modules/icon/components/account/search/Search";
 import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
 import cn from "classnames";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const HatNavigation: React.FC = () => {
   const dispatch = useDispatch();
-  const cart = useSelector((e: StoreInterface) => e.cart);
-
-  const isVisibleMenu = useSelector(
-    (e: StoreInterface) => e.departmentsMenuMobile.isVisible
+  const cart = useSelectorAccount((e) => e.cart);
+  const isVisibleMenu = useSelectorAccount(
+    (e) => e.departmentsMenuMobile.isVisible
   );
 
   function toggleMobileDepartmentsMenu(e: any) {

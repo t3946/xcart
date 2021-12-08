@@ -15,9 +15,9 @@ return [
         'name' => 'add-list',
     ],
     [
-        'route' => '/account/',
+        'route' => '/',
         'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'index'
+        'name' => 'account:index'
     ],
 
     [
@@ -82,7 +82,7 @@ return [
     [
         'route' => '/orders',
         'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'orders'
+        'name' => 'account:orders'
     ],
     [
         'route' => '/orders/open-orders',
@@ -142,7 +142,7 @@ return [
     [
         'route' => '/orders/open-orders/decisions-required',
         'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'order-decisions-required',
+        'name' => 'account:order-decisions-required',
     ],
     [
         'route' => '/decision/{*:decision_id}',
@@ -159,7 +159,7 @@ return [
     [
         'route' => '/login',
         'target' => [AccountController::class, 'login'],
-        'name' => 'login',
+        'name' => 'account:login',
     ],
 
     [
@@ -171,7 +171,7 @@ return [
     [
         'route' => '/dashboard',
         'target' => [AccountController::class, 'dashboard'],
-        'name' => 'dashboard'
+        'name' => 'account:dashboard'
     ],
 
     [

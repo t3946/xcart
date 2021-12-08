@@ -1,23 +1,30 @@
 import { AnyAction } from "redux";
-import { accountMenuInitialValue } from "../../../modules/account/ts/consts/store-initial-value";
 
-const MenuReducer = (state = accountMenuInitialValue, action: AnyAction) => {
+const initialValue = {
+  isMobileMenuVisible: false,
+  isTabletMenuVisible: false,
+};
+
+const MenuReducer = (
+  store: Record<any, any> = initialValue,
+  action: AnyAction
+): Record<any, any> => {
   switch (action.type) {
     case "SET_MOBILE_MENU_VISIBLE":
-      state.isMobileMenuVisible = action.isMobileMenuVisible;
-      return state;
+      store.isMobileMenuVisible = action.isMobileMenuVisible;
+      return store;
 
     case "SET_TABLET_MENU_VISIBLE":
-      state.isTabletMenuVisible = action.isTabletMenuVisible;
-      return state;
+      store.isTabletMenuVisible = action.isTabletMenuVisible;
+      return store;
 
     case "HIDE_ALL_MENU":
-      state.isMobileMenuVisible = false;
-      state.isTabletMenuVisible = false;
-      return state;
+      store.isMobileMenuVisible = false;
+      store.isTabletMenuVisible = false;
+      return store;
 
     default:
-      return state;
+      return store;
   }
 };
 
