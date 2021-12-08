@@ -132,8 +132,6 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
         },
       ];
 
-      console.log("category.name", category.name);
-
       items.push(
         <li className="category-menu-item has-child" key={key}>
           <a
@@ -220,8 +218,8 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
                     : "d-none",
                 ])}
               >
-                {/*{groupsTemplate()}*/}
-                {/*{categoryLinkTemplate()}*/}
+                {groupsTemplate()}
+                {categoryLinkTemplate()}
               </div>
             </div>
           </div>
