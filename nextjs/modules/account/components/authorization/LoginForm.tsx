@@ -1,6 +1,4 @@
 import React from "react";
-import { StoreDto } from "@s3stores-mail/ts/types";
-import { useSelector } from "react-redux";
 import LoginFormInputLogin from "@modules/account/components/authorization/LoginFormInputLogin";
 import LoginFormInputPassword from "@modules/account/components/authorization/LoginFormInputPassword";
 import LoginFormInputOTP from "@modules/account/components/authorization/LoginFormInputOTP";
@@ -9,13 +7,16 @@ import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes"
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
 
 const LoginForm: React.FC<any> = () => {
-  const user = useSelector((e: StoreDto) => e.user);
+  const router = useRouter();
+  const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
 
   if (user !== null) {
-    //todo: перейти на индекс
+    router.push("/");
   }
 
   const INPUT_LOGIN_MODE = 0;
@@ -72,13 +73,13 @@ const LoginForm: React.FC<any> = () => {
     setMode(INPUT_OTP_MODE);
   }
 
-  function submit({ form, actions, success, error, complete }): void {
+  function submit({ form, actions, success, error, complete }: any): void {
     setLastSentForm(form);
     dispatch(
       loginAction({
         form,
 
-        success(res) {
+        success(res: any) {
           res.user && dispatch(userSetAction(res.user));
           success(res);
         },

@@ -20,7 +20,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         "Enter valid email or phone number",
         async function (value) {
           return (
-            value &&
+            !!value &&
             (value.search(/[^@]+?@[^@]+/) !== -1 ||
               value.search(/\+\d{11}/) !== -1)
           );
@@ -35,10 +35,10 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
   };
 
   React.useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   });
 
-  function submit(values, actions) {
+  function submit(values: any, actions: any) {
     const form = { login: values.login };
 
     dispatch(
@@ -50,7 +50,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
           props.setLastSentForm(form);
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors({ login: err.login[0] });
         },
 
@@ -67,7 +67,6 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         initialValues={initialState}
         validationSchema={validationSchema}
         onSubmit={submit}
-        ref={React.useRef()}
       >
         {({ isSubmitting, handleChange, values, errors }) => {
           return (
