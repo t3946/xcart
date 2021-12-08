@@ -9,3 +9,9 @@
     width: pxToRem(48);
   }
 }
+
+.navigationContainer {
+  @include breakpoint(md) {
+    padding: pxToRem(7) 0;
+  }
+}

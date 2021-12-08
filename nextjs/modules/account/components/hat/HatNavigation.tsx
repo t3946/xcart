@@ -17,6 +17,9 @@ const HatNavigation: React.FC = () => {
   const isVisibleMenu = useSelectorAccount(
     (e) => e.departmentsMenuMobile.isVisible
   );
+  const classes = {
+    navigationContainer: ["d-flex", Styles.navigationContainer],
+  };
 
   function toggleMobileDepartmentsMenu(e: any) {
     e.stopPropagation();
@@ -69,7 +72,7 @@ const HatNavigation: React.FC = () => {
             }}
           />
 
-          <div className="logo_menu d-flex">
+          <div className={cn(classes.navigationContainer)}>
             <div className="container">
               <div className="row">
                 <div className="col-md-1 col-auto d-flex align-items-center d-lg-none">
