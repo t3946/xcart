@@ -5,31 +5,30 @@ import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import accountRootSaga from "../sagas/account/MainSaga";
 
-//reducers
-import UserReducer from "../reduсers/account/UserReduсer";
-// import accountAddressesReducer from "../reduсers/account/AddresesReduсer";
-// import accountMainReducer from "../reduсers/account/MainReduсer";
-// import WalletReducer from "../reduсers/account/PaymentsReducer";
-import MenuReducer from "../reduсers/account/MenuReducer";
-import RoutesReducer from "../reduсers/RoutesReducer";
-// import BreadcrumbsReducer from "../reduсers/account/BreadcrumbsReducer";
-// import ShadowPanelReducer from "@redux/reduсers/account/ShadowPanelReducer";
-// import CountriesReducer from "@redux/reduсers/account/CountriesReducer";
-// import ListsReducer from "@redux/reduсers/account/ListsReducer";
-import DepartmentsMenuReducer from "@redux/reduсers/account/DepartmentsMenuReducer";
-import DepartmentsMenuMobileReducer from "@redux/reduсers/account/DepartmentsMenuMobileReducer";
-import DepartmentsMenuDesktopReducer from "@redux/reduсers/account/DepartmentsMenuDesktopReducer";
-// import LoginAndSecurityReducer from "@redux/reduсers/account/LoginAndSecurityReducer";
-// import MobileAlertReducer from "@redux/reduсers/account/MobileAlertReducer";
-import CartReducer from "@redux/reduсers/CartReducer";
-// import MiniCartReducer from "@redux/reduсers/MiniCartReducer";
-// import PublicProfileReducer from "@redux/reduсers/account/PublicProfileReducer";
-// import OrdersReducer from "@redux/reduсers/account/OrdersReducer";
-// import RatingsReducer from "@redux/reduсers/RatingsReducer";
-// import ReviewsReducer from "@redux/reduсers/ReviewsReducer";
-// import ProductReducer from "@redux/reduсers/ProductReducer";
-// import PhotoSwipeReducer from "@redux/reduсers/PhotoSwipeReducer";
-// import DecisionsReducer from "@redux/reduсers/account/DecisionsReducer";
+import UserReducer from "../reducers/account/UserReducer";
+// import accountAddressesReducer from "../reducers/account/AddressesReducer";
+// import accountMainReducer from "../reducers/account/MainReducer";
+// import WalletReducer from "../reducers/account/PaymentsReducer";
+import MenuReducer from "../reducers/account/MenuReducer";
+import RoutesReducer from "../reducers/RoutesReducer";
+import BreadcrumbsReducer from "@redux/reducers/account/BreadcrumbsReducer";
+// import ShadowPanelReducer from "@redux/reducers/account/ShadowPanelReducer";
+// import CountriesReducer from "@redux/reducers/account/CountriesReducer";
+// import ListsReducer from "@redux/reducers/account/ListsReducer";
+import DepartmentsMenuReducer from "@redux/reducers/account/DepartmentsMenuReducer";
+import DepartmentsMenuMobileReducer from "@redux/reducers/account/DepartmentsMenuMobileReducer";
+import DepartmentsMenuDesktopReducer from "@redux/reducers/account/DepartmentsMenuDesktopReducer";
+// import LoginAndSecurityReducer from "@redux/reducers/account/LoginAndSecurityReducer";
+// import MobileAlertReducer from "@redux/reducers/account/MobileAlertReducer";
+import CartReducer from "@redux/reducers/CartReducer";
+// import MiniCartReducer from "@redux/reducers/MiniCartReducer";
+// import PublicProfileReducer from "@redux/reducers/account/PublicProfileReducer";
+// import OrdersReducer from "@redux/reducers/account/OrdersReducer";
+// import RatingsReducer from "@redux/reducers/RatingsReducer";
+// import ReviewsReducer from "@redux/reducers/ReviewsReducer";
+// import ProductReducer from "@redux/reducers/ProductReducer";
+// import PhotoSwipeReducer from "@redux/reducers/PhotoSwipeReducer";
+// import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 let clientPreloadedState;
@@ -51,7 +50,7 @@ const reducers = combineReducers({
   // main: accountMainReducer,
   // payments: WalletReducer,
   mobileMenu: MenuReducer,
-  // breadcrumbs: BreadcrumbsReducer,
+  breadcrumbs: BreadcrumbsReducer,
   // shadowPanel: ShadowPanelReducer,
   // countries: CountriesReducer,
   // lists: ListsReducer,

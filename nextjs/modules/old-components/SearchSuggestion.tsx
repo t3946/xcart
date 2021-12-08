@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import storeApp from "@redux/stores/StoreApp";
 import SuggestionsListForAll from "@modules/old-components/SuggestionsListForAll";
-import { checkOff, action } from "@redux/reduсers/appHeadReduсer";
+import { checkOff, action } from "@redux/reducers/appHeadReducer";
 import $ from "jquery";
 
 export default class SearchSuggestion {
