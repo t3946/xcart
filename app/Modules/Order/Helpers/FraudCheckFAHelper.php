@@ -4,10 +4,13 @@
 namespace Modules\Order\Helpers;
 
 
+use Exception;
 use Modules\Core\Classes\MelissaAPI;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\StateModel;
+use Modules\Order\Models\OrderAddressGeolocation;
+use Modules\Order\Models\OrderAddressType;
 use Modules\Order\Models\OrderModel;
 
 class FraudCheckFAHelper
@@ -112,16 +115,18 @@ class FraudCheckFAHelper
         $info = $this->getInfoAddress(
             $fraud,
             [
+                'street' => $this->order_model->s_address ?? '',
                 'state' => $this->order_model->s_state,
                 'city' => $this->order_model->s_city,
                 'zipcode' => $this->order_model->s_zipcode,
-                'country' => $this->order_model->s_country ?? ''
+                'country' => $this->order_model->s_country ?? '',
             ],
             [
+                'street' => $this->order_model->b_address ?? '',
                 'state' => $this->order_model->b_state,
                 'city' => $this->order_model->b_city,
                 'zipcode' => $this->order_model->b_zipcode,
-                'country' => $this->order_model->b_country ?? ''
+                'country' => $this->order_model->b_country ?? '',
             ],
         );
         if ($outcome) {
@@ -183,9 +188,62 @@ class FraudCheckFAHelper
     public static function getStringAddressByArray(?array $address): ?string
     {
         if (isset($address['state'], $address['city'], $address['zipcode'])) {
-            return "{$address['city']}, {$address['state']}, {$address['zipcode']}, {$address['country']}";
+            $normalize_address = array_filter($address);
+            $str_address = implode(', ', $normalize_address);
+            return trim($str_address);
         }
         return null;
+    }
+
+    public function collectAddressesGeolocation(): void
+    {
+        /** @var OrderAddressType $address_type */
+        foreach (OrderAddressType::objects()->all() as $address_type) {
+            $field_latitude = 'Latitude';
+            $field_longitude = 'Longitude';
+            $type = $address_type->code;
+            switch ($type) {
+                case OrderAddressType::ADDRESS_TYPE_BILLING:
+                case OrderAddressType::ADDRESS_TYPE_SHIPPING:
+                    $address_info = $this->ob_melissa->melissa_address[$type]['address'];
+                    break;
+                case OrderAddressType::ADDRESS_TYPE_OWNER_BILLING:
+                case OrderAddressType::ADDRESS_TYPE_OWNER_SHIPPING:
+                    [$owner, $type_name] = explode('_', $type);
+                    $address_info = $this->ob_melissa->melissa_address[$type_name][$owner];
+                    break;
+                case OrderAddressType::ADDRESS_TYPE_IP_LOCATION:
+                    $address_info = $this->ob_melissa->ip_data;
+                    break;
+                case OrderAddressType::ADDRESS_TYPE_PHONE_LOCATION:
+                    $address_info = $this->ob_melissa->phone_data;
+                    $field_latitude = 'Lat';
+                    $field_longitude = 'Lng';
+                    break;
+            }
+            if (!empty($address_info)) {
+                // Валидация элементов(широта и долгота) в объекте
+                foreach ([$field_longitude, $field_latitude] as $type_location) {
+                    if (empty($address_info[$type_location]) || !is_numeric($address_info[$type_location])) {
+                        continue 2;
+                    }
+                }
+                $longitude = (float)$address_info[$field_latitude];
+                $latitude = (float)$address_info[$field_longitude];
+                $this->saveGeolocationData($address_type, $latitude, $longitude);
+            }
+        }
+    }
+
+    private function saveGeolocationData(OrderAddressType $type_model, float $latitude, float $longitude): void
+    {
+        $geolocation_model = new OrderAddressGeolocation([
+            'order_id' => $this->order_model->pk,
+            'address_type_id' => $type_model->pk,
+            'longitude' => $longitude,
+            'latitude' => $latitude,
+        ]);
+        $geolocation_model->save();
     }
 
     public function scorePhoneAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
@@ -256,15 +314,15 @@ class FraudCheckFAHelper
         if ($this->isEmptyAddress($compare_address) || $this->isEmptyAddress($addressData)) {
             return 0;
         }
-        $compare_coef = 0;
+        $coefficient = 0;
         foreach ($addressData as $attr => $value) {
             if (strtoupper($value) === strtoupper($compare_address[$attr])) {
-                $compare_coef++;
+                $coefficient++;
             } else {
                 break;
             }
         }
-        return round($compare_coef / count($addressData), 2);
+        return round($coefficient / count($addressData), 2);
     }
 
     public function isEmptyAddress(array $address): bool
@@ -327,11 +385,8 @@ class FraudCheckFAHelper
         $ar_f = explode(' ', $f_full_name);
         $ar_t = explode(' ', $t_full_name);
 
-        if (strtoupper($ar_f[count($ar_f) - 1]) === strtoupper($ar_t[count($ar_t) - 1])
-            || soundex($ar_f[count($ar_f) - 1]) === soundex($ar_t[count($ar_t) - 1])) {
-            return true;
-        }
-        return false;
+        return strtoupper($ar_f[count($ar_f) - 1]) === strtoupper($ar_t[count($ar_t) - 1])
+            || soundex($ar_f[count($ar_f) - 1]) === soundex($ar_t[count($ar_t) - 1]);
     }
 
     public function comparePhoneCaller($full_name): bool
@@ -451,13 +506,13 @@ class FraudCheckFAHelper
     private function getInfoFN(FraudFAQuestionModel $question_model, array $f_value, array $t_value): array
     {
         return [
-            "value{$question_model->f_fraud->fraud_code}" => !empty(trim($f_value['value']))
+            "value{$question_model->f_fraud->code}" => !empty(trim($f_value['value']))
                 ? [
                     'full_name' => $f_value['value'],
                     'zip' => !empty($f_value['zipcode']) ? $f_value['value'] : ''
                 ]
                 : self::ADDITIONAL_INFO_NULL_CHECK,
-            "value{$question_model->t_fraud->fraud_code}" => !empty(trim($t_value['value']))
+            "value{$question_model->t_fraud->code}" => !empty(trim($t_value['value']))
                 ? [
                     'full_name' => $t_value['value'],
                     'zip' => !empty($t_value['zipcode']) ? $t_value['zipcode'] : ''
@@ -475,10 +530,10 @@ class FraudCheckFAHelper
     private function getInfoAddress(FraudFAQuestionModel $question_model, array $f_value, array $t_value): array
     {
         return [
-            "value{$question_model->f_fraud->fraud_code}" => self::getStringAddressByArray($f_value)
+            "value{$question_model->f_fraud->code}" => self::getStringAddressByArray($f_value)
                 ? $f_value
                 : self::ADDITIONAL_INFO_NULL_CHECK,
-            "value{$question_model->t_fraud->fraud_code}" => self::getStringAddressByArray($t_value)
+            "value{$question_model->t_fraud->code}" => self::getStringAddressByArray($t_value)
                 ? $t_value
                 : self::ADDITIONAL_INFO_NULL_CHECK
         ];
@@ -492,8 +547,8 @@ class FraudCheckFAHelper
     private function getNullDataInfo(FraudFAQuestionModel $question_model, array $value = null): array
     {
         return [
-            "value{$question_model->f_fraud->fraud_code}" => $value ?? self::ADDITIONAL_INFO_NULL_CHECK,
-            "value{$question_model->t_fraud->fraud_code}" => self::ADDITIONAL_INFO_NULL_CHECK
+            "value{$question_model->f_fraud->code}" => $value ?? self::ADDITIONAL_INFO_NULL_CHECK,
+            "value{$question_model->t_fraud->code}" => self::ADDITIONAL_INFO_NULL_CHECK
         ];
     }
 }

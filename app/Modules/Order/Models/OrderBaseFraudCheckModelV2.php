@@ -2,12 +2,9 @@
 
 namespace Modules\Order\Models;
 
-use Modules\Core\Models\FraudAllQuestionModel;
-use Modules\Goods\Models\ProductHardResellModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
@@ -16,7 +13,7 @@ use Xcart\App\Orm\Model;
  * Class OrderFraudCheckModel
  * @package Modules\Order\Models
  * @property OrderModel order
- * @property BaseFraudCheckModelV2 question
+ * @property FraudCheckBaseQuestionModel question
  * @property string fraud_result
  * @property string|float fraud_score
  * @property string|int question_id
@@ -48,7 +45,7 @@ class OrderBaseFraudCheckModelV2 extends Model
             'question' => [
                 'field' => 'question_id',
                 'class' => ForeignField::class,
-                'modelClass' => BaseFraudCheckModelV2::class,
+                'modelClass' => FraudCheckBaseQuestionModel::class,
                 'link' => ['question_id' => 'question_id'],
                 'null' => false,
             ],

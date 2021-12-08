@@ -2,12 +2,15 @@
 
 namespace Modules\Core\Controllers\Api;
 
+use Exception;
 use Modules\Core\Models\FraudCheckColumnModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\GlobalConfigModel;
-use Modules\Order\Models\BaseFraudCheckModelV2;
+use Modules\Order\Models\FraudCheckBaseQuestionModel;
 use Modules\Order\Models\FraudStatusModel;
+use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
+use Throwable;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
@@ -15,22 +18,23 @@ use Xcart\App\Main\Xcart;
 class FraudCheckController extends Controller
 {
 
-    public function getAllFAQuestions() : array
+    public function getAllFAQuestions(): array
     {
         $ar_result = [];
         /** @var FraudFAQuestionModel $question */
         foreach (FraudFAQuestionModel::objects()->all() as $question) {
             $ar_result[$question->f_fraud->type]['data'][] = [
                 'value' => $question->weight,
-                'f_fraud' => $question->f_fraud->fraud_name,
-                't_fraud' => $question->t_fraud->fraud_name,
+                'f_fraud' => $question->f_fraud->name,
+                't_fraud' => $question->t_fraud->name,
                 'template' => $question->template,
-                'questionId' => $question->question_id
+                'questionId' => $question->question_id,
+                'questionCode' => (string)$question
             ];
         }
         /** @var FraudCheckColumnModel $column */
         foreach (FraudCheckColumnModel::objects()->all() as $column) {
-            $ar_result[$column->type]['columns'][] = $column->fraud_name;
+            $ar_result[$column->type]['columns'][] = $column->name;
         }
         return $ar_result;
     }
@@ -38,7 +42,7 @@ class FraudCheckController extends Controller
     /**
      * @throws UnknownPropertyException
      */
-    public function getFraudCheckSettings()
+    public function getFraudCheckSettings(): void
     {
         $ar_settings = [
             'faQuestions' => $this->getAllFAQuestions(),
@@ -51,8 +55,8 @@ class FraudCheckController extends Controller
     public function getAllBaseQuestions(): array
     {
         $ar_result = [];
-        /** @var BaseFraudCheckModelV2 $question */
-        foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->all() as $question) {
+        /** @var FraudCheckBaseQuestionModel $question */
+        foreach (FraudCheckBaseQuestionModel::objects()->order(['orderby'])->all() as $question) {
             $ar_result[] = [
                 'questionId' => $question->question_id,
                 'questionCode' => $question->question_code,
@@ -68,12 +72,13 @@ class FraudCheckController extends Controller
 
     /**
      * @throws UnknownPropertyException
-     * @throws \Exception
+     * @throws Exception
      */
     public function getBaseSettings(): array
     {
         global $fraud_Google_address_search_exclusions, $fraud_Google_phone_search_exclusions, $fraud_Google_email_search_exclusions;
         $ar_settings = [];
+        /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getGlobalConfig();
 
@@ -115,13 +120,13 @@ class FraudCheckController extends Controller
                 }
             }
             $this->jsonResponse(['update' => true]);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->jsonResponse(['message' => $exception->getMessage()], 400);
         }
 
     }
 
-    public function updateFAQuestion()
+    public function updateFAQuestion(): void
     {
         try {
             $update_data = json_decode(file_get_contents('php://input'), true);
@@ -130,16 +135,16 @@ class FraudCheckController extends Controller
             $question_model->template = $update_data['template'];
             $question_model->weight = $update_data['weight'];
             $this->jsonResponse(['update' => $question_model->save()]);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->jsonResponse(['message' => $exception->getMessage()], 400);
         }
     }
 
-    public function updateBaseQuestion()
+    public function updateBaseQuestion(): void
     {
         $update_data = json_decode(file_get_contents('php://input'), true);
-        /** @var BaseFraudCheckModelV2 $question_model */
-        $question_model = BaseFraudCheckModelV2::objects()->get(['question_id' => $update_data['questionId']]);
+        /** @var FraudCheckBaseQuestionModel $question_model */
+        $question_model = FraudCheckBaseQuestionModel::objects()->get(['question_id' => $update_data['questionId']]);
         $question_model->orderby = $update_data['orderBy'];
         $question_model->question_template_body = $update_data['template'];
         $question_model->weight = $update_data['weight'];

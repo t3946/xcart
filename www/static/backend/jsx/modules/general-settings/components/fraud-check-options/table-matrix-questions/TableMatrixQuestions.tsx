@@ -9,11 +9,16 @@ interface ITableFraud {
   data: TableDataResponse[];
   type: string;
 }
-export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
+export const TableMatrixQuestions: React.FC<ITableFraud> = ({
+  columns,
+  data,
+  type,
+}) => {
   const [dataChange, setDataChange] = useState<ChangeQuestionDataForm>(null);
   const [open, setOpen] = useState(false);
   const onClickChangeQuestion = (question: TableDataResponse) => {
     setDataChange({
+      questionCode: question.questionCode,
       weight: question.value,
       template: question.template,
       questionId: question.questionId,
@@ -25,7 +30,7 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
     <Fragment>
       <table border={1} className="table-question-fraud-check">
         <tr>
-          <th className="table-header-fraud-empty">code</th>
+          <th className="table-header-code-text">Сode</th>
           {columns.map((column) => (
             <th
               className={`table-header-fraud ${getHeaderClassByName(column)}`}
@@ -38,13 +43,15 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
           return (
             <tr>
               <td
-                className={`table-header-fraud ${getHeaderClassByName(column)}`}
+                className={`table-header-fraud column-name ${getHeaderClassByName(
+                  column
+                )}`}
               >
                 {column}
               </td>
               {columns.map((col) => {
                 if (col === column) {
-                  return <td>&#10003;</td>;
+                  return <td className="redundant-text">&#10003;</td>;
                 }
                 const question = data.find(
                   (answer) =>
@@ -62,17 +69,21 @@ export const TableFraud: React.FC<ITableFraud> = ({ columns, data, type }) => {
                     </td>
                   );
                 }
-                return <td>Redundant</td>;
+                return <td className="redundant-text">Redundant</td>;
               })}
             </tr>
           );
         })}
       </table>
-      <DialogTableEdit
-        type="faQuestions"
-        state={{ get: open, set: setOpen }}
-        form={{ get: dataChange, set: setDataChange }}
-      />
+      {open && (
+        <DialogTableEdit
+          type="faQuestions"
+          template={dataChange}
+          onClose={() => setOpen(false)}
+          open={open}
+          onChangeTemplate={setDataChange}
+        />
+      )}
     </Fragment>
   );
 };

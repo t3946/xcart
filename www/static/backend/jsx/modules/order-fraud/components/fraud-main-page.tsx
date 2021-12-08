@@ -1,10 +1,17 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Paper, Typography, CircularProgress } from "@material-ui/core";
+import {
+  Paper,
+  Typography,
+  CircularProgress,
+  Box,
+  Grid,
+  Stack,
+} from "@mui/material";
 import { FraudCheckHat } from "@admin/modules/order-fraud/components/fraud-check-hat/fraud-check-hat";
 import { FraudTableQuestion } from "@admin/modules/order-fraud/components/fraud-table-question/fraud-table-question";
 import { FraudInfoBasement } from "@admin/modules/order-fraud/components/fraud-info-basement/fraud-info-basement";
-import { MatrixQuestion } from "./matrix-question/matrix-question";
-import { NotCheckInfo } from "@admin/modules/order-fraud/components/not-check-info/not-check-info";
+import { MatrixQuestion } from "./matrix-question/MatrixQuestion";
+import { NotCheckInfo } from "@admin/modules/order-fraud/components/not-check-info/NotCheckInfo";
 import { FraudScoreResult } from "@admin/modules/order-fraud/components/fraud-score-result/fraud-score-result";
 import { SnackbarContext } from "@s3stores-mail/contexts/snackbar/Snackbar.context";
 import { FraudPaymentAnswer } from "@admin/modules/order-fraud/components/fraud-payment-answer/fraud-payment-answer";
@@ -19,11 +26,11 @@ import {
   setTemplateView,
 } from "@redux/actions/fraudCheckActions";
 import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
-import { MatrixModal } from "@admin/modules/order-fraud/components/matrix-modal/matrix-modal";
+import { MatrixModal } from "@admin/modules/order-fraud/components/matrix-modal/MatrixModal";
 import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 import { MatchingAddress } from "@admin/modules/order-fraud/components/matching-address/MatchingAddress";
 import Divider from "@mui/material/Divider";
-import { Box, Grid } from "@mui/material";
+import { AddressesMap } from "@admin/modules/order-fraud/components/addresses-map/AddressesMap";
 
 interface FraudMainPage {
   orderId: number | string;
@@ -126,12 +133,21 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               Addresses: Information gathering
             </Typography>
             <MatrixHistory historyColumn={data.legend.address} />
-            <Box sx={{ my: 1 }}>
-              <Typography variant="h6" align="left">
-                Comparison of two addresses: Matching degrees
-              </Typography>
-              <MatchingAddress />
-            </Box>
+            <Stack
+              alignItems="center"
+              spacing={3}
+              my={1}
+              direction="row"
+              justifyContent="center"
+            >
+              <AddressesMap width={596} />
+              <Box>
+                <Typography noWrap={true} variant="h6" align="left">
+                  Comparison of two addresses: Matching degrees
+                </Typography>
+                <MatchingAddress />
+              </Box>
+            </Stack>
             <Typography variant="h6" align="center">
               Addresses: Cross check matrix
             </Typography>

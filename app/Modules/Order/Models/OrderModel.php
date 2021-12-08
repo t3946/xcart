@@ -63,6 +63,7 @@ use Xcart\Order;
  * @property int|mixed subtotal
  * @property Manager|OrderDetailModel[] detail_models
  * @property Manager|OrderGroupModel[] groups
+ * @property Manager|OrderAddressGeolocation[] addresses_geolocation
  * @property mixed|PaymentMethodModel payment_method_model
  * @property string|null non_us_confirmation
  * @property string orig_po
@@ -402,7 +403,12 @@ class OrderModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => OrderFraudFACheckModel::class,
                 'link' => ['orderid' => 'order_id']
-            ]
+            ],
+            'addresses_geolocation' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderAddressGeolocation::class,
+                'link' => ['orderid' => 'order_id']
+            ],
         ];
     }
 
@@ -700,6 +706,21 @@ class OrderModel extends Model
         return $res;
     }
 
+    public function getAddressesGeoLocation(): array
+    {
+        foreach ($this->addresses_geolocation as $address_location) {
+
+            $address_type = $address_location->address_type;
+            $ar_location[] = [
+                'typeId' => $address_type->address_type_id,
+                'longitude' => $address_location->longitude,
+                'type' => $address_type->name,
+                'latitude' => $address_location->latitude,
+            ];
+        }
+        return $ar_location ?? [];
+    }
+
     public function getGoogleShippingAddress(): string
     {
         $result_address = '';
@@ -723,11 +744,11 @@ class OrderModel extends Model
         return $this->transactions->limit(1)->order(['-date'])->get();
     }
 
-    public function orderFraudCheck()
+    public function orderFraudCheck(): void
     {
         $overall_score = $bare_score = 0;
-        /** @var BaseFraudCheckModelV2 $fraud */
-        foreach (BaseFraudCheckModelV2::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
+        /** @var FraudCheckBaseQuestionModel $fraud */
+        foreach (FraudCheckBaseQuestionModel::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
             [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
             if (!is_null($fraud_result)) {
                 [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
@@ -747,11 +768,11 @@ class OrderModel extends Model
             }
         }
 
-        $fa_heler = new FraudCheckFAHelper($this);
-        $fa_heler->fetchBaseDataOrder();
+        $fa_helper = new FraudCheckFAHelper($this);
+        $fa_helper->fetchBaseDataOrder();
         /** @var FraudFAQuestionModel $fraud_fa */
         foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
-            [$fraud_result, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, true, $fa_heler);
+            [$fraud_result, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, $fa_helper);
             /** @var OrderFraudFACheckModel $order_fraud_fa */
             [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
                 'order_id' => $this->orderid,
@@ -766,6 +787,7 @@ class OrderModel extends Model
             $bare_score += (float)$order_fraud_fa->fraud_score;
             $order_fraud_fa->save();
         }
+        $fa_helper->collectAddressesGeolocation();
         $this->overall_fraud_score_v2 = $overall_score;
         $this->bare_fraud_score_v2 = $bare_score;
         $this->save();

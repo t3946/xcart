@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
 import {

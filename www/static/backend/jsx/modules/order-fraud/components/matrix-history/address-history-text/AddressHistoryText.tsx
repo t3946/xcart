@@ -9,11 +9,9 @@ export const AddressHistoryText: React.FC<AddressHistoryText> = ({
   return (
     <Fragment>
       {columnData.value !== "N/A" ? (
-        <a className="value-link" href={columnData.linkUrl}>{`${
-          columnData.value["city"]
-        }, ${columnData.value["state"]} ${columnData.value["zipcode"]} ${
-          columnData.value["country"] ? `,${columnData.value["country"]}` : ""
-        }`}</a>
+        <a target="_blank" className="value-link" href={columnData.linkUrl}>
+          {Object.values(columnData.value).join(", ")}
+        </a>
       ) : (
         columnData.value
       )}

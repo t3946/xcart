@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 import { FraudInfoStatuses } from "@admin/modules/order-fraud/components/fraud-info-basement/fraud-info-statuses";
 import { useSelector } from "react-redux";
 import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";

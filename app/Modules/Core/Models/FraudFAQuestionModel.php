@@ -26,12 +26,15 @@ class FraudFAQuestionModel extends Model
     use AutoMetaTrait;
 
     private $result;
-    public const FRAUD_CHECK_FOR_FULL_NAME = 'full_name';
-    public const FRAUD_CHECK_FOR_ADDRESS = 'address';
 
     public static function tableName()
     {
         return 'xcart_fraud_fa_question';
+    }
+
+    public function __toString()
+    {
+        return "{$this->f_fraud->name}-{$this->t_fraud->name}";
     }
 
     public static function getFields()
@@ -73,77 +76,73 @@ class FraudFAQuestionModel extends Model
         ];
     }
 
-    public function getScore(OrderModel $order, $recalc = true, FraudCheckFAHelper $helper)
+    public function getScore(OrderModel $order, FraudCheckFAHelper $helper): ?array
     {
-        if ($result = $this->getMethodResult($order, $recalc, $helper)) {
+        if ($result = $this->getMethodResult($order, $helper)) {
             [$fraud_result, $weight, $info, $outcome] = $result;
             return [$fraud_result, round($weight * $outcome, 2), $info, $outcome];
         }
         return null;
     }
 
-    public function getMethodResult(OrderModel $order, $recalc = true, FraudCheckFAHelper $helper)
+    public function getMethodResult(OrderModel $order, FraudCheckFAHelper $helper): array
     {
         $result = [];
-        if (!$recalc && $order_fraud = OrderFraudFACheckModel::objects()->get(['orderid' => $order, 'question_id' => $this->questin_id])) {
-            $this->result = [$order_fraud->fraud_result, $order_fraud->fraud_score];
-        } else {
-            $compare_value = $this->getNameValueByMatrixCode($this->f_fraud->fraud_code, $order, $helper);
-            switch ($this->t_fraud->fraud_code) {
-                case 'FN_BA':
-                    $result = $helper->scoreBaseName($this, [$compare_value, ['value' => $order->b_firstname, 'zipcode' => $order->b_zipcode]]);
-                    break;
-                case 'FN_SA':
-                    $result = $helper->scoreBaseName($this, [
-                        ['value' => $order->firstname],
-                        ['value' => $order->s_firstname, 'zipcode' => $order->s_zipcode]
-                    ]);
-                    break;
-                case 'FN_CH':
-                    $result = $helper->scoreCardHolder($this, $compare_value);
-                    break;
-                case 'FN_T_BA':
-                    $result = $helper->scoreTenantAddress($this, $compare_value, 'billing');
-                    break;
-                case 'FN_O_BA':
-                    $result = $helper->scoreOwnerAddress($this, $compare_value, 'billing');
-                    break;
-                case 'FN_O_SA':
-                    $result = $helper->scoreOwnerAddress($this, $compare_value);
-                    break;
-                case 'FN_T_SA':
-                    $result = $helper->scoreTenantAddress($this, $compare_value);
-                    break;
-                case 'FN_TN':
-                    $result = $helper->scorePhoneCaller($this, $compare_value);
-                    break;
-                case 'FN_EA':
-                    $result = $helper->scoreEmailAddress($this, $compare_value);
-                    break;
-                case 'BA':
-                    $result = $helper->scoreBaseAddress($this);
-                    break;
-                case 'CSZ_IP':
-                    $result = $helper->scoreIpAddress($this, $compare_value);
-                    break;
-                case 'CSZ_TN':
-                    $result = $helper->scorePhoneAddress($this, $compare_value);
-                    break;
-                case 'ORA_BA':
-                    $result = $helper->scoreOwnerResidenceAddress($this, $compare_value, 'billing');
-                    break;
-                case 'ORA_SA':
-                    $result = $helper->scoreOwnerResidenceAddress($this, $compare_value);
-                    break;
-                default:
-                    $result = ['negative', $this->weight];
-                    break;
-            }
+        $compare_value = $this->getNameValueByMatrixCode($this->f_fraud->code, $order, $helper);
+        switch ($this->t_fraud->code) {
+            case 'FN_BA':
+                $result = $helper->scoreBaseName($this, [$compare_value, ['value' => $order->b_firstname, 'zipcode' => $order->b_zipcode]]);
+                break;
+            case 'FN_SA':
+                $result = $helper->scoreBaseName($this, [
+                    ['value' => $order->firstname],
+                    ['value' => $order->s_firstname, 'zipcode' => $order->s_zipcode]
+                ]);
+                break;
+            case 'FN_CH':
+                $result = $helper->scoreCardHolder($this, $compare_value);
+                break;
+            case 'FN_T_BA':
+                $result = $helper->scoreTenantAddress($this, $compare_value, 'billing');
+                break;
+            case 'FN_O_BA':
+                $result = $helper->scoreOwnerAddress($this, $compare_value, 'billing');
+                break;
+            case 'FN_O_SA':
+                $result = $helper->scoreOwnerAddress($this, $compare_value);
+                break;
+            case 'FN_T_SA':
+                $result = $helper->scoreTenantAddress($this, $compare_value);
+                break;
+            case 'FN_TN':
+                $result = $helper->scorePhoneCaller($this, $compare_value);
+                break;
+            case 'FN_EA':
+                $result = $helper->scoreEmailAddress($this, $compare_value);
+                break;
+            case 'BA':
+                $result = $helper->scoreBaseAddress($this);
+                break;
+            case 'CSZ_IP':
+                $result = $helper->scoreIpAddress($this, $compare_value);
+                break;
+            case 'CSZ_TN':
+                $result = $helper->scorePhoneAddress($this, $compare_value);
+                break;
+            case 'ORA_BA':
+                $result = $helper->scoreOwnerResidenceAddress($this, $compare_value, 'billing');
+                break;
+            case 'ORA_SA':
+                $result = $helper->scoreOwnerResidenceAddress($this, $compare_value);
+                break;
+            default:
+                $result = ['negative', $this->weight];
+                break;
         }
         return $result;
     }
 
-    private function getNameValueByMatrixCode(string $fraud_code, OrderModel $order, FraudCheckFAHelper $helper)
+    private function getNameValueByMatrixCode(string $fraud_code, OrderModel $order, FraudCheckFAHelper $helper): ?array
     {
         switch ($fraud_code) {
             case 'FN_CI':
@@ -210,7 +209,6 @@ class FraudFAQuestionModel extends Model
                         'zipcode' => $zip,
                     ];
                 }
-                return null;
             case 'CSZ_TN':
                 if (!is_null($helper->ob_melissa->phone_data)) {
                     /** @var CountryModel $country_model */
@@ -227,7 +225,6 @@ class FraudFAQuestionModel extends Model
                         }
                     }
                 }
-                return null;
             case 'CSZ_IP':
                 if (!is_null($helper->ob_melissa->ip_data)) {
                     /** @var CountryModel $country_model */
@@ -244,7 +241,6 @@ class FraudFAQuestionModel extends Model
                         }
                     }
                 }
-                return null;
         }
         return null;
     }

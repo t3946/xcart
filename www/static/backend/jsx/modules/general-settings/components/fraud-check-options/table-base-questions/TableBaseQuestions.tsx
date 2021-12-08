@@ -6,7 +6,7 @@ import { DialogTableEdit } from "@admin/modules/general-settings/components/frau
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { TableBaseQuestion } from "@admin/modules/general-settings/ts/types/fraud-check/question-data.type";
 
-export const BaseQuestionTable: React.FC = () => {
+export const TableBaseQuestions: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<ChangeQuestionDataForm>(null);
   const baseQuestion = useSelector(
@@ -14,6 +14,7 @@ export const BaseQuestionTable: React.FC = () => {
   );
   const onClickEditHandler = (question: TableBaseQuestion) => {
     setForm({
+      questionCode: question.questionCode,
       questionId: question.questionId,
       weight: question.weight,
       template: question.template,
@@ -27,10 +28,11 @@ export const BaseQuestionTable: React.FC = () => {
       <table border="1">
         <tr>
           <th>Question code</th>
-          <th>Template</th>
+          <th>Question template</th>
           <th>Auto</th>
-          <th>Weight</th>
-          <th>Type</th>
+          <th>Question weight</th>
+          <th>Question type Type</th>
+          <th>Order by</th>
           <th>Edit</th>
         </tr>
         {baseQuestion.map((question) => (
@@ -42,18 +44,23 @@ export const BaseQuestionTable: React.FC = () => {
             <td>{question.auto}</td>
             <td>{question.weight}</td>
             <td>{question.type}</td>
+            <td>{question.orderBy}</td>
             <td style={{ cursor: "pointer" }}>
               <EditIcon onClick={() => onClickEditHandler(question)} />
             </td>
           </tr>
         ))}
       </table>
-      <DialogTableEdit
-        state={{ get: open, set: setOpen }}
-        form={{ get: form, set: setForm }}
-        type="baseQuestions"
-        isBase
-      />
+      {open && (
+        <DialogTableEdit
+          template={form}
+          onClose={() => setOpen(false)}
+          onChangeTemplate={setForm}
+          type="baseQuestions"
+          isBase
+          open={open}
+        />
+      )}
     </Fragment>
   );
 };

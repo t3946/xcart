@@ -21,7 +21,7 @@ use Xcart\App\Orm\Model;
  * @property int|string question_id
  * @property int orderby
  */
-class BaseFraudCheckModelV2 extends Model
+class FraudCheckBaseQuestionModel extends Model
 {
     use AutoMetaTrait;
 

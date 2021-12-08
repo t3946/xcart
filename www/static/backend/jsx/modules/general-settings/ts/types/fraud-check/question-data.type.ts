@@ -4,13 +4,14 @@ export interface TableDataResponse {
   t_fraud: string;
   template: string;
   questionId: number;
+  questionCode: string;
 }
 export interface TableBaseQuestion {
-  questionId: number | string;
+  questionId: number;
   questionCode: string;
   auto: string;
   template: string;
-  weight: string | number;
+  weight: number;
   type: string;
   orderBy: number;
 }

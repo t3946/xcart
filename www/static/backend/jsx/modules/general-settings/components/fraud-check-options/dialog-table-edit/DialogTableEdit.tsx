@@ -16,100 +16,86 @@ import {
 } from "@redux/actions/fraudSettingsActions";
 
 interface DialogTableEdit {
-  state: { get: boolean; set: (newState: boolean) => void };
-  form: { get: ChangeQuestionDataForm; set: (newState: any) => void };
+  open: boolean;
+  onClose: () => void;
+  template: ChangeQuestionDataForm;
+  onChangeTemplate: (newState: any) => void;
   type: string;
   isBase?: boolean;
 }
 export const DialogTableEdit: React.FC<DialogTableEdit> = ({
-  state,
-  form,
+  open,
+  onClose,
   type,
+  onChangeTemplate,
+  template,
   isBase = null,
 }) => {
   const dispatch = useDispatch();
   const saveChangeQuestion = () => {
     switch (type) {
       case "faQuestions":
-        dispatch(changeFraudFAQuestionData(form.get));
+        dispatch(changeFraudFAQuestionData(template));
         break;
       case "baseQuestions":
-        dispatch(changeFraudBaseQuestionData(form.get));
+        dispatch(changeFraudBaseQuestionData(template));
         break;
     }
-    state.set(!state.get);
+    onClose();
   };
   const onChangeField = (event: React.ChangeEvent<HTMLInputElement>) => {
-    form.set({ ...form.get, [event.target.name]: event.target.value });
+    onChangeTemplate({ ...template, [event.target.name]: event.target.value });
   };
   return (
-    <Fragment>
-      {form.get && (
-        <Dialog
-          open={state.get}
-          onClose={() => state.set(!state.get)}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">
-            Changing data about question
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              You can change the template and the weight value of the question.
-              Please do not change the dependency of the words specified in {{}}
-            </DialogContentText>
-            <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Weight</Form.Label>
-                <Form.Control
-                  value={form.get.weight}
-                  type="text"
-                  name="weight"
-                  onChange={onChangeField}
-                />
-              </Form.Group>
-              {isBase && (
-                <Form.Group
-                  className="mb-3"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label>Order by</Form.Label>
-                  <Form.Control
-                    value={form.get.orderBy}
-                    type="text"
-                    name="orderBy"
-                    onChange={onChangeField}
-                  />
-                </Form.Group>
-              )}
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Template</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  value={form.get.template}
-                  name="template"
-                  rows={6}
-                  onChange={onChangeField}
-                />
-              </Form.Group>
-            </Form>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => state.set(!state.get)} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={saveChangeQuestion} color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-    </Fragment>
+    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">
+        Edit {template.questionCode} Fraud check question
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Below you can edit question template and question weight.
+        </DialogContentText>
+        <Form>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Label>Question template</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={template.template}
+              name="template"
+              rows={6}
+              onChange={onChangeField}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Label>Question weight</Form.Label>
+            <Form.Control
+              value={template.weight}
+              type="text"
+              name="weight"
+              onChange={onChangeField}
+            />
+          </Form.Group>
+          {isBase && (
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Order by</Form.Label>
+              <Form.Control
+                value={template.orderBy}
+                type="text"
+                name="orderBy"
+                onChange={onChangeField}
+              />
+            </Form.Group>
+          )}
+        </Form>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={saveChangeQuestion} color="primary">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };

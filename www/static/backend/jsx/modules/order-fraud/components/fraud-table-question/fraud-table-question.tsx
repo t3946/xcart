@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@mui/material";
 import { FraudRadioField } from "@admin/modules/order-fraud/components/fraud-table-question/fraud-radio-field";
 import { MainAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 

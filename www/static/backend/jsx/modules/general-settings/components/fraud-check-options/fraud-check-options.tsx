@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { AppBar, Container, Grid, Tab, Typography } from "@material-ui/core";
-import { CheckSettingsForm } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/check-settings-form";
-import { TabContext, TabList, TabPanel } from "@material-ui/lab";
-import { TableFraud } from "@admin/modules/general-settings/components/fraud-check-options/table-fraud/table-fraud";
+import { CheckSettingsForm } from "@admin/modules/general-settings/components/fraud-check-options/check-settings-form/CheckSettingsForm";
+import { TableMatrixQuestions } from "@admin/modules/general-settings/components/fraud-check-options/table-matrix-questions/TableMatrixQuestions";
 import { setFraudSettings } from "@redux/actions/fraudSettingsActions";
 import { useDispatch, useSelector } from "react-redux";
 import { StoreGeneralSettings } from "@admin/modules/general-settings/ts/types/general-settings/generalSettings.type";
-import { BaseQuestionTable } from "@admin/modules/general-settings/components/fraud-check-options/base-question-table/BaseQuestionTable";
+import { TableBaseQuestions } from "@admin/modules/general-settings/components/fraud-check-options/table-base-questions/TableBaseQuestions";
+import { AppBar, Container, Grid, Tab, Typography } from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 
-export const FraudCheckOptions: React.FC<any> = () => {
+export const FraudCheckOptions: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<string>(`0`);
   const fraudSettings = useSelector(
     (state: StoreGeneralSettings) => state.fraudSettings
@@ -28,15 +30,19 @@ export const FraudCheckOptions: React.FC<any> = () => {
           classes={{ colorPrimary: "tab-fraud__app-bar" }}
           position="static"
         >
-          <TabList
-            onChange={handleChange}
-            centered
-            aria-label="simple tabs example"
-          >
-            <Tab label="FC options" value="0" />
-            <Tab label="FN CCM parameters" value="1" />
-            <Tab label="A CCM parameters" value="2" />
-            <Tab label="Base question list" value="3" />
+          <TabList onChange={handleChange} centered>
+            {[
+              "FC options",
+              "FN CCM parameters",
+              "A CCM parameters",
+              "Base question list",
+            ].map((tab, i) => (
+              <Tab
+                classes={{ selected: "tab-fraud-admin" }}
+                label={tab}
+                value={i.toString()}
+              />
+            ))}
           </TabList>
         </AppBar>
         <TabPanel value="0">
@@ -53,7 +59,7 @@ export const FraudCheckOptions: React.FC<any> = () => {
               FN CCM parameters
             </Typography>
             {fraudSettings.faQuestions.full_name && (
-              <TableFraud
+              <TableMatrixQuestions
                 data={fraudSettings.faQuestions.full_name.data}
                 columns={fraudSettings.faQuestions.full_name.columns}
                 type="full_name"
@@ -72,7 +78,7 @@ export const FraudCheckOptions: React.FC<any> = () => {
               A CCM parameters
             </Typography>
             {fraudSettings.faQuestions.address && (
-              <TableFraud
+              <TableMatrixQuestions
                 columns={fraudSettings.faQuestions.address.columns}
                 data={fraudSettings.faQuestions.address.data}
                 type="address"
@@ -90,7 +96,7 @@ export const FraudCheckOptions: React.FC<any> = () => {
             <Typography variant="h6" align="center">
               Base fraud check question
             </Typography>
-            {fraudSettings.baseQuestions && <BaseQuestionTable />}
+            {fraudSettings.baseQuestions && <TableBaseQuestions />}
           </Grid>
         </TabPanel>
       </TabContext>
