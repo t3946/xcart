@@ -14,12 +14,7 @@ import Styles from "@modules/account/components/hat/HatSearchLine.module.scss";
 import Magnifier from "@modules/icon/components/common/magnifier/Light";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface IProps {
-  isStatic?: boolean;
-}
-
-const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
-  const isStatic = props.isStatic || false;
+const HatSearchLine: React.FC = (): any => {
   const dispatch = useDispatch();
   const isVisibleDepartmentsMenu = useSelectorAccount(
     (e) => e.departmentsMenuDesktop.isVisible

@@ -1,17 +1,15 @@
 import * as React from "react";
-import Link from "next/link";
-import getInitialState from "@services/axios/Account";
+import Page from "@modules/account/components/layout/Page";
+import RegisterForm from "@modules/account/components/authorization/RegisterForm";
 
-function Register() {
+function Login() {
   return (
-    <div>
-      <h1>Register</h1>
-
-      <Link href="/login">
-        <a>static link login</a>
-      </Link>
-    </div>
+    <Page showBreadcrumbs={false}>
+      <div className="d-flex align-items-center">
+        <RegisterForm />
+      </div>
+    </Page>
   );
 }
 
-export default Register;
+export default Login;

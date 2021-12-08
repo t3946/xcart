@@ -24,6 +24,6 @@ return [
     [
         'route' => '/reset-password',
         'target' => [ResetPasswordApi::class, 'resetPassword'],
-        'name' => 'reset-password',
+        'name' => 'reset',
     ],
 ];

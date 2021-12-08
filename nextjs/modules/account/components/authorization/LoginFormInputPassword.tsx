@@ -1,15 +1,17 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
+//todo: remove this dependencies
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
-import { useHistory, Link } from "react-router-dom";
-import { route } from "@utils/AppData";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { useDispatch } from "react-redux";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { useRouter } from "next/router";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Link from "next/link";
 
 interface IProps {
   login: string;
@@ -19,9 +21,10 @@ interface IProps {
 
 const LoginFormInputPassword = function (props: IProps): any {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
   const { goToInputLogin, goToOTPInput, login } = props;
+  const routes = useSelectorAccount((e) => e.routes);
 
   React.useEffect(() => {
     inputRef.current.focus();
@@ -68,17 +71,17 @@ const LoginFormInputPassword = function (props: IProps): any {
             fingerprint: await generateFp(),
           },
 
-          success(res) {
+          success(res: any) {
             if (!res.user) {
               goToOTPInput();
             } else {
-              history.push(route("account:index"));
+              router.push(routes["account:index"]);
             }
 
             res.user && dispatch(userSetAction(res.user));
           },
 
-          error(err) {
+          error(err: any) {
             actions.setErrors({ password: err.password[0] });
           },
 
@@ -121,12 +124,13 @@ const LoginFormInputPassword = function (props: IProps): any {
                     <span className={"form-input-label"}>Password</span>
 
                     <Link
-                      to={route(
+                      href={routes(
                         "account:two-step-verification-recovery-password-assistance"
                       )}
-                      className={"common-link auth-form-info"}
                     >
-                      Forgot your password?
+                      <a className={"common-link auth-form-info"}>
+                        Forgot your password?
+                      </a>
                     </Link>
                   </RBForm.Label>
 

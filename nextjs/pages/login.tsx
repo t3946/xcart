@@ -1,17 +1,14 @@
 import * as React from "react";
-import Link from "next/link";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Page from "@modules/account/components/layout/Page";
+import LoginForm from "@modules/account/components/authorization/LoginForm";
 
 function Login() {
-  const cart = useSelectorAccount((e) => e.cart);
-
   return (
-    <div>
-      login
-      <Link href="/register">
-        <a>static link register</a>
-      </Link>
-    </div>
+    <Page showBreadcrumbs={false}>
+      <div className="d-flex align-items-center">
+        <LoginForm />
+      </div>
+    </Page>
   );
 }
 

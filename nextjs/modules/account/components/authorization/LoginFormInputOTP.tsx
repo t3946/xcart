@@ -2,11 +2,13 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import { Link, useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const LoginFormInputOTP = function (props: Record<any, any>): any {
-  const history = useHistory();
+  const routes = useSelectorAccount((e) => e.routes);
+  const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
@@ -32,7 +34,7 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
       form,
 
       success() {
-        history.push(route("account:dashboard"));
+        router.push(routes["account:dashboard"]);
       },
 
       error(err) {
@@ -109,11 +111,10 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
             </button>
 
             <div className="px-12 px-sm-0">
-              <Link
-                to={route("account:two-step-verification-recovery")}
-                className={"auth-form-info"}
-              >
-                Two-step Verification account recovery
+              <Link href={routes["account:two-step-verification-recovery"]}>
+                <a className={"auth-form-info"}>
+                  Two-step Verification account recovery
+                </a>
               </Link>
             </div>
           </Form>

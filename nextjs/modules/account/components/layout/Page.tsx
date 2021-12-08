@@ -6,38 +6,32 @@ import MenuMobile from "@modules/account/components/hat/MenuMobile";
 import { setBreadcrumbsAddresses } from "@redux/actions/account-actions/BreadcrumbsActions";
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
 import Snackbar from "@modules/account/components/snackbar/Snackbar";
-import SideBarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
-import cn from "classnames";
 import BreadCrumbs from "@modules/account/components/bread-crumbs/BreadCrumbs";
+import _merge from "lodash/merge";
 
-const Page: React.FC = (props): any => {
+interface IProps {
+  showBreadcrumbs?: boolean;
+}
+const Page: React.FC<IProps> = (props: IProps): any => {
   const dispatch = useDispatch();
-  dispatch(setBreadcrumbsAddresses(staticRoutes));
-
-  const classes = {
-    leftColumnClasses: ["col account-page-left-column d-none", "d-lg-block"],
-    rightColumnClasses: ["col", "account-page-right-column"],
+  const defaultProps: IProps = {
+    showBreadcrumbs: true,
   };
+  const { showBreadcrumbs } = _merge(defaultProps, props);
+
+  dispatch(setBreadcrumbsAddresses(staticRoutes));
 
   return (
     <>
       <Snackbar>
         <HatNavigation />
-        <HatSearchLine isStatic={true} />
+        <HatSearchLine />
         <MenuMobile />
 
         <div className="container">
-          <BreadCrumbs />
+          {showBreadcrumbs && <BreadCrumbs />}
 
-          <div className="row mt-lg-20">
-            <div className={cn(classes.leftColumnClasses)}>
-              <SideBarMenu />
-            </div>
-
-            <div className={cn(classes.rightColumnClasses)}>
-              {props.children}
-            </div>
-          </div>
+          <div className="row mt-lg-20">{props.children}</div>
         </div>
       </Snackbar>
     </>

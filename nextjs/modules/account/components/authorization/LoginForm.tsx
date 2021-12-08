@@ -4,8 +4,6 @@ import { useSelector } from "react-redux";
 import LoginFormInputLogin from "@modules/account/components/authorization/LoginFormInputLogin";
 import LoginFormInputPassword from "@modules/account/components/authorization/LoginFormInputPassword";
 import LoginFormInputOTP from "@modules/account/components/authorization/LoginFormInputOTP";
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
 import classNames from "classnames";
 import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
@@ -16,7 +14,9 @@ const LoginForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);
   const dispatch = useDispatch();
 
-  // user && useHistory().push(route("account:index"));
+  if (user !== null) {
+    //todo: перейти на индекс
+  }
 
   const INPUT_LOGIN_MODE = 0;
   const INPUT_PASSWORD_MODE = 1;

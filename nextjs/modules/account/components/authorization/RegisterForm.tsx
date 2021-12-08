@@ -1,20 +1,24 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import { NavLink, useHistory } from "react-router-dom";
-import { StoreDto } from "@s3stores-mail/ts/types";
-import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
 import { Form as RBForm } from "react-bootstrap";
 import { registerAction } from "@redux/actions/account-actions/AutorizationActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
-import { route } from "@utils/AppData";
 import classNames from "classnames";
 import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const RegisterForm: React.FC<any> = () => {
-  const user = useSelector((e: StoreDto) => e.user);
+  const router = useRouter();
+  const routes = useSelectorAccount((e) => e.routes);
+  const user = useSelectorAccount((e) => e.user);
 
-  user && useHistory().push(route("account:index"));
+  if (user) {
+    router.push(routes["account:index"]);
+  }
 
   const initialValues = {
     name: "",
@@ -24,7 +28,6 @@ const RegisterForm: React.FC<any> = () => {
   };
   const formRef = React.useRef();
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const validationSchema = yup.object().shape({
     name: yup.string().required("Name is a required field"),
@@ -50,12 +53,12 @@ const RegisterForm: React.FC<any> = () => {
       registerAction({
         form: values,
 
-        success(res) {
+        success(res: any) {
           dispatch(userSetAction(res));
-          history.push(route("account:index"));
+          router.push(routes["account:index"]);
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors(err);
         },
 
@@ -201,13 +204,11 @@ const RegisterForm: React.FC<any> = () => {
                   </span>
                 </div>
 
-                <NavLink
-                  to={route("account:login")}
-                  exact={true}
-                  className="form-button form-button__outline common-link"
-                >
-                  sign in
-                </NavLink>
+                <Link href={routes["account:login"]}>
+                  <a className="form-button form-button__outline common-link">
+                    sign in
+                  </a>
+                </Link>
               </div>
 
               <div className="d-none d-sm-block">
@@ -219,13 +220,9 @@ const RegisterForm: React.FC<any> = () => {
                   }
                 >
                   Already have an account?{" "}
-                  <NavLink
-                    to={route("account:login")}
-                    className="common-link"
-                    exact={true}
-                  >
-                    Sign-In
-                  </NavLink>
+                  <Link href={routes["account:login"]}>
+                    <a className="common-link"> Sign-In</a>
+                  </Link>
                 </p>
               </div>
             </Form>

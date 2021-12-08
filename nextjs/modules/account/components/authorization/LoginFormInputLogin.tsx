@@ -1,15 +1,16 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
-import { checkUserLoginAction } from "../../../../redux/actions/account-actions/AutorizationActions";
+import { checkUserLoginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { Form as RBForm } from "react-bootstrap";
-import { NavLink, Link } from "react-router-dom";
+import Link from "next/link";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
-import { route } from "@utils/AppData";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const LoginFormInputLogin: React.FC<any> = (props: any) => {
   const dispatch = useDispatch();
+  const routes = useSelectorAccount((e) => e.routes);
   const validationSchema = yup.object().shape({
     login: yup
       .string()
@@ -130,11 +131,8 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                   </a>
                   {showHelpInfo && (
                     <div className={"mt-1"}>
-                      <Link
-                        to={route("account:api:reset-password")}
-                        className="common-link"
-                      >
-                        Forgot your password?
+                      <Link href={routes["api:account:reset-password:reset"]}>
+                        <a className="common-link">Forgot your password?</a>
                       </Link>
                       <br />
                       <a href="#" className="common-link d-none">
@@ -153,13 +151,11 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         <span className="form-divider-text">New to S3 Stores?</span>
       </div>
 
-      <NavLink
-        to="/account/register"
-        exact={true}
-        className="form-button form-button__outline common-link p-0"
-      >
-        Create your account
-      </NavLink>
+      <Link href={"/register"}>
+        <a className="form-button form-button__outline common-link p-0">
+          Create your account
+        </a>
+      </Link>
     </>
   );
 };

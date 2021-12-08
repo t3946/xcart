@@ -231,13 +231,13 @@ return [
     [
         'route' => '/login-and-security/two-step-verification/recovery',
         'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'two-step-verification-recovery',
+        'name' => 'account:two-step-verification-recovery',
     ],
 
     [
         'route' => '/login-and-security/two-step-verification/password-assistance',
         'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'two-step-verification-recovery-password-assistance',
+        'name' => 'account:two-step-verification-recovery-password-assistance',
     ],
 
     [
