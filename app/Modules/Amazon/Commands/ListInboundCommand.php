@@ -176,7 +176,7 @@ class ListInboundCommand extends Command
             OrderLogModel::createLog(
                 $order->orderid,
                 OrderLogModel::LOG_TYPE_XCART,
-                nl2br($log)
+                $log
             );
         }
 

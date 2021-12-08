@@ -50,7 +50,7 @@ class OrderEventHelper
 
             /** @var OrderExtraModel $order_extra_model */
 
-            [$order_extra_model] = OrderExtraModel::objects()->getOrNew(['order_id' => $model->orderid]);
+            [$order_extra_model, $is_new] = OrderExtraModel::objects()->getOrNew(['order_id' => $model->orderid]);
 
             $ip = $app->request->getUserIP();
             if ($geo_litecity_location = GeoIpHelper::getGeoipLocation($ip)) {
@@ -62,28 +62,20 @@ class OrderEventHelper
                 'ip' => $ip,
             ]);
             $order_extra_model->save();
-
-            OrderLogModel::createLog(
-                $model->orderid,
-                OrderLogModel::LOG_TYPE_CUSTOMER,
-                "<b>Customer IP:</b> $ip"
-            );
-
-            if (!empty($model->customer_notes)) {
+            if ($is_new) {
                 OrderLogModel::createLog(
                     $model->orderid,
                     OrderLogModel::LOG_TYPE_CUSTOMER,
-                    "<b>Customer notes:</b>\n$model->customer_notes\n"
+                    "<b>Customer IP:</b> $ip"
                 );
-            }
 
-            $d_min = DiscountHelper::getDiscountMinutes();
-            if ($d_min !== null) {
-                OrderLogModel::createLog(
-                    $model->orderid,
-                    OrderLogModel::LOG_TYPE_CUSTOMER,
-                    "<b>Discount time:</b> {$d_min} min."
-                );
+                if (!empty($model->customer_notes)) {
+                    OrderLogModel::createLog(
+                        $model->orderid,
+                        OrderLogModel::LOG_TYPE_CUSTOMER,
+                        "<b>Customer notes:</b>\n$model->customer_notes\n"
+                    );
+                }
             }
 
             $surf_path = SurfPathModel::objects()
@@ -205,6 +197,8 @@ class OrderEventHelper
         OrderInvoiceHelper::sendOrderStatusNotification($model);
 
         $model->updateVerificationStatus();
+
+        OrderHelper::decreaseOrderProductsQuantity($model);
     }
 
     public static function orderShippedEvent(OrderModel $model): void

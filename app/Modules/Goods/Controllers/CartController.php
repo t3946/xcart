@@ -89,18 +89,17 @@ class CartController extends BaseCartController
                          'type' => 'success'
                      ],
                 ]));
-            Xcart::app()->end();
+            exit();
         }
-        else {
-            echo $cart->getQuantity();
-        }
+
+        echo $cart->getQuantity();
     }
 
     public function actionProductsGet(): void
     {
         if ($this->getRequest()->getIsAjax()) {
             $this->jsonResponse($this->getCartStateArray());
-            Xcart::app()->end();
+            exit();
         }
         echo $this->getCart()->getQuantity();
     }

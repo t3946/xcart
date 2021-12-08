@@ -55,7 +55,7 @@ class InvoiceConventerController extends Controller
 
             if ($slug === $hash) {
                 echo OrderInvoiceHelper::getInvoiceHtml($order_model, 'mail/invoice.tpl', $mode);
-               Xcart::app()->end();
+               exit();
             }
         }
         $this->redirect(404);

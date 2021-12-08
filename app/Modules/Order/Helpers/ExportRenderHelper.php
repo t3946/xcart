@@ -45,6 +45,27 @@ class ExportRenderHelper
                     ];
                 }
                 break;
+            case 'PWW':
+                /** @var OrderDetail $detail */
+                foreach ($group->detail_models as $detail) {
+                    $result[] = [
+                        'Order Number' => $order->getOrderNumber(),
+                        'First Name' => $name[0] ?? '',
+                        'Last Name' => $name[1] ?? '',
+                        'Address 1' => $address[0],
+                        'Address 2' => $address[1] ?? '',
+                        'City' => $order->s_city,
+                        'State' => $order->s_state,
+                        'Zip Code' => $order->s_zipcode,
+                        'Country' => $order->s_country === 'US' ? 'USA' : $order->s_country,
+                        'Phone Number' => $order->phone,
+                        'Shipping Method' => 'USPS',
+                        'Qty' => (int) $detail->amount,
+                        'CODE (Item SKU)' => $detail->product_model->getMpn(),
+                        'Cost (Per item)' => number_format((float) $detail->item_cost_to_us, 2, '.', '')
+                    ];
+                }
+                break;
         }
         return $result ?? [];
     }

@@ -36,7 +36,7 @@
         {set $profit = $order_group->getProfitMargin()}
         {set $dx = $order_group->manufacturer}
         {foreach $invoices as $invoice}
-            <tr data-total="{$invoice->invoice_total}" class="net__row">
+            <tr data-total="{$invoice->invoice_total}" class="net__row {if $invoice->invoice_number > 1}style="background-color:#ffd6d6"{/if}">
                 <td>
                     <input name="invoices[]" type="checkbox" value="{$invoice->orderid}_{$invoice->manufacturerid}_{$invoice->invoice_number}" />
                     <input type="hidden" name="manufacturer_id" value="{$invoice->manufacturerid}">
@@ -58,7 +58,7 @@
             </tr>
         {/foreach}
         {foreach $memos as $memo}
-            <tr data-total="-{$memo->ref_to_us_total}" class="net__row">
+            <tr data-total="-{$memo->ref_to_us_total}" class="net__row" {if $memo->memo_number > 1}style="background-color:#ffd6d6"{/if}>
                 <td>
                     <input name="memos[]" type="checkbox" value="{$memo->orderid}_{$memo->manufacturerid}_{$memo->memo_number}" />
 

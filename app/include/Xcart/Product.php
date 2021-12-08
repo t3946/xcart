@@ -215,7 +215,7 @@ class Product extends Data
                         if (!empty($sNote)) {
                             $sLogMessage .= 'Problem/fix description: ' . $sNote;
                         }
-                        OrderLogModel::createLog($iOrderId, OrderLogModel::LOG_TYPE_XCART, nl2br($sLogMessage));
+                        OrderLogModel::createLog($iOrderId, OrderLogModel::LOG_TYPE_XCART, $sLogMessage);
                     }
                 }
                 $this->setField('verification_statusid', $aUpdateParams['verification_statusid']);

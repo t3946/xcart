@@ -44,6 +44,7 @@ class QueueProcessCommand extends Command
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             try {
                 $feed =  null;
+
                 $data = array_filter($data, static fn($v) => $v !== null);
 
                 $is_manual_feed = $data['source'] === 'manual';
@@ -54,6 +55,13 @@ class QueueProcessCommand extends Command
                     $feed = SupplierFeedModel::objects()->get(
                         ['manufacturerid' => $data['manufacturerid'], 'storefront_id' => $data['storefront']]
                     );
+                    if ($feed) {
+                        foreach($feed->dont_update_fields as $field) {
+                            if ($field) {
+                                unset($data[$field]);
+                            }
+                        }
+                    }
                 }
 
                 $data['source'] ??= 'feed';

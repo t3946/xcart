@@ -7,7 +7,7 @@ use Xcart\App\Main\Xcart;
 
 class OrderLogger
 {
-    private array $messages = [];
+    public array $messages = [];
 
     public function __construct()
     {

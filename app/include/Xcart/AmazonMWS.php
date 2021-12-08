@@ -945,7 +945,7 @@ SQL;
         $oOrderGroup->_refresh();
         if ($oOrderGroup->getOrderGroupStatusCB() !== 'P') {
             $log .= "Shipping order by Amazon - failed. Order group status not Paid.\n";
-            OrderLogModel::createLog($oOrderGroup->getOrderId(), OrderLogModel::LOG_TYPE_XCART, nl2br($log));
+            OrderLogModel::createLog($oOrderGroup->getOrderId(), OrderLogModel::LOG_TYPE_XCART, $log);
             return false;
         }
 
@@ -1025,7 +1025,7 @@ SQL;
                 $log .= "ResponseHeaderMetadata: " . $ex->getResponseHeaderMetadata() . "\n";
             }
 
-            OrderLogModel::createLog($oOrderGroup->getOrderId(), OrderLogModel::LOG_TYPE_XCART, nl2br($log));
+            OrderLogModel::createLog($oOrderGroup->getOrderId(), OrderLogModel::LOG_TYPE_XCART, $log);
         }
         return true;
     }

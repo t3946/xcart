@@ -63,7 +63,7 @@ class DispatchOrderCommand extends Command
             OrderLogModel::createLog(
                 $group->order->orderid,
                 OrderLogModel::LOG_TYPE_XCART,
-                nl2br($log)
+                $log
             );
 
             $log_text = "<a href='{$order->getAdminUrl()}' target='_blank' style='color: blue;'>{$order->getOrderNumber()}</a>, {$dx->code} - dispatched by cron";

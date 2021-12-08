@@ -23,6 +23,7 @@ services:
     ports:
       - '3306:3306'
     volumes:
+#      - ./docker/mysql/logs:/var/log/mysql
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my_dev.cnf:/etc/my.cnf.d/my.cnf
       - ./docker/mysql/slave.cnf:/etc/my.cnf.d/repl.cnf
@@ -39,6 +40,8 @@ services:
       - php
     tty: true
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
       - "443:443"
@@ -47,9 +50,8 @@ services:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
       - ./docker/nginx/configs/:/etc/nginx/configs/
-      - ./docker/nginx/sites/:/etc/nginx/sites-enabled.d/
+      - ./docker/nginx/sites_dev/:/etc/nginx/sites-enabled.d/
       - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
 
   php:
     build:
@@ -88,8 +90,6 @@ services:
       - backend
     ports:
       - "6379:6379"
-    volumes:
-      - ./docker/redis/data:/data
     restart: always
     privileged: true
 
@@ -106,21 +106,7 @@ services:
     volumes:
       - ./:/home/node/app
 
-  certbot:
-    container_name: certbot
-    image: certbot/dns-route53
-    networks:
-      - frontend
-    depends_on:
-      - nginx
-    tty: true
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    volumes:
-      - ./docker/certbot/conf:/etc/letsencrypt
-      - ./docker/certbot/www:/var/www/certbot
-    environment:
-      AWS_ACCESS_KEY_ID: AKIA5YFRXSHY7JXWQAIR
-      AWS_SECRET_ACCESS_KEY: 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
+
 
 #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1

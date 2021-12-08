@@ -1,5 +1,8 @@
 FROM php:8.1.0-fpm
 
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-php-extensions && sync
@@ -12,10 +15,10 @@ WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update
-RUN apt-get install -y msmtp
+RUN apt-get install -y msmtp git
 
 # Install extensions
-RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis protobuf grpc
+RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -23,9 +26,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+RUN usermod -u ${USER_ID} www-data && groupmod -g ${GROUP_ID} www-data
 
-# Change current user to www
-#USER www
+USER "${USER_ID}:${GROUP_ID}"
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

@@ -44,7 +44,7 @@
                     <div class="columns large-12">
 
                         <div class="item">
-                            <input type="checkbox" {if $model->id|in:$ids }disabled="disabled"{/if}
+                            <input type="checkbox" {if $model->id|in:$ids && !$is_super_user}disabled="disabled"{/if}
                                    name="{$class}[id][]" value="{$model->id}" id="sf_id"
                                     {if $model->id|in:$ids }checked{/if}>
                             <label for="sf_id">

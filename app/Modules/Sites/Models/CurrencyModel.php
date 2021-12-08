@@ -4,10 +4,11 @@
 namespace Modules\Sites\Models;
 
 
-use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DecimalField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 /**
  * @property string currency_code
@@ -24,7 +25,6 @@ use Xcart\App\Orm\Model;
  */
 class CurrencyModel extends Model
 {
-    use AutoMetaTrait;
 
     public static function tableName()
     {
@@ -35,8 +35,38 @@ class CurrencyModel extends Model
     {
         return [
             'currency_id' => AutoField::class,
+            'currency_code' => [
+                'class' => CharField::class,
+                'default' => ''
+            ],
+            'symbol' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
+            ],
+            'symbol_prefix' => [
+                'class' => CharField::class,
+                'null' => true,
+                'default' => null
+            ],
+            'coefficient' => [
+                'class' => DecimalField::class,
+                'default' => 1
+            ],
+            'position' => [
+                'class' => IntField::class
+            ],
+            'decimals_separator' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => '.'
+            ],
             'is_primary' => BooleanCharField::class,
             'after' => BooleanCharField::class,
+            'decimals' => [
+                'class' => IntField::class,
+                'default' => 2
+            ],
             'thousands_separator' => [
                 'class' => CharField::class,
                 'null' => false,

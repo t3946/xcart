@@ -13,6 +13,10 @@ log_bin_trust_function_creators = 1
 skip_name_resolve=on
 event_scheduler=off
 
+slow_query_log=1
+slow_query_log_file=/var/log/mysql/slow.log
+long_query_time=0.1
+
 
 server-id = 2
 relay-log = /var/lib/mysql/mysql-relay-bin

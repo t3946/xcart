@@ -229,7 +229,7 @@ class DashboardController extends PrototypeAdminController
     public function subscription($id): void
     {
         $user = Xcart::app()->user;
-        $super_user = ['pavel','sergey2', 'roman_n'];
+        $super_user = ['pavel','sergey2', 'roman_n', 'zouhair'];
         $is_super_user = in_array($user->login, $super_user, true);
         $class = UserModel::classNameShort();
 
@@ -242,11 +242,13 @@ class DashboardController extends PrototypeAdminController
                         UserFiltersLinkModel::objects()->getOrCreate($params);
                     }
                 }
-                if ($user_ids && $is_super_user) {
-                    UserFiltersLinkModel::objects()
-                        ->exclude(['user_id__in' => $user_ids])
-                        ->filter(['filter_id' => $id])
-                        ->delete();
+                if ( $is_super_user) {
+                    $qs = UserFiltersLinkModel::objects()
+                        ->filter(['filter_id' => $id]);
+                    if ($user_ids) {
+                        $qs->exclude(['user_id__in' => $user_ids]);
+                    }
+                    $qs->delete();
                 }
             }
 

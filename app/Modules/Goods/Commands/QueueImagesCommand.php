@@ -69,7 +69,6 @@ class QueueImagesCommand extends Command
                     echo "$product->productcode: {$exception->getMessage()}\n";
                 }
             } else {
-                echo "nack\n";
                 $message->nack();
                 return;
             }

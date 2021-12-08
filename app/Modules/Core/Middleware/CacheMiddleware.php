@@ -48,7 +48,7 @@ class CacheMiddleware extends Middleware
                     {
                         if ($request->getHeaderValue('IF_NONE_MATCH') == "\"{$etag}\"") {
                             header("HTTP/1.1 304 Not Modified");
-                            Xcart::app()->end();
+                            exit();
                         }
 
                         foreach ($headers as $header) {
@@ -58,7 +58,7 @@ class CacheMiddleware extends Middleware
                         $this->setCacheHeaders($modTime, $cacheTime, $etag);
 
                         echo $output;
-                        Xcart::app()->end();
+                        exit();
                     }
                 }
             }

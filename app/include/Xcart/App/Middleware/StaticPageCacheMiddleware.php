@@ -24,7 +24,7 @@ class StaticPageCacheMiddleware extends Middleware
         $path = $cachePath . DIRECTORY_SEPARATOR . $fileName;
         if (file_exists($path)) {
             echo file_get_contents($path);
-            Xcart::app()->end();
+            exit();
         }
     }
 

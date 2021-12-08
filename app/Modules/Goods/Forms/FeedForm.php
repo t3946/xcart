@@ -108,7 +108,7 @@ class FeedForm extends ModelForm
                 'feeds',
                 json_encode(
                     [
-                        'code' => $this->getCode(),
+                        'code' => $instance->getCode(),
                         'run_force' => true
                     ],
                     JSON_THROW_ON_ERROR

@@ -164,16 +164,16 @@ class DefaultController extends FrontendController
                     'content' => $this->render('catalog/category.tpl', ['model' => $model, 'pager' => $pager,]),
                     'page_count' => $this->render('catalog/parts/_page_count.tpl', ['model' => $model, 'pager' => $pager,]),
                 ]);
-                Xcart::app()->end();
-            } else {
-                $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
-
-                $params = array_merge($params, [
-                    'pager' => $pager->setPage(0),
-                    'sort' => $orderBy,
-                    'sort_arr' => ProductSortHelper::getOrderBy(),
-                ]);
+                exit();
             }
+
+            $orderBy = Xcart::app()->request->session->get('category_sort', ProductSortHelper::$default);
+
+            $params = array_merge($params, [
+                'pager' => $pager->setPage(0),
+                'sort' => $orderBy,
+                'sort_arr' => ProductSortHelper::getOrderBy(),
+            ]);
         }
 
         if ($model->isOutOfStock()){

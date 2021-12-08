@@ -56,17 +56,17 @@ class ProcessorModel extends Model
                 'default' => 'Y',
                 'null' => true
             ],
-            'param3' => [
+            'param03' => [
                 'class' => CharField::class,
                 'default' => null,
                 'null' => true
             ],
-            'param2' => [
+            'param02' => [
                 'class' => CharField::class,
                 'default' => null,
                 'null' => true
             ],
-            'param1' => [
+            'param01' => [
                 'class' => CharField::class,
                 'default' => null,
                 'null' => true

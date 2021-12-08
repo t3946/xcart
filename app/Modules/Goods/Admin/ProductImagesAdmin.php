@@ -105,7 +105,7 @@ class ProductImagesAdmin extends ListViewAdmin
                     } else {
                         if (isset($_POST['popup'])) {
                             echo $this->render('admin/popup_close.tpl');
-                            Xcart::app()->end();
+                            exit();
                         }
                         if ($next === 'save') {
                             $request->redirect($this->getAllUrl());
@@ -172,7 +172,7 @@ class ProductImagesAdmin extends ListViewAdmin
                         } else {
                             if (isset($_POST['popup'])) {
                                 echo $this->render('admin/popup_close.tpl');
-                                Xcart::app()->end();
+                                exit();
                             }
                             if ($next === 'save') {
                                 $request->redirect($this->getAllUrl());

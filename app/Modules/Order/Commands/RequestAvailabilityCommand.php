@@ -64,7 +64,7 @@ class RequestAvailabilityCommand extends Command
                 OrderLogModel::createLog(
                     $group->order->orderid,
                     OrderLogModel::LOG_TYPE_SYSTEM,
-                    nl2br($log)
+                    $log
                 );
             }
         }

@@ -730,8 +730,7 @@ class HttpRequest extends Request
         if (Xcart::app()->hasComponent('middleware')) {
             Xcart::app()->middleware->processResponse(Xcart::app()->request->getRequest());
         }
-
-        Xcart::app()->end();
+        exit();
     }
 
     public function getMatchRouting($url = null)

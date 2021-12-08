@@ -9,7 +9,7 @@
         <div class="row">
             <div class="columns large-2 show-for-large">
                 <div class="top-block">
-                    {set $icon = $model->icon}
+
                     {if $icon}
                         <div class="image" id="image_left-top">
                             <img class="lazy-img" src="" data-src="{$model->icon}" alt="{$model->category}" itemprop="image" />

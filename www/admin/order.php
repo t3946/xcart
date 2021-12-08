@@ -629,12 +629,12 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 
 Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 
-require "./gi-find.php";
+$ticket_resolver_messages = OrderHelper::getOTRSMessages($order_model);
 
-if (empty($ticket_resolver_link)) {
-    $ticket_resolver_link = func_query_first_cell("SELECT otrs_ticket FROM $sql_tbl[orders] WHERE orderid='$orderid'");
-    $smarty->assign('ticket_resolver_link', $ticket_resolver_link);
-}
+$ticket_resolver_link = $order_model->otrs_ticket;
+
+$smarty->assign('ticket_resolver_link', $ticket_resolver_link);
+$smarty->assign('ticket_resolver_messages', $ticket_resolver_messages);
 
 if ($REQUEST_METHOD === "POST") {
 

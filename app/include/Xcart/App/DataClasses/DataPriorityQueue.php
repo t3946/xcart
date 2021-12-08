@@ -7,12 +7,14 @@ class DataPriorityQueue extends DataQueue
     {
         $this->data[] = ['data' => $data, 'priority' => $priority];
 
-        usort($this->data, function($a, $b){
-            if ($a['priority'] == $b['priority']) {
+        // TODO test after upgrade to 8.0
+        //usort is not stable sort algorithm in php 7.4
+        /*usort($this->data, static function($a, $b){
+            if ($a['priority'] === $b['priority']) {
                 return 0;
             }
             return ($a['priority'] < $b['priority']) ? -1 : 1;
-        });
+        });*/
     }
 
     public function getData($key)
