@@ -23,11 +23,17 @@ class Sberbank extends Gateway
         Xcart::app()->logger->debug('sberbank', [$params], 'sberbank_response');
         /** @var OrderTransactionModel txn */
         if ($this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $transaction_id, 'orderid' => $order_id])) {
+            Xcart::app()->logger->debug('sberbank', ['Stage 1(found)'], 'sberbank_response');
             $transaction_response = $this->txn->transaction_response;
+            Xcart::app()->logger->debug('sberbank', ['Stage 2(get response)'], 'sberbank_response');
             $amount = $this->txn->transaction_amount * 100;
+            Xcart::app()->logger->debug('sberbank', ['Stage 3(amount)'], 'sberbank_response');
             $data = "amount;$amount;mdOrder;{$this->txn->transaction_id};operation;{$params['operation']};orderNumber;{$transaction_response['uniqueOrderNumber']};status;{$params['status']};";
+            Xcart::app()->logger->debug('sberbank', ['Stage 4(collect data)', $data], 'sberbank_response');
             $key = $this->txn->payment_method_model->frontend_processor->param03;
+            Xcart::app()->logger->debug('sberbank', ['Stage 5(get param03)', $key], 'sberbank_response');
             $hmac = hash_hmac('sha256', $data, $key);
+            Xcart::app()->logger->debug('sberbank', ['Stage 6(hmac method)', $hmac], 'sberbank_response');
             Xcart::app()->logger->debug('sberbank response', [strtoupper($hmac), $params['checksum'], $params], 'sberbank_response');
 
             if (strtoupper($hmac) === $params['checksum']) {
