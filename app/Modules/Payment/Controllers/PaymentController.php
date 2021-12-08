@@ -83,7 +83,6 @@ class PaymentController extends Controller
                     $transaction->save();
 
                 }
-
                 OrderHelper::changeOrderStatus($order, OrderStatusModel::ORDER_STATUS_NOT_FINISHED, 'cb', false);
 
                 if ($gw->result && $gw->result->isRedirect()) {
@@ -109,7 +108,6 @@ class PaymentController extends Controller
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
             if ($gw = Gateway::getGateway($pm)) {
                 try {
-                    Xcart::app()->logger->debug("{$gateway} callback action", $params, 'payment');
                     $gw->success($params);
 
                 } catch (Exception $e) {
