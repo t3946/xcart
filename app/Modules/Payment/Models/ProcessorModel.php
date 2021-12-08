@@ -19,8 +19,6 @@ use Xcart\App\Orm\Model;
  */
 class ProcessorModel extends Model
 {
-    use AutoMetaTrait;
-
     public const PAYMENT_NAME_PAYPAL = 'PayPal';
     public const PAYMENT_NAME_STRIPE = 'Stripe';
     public const PAYMENT_NAME_BLUEPAY = 'BluePay';
@@ -56,6 +54,21 @@ class ProcessorModel extends Model
             'test_mode' => [
                 'class' => CharField::class,
                 'default' => 'Y',
+                'null' => true
+            ],
+            'param3' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
+            'param2' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true
+            ],
+            'param1' => [
+                'class' => CharField::class,
+                'default' => null,
                 'null' => true
             ]
         ];
