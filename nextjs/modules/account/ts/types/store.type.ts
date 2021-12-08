@@ -117,6 +117,10 @@ interface StoreInterface {
   departmentsMenuDesktop: {
     isVisible: boolean;
   };
+  departmentsMenu: {
+    mobile: [];
+    desktop: [];
+  };
   countries: any;
   loginAndSecurity: AccountLoginAndSecurityStore;
   mobileAlert: AccountMobileAlertStore;

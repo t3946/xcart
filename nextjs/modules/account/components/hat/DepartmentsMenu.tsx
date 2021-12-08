@@ -1,21 +1,21 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { route } from "@utils/AppData";
 import classnames from "classnames";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
   const containerClasses = [props.className, "departments-menu"];
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [selectedCategory, setSelectedCategory] = React.useState<Record<
+    any,
+    any
+  > | null>(null);
   const [isMouseOverMenuItem, setIsMouseOverMenuItem] = React.useState(false);
   const [isMouseOverCategoryDetails, setIsMouseOverCategoryDetails] =
     React.useState(false);
-  const [closeTimeout, setCloseTimeOut] = React.useState(null);
-  const departmentsMenu = useSelector(
-    (e: StoreDto) => e.departmentsMenu.desktop
-  );
+  const [closeTimeout, setCloseTimeOut] = React.useState<any>(null);
+  const departmentsMenu = useSelectorAccount((e) => e.departmentsMenu.desktop);
 
   // close menu by timeout if cursor leave menu
   if (
@@ -121,7 +121,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     const categories = departmentsMenu.slice(0, MAX_CATEGORIES_NUMBER);
 
     for (const key in categories) {
-      const category = categories[key];
+      const category: Record<any, any> = categories[key];
       const linkClasses = [
         "category-menu-link category-menu-link__top-level",
         {
