@@ -344,10 +344,6 @@ foreach ($config_items as $config_item) {
 $config["Sessions"]["session_length"] = $use_session_length;
 
 #
-# Include data cache functionality
-#
-@include_once($xcart_dir . "/include/data_cache.php");
-#
 # Timezone offset (sec) = N hours x 60 minutes x 60 seconds
 #
 $config["Appearance"]["timezone_offset"] = intval($config["Appearance"]["timezone_offset"]) * 3600;
