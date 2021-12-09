@@ -25,8 +25,7 @@ MyApp.getInitialProps = async function (ctx) {
   const initialProps = App.getInitialProps(ctx);
 
   if (process.browser === false) {
-    console.log("MyApp.getInitialProps");
-    initialProps.state = await getInitialState();
+    initialProps.state = await getInitialState(ctx.ctx.req);
     process.initialState = initialProps.state;
   }
 

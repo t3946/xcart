@@ -67,6 +67,8 @@ class AccountApi extends FrontendController
 
         if ($user->getIsGuest()) {
             $user = null;
+        } else {
+            $user = $user->toArray();
         }
 
         $initial_data = [

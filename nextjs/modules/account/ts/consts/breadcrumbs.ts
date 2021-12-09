@@ -94,6 +94,6 @@ export const staticRoutes = [
 
   {
     name: "Decisions required",
-    path: needSpecifyPath,
+    path: "/",
   },
 ];
