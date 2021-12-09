@@ -922,6 +922,10 @@ Highlight ETA date on the order list pages in pink if ETA date - <input type="te
 {elseif $configuration[cat_num].type eq "checkbox"}
 <input type="checkbox" id="{$opt_label_id}" name="{$configuration[cat_num].name}"{if $configuration[cat_num].value eq "Y"} checked="checked"{/if} />
 
+{elseif $configuration[cat_num].type === 'tinymce'}
+    <textarea class="tinymce-field" rows="30" cols="60" name="{$configuration[cat_num].name}">
+        {$configuration[cat_num].value|escape:html}
+    </textarea>
 {elseif $configuration[cat_num].type eq "textarea"}
 <textarea 
 
