@@ -566,7 +566,14 @@ if (!defined("QUICK_START")) {
 # Read Modules and put in into $active_modules
 #
 $import_specification = [];
-$active_modules       = func_data_cache_get("modules");
+
+$all_active_modules = func_query_column("SELECT module_name FROM $sql_tbl[modules] USE INDEX (active) WHERE active='Y'");
+$active_modules = [];
+if ($all_active_modules) {
+    foreach($all_active_modules as $active_module) {
+        $active_modules[$active_module]=true;
+    }
+}
 
 $addons        = [];
 $body_onload   = "";
