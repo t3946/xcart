@@ -629,13 +629,6 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 
 Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 
-$ticket_resolver_messages = OrderHelper::getOTRSMessages($order_model);
-
-$ticket_resolver_link = $order_model->otrs_ticket;
-
-$smarty->assign('ticket_resolver_link', $ticket_resolver_link);
-$smarty->assign('ticket_resolver_messages', $ticket_resolver_messages);
-
 if ($REQUEST_METHOD === "POST") {
 
     if ($mode === 'submit_message' && $type === 'empty') {

@@ -104,13 +104,10 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                     <td>
                         {include file="page_title.tpl" title=$order_details_name}
                     </td>
-                    {if $ticket_resolver_link ne ""}
-                        <td style="font-size: 15px; {* font-weight: bold; *}">
-                            / <a target="_blank" style="color: #140BFC;{* text-decoration: none;*}"
-                                 href="{$ticket_resolver_link}">OTRS
-                                ticket{if $ticket_resolver_messages ne ""} ({$ticket_resolver_messages}){/if}</a>
+                        <td data-id="{$order.orderid}" data-entity="order" data-url="{$xcartApp->router->url('order_otrs_message')}" id="otrs-resolver-order-link" style="font-size: 15px; display: none">
+                            / <a target="_blank" style="color: #140BFC;">
+                            </a>
                         </td>
-                    {/if}
                     <td>
                         / <a target="_blank" style="color: #140BFC"
                              href="https://mail.google.com/mail/u/0/#search/{$order.order_prefix}{$order.orderid}+OR+%22SFP-{$order.orderid}%22">Gmail</a>
@@ -534,9 +531,9 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
             <table cellspacing="0" cellpadding="0" border="0">
             <tr><td><B>Order date:</B></td><td>{$order.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
             <tr><td><B>Current date:</B>&nbsp;</td><td>{$current_date|date_format:'%d-%b-%Y&nbsp; %H:%M'}</td></tr>
-            <tr><td><B>Fraud Check v.2:</B></td><td><a href="/admin/order/fraud_check_v2/{$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score_v2})</a></td></tr>
             <tr><td nowrap="nowrap"><B>Fraud check:</B></td><td>{if $order.amazonorderid eq ""}<a href="fraud_page.php?orderid={$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score})</a>{else}Cleared by Amazon{/if}</td></tr>
-            <tr><td nowrap="nowrap" style="padding-right: 5px;"><b><a href="{$xcartApp->router->url('admin:list', ['module' => 'Goods', 'admin' => 'ProductVerificationAdmin'])}" target="_blank">Product verification</a>:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
+            <tr><td><B>Fraud Check v.2:</B></td><td><a href="/admin/order/fraud_check_v2/{$order.orderid}" target="_blank" style="color: #140BFC">{include file="main/fraud_status.tpl" fraud_status=$order.fraud_status fraud_static="Y"} ({$order.overall_fraud_score_v2})</a></td></tr>
+                <tr><td nowrap="nowrap" style="padding-right: 5px;"><b><a href="{$xcartApp->router->url('admin:list', ['module' => 'Goods', 'admin' => 'ProductVerificationAdmin'])}" target="_blank">Product verification</a>:</b></td><td><a id="product_verification_status_link" href="#">{$order.product_verification_status}</a>
                     <select data-order-id="{$order.orderid}" id="product_verification_status_change" style="display:none;">
                         {foreach from=$order.product_verification_statuses item=product_verification_sts}
                             <option {if $order.product_verification_status == $product_verification_sts->getField('name')} selected="selected" {/if} value="{$product_verification_sts->getField('code')}">{$product_verification_sts->getField('name')}</option>
