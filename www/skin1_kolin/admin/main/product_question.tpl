@@ -173,7 +173,7 @@ $(function() {ldelim}
             <tr>
                 <td><B>Product name:</B></td>
                 <td>
-                    <a href="{$productModel->getUrl()}" title="{$productModel->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$productModel->getFrontendName()}</a>
+                    <a href="{$productModel->getAbsoluteUrl()}" title="{$productModel->getFrontendName()}" style="color: #3A3AFF;" target="_blank">{$productModel->getFrontendName()}</a>
                 </td>
             </tr>
             <tr>
