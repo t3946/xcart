@@ -18,7 +18,7 @@ const SideBarMenu: React.FC = () => {
       label: "Orders",
       routerItems: [
         {
-          to: "/orders/open-orders/decisions-required",
+          to: "/orders/decisions-required",
           label: "Decisions required",
           badge: user?.decisions_required_count || 0,
         },
