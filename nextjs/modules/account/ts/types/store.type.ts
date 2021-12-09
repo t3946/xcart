@@ -23,7 +23,7 @@ export interface AccountStore {
   departmentsMenuDesktop: {
     isVisible: boolean;
   };
-  breadcrumbs: Record<string, string>;
+  breadcrumbs: Record<any, any>[];
   countries: any;
   loginAndSecurity: AccountLoginAndSecurityStore;
   mobileAlert: AccountMobileAlertStore;
@@ -99,6 +99,7 @@ export interface AccountPublicProfileStore {
 }
 
 interface StoreInterface {
+  breadcrumbs: Record<any, any>[];
   routes: any;
   addresses: AccountAddressesStore;
   main: AccountMainStore;

@@ -10,7 +10,6 @@ import { useDispatch } from "react-redux";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useRouter } from "next/router";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Link from "next/link";
 
 interface IProps {
@@ -24,7 +23,6 @@ const LoginFormInputPassword = function (props: IProps): any {
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
   const { goToInputLogin, goToOTPInput, login } = props;
-  const routes = useSelectorAccount((e) => e.routes);
 
   React.useEffect(() => {
     inputRef.current.focus();
@@ -75,7 +73,7 @@ const LoginFormInputPassword = function (props: IProps): any {
             if (!res.user) {
               goToOTPInput();
             } else {
-              router.push(routes["account:index"]);
+              router.push("/");
             }
 
             res.user && dispatch(userSetAction(res.user));
@@ -99,7 +97,6 @@ const LoginFormInputPassword = function (props: IProps): any {
         initialValues={initialState}
         validationSchema={validationSchema}
         onSubmit={submit}
-        ref={React.useRef()}
       >
         {(formikProps) => {
           const { isSubmitting, handleChange, values, errors } = formikProps;
@@ -124,9 +121,9 @@ const LoginFormInputPassword = function (props: IProps): any {
                     <span className={"form-input-label"}>Password</span>
 
                     <Link
-                      href={routes(
-                        "account:two-step-verification-recovery-password-assistance"
-                      )}
+                      href={
+                        "/login-and-security/two-step-verification/password-assistance"
+                      }
                     >
                       <a className={"common-link auth-form-info"}>
                         Forgot your password?

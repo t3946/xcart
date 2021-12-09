@@ -1,42 +1,35 @@
 import React from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useSelector } from "react-redux";
-import { AccountStore } from "@modules/account/ts/types/store.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const BreadCrumbs: React.FC = () => {
-  const breadcrumbsStore = useSelector((e: AccountStore) => e.breadcrumbs);
+  const breadcrumbs = useSelectorAccount((e) => e.breadcrumbs);
   const breadcrumbsList = [];
 
-  let path;
+  let currentPath;
 
   if (process.browser) {
-    path = window.location.pathname;
+    currentPath = window.location.pathname;
   } else {
-    path = process.next.url;
+    currentPath = process.next.url;
   }
 
-  const subPathsList = path.split("/");
+  const currentPathParts = currentPath.split("/");
 
-  for (let i = 0, path = ""; i < subPathsList.length; i++) {
-    const subPath = subPathsList[i];
+  let subPath = "";
 
-    if (subPath === "") {
+  for (const part of currentPathParts) {
+    if (part === "") {
       continue;
     }
 
-    path += `/${subPath}`;
+    subPath += `/${part}`;
 
-    if (breadcrumbsStore[path]) {
-      breadcrumbsList.push({
-        name: breadcrumbsStore[path],
-        path,
-      });
-    } else if (breadcrumbsStore[path + "/"]) {
-      breadcrumbsList.push({
-        name: breadcrumbsStore[path + "/"],
-        path: path + "/",
-      });
+    for (const breadcrumb of breadcrumbs) {
+      if (breadcrumb.path === subPath) {
+        breadcrumbsList.push({ ...breadcrumb });
+      }
     }
   }
 

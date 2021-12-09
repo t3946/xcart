@@ -30,6 +30,8 @@ import CartReducer from "@redux/reducers/CartReducer";
 // import PhotoSwipeReducer from "@redux/reducers/PhotoSwipeReducer";
 // import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
 
+import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
+
 const sagaMiddleware = createSagaMiddleware();
 let clientPreloadedState;
 
@@ -37,6 +39,7 @@ if (process.browser) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   clientPreloadedState = window.__PRELOADED_STATE__;
+  clientPreloadedState.breadcrumbs = staticRoutes;
   console.log("__PRELOADED_STATE__", clientPreloadedState);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -81,6 +84,8 @@ sagaMiddleware.run(accountRootSaga);
 export default store;
 
 export const getServerStore = function (serverPreloadedState: any) {
+  serverPreloadedState.breadcrumbs = staticRoutes;
+
   return createStore(
     reducers,
     serverPreloadedState,

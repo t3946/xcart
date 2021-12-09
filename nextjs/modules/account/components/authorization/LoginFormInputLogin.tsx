@@ -55,7 +55,6 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         },
 
         complete() {
-          actions.setSubmitting(false);
         },
       })
     );

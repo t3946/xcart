@@ -15,9 +15,7 @@ const PageTwoColumns: React.FC = (props): any => {
         <SideBarMenu />
       </div>
 
-      <div className={cn(classes.rightColumnClasses)}>
-        {props.children}
-      </div>
+      <div className={cn(classes.rightColumnClasses)}>{props.children}</div>
     </Page>
   );
 };
