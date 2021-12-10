@@ -8,10 +8,9 @@ interface IProps {
   classes?: {
     container: any;
   };
-  ref?: any;
 }
 
-const Item: React.FC<IProps> = function (props: IProps) {
+const Item = React.forwardRef(function (props: IProps, ref: any) {
   const { decision } = props;
   const decisionName = ["ETA"][decision.type];
 
@@ -60,7 +59,7 @@ const Item: React.FC<IProps> = function (props: IProps) {
   };
 
   return (
-    <div className={classnames(classes.container)}>
+    <div className={classnames(classes.container)} ref={ref}>
       <span className={"decisions-item-text"}>
         <span className="d-block d-md-inline">{decision.order_number}:</span>{" "}
         <span className="d-block d-md-inline">
@@ -71,6 +70,6 @@ const Item: React.FC<IProps> = function (props: IProps) {
       <span className="decisions-item-icon">{statusTemplate()}</span>
     </div>
   );
-};
+});
 
 export default Item;

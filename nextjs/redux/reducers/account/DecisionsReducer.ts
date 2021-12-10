@@ -51,6 +51,18 @@ const DecisionsReducer = (
 
       return { ...store };
 
+    case "SET_DECISIONS":
+      return {
+        solved: {
+          pagination_offset: action.decisions.solved.length,
+          decisions: action.decisions.solved,
+        },
+        notSolved: {
+          pagination_offset: action.decisions.notSolved.length,
+          decisions: action.decisions.notSolved,
+        },
+      };
+
     default:
       return store;
   }

@@ -26,3 +26,8 @@ export const uploadLicense = (payload: Record<any, any>): any => ({
   type: "UPLOAD_LICENSE_DECISION",
   payload,
 });
+
+export const setDecisionsAction = (decisions: Record<any, any>): any => ({
+  type: "SET_DECISIONS",
+  decisions,
+});

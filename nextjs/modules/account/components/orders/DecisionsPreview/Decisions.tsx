@@ -14,7 +14,10 @@ const Decisions: React.FC = function () {
   if (isPrintNotSolved) {
     lists.push(
       <div key={5}>
-        <h2 className={"decisions-list-header decisions-lists__header mt-md-0"} key={1}>
+        <h2
+          className={"decisions-list-header decisions-lists__header mt-md-0"}
+          key={1}
+        >
           Order decisions required
         </h2>
 
@@ -48,7 +51,9 @@ const Decisions: React.FC = function () {
   if (isPrintSolved) {
     lists.push(
       <div key={6}>
-        <h2 className={classnames(classes.header)} key={3}>Order decisions made</h2>
+        <h2 className={classnames(classes.header)} key={3}>
+          Order decisions made
+        </h2>
 
         <Row className={"m-sm-0"} key={4}>
           <List
