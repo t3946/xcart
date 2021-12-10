@@ -88,11 +88,7 @@ const List: React.FC<IProps> = function (props: IProps) {
     const theLast = i === decisions.length - 1;
 
     items.push(
-      <Link
-        href={"/"}
-        // to={route("account:order-make-decision", decision.decision_id)}
-        key={i}
-      >
+      <Link href={"/orders/decision/" + decision.decision_id} key={i}>
         <a className={"text-decoration-none p-0"}>
           <Item
             decision={decision}

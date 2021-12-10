@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import Badge from "@modules/account/components/orders/Navigation/Badge";
 
 interface IProps {
@@ -27,12 +27,16 @@ const Item: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <NavLink className={classnames(classes.button)} to={path} exact={true}>
-      <span className={classnames(classes.text)}>
-        {text}
-        {badge && <Badge className={classnames(classes.badge)} text={badge} />}
-      </span>
-    </NavLink>
+    <Link href={path}>
+      <a className={classnames(classes.button)}>
+        <span className={classnames(classes.text)}>
+          {text}
+          {badge && (
+            <Badge className={classnames(classes.badge)} text={badge} />
+          )}
+        </span>
+      </a>
+    </Link>
   );
 };
 

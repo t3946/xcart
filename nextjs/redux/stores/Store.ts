@@ -29,6 +29,7 @@ import CartReducer from "@redux/reducers/CartReducer";
 // import ProductReducer from "@redux/reducers/ProductReducer";
 // import PhotoSwipeReducer from "@redux/reducers/PhotoSwipeReducer";
 import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
+import ConfigReducer from "@redux/reducers/ConfigReducer";
 
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
 
@@ -71,6 +72,7 @@ const reducers = combineReducers({
   // product: ProductReducer,
   decisions: DecisionsReducer,
   // photoswipe: PhotoSwipeReducer,
+  config: ConfigReducer,
 });
 
 const store = createStore(

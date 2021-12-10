@@ -13,6 +13,7 @@ import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import cn from "classnames";
 import SliderSwitchButton from "@modules/ui/SliderSwitchButton";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IStripeProps extends CardElementProps {
   afterInit: (e: any) => any;
@@ -28,7 +29,7 @@ const StripeField: React.FC<IStripeProps> = function (props: IStripeProps) {
         base: "w-100",
       },
     },
-    ref: cardRef,
+    // ref: cardRef,
   };
   const cardElementProps = _merge(defaultProps);
   const [hasErrors, setHasErrors] = React.useState(false);
@@ -118,7 +119,6 @@ const Checkout: React.FC = function () {
       initialValues={initialValues}
       // validationSchema={validationSchema}
       onSubmit={submit}
-      ref={React.useRef()}
     >
       {({ errors, values }) => {
         const stripeCardElemProps = {
@@ -170,7 +170,8 @@ const Checkout: React.FC = function () {
 };
 
 const PaymentRequired: React.FC = function () {
-  const stripePromise = loadStripe(AppData.stripeSettings.publicKey, {
+  const publicKey = useSelectorAccount((e) => e.config.stripePublicKey);
+  const stripePromise = loadStripe(publicKey, {
     locale: "en",
   });
 

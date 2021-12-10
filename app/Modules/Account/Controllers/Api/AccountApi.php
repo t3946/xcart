@@ -13,6 +13,7 @@ use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\FrontendController;
@@ -71,6 +72,8 @@ class AccountApi extends FrontendController
             $user = $user->toArray();
         }
 
+        $stripeSettings = ProcessorModel::objects()->asArray()->get(['processor_name' => 'Stripe']);
+
         $initial_data = [
             'user' => $user,
             'routes' => AdminHelper::getRoutesMap(),
@@ -88,6 +91,7 @@ class AccountApi extends FrontendController
                 'cidev_top_header_code' => $config['cidev_top_header_code'],
                 'cidev_header_code' => $config['cidev_header_code'],
                 'companyName' => $config['company_name'],
+                'stripePublicKey' => $stripeSettings['param01'],
             ],
             'templates' => [
                 'renderStaticNotifications' => StaticMessagesLibrary::renderStaticMessages(),

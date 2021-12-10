@@ -2,8 +2,6 @@ import React from "react";
 import Navigation from "@modules/account/components/orders/Navigation/Navigation";
 import LicenseRequire from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
 import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
-import { route } from "@utils/AppData";
-import { useHistory } from "react-router-dom";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
@@ -11,41 +9,27 @@ import {
   resetAction,
 } from "@redux/actions/account-actions/DecisionsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
 
-function getDecision() {
-  const decisionId = parseInt(document.location.href.split("/").pop());
-  const { solved, notSolved } = useSelectorAccount((e) => e.decisions);
-  const decisions = [...solved.decisions, ...notSolved.decisions];
-
-  let decision;
-  let i = 0;
-  const max = decisions.length;
-
-  while (!decision && i < max) {
-    if (decisions[i].decision_id === decisionId) {
-      decision = decisions[i];
-    }
-
-    i++;
-  }
-
-  return decision;
-}
-
-const Decision: React.FC = () => {
+const Decision: React.FC = (props) => {
+  const router = useRouter();
   const dispatch = useDispatch();
-  const decision = getDecision();
-  const history = useHistory();
+  const decision = props.decision;
+
+
+  console.log("PROPS", props);
 
   if (!decision) {
-    history.push(route("account:order-decisions-required"));
-    return;
+    if (process.browser) {
+      router.push("/orders/decision-required");
+    }
+    return <span>no decision</span>;
   }
 
   function onChangeDecision(decision: DecisionsInterface) {
     dispatch(resetAction());
     dispatch(addAction(decision));
-    history.push(route("account:order-decisions-required"));
+    router.push("/orders/decision-required");
   }
 
   return (
