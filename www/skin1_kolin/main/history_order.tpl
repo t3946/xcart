@@ -104,7 +104,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
                     <td>
                         {include file="page_title.tpl" title=$order_details_name}
                     </td>
-                        <td data-id="{$order.orderid}" data-entity="order" data-url="{$xcartApp->router->url('entity_otrs_message')}" id="otrs-resolver-order-link" style="font-size: 15px; display: none">
+                        <td data-id="{$order.orderid}" data-entity="order" data-url="{$xcartApp->router->url('api:entity_otrs_message')}" id="otrs-resolver-order-link" style="font-size: 15px; display: none">
                             / <a target="_blank" style="color: #140BFC;">
                             </a>
                         </td>
