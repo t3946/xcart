@@ -73,6 +73,7 @@ class UploadFileCommand extends Command
                 $upload_model->status = DistributorUploadPriceModel::UPLOAD_STATUS_SUCCESS;
             } catch (Throwable $exception) {
                 $upload_model->status = DistributorUploadPriceModel::UPLOAD_STATUS_ERROR;
+                Xcart::app()->logger->error('error consume dx price', [$exception->getMessage(), $exception->getFile(), $exception->getLine()], 'upload dx file');
             } finally {
                 if (isset($path_save) && file_exists($path_save)) {
                     unlink($path_save);

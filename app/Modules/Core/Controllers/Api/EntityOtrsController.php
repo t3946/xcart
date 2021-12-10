@@ -19,11 +19,11 @@ class EntityOtrsController extends Controller
             $entityId = $data['entityId'];
             $entity_model = null;
             switch ($entity) {
-                case 'question':
-                    /** @var OrderModel $order_model */
-                    $order_model = OrderModel::objects()->get(['pk' => $entityId]);
-                    break;
                 case 'order':
+                    /** @var OrderModel $order_model */
+                    $entity_model = OrderModel::objects()->get(['pk' => $entityId]);
+                    break;
+                case 'question':
                     /** @var ProductQuestionModel $entity_model */
                     $entity_model = ProductQuestionModel::objects()->get(['pk' => $entityId]);
                     break;
@@ -32,7 +32,7 @@ class EntityOtrsController extends Controller
             if ($entity_model) {
                 $ticket_resolver_messages = OrderHelper::getOTRSMessages($entity_model);
 
-                $ticket_resolver_link = $order_model->otrs_ticket;
+                $ticket_resolver_link = $entity_model->otrs_ticket;
 
                 $this->jsonResponse(['link' => $ticket_resolver_link, 'message' => $ticket_resolver_messages]);
             }
