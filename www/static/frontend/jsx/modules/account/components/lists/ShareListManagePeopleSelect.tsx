@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
-import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { UserRightsActionsEnum } from "@client/modules/account/ts/consts/user-rights-actions.enum";
 import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
@@ -34,14 +33,13 @@ export const ShareListManagePeopleSelect: React.FC<ShareListManagePeopleSelectPr
     });
 
     return (
-      <Grid
+      <div
         className={classnames(
-          `select select-send share-list-select  ${open && "open"}`,
+          `select select-send share-list-select  d-flex justify-content-between align-center  ${
+            open && "open"
+          }`,
           classes?.group
         )}
-        container
-        alignItems="center"
-        justifyContent="space-between"
       >
         <div
           onClick={() => {
@@ -91,6 +89,6 @@ export const ShareListManagePeopleSelect: React.FC<ShareListManagePeopleSelectPr
             </ul>
           )}
         </div>
-      </Grid>
+      </div>
     );
   };

@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@material-ui/core";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { useSelector } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
@@ -36,16 +35,16 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
 
   return (
     <div className={"product-list-item-btns-container"}>
-      <Button
+      <button
         disabled={outOfStock}
         className={classnames(
-          "account-submit-btn  full-width-button",
+          "form-button account-submit-btn  full-width-button",
           mainBtnClasses
         )}
         onClick={onMainBtnClick}
       >
         {btnLabel}
-      </Button>
+      </button>
       {edit && (
         <div className="list-product-item-btns-container">
           <FormSelect
@@ -68,13 +67,13 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
               selectHeader: "product-list-item-move-select",
             }}
           />
-          <Button
+          <button
             type={"submit"}
             onClick={deleteItem}
-            className="account-submit-btn account-submit-btn-outline auto-width-button product-list-item-delete-button"
+            className="form-button account-submit-btn account-submit-btn-outline auto-width-button product-list-item-delete-button"
           >
             delete
-          </Button>
+          </button>
         </div>
       )}
     </div>

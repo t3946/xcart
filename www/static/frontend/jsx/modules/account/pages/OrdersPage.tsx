@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getOrders } from "@client/jsx/redux/actions/account-actions/OrdersActions";
 import { OrdersListHeader } from "@client/modules/account/components/orders/OrdersListHeader";
 import { OrderItem } from "@client/modules/account/components/orders/OrderItem";
-import { CircularProgress } from "@material-ui/core";
 import { AccountStore } from "@client/modules/account/ts/types/store.type";
+import { Spinner } from "react-bootstrap";
 
 interface OrdersPageProps {
   label: string;
@@ -32,9 +32,9 @@ export const OrdersPage: React.FC<OrdersPageProps> = ({ label, type }) => {
         label={label}
       />
       {ordersLoading ? (
-        <div className="progress-circular">
-          <CircularProgress classes={{ root: "circular-item" }} />
-        </div>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
       ) : (
         <div>
           {orders[type]?.items?.length ? (

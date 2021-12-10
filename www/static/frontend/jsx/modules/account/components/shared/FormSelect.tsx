@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
-import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { SelectValue } from "@client/modules/account/ts/types/select-value.type";
 import { FormikErrors } from "formik";
@@ -51,13 +50,13 @@ export const FormSelect: React.FC<IProps> = ({
   });
 
   return (
-    <Grid
+    <div
       className={classnames(
-        `select select-send ${open && "open"} justify-content-between`,
+        `select select-send  alight-center d-flex ${
+          open && "open"
+        } justify-content-between`,
         classes?.group
       )}
-      container
-      alignItems="center"
     >
       {label && (
         <label
@@ -115,6 +114,6 @@ export const FormSelect: React.FC<IProps> = ({
           </div>
         )}
       </div>
-    </Grid>
+    </div>
   );
 };

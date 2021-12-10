@@ -113,11 +113,18 @@
 .add-address-checkbox{
   margin-top: 20px;
   margin-bottom: 25px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .add-address-input{
   width: 50% !important;
   position: relative;
+}
+
+.add-address-input-container{
+  display: flex;
+  justify-content: flex-end;
 }
 
 @media (max-width: 640px) {

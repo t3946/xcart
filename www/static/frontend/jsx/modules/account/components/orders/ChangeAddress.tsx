@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { BillingAddressList } from "@client/modules/account/components/wallet/BillingAddressList";
-import { Button } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/store.type";
 import { AddAddressForm } from "@client/modules/account/components/addresses/AddAddressForm";
@@ -95,13 +94,13 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
 
       {isAddingAddress ? (
         <AddAddressForm onCancelClick={() => setIsAddingAddress(false)}>
-          <Button
+          <button
             style={{ marginTop: 10 }}
             onClick={() => setIsAddingAddress(false)}
-            className="account-submit-btn account-submit-btn-outline"
+            className="form-button account-submit-btn account-submit-btn-outline"
           >
             Back
-          </Button>
+          </button>
         </AddAddressForm>
       ) : (
         <div className="billing-address-container">
@@ -115,21 +114,21 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
           )}
 
           <div className="billing-address-butns">
-            <Button
+            <button
               type={"submit"}
               onClick={() => setIsAddingAddress(true)}
-              className="account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+              className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
             >
               ADD new ADDRESS
-            </Button>
-            <Button
+            </button>
+            <button
               disabled={!selectedValue || loading}
               type={"submit"}
-              className="account-submit-btn auto-width-button"
+              className="form-button account-submit-btn auto-width-button"
               onClick={onChangeAddress}
             >
               {loading ? "PEnding..." : "use this address"}
-            </Button>
+            </button>
           </div>
         </div>
       )}

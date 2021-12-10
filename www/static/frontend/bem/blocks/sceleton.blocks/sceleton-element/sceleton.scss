@@ -1,0 +1,21 @@
+.sceleton{
+  width: 100%;
+  animation-duration: 3s;
+  animation-name: opacity;
+  background-color: #7d7c7c;
+  animation-iteration-count: infinite;
+}
+
+@keyframes opacity {
+  from {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+
+  to {
+    opacity: 0.2;
+  }
+}

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "@client/modules/account/components/shared/FormInput";
-import { Grid } from "@material-ui/core";
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import { FormCheckBox } from "@client/modules/account/components/shared/FormCheckBox";
 import Store from "@client/jsx/redux/stores/Store";
@@ -139,12 +138,7 @@ export const ManageList: React.FC<ManageListProps> = ({
           value={formik.values.email}
           label={"Email"}
         />
-        <Grid
-          container
-          justifyContent="space-between"
-          className="d-flex justify-content-between align-center"
-          alignItems="center"
-        >
+        <div className="d-flex justify-content-between align-center">
           <label className={classnames("form-input-label")}>Birthday</label>
           <div className="d-flex justify-content-between list-input-manage-list">
             <FormSelect
@@ -172,7 +166,7 @@ export const ManageList: React.FC<ManageListProps> = ({
               }}
             />
           </div>
-        </Grid>
+        </div>
         <FormSelect
           items={getValuesForSelect(
             Store.getState().addresses.addressesList,

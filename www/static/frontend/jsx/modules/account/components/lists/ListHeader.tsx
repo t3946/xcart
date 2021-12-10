@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import ShareIcon from "@material-ui/icons/Share";
 import { useHistory } from "react-router-dom";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { ShareListDialog } from "@client/modules/account/components/lists/ShareListDialog";
@@ -12,6 +11,7 @@ import { List } from "@client/modules/account/ts/types/list.type";
 import { deleteList } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
 import { SnackbarContext } from "@client/modules/account/contexts/snackbar/Snackbar.context";
+import ShareIcon from "@client/modules/icon/components/account/share/ShareIcon";
 
 interface ListHeaderProps {
   label: string;

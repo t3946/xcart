@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FocusEventHandler, MutableRefObject } from "react";
-import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { FormikErrors, FormikTouched } from "formik";
 import InputMask from "react-input-mask";
@@ -47,10 +46,10 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   const error = errorMessage && touched;
   return (
     <div className={classnames("form-input-container", classes?.group)}>
-      <Grid
-        container
-        alignItems="center"
-        className={`form-input-${label ? "space-between" : "flex-end"}`}
+      <div
+        className={`d-flex alight-center form-input-${
+          label ? "space-between" : "flex-end"
+        }`}
       >
         {label && (
           <label
@@ -107,7 +106,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
             />
           )}
         </div>
-      </Grid>
+      </div>
       <div className="error-message-input-container">
         <div className={classnames(classes?.input)}>
           {error && <div className="form-input-caption">{errorMessage}</div>}

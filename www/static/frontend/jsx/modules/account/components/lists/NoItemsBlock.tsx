@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@material-ui/core";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { useHistory } from "react-router-dom";
 import { List } from "@client/modules/account/ts/types/list.type";
@@ -28,13 +27,13 @@ export const NoItemsBlock: React.FC<NoItemsBlockProps> = ({ listInfo }) => {
       </div>
       {breakPoint({
         xs: (
-          <Button
+          <button
             onClick={addIdea}
             type={"submit"}
-            className="account-submit-btn account-submit-btn-outline full-width"
+            className="form-button account-submit-btn account-submit-btn-outline full-width"
           >
             Add idea to list
-          </Button>
+          </button>
         ),
         md: null,
       })}

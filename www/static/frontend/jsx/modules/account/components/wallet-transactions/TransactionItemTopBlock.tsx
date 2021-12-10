@@ -1,8 +1,7 @@
 import React from "react";
-import { Button } from "@material-ui/core";
-import PrintIcon from "@material-ui/icons/Print";
-import PictureAsPdfIcon from "@material-ui/icons/PictureAsPdf";
 import ReactToPrint from "react-to-print";
+import PrintIcon from "@client/modules/icon/components/account/print/PrintIcon";
+import PictureAsPdfIcon from "@client/modules/icon/components/account/pdf/PictureAsPdfIcon";
 
 export const TransactionItemTopBlock = ({
   componentRef,
@@ -25,23 +24,23 @@ export const TransactionItemTopBlock = ({
             <div className="transaction-btns">
               <ReactToPrint
                 trigger={() => (
-                  <Button className="account-submit-btn-outline print-button transaction-button">
+                  <button className="form-button account-submit-btn-outline print-button transaction-button">
                     <div className="btn-entry">
                       <PrintIcon className="btn-icon" />
                       <div>PRINT</div>
                     </div>
-                  </Button>
+                  </button>
                 )}
                 content={() => componentRef.current}
               />
               <ReactToPrint
                 trigger={() => (
-                  <Button className="account-submit-btn-outline transaction-button">
+                  <button className="form-button account-submit-btn-outline transaction-button">
                     <div className="btn-entry">
                       <PictureAsPdfIcon className="btn-icon" />
                       <div>OPEN PDF</div>
                     </div>
-                  </Button>
+                  </button>
                 )}
                 content={() => componentRef.current}
               />

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import ClearIcon from "@material-ui/icons/Clear";
-import { IconButton } from "@material-ui/core";
+import ClearIcon from "@client/modules/icon/components/account/clear/ClearIcon";
 
 interface FileItemProps {
   file: File;
@@ -12,7 +11,7 @@ export const FileItem: React.FC<FileItemProps> = ({ file, onClick }) => {
   return (
     <div style={{ opacity }} className={"file-container"}>
       <div>{file.name}</div>
-      <IconButton
+      <div
         onClick={() => {
           setOpacity(0);
           setTimeout(() => {
@@ -21,7 +20,7 @@ export const FileItem: React.FC<FileItemProps> = ({ file, onClick }) => {
         }}
       >
         <ClearIcon />
-      </IconButton>
+      </div>
     </div>
   );
 };

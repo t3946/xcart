@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Dialog } from "@material-ui/core";
-import { DialogHeader } from "../dialog/DialogHeader";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { CardAction } from "./CardAction";
 import { CardItemDto } from "@client/modules/account/ts/types/wallet.type";

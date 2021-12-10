@@ -6,12 +6,12 @@
  * http://opensource.org/licenses/MIT
  */
 
-;(function ($, w, undefined) {
-	'use strict';
+(function ($, w, undefined) {
+	"use strict";
 
-	var pluginName = 'sly';
-	var className  = 'Sly';
-	var namespace  = pluginName;
+	var pluginName = "sly";
+	var className = "Sly";
+	var namespace = pluginName;
 
 	// Local WindowAnimationTiming interface
 	var cAF = w.cancelAnimationFrame || w.cancelRequestAnimationFrame;
@@ -22,13 +22,16 @@
 
 	// Other global values
 	var $doc = $(document);
-	var dragInitEvents = 'touchstart.' + namespace + ' mousedown.' + namespace;
-	var dragMouseEvents = 'mousemove.' + namespace + ' mouseup.' + namespace;
-	var dragTouchEvents = 'touchmove.' + namespace + ' touchend.' + namespace;
-	var wheelEvent = (document.implementation.hasFeature('Event.wheel', '3.0') ? 'wheel.' : 'mousewheel.') + namespace;
-	var clickEvent = 'click.' + namespace;
-	var mouseDownEvent = 'mousedown.' + namespace;
-	var interactiveElements = ['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA'];
+	var dragInitEvents = "touchstart." + namespace + " mousedown." + namespace;
+	var dragMouseEvents = "mousemove." + namespace + " mouseup." + namespace;
+	var dragTouchEvents = "touchmove." + namespace + " touchend." + namespace;
+	var wheelEvent =
+		(document.implementation.hasFeature("Event.wheel", "3.0")
+			? "wheel."
+			: "mousewheel.") + namespace;
+	var clickEvent = "click." + namespace;
+	var mouseDownEvent = "mousedown." + namespace;
+	var interactiveElements = ["INPUT", "SELECT", "BUTTON", "TEXTAREA"];
 	var tmpArray = [];
 	var time;
 
@@ -47,7 +50,8 @@
 		var time = +new Date();
 		// Update last global wheel time, but only when event didn't originate
 		// in Sly frame, or the origin was less than scrollHijack time ago
-		if (!sly || sly.options.scrollHijack < time - lastGlobalWheel) lastGlobalWheel = time;
+		if (!sly || sly.options.scrollHijack < time - lastGlobalWheel)
+			lastGlobalWheel = time;
 	});
 
 	/**
@@ -79,7 +83,7 @@
 			center: 0,
 			end: 0,
 			cur: 0,
-			dest: 0
+			dest: 0,
 		};
 
 		// Scrollbar
@@ -90,7 +94,7 @@
 		var hPos = {
 			start: 0,
 			end: 0,
-			cur: 0
+			cur: 0,
 		};
 
 		// Pagesbar
@@ -106,7 +110,7 @@
 			lastItem: 0,
 			centerItem: 0,
 			activeItem: null,
-			activePage: 0
+			activePage: 0,
 		};
 
 		// Styles
@@ -116,9 +120,9 @@
 		var handleStyles = new StyleRestorer($handle[0]);
 
 		// Navigation type booleans
-		var basicNav = o.itemNav === 'basic';
-		var forceCenteredNav = o.itemNav === 'forceCentered';
-		var centeredNav = o.itemNav === 'centered' || forceCenteredNav;
+		var basicNav = o.itemNav === "basic";
+		var forceCenteredNav = o.itemNav === "forceCentered";
+		var centeredNav = o.itemNav === "centered" || forceCenteredNav;
 		var itemNav = !parallax && (basicNav || centeredNav || forceCenteredNav);
 
 		// Miscellaneous
@@ -135,12 +139,12 @@
 		var animation = {};
 		var move = {};
 		var dragging = {
-			released: 1
+			released: 1,
 		};
 		var scrolling = {
 			last: 0,
 			delta: 0,
-			resetTime: 200
+			resetTime: 200,
 		};
 		var renderID = 0;
 		var historyID = 0;
@@ -182,9 +186,11 @@
 			pos.old = $.extend({}, pos);
 
 			// Reset global variables
-			frameSize = parallax ? 0 : $frame[o.horizontal ? 'width' : 'height']();
-			sbSize = $sb[o.horizontal ? 'width' : 'height']();
-			slideeSize = parallax ? frame : $slidee[o.horizontal ? 'outerWidth' : 'outerHeight']();
+			frameSize = parallax ? 0 : $frame[o.horizontal ? "width" : "height"]();
+			sbSize = $sb[o.horizontal ? "width" : "height"]();
+			slideeSize = parallax
+				? frame
+				: $slidee[o.horizontal ? "outerWidth" : "outerHeight"]();
 			pages.length = 0;
 
 			// Set position limits & relatives
@@ -201,10 +207,16 @@
 				items.length = 0;
 
 				// Needed variables
-				var paddingStart = getPx($slidee, o.horizontal ? 'paddingLeft' : 'paddingTop');
-				var paddingEnd = getPx($slidee, o.horizontal ? 'paddingRight' : 'paddingBottom');
-				var borderBox = $($items).css('boxSizing') === 'border-box';
-				var areFloated = $items.css('float') !== 'none';
+				var paddingStart = getPx(
+					$slidee,
+					o.horizontal ? "paddingLeft" : "paddingTop"
+				);
+				var paddingEnd = getPx(
+					$slidee,
+					o.horizontal ? "paddingRight" : "paddingBottom"
+				);
+				var borderBox = $($items).css("boxSizing") === "border-box";
+				var areFloated = $items.css("float") !== "none";
 				var ignoredMargin = 0;
 				var lastItemIndex = $items.length - 1;
 				var lastItem;
@@ -217,9 +229,19 @@
 					// Item
 					var $item = $(element);
 					var rect = element.getBoundingClientRect();
-					var itemSize = round(o.horizontal ? rect.width || rect.right - rect.left : rect.height || rect.bottom - rect.top);
-					var itemMarginStart = getPx($item, o.horizontal ? 'marginLeft' : 'marginTop');
-					var itemMarginEnd = getPx($item, o.horizontal ? 'marginRight' : 'marginBottom');
+					var itemSize = round(
+						o.horizontal
+							? rect.width || rect.right - rect.left
+							: rect.height || rect.bottom - rect.top
+					);
+					var itemMarginStart = getPx(
+						$item,
+						o.horizontal ? "marginLeft" : "marginTop"
+					);
+					var itemMarginEnd = getPx(
+						$item,
+						o.horizontal ? "marginRight" : "marginBottom"
+					);
 					var itemSizeFull = itemSize + itemMarginStart + itemMarginEnd;
 					var singleSpaced = !itemMarginStart || !itemMarginEnd;
 					var item = {};
@@ -260,15 +282,21 @@
 				});
 
 				// Resize SLIDEE to fit all items
-				$slidee[0].style[o.horizontal ? 'width' : 'height'] = (borderBox ? slideeSize: slideeSize - paddingStart - paddingEnd) + 'px';
+				$slidee[0].style[o.horizontal ? "width" : "height"] =
+					(borderBox ? slideeSize : slideeSize - paddingStart - paddingEnd) +
+					"px";
 
 				// Adjust internal SLIDEE size for last margin
 				slideeSize -= ignoredMargin;
 
 				// Set limits
 				if (items.length) {
-					pos.start =  items[0][forceCenteredNav ? 'center' : 'start'];
-					pos.end = forceCenteredNav ? lastItem.center : frameSize < slideeSize ? lastItem.end : pos.start;
+					pos.start = items[0][forceCenteredNav ? "center" : "start"];
+					pos.end = forceCenteredNav
+						? lastItem.center
+						: frameSize < slideeSize
+						? lastItem.end
+						: pos.start;
 				} else {
 					pos.start = pos.end = 0;
 				}
@@ -284,11 +312,15 @@
 			if ($handle.length && sbSize > 0) {
 				// Stretch scrollbar handle to represent the visible area
 				if (o.dynamicHandle) {
-					handleSize = pos.start === pos.end ? sbSize : round(sbSize * frameSize / slideeSize);
+					handleSize =
+						pos.start === pos.end
+							? sbSize
+							: round((sbSize * frameSize) / slideeSize);
 					handleSize = within(handleSize, o.minHandleSize, sbSize);
-					$handle[0].style[o.horizontal ? 'width' : 'height'] = handleSize + 'px';
+					$handle[0].style[o.horizontal ? "width" : "height"] =
+						handleSize + "px";
 				} else {
-					handleSize = $handle[o.horizontal ? 'outerWidth' : 'outerHeight']();
+					handleSize = $handle[o.horizontal ? "outerWidth" : "outerHeight"]();
 				}
 
 				hPos.end = sbSize - handleSize;
@@ -301,14 +333,17 @@
 			// Pages
 			if (!parallax && frameSize > 0) {
 				var tempPagePos = pos.start;
-				var pagesHtml = '';
+				var pagesHtml = "";
 
 				// Populate pages array
 				if (itemNav) {
 					$.each(items, function (i, item) {
 						if (forceCenteredNav) {
 							pages.push(item.center);
-						} else if (item.start + item.size > tempPagePos && tempPagePos <= pos.end) {
+						} else if (
+							item.start + item.size > tempPagePos &&
+							tempPagePos <= pos.end
+						) {
 							tempPagePos = item.start;
 							pages.push(tempPagePos);
 							tempPagePos += frameSize;
@@ -344,11 +379,15 @@
 			if (itemNav) {
 				if (isInit && o.startAt != null) {
 					activate(o.startAt);
-					self[centeredNav ? 'toCenter' : 'toStart'](o.startAt);
+					self[centeredNav ? "toCenter" : "toStart"](o.startAt);
 				}
 				// Fix possible overflowing
 				var activeItem = items[rel.activeItem];
-				slideTo(centeredNav && activeItem ? activeItem.center : within(pos.dest, pos.start, pos.end));
+				slideTo(
+					centeredNav && activeItem
+						? activeItem.center
+						: within(pos.dest, pos.start, pos.end)
+				);
 			} else {
 				if (isInit) {
 					if (o.startAt != null) slideTo(o.startAt, 1);
@@ -359,9 +398,11 @@
 			}
 
 			// Trigger load event
-			trigger('load');
+			trigger("load");
 		}
-		self.reload = function () { load(); };
+		self.reload = function () {
+			load();
+		};
 
 		/**
 		 * Animate to a position.
@@ -407,8 +448,11 @@
 			animation.from = pos.cur;
 			animation.to = newPos;
 			animation.delta = newPos - pos.cur;
-			animation.tweesing = dragging.tweese || dragging.init && !dragging.slidee;
-			animation.immediate = !animation.tweesing && (immediate || dragging.init && dragging.slidee || !o.speed);
+			animation.tweesing =
+				dragging.tweese || (dragging.init && !dragging.slidee);
+			animation.immediate =
+				!animation.tweesing &&
+				(immediate || (dragging.init && dragging.slidee) || !o.speed);
 
 			// Reset dragging tweesing request
 			dragging.tweese = 0;
@@ -416,7 +460,7 @@
 			// Start animation rendering
 			if (newPos !== pos.dest) {
 				pos.dest = newPos;
-				trigger('change');
+				trigger("change");
 				if (!renderID) {
 					render();
 				}
@@ -445,7 +489,7 @@
 			if (!renderID) {
 				renderID = rAF(render);
 				if (dragging.released) {
-					trigger('moveStart');
+					trigger("moveStart");
 				}
 				return;
 			}
@@ -461,13 +505,24 @@
 				if (abs(animation.tweeseDelta) < 0.1) {
 					pos.cur = animation.to;
 				} else {
-					pos.cur += animation.tweeseDelta * (dragging.released ? o.swingSpeed : o.syncSpeed);
+					pos.cur +=
+						animation.tweeseDelta *
+						(dragging.released ? o.swingSpeed : o.syncSpeed);
 				}
 			}
 			// Use tweening for basic animations with known end point
 			else {
 				animation.time = min(+new Date() - animation.start, o.speed);
-				pos.cur = animation.from + animation.delta * $.easing[o.easing](animation.time/o.speed, animation.time, 0, 1, o.speed);
+				pos.cur =
+					animation.from +
+					animation.delta *
+						$.easing[o.easing](
+							animation.time / o.speed,
+							animation.time,
+							0,
+							1,
+							o.speed
+						);
 			}
 
 			// If there is nothing more to render break the rendering loop, otherwise request new animation frame.
@@ -478,20 +533,26 @@
 				renderID = rAF(render);
 			}
 
-			trigger('move');
+			trigger("move");
 
 			// Update SLIDEE position
 			if (!parallax) {
 				if (transform) {
-					$slidee[0].style[transform] = gpuAcceleration + (o.horizontal ? 'translateX' : 'translateY') + '(' + (-pos.cur) + 'px)';
+					$slidee[0].style[transform] =
+						gpuAcceleration +
+						(o.horizontal ? "translateX" : "translateY") +
+						"(" +
+						-pos.cur +
+						"px)";
 				} else {
-					$slidee[0].style[o.horizontal ? 'left' : 'top'] = -round(pos.cur) + 'px';
+					$slidee[0].style[o.horizontal ? "left" : "top"] =
+						-round(pos.cur) + "px";
 				}
 			}
 
 			// When animation reached the end, and dragging is not active, trigger moveEnd
 			if (!renderID && dragging.released) {
-				trigger('moveEnd');
+				trigger("moveEnd");
 			}
 
 			syncScrollbar();
@@ -504,14 +565,25 @@
 		 */
 		function syncScrollbar() {
 			if ($handle.length) {
-				hPos.cur = pos.start === pos.end ? 0 : (((dragging.init && !dragging.slidee) ? pos.dest : pos.cur) - pos.start) / (pos.end - pos.start) * hPos.end;
+				hPos.cur =
+					pos.start === pos.end
+						? 0
+						: (((dragging.init && !dragging.slidee ? pos.dest : pos.cur) -
+								pos.start) /
+								(pos.end - pos.start)) *
+						  hPos.end;
 				hPos.cur = within(round(hPos.cur), hPos.start, hPos.end);
 				if (last.hPos !== hPos.cur) {
 					last.hPos = hPos.cur;
 					if (transform) {
-						$handle[0].style[transform] = gpuAcceleration + (o.horizontal ? 'translateX' : 'translateY') + '(' + hPos.cur + 'px)';
+						$handle[0].style[transform] =
+							gpuAcceleration +
+							(o.horizontal ? "translateX" : "translateY") +
+							"(" +
+							hPos.cur +
+							"px)";
 					} else {
-						$handle[0].style[o.horizontal ? 'left' : 'top'] = hPos.cur + 'px';
+						$handle[0].style[o.horizontal ? "left" : "top"] = hPos.cur + "px";
 					}
 				}
 			}
@@ -525,8 +597,11 @@
 		function syncPagesbar() {
 			if ($pages[0] && last.page !== rel.activePage) {
 				last.page = rel.activePage;
-				$pages.removeClass(o.activeClass).eq(rel.activePage).addClass(o.activeClass);
-				trigger('activePage', last.page);
+				$pages
+					.removeClass(o.activeClass)
+					.eq(rel.activePage)
+					.addClass(o.activeClass);
+				trigger("activePage", last.page);
 			}
 		}
 
@@ -545,14 +620,16 @@
 				var $item = $slidee.find(item).eq(0);
 
 				if ($item[0]) {
-					var offset = o.horizontal ? $item.offset().left - $slidee.offset().left : $item.offset().top - $slidee.offset().top;
-					var size = $item[o.horizontal ? 'outerWidth' : 'outerHeight']();
+					var offset = o.horizontal
+						? $item.offset().left - $slidee.offset().left
+						: $item.offset().top - $slidee.offset().top;
+					var size = $item[o.horizontal ? "outerWidth" : "outerHeight"]();
 
 					return {
 						start: offset,
 						center: offset - frameSize / 2 + size / 2,
 						end: offset - frameSize + size,
-						size: size
+						size: size,
 					};
 				} else {
 					return false;
@@ -571,17 +648,21 @@
 		self.moveBy = function (speed) {
 			move.speed = speed;
 			// If already initiated, or there is nowhere to move, abort
-			if (dragging.init || !move.speed || pos.cur === (move.speed > 0 ? pos.end : pos.start)) {
+			if (
+				dragging.init ||
+				!move.speed ||
+				pos.cur === (move.speed > 0 ? pos.end : pos.start)
+			) {
 				return;
 			}
 			// Initiate move object
 			move.lastTime = +new Date();
 			move.startPos = pos.cur;
 			// Set dragging as initiated
-			continuousInit('button');
+			continuousInit("button");
 			dragging.init = 1;
 			// Start movement
-			trigger('moveStart');
+			trigger("moveStart");
 			cAF(continuousID);
 			moveLoop();
 		};
@@ -600,13 +681,13 @@
 			continuousID = dragging.init ? rAF(moveLoop) : 0;
 			// Update move object
 			move.now = +new Date();
-			move.pos = pos.cur + (move.now - move.lastTime) / 1000 * move.speed;
+			move.pos = pos.cur + ((move.now - move.lastTime) / 1000) * move.speed;
 			// Slide
 			slideTo(dragging.init ? move.pos : round(move.pos));
 			// Normally, this is triggered in render(), but if there
 			// is nothing to render, we have to do it manually here.
 			if (!dragging.init && pos.cur === pos.dest) {
-				trigger('moveEnd');
+				trigger("moveEnd");
 			}
 			// Update times for future iteration
 			move.lastTime = move.now;
@@ -618,7 +699,7 @@
 		 * @return {Void}
 		 */
 		self.stop = function () {
-			if (dragging.source === 'button') {
+			if (dragging.source === "button") {
 				dragging.init = 0;
 				dragging.released = 1;
 			}
@@ -673,8 +754,12 @@
 				return;
 			}
 			if (itemNav) {
-				self[centeredNav ? 'toCenter' : 'toStart'](
-					within((centeredNav ? rel.centerItem : rel.firstItem) + o.scrollBy * delta, 0, items.length)
+				self[centeredNav ? "toCenter" : "toStart"](
+					within(
+						(centeredNav ? rel.centerItem : rel.firstItem) + o.scrollBy * delta,
+						0,
+						items.length
+					)
 				);
 			} else {
 				slideTo(pos.dest + delta, immediate);
@@ -704,7 +789,7 @@
 		 */
 		function to(location, item, immediate) {
 			// Optional arguments logic
-			if (type(item) === 'boolean') {
+			if (type(item) === "boolean") {
 				immediate = item;
 				item = undefined;
 			}
@@ -714,7 +799,7 @@
 			} else {
 				// You can't align items to sides of the frame
 				// when centered navigation type is enabled
-				if (centeredNav && location !== 'center') {
+				if (centeredNav && location !== "center") {
 					return;
 				}
 
@@ -734,7 +819,7 @@
 		 * @return {Void}
 		 */
 		self.toStart = function (item, immediate) {
-			to('start', item, immediate);
+			to("start", item, immediate);
 		};
 
 		/**
@@ -746,7 +831,7 @@
 		 * @return {Void}
 		 */
 		self.toEnd = function (item, immediate) {
-			to('end', item, immediate);
+			to("end", item, immediate);
 		};
 
 		/**
@@ -758,7 +843,7 @@
 		 * @return {Void}
 		 */
 		self.toCenter = function (item, immediate) {
-			to('center', item, immediate);
+			to("center", item, immediate);
 		};
 
 		/**
@@ -769,11 +854,13 @@
 		 * @return {Int}  Item index, or -1 if not found.
 		 */
 		function getIndex(item) {
-			return item != null ?
-					isNumber(item) ?
-						item >= 0 && item < items.length ? item : -1 :
-						$items.index(item) :
-					-1;
+			return item != null
+				? isNumber(item)
+					? item >= 0 && item < items.length
+						? item
+						: -1
+					: $items.index(item)
+				: -1;
 		}
 		// Expose getIndex without lowering the compressibility of it,
 		// as it is used quite often throughout Sly.
@@ -814,7 +901,7 @@
 				last.active = rel.activeItem = index;
 
 				updateButtonsState();
-				trigger('active', index);
+				trigger("active", index);
 			}
 
 			return index;
@@ -871,7 +958,11 @@
 		 * @return {Void}
 		 */
 		function getRelatives(slideePos) {
-			slideePos = within(isNumber(slideePos) ? slideePos : pos.dest, pos.start, pos.end);
+			slideePos = within(
+				isNumber(slideePos) ? slideePos : pos.dest,
+				pos.start,
+				pos.end
+			);
 
 			var relatives = {};
 			var centerOffset = forceCenteredNav ? 0 : frameSize / 2;
@@ -901,7 +992,7 @@
 				for (var i = 0, il = items.length; i < il; i++) {
 					let border = items[i].half;
 
-					if ( slideePos > items[ i ].center + items[i].half ) {
+					if (slideePos > items[i].center + items[i].half) {
 						border *= 1.85;
 					} else {
 						border *= 0.15;
@@ -925,7 +1016,6 @@
 						last = i;
 						break;
 					}
-
 				}
 
 				// Safe assignment, just to be sure the false won't be returned
@@ -964,16 +1054,20 @@
 			if (last.slideePosState !== slideePosState) {
 				last.slideePosState = slideePosState;
 
-				if ($prevPageButton.is('button,input')) {
-					$prevPageButton.prop('disabled', isStart);
+				if ($prevPageButton.is("button,input")) {
+					$prevPageButton.prop("disabled", isStart);
 				}
 
-				if ($nextPageButton.is('button,input')) {
-					$nextPageButton.prop('disabled', isEnd);
+				if ($nextPageButton.is("button,input")) {
+					$nextPageButton.prop("disabled", isEnd);
 				}
 
-				$prevPageButton.add($backwardButton)[isStart ? 'addClass' : 'removeClass'](o.disabledClass);
-				$nextPageButton.add($forwardButton)[isEnd ? 'addClass' : 'removeClass'](o.disabledClass);
+				$prevPageButton
+					.add($backwardButton)
+					[isStart ? "addClass" : "removeClass"](o.disabledClass);
+				$nextPageButton
+					.add($forwardButton)
+					[isEnd ? "addClass" : "removeClass"](o.disabledClass);
 			}
 
 			// Forward & Backward buttons need a separate state caching because we cannot "property disable"
@@ -981,12 +1075,12 @@
 			if (last.fwdbwdState !== slideePosState && dragging.released) {
 				last.fwdbwdState = slideePosState;
 
-				if ($backwardButton.is('button,input')) {
-					$backwardButton.prop('disabled', isStart);
+				if ($backwardButton.is("button,input")) {
+					$backwardButton.prop("disabled", isStart);
 				}
 
-				if ($forwardButton.is('button,input')) {
-					$forwardButton.prop('disabled', isEnd);
+				if ($forwardButton.is("button,input")) {
+					$forwardButton.prop("disabled", isEnd);
 				}
 			}
 
@@ -999,16 +1093,16 @@
 				if (last.itemsButtonState !== itemsButtonState) {
 					last.itemsButtonState = itemsButtonState;
 
-					if ($prevButton.is('button,input')) {
-						$prevButton.prop('disabled', isFirst);
+					if ($prevButton.is("button,input")) {
+						$prevButton.prop("disabled", isFirst);
 					}
 
-					if ($nextButton.is('button,input')) {
-						$nextButton.prop('disabled', isLast);
+					if ($nextButton.is("button,input")) {
+						$nextButton.prop("disabled", isLast);
 					}
 
-					$prevButton[isFirst ? 'addClass' : 'removeClass'](o.disabledClass);
-					$nextButton[isLast ? 'addClass' : 'removeClass'](o.disabledClass);
+					$prevButton[isFirst ? "addClass" : "removeClass"](o.disabledClass);
+					$nextButton[isLast ? "addClass" : "removeClass"](o.disabledClass);
 				}
 			}
 		}
@@ -1021,7 +1115,12 @@
 		 * @return {Void}
 		 */
 		self.resume = function (priority) {
-			if (!o.cycleBy || !o.cycleInterval || o.cycleBy === 'items' && (!items[0] || rel.activeItem == null) || priority < self.isPaused) {
+			if (
+				!o.cycleBy ||
+				!o.cycleInterval ||
+				(o.cycleBy === "items" && (!items[0] || rel.activeItem == null)) ||
+				priority < self.isPaused
+			) {
 				return;
 			}
 
@@ -1030,18 +1129,22 @@
 			if (cycleID) {
 				cycleID = clearTimeout(cycleID);
 			} else {
-				trigger('resume');
+				trigger("resume");
 			}
 
 			cycleID = setTimeout(function () {
-				trigger('cycle');
+				trigger("cycle");
 				switch (o.cycleBy) {
-					case 'items':
-						self.activate(rel.activeItem >= items.length - 1 ? 0 : rel.activeItem + 1);
+					case "items":
+						self.activate(
+							rel.activeItem >= items.length - 1 ? 0 : rel.activeItem + 1
+						);
 						break;
 
-					case 'pages':
-						self.activatePage(rel.activePage >= pages.length - 1 ? 0 : rel.activePage + 1);
+					case "pages":
+						self.activatePage(
+							rel.activePage >= pages.length - 1 ? 0 : rel.activePage + 1
+						);
 						break;
 				}
 			}, o.cycleInterval);
@@ -1063,7 +1166,7 @@
 
 			if (cycleID) {
 				cycleID = clearTimeout(cycleID);
-				trigger('pause');
+				trigger("pause");
 			}
 		};
 
@@ -1073,7 +1176,7 @@
 		 * @return {Void}
 		 */
 		self.toggle = function () {
-			self[cycleID ? 'pause' : 'resume']();
+			self[cycleID ? "pause" : "resume"]();
 		};
 
 		/**
@@ -1176,17 +1279,32 @@
 			position = getRelativeIndex(position);
 
 			// Move only if there is an actual change requested
-			if (item > -1 && position > -1 && item !== position && (!after || position !== item - 1) && (after || position !== item + 1)) {
-				$items.eq(item)[after ? 'insertAfter' : 'insertBefore'](items[position].el);
+			if (
+				item > -1 &&
+				position > -1 &&
+				item !== position &&
+				(!after || position !== item - 1) &&
+				(after || position !== item + 1)
+			) {
+				$items
+					.eq(item)
+					[after ? "insertAfter" : "insertBefore"](items[position].el);
 
-				var shiftStart = item < position ? item : (after ? position : position - 1);
-				var shiftEnd = item > position ? item : (after ? position + 1 : position);
+				var shiftStart =
+					item < position ? item : after ? position : position - 1;
+				var shiftEnd = item > position ? item : after ? position + 1 : position;
 				var shiftsUp = item > position;
 
 				// Update activeItem index
 				if (rel.activeItem != null) {
 					if (item === rel.activeItem) {
-						last.active = rel.activeItem = after ? (shiftsUp ? position + 1 : position) : (shiftsUp ? position : position - 1);
+						last.active = rel.activeItem = after
+							? shiftsUp
+								? position + 1
+								: position
+							: shiftsUp
+							? position
+							: position - 1;
 					} else if (rel.activeItem > shiftStart && rel.activeItem < shiftEnd) {
 						last.active = rel.activeItem += shiftsUp ? 1 : -1;
 					}
@@ -1231,23 +1349,23 @@
 		 */
 		self.on = function (name, fn) {
 			// Callbacks map
-			if (type(name) === 'object') {
+			if (type(name) === "object") {
 				for (var key in name) {
 					if (name.hasOwnProperty(key)) {
 						self.on(key, name[key]);
 					}
 				}
-			// Callback
-			} else if (type(fn) === 'function') {
-				var names = name.split(' ');
+				// Callback
+			} else if (type(fn) === "function") {
+				var names = name.split(" ");
 				for (var n = 0, nl = names.length; n < nl; n++) {
 					callbacks[names[n]] = callbacks[names[n]] || [];
 					if (callbackIndex(names[n], fn) === -1) {
 						callbacks[names[n]].push(fn);
 					}
 				}
-			// Callbacks array
-			} else if (type(fn) === 'array') {
+				// Callbacks array
+			} else if (type(fn) === "array") {
 				for (var f = 0, fl = fn.length; f < fl; f++) {
 					self.on(name, fn[f]);
 				}
@@ -1284,7 +1402,7 @@
 					self.off(name, fn[f]);
 				}
 			} else {
-				var names = name.split(' ');
+				var names = name.split(" ");
 				for (var n = 0, nl = names.length; n < nl; n++) {
 					callbacks[names[n]] = callbacks[names[n]] || [];
 					if (fn == null) {
@@ -1335,7 +1453,12 @@
 		 * @return {Int}
 		 */
 		function handleToSlidee(handlePos) {
-			return round(within(handlePos, hPos.start, hPos.end) / hPos.end * (pos.end - pos.start)) + pos.start;
+			return (
+				round(
+					(within(handlePos, hPos.start, hPos.end) / hPos.end) *
+						(pos.end - pos.start)
+				) + pos.start
+			);
 		}
 
 		/**
@@ -1361,7 +1484,7 @@
 		function continuousInit(source) {
 			dragging.released = 0;
 			dragging.source = source;
-			dragging.slidee = source === 'slidee';
+			dragging.slidee = source === "slidee";
 		}
 
 		/**
@@ -1372,22 +1495,25 @@
 		 * @return {Void}
 		 */
 		function dragInit(event) {
-			var isTouch = event.type === 'touchstart';
+			var isTouch = event.type === "touchstart";
 			var source = event.data.source;
-			var isSlidee = source === 'slidee';
+			var isSlidee = source === "slidee";
 
 			// Ignore when already in progress, or interactive element in non-touch navivagion
-			if (dragging.init || !isTouch && isInteractive(event.target)) {
+			if (dragging.init || (!isTouch && isInteractive(event.target))) {
 				return;
 			}
 
 			// Handle dragging conditions
-			if (source === 'handle' && (!o.dragHandle || hPos.start === hPos.end)) {
+			if (source === "handle" && (!o.dragHandle || hPos.start === hPos.end)) {
 				return;
 			}
 
 			// SLIDEE dragging conditions
-			if (isSlidee && !(isTouch ? o.touchDragging : o.mouseDragging && event.which < 2)) {
+			if (
+				isSlidee &&
+				!(isTouch ? o.touchDragging : o.mouseDragging && event.which < 2)
+			) {
 				return;
 			}
 
@@ -1413,7 +1539,7 @@
 			dragging.delta = 0;
 			dragging.locked = 0;
 			dragging.history = [0, 0, 0, 0];
-			dragging.pathToLock = isSlidee ? isTouch ? 30 : 10 : 0;
+			dragging.pathToLock = isSlidee ? (isTouch ? 30 : 10) : 0;
 
 			// Bind dragging events
 			$doc.on(isTouch ? dragTouchEvents : dragMouseEvents, dragHandler);
@@ -1425,7 +1551,7 @@
 			(isSlidee ? $slidee : $handle).addClass(o.draggedClass);
 
 			// Trigger moveStart event
-			trigger('moveStart');
+			trigger("moveStart");
 
 			// Keep track of a dragging path history. This is later used in the
 			// dragging release swing calculation when dragging SLIDEE.
@@ -1442,8 +1568,12 @@
 		 * @return {Void}
 		 */
 		function dragHandler(event) {
-			dragging.released = event.type === 'mouseup' || event.type === 'touchend';
-			dragging.pointer = dragging.touch ? event.originalEvent[dragging.released ? 'changedTouches' : 'touches'][0] : event;
+			dragging.released = event.type === "mouseup" || event.type === "touchend";
+			dragging.pointer = dragging.touch
+				? event.originalEvent[
+						dragging.released ? "changedTouches" : "touches"
+				  ][0]
+				: event;
 			dragging.pathX = dragging.pointer.pageX - dragging.initX;
 			dragging.pathY = dragging.pointer.pageY - dragging.initY;
 			dragging.path = sqrt(pow(dragging.pathX, 2) + pow(dragging.pathY, 2));
@@ -1458,11 +1588,14 @@
 					// If the pointer was released, the path will not become longer and it's
 					// definitely not a drag. If not released yet, decide on next iteration
 					return dragging.released ? dragEnd() : undefined;
-				}
-				else {
+				} else {
 					// If dragging path is sufficiently long we can confidently start a drag
 					// if drag is in different direction than scroll, ignore it
-					if (o.horizontal ? abs(dragging.pathX) > abs(dragging.pathY) : abs(dragging.pathX) < abs(dragging.pathY)) {
+					if (
+						o.horizontal
+							? abs(dragging.pathX) > abs(dragging.pathY)
+							: abs(dragging.pathX) < abs(dragging.pathY)
+					) {
 						dragging.init = 1;
 					} else {
 						return dragEnd();
@@ -1473,7 +1606,11 @@
 			stopDefault(event);
 
 			// Disable click on a source element, as it is unwelcome when dragging
-			if (!dragging.locked && dragging.path > dragging.pathToLock && dragging.slidee) {
+			if (
+				!dragging.locked &&
+				dragging.path > dragging.pathToLock &&
+				dragging.slidee
+			) {
 				dragging.locked = 1;
 				dragging.$source.on(clickEvent, disableOneEvent);
 			}
@@ -1484,13 +1621,17 @@
 
 				// Adjust path with a swing on mouse release
 				if (o.releaseSwing && dragging.slidee) {
-					dragging.swing = (dragging.delta - dragging.history[0]) / 40 * 300;
+					dragging.swing = ((dragging.delta - dragging.history[0]) / 40) * 300;
 					dragging.delta += dragging.swing;
 					dragging.tweese = abs(dragging.swing) > 10;
 				}
 			}
 
-			slideTo(dragging.slidee ? round(dragging.initPos - dragging.delta) : handleToSlidee(dragging.initPos + dragging.delta));
+			slideTo(
+				dragging.slidee
+					? round(dragging.initPos - dragging.delta)
+					: handleToSlidee(dragging.initPos + dragging.delta)
+			);
 		}
 
 		/**
@@ -1512,7 +1653,7 @@
 			// Normally, this is triggered in render(), but if there
 			// is nothing to render, we have to do it manually here.
 			if (pos.cur === pos.dest && dragging.init) {
-				trigger('moveEnd');
+				trigger("moveEnd");
 			}
 
 			// Resume ongoing cycle
@@ -1527,7 +1668,10 @@
 		 * @return {Boolean}
 		 */
 		function isInteractive(element) {
-			return ~$.inArray(element.nodeName, interactiveElements) || $(element).is(o.interactive);
+			return (
+				~$.inArray(element.nodeName, interactiveElements) ||
+				$(element).is(o.interactive)
+			);
 		}
 
 		/**
@@ -1537,7 +1681,7 @@
 		 */
 		function movementReleaseHandler() {
 			self.stop();
-			$doc.off('mouseup', movementReleaseHandler);
+			$doc.off("mouseup", movementReleaseHandler);
 		}
 
 		/**
@@ -1554,7 +1698,7 @@
 				case $forwardButton[0]:
 				case $backwardButton[0]:
 					self.moveBy($forwardButton.is(this) ? o.moveBy : -o.moveBy);
-					$doc.on('mouseup', movementReleaseHandler);
+					$doc.on("mouseup", movementReleaseHandler);
 					break;
 
 				case $prevButton[0]:
@@ -1584,7 +1728,9 @@
 		 */
 		function normalizeWheelDelta(event) {
 			// wheelDelta needed only for IE8-
-			scrolling.curDelta = ((o.horizontal ? event.deltaY || event.deltaX : event.deltaY) || -event.wheelDelta);
+			scrolling.curDelta =
+				(o.horizontal ? event.deltaY || event.deltaX : event.deltaY) ||
+				-event.wheelDelta;
 			scrolling.curDelta /= event.deltaMode === 1 ? 3 : 100;
 			if (!itemNav) {
 				return scrolling.curDelta;
@@ -1616,7 +1762,11 @@
 			event.originalEvent[namespace] = self;
 			// Don't hijack global scrolling
 			var time = +new Date();
-			if (lastGlobalWheel + o.scrollHijack > time && $scrollSource[0] !== document && $scrollSource[0] !== window) {
+			if (
+				lastGlobalWheel + o.scrollHijack > time &&
+				$scrollSource[0] !== document &&
+				$scrollSource[0] !== window
+			) {
 				lastGlobalWheel = time;
 				return;
 			}
@@ -1626,7 +1776,11 @@
 			}
 			var delta = normalizeWheelDelta(event.originalEvent);
 			// Trap scrolling only when necessary and/or requested
-			if (o.scrollTrap || delta > 0 && pos.dest < pos.end || delta < 0 && pos.dest > pos.start) {
+			if (
+				o.scrollTrap ||
+				(delta > 0 && pos.dest < pos.end) ||
+				(delta < 0 && pos.dest > pos.start)
+			) {
 				stopDefault(event, 1);
 			}
 			self.slideBy(o.scrollBy * delta);
@@ -1644,7 +1798,14 @@
 			if (o.clickBar && event.target === $sb[0]) {
 				stopDefault(event);
 				// Calculate new handle position and sync SLIDEE to it
-				slideTo(handleToSlidee((o.horizontal ? event.pageX - $sb.offset().left : event.pageY - $sb.offset().top) - handleSize / 2));
+				slideTo(
+					handleToSlidee(
+						(o.horizontal
+							? event.pageX - $sb.offset().left
+							: event.pageY - $sb.offset().top) -
+							handleSize / 2
+					)
+				);
 			}
 		}
 
@@ -1664,13 +1825,13 @@
 				// Left or Up
 				case o.horizontal ? 37 : 38:
 					stopDefault(event);
-					self[o.keyboardNavBy === 'pages' ? 'prevPage' : 'prev']();
+					self[o.keyboardNavBy === "pages" ? "prevPage" : "prev"]();
 					break;
 
 				// Right or Down
 				case o.horizontal ? 39 : 40:
 					stopDefault(event);
-					self[o.keyboardNavBy === 'pages' ? 'nextPage' : 'next']();
+					self[o.keyboardNavBy === "pages" ? "nextPage" : "next"]();
 					break;
 			}
 		}
@@ -1687,14 +1848,18 @@
 
 			// Ignore clicks on interactive elements.
 			if (isInteractive(this)) {
-				event.originalEvent[namespace + 'ignore'] = true;
+				event.originalEvent[namespace + "ignore"] = true;
 				return;
 			}
 
 			// Ignore events that:
 			// - are not originating from direct SLIDEE children
 			// - originated from interactive elements
-			if (this.parentNode !== $slidee[0] || event.originalEvent[namespace + 'ignore']) return;
+			if (
+				this.parentNode !== $slidee[0] ||
+				event.originalEvent[namespace + "ignore"]
+			)
+				return;
 
 			self.activate(this);
 		}
@@ -1723,7 +1888,7 @@
 		 */
 		function pauseOnHoverHandler(event) {
 			if (o.pauseOnHover) {
-				self[event.type === 'mouseenter' ? 'pause' : 'resume'](2);
+				self[event.type === "mouseenter" ? "pause" : "resume"](2);
 			}
 		}
 
@@ -1771,10 +1936,10 @@
 				.add($nextButton)
 				.add($prevPageButton)
 				.add($nextPageButton)
-				.off('.' + namespace);
+				.off("." + namespace);
 
 			// Unbinding specifically as to not nuke out other instances
-			$doc.off('keydown', keyboardHandler);
+			$doc.off("keydown", keyboardHandler);
 
 			// Remove classes
 			$prevButton
@@ -1792,7 +1957,7 @@
 
 			if (!parallax) {
 				// Unbind events from frame
-				$frame.off('.' + namespace);
+				$frame.off("." + namespace);
 				// Restore original styles
 				frameStyles.restore();
 				slideeStyles.restore();
@@ -1822,7 +1987,8 @@
 			}
 
 			// Disallow multiple instances on the same element
-			if (Sly.getInstance(frame)) throw new Error('There is already a Sly instance on this element');
+			if (Sly.getInstance(frame))
+				throw new Error("There is already a Sly instance on this element");
 
 			// Store the reference to itself
 			Sly.storeInstance(frame, self);
@@ -1831,8 +1997,17 @@
 			self.on(callbackMap);
 
 			// Save styles
-			var holderProps = ['overflow', 'position'];
-			var movableProps = ['position', 'webkitTransform', 'msTransform', 'transform', 'left', 'top', 'width', 'height'];
+			var holderProps = ["overflow", "position"];
+			var movableProps = [
+				"position",
+				"webkitTransform",
+				"msTransform",
+				"transform",
+				"left",
+				"top",
+				"width",
+				"height",
+			];
 			frameStyles.save.apply(frameStyles, holderProps);
 			sbStyles.save.apply(sbStyles, holderProps);
 			slideeStyles.save.apply(slideeStyles, movableProps);
@@ -1842,9 +2017,9 @@
 			var $movables = $handle;
 			if (!parallax) {
 				$movables = $movables.add($slidee);
-				$frame.css('overflow', 'hidden');
-				if (!transform && $frame.css('position') === 'static') {
-					$frame.css('position', 'relative');
+				$frame.css("overflow", "hidden");
+				if (!transform && $frame.css("position") === "static") {
+					$frame.css("position", "relative");
 				}
 			}
 			if (transform) {
@@ -1852,10 +2027,10 @@
 					$movables.css(transform, gpuAcceleration);
 				}
 			} else {
-				if ($sb.css('position') === 'static') {
-					$sb.css('position', 'relative');
+				if ($sb.css("position") === "static") {
+					$sb.css("position", "relative");
 				}
-				$movables.css({ position: 'absolute' });
+				$movables.css({ position: "absolute" });
 			}
 
 			// Navigation buttons
@@ -1888,30 +2063,33 @@
 
 			// Click on items navigation
 			if (itemNav && o.activateOn) {
-				$frame.on(o.activateOn + '.' + namespace, '*', activateHandler);
+				$frame.on(o.activateOn + "." + namespace, "*", activateHandler);
 			}
 
 			// Pages navigation
 			if ($pb[0] && o.activatePageOn) {
-				$pb.on(o.activatePageOn + '.' + namespace, '*', activatePageHandler);
+				$pb.on(o.activatePageOn + "." + namespace, "*", activatePageHandler);
 			}
 
 			// Dragging navigation
-			$dragSource.on(dragInitEvents, { source: 'slidee' }, dragInit);
+			$dragSource.on(dragInitEvents, { source: "slidee" }, dragInit);
 
 			// Scrollbar dragging navigation
 			if ($handle) {
-				$handle.on(dragInitEvents, { source: 'handle' }, dragInit);
+				$handle.on(dragInitEvents, { source: "handle" }, dragInit);
 			}
 
 			// Keyboard navigation
-			$doc.on('keydown', keyboardHandler);
+			$doc.on("keydown", keyboardHandler);
 
 			if (!parallax) {
 				// Pause on hover
-				$frame.on('mouseenter.' + namespace + ' mouseleave.' + namespace, pauseOnHoverHandler);
+				$frame.on(
+					"mouseenter." + namespace + " mouseleave." + namespace,
+					pauseOnHoverHandler
+				);
 				// Reset native FRAME element scroll
-				$frame.on('scroll.' + namespace, resetScroll);
+				$frame.on("scroll." + namespace, resetScroll);
 			}
 
 			// Mark instance as initialized
@@ -1922,7 +2100,7 @@
 
 			// Initiate automatic cycling
 			if (o.cycleBy && !parallax) {
-				self[o.startPaused ? 'pause' : 'resume']();
+				self[o.startPaused ? "pause" : "resume"]();
 			}
 
 			// Return instance
@@ -1954,8 +2132,13 @@
 			return String(value);
 		}
 
-		if (typeof value === 'object' || typeof value === 'function') {
-			return Object.prototype.toString.call(value).match(/\s([a-z]+)/i)[1].toLowerCase() || 'object';
+		if (typeof value === "object" || typeof value === "function") {
+			return (
+				Object.prototype.toString
+					.call(value)
+					.match(/\s([a-z]+)/i)[1]
+					.toLowerCase() || "object"
+			);
 		}
 
 		return typeof value;
@@ -2020,7 +2203,7 @@
 	 * @return {Int}
 	 */
 	function getPx($item, property) {
-		return 0 | round(String($item.css(property)).replace(/[^\-0-9.]/g, ''));
+		return 0 | round(String($item.css(property)).replace(/[^\-0-9.]/g, ""));
 	}
 
 	/**
@@ -2060,7 +2243,8 @@
 		self.restore = function () {
 			if (!element || !element.nodeType) return;
 			for (var prop in self.style) {
-				if (self.style.hasOwnProperty(prop)) element.style[prop] = self.style[prop];
+				if (self.style.hasOwnProperty(prop))
+					element.style[prop] = self.style[prop];
 			}
 			return self;
 		};
@@ -2069,13 +2253,11 @@
 
 	// Local WindowAnimationTiming interface polyfill
 	(function (w) {
-		rAF = w.requestAnimationFrame
-			|| w.webkitRequestAnimationFrame
-			|| fallback;
+		rAF = w.requestAnimationFrame || w.webkitRequestAnimationFrame || fallback;
 
 		/**
-		* Fallback implementation.
-		*/
+		 * Fallback implementation.
+		 */
 		var prev = new Date().getTime();
 		function fallback(fn) {
 			var curr = new Date().getTime();
@@ -2086,25 +2268,26 @@
 		}
 
 		/**
-		* Cancel.
-		*/
-		var cancel = w.cancelAnimationFrame
-			|| w.webkitCancelAnimationFrame
-			|| w.clearTimeout;
+		 * Cancel.
+		 */
+		var cancel =
+			w.cancelAnimationFrame || w.webkitCancelAnimationFrame || w.clearTimeout;
 
-		cAF = function(id){
+		cAF = function (id) {
 			cancel.call(w, id);
 		};
-	}(window));
+	})(window);
 
 	// Feature detects
 	(function () {
-		var prefixes = ['', 'Webkit', 'Moz', 'ms', 'O'];
-		var el = document.createElement('div');
+		var prefixes = ["", "Webkit", "Moz", "ms", "O"];
+		var el = document.createElement("div");
 
 		function testProp(prop) {
 			for (var p = 0, pl = prefixes.length; p < pl; p++) {
-				var prefixedProp = prefixes[p] ? prefixes[p] + prop.charAt(0).toUpperCase() + prop.slice(1) : prop;
+				var prefixedProp = prefixes[p]
+					? prefixes[p] + prop.charAt(0).toUpperCase() + prop.slice(1)
+					: prop;
 				if (el.style[prefixedProp] != null) {
 					return prefixedProp;
 				}
@@ -2112,9 +2295,9 @@
 		}
 
 		// Global support indicators
-		transform = testProp('transform');
-		gpuAcceleration = testProp('perspective') ? 'translateZ(0) ' : '';
-	}());
+		transform = testProp("transform");
+		gpuAcceleration = testProp("perspective") ? "translateZ(0) " : "";
+	})();
 
 	// Expose class globally
 	w[className] = Sly;
@@ -2125,8 +2308,8 @@
 
 		// Attributes logic
 		if (!$.isPlainObject(options)) {
-			if (type(options) === 'string' || options === false) {
-				method = options === false ? 'destroy' : options;
+			if (type(options) === "string" || options === false) {
+				method = options === false ? "destroy" : options;
 				methodArgs = Array.prototype.slice.call(arguments, 1);
 			}
 			options = {};
@@ -2134,14 +2317,14 @@
 
 		// Apply to all elements
 		return this.each(function (i, element) {
-			// Call with prevention against multiple instantiations
+			// сall with prevention against multiple instantiations
 			var plugin = Sly.getInstance(element);
 
 			if (!plugin && !method) {
 				// Create a new object if it doesn't exist yet
 				plugin = new Sly(element, options, callbackMap).init();
 			} else if (plugin && method) {
-				// Call method
+				// сall method
 				if (plugin[method]) {
 					plugin[method].apply(plugin, methodArgs);
 				}
@@ -2151,72 +2334,72 @@
 
 	// Default options
 	Sly.defaults = {
-		slidee:     null,  // Selector, DOM element, or jQuery object with DOM element representing SLIDEE.
+		slidee: null, // Selector, DOM element, or jQuery object with DOM element representing SLIDEE.
 		horizontal: false, // Switch to horizontal mode.
 
 		// Item based navigation
-		itemNav:        null,  // Item navigation type. Can be: 'basic', 'centered', 'forceCentered'.
-		itemSelector:   null,  // Select only items that match this selector.
-		smart:          false, // Repositions the activated item to help with further navigation.
-		activateOn:     null,  // Activate an item on this event. Can be: 'click', 'mouseenter', ...
+		itemNav: null, // Item navigation type. Can be: 'basic', 'centered', 'forceCentered'.
+		itemSelector: null, // Select only items that match this selector.
+		smart: false, // Repositions the activated item to help with further navigation.
+		activateOn: null, // Activate an item on this event. Can be: 'click', 'mouseenter', ...
 		activateMiddle: false, // Always activate the item in the middle of the FRAME. forceCentered only.
 
 		// Scrolling
-		scrollSource: null,  // Element for catching the mouse wheel scrolling. Default is FRAME.
-		scrollBy:     0,     // Pixels or items to move per one mouse scroll. 0 to disable scrolling.
-		scrollHijack: 300,   // Milliseconds since last wheel event after which it is acceptable to hijack global scroll.
-		scrollTrap:   false, // Don't bubble scrolling when hitting scrolling limits.
+		scrollSource: null, // Element for catching the mouse wheel scrolling. Default is FRAME.
+		scrollBy: 0, // Pixels or items to move per one mouse scroll. 0 to disable scrolling.
+		scrollHijack: 300, // Milliseconds since last wheel event after which it is acceptable to hijack global scroll.
+		scrollTrap: false, // Don't bubble scrolling when hitting scrolling limits.
 
 		// Dragging
-		dragSource:    null,  // Selector or DOM element for catching dragging events. Default is FRAME.
+		dragSource: null, // Selector or DOM element for catching dragging events. Default is FRAME.
 		mouseDragging: false, // Enable navigation by dragging the SLIDEE with mouse cursor.
 		touchDragging: false, // Enable navigation by dragging the SLIDEE with touch events.
-		releaseSwing:  false, // Ease out on dragging swing release.
-		swingSpeed:    0.2,   // Swing synchronization speed, where: 1 = instant, 0 = infinite.
+		releaseSwing: false, // Ease out on dragging swing release.
+		swingSpeed: 0.2, // Swing synchronization speed, where: 1 = instant, 0 = infinite.
 		elasticBounds: false, // Stretch SLIDEE position limits when dragging past FRAME boundaries.
-		dragThreshold: 3,     // Distance in pixels before Sly recognizes dragging.
-		interactive:   null,  // Selector for special interactive elements.
+		dragThreshold: 3, // Distance in pixels before Sly recognizes dragging.
+		interactive: null, // Selector for special interactive elements.
 
 		// Scrollbar
-		scrollBar:     null,  // Selector or DOM element for scrollbar container.
-		dragHandle:    false, // Whether the scrollbar handle should be draggable.
+		scrollBar: null, // Selector or DOM element for scrollbar container.
+		dragHandle: false, // Whether the scrollbar handle should be draggable.
 		dynamicHandle: false, // Scrollbar handle represents the ratio between hidden and visible content.
-		minHandleSize: 50,    // Minimal height or width (depends on sly direction) of a handle in pixels.
-		clickBar:      false, // Enable navigation by clicking on scrollbar.
-		syncSpeed:     0.5,   // Handle => SLIDEE synchronization speed, where: 1 = instant, 0 = infinite.
+		minHandleSize: 50, // Minimal height or width (depends on sly direction) of a handle in pixels.
+		clickBar: false, // Enable navigation by clicking on scrollbar.
+		syncSpeed: 0.5, // Handle => SLIDEE synchronization speed, where: 1 = instant, 0 = infinite.
 
 		// Pagesbar
-		pagesBar:       null, // Selector or DOM element for pages bar container.
+		pagesBar: null, // Selector or DOM element for pages bar container.
 		activatePageOn: null, // Event used to activate page. Can be: click, mouseenter, ...
-		pageBuilder:          // Page item generator.
-			function (index) {
-				return '<li>' + (index + 1) + '</li>';
-			},
+		// Page item generator.
+		pageBuilder: function (index) {
+			return "<li>" + (index + 1) + "</li>";
+		},
 
 		// Navigation buttons
-		forward:  null, // Selector or DOM element for "forward movement" button.
+		forward: null, // Selector or DOM element for "forward movement" button.
 		backward: null, // Selector or DOM element for "backward movement" button.
-		prev:     null, // Selector or DOM element for "previous item" button.
-		next:     null, // Selector or DOM element for "next item" button.
+		prev: null, // Selector or DOM element for "previous item" button.
+		next: null, // Selector or DOM element for "next item" button.
 		prevPage: null, // Selector or DOM element for "previous page" button.
 		nextPage: null, // Selector or DOM element for "next page" button.
 
 		// Automated cycling
-		cycleBy:       null,  // Enable automatic cycling by 'items' or 'pages'.
-		cycleInterval: 5000,  // Delay between cycles in milliseconds.
-		pauseOnHover:  false, // Pause cycling when mouse hovers over the FRAME.
-		startPaused:   false, // Whether to start in paused sate.
+		cycleBy: null, // Enable automatic cycling by 'items' or 'pages'.
+		cycleInterval: 5000, // Delay between cycles in milliseconds.
+		pauseOnHover: false, // Pause cycling when mouse hovers over the FRAME.
+		startPaused: false, // Whether to start in paused sate.
 
 		// Mixed options
-		moveBy:        300,     // Speed in pixels per second used by forward and backward buttons.
-		speed:         0,       // Animations speed in milliseconds. 0 to disable animations.
-		easing:        'swing', // Easing for duration based (tweening) animations.
-		startAt:       null,    // Starting offset in pixels or items.
-		keyboardNavBy: null,    // Enable keyboard navigation by 'items' or 'pages'.
+		moveBy: 300, // Speed in pixels per second used by forward and backward buttons.
+		speed: 0, // Animations speed in milliseconds. 0 to disable animations.
+		easing: "swing", // Easing for duration based (tweening) animations.
+		startAt: null, // Starting offset in pixels or items.
+		keyboardNavBy: null, // Enable keyboard navigation by 'items' or 'pages'.
 
 		// Classes
-		draggedClass:  'dragged', // Class for dragged elements (like SLIDEE or scrollbar handle).
-		activeClass:   'active',  // Class for active items and pages.
-		disabledClass: 'disabled' // Class for disabled navigation elements.
+		draggedClass: "dragged", // Class for dragged elements (like SLIDEE or scrollbar handle).
+		activeClass: "active", // Class for active items and pages.
+		disabledClass: "disabled", // Class for disabled navigation elements.
 	};
-}(jQuery, window));
+})(jQuery, window);

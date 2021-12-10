@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@material-ui/core";
 import { CardDialog } from "@client/modules/account/components/wallet/CardDialog";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
@@ -22,12 +21,12 @@ export const AddNewPaymentMethod: React.FC = () => {
 
   return (
     <div className="add-new-payment-method-container">
-      <Button
+      <button
         onClick={addCard}
-        className="account-submit-btn edit-card-btn add-new-payment"
+        className="form-button account-submit-btn edit-card-btn add-new-payment"
       >
         Add a credit or debit card
-      </Button>
+      </button>
       <div>S3 Stores Inc accepts major credit and debit cards</div>
       <CardDialog
         contentType={BillingAddressFormEnum.ADD_CARD}

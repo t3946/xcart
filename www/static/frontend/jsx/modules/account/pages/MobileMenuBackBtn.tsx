@@ -1,5 +1,5 @@
+import ArrowBackIcon from "@client/modules/icon/components/account/arrows/ArrowBackIcon";
 import React from "react";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useHistory } from "react-router-dom";
 
 interface MobileMenuBackBtnProps {

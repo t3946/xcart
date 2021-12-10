@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { Form, Formik } from "formik";
 import { FormSelect } from "../shared/FormSelect";
 import { FormInput } from "../shared/FormInput";
-import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { fillMassToSelect } from "../../utils/fill-mass-to-select";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
@@ -103,11 +102,7 @@ export const AddCardForm: React.FC = () => {
                 classes={{ input: "add-card-input" }}
                 handleBlur={handleBlur}
               />
-              <Grid
-                container
-                justifyContent="space-between"
-                alignContent="center"
-              >
+              <div className="d-flex justify-content-center align-center">
                 <label className="form-input-label">Expiration date</label>
                 <div className="expirations-date-container add-card-input">
                   <FormSelect
@@ -129,13 +124,9 @@ export const AddCardForm: React.FC = () => {
                     id={"select-expirations-year"}
                   />
                 </div>
-              </Grid>
+              </div>
 
-              <Grid
-                className="add-address-checkbox"
-                container
-                justifyContent="flex-end"
-              >
+              <div className="d-flex justify-content-end add-address-checkbox">
                 <div className="add-card-input">
                   <FormCheckBox
                     label={"Make this my default card"}
@@ -144,23 +135,23 @@ export const AddCardForm: React.FC = () => {
                     handleChange={handleChange}
                   />
                 </div>
-              </Grid>
-              <Grid container justifyContent="flex-end">
+              </div>
+              <div className="d-flex justify-content-end">
                 <div className="add-card-form-btns">
-                  <Button
+                  <button
                     onClick={cardsHandleCancel}
-                    className="account-submit-btn account-submit-btn-outline auto-width-button cancel-btn"
+                    className="form-button account-submit-btn account-submit-btn-outline auto-width-button cancel-btn"
                   >
                     Cancel
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     type={"submit"}
-                    className="account-submit-btn auto-width-button"
+                    className="form-button account-submit-btn auto-width-button"
                   >
                     Add your card
-                  </Button>
+                  </button>
                 </div>
-              </Grid>
+              </div>
             </Form>
           );
         }}

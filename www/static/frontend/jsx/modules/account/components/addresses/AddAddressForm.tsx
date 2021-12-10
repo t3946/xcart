@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
-import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { Form, Formik, useFormik } from "formik";
 import {
@@ -165,32 +164,28 @@ export const AddAddressForm: React.FC<any> = ({
           classes={{ input: "add-address-input" }}
           handleBlur={formik.handleBlur}
         />
-        <Grid
-          className="add-address-checkbox"
-          container
-          justifyContent="flex-end"
-        >
-          <Grid className="add-address-input">
+        <div className="add-address-checkbox">
+          <div className="add-address-input">
             <FormCheckBox
               label={"Make this my default address"}
               value={formik.values.is_default}
               name={"is_default"}
               handleChange={formik.handleChange}
             />
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="flex-end">
-          <Grid className="add-address-input">
-            <Button
+          </div>
+        </div>
+        <div className="add-address-input-container">
+          <div className="add-address-input">
+            <button
               disabled={addressFormLoading}
               type={"submit"}
-              className="account-submit-btn"
+              className=" form-button account-submit-btn"
             >
               {addressInfo ? "Save changes" : "Add Address"}
-            </Button>
+            </button>
             {children}
-          </Grid>
-        </Grid>
+          </div>
+        </div>
       </form>
     </div>
   );

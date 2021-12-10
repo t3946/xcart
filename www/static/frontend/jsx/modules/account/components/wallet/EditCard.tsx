@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Button, Grid } from "@material-ui/core";
 import { useFormik } from "formik";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
@@ -49,8 +48,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
   const getCardAddressInfo = (cardInfo) => {
     const card = { ...cardInfo };
     if (cardSubmitData?.address?.address_id) {
-      [card.address] = Store
-        .getState()
+      [card.address] = Store.getState()
         .addresses.addressesList.filter(
           (address) => address.address_id === cardSubmitData.address.address_id
         )
@@ -110,12 +108,8 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
     <div className="billing-address-container">
       <div className="edit-card-content">
         <div>
-          <Grid
-            container
-            justifyContent="space-between"
-            className="edit-card-top-part"
-          >
-            <Grid container direction="column">
+          <div className="edit-card-top-part">
+            <div className="d-flex flex-dir-column">
               <div className="wallet-card-content-label label-card-block">
                 Payment method
               </div>
@@ -124,13 +118,9 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
                 cardType={cardInfo.card_type}
                 containerClass={"full-width"}
               />
-            </Grid>
-          </Grid>
-          <Grid
-            alignContent={"center"}
-            justifyContent="space-between"
-            container
-          >
+            </div>
+          </div>
+          <div className="d-flex align-center justify-content-center">
             <div className="wallet-card-content-label label-card-block">
               Billing address
             </div>
@@ -142,7 +132,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
             >
               Change
             </div>
-          </Grid>
+          </div>
           <div className={"address-block"}>
             <div>{cardInformation.address.street} </div>
             <div>{cardInformation.address.state}</div>
@@ -214,22 +204,22 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
       </div>
 
       <div className="edit-card-btns">
-        <Button
+        <button
           onClick={() => onCardActionsEnd(context.handleClose)}
           type={"submit"}
           disabled={submitCardFormLoading}
-          className="account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
+          className="form-button account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
         >
           Cancel
-        </Button>
-        <Button
+        </button>
+        <button
           disabled={submitCardFormLoading}
           onClick={() => onSubmit(formik.values, formik.errors)}
           type={"submit"}
-          className="account-submit-btn auto-width-button"
+          className="form-button account-submit-btn auto-width-button"
         >
           Save
-        </Button>
+        </button>
       </div>
     </div>
   );

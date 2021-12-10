@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
-import { Button } from "@material-ui/core";
 import { useHistory } from "react-router";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
-import Store from "@client/jsx/redux/stores/Store";
 import { useDispatch, useSelector } from "react-redux";
 import { removeCard } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { CardHeader } from "./CardHeader";
@@ -50,20 +48,20 @@ export const RemoveCard: React.FC<RemoveCardProps> = ({ cardInfo }) => {
         cancel any of your open orders that use this method.)
       </div>
       <div className="edit-card-btns remove-card-btns">
-        <Button
+        <button
           onClick={onRemoveEnd}
-          className="account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
+          className="form-button account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
           disabled={submitCardFormLoading}
         >
           Cancel
-        </Button>
-        <Button
+        </button>
+        <button
           disabled={submitCardFormLoading}
           onClick={handleSubmit}
-          className="account-submit-btn auto-width-button"
+          className="form-button account-submit-btn auto-width-button"
         >
           Remove
-        </Button>
+        </button>
       </div>
     </div>
   );
