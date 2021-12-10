@@ -94,7 +94,7 @@ class SaveFilePrice
                     $search_value = $code;
                 }
                 /** @var ProductModel $product */
-                $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value]);
+                $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value, 'manufacturerid' => $this->dx_model->pk]);
                 if ($product) {
                     $fields_send = $this->collectProductData($product, $table_index, $key);
                 } else if ($cost_to_us = $this->ar_update_field[$table_index]['cost_to_us'][$key]) {
