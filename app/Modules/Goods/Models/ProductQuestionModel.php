@@ -12,7 +12,9 @@ use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\ProductQuestion;
 
-
+/**
+ * @property string otrs_ticket
+ */
 class ProductQuestionModel extends Model
 {
     use AutoMetaTrait, DataModelTrait;
