@@ -136,7 +136,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             <Stack
               alignItems="center"
               spacing={3}
-              my={1}
+              my={3}
               direction="row"
               justifyContent="center"
             >

@@ -66,6 +66,7 @@ use Xcart\Manufacturer;
  * @property string $d_website_search_for_sku_url
  * @property float $max_extra_margin
  * @property SupplierFeedModel[]|Manager $feeds
+ * @property DistributorUploadPriceModel[]|null|Manager upload_prices
  */
 class DistributorModel extends Model
 {
@@ -609,7 +610,12 @@ class DistributorModel extends Model
                     'by_email_or_and_fax' => 'by email or/and fax',
                 ],
                 'default' => 'through_distributor_website'
-            ]
+            ],
+            'upload_prices' => [
+                'class' => HasManyField::class,
+                'modelClass' => DistributorUploadPriceModel::class,
+                'link' => ['manufacturerid' => 'manufacturer_id']
+            ],
         ];
     }
 

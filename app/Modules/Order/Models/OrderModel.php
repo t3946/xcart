@@ -67,6 +67,7 @@ use Xcart\Order;
  * @property mixed|PaymentMethodModel payment_method_model
  * @property string|null non_us_confirmation
  * @property string orig_po
+ * @property string otrs_ticket
  * @property string po_number
  * @property string firstname
  * @property string login_last_opened_or_saved
@@ -166,6 +167,11 @@ class OrderModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => OrderGroupModel::class,
                 'link' => ['orderid' => 'orderid'],
+            ],
+            'otrs_ticket' => [
+                'class' => CharField::class,
+                'null' => false,
+                'default' => ''
             ],
             'tags' => [
                 'class' => ManyToManyField::class,
@@ -748,7 +754,7 @@ class OrderModel extends Model
     {
         $overall_score = $bare_score = 0;
         /** @var FraudCheckBaseQuestionModel $fraud */
-        foreach (FraudCheckBaseQuestionModel::objects()->order(['orderby'])->filter(['active' => 'Y']) as $fraud) {
+        foreach (FraudCheckBaseQuestionModel::objects()->order(['orderby']) as $fraud) {
             [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
             if (!is_null($fraud_result)) {
                 [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([

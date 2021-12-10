@@ -1,8 +1,8 @@
 <?php
 
+use Modules\Core\Controllers\Api\EntityOtrsController;
 use Modules\Core\Controllers\Api\FraudCheckController;
 use Modules\Core\Controllers\Api\GeneralSettingsController;
-use Modules\Order\Controllers\Api\OrderFraudCheckController;
 
 return [
 	[
@@ -54,5 +54,10 @@ return [
         'route' => 'question/base/update',
         'target' => [FraudCheckController::class, 'updateBaseQuestion'],
         'name' => 'update_base_question'
+    ],
+    [
+        'route' => '/api/entity/otrs/messages',
+        'target' => [EntityOtrsController::class, 'getOtrsMessage'],
+        'name' => 'entity_otrs_message'
     ]
 ];

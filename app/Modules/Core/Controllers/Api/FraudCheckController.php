@@ -24,7 +24,7 @@ class FraudCheckController extends Controller
         /** @var FraudFAQuestionModel $question */
         foreach (FraudFAQuestionModel::objects()->all() as $question) {
             $ar_result[$question->f_fraud->type]['data'][] = [
-                'value' => $question->weight,
+                'value' => number_format($question->weight, 2),
                 'f_fraud' => $question->f_fraud->name,
                 't_fraud' => $question->t_fraud->name,
                 'template' => $question->template,

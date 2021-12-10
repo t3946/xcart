@@ -15,7 +15,7 @@ export const FraudScoreResult: React.FC = () => {
       alignItems="flex-end"
     >
       <Typography align="right" variant="body2">
-        <b>Bare fraud score:</b> {orderInfo.bareResult}
+        <b>Score:</b> {orderInfo.bareResult}
       </Typography>
       <Typography variant="body2" align="right">
         <b>Current fraud check status:</b> {orderInfo.fraudStatus.name}

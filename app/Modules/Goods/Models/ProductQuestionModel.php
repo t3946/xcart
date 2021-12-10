@@ -76,10 +76,13 @@ class ProductQuestionModel extends Model
     {
         $phone = $this->phone;
         if($this->phone_ext) {
-            $phone .= ' x ' . $this->phone_ext;
+            $phone .= " x $this->phone_ext";
         }
         return $phone;
     }
-
+    public function getProductQuestionId(): string
+    {
+        return 'PRQN-'.sprintf('%1$05d', $this->pk);
+    }
 
 }

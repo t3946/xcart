@@ -1,7 +1,11 @@
 <?php
 
 
-if ( !defined('XCART_START') ) { header("Location: index.php"); die("Access denied"); }
+
+if (!defined('XCART_START')) {
+    header("Location: index.php");
+    die("Access denied");
+}
 
 umask(0);
 
@@ -28,11 +32,11 @@ $smarty = Templater::getInstance();
 $smarty->use_sub_dirs = false;
 $smarty->request_use_auto_globals = false;
 
-$smarty->template_dir = $xcart_dir."/skin1_kolin";
+$smarty->template_dir = $xcart_dir . "/skin1_kolin";
 $smarty->compile_dir = $var_dirs["templates_c"];
-$smarty->config_dir = $xcart_dir."/skin1_kolin";
+$smarty->config_dir = $xcart_dir . "/skin1_kolin";
 $smarty->cache_dir = $var_dirs["cache"];
-$smarty->secure_dir = $xcart_dir."/skin1_kolin";
+$smarty->secure_dir = $xcart_dir . "/skin1_kolin";
 $smarty->debug_tpl = "file:debug_templates.tpl";
 
 if (defined('LOCAL_SF_ID')) {
@@ -48,8 +52,8 @@ if (AREA_TYPE == 'C') {
     }
 }
 
-if ($HTTPS){
-	$smarty->assign("HTTPS_used", "Y");
+if ($HTTPS) {
+    $smarty->assign("HTTPS_used", "Y");
 }
 
 $smarty_skin_dir = "/skin1_kolin";
@@ -68,7 +72,6 @@ $smarty->assign("template_dir", $smarty->template_dir);
 #
 $mail_smarty = $smarty;
 
-if (defined('SMARTY_AUTO_RECOMPILE') && SMARTY_AUTO_RECOMPILE)
-{
+if (defined('SMARTY_AUTO_RECOMPILE') && SMARTY_AUTO_RECOMPILE) {
     $smarty->compile_check = true;
 }

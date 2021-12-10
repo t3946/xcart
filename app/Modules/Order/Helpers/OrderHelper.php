@@ -3,6 +3,7 @@
 namespace Modules\Order\Helpers;
 
 use DateTime;
+use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Models\VoidedReasonModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAnd;
@@ -283,7 +284,11 @@ class OrderHelper
         return null;
     }
 
-    public static function getOTRSMessages(OrderModel $model): int
+    /**
+     * @param OrderModel|ProductQuestionModel $model
+     * @return int
+     */
+    public static function getOTRSMessages($model): int
     {
         $t_arr = Xcart::app()->cache->get('ticket_resolver_messages', []);
         if (isset($t_arr[$model->pk])) {
@@ -297,8 +302,11 @@ class OrderHelper
             '%s',
             'http://helpdesk.s3stores.com/otrs/index.pl?Action=AgentTicketZoom;TicketID=%d'
         );
-
-        $ticket = $resolver->fetch_ticket_info($model->getOrderNumber())[0];
+        if ($model instanceof OrderModel) {
+            $ticket = $resolver->fetch_ticket_info($model->getOrderNumber())[0];
+        } elseif ($model instanceof ProductQuestionModel) {
+            $ticket = $resolver->fetch_ticket_info($model->getProductQuestionId())[0];
+        }
 
         if (isset($ticket['url'])) {
             $model->otrs_ticket = $ticket['url'];
