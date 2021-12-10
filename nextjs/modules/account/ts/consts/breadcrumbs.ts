@@ -84,7 +84,7 @@ export const staticRoutes = [
 
   {
     name: "Orders",
-    path: needSpecifyPath,
+    path: "/account/orders",
   },
 
   {
@@ -94,6 +94,6 @@ export const staticRoutes = [
 
   {
     name: "Decisions required",
-    path: "/",
+    path: "/account/orders/decisions-required",
   },
 ];

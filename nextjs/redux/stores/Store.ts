@@ -28,7 +28,7 @@ import CartReducer from "@redux/reducers/CartReducer";
 // import ReviewsReducer from "@redux/reducers/ReviewsReducer";
 // import ProductReducer from "@redux/reducers/ProductReducer";
 // import PhotoSwipeReducer from "@redux/reducers/PhotoSwipeReducer";
-// import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
+import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
 
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
 
@@ -69,7 +69,7 @@ const reducers = combineReducers({
   // productsRatings: RatingsReducer,
   // productsReviews: ReviewsReducer,
   // product: ProductReducer,
-  // decisions: DecisionsReducer,
+  decisions: DecisionsReducer,
   // photoswipe: PhotoSwipeReducer,
 });
 

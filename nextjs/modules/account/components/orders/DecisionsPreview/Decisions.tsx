@@ -13,12 +13,12 @@ const Decisions: React.FC = function () {
 
   if (isPrintNotSolved) {
     lists.push(
-      <>
-        <h2 className={"decisions-list-header decisions-lists__header mt-md-0"}>
+      <div key={5}>
+        <h2 className={"decisions-list-header decisions-lists__header mt-md-0"} key={1}>
           Order decisions required
         </h2>
 
-        <Row className={"m-sm-0"}>
+        <Row className={"m-sm-0"} key={2}>
           <List
             solved={false}
             decisions={decisions.notSolved.decisions}
@@ -31,7 +31,7 @@ const Decisions: React.FC = function () {
             key={"notSolved"}
           />
         </Row>
-      </>
+      </div>
     );
   }
 
@@ -47,10 +47,10 @@ const Decisions: React.FC = function () {
 
   if (isPrintSolved) {
     lists.push(
-      <>
-        <h2 className={classnames(classes.header)}>Order decisions made</h2>
+      <div key={6}>
+        <h2 className={classnames(classes.header)} key={3}>Order decisions made</h2>
 
-        <Row className={"m-sm-0"}>
+        <Row className={"m-sm-0"} key={4}>
           <List
             solved={true}
             decisions={decisions.solved.decisions}
@@ -63,7 +63,7 @@ const Decisions: React.FC = function () {
             key={"solved"}
           />
         </Row>
-      </>
+      </div>
     );
   }
 

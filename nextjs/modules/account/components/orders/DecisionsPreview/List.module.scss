@@ -1,16 +1,16 @@
-@import "~style-modules/sass-utils.scss";
+@import "styles/utils/Utils.module";
 
 $items-in-viewport: 3;
 
 .decisions-list-items {
   overflow-y: scroll;
-  height: rem-calc(70*$items-in-viewport);
+  height: pxToRem(70*$items-in-viewport);
 
-  @include breakpoint(md up) {
-    height: rem-calc(75*$items-in-viewport);
+  @include breakpoint(md) {
+    height: pxToRem(75*$items-in-viewport);
   }
 
-  @include breakpoint(lg up) {
-    height: rem-calc(70*$items-in-viewport);
+  @include breakpoint(lg) {
+    height: pxToRem(70*$items-in-viewport);
   }
 }

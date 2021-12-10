@@ -1,5 +1,4 @@
 import { AnyAction } from "redux";
-import { decisions } from "@modules/account/ts/consts/store-initial-value";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 
 interface DecisionsStore {
@@ -13,8 +12,19 @@ interface DecisionsStore {
   };
 }
 
+const initialState = {
+  solved: {
+    pagination_offset: 0,
+    decisions: [],
+  },
+  notSolved: {
+    pagination_offset: 0,
+    decisions: [],
+  },
+};
+
 const DecisionsReducer = (
-  store: DecisionsStore = decisions,
+  store: DecisionsStore = initialState,
   action: AnyAction
 ): any => {
   switch (action.type) {

@@ -1,12 +1,12 @@
 import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
-import Decisions from "@modules/account/components/orders/DecisionsPreview/Decisions";
-function DecisionsRequired() {
+
+function Dashboard() {
   return (
     <PageTwoColumns>
-      <Decisions />
+      <div className="d-flex align-items-center">Dashboard</div>
     </PageTwoColumns>
   );
 }
 
-export default DecisionsRequired;
+export default Dashboard;

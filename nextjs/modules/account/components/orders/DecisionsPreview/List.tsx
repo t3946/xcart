@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import Item from "@modules/account/components/orders/DecisionsPreview/Item";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
-import { route } from "@utils/AppData";
+import Link from "next/link";
 import style from "@modules/account/components/orders/DecisionsPreview/List.module.scss";
 import {
   loadMoreAction,
@@ -41,8 +40,8 @@ const List: React.FC<IProps> = function (props: IProps) {
     !isAllLoaded &&
     (decisions.length === 0 || (isIntersecting && !isLoading))
   ) {
-    getMoreDecision();
-    setIsIntersecting(false);
+    // getMoreDecision();
+    // setIsIntersecting(false);
   }
 
   function getMoreDecision() {
@@ -90,13 +89,15 @@ const List: React.FC<IProps> = function (props: IProps) {
 
     items.push(
       <Link
-        to={route("account:order-make-decision", decision.decision_id)}
-        className={"text-decoration-none p-0"}
+        href={"/"}
+        // to={route("account:order-make-decision", decision.decision_id)}
       >
-        <Item
-          decision={decision}
-          ref={theLast && !isLoading ? theLastItemRef : null}
-        />
+        <a className={"text-decoration-none p-0"}>
+          <Item
+            decision={decision}
+            ref={theLast && !isLoading ? theLastItemRef : null}
+          />
+        </a>
       </Link>
     );
   }

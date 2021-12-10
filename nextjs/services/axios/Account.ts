@@ -2,13 +2,16 @@ import axios from "axios";
 
 const getInitialState = async function (req: any) {
   let initialState: any;
+  let xidCookieMatches;
 
-  const matches = req.headers.cookie.match(/xid\d+=.+?;/);
+  if (req.headers.cookie) {
+    xidCookieMatches = req.headers.cookie.match(/xid\d+=.+?;/);
+  }
 
   let cookie = "";
 
-  if (matches) {
-    cookie = matches[0];
+  if (xidCookieMatches) {
+    cookie = xidCookieMatches[0];
   }
 
   const instance = axios.create({

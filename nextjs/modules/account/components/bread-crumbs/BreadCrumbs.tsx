@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Styles from "@modules/account/components/bread-crumbs/BreadCrumbs.module.scss";
+import cn from "classnames";
 
 const BreadCrumbs: React.FC = () => {
   const breadcrumbs = useSelectorAccount((e) => e.breadcrumbs);
@@ -12,7 +14,7 @@ const BreadCrumbs: React.FC = () => {
   if (process.browser) {
     currentPath = window.location.pathname;
   } else {
-    currentPath = process.next.url;
+    currentPath = "/account" + process.next.url;
   }
 
   const currentPathParts = currentPath.split("/");
@@ -29,6 +31,7 @@ const BreadCrumbs: React.FC = () => {
     for (const breadcrumb of breadcrumbs) {
       if (breadcrumb.path === subPath) {
         breadcrumbsList.push({ ...breadcrumb });
+        break;
       }
     }
   }
@@ -48,17 +51,21 @@ const BreadCrumbs: React.FC = () => {
     >
       {breadcrumbsList.map((item, i) => {
         const last = i + 1 === breadcrumbsList.length;
+        //next has base url `/account` that will be added in <Link>
+        const path = item.path.replace("/account", "") || "/";
 
         if (!last) {
           return (
-            <SwiperSlide key={i} className="breadcrumb-slide">
-              <Link href={item.path}>
+            <SwiperSlide
+              key={i}
+              className={cn(Styles.breadcrumbSlide, "w-auto")}
+            >
+              <Link href={path}>
                 <a
                   className="breadcrumb-link"
                   itemScope
                   itemType="https://schema.org/Thing"
                   itemProp="item"
-                  id={item.path}
                 >
                   <span itemProp="name">{item.name}</span>
                 </a>
@@ -68,7 +75,10 @@ const BreadCrumbs: React.FC = () => {
           );
         } else {
           return (
-            <SwiperSlide key={i} className="breadcrumb-slide">
+            <SwiperSlide
+              key={i}
+              className={cn(Styles.breadcrumbSlide, "w-auto")}
+            >
               <span
                 itemScope
                 itemType="https://schema.org/Thing"

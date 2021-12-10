@@ -1,18 +1,15 @@
 import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
-import { useSelector } from "react-redux";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const SideBarMenu: React.FC = () => {
-  const routes = useSelectorAccount((e) => e.routes);
   const breakpoint = useBreakpoint();
-  const user = useSelector((e: StoreInterface) => e.user);
+  const user = useSelectorAccount((e) => e.user);
   const menuItems = [
-    { to: "/account/dashboard", label: "Dashboard" },
+    { to: "/dashboard", label: "Dashboard" },
     {
       to: "",
       label: "Orders",
