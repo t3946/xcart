@@ -28,6 +28,7 @@ class DistributorAdmin extends Admin
             'sites',
             'products',
             'active_products',
+            'ads_products',
             'feed',
             'feed_source',
             'provider',
@@ -53,6 +54,9 @@ class DistributorAdmin extends Admin
             ],
             'active_products' => [
                 'title' => "Active<br/>SKUs",
+            ],
+            'ads_products' => [
+                'title' => "Ads<br/>SKUs",
             ],
             'feed' => [
                 'title' => 'Feed',
@@ -86,9 +90,11 @@ class DistributorAdmin extends Admin
                     )
                 );
             case 'products' :
-                return $item->products->filter([new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])])->count();
+                return $item->products->filter(['is_group_root' => false])->count();
             case 'active_products' :
-                return $item->products_active->filter([new QOr(['productid__isnt' => new Expression('group_root'), 'group_root__isnull' => true])])->count();
+                return $item->products_active->filter(['is_group_root' => false])->count();
+            case 'ads_products' :
+                return $item->products->filter(['is_group_root' => false, 'google_ads__shopping_status' => 'approved'])->count();
             case 'feed' :
                 $i_count = $item->feed_I_E->count();
                 $p_count = $item->feed_P_E->count();
