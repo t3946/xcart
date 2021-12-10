@@ -20,6 +20,7 @@ class QueueManager
     private ?AMQPChannel $channel = null;
 
     private array $init_queues = [];
+    private int $prefetch_count = 50;
 
     private function connect(): void
     {
@@ -31,7 +32,7 @@ class QueueManager
                 $this->password #password
             );
             $this->channel = $this->connection->channel();
-            $this->channel->basic_qos( null, 50, null );
+            $this->channel->basic_qos( null, $this->prefetch_count, null );
         }
     }
 
@@ -139,5 +140,10 @@ class QueueManager
                 $this->channel->basic_consume($queue, $tag, false, false, false, false, $callback);
             }
         }
+    }
+    public function setCount(int $count): QueueManager
+    {
+        $this->prefetch_count = $count;
+        return $this;
     }
 }

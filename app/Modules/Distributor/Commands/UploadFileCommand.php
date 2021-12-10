@@ -22,7 +22,7 @@ class UploadFileCommand extends Command
 
     public function handle($arguments = []): void
     {
-        Xcart::app()->queue->consume('dx_prices', [$this, 'consume']);
+        Xcart::app()->queue->setCount(1)->consume('dx_prices', [$this, 'consume']);
     }
 
     /**
