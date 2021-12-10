@@ -52,7 +52,7 @@ export const FraudInfoStatuses: React.FC = ({}) => {
               dispatch(updateFraudCheckStatus(orderId, fraudStatus.code))
             }
           >
-            Apply changes, update fraud scores and change fraud check status
+            Apply changes, update fraud score and change fraud check status
           </button>
         </div>
       </Grid>

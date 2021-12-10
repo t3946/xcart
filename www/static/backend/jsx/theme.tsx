@@ -600,6 +600,25 @@ if (paypal_form.length) {
     },
   });
 }
+$(function () {
+  const link = $("#otrs-resolver-order-link");
+  if (link.length) {
+    $.ajax({
+      url: link.data("url"),
+      data: { entityId: link.data("id"), entity: link.data("entity") },
+      type: "get",
+      dataType: "json",
+      success: (data) => {
+        if (data.link) {
+          link.show();
+          const child = link.children("a");
+          child.attr("href", data.link ?? "#");
+          child.text(`OTRS ticket (${data.message})`);
+        }
+      },
+    });
+  }
+});
 
 $(function () {
   $(document).on("click", "a[data-prevention]", function (e) {

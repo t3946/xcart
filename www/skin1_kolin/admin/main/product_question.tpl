@@ -59,11 +59,12 @@ $(function() {ldelim}
  {assign var="ticket_resolver_link" value="http://helpdesk.s3stores.com/otrs/"}
 *}
 
- {if $ticket_resolver_link ne ""}
- <td style="font-size: 15px; {* font-weight: bold; *}">
-        / <a target="_blank" style="color: #140BFC;{* text-decoration: none;*}" href="{$ticket_resolver_link}">OTRS ticket{if $ticket_resolver_messages ne ""} ({$ticket_resolver_messages}){/if}</a>
+ <td data-entity="question" data-id="{$product_question.id}"
+     style="font-size: 15px; display: none;  font-weight: bold; "
+     data-url="{$xcartApp->router->url('entity_otrs_message')}">
+        / <a target="_blank" style="color: #140BFC;">
+     </a>
  </td>
- {/if}
  </tr>
  </table>
 </td>

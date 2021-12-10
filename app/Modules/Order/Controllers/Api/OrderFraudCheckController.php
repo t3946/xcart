@@ -108,7 +108,7 @@ class OrderFraudCheckController extends Controller
             $ar_response['addressesLocation'] = $order_model->getAddressesGeoLocation();
 
             $this->jsonResponse($ar_response);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $log = "OrderID: $order_id. By get fraud check data";
             Xcart::app()->logger->error($log, [$exception->getMessage()], 'fraud_check');
             $this->jsonResponse(['message' => 'Error by get fraud check data, repeat operation later'], 400);
@@ -292,7 +292,6 @@ class OrderFraudCheckController extends Controller
         $ar_res_answer = ['diagonal' => [], 'red_flags' => []];
         $base_answer_fraud = OrderBaseFraudCheckModelV2::objects()->filter([
             'order_id' => $orderModel->orderid,
-            'question__active' => 'Y',
             'question__type__in' => ['diagonal', 'red_flags']
         ]);
         $email_domain = $orderModel->getEmailDomain();
@@ -380,7 +379,7 @@ HTML;
             if ($status = FraudStatusModel::objects()->get(['code' => $post->code])) {
                 $this->jsonResponse(['code' => $status->code, 'name' => $status->name]);
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->jsonResponse(['message' => $exception->getMessage()], 400);
         }
     }
@@ -393,7 +392,7 @@ HTML;
                 $order_model->orderFraudCheck();
                 $this->jsonResponse(['status' => true]);
             }
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $log = "OrderID: $order_id. By force fraud check data";
             Xcart::app()->logger->error($log, [$exception->getMessage()], 'fraud_check');
             $this->jsonResponse(['message' => 'Error by force fraud check, repeat operation later'], 400);

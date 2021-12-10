@@ -49,11 +49,11 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
   return (
     <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">
-        Edit {template.questionCode} Fraud check question
+        Edit <b>{template.questionCode}</b> Fraud check question
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Below you can edit question template and question weight.
+          Below you can edit question weight.
         </DialogContentText>
         <Form>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -63,6 +63,7 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
               value={template.template}
               name="template"
               rows={6}
+              disabled
               onChange={onChangeField}
             />
           </Form.Group>

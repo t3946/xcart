@@ -35,7 +35,7 @@ export const FraudCheckOptions: React.FC = () => {
               "FC options",
               "FN CCM parameters",
               "A CCM parameters",
-              "Base question list",
+              "Basic FC Questions",
             ].map((tab, i) => (
               <Tab
                 classes={{ selected: "tab-fraud-admin" }}
@@ -94,7 +94,7 @@ export const FraudCheckOptions: React.FC = () => {
             direction="column"
           >
             <Typography variant="h6" align="center">
-              Base fraud check question
+              Basic fraud check questions
             </Typography>
             {fraudSettings.baseQuestions && <TableBaseQuestions />}
           </Grid>
