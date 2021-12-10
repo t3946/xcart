@@ -87,7 +87,6 @@ export const TablePrice: React.FC<ITablePrice> = ({
                     onDoubleClick={() => setPop(`${i}.${index}`)}
                     className={getClassTd(i)}
                   >
-                    {el}
                     {typeof el === "object" ? "" : el ? el : ""}
                   </td>
                 </Tooltip>

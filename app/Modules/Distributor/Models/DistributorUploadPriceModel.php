@@ -5,6 +5,7 @@ namespace Modules\Distributor\Models;
 use Modules\User\Models\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -19,6 +20,7 @@ use Xcart\App\Orm\Model;
  * @property int date
  * @property string file_path
  * @property string status
+ * @property string file_name
  */
 class DistributorUploadPriceModel extends Model
 {
@@ -41,7 +43,10 @@ class DistributorUploadPriceModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturer_id' => 'manufacturerid'],
             ],
-            'date' => IntField::class,
+            'date' => [
+                'class' => DateTimeField::class,
+                'autoNowAdd' => true,
+            ],
             'count_rows' => IntField::class,
             'user' => [
                 'field' => 'user_id',
@@ -57,6 +62,11 @@ class DistributorUploadPriceModel extends Model
             'status' => [
                 'class' => CharField::class,
                 'default' => self::UPLOAD_STATUS_IN_PROCESS,
+                'null' => true
+            ],
+            'file_name' => [
+                'class' => CharField::class,
+                'default' => null,
                 'null' => true
             ]
         ];

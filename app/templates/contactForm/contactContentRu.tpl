@@ -8,10 +8,10 @@
         <div class="tabs-panel" id="Phone">
             <div class="tab-content">
                 {if $config.local_phone}
-                    <div><span class="title">Local</span><wbr>{$config.local_phone}</div>
+                    <div><span class="title">{t 'Local'}</span><wbr>{$config.local_phone}</div>
                 {/if}
                 {if $config.cidev_top_header_code}
-                    <div><span class="title">Toll&nbsp;free</span><wbr>{$config.cidev_top_header_code}</div>
+                    <div><span class="title">{t 'Toll free'}</span><wbr>{$config.cidev_top_header_code}</div>
                 {/if}
             </div>
         </div>

@@ -33,8 +33,9 @@ export interface ResponsePricesSettings {
 }
 export interface UploadLog {
   uploadId: number;
-  date: number;
+  date: string;
   count: number;
   userUpload: string;
   status: string;
+  name: string;
 }

@@ -21,9 +21,9 @@ export const UploadLogs: React.FC<UploadLogs> = ({ logs }) => {
       {logs.map((log) => (
         <Accordion disabled={log.status === "In process"} key={log.uploadId}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>{`Upload from ${moment
-              .unix(log.date)
-              .format("lll")} - ${log.status}`}</Typography>
+            <Typography>{`Upload from ${moment(log.date).format("lll")} | ${
+              log.name
+            } | ${log.status}`}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="body2">
