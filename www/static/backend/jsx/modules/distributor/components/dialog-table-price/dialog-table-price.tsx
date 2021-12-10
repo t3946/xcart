@@ -73,7 +73,7 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
         if (response.data) {
           state.set(false);
           showSnackbar(
-            `You have successfully updated ${response.data.countUpdate} products`,
+            `You successfully uploaded the file, within 5 minutes information about the download will appear in the log`,
             "success"
           );
         }

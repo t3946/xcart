@@ -15,6 +15,7 @@ export interface ITablePrice extends IListTablePrice {
 export interface FilesInfo {
   files: FileItem[];
   folderId: string;
+  logs: UploadLog[];
 }
 export interface FileItem {
   id: string;
@@ -29,4 +30,11 @@ export interface ResponsePricesSettings {
   column: any;
   for_sale_value: any;
   sites: Site[];
+}
+export interface UploadLog {
+  uploadId: number;
+  date: number;
+  count: number;
+  userUpload: string;
+  status: string;
 }

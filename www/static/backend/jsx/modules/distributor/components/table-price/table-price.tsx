@@ -88,6 +88,7 @@ export const TablePrice: React.FC<ITablePrice> = ({
                     className={getClassTd(i)}
                   >
                     {el}
+                    {typeof el === "object" ? "" : el ? el : ""}
                   </td>
                 </Tooltip>
               ))}

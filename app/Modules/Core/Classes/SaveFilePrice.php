@@ -145,6 +145,7 @@ class SaveFilePrice
                 case 'cost_to_us':
                 case 'list_price':
                 case 'new_map_price':
+                case 'weight':
                     if ($item[$num_row] && preg_match("/(?<price>(\d+\.\d+)|(\d+)|(\.\d+))/", $item[$num_row], $matches)) {
                         $ar_field[$field] = (float)$matches['price'];
                     }

@@ -5,19 +5,23 @@ namespace Modules\Distributor\Controllers\Api;
 
 
 use Exception;
+use JsonException;
 use Modules\Core\Classes\GoogleDrive;
 use Modules\Core\Classes\SaveFilePrice;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Distributor\Models\ColumnTableSaveModel;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Distributor\Models\DistributorUploadPriceModel;
 use Modules\Distributor\Models\SupplierFeedModel;
 use Modules\Sites\Models\SiteModel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use Throwable;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Helpers\Paths;
+use Xcart\App\Main\Xcart;
 
 class ApiDxController extends Controller
 {
@@ -98,12 +102,29 @@ class ApiDxController extends Controller
             }
             return ($curr['dateCreate'] > $prev['dateCreate']) ? -1 : 1;
         });
-        $this->jsonResponse(['files' => $file_list, 'folderId' => $dx_folder]);
+        /** @var DistributorUploadPriceModel $upload_model */
+        foreach ($dx->upload_prices as $upload_model) {
+            $ar_logs[] = [
+                'uploadId' => $upload_model->upload_id,
+                'date' => $upload_model->date,
+                'userUpload' => (string)$upload_model->user,
+                'count' => $upload_model->count_rows,
+                'status' => $upload_model->status,
+            ];
+        }
+        $this->jsonResponse([
+            'files' => $file_list,
+            'folderId' => $dx_folder,
+            'logs' => $ar_logs ?? []
+        ]);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function loadFile(): void
     {
-        $post = json_decode(file_get_contents('php://input'));
+        $post = json_decode(file_get_contents('php://input'), false, 512, JSON_THROW_ON_ERROR);
         $file_id = $post->fileId;
         try {
             [$file, $info_file] = DistributorHelper::getResourceGooglePriceFile("$post->folderId/$file_id");
@@ -134,6 +155,9 @@ class ApiDxController extends Controller
                     for ($i = 0; $i < 100; $i++) {
                         $cell_item = $worksheet->getCell($cell . $i);
                         $cell_value = $cell_item->getDataType() === DataType::TYPE_FORMULA ? $cell_item->getCalculatedValue() : $cell_item->getValue();
+                        if ($cell_value instanceof RichText) {
+                            $cell_value = $cell_value->getPlainText();
+                        }
                         $cells_values[$cell][] = is_numeric($cell_value) ? round($cell_value, 2) : $cell_value;
                     }
                 }
@@ -177,73 +201,24 @@ class ApiDxController extends Controller
     }
 
     /* Update products by rows from Excel file */
+    /**
+     * @throws JsonException
+     */
     public function updateProductsFromPriceList(): void
     {
-        $post = json_decode(file_get_contents('php://input'));
-        $select = $post->select;
-        $search_by = $post->checkField;
-        $active_products = $post->valueActive;
-        /** @var DistributorModel $dx */
-        $dx = DistributorModel::objects()->get(['manufacturerid' => $post->dx]);
-        if (!$dx) {
-            $this->jsonResponse(['message' => 'Fail found distributor'], 400);
-        }
+        $post = json_decode(file_get_contents('php://input'), false, 512, JSON_THROW_ON_ERROR);
         try {
-            [$file, $info_file] = DistributorHelper::getResourceGooglePriceFile($post->pathFile);
-            $file_name = md5($info_file['name']);
-            $path_save = Paths::get('runtime') . "/tmp/$file_name.{$info_file['extension']}";
-            $file_save = file_put_contents($path_save, $file);
-            if (!$file_save) {
-                $this->jsonResponse(['message' => 'Failed save file to server with google drive'], 400);
+            $upload_model = new DistributorUploadPriceModel();
+            $upload_model->user = Xcart::app()->user;
+            $upload_model->manufacturer_id = $post->dx;
+            $upload_model->date = time();
+            $upload_model->file_path = $post->pathFile;
+            if ($upload_model->save()) {
+                Xcart::app()->queue->send('dx_prices', json_encode(array_merge((array)$post, ['upload_id' => $upload_model->pk]), JSON_THROW_ON_ERROR));
             }
-            $reader = IOFactory::createReaderForFile($path_save);
-            $excel_obj = $reader->load($path_save);
-            $ar_save = [];
-            for ($i = 0; $i < $excel_obj->getSheetCount(); $i++) {
-                foreach ($excel_obj->getSheet($i)->toArray() as $column) {
-                    $ar_save[$i][] = $column;
-                }
-            }
-            $ob_save_price = new SaveFilePrice($dx, (array)$search_by);
-            $ob_save_price->active_for_sale_value = $active_products;
-            $ob_save_price->storefront = $post->storefront;
-            $ob_save_price->need_create = $post->create;
-            $ob_save_price->collectField((array)$select, $ar_save);
-            $ob_save_price->need_send = $post->needSend;
-            $ob_save_price->savePrice();
-            $ob_save_price->sendStats();
-            $this->jsonResponse(['countUpdate' => $ob_save_price->count_update]);
-        } catch (Throwable $exception) {
-            $this->jsonResponse(['message' => $exception->getMessage()], 400);
-        } finally {
-            if (isset($path_save) && file_exists($path_save)) {
-                unlink($path_save);
-            }
-            // overwriting column order in Excel table
-            $id_list = ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx->pk])->valuesList(['id'], true);
-            if ($id_list) {
-                ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
-            }
-            foreach ($select as $table_index => $fields) {
-                foreach ($fields as $key => $field) {
-                    $column = new ColumnTableSaveModel();
-                    $column->num_column = $key;
-                    $column->option_name = $field;
-                    $column->manufacture = $dx;
-                    $column->num_table = $table_index;
-                    $column->save();
-                }
-            }
-            if (!empty($active_products)) {
-                foreach ($active_products as $table_index => $value) {
-                    $column = new ColumnTableSaveModel();
-                    $column->num_table = $table_index;
-                    $column->is_for_sale_value = true;
-                    $column->manufacture = $dx;
-                    $column->option_name = $value;
-                    $column->save();
-                }
-            }
+            $this->jsonResponse(['status' => true]);
+        } catch (Throwable $e) {
+            $this->jsonResponse(['message' => $e->getMessage()]);
         }
     }
 
@@ -251,8 +226,7 @@ class ApiDxController extends Controller
     /**
      * @throws Exception
      */
-    public
-    function getColumnByDx(int $dx): void
+    public function getColumnByDx(int $dx): void
     {
         $dx_model = DistributorModel::objects()->get(['manufacturerid' => $dx]);
         $ar_column = [];

@@ -11,17 +11,19 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import {
   FileItem,
   FilesInfo,
+  UploadLog,
 } from "@admin/modules/distributor/ts/types/table-price.types";
 import Divider from "@mui/material/Divider";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 import { initialFiles } from "@admin/modules/distributor/ts/initial/form-price.initial";
 import moment from "moment";
+import { UploadLogs } from "@admin/modules/distributor/components/upload-logs/UploadLogs";
 interface IFormPrice {
   distributorId: number;
 }
 
 export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
-  const [files, setFiles] = useState<FilesInfo>(initialFiles);
+  const [dxInfo, setDxInfo] = useState<FilesInfo>(initialFiles);
   const [selectedFile, setSelectedFile] = useState<FileItem>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [table, setTable] = useState([]);
@@ -37,7 +39,7 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
   useEffect(() => {
     try {
       axios.get(`/api/dx/get-file-list/${distributorId}`).then((response) => {
-        setFiles(response.data);
+        setDxInfo(response.data);
       });
     } catch (e) {
       if (e.response.data) {
@@ -55,7 +57,7 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
           JSON.stringify({
             distributorId,
             fileId: file.id,
-            folderId: files.folderId,
+            folderId: dxInfo.folderId,
           })
         )
         .then((response) => {
@@ -66,7 +68,7 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
       showSnackbar("An error has occurred, please try again", "error");
     }
   };
-  if (Array.isArray(files.files) && !files.files.length) {
+  if (Array.isArray(dxInfo.files) && !dxInfo.files.length) {
     return (
       <Typography variant="h6" align="center">
         Not found files
@@ -80,9 +82,9 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
       justifyContent="center"
       alignItems="center"
     >
-      {files.files ? (
+      {dxInfo.files ? (
         <List>
-          {files.files.map((file) => (
+          {dxInfo.files.map((file) => (
             <Fragment>
               <ListItem disablePadding>
                 <ListItemButton onClick={() => selectFile(file)}>
@@ -102,14 +104,15 @@ export const FormPrice: React.FC<IFormPrice> = ({ distributorId }) => {
       ) : (
         <CircularProgress />
       )}
+      {dxInfo.logs && <UploadLogs logs={dxInfo.logs} />}
       {dialogOpen && (
         <DialogTablePrice
-          pathFile={`${files.folderId}/${selectedFile.id}`}
+          pathFile={`${dxInfo.folderId}/${selectedFile.id}`}
           dx={distributorId}
           arTable={table}
           state={{ get: dialogOpen, set: setDialogOpen }}
           arTableName={nameTable}
-          folderDx={files.folderId}
+          folderDx={dxInfo.folderId}
           closeHandle={handleClose}
         />
       )}
