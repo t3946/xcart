@@ -105,7 +105,6 @@ const Checkout: React.FC = function () {
   };
 
   function stripeInitHandler({ stripe, elements }) {
-    console.log("stripeInitHandler", { stripe, elements });
     setStripe(stripe);
     setElements(elements);
   }
@@ -130,8 +129,6 @@ const Checkout: React.FC = function () {
             setStripeError(errorMessage);
           },
         };
-
-        console.log("Formik", { errors, values });
 
         return (
           <Form className={"mt-5"}>

@@ -1,9 +1,14 @@
 import { AnyAction } from "redux";
 import { AccountMainStore } from "@modules/account/ts/types/store.type";
-import { accountMainStoreInitialValue } from "@modules/account/ts/consts/store-initial-value";
+
+const initialValue = {
+  countries: [],
+  states: [],
+  isList: false,
+};
 
 const accountMainReducer = (
-  state: AccountMainStore = accountMainStoreInitialValue,
+  state: AccountMainStore = initialValue,
   action: AnyAction
 ): AccountMainStore => {
   switch (action.type) {

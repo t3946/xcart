@@ -43,17 +43,6 @@ const SideBarMenu: React.FC = () => {
     { to: "/account/rewards", label: "Rewards" },
   ];
 
-  function logoutButtonTemplate(): any {
-    if (!user) {
-      return;
-    }
-
-    return breakpoint({
-      xs: <LogoutButton />,
-      lg: null,
-    });
-  }
-
   return (
     <div className="sidebar-menu-wrapper">
       {menuItems.map((value: Record<any, any>, index) => {
@@ -81,7 +70,7 @@ const SideBarMenu: React.FC = () => {
         );
       })}
 
-      {logoutButtonTemplate()}
+      <LogoutButton classes={"d-lg-none"} />
     </div>
   );
 };

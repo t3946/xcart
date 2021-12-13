@@ -7,7 +7,7 @@ function useCLickListener(
   callback: (arg: boolean) => void,
   id?: string
 ): ClickListenerData {
-  const handleFunction = (e) => {
+  const handleFunction = (e: any) => {
     if (e.target.id === id) {
       return;
     }
@@ -16,11 +16,15 @@ function useCLickListener(
   };
 
   const startListen = () => {
-    document.body.addEventListener("click", handleFunction);
+    if (process.browser) {
+      document.body.addEventListener("click", handleFunction);
+    }
   };
 
   const endListen = () => {
-    document.body.removeEventListener("click", handleFunction);
+    if (process.browser) {
+      document.body.removeEventListener("click", handleFunction);
+    }
   };
 
   return {

@@ -2,57 +2,81 @@ import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import breakpoints from "@modules/account/ts/consts/breakpoints";
 import Store from "@redux/stores/Store";
 
-function resizeHandler() {
-  Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
+function getScreenWidth() {
+  const backdropScreenSize = 768;
+  return process.browser ? window.innerWidth : backdropScreenSize;
 }
 
-export default function useBreakpoint(): (actions: ActionsInterface) => any {
-  //todo: не ясно как это будет работать
-  if (typeof window === "undefined") {
-    return () => {};
+function resizeHandler() {
+  Store.dispatch(setBreakpoint(getBreakpointsFlags(getScreenWidth())));
+}
+
+export default function useBreakpoint(): (
+  actions: Record<EBreakPoints, any>
+) => any {
+  if (process.browser) {
+    window.removeEventListener("resize", resizeHandler);
+    window.addEventListener("resize", resizeHandler);
   }
-  window.removeEventListener("resize", resizeHandler);
-  window.addEventListener("resize", resizeHandler);
 
   return executeBreakpoint;
 }
 
-interface ActionsInterface {
-  xxl?: any;
-  xl?: any;
-  lg?: any;
-  md?: any;
-  sm?: any;
-  xs?: any;
+enum EBreakPoints {
+  xxl = "xxl",
+  xl = "xl",
+  lg = "lg",
+  md = "md",
+  sm = "sm",
+  xs = "xs",
 }
 
 /**
  * From passed breakpoint actions to select the most relevant and return it
  * @param actions actions for breakpoints
  */
-function executeBreakpoint(actions: ActionsInterface): any {
-  const breakpointsOrder = ["xxl", "xl", "lg", "md", "sm", "xs"].reverse();
-  const breakpointsFlags = getBreakpointsFlags(window.innerWidth);
-  let action;
+function executeBreakpoint(actions: Record<any, any>): any {
+  const breakpointsOrder: EBreakPoints[] = [
+    EBreakPoints.xxl,
+    EBreakPoints.xl,
+    EBreakPoints.lg,
+    EBreakPoints.md,
+    EBreakPoints.sm,
+    EBreakPoints.xs,
+  ].reverse();
+  const breakpointsFlags = getBreakpointsFlags(getScreenWidth());
+  if (process.browser) {
+    let action;
 
-  for (const breakpointName of breakpointsOrder) {
-    if (
-      breakpointsFlags[breakpointName] &&
-      actions[breakpointName] !== undefined
-    ) {
-      action = actions[breakpointName];
+    for (const breakpointName of breakpointsOrder) {
+      if (
+        breakpointsFlags[breakpointName] &&
+        actions[breakpointName] !== undefined
+      ) {
+        action = actions[breakpointName];
+      }
     }
-  }
 
-  if (action === undefined) {
-    action = actions["xs"];
-  }
+    if (action === undefined) {
+      action = actions["xs"];
+    }
 
-  return typeof action === "function" ? action() : action;
+    return typeof action === "function" ? action() : action;
+  } else {
+    const allActions: any[] = [];
+
+    for (const breakpointName of breakpointsOrder) {
+      if (actions[breakpointName] !== undefined) {
+        allActions.push(actions[breakpointName]);
+      }
+    }
+
+    return allActions;
+  }
 }
 
 export function getBreakpointsFlags(resolution: number): any {
-  const activeBreakpoints = {};
+  const activeBreakpoints: any = {};
 
   for (const sizeName in breakpoints) {
     activeBreakpoints[sizeName] = resolution >= breakpoints[sizeName];

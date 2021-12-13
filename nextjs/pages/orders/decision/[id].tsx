@@ -50,7 +50,6 @@ function DecisionPage(props) {
   let i = 0;
 
   while (!decision && i < max) {
-    console.log(decisions[i].decision_id, decisionId);
     if (decisions[i].decision_id === decisionId) {
       decision = decisions[i];
     }

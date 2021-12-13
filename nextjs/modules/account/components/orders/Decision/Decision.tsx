@@ -16,9 +16,6 @@ const Decision: React.FC = (props) => {
   const dispatch = useDispatch();
   const decision = props.decision;
 
-
-  console.log("PROPS", props);
-
   if (!decision) {
     if (process.browser) {
       router.push("/orders/decision-required");

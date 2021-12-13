@@ -1,13 +1,11 @@
 import React from "react";
 import Item from "@modules/account/components/orders/Navigation/Item";
-// import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import NavigationMobile from "@modules/account/components/orders/Navigation/NavigationMobile";
-import { route } from "@utils/AppData";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const Navigation: React.FC = () => {
-  // useSelector((store: AccountStore) => store.main.breakpoint);
+  useSelectorAccount((e) => e.main.breakpoint);
   const user = useSelectorAccount((e: StoreInterface) => e.user);
 
   const menu = [
@@ -33,25 +31,22 @@ const Navigation: React.FC = () => {
     { text: "Order log", path: "/" },
   ];
 
-  const items = [];
+  const items: any[] = [];
 
   menu.forEach((value, index) => {
     items.push(<Item {...value} key={index} />);
   });
 
-  // const breakpoint = useBreakpoint();
-
-  //todo: fix breakpoint
-  /*return breakpoint({
-    md: <div className={"orders-navigation"}>{items}</div>,
-    xs: (
+  return (
+    <>
       <NavigationMobile
         menu={menu}
-        className={"account-orders__mobile-navigation"}
+        className={"account-orders__mobile-navigation d-lg-none"}
       />
-    ),
-  });*/
-  return <div className={"orders-navigation"}>{items}</div>;
+
+      <div className={"orders-navigation d-none d-lg-flex"}>{items}</div>
+    </>
+  );
 };
 
 export default Navigation;

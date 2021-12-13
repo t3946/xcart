@@ -18,7 +18,7 @@ const Navigation: React.FC<IProps> = (props: IProps) => {
   const [active, setActive] = React.useState("0");
   const { menu, className } = props;
 
-  function toggleTemplate(isVisible) {
+  function toggleTemplate(isVisible: any) {
     const { text, badge } = menu[active];
     const classes = {
       toggle: [
@@ -56,11 +56,11 @@ const Navigation: React.FC<IProps> = (props: IProps) => {
   }
 
   function menuTemplate() {
-    return menu.map((value) => {
+    return menu.map((value, index) => {
       const { text, badge } = value;
 
       return (
-        <span className={"d-flex align-items-center"}>
+        <span className={"d-flex align-items-center"} key={index}>
           {text}
 
           <span className={"d-inline-block"}>

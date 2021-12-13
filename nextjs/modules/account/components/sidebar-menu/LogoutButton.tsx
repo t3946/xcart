@@ -2,15 +2,28 @@ import React from "react";
 import { logoutAction } from "@redux/actions/account-actions/AutorizationActions";
 import { userClearAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
-import { route } from "@utils/AppData";
+import { useRouter } from "next/router";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import cn from "classnames";
 
 interface IProps {
   onClick?: () => void;
+  classes?: any;
 }
 
 const LogoutButton: React.FC<IProps> = function (props: IProps) {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const classes = {
+    button: [
+      "sidebar-menu-item",
+      "sidebar-menu_top-level-item",
+      "text-start",
+      "w-100",
+      "sidebar-menu-item__logout",
+      props.classes,
+    ],
+  };
 
   function logout() {
     HideAllMenu(dispatch);
@@ -19,10 +32,7 @@ const LogoutButton: React.FC<IProps> = function (props: IProps) {
       logoutAction({
         callback() {
           dispatch(userClearAction());
-          // todo: редирект больше не будета работать
-          // if (navigate) {
-          //   navigate(route("account:login"));
-          // }
+          router.push("/login");
         },
       })
     );
@@ -31,12 +41,7 @@ const LogoutButton: React.FC<IProps> = function (props: IProps) {
   }
 
   return (
-    <button
-      className={
-        "sidebar-menu-item sidebar-menu_top-level-item text-start w-100 sidebar-menu-item__logout"
-      }
-      onClick={logout}
-    >
+    <button className={cn(classes.button)} onClick={logout}>
       Log out
     </button>
   );

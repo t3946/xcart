@@ -7,7 +7,7 @@ import accountRootSaga from "../sagas/account/MainSaga";
 
 import UserReducer from "../reducers/account/UserReducer";
 // import accountAddressesReducer from "../reducers/account/AddressesReducer";
-// import accountMainReducer from "../reducers/account/MainReducer";
+import accountMainReducer from "../reducers/account/MainReducer";
 // import WalletReducer from "../reducers/account/PaymentsReducer";
 import MenuReducer from "../reducers/account/MenuReducer";
 import RoutesReducer from "../reducers/RoutesReducer";
@@ -51,7 +51,7 @@ const reducers = combineReducers({
   user: UserReducer,
   routes: RoutesReducer,
   // addresses: accountAddressesReducer,
-  // main: accountMainReducer,
+  main: accountMainReducer,
   // payments: WalletReducer,
   mobileMenu: MenuReducer,
   breadcrumbs: BreadcrumbsReducer,
