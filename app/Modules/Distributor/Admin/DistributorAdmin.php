@@ -26,7 +26,7 @@ class DistributorAdmin extends Admin
             'manufacturer',
             'code',
             'sites',
-            'products',
+            'total_products',
             'active_products',
             'ads_products',
             'feed',
@@ -49,7 +49,7 @@ class DistributorAdmin extends Admin
             'sites' => [
                 'title' => 'Main SF',
             ],
-            'products' => [
+            'total_products' => [
                 'title' => 'All<br/>SKUs',
             ],
             'active_products' => [
@@ -89,12 +89,6 @@ class DistributorAdmin extends Admin
                         $item->$property->all()
                     )
                 );
-            case 'products' :
-                return $item->products->filter(['is_group_root' => false])->count();
-            case 'active_products' :
-                return $item->products_active->filter(['is_group_root' => false])->count();
-            case 'ads_products' :
-                return $item->products->filter(['is_group_root' => false, 'google_ads__shopping_status' => 'approved'])->count();
             case 'feed' :
                 $i_count = $item->feed_I_E->count();
                 $p_count = $item->feed_P_E->count();

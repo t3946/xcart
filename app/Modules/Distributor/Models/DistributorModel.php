@@ -452,6 +452,21 @@ class DistributorModel extends Model
                 'default' => 0,
                 'null' => false,
             ],
+            'total_products' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
+            'active_products' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
+            'ads_products' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false,
+            ],
             'dx_eta_date' => [
                 'class' => DateField::class,
                 'null' => true,
