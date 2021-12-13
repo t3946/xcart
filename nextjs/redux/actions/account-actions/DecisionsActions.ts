@@ -36,3 +36,20 @@ export const payOrderAction = (payload: Record<any, any>): any => ({
   type: "PAY_ORDER_DECISION",
   payload,
 });
+
+export const approveIncreaseInShippingChargeAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "APPROVE_INCREASE_IN_SHIPPING_CHARGE_DECISION",
+  payload,
+});
+
+export const cancelOrderAction = (payload: Record<any, any>): any => ({
+  type: "CANCEL_ORDER_DECISION",
+  payload,
+});
+
+export const checkSentAction = (payload: Record<any, any>): any => ({
+  type: "CHECK_SENT_DECISION",
+  payload,
+});

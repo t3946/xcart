@@ -55,10 +55,45 @@ function* payOrder(action): Generator {
     });
 }
 
+function* approveIncreaseInShippingChargeDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
+function* cancelOrderDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+function* checkSentDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
   yield takeLatest("UPLOAD_LICENSE_DECISION", uploadLicense);
   yield takeLatest("GET_ETA_PRODUCTS_DECISION", getEtaProductsDecision);
   yield takeLatest("PAY_ORDER_DECISION", payOrder);
+  yield takeLatest(
+    "APPROVE_INCREASE_IN_SHIPPING_CHARGE_DECISION",
+    approveIncreaseInShippingChargeDecision
+  );
+  yield takeLatest("CANCEL_ORDER_DECISION", cancelOrderDecision);
+  yield takeLatest("CHECK_SENT_DECISION", checkSentDecision);
 }

@@ -1,0 +1,209 @@
+@import "styles/utils/Utils.module";
+
+.estimateTable {
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.decision__table_increaseInShippingCharge {
+  margin: 0;
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(26);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(29);
+  }
+}
+
+.estimateTable__caption {
+  margin: 0 0 pxToRem(13);
+  white-space: pre-line;
+  line-height: 1.4;
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(22);
+  }
+}
+
+.estimateTableCaption {
+  padding: 0 pxToRem(9);
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+  }
+}
+
+.estimateTableProductImage {
+  height: pxToRem(42);
+  width: pxToRem(42);
+}
+
+.estimateTableProductName {
+  color: #075a91;
+}
+
+.estimateTableProductNameSku_order {
+  line-height: pxToRem(20);
+  @include breakpoint(md) {
+    line-height: pxToRem(28);
+  }
+  @include breakpoint(lg) {
+    line-height: pxToRem(22);
+  }
+}
+
+.estimateTableProductSku {
+  color: #2a8c3e;
+}
+
+.estimateTableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  text-align: center;
+  align-items: center;
+  padding: pxToRem(15) pxToRem(9);
+
+  & > *:first-child {
+    text-align: left;
+  }
+
+  & > *:last-child {
+    text-align: right;
+  }
+
+  @include breakpoint(md) {
+    padding: pxToRem(30) pxToRem(20);
+    grid-template-columns: 4fr 2fr 2fr;
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(26) pxToRem(24);
+  }
+
+  @include breakpoint(xl) {
+    grid-template-columns: 4fr 2fr 1fr;
+  }
+}
+.estimateTableRow_product {
+  grid-template-columns: 1fr;
+  padding: pxToRem(15) pxToRem(9) pxToRem(0);
+
+  &:after {
+    content: "";
+    display: block;
+    border-bottom: 1px solid #c4c4c4;
+    margin: pxToRem(15) 0 0;
+  }
+
+  @include breakpoint(md) {
+    border-bottom: 1px solid #c4c4c4;
+    grid-template-columns: 4fr 2fr 2fr;
+    padding: pxToRem(30) pxToRem(20);
+
+    &:after {
+      display: none;
+    }
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(26) pxToRem(24);
+  }
+
+  @include breakpoint(xl) {
+    grid-template-columns: 4fr 2fr 1fr;
+  }
+}
+
+.estimateTableRow_order {
+  @include breakpoint(md) {
+    grid-template-columns: 6fr 2fr 2fr;
+  }
+  @include breakpoint(lg) {
+    grid-template-columns: 1fr 4fr 2fr 1fr 1.5fr;
+  }
+
+  @include breakpoint(xl) {
+    grid-template-columns: 1fr 7fr 3fr 2fr 2fr;
+  }
+}
+
+.estimateTableRow_order_product {
+  padding: pxToRem(9) pxToRem(9) pxToRem(15) pxToRem(9);
+  line-height: pxToRem(17);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  &:after {
+    display: none;
+  }
+
+  @include breakpoint(md) {
+    padding: pxToRem(15) pxToRem(20) pxToRem(16) pxToRem(19);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    border-bottom: 1px solid #c4c4c4;
+    padding: pxToRem(27) pxToRem(24) pxToRem(24) pxToRem(25);
+  }
+}
+
+.estimateTableRow_hat {
+  padding: 0 pxToRem(9);
+  color: #494949;
+  height: pxToRem(35);
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20);
+    height: pxToRem(43);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+    height: pxToRem(46);
+  }
+}
+
+.estimateTableHat_theme_green {
+  background-color: #e1ffdc;
+}
+
+.estimateTableHat_theme_grey {
+  background-color: #f4f4f4;
+}
+
+.estimateTableHat_theme_red {
+  background-color: #ffeeeb;
+}
+
+.estimateTableHat_theme_yellow {
+  background-color: #fff5d2;
+}
+
+.estimateTableProductPrice {
+  flex: 1.5;
+}
+
+.estimateTableProductAmount {
+  flex: 2;
+}

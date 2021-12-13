@@ -3,6 +3,8 @@ import Navigation from "@modules/account/components/orders/Navigation/Navigation
 import LicenseRequire from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
 import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
 import UnpaidOrder from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder";
+import SendingCheck from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck";
+import IncreaseInShippingCharge from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
@@ -40,6 +42,21 @@ const Decision: React.FC = (props) => {
       {/*<LicenseRequire onChange={onChangeDecision} decision={decision} />*/}
       {/* <PaymentRequired /> */}
       <UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />
+      <SendingCheck
+        firstAddress={{
+          name: "S3 Stores, Inc.",
+          address: `2885 Sanford Ave SW #12717
+          Grandville, MI, 49418
+          USA`,
+        }}
+        secondAddress={{
+          name: "S3 Stores, Inc.",
+          address: `27 Joseph St.,
+          Chatham, Ontario, N7L 3G4
+          Canada`,
+        }}
+      />
+      <IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />
     </div>
   );
 };

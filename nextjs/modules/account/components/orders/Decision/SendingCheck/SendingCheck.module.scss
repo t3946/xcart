@@ -1,0 +1,159 @@
+@import "styles/utils/Utils.module";
+
+.decision {
+  font-size: pxToRem(16);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.decision__header {
+  margin: pxToRem(27) 0 pxToRem(16);
+
+  @include breakpoint(md) {
+    margin: pxToRem(34) 0 pxToRem(19);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(38) 0 pxToRem(18);
+  }
+}
+
+.decision__caption {
+  margin: 0 0 pxToRem(21);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(24);
+  }
+}
+
+.decision__cardOrCard {
+  margin: pxToRem(18) 0 pxToRem(26);
+
+  @include breakpoint(md) {
+    margin: pxToRem(24) 0 pxToRem(31);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(30) 0 pxToRem(33);
+  }
+}
+
+.decisionHeader {
+  font-weight: bold;
+  text-align: center;
+  font-size: pxToRem(22);
+  line-height: pxToRem(26);
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    text-transform: none;
+    font-size: pxToRem(30);
+    line-height: pxToRem(36);
+  }
+
+  @include breakpoint(lg) {
+    text-align: left;
+    padding: 0 0 0 pxToRem(24);
+    font-size: pxToRem(24);
+  }
+}
+
+.decisionElement {
+  @include breakpoint(lg) {
+    padding: 0 0 0 pxToRem(24);
+  }
+}
+
+.decisionCaption {
+  padding: 0 pxToRem(10);
+  line-height: pxToRem(22);
+
+  @include breakpoint(md) {
+    padding: 0 0 0 pxToRem(22);
+    line-height: pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    line-height: pxToRem(23);
+    padding: 0 0 0 pxToRem(25);
+  }
+}
+
+.decisionCardOrCard {
+  @include breakpoint(lg) {
+    max-width: pxToRem(797);
+  }
+}
+
+.decisionCardBody {
+  gap: pxToRem(14);
+  line-height: pxToRem(28);
+  padding: pxToRem(13) pxToRem(10) pxToRem(24) pxToRem(12);
+
+  @include breakpoint(md) {
+    padding: pxToRem(23) pxToRem(12) pxToRem(35) pxToRem(21);
+    gap: pxToRem(18);
+    line-height: inherit;
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(16) pxToRem(12) pxToRem(16) pxToRem(24);
+    line-height: pxToRem(26);
+    gap: pxToRem(25);
+  }
+}
+
+.decisionCardBodyText {
+  white-space: pre-line;
+}
+
+.decisionCardBodyTitle {
+  font-size: pxToRem(16);
+  line-height: pxToRem(28);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(31);
+  }
+
+  @include breakpoint(lg) {
+    line-height: pxToRem(29);
+  }
+}
+
+.button {
+  font-size: pxToRem(20);
+  line-height: pxToRem(24);
+
+  &:disabled {
+    cursor: default;
+    &:focus,
+    &:hover,
+    &:active {
+      background-color: #ffb426;
+      box-shadow: none;
+    }
+  }
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(34) 0 pxToRem(31);
+    height: pxToRem(48);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(42);
+    padding: 0 pxToRem(29) 0 pxToRem(28);
+    font-size: pxToRem(18);
+    line-height: pxToRem(20);
+  }
+}

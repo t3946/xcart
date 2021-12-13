@@ -1,0 +1,476 @@
+@import "styles/utils/Utils.module";
+
+.decision {
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.decisionHeader {
+  font-size: pxToRem(22);
+  line-height: pxToRem(26);
+  padding: 0 pxToRem(9);
+  font-weight: bold;
+  text-align: center;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+    text-transform: none;
+    padding: 0 pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(24);
+    padding: 0 pxToRem(24);
+    text-align: left;
+  }
+}
+
+.decision__header {
+  margin: pxToRem(25) 0 pxToRem(17);
+
+  @include breakpoint(md) {
+    margin: pxToRem(34) 0 pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(42) 0 pxToRem(26);
+  }
+}
+
+.decisionText {
+  font-size: pxToRem(16);
+  line-height: pxToRem(22);
+  padding: 0 pxToRem(9);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(23);
+    padding: 0 pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+  }
+}
+
+.decision__text {
+  margin: 0 0 pxToRem(13);
+  white-space: pre-line;
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(22);
+  }
+}
+
+.decisionFooterText {
+  line-height: pxToRem(22);
+  font-size: pxToRem(16);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.decision__footerText {
+  margin: pxToRem(26) 0 pxToRem(21);
+
+  @include breakpoint(md) {
+    margin: pxToRem(44) 0 pxToRem(28);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(45) 0 pxToRem(30);
+  }
+}
+
+.accordion {
+  border: pxToRem(1) solid #c4c4c4;
+  margin: pxToRem(15) 0 0 0;
+}
+
+.accordionHeader {
+  font-weight: bold;
+  font-size: pxToRem(18);
+  line-height: pxToRem(22);
+  align-items: center;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: space-between;
+  padding: pxToRem(12) pxToRem(10);
+  border-bottom: pxToRem(1) solid #c4c4c4;
+  height: pxToRem(46);
+
+  @include breakpoint(md) {
+    padding: pxToRem(13) pxToRem(22) pxToRem(13) pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(11) pxToRem(25) pxToRem(11) pxToRem(24);
+  }
+}
+
+.accordionIcon {
+  width: pxToRem(15);
+  color: #051b28;
+  transition: opacity 0.2s;
+}
+
+.accordionIcon_chevron {
+  width: pxToRem(22);
+  transition: transform 0.2s;
+}
+.accordionIcon_chevron_rotate {
+  transform: rotate(180deg);
+}
+.accordion__icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.accordionIcon_hidden {
+  opacity: 0;
+}
+
+.table__name {
+  margin: pxToRem(20) 0 pxToRem(12);
+
+  @include breakpoint(md) {
+    margin: pxToRem(37) 0 pxToRem(27);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(30) 0;
+  }
+}
+
+.tableName {
+  font-size: pxToRem(18);
+  line-height: pxToRem(22);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.table__footer {
+  margin: 0 0 pxToRem(25);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(13);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(30);
+  }
+}
+
+.tableFooter {
+  @include breakpoint(md) {
+    flex-direction: row;
+    padding: 0 0 pxToRem(6);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 0 pxToRem(2);
+  }
+}
+
+.tableFooterDetails {
+  background-color: #f8f8f8;
+  padding: pxToRem(10) pxToRem(10) pxToRem(12) pxToRem(10);
+
+  @include breakpoint(md) {
+    background-color: #ffffff;
+    padding: 0 pxToRem(20);
+  }
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+  }
+}
+
+.tableFooterDetailsLine {
+  line-height: pxToRem(22);
+}
+
+.tableFooterShippingTotals {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: pxToRem(30);
+  line-height: pxToRem(20);
+  text-align: right;
+  padding: pxToRem(10) pxToRem(10) 0 pxToRem(10);
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20);
+    column-gap: pxToRem(53);
+  }
+
+  @include breakpoint(lg) {
+    column-gap: pxToRem(27);
+    padding: 0 pxToRem(25);
+  }
+}
+
+.tableFooterShippingSubtotal__regularShipping {
+  margin: 0 0 pxToRem(8);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(12);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(17);
+  }
+}
+
+.tableFooterShippingSubtotalRegularShipping {
+  color: #2a8c3e;
+}
+
+.tableFooterShippingSubtotalTax {
+  color: #154159;
+}
+
+.tableFooterShippingSubtotal__tax {
+  margin: 0 0 pxToRem(3);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(6);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(9);
+  }
+}
+
+.tableFooterShippingSubtotal {
+  color: #83132b;
+}
+
+.tableFooterShipping__subtotal {
+  margin: pxToRem(8) 0 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(14) 0 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(17) 0 0;
+  }
+}
+.accordionFooter_border {
+  border-top: 1px solid #666666;
+
+  @include breakpoint(md) {
+    border-top: 1px solid #8a8a8a;
+  }
+  @include breakpoint(lg) {
+    border-top: 1px solid #4a4949;
+  }
+}
+
+.accordionFooter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-items: end;
+  column-gap: pxToRem(21);
+  padding: pxToRem(22) pxToRem(10) pxToRem(32);
+  line-height: pxToRem(20);
+
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    line-height: pxToRem(22);
+    column-gap: pxToRem(53);
+    padding: pxToRem(26) pxToRem(20) pxToRem(39);
+  }
+  @include breakpoint(lg) {
+    column-gap: pxToRem(17);
+    padding: pxToRem(30) pxToRem(25);
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+}
+
+.accordionFooter_opened {
+  padding: pxToRem(10) pxToRem(10) pxToRem(32);
+
+  @include breakpoint(md) {
+    padding: pxToRem(26) pxToRem(20) pxToRem(39);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(30) pxToRem(25);
+  }
+}
+
+.totalTable__shippingCost {
+  margin: pxToRem(16) 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(25) 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(34) 0;
+  }
+}
+
+.totalTableShippingCost {
+  position: relative;
+  color: #2a8c3e;
+
+  &:after {
+    content: "";
+    position: absolute;
+    border: pxToRem(1) solid #9a1524;
+    top: pxToRem(-4);
+    width: calc(100% + pxToRem(21));
+    height: calc(100% + pxToRem(8));
+
+    @include breakpoint(md) {
+      top: pxToRem(-8);
+      width: calc(100% + pxToRem(53));
+      height: calc(100% + pxToRem(16));
+    }
+
+    @include breakpoint(lg) {
+      top: pxToRem(-12);
+      width: calc(100% + pxToRem(28));
+      height: calc(100% + pxToRem(24));
+    }
+  }
+
+  @include breakpoint(lg) {
+    font-weight: bold;
+  }
+}
+
+.totalTableShippingCost__label {
+  &:after {
+    left: pxToRem(-5);
+    border-right: none;
+
+    @include breakpoint(md) {
+      left: pxToRem(-11);
+    }
+
+    @include breakpoint(lg) {
+      left: pxToRem(-13);
+    }
+  }
+}
+.totalTableShippingCost__value {
+  &:after {
+    right: pxToRem(-5);
+    border-left: none;
+
+    @include breakpoint(md) {
+      right: pxToRem(-11);
+    }
+
+    @include breakpoint(lg) {
+      right: pxToRem(-16);
+    }
+  }
+}
+
+.totalTable__tax {
+  margin: 0 0 pxToRem(3);
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(7);
+  }
+}
+
+.totalTableTax {
+  color: #154159;
+}
+
+.totalTable__grandTotal {
+  margin: pxToRem(8) 0 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(12) 0 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(17) 0 0;
+  }
+}
+
+.totalTableGrandTotal {
+  color: #83132b;
+  font-size: pxToRem(16);
+  font-weight: bold;
+  text-transform: uppercase;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+}
+
+.decisionFooterButtons {
+  gap: pxToRem(14);
+  height: pxToRem(108);
+  padding: 0;
+
+  @include breakpoint(md) {
+    padding: 0 0 0 pxToRem(20);
+    height: pxToRem(48);
+    gap: pxToRem(11);
+    flex-direction: row;
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(41);
+    gap: pxToRem(12);
+    padding: 0 0 0 pxToRem(24);
+  }
+}
+
+.button {
+  font-size: pxToRem(20);
+  font-weight: bold;
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(35);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.decisionFooterButtonsApprove {
+  padding: 0 pxToRem(37);
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(33);
+  }
+}
+
+.decisionFooterButtonsCancel {
+  padding: 0 pxToRem(32);
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(31);
+  }
+}
