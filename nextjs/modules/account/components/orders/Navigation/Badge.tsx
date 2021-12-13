@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import Styles from "@modules/account/components/orders/Navigation/Badge.module.scss";
 
 interface IProps {
   text?: string | number;
@@ -13,8 +14,8 @@ const Badge: React.FC<IProps> = (props: IProps) => {
     "d-flex",
     "align-items-center",
     "justify-content-center",
-    "rounded-pill",
     "fw-bold",
+    Styles.badge,
     className,
   ];
 

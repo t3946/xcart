@@ -1,0 +1,23 @@
+@import "styles/utils/Utils.module";
+
+.badge {
+  border-radius: 100px;
+  color: #ffffff;
+  background-color: #df1b10;
+  height: pxToRem(20);
+  min-width: pxToRem(20);
+  padding: 0 pxToRem(5);
+  font-size: pxToRem(12);
+
+  @include breakpoint(md) {
+    height: pxToRem(24);
+    min-width: pxToRem(24);
+    font-size: pxToRem(16);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(20);
+    min-width: pxToRem(20);
+    font-size: pxToRem(12);
+  }
+}
