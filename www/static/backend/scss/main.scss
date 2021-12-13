@@ -56,31 +56,35 @@
 @import "../bem/bem";
 
 html, body {
-    font-size: initial;
+  font-size: initial;
+}
+
+.admin-main-content {
+  width: fit-content;
 }
 
 .admin-main-content,
 .VertMenuBorder,
 .headSearchLine,
 .select2-container {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 .container {
-    min-width: 1310px;
+  min-width: 1310px;
 }
 
 @media (min-width: 1200px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl {
-        max-width: 1310px;
-    }
+  .container, .container-lg, .container-md, .container-sm, .container-xl {
+    max-width: 1310px;
+  }
 }
 
-.OrderSheet, .OrderSheet td{
-    border: 1px solid #000000;
+.OrderSheet, .OrderSheet td {
+  border: 1px solid #000000;
 }
 
 button {
-    border: rem-calc(1) solid #000000;
-    border-radius: rem-calc(2);
+  border: rem-calc(1) solid #000000;
+  border-radius: rem-calc(2);
 }

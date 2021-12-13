@@ -117,7 +117,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
 
                 $overall_fraud_score += $orderFraudCheckModel->fraud_score;
                 if ($fraudCheckModel->question_code !== 'CHECK_TOTAL') {
-                    $bareFraudScore += (float) $orderFraudCheckModel->fraud_score;
+                    $bareFraudScore += (float)$orderFraudCheckModel->fraud_score;
                 }
                 $orderFraudCheckModel->save();
 
@@ -134,7 +134,9 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
         $current_bare_fraud_score = $orderModel->bare_fraud_score;
 
         if ($acc_paymentid = Xcart::app()->request->post->get('acc_paymentid')) {
-            $orderModel->groups->update(['acc_paymentid' => $acc_paymentid]);
+            foreach ($acc_paymentid as $key => $payment_id) {
+                $orderModel->groups->filter(['order_group_id' => $key])->update(['acc_paymentid' => $payment_id]);
+            }
         }
 
         $overall_fraud_score = price_format($overall_fraud_score);
