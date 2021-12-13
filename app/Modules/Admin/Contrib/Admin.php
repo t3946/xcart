@@ -480,8 +480,14 @@ abstract class Admin
                 } elseif ($model_field instanceof ForeignField) {
                     $key = "{$model_field->getName()}__{$model_field->getTo()}";
                     if (is_array($value)) {
-                        if ($value = array_filter($value)) {
-                            $qs->filter(["{$key}__in" => $value]);
+                        $list_value = [];
+                        foreach ($value as $item) {
+                            if ($item !== '') { // !empty не ставить, и по array_filter не проверять
+                                $list_value[] = $item;
+                            }
+                        }
+                        if ($list_value) {
+                            $qs->filter(["{$key}__in" => $list_value]);
                         }
                     } else {
                         $qs->filter([$key => $value]);
