@@ -1664,7 +1664,6 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             else {
                 db_query("INSERT INTO $sql_tbl[off_hours_messages] (orderid, manufacturerid, message) VALUES ('$orderid', '$mnf_id', '" . addslashes($mnf_body_to_db) . "')");
             }
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
 
             if (!isset($top_message["content"])) {
