@@ -33,7 +33,7 @@ class CategoryAdmin extends NestedAdmin
     {
         switch ($property) {
             case 'products':
-                return $item->{$property}->count();
+                return "<a target='_blank' href='{$item->getAbsoluteUrl()}'>$item->product_count ($item->global_product_count)</a>";
         }
         return parent::getItemProperty($item, $property);
     }
@@ -66,5 +66,12 @@ class CategoryAdmin extends NestedAdmin
     public function isAjaxUpdate(): bool
     {
         return true;
+    }
+
+    public function getListItemActions(): array
+    {
+        return [
+            'update',
+        ];
     }
 }

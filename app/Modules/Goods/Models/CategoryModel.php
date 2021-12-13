@@ -33,6 +33,8 @@ use Xcart\Category;
  * @property string category Name of category
  * @property null|SiteModel site
  * @property Manager|ProductModel[] products
+ * @property int global_product_count
+ * @property int product_count
  */
 class CategoryModel extends TreeModel
 {
@@ -149,11 +151,15 @@ class CategoryModel extends TreeModel
                 ],
                 'title_tag' => [
                     'class' => CharField::class,
-                    'verboseName' => htmlentities('Title (<title>)')
+                    'verboseName' => htmlentities('Title (<title>)'),
+                    'default' => '',
+                    'null' => true
                 ],
                 'SEO_category_name' => [
                     'class' => CharField::class,
-                    'verboseName' => htmlentities('SEO category name (<H1>)')
+                    'verboseName' => htmlentities('SEO category name (<H1>)'),
+                    'default' => '',
+                    'null' => true
                 ],
                 'meta_keywords' => [
                     'class' => CharField::class,
