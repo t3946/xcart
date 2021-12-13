@@ -83,13 +83,18 @@ export const staticRoutes = [
   },
 
   {
-    name: "Orders",
-    path: "/account/orders",
+    name: "Open orders",
+    path: "/account/orders/open-orders",
   },
 
   {
-    name: "Open orders",
-    path: "/account/orders/open-orders",
+    name: "Cancelled orders",
+    path: "/account/orders/canceled-orders",
+  },
+
+  {
+    name: "Completed orders",
+    path: "/account/orders/completed-orders",
   },
 
   {
