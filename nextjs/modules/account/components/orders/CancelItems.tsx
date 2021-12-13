@@ -26,7 +26,7 @@ export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
     setLoading(true);
     api
       .post(
-        "/account/api/orders/open-cancel-request",
+        "/api/account/orders/open-cancel-request",
         JSON.stringify({
           order: {
             order_id: urlParams.id,

@@ -89,7 +89,7 @@ export const staticRoutes = [
 
   {
     name: "Open orders",
-    path: needSpecifyPath,
+    path: "/account/orders/open-orders",
   },
 
   {

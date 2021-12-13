@@ -23,7 +23,7 @@ import DepartmentsMenuDesktopReducer from "@redux/reducers/account/DepartmentsMe
 import CartReducer from "@redux/reducers/CartReducer";
 // import MiniCartReducer from "@redux/reducers/MiniCartReducer";
 // import PublicProfileReducer from "@redux/reducers/account/PublicProfileReducer";
-// import OrdersReducer from "@redux/reducers/account/OrdersReducer";
+import OrdersReducer from "@redux/reducers/account/OrdersReducer";
 // import RatingsReducer from "@redux/reducers/RatingsReducer";
 // import ReviewsReducer from "@redux/reducers/ReviewsReducer";
 // import ProductReducer from "@redux/reducers/ProductReducer";
@@ -66,7 +66,7 @@ const reducers = combineReducers({
   cart: CartReducer,
   // miniCart: MiniCartReducer,
   // publicProfile: PublicProfileReducer,
-  // ordersStore: OrdersReducer,
+  ordersStore: OrdersReducer,
   // productsRatings: RatingsReducer,
   // productsReviews: ReviewsReducer,
   // product: ProductReducer,

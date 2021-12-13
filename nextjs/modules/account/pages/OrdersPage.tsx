@@ -1,24 +1,23 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getOrders } from "@redux/actions/account-actions/OrdersActions";
 import { OrdersListHeader } from "@modules/account/components/orders/OrdersListHeader";
 import { OrderItem } from "@modules/account/components/orders/OrderItem";
 import { CircularProgress } from "@material-ui/core";
-import { AccountStore } from "@modules/account/ts/types/store.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface OrdersPageProps {
   label: string;
   type: string;
 }
 
-export const OrdersPage: React.FC<OrdersPageProps> = ({ label, type }) => {
+const OrdersPage: React.FC<OrdersPageProps> = (props: OrdersPageProps) => {
+  const { label, type } = props;
   const dispatch = useDispatch();
 
-  const orders = useSelector((e: AccountStore) => e.ordersStore.orders);
+  const orders = useSelectorAccount((e) => e.ordersStore.orders);
 
-  const ordersLoading = useSelector(
-    (e: AccountStore) => e.ordersStore.ordersLoading
-  );
+  const ordersLoading = useSelectorAccount((e) => e.ordersStore.ordersLoading);
 
   useEffect(() => {
     dispatch(getOrders(type));
@@ -39,7 +38,7 @@ export const OrdersPage: React.FC<OrdersPageProps> = ({ label, type }) => {
         <div>
           {orders[type]?.items?.length ? (
             <div>
-              {orders[type].items?.map((e) => {
+              {orders[type].items?.map((e: any) => {
                 return (
                   <OrderItem
                     orderType={type}
@@ -65,3 +64,5 @@ export const OrdersPage: React.FC<OrdersPageProps> = ({ label, type }) => {
     </div>
   );
 };
+
+export default OrdersPage;

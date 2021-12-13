@@ -9,7 +9,7 @@ const api = new ApiService();
 function* getCards(action: AnyAction): Generator {
   const orders: any = yield api
     .get<any>(
-      `/account/api/orders/get-orders/${action.ordersType}/${
+      `/api/account/orders/get-orders/${action.ordersType}/${
         Store.getState().ordersStore.orders[action.ordersType].selectValue.value
       }`
     )

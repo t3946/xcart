@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import { useAccordion } from "@modules/account/hooks/useAccordion";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { useSelector } from "react-redux";
-import { AccountStore } from "@modules/account/ts/types/store.type";
 
 interface OrderItemProps {
   order: any;
   orderType: string;
-  orderItem: any;
+  orderItem?: any;
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
@@ -34,7 +31,6 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
 
   const orderId = order.orderInfo.order_prefix + order.orderInfo.orderid;
 
-  const breakPoint = useBreakpoint();
   return (
     <div className="order-item-container">
       <div className="order-item-header-container">
@@ -42,13 +38,16 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div className="order-item-name">
             Order # <b>{orderId}</b>
           </div>
-          <NavLink
-            to={`/account/orders/${order.orderInfo.orderid}/${orderType}/order-info/order-tracking`}
+
+          <Link
+            href={`/account/orders/${order.orderInfo.orderid}/${orderType}/order-info/order-tracking`}
           >
-            <button className="form-button form-button__outline order-details-btn">
-              order details
-            </button>
-          </NavLink>
+            <a>
+              <button className="form-button form-button__outline order-details-btn">
+                order details
+              </button>
+            </a>
+          </Link>
         </div>
         <div className="order-item-body-right-side header-right">
           <div>
@@ -111,8 +110,12 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                 if (groupIndex === 0 && itemIndex === 0) {
                   return null;
                 }
+
                 return (
-                  <div className={"order-item-body-product-container"}>
+                  <div
+                    className={"order-item-body-product-container"}
+                    key={`${groupIndex}-${itemIndex}`}
+                  >
                     <div className="order-item-body-product-left-part">
                       <img
                         className="order-item-body-product-img"

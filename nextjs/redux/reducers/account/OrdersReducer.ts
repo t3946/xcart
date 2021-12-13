@@ -1,9 +1,27 @@
 import { AnyAction } from "redux";
-import { accountOrdersInitialValue } from "@modules/account/ts/consts/store-initial-value";
 import { OrdersStore } from "@modules/account/ts/types/store.type";
+import { ordersHeaderSelectValues } from "@modules/account/ts/consts/orders-header-select-values";
+
+const initialValue = {
+  ordersLoading: false,
+  orders: {
+    open: {
+      items: null,
+      selectValue: ordersHeaderSelectValues[0],
+    },
+    cancelled: {
+      items: null,
+      selectValue: ordersHeaderSelectValues[0],
+    },
+    completed: {
+      items: null,
+      selectValue: ordersHeaderSelectValues[0],
+    },
+  },
+};
 
 const OrdersReducer = (
-  state: OrdersStore = accountOrdersInitialValue,
+  state: OrdersStore = initialValue,
   action: AnyAction
 ): OrdersStore => {
   switch (action.type) {
