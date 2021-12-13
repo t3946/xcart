@@ -129,6 +129,8 @@ class CategoryForm extends ModelForm
                         )]
                     : [],
             ],
+            'title_tag' => CharField::class,
+            'SEO_category_name' => CharField::class
         ];
     }
 }

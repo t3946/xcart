@@ -67,6 +67,7 @@ use Xcart\Manufacturer;
  * @property float $max_extra_margin
  * @property SupplierFeedModel[]|Manager $feeds
  * @property DistributorUploadPriceModel[]|null|Manager upload_prices
+ * @property ProductModel[]|Manager|null products
  * @property int active_products
  * @property int total_products
  * @property int ads_products
