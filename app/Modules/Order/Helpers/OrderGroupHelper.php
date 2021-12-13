@@ -82,12 +82,6 @@ class OrderGroupHelper
                     $trStore = new OrderTransactionStore($params, $auth_tr);
                     $model = $trStore->capture();
 
-                    OrderLogModel::createLog(
-                        $order_model->orderid,
-                        OrderLogModel::LOG_TYPE_XCART,
-                        $trStore->log
-                    );
-
                     if ($model->type === OrderTransactionModel::TYPE_CAPTURE && $model->transaction_status === OrderTransactionModel::STATUS_COMPLETED) {
                         $toCaptureAmount = round ($toCaptureAmount - $model->transaction_amount, 2);
                     }
