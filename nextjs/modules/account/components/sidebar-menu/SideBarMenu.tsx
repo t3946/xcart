@@ -2,11 +2,9 @@ import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const SideBarMenu: React.FC = () => {
-  const breakpoint = useBreakpoint();
   const user = useSelectorAccount((e) => e.user);
   const menuItems = [
     { to: "/dashboard", label: "Dashboard" },
