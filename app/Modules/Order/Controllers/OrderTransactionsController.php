@@ -102,7 +102,6 @@ class OrderTransactionsController extends PrototypeAdminController
             /** @var OrderTransactionModel $transaction_model */
             $store = new OrderTransactionStore($params);
             $transaction_model = $store->authorize();
-            $order_log .= $store->log;
 
             if ($transaction_model->transaction_status === OrderTransactionModel::STATUS_AUTHORIZED) {
                 [$o_log, $send_notification] = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
@@ -152,7 +151,9 @@ class OrderTransactionsController extends PrototypeAdminController
             && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
 
             /** @var OrderTransactionModel $model */
-             list($model, $isNew) = OrderTransactionModel::objects()->getOrNew(['orderid' => $orderModel->orderid, 'transaction_id' => trim($_POST['transaction_id'])]);
+             [$model, $isNew] = OrderTransactionModel::objects()->getOrNew(
+                 ['orderid' => $orderModel->orderid, 'transaction_id' => trim($_POST['transaction_id'])]
+             );
 
             $tr_type = OrderTransactionModel::TYPE_AUTHORIZATION;
              switch($_POST['transaction_status']){
