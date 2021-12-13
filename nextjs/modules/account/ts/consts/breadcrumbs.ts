@@ -12,7 +12,7 @@ export const staticRoutes = [
   },
   {
     name: "Shipping lists",
-    path: needSpecifyPath,
+    path: "/account/shopping-lists",
   },
 
   { name: "Account", path: "/account" },

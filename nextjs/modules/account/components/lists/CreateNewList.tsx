@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FormInput } from "@modules/account/components/shared/FormInput";
-import { Tooltip } from "@modules/account/components/shared/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
-import { createList } from "../../../../redux/actions/account-actions/ListsActions";
+import { createList } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { useHistory } from "react-router";
+import { useRouter } from "next/router";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import Store from "@redux/stores/Store";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
@@ -40,7 +39,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const [isViewingInfo, setIsViewingInfo] = useState(false);
 
-  const history = useHistory();
+  const router = useRouter();
 
   const listLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
@@ -79,8 +78,9 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
       theme: "success",
     });
     onCancelBtnClick();
-    history.push(`/account/your-lists/${param.cache_url}`);
+    router.push(`/shopping-lists/${param.cache_url}`);
   };
+
   return (
     <div>
       {isViewingInfo ? (

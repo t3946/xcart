@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
 import RatingStars from "@modules/shared/components/ratings/RatingStars";
 import { Tooltip } from "@modules/account/components/shared/Tooltip";
-import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import { ListProductItemBtns } from "./ListProductItemBtns";
 import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
 import { EditComment } from "@modules/account/components/lists/EditComment";
@@ -10,18 +9,14 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
-import { cartAdd } from "../../../../redux/reduсers/appCartReducer";
+import { cartAdd } from "@redux/reducers/appCartReducer";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { CountInput } from "@modules/account/components/shared/CountInput";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
-import useBreakpoint, {
-  getBreakpointsFlags,
-} from "@modules/account/hooks/useBreakpoint";
-import Store from "@redux/stores/Store";
-import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   info,
@@ -75,7 +70,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     setCountProductsOnCart(value);
   };
 
-  const history = useHistory();
+  // const history = useHistory();
 
   const data = [
     {
@@ -114,17 +109,17 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     {
       label: "Add comment, quantity & priority",
       onClick: () => {
-        history.push(
-          `/account/your-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
-        );
+        // history.push(
+        //   `/account/your-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
+        // );
       },
     },
     {
       label: "Move",
       onClick: () => {
-        history.push(
-          `/account/your-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
-        );
+        // history.push(
+        //   `/account/your-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
+        // );
       },
     },
     {

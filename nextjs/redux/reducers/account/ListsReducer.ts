@@ -1,11 +1,15 @@
 import { AnyAction } from "redux";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
-import { accountListsInitialValue } from "@modules/account/ts/consts/store-initial-value";
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 
+const initialValue = {
+  lists: [],
+  listLoading: false,
+};
+
 const accountListReducer = (
-  state: AccountListsStore = accountListsInitialValue,
+  state: AccountListsStore = initialValue,
   action: AnyAction
 ): AccountListsStore => {
   switch (action.type) {

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { ListHeader } from "@modules/account/components/lists/ListHeader";
 import { Button } from "@material-ui/core";
 import { ListProductItems } from "@modules/account/components/lists/ListProductItems";
-import { useHistory, useParams } from "react-router-dom";
+import { useRouter } from "next/router";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { Sceleton } from "@modules/shared/components/sceleton/Sceleton";
 import { ListProductItemSkeleton } from "../components/lists/ListProductItemSkeleton";
@@ -16,8 +16,9 @@ import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu
 import { List } from "@modules/account/ts/types/list.type";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
-export const ListsPage: React.FC = () => {
-  const { id }: { id: string } = useParams();
+const ListsPage: React.FC = () => {
+  //todo: cant get id param form url
+  const { id }: { id: string } = { id: "0" };
 
   const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
@@ -27,10 +28,11 @@ export const ListsPage: React.FC = () => {
 
   const breakpoints = useBreakpoint();
 
-  const history = useHistory();
+  const router = useRouter();
 
   const edit = list?.list_info.role !== UserPrivateVariantsEnum.VIEW;
 
+  //todo: router get
   const viewLists = () => {
     return (
       <React.Fragment>
@@ -40,7 +42,7 @@ export const ListsPage: React.FC = () => {
           edit={edit}
           info={list}
         />
-        <ListProductItems edit={edit} path={history.location} info={list} />
+        <ListProductItems edit={edit} path={router.pathname} info={list} />
       </React.Fragment>
     );
   };
@@ -72,8 +74,8 @@ export const ListsPage: React.FC = () => {
             <Sceleton height={36} maxWidth={"100%"} />
           </div>
 
-          {Array.from({ length: 3 }, (v, k) => k).map(() => {
-            return <ListProductItemSkeleton />;
+          {Array.from({ length: 3 }, (v, k) => k).map((value, index) => {
+            return <ListProductItemSkeleton key={index} />;
           })}
         </React.Fragment>
       )}
@@ -87,18 +89,17 @@ export const ListsPage: React.FC = () => {
           onCancelBtnClick={createIdeaDialog.handleClose}
         />
       </BootstrapDialogHOC>
-      {breakpoints({
-        xs: (
-          <Button
-            onClick={createIdeaDialog.handleClickOpen}
-            type={"submit"}
-            disabled={!lists || !edit}
-            className="account-submit-btn account-submit-btn-outline add-idea-btn"
-          >
-            Add idea to list
-          </Button>
-        ),
-      })}
+
+      <Button
+        onClick={createIdeaDialog.handleClickOpen}
+        type={"submit"}
+        disabled={!lists || !edit}
+        className="account-submit-btn account-submit-btn-outline add-idea-btn d-md-none"
+      >
+        Add idea to list
+      </Button>
     </div>
   );
 };
+
+export default ListsPage;

@@ -14,7 +14,7 @@ import RoutesReducer from "../reducers/RoutesReducer";
 import BreadcrumbsReducer from "@redux/reducers/account/BreadcrumbsReducer";
 // import ShadowPanelReducer from "@redux/reducers/account/ShadowPanelReducer";
 // import CountriesReducer from "@redux/reducers/account/CountriesReducer";
-// import ListsReducer from "@redux/reducers/account/ListsReducer";
+import ListsReducer from "@redux/reducers/account/ListsReducer";
 import DepartmentsMenuReducer from "@redux/reducers/account/DepartmentsMenuReducer";
 import DepartmentsMenuMobileReducer from "@redux/reducers/account/DepartmentsMenuMobileReducer";
 import DepartmentsMenuDesktopReducer from "@redux/reducers/account/DepartmentsMenuDesktopReducer";
@@ -57,7 +57,7 @@ const reducers = combineReducers({
   breadcrumbs: BreadcrumbsReducer,
   // shadowPanel: ShadowPanelReducer,
   // countries: CountriesReducer,
-  // lists: ListsReducer,
+  lists: ListsReducer,
   departmentsMenu: DepartmentsMenuReducer,
   departmentsMenuMobile: DepartmentsMenuMobileReducer,
   departmentsMenuDesktop: DepartmentsMenuDesktopReducer,

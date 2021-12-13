@@ -1,6 +1,6 @@
 import React from "react";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { useHistory } from "react-router-dom";
+// import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { useRouter } from "next/router";
 
 interface MobileMenuBackBtnProps {
   redirectUrl: string;
@@ -11,16 +11,16 @@ export const MobileMenuBackBtn: React.FC<MobileMenuBackBtnProps> = ({
   redirectUrl,
   label,
 }) => {
-  const history = useHistory();
+  const router = useRouter();
 
   const onBtnClick = () => {
-    history.push(redirectUrl);
+    router.push(redirectUrl);
   };
   return (
     <div className={"mobile-menu-back-btn-container"}>
       <button onClick={onBtnClick} className="form-button__outline ">
         <div className="back-account-btn-inner mobile-menu-back-btn">
-          <ArrowBackIcon className="mobile-menu-back-btn-icon" />
+          {/*<ArrowBackIcon className="mobile-menu-back-btn-icon" />*/}
           <div>{label}</div>
         </div>
       </button>

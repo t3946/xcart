@@ -26,7 +26,7 @@ const SideBarMenu: React.FC = () => {
       ],
     },
     {
-      to: "/your-lists",
+      to: "/shopping-lists",
       label: "Shopping Lists",
     },
     { to: "/addresses", label: "Addresses" },

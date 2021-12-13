@@ -5,7 +5,6 @@ import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
-import { useParams } from "react-router-dom";
 import Store from "@redux/stores/Store";
 import { List } from "@modules/account/ts/types/list.type";
 
@@ -16,7 +15,8 @@ interface ShareListProps {
 export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const { id }: { id: string } = useParams();
+  //todo: can't get id param
+  const { id }: { id: string } = 0;
 
   let list: List | undefined;
 

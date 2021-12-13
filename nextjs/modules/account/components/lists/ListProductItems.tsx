@@ -8,7 +8,7 @@ import {
   moveProduct,
   reorderList,
   setLists,
-} from "../../../../redux/actions/account-actions/ListsActions";
+} from "@redux/actions/account-actions/ListsActions";
 import { reorderMass } from "@modules/account/utils/reorder-mass";
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";

@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { List } from "@modules/account/ts/types/list.type";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 
@@ -8,10 +8,10 @@ interface ListMobileMenuProps {
 }
 
 export const ListMobileMenu: React.FC<ListMobileMenuProps> = ({ lists }) => {
-  const history = useHistory();
+  const router = useRouter();
 
   const redirectToList = (hash: string) => {
-    history.push(`/account/your-lists/${hash}`);
+    router.push(`/shopping-lists/${hash}`);
   };
 
   return (

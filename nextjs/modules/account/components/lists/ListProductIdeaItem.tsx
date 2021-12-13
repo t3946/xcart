@@ -8,7 +8,7 @@ import { EditComment } from "@modules/account/components/lists/EditComment";
 import { useDialog } from "../../hooks/useDialog";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
@@ -24,20 +24,16 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   onMoveClick,
 }) => {
   const editCommentDialog = useDialog();
-
   const mobileMenuDialog = useDialog();
-
-  const history = useHistory();
-
+  const router = useRouter();
   const breakpoint = useBreakpoint();
-
   const deleteIdeaDialog = useDialog();
 
   const deleteIdea = () => {
     breakpoint({
       xs: () =>
-        history.push(
-          `/account/your-lists/delete-product/idea/${listInfo.product_list_id}/${info.product_id}/`
+        router.push(
+          `/shopping-lists/delete-product/idea/${listInfo.product_list_id}/${info.product_id}/`
         ),
       md: deleteIdeaDialog.handleClickOpen,
     });
@@ -51,16 +47,16 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
     {
       label: "Add comment, quantity & priority",
       onClick: () => {
-        history.push(
-          `/account/your-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
+        router.push(
+          `/shopping-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
         );
       },
     },
     {
       label: "Move",
       onClick: () => {
-        history.push(
-          `/account/your-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
+        router.push(
+          `/shopping-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
         );
       },
     },

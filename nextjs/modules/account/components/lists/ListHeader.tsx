@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import ShareIcon from "@material-ui/icons/Share";
-import { useHistory } from "react-router-dom";
+// import ShareIcon from "@material-ui/icons/Share";
+import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
 import { ManageList } from "@modules/account/components/lists/ManageList";
@@ -36,7 +36,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
 
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const history = useHistory();
+  const router = useRouter();
 
   const dispatch = useDispatch();
 
@@ -49,30 +49,26 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   };
 
   const handleDeleteList = () => {
-    history.push("/account/your-lists");
+    router.push("/your-lists");
     dispatch(deleteList(info.product_list_id, onRequestEnd));
   };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
-      onClick: () =>
-        history.push(`/account/your-lists/manage-list/${info.cache_url}`),
+      onClick: () => router.push(`/your-lists/manage-list/${info.cache_url}`),
     },
     {
       label: "Add idea",
-      onClick: () =>
-        history.push(`/account/your-lists/add-idea/${info.cache_url}`),
+      onClick: () => router.push(`/your-lists/add-idea/${info.cache_url}`),
     },
     {
       label: "Share list with others",
-      onClick: () =>
-        history.push(`/account/your-lists/${info.cache_url}/share-list`),
+      onClick: () => router.push(`/your-lists/${info.cache_url}/share-list`),
     },
     {
       label: "Delete list",
-      onClick: () =>
-        history.push(`/account/your-lists/${info.cache_url}/delete-list`),
+      onClick: () => router.push(`/your-lists/${info.cache_url}/delete-list`),
     },
   ];
 
@@ -115,7 +111,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
       </div>
       {edit && (
         <div className="list-header-shared-block">
-          <ShareIcon className="list-header-share-btn blue" />
+          {/*<ShareIcon className="list-header-share-btn blue" />*/}
           <div
             className="list-header-share-text blue"
             onClick={shareDialog.handleClickOpen}

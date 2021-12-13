@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
-import { useHistory } from "react-router";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import React from "react";
+// import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
-import { useSelector } from "react-redux";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { SideBarMenuItem } from "@modules/account/components/sidebar-menu/SideBarMenuItem";
 import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSidebarLabel";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
 
 export const ListsSidebarMenu: React.FC = () => {
-  const history = useHistory();
+  const router = useRouter();
   const createListDialog = useDialog();
-  const lists = useSelector((e: StoreInterface) => e.lists.lists);
+  const lists = useSelectorAccount((e) => e.lists.lists);
 
   const backOnAccount = () => {
-    history.push("/account/");
+    router.push("/");
   };
 
   return (
@@ -24,7 +23,7 @@ export const ListsSidebarMenu: React.FC = () => {
         className="form-button__outline back-on-account-btn"
       >
         <div className="back-account-btn-inner">
-          <ArrowBackIcon />
+          {/*<ArrowBackIcon />*/}
           <div>Back on account</div>
         </div>
       </button>
@@ -44,6 +43,7 @@ export const ListsSidebarMenu: React.FC = () => {
           />
         );
       })}
+
       <div
         onClick={createListDialog.handleClickOpen}
         className="create-list-btn-container"
@@ -53,6 +53,7 @@ export const ListsSidebarMenu: React.FC = () => {
         </div>
         <div className="create-list-label">create a list</div>
       </div>
+
       <CreateNewListDialog
         open={createListDialog.open}
         handleClose={createListDialog.handleClose}
@@ -60,3 +61,5 @@ export const ListsSidebarMenu: React.FC = () => {
     </div>
   );
 };
+
+export default ListsSidebarMenu;
