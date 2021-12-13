@@ -21,14 +21,12 @@ class OrderGroupHelper
 {
     /**
      * @param array $params
-     * @return string
+     * @return void
      * @throws \Xcart\App\Exceptions\InvalidConfigException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public static function dispatchGroup($params): string
+    public static function dispatchGroup(array $params): void
     {
-        $log = '';
-
         /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $params['orderid']]);
 
@@ -36,12 +34,12 @@ class OrderGroupHelper
 
         if (($order_model->groups->count() > 1) && !OrderTransactionHelper::isPartiallyCaptureEnabled($transactions)) {
             if (OrderTransactionHelper::getCaptured($transactions) >= $order_model->total) {
-                return $log;
+                return;
             }
 
             $section_name_top_message['content'] = OrderModule::t("Dispatch of orders with BluePay transactions, having more than one Dx only possible after manual capture of amount enough to cover overall order total adjusted after all Dx's confirmations");
             $section_name_top_message['type'] = 'E';
-            static::dispatchError($order_model, $section_name_top_message, $log);
+            static::dispatchError($order_model, $section_name_top_message);
         }
 
         /** @var OrderGroupModel $group_model */
@@ -84,7 +82,11 @@ class OrderGroupHelper
                     $trStore = new OrderTransactionStore($params, $auth_tr);
                     $model = $trStore->capture();
 
-                    $log .= '<br />' .$trStore->log;
+                    OrderLogModel::createLog(
+                        $order_model->orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        $trStore->log
+                    );
 
                     if ($model->type === OrderTransactionModel::TYPE_CAPTURE && $model->transaction_status === OrderTransactionModel::STATUS_COMPLETED) {
                         $toCaptureAmount = round ($toCaptureAmount - $model->transaction_amount, 2);
@@ -99,14 +101,20 @@ class OrderGroupHelper
                     $top_message['content'] = func_get_langvar_by_name('txt_capture_failed');
                     $top_message['type'] = 'I';
 
-                    static::dispatchError($order_model, $top_message, $log);
+                    static::dispatchError($order_model, $top_message);
                 }
 
                 if ($new_status = OrderStatusModel::objects()->get(['code' => OrderStatusModel::ORDER_STATUS_COMPLETED])) {
                     /** @var OrderStatusModel $new_status */
-                    $log .= "<br /><B>{$group_model->manufacturer->code}:</B> cb_status: {$group_model->cb_status_model->name} -> {$new_status->name}";
+
                     $group_model->cb_status_model = $new_status;
                     $group_model->save();
+
+                    OrderLogModel::createLog(
+                        $order_model->orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        "<b>{$group_model->manufacturer->code}:</b> cb_status: {$group_model->cb_status_model->name} -> $new_status->name"
+                    );
                 }
 
             } else {
@@ -114,24 +122,25 @@ class OrderGroupHelper
                 $section_name_top_message['content'] = func_get_langvar_by_name('lbl_captureamount_not_equal_order_amount');
                 $section_name_top_message['type'] = 'E';
 
-                static::dispatchError($order_model, $section_name_top_message, $log);
+                static::dispatchError($order_model, $section_name_top_message);
 
             }
         }
-        return $log;
     }
 
     /**
      * @param $order_model
      * @param $section_name_top_message
-     * @param $log
      * @throws \Xcart\App\Exceptions\InvalidConfigException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public static function dispatchError($order_model, $section_name_top_message, $log): void
+    public static function dispatchError($order_model, $section_name_top_message): void
     {
-        $log .= '<br />' . $section_name_top_message['content'];
-        OrderLogModel::createLog($order_model->orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+        OrderLogModel::createLog(
+            $order_model->orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            $section_name_top_message['content']
+        );
 
         Xcart::app()->request->session->add('section_name_top_message', $section_name_top_message);
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_model->orderid}");
