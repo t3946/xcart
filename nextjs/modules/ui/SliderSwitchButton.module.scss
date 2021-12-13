@@ -5,97 +5,121 @@
   transition-property: $props;
 }
 
-
 .background {
   width: calc(260% + 10px);
   position: absolute;
   height: calc(100% + 10px);
   background: linear-gradient(-90deg, #1ca839 40%, #3691d3 60%);
-  top: pxToRem(-5);
+  top: rem-calc(-5);
   z-index: 0;
-
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   @include slideTransition(left);
 }
 
 .background_enabled {
-  left: pxToRem(-137);
+  left: rem-calc(-134);
 }
 
 .background_disabled {
-  left: pxToRem(-3);
+  left: rem-calc(-3);
 }
-
 
 .caption {
   position: absolute;
   color: #ffffff;
   text-transform: capitalize;
-  font-size: pxToRem(18);
+  font-size: rem-calc(18);
   z-index: 3;
 
   @include slideTransition(left, right, opacity);
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+  }
 }
 
 .caption_enabledActive {
-  left: pxToRem(13);
+  left: rem-calc(21);
   opacity: 1;
+
+  @include breakpoint(lg up) {
+    left: rem-calc(19);
+  }
 }
 
 .caption_enabledInactive {
-  left: pxToRem(-37);
+  left: rem-calc(-37);
   opacity: 0;
 }
 
 .caption_disabledActive {
-  right: pxToRem(13);
+  right: rem-calc(25);
   opacity: 1;
+
+  @include breakpoint(lg up) {
+    right: rem-calc(20);
+  }
 }
 
 .caption_disabledInactive {
-  right: pxToRem(-37);
+  right: rem-calc(-37);
   opacity: 0;
 }
 
-
 .ball {
   position: absolute;
-  top: pxToRem(2);
   display: block;
-  width: pxToRem(24);
-  height: pxToRem(24);
+  top: rem-calc(4);
+  width: rem-calc(24);
+  height: rem-calc(24);
   background: #ffffff;
-  border-radius: pxToRem(13);
+  border-radius: rem-calc(13);
   z-index: 3;
-  box-shadow: 0 pxToRem(3) pxToRem(3) pxToRem(-1) rgba(0,0,0,0.38);
+  box-shadow: 0 rem-calc(3) rem-calc(3) rem-calc(-1) rgba(0, 0, 0, 0.38);
 
   @include slideTransition(left);
+
+  @include breakpoint(lg up) {
+    top: rem-calc(3);
+    width: rem-calc(21);
+    height: rem-calc(21);
+  }
 }
 
 .ball_enabled {
-  left: pxToRem(54);
+  left: rem-calc(61);
+
+  @include breakpoint(lg up) {
+    left: rem-calc(54);
+  }
 }
 
 .ball_disabled {
-  left: pxToRem(2);
+  left: rem-calc(4);
+  @include breakpoint(lg up) {
+    left: rem-calc(3);
+  }
 }
-
 
 .label {
   position: relative;
   display: block;
   background: #ffffff;
-  border-radius: pxToRem(20);
-  height: pxToRem(28);
-  width: pxToRem(80);
+  border-radius: rem-calc(20);
+  height: rem-calc(32);
+  width: rem-calc(89);
   cursor: pointer;
   user-select: none;
   overflow: hidden;
+  @include breakpoint(lg up) {
+    height: rem-calc(27);
+    width: rem-calc(78);
+  }
 }
 
-
 .border {
-  padding: pxToRem(2);
+  padding: rem-calc(2);
   display: inline-block;
-  border-radius: pxToRem(100);
+  border-radius: rem-calc(100);
   background: linear-gradient(180deg, #cbcccb, #ececec);
 }

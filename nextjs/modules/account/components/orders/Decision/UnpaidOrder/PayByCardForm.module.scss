@@ -1,0 +1,63 @@
+@import "styles/utils/Utils.module";
+
+.form {
+  max-width: 100%;
+}
+
+.form__caption {
+  margin: 0 0 rem-calc(22);
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(26);
+  }
+}
+
+.form__inputLabel {
+  margin: 0 0 rem-calc(7);
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(14);
+  }
+}
+
+.formInputLabel {
+  font-size: rem-calc(16);
+  line-height: rem-calc(19);
+  display: block;
+  width: auto;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+    line-height: rem-calc(22);
+    width: max-content;
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+    line-height: rem-calc(19);
+  }
+}
+
+.formInput {
+  height: rem-calc(40);
+
+  @include breakpoint(lg up) {
+    max-width: rem-calc(360);
+  }
+}
+
+.formCaption {
+  color: #959595;
+  font-size: rem-calc(12);
+  line-height: rem-calc(14);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(14);
+    line-height: rem-calc(19);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(12);
+    line-height: rem-calc(14);
+  }
+}

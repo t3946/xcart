@@ -31,3 +31,8 @@ export const setDecisionsAction = (decisions: Record<any, any>): any => ({
   type: "SET_DECISIONS",
   decisions,
 });
+
+export const payOrderAction = (payload: Record<any, any>): any => ({
+  type: "PAY_ORDER_DECISION",
+  payload,
+});

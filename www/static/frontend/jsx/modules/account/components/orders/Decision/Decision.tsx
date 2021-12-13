@@ -57,6 +57,7 @@ const Decision: React.FC = () => {
       {/*<EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />*/}
       {/*<LicenseRequire onChange={onChangeDecision} decision={decision} />*/}
       <PaymentRequired />
+      <UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />
     </div>
   );
 };

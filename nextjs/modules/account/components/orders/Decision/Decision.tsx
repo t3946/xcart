@@ -2,6 +2,7 @@ import React from "react";
 import Navigation from "@modules/account/components/orders/Navigation/Navigation";
 import LicenseRequire from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
 import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
+import UnpaidOrder from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
@@ -37,7 +38,8 @@ const Decision: React.FC = (props) => {
       <Navigation />
       {/*<EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />*/}
       {/*<LicenseRequire onChange={onChangeDecision} decision={decision} />*/}
-      <PaymentRequired />
+      {/* <PaymentRequired /> */}
+      <UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />
     </div>
   );
 };

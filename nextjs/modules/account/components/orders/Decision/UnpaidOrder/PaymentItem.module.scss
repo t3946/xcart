@@ -1,0 +1,83 @@
+@import "styles/utils/Utils.module";
+
+.paymentItem {
+  border-bottom: 1px solid #cbcbcb;
+
+  &:nth-child(odd) {
+    background-color: #f4f4f4;
+    border: none;
+  }
+
+  @include breakpoint(sm up) {
+    border: none;
+  }
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.paymentItemGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 0 rem-calc(31);
+
+  @include breakpoint(sm up) {
+    padding: 0 rem-calc(21);
+  }
+
+  @include breakpoint(lg up) {
+    grid-template-columns: 1fr 2fr;
+    column-gap: rem-calc(78);
+    padding: 0 rem-calc(25);
+  }
+}
+
+.paymentItemGrid_verticalLayout {
+  height: rem-calc(119);
+  row-gap: rem-calc(11);
+  
+  @include breakpoint(md up) {
+    height: rem-calc(126);
+  }
+
+  @include breakpoint(lg up) {
+    row-gap: 0;
+    height: rem-calc(90);
+    grid-template-rows: rem-calc(90) 1fr;
+  }
+}
+
+.paymentItemCaption {
+  padding: 0 0 0 rem-calc(34);
+  font-size: rem-calc(12);
+  line-height: rem-calc(16);
+  color: #4a4949;
+
+  @include breakpoint(md up) {
+    padding: 0 0 0 rem-calc(50);
+    font-size: rem-calc(18);
+    line-height: rem-calc(22);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0;
+    line-height: rem-calc(17);
+    font-size: rem-calc(14);
+  }
+}
+
+.paymentItemCaption_accent {
+  font-weight: bold;
+  margin: 0 0 rem-calc(23) 0;
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(27) 0;
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+    line-height: rem-calc(19);
+    margin: 0 0 rem-calc(31) 0;
+  }
+}

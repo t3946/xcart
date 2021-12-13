@@ -1,0 +1,17 @@
+@import "styles/utils/Utils.module";
+
+.paymentItemName {
+  column-gap: rem-calc(16);
+  line-height: rem-calc(19);
+
+  @include breakpoint(md up) {
+    column-gap: rem-calc(23);
+    font-size: rem-calc(20);
+    line-height: rem-calc(24);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: inherit;
+    line-height: rem-calc(19);
+  }
+}

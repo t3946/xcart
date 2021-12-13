@@ -45,9 +45,20 @@ function* uploadLicense(action): Generator {
     });
 }
 
+function* payOrder(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
   yield takeLatest("UPLOAD_LICENSE_DECISION", uploadLicense);
   yield takeLatest("GET_ETA_PRODUCTS_DECISION", getEtaProductsDecision);
+  yield takeLatest("PAY_ORDER_DECISION", payOrder);
 }
