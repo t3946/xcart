@@ -1,11 +1,10 @@
 import React from "react";
 import { SidebarItem } from "@modules/account/ts/types/sidebar-item.type";
 import { SideBarMenuAccordIonItem } from "./SideBarMenuAccordIonItem";
-import { useAccordion } from "../../hooks/useAccordion";
+import { useAccordion } from "@modules/account/hooks/useAccordion";
 import classnames from "classnames";
 import ArrowIconTablet from "@modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface sideBarMenuItemPropsDto extends SidebarItem {
   routerItems: SidebarItem[];
@@ -14,12 +13,11 @@ interface sideBarMenuItemPropsDto extends SidebarItem {
   };
 }
 
-export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
+const ItemAccordion: React.FC<sideBarMenuItemPropsDto> = (
   props: Record<any, any>
 ) => {
-  const { to, label, routerItems } = props;
+  const { label, routerItems } = props;
   const accordion = useAccordion();
-  const breakpoint = useBreakpoint();
 
   const classes = {
     handlerClasses: [
@@ -27,26 +25,28 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
       { "sidebar-menu-item__opened-accordion": accordion.open },
       props.classes.handlerClass,
     ],
-    iconClasses: [
+    icon: [
       "accordion-arrow arrow-rotatable sidebar-menu-item_accordion-arrow",
       {
         "sidebar-accordion-arrow__open": accordion.open,
       },
     ],
+    iconMobileDesktop: ["d-md-none", "d-lg-block"],
+    iconTablet: ["d-none", "d-md-block", "d-lg-none"],
   };
 
   function iconTemplate(): any {
-    return <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />;
+    return (
+      <>
+        <ArrowIconMobileDesktop
+          className={classnames(classes.icon, classes.iconMobileDesktop)}
+        />
 
-    return breakpoint({
-      xs: (
-        <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />
-      ),
-      md: <ArrowIconTablet className={classnames(classes.iconClasses)} />,
-      lg: (
-        <ArrowIconMobileDesktop className={classnames(classes.iconClasses)} />
-      ),
-    });
+        <ArrowIconTablet
+          className={classnames(classes.icon, classes.iconTablet)}
+        />
+      </>
+    );
   }
 
   return (
@@ -67,7 +67,7 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
         className={"overflow-hidden common-transition"}
       >
         <div className="sidebar-menu-accordion-content">
-          {routerItems.map((value, index) => {
+          {routerItems.map((value: any, index: number) => {
             return (
               <SideBarMenuAccordIonItem
                 to={value.to}
@@ -82,3 +82,5 @@ export const SideBarMenuAccordion: React.FC<sideBarMenuItemPropsDto> = (
     </React.Fragment>
   );
 };
+
+export default ItemAccordion;

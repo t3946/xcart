@@ -2,7 +2,7 @@ import React from "react";
 // import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
-import { SideBarMenuItem } from "@modules/account/components/sidebar-menu/SideBarMenuItem";
+import Item from "@modules/account/components/sidebar-menu/Item";
 import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSidebarLabel";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
@@ -30,7 +30,7 @@ export const ListsSidebarMenu: React.FC = () => {
       <div className="lists-sidebar-label">Shopping Lists</div>
       {lists?.map((e, index) => {
         return (
-          <SideBarMenuItem
+          <Item
             to={`/account/your-lists${!index ? "" : "/" + e.cache_url}`}
             label={
               <ListsSidebarLabel

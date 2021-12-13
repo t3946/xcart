@@ -10,7 +10,7 @@ interface sideBarMenuItemProps {
   onClick?: any;
 }
 
-export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
+const Item: React.FC<sideBarMenuItemProps> = ({
   to,
   label,
   badge,
@@ -45,3 +45,5 @@ export const SideBarMenuItem: React.FC<sideBarMenuItemProps> = ({
     </Link>
   );
 };
+
+export default Item;

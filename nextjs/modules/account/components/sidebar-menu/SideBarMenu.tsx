@@ -1,8 +1,10 @@
 import React from "react";
-import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
-import { SideBarMenuItem } from "./SideBarMenuItem";
+import Item from "@modules/account/components/sidebar-menu/Item";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Styles from "@modules/account/components/sidebar-menu/Item.module.scss";
+import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordion";
+import cn from "classnames";
 
 const SideBarMenu: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);
@@ -46,11 +48,11 @@ const SideBarMenu: React.FC = () => {
       {menuItems.map((value: Record<any, any>, index) => {
         if (!value.routerItems) {
           return (
-            <SideBarMenuItem
+            <Item
               to={value.to}
               label={value.label}
               badge={value.badge}
-              className={"sidebar-menu_top-level-item"}
+              className={Styles.item_topLevel}
               onClick={value.onClick}
               key={index}
             />
@@ -58,11 +60,11 @@ const SideBarMenu: React.FC = () => {
         }
 
         return (
-          <SideBarMenuAccordion
+          <ItemAccordion
             to={value.to}
             label={value.label}
             routerItems={value.routerItems}
-            classes={{ handlerClass: "sidebar-menu_top-level-item" }}
+            classes={{ handlerClass: Styles.item_topLevel }}
             key={index}
           />
         );
