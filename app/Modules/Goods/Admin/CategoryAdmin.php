@@ -33,7 +33,7 @@ class CategoryAdmin extends NestedAdmin
     {
         switch ($property) {
             case 'products':
-                return $item->{$property}->count();
+                return "$item->product_count ($item->global_product_count)";
         }
         return parent::getItemProperty($item, $property);
     }

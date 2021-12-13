@@ -21,13 +21,10 @@ class MetricsProductCommand extends Command
             $name = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$distributor_model);
             $name = "[$distributor_model->code] $name";
 
-            $active_products = ProductModel::without_group()->filter(['manufacturerid' => $distributor_model->pk, 'forsale' => 'Y'])->count();
-            $ad_products = $distributor_model->products_active->filter(['google_ads__shopping_status' => GoogleProductsModel::SHOPPING_STATUS_APPROVED])->count();
-
-            $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_active', $active_products, [
+            $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_active', $distributor_model->active_products, [
                 'dx_code' => $name
             ]);
-            $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_google_ads', $ad_products, [
+            $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_google_ads', $distributor_model->ads_products, [
                 'dx_code' => $name
             ]);
         }

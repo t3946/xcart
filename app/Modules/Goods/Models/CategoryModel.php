@@ -33,6 +33,8 @@ use Xcart\Category;
  * @property string category Name of category
  * @property null|SiteModel site
  * @property Manager|ProductModel[] products
+ * @property int global_product_count
+ * @property int product_count
  */
 class CategoryModel extends TreeModel
 {
