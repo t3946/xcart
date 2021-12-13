@@ -654,7 +654,7 @@ if ($REQUEST_METHOD === 'POST')
             }
 
             if ($make_paypal_void) {
-                $log .= OrderHelper::cancelOrder($orderid);
+                OrderHelper::cancelOrder($orderid);
             }
         }
 
