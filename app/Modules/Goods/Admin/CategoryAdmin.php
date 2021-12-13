@@ -9,6 +9,7 @@ use Modules\Goods\Models\CategoryModel;
 use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Orm\Model;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class CategoryAdmin extends NestedAdmin
 {
@@ -55,5 +56,15 @@ class CategoryAdmin extends NestedAdmin
     public static function getName(): string
     {
         return "Categories";
+    }
+
+    public function isAjaxCreate(): bool
+    {
+        return true;
+    }
+
+    public function isAjaxUpdate(): bool
+    {
+        return true;
     }
 }

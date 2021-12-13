@@ -49,6 +49,7 @@ $po_issued_to_arr = [
 $smarty->assign("po_issued_to_arr", $po_issued_to_arr);
 
 if ($orderid && is_numeric($orderid)) {
+    /** @var OrderModel $order_model */
     $order_model = OrderModel::objects()->get(['orderid' => $orderid]);
 }
 if (!$order_model) {
@@ -75,9 +76,8 @@ else {
     $time_for_order_in_mins = $config["General"]["order_lock_time_in_seconds"] / 60;
     $current_time           = time();
 
-    $last_opened_or_saved       = func_query_first("SELECT login_last_opened_or_saved, time_last_opened_or_saved FROM $sql_tbl[orders] WHERE orderid='" . addslashes($orderid) . "'");
-    $login_last_opened_or_saved = $last_opened_or_saved["login_last_opened_or_saved"];
-    $time_last_opened_or_saved  = $last_opened_or_saved["time_last_opened_or_saved"];
+    $login_last_opened_or_saved = $order_model->login_last_opened_or_saved;
+    $time_last_opened_or_saved  = $order_model->time_last_opened_or_saved;
 
     $diff_time_in_mins = ($current_time - $time_last_opened_or_saved) / 60;
 
@@ -135,7 +135,7 @@ If you need to make urgent changes to the order, ask $operator_firstname to unlo
         $smarty->assign("lock_message", $lock_message);
 
         $tmp_diff_time       = time() - 60 * $time_for_order_in_mins;
-        $count_locked_orders = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders] WHERE login_last_opened_or_saved='" . addslashes($login) . "' AND time_last_opened_or_saved > '$tmp_diff_time'");
+        $count_locked_orders = OrderModel::objects()->filter(['login_last_opened_or_saved' => $login, 'time_last_opened_or_saved__gt' => $tmp_diff_time])->count();
 
         $smarty->assign("count_locked_orders", $count_locked_orders);
     }

@@ -187,11 +187,13 @@
                             <tr>
                                 <td></td>
                                 <td align="center">
-                                    <B>Payment:</B> {$orderModel->payment_method_model}
+                                    {if $smarty.foreach.groups.first}
+                                        <B>Payment:</B> {$orderModel->payment_method_model}
+                                    {/if}
                                 </td>
                                 <td align="right">
                                     <b>{$lng.lbl_processor}:</b>
-                                    <select name="acc_paymentid">
+                                    <select name="acc_paymentid[{$v->order_group_id}]">
                                         <option value="0"></option>
                                         {foreach from=$all_processors item=ps}
                                             <option value="{$ps->paymentid}" {if $ps->paymentid == $v->acc_paymentid || $ps->paymentid == $orderModel->paymentid} selected="selected" {/if}>{$ps->payment_method}</option>

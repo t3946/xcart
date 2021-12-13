@@ -110,6 +110,7 @@ class ApiDxController extends Controller
                 'userUpload' => (string)$upload_model->user,
                 'count' => $upload_model->count_rows,
                 'status' => $upload_model->status,
+                'name' => $upload_model->file_name
             ];
         }
         $this->jsonResponse([
@@ -208,11 +209,13 @@ class ApiDxController extends Controller
     {
         $post = json_decode(file_get_contents('php://input'), false, 512, JSON_THROW_ON_ERROR);
         try {
+            [$file, $info_file] = DistributorHelper::getResourceGooglePriceFile($post->pathFile);
             $upload_model = new DistributorUploadPriceModel();
             $upload_model->user = Xcart::app()->user;
             $upload_model->manufacturer_id = $post->dx;
             $upload_model->date = time();
             $upload_model->file_path = $post->pathFile;
+            $upload_model->file_name = $info_file['name'] ?? 'None';
             if ($upload_model->save()) {
                 Xcart::app()->queue->send('dx_prices', json_encode(array_merge((array)$post, ['upload_id' => $upload_model->pk]), JSON_THROW_ON_ERROR));
             }

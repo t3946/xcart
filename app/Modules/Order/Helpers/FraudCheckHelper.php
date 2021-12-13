@@ -1209,9 +1209,11 @@ class FraudCheckHelper
                 }
             }
         }
-        $hard = array_unique($hard);
-        if (count($hard) === 1) {
-            $fraud_result = reset($hard);
+        if ($hard) {
+            $hard = array_unique($hard);
+            if (count($hard) === 1) {
+                $fraud_result = reset($hard);
+            }
         }
         if (!(($order->total > 50) || ($maxOrderPriceAmount > 10))) {
             $fraud_result = 'positive';
