@@ -24,7 +24,7 @@ class OrderTransactionsController extends PrototypeAdminController
 {
     public function transaction_process($order_id, $mode, $id)
     {
-        $order_log = OrderTransactionStore::$gatewayMethods[$mode]['order_log']."<br>";
+        OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, OrderTransactionStore::$gatewayMethods[$mode]['order_log']);
 
         /** @var OrderModel $orderModel */
         if ($orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
@@ -50,9 +50,8 @@ class OrderTransactionsController extends PrototypeAdminController
 
                 $store = new OrderTransactionStore($params);
                 $store->$mode();
-                $order_log .= $store->log;
             }
-            OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
+
         }
 
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
