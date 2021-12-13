@@ -146,7 +146,6 @@ class ProductModel extends Model implements ICartItem
                 'modelClass' => CategoryModel::class,
                 'through' => ProductCategoriesModel::class,
             ],
-
             'product_categories' => [
                 'class' => HasManyField::class,
                 'modelClass' => ProductCategoriesModel::class,
@@ -154,8 +153,8 @@ class ProductModel extends Model implements ICartItem
             ],
             'forsale' => [
                 'class' => CharField::class,
+                'default' => 'Y'
             ],
-
             'amazon_offer_model' => [
                 'class' => HasToOneField::class,
                 'modelClass' => AmazonOfferModel::class,
