@@ -10,7 +10,7 @@ import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
-import RotateStyles from "styles/Rotate.module.scss";
+import RotateStyles from "styles/modules/Rotate.module.scss";
 import Styles from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
