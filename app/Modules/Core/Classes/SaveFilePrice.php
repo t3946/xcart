@@ -169,6 +169,9 @@ class SaveFilePrice
         if (!empty($ar_field)) {
             $ar_field['hash_product'] = md5(json_encode($ar_field, JSON_THROW_ON_ERROR));
             $ar_field['source'] = 'manual';
+            if ($product_model && empty($ar_field['productcode'])) {
+                $ar_field['productcode'] = $product_model->productcode;
+            }
             if ($this->storefront) {
                 $ar_field['storefront'] = $this->storefront;
             }
