@@ -5,6 +5,7 @@ namespace Modules\Admin\Contrib;
 
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\TreeManager;
+use Xcart\App\Orm\TreeModel;
 
 abstract class NestedAdmin extends Admin
 {
@@ -50,8 +51,8 @@ abstract class NestedAdmin extends Admin
             $module = static::getModuleName();
             $admin = static ::classNameShort();
 
-            /** @var \Xcart\App\Orm\TreeModel $model */
-            foreach ($models as $model) {
+            /** @var TreeModel $model */
+            foreach (array_reverse($models) as $model) {
                 $bread[] = [(string)$model, Xcart::app()->router->url('admin:list_nested', [
                     'module' => $module,
                     'admin' => $admin,
