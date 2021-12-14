@@ -304,7 +304,7 @@ class ModelForm extends MixinBaseForm
         }
 
         $instance = $this->getInstance();
-        $instanceOrModel = $instance ? $instance : $this->getModel();
+        $instanceOrModel = $instance ?: $this->getModel();
 
         $inlines = [];
         $excludeModels = [];
