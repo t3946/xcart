@@ -1,3 +1,38 @@
+@import "styles/utils/Utils.module";
+
 .miniCart {
   background-color: #ffb400;
+}
+
+.button {
+  display: block;
+  color: #0a0a0a;
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  height: pxToRem(50);
+  font-size: pxToRem(16);
+  font-weight: 700;
+
+  &:hover, &:focus {
+    color: currentColor;
+  }
+}
+
+.icon {
+  width: pxToRem(43);
+  margin: 0 pxToRem(-8) 0 0;
+  color: #0d2431;
+}
+
+.counter {
+  font-size: pxToRem(19);
+  padding: 0 pxToRem(8) 0 0;
+}
+
+.counter__quantity {
+  left: 0;
+  right: pxToRem(8);
+  top: pxToRem(-5);
 }
