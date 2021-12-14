@@ -56,7 +56,7 @@ return [
         'name' => 'update_base_question'
     ],
     [
-        'route' => '/api/entity/otrs/messages',
+        'route' => 'entity/otrs/messages',
         'target' => [EntityOtrsController::class, 'getOtrsMessage'],
         'name' => 'entity_otrs_message'
     ]
