@@ -1,9 +1,12 @@
 import { AnyAction } from "redux";
 import { AccountLoginAndSecurityStore } from "@modules/account/ts/types/store.type";
-import { accountLoginAndSecurityValue } from "@modules/account/ts/consts/store-initial-value";
+
+const initialValue = {
+  alert: null,
+};
 
 const LoginAndSecurityReducer = (
-  state: AccountLoginAndSecurityStore = accountLoginAndSecurityValue,
+  state: AccountLoginAndSecurityStore = initialValue,
   action: AnyAction
 ): AccountLoginAndSecurityStore => {
   switch (action.type) {

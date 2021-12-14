@@ -18,7 +18,7 @@ import ListsReducer from "@redux/reducers/account/ListsReducer";
 import DepartmentsMenuReducer from "@redux/reducers/account/DepartmentsMenuReducer";
 import DepartmentsMenuMobileReducer from "@redux/reducers/account/DepartmentsMenuMobileReducer";
 import DepartmentsMenuDesktopReducer from "@redux/reducers/account/DepartmentsMenuDesktopReducer";
-// import LoginAndSecurityReducer from "@redux/reducers/account/LoginAndSecurityReducer";
+import LoginAndSecurityReducer from "@redux/reducers/account/LoginAndSecurityReducer";
 // import MobileAlertReducer from "@redux/reducers/account/MobileAlertReducer";
 import CartReducer from "@redux/reducers/CartReducer";
 // import MiniCartReducer from "@redux/reducers/MiniCartReducer";
@@ -61,7 +61,7 @@ const reducers = combineReducers({
   departmentsMenu: DepartmentsMenuReducer,
   departmentsMenuMobile: DepartmentsMenuMobileReducer,
   departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
-  // loginAndSecurity: LoginAndSecurityReducer,
+  loginAndSecurity: LoginAndSecurityReducer,
   // mobileAlert: MobileAlertReducer,
   cart: CartReducer,
   // miniCart: MiniCartReducer,
