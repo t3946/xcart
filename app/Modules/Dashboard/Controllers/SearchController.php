@@ -19,7 +19,7 @@ class SearchController extends PrototypeAdminController
 
     //набор шаблонов для функции быстрого поиска
     private const PATTERNS = [
-        "sku" => "/^[a-zA-Z]{3,}-[\.\w\d_-~\/]+$/i",
+        "sku" => "/^[a-zA-Z]{3,}-[\.\w\d_\-~\/]+$/i",
         "upc" => "/[0-9]{12,}$/i",
         "order_id_with_prefix" => "/^([a-z]{2}-)?(\d{6})$/i",
         "order_amazon_id" => "/\d+-\d+-\d+/",
