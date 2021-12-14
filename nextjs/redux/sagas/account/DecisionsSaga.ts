@@ -84,6 +84,37 @@ function* checkSentDecision(action): Generator {
     });
 }
 
+function* iSentOriginalPurchaseOrderViaFaxDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
+
+function* uploadOriginalPurchaseorderDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
+function* sentAchTransferDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>(route("order:api:make-license"), data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
@@ -96,4 +127,13 @@ export default function* ratingsActionWatcher(): SagaIterator {
   );
   yield takeLatest("CANCEL_ORDER_DECISION", cancelOrderDecision);
   yield takeLatest("CHECK_SENT_DECISION", checkSentDecision);
+  yield takeLatest(
+    "UPLOAD_ORIGINAL_PURCHASE_ORDER_DECISION",
+    uploadOriginalPurchaseorderDecision
+  );
+  yield takeLatest(
+    "I_SENT_ORIGINAL_PURCHASE_ORDER_VIA_FAX_DECISION",
+    iSentOriginalPurchaseOrderViaFaxDecision
+  );
+  yield takeLatest("SENT_ACH_TRANSFER_DECISION", sentAchTransferDecision);
 }
