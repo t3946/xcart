@@ -1,0 +1,77 @@
+@import "styles/utils/Utils.module";
+
+.ordersNavigation__button {
+  @include breakpoint(xxl) {
+    margin: 0 pxToRem(7) 0 0;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.ordersNavigationButton {
+  $color: #4a4949;
+
+  background: #f4f4f4;
+  border: 1px solid #c4c4c4;
+  padding: pxToRem(9) pxToRem(26);
+  justify-content: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: $color;
+  text-align: center;
+  width: 100%;
+  transition: all 0.15s linear;
+
+  &:hover {
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  &:active {
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: $color;
+  }
+
+  @include breakpoint(xxl) {
+    width: initial;
+  }
+}
+
+.ordersNavigationButton_active {
+  background: #fff5f4;
+  border: 1px solid #ffa9a5;
+  color: #000000;
+  font-size: pxToRem(18);
+
+  &:hover {
+    box-shadow: 0px 0px 4px #ffa9a5;
+  }
+
+  &:active {
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  @include breakpoint(md) {
+    font-weight: bold;
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    font-weight: normal;
+  }
+}
+
+.ordersNavigationText__badge {
+  position: absolute;
+  top: pxToRem(5);
+  right: pxToRem(5);
+}
