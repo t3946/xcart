@@ -100,12 +100,11 @@ class SearchController extends PrototypeAdminController
      * @return void
      * @throws InvalidConfigException
      * @throws UnknownPropertyException
-     * @throws JsonException
      */
     public function fastSearch(): void
     {
 
-        $search_type = json_decode($this->getRequest()->get->get('search_type'), true, 512, JSON_THROW_ON_ERROR);
+        $search_type = json_decode($this->getRequest()->get->get('search_type'),true);
 
         if (!$search_string = trim($this->getRequest()->get->get('search_string'))) {
             $this->getRequest()->redirect('admin:index');
