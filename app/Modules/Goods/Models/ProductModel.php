@@ -614,11 +614,11 @@ class ProductModel extends Model implements ICartItem
             return ProductImageModel::objects()
                 ->filter([
                     'products__group_root' => $this->pk,
+                    'products__forsale' => 'Y',
                     'products_images__is_active' => true
                 ])
                 ->group(['hash'])
                 ->order(['products_images__order_by','products_images__image_id'])
-                ->limit(4)
                 ->all();
         }
 
