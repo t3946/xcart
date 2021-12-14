@@ -16,7 +16,7 @@ import {
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-// import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface IProps {
@@ -88,9 +88,8 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
   ];
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
-  // const history = useHistory();
-  // const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const alert = null;
+  const router = useRouter();
+  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
 
   if (alert) {
@@ -100,7 +99,7 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
         dispatch(setMobileAlertAction(alert));
         dispatch(showMobileAlertAction(true));
         dispatch(setVisibleShadowPanelAction(true));
-        history.push("/account/orders/open-orders/decisions-required");
+        router.push("/account/orders/open-orders/decisions-required");
       },
       md: function () {},
     });

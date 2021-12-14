@@ -13,7 +13,7 @@ import {
 } from "@redux/actions/account-actions/MobileMenuActions";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
-// import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface IAddress {
@@ -29,9 +29,8 @@ interface IProps {
 const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
-  // const history = useHistory();
-  // const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const alert = null;
+  const router = useRouter();
+  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const initialValues = {
     address: null,
@@ -56,7 +55,7 @@ const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
         dispatch(setMobileAlertAction(alert));
         dispatch(showMobileAlertAction(true));
         dispatch(setVisibleShadowPanelAction(true));
-        // history.push("/account/orders/open-orders/decisions-required");
+        router.push("/account/orders/open-orders/decisions-required");
       },
       md: function () {},
     });

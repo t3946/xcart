@@ -34,11 +34,11 @@
 }
 
 .paymentItemGrid_verticalLayout {
-  height: rem-calc(119);
-  row-gap: rem-calc(11);
-  
-  @include breakpoint(md up) {
-    height: rem-calc(126);
+  height: pxToRem(119);
+  row-gap: pxToRem(11);
+
+  @include breakpoint(md) {
+    height: pxToRem(126);
   }
 
   @include breakpoint(lg up) {
@@ -80,4 +80,12 @@
     line-height: rem-calc(19);
     margin: 0 0 rem-calc(31) 0;
   }
+}
+
+.show {
+  background-color: red;
+}
+
+.kek {
+  color: black;
 }

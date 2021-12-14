@@ -3,7 +3,7 @@ import RadioButtonDescription from "@modules/account/components/orders/Decision/
 import RadioButtonName from "@modules/account/components/orders/Decision/UnpaidOrder/RadioButtonName";
 import cn from "classnames";
 import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem.module.scss";
-import { Accordion } from "react-bootstrap";
+import Accordion from "react-bootstrap/Accordion";
 
 interface IProps {
   value: string;
@@ -41,6 +41,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
 
         <p className={cn(["m-0", Styles.paymentItemCaption])}>{caption}</p>
       </label>
+      {/* <Accordion.Item bsPrefix={Styles.show} eventKey={value}> */}
       <Accordion.Collapse eventKey={value}>
         <RadioButtonDescription>
           <div

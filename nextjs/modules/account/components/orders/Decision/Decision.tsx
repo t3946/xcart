@@ -19,6 +19,8 @@ const Decision: React.FC = (props) => {
   const dispatch = useDispatch();
   const decision = props.decision;
 
+  console.log("PROPS", props);
+
   if (!decision) {
     if (process.browser) {
       router.push("/orders/decision-required");
@@ -42,7 +44,7 @@ const Decision: React.FC = (props) => {
       {/*<LicenseRequire onChange={onChangeDecision} decision={decision} />*/}
       {/* <PaymentRequired /> */}
       <UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />
-      <SendingCheck
+      {/* <SendingCheck
         firstAddress={{
           name: "S3 Stores, Inc.",
           address: `2885 Sanford Ave SW #12717
@@ -57,6 +59,8 @@ const Decision: React.FC = (props) => {
         }}
       />
       <IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />
+      <OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
+      <AchPaymentIsRequired />
     </div>
   );
 };

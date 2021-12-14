@@ -2,7 +2,13 @@ import React from "react";
 import cn from "classnames";
 import PaymentItem from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem";
 import PayByCardForm from "@modules/account/components/orders/Decision/UnpaidOrder/PayByCardForm";
-import { Accordion } from "react-bootstrap";
+import {
+  Accordion,
+  Card,
+  useAccordionButton,
+  AccordionContext,
+  AccordionCollapseProps,
+} from "react-bootstrap";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import unpaidOrderStyles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
 import paymentItemStyles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem.module.scss";
@@ -14,6 +20,27 @@ interface IProps {
   onChangeDecision: (decision: DecisionsInterface) => any;
   decision: DecisionsInterface;
   classes: any;
+}
+
+function CustomToggle({ children, eventKey, callback }) {
+  const { activeEventKey } = React.useContext(AccordionContext);
+
+  const decoratedOnClick = useAccordionButton(
+    eventKey,
+    () => callback && callback(eventKey)
+  );
+
+  const isCurrentEventKey = activeEventKey === eventKey;
+
+  return (
+    <button
+      type="button"
+      style={{ backgroundColor: isCurrentEventKey ? "pink" : "lavender" }}
+      onClick={decoratedOnClick}
+    >
+      {children}
+    </button>
+  );
 }
 
 const PaymentSelection: React.FC<IProps> = (props: IProps) => {
