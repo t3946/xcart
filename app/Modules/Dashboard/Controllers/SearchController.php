@@ -2,11 +2,14 @@
 
 namespace Modules\Dashboard\Controllers;
 
+use JsonException;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Stores\OrderSearchStore;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderModel;
 use Xcart\App\Controller\PrototypeAdminController;
+use Xcart\App\Exceptions\InvalidConfigException;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Q\QOr;
 
@@ -17,6 +20,7 @@ class SearchController extends PrototypeAdminController
     //набор шаблонов для функции быстрого поиска
     private const PATTERNS = [
         "sku" => "/^[a-zA-Z]{3,}-[\.\w\d_-~\/]+$/i",
+        "upc" => "/[0-9]{12,}$/i",
         "order_id_with_prefix" => "/^([a-z]{2}-)?(\d{6})$/i",
         "order_amazon_id" => "/\d+-\d+-\d+/",
     ];
@@ -94,34 +98,42 @@ class SearchController extends PrototypeAdminController
     /**
      * Искать продукты и заказы по Order # / PO # / Zip code / SKU
      * @return void
-    */
+     * @throws InvalidConfigException
+     * @throws UnknownPropertyException
+     * @throws JsonException
+     */
     public function fastSearch(): void
     {
 
-        $search_type = json_decode($this->getRequest()->get->get('search_type'),true);
+        $search_type = json_decode($this->getRequest()->get->get('search_type'), true, 512, JSON_THROW_ON_ERROR);
 
         if (!$search_string = trim($this->getRequest()->get->get('search_string'))) {
             $this->getRequest()->redirect('admin:index');
             return;
         }
 
-        if (!$search_type = $search_type['value'])
-        {
+        if (!$search_type = $search_type['value']) {
+            /** @var ProductModel $product */
+            // search by PRODUCT UPC
+            if (preg_match(self::PATTERNS['upc'], $search_string, $matches) === 1) {
+                $product = ProductModel::objects()->get(['upc' => $matches[0]]);
+            }
+
             // search by PRODUCT SKU
             if (preg_match(self::PATTERNS['sku'], $search_string, $matches) === 1) {
                 $product = ProductModel::objects()->get(['productcode' => $matches[0]]);
-
-                //redirect if found
-                if ($product) {
-                    $this->redirect($product->getAdminUrl());
-                    return;
-                }
             }
 
-            $this->getRequest()->redirect('admin:index');
+            //redirect if found
+            if (isset($product)) {
+                $this->redirect($product->getAdminUrl());
+            }
+
+            $this->redirect('admin:index');
         }
 
-        if($search_type === 'id'){
+        if ($search_type === 'id') {
+            /** @var OrderModel $order */
             // search by ORDER ID with prefix
             if (preg_match(self::PATTERNS['order_id_with_prefix'], $search_string, $matches) === 1) {
                 $order = OrderModel::objects()->get(['orderid' => $matches[2]]);
@@ -138,32 +150,32 @@ class SearchController extends PrototypeAdminController
             }
         }
 
-        if($search_type === 'order_po'){
+        if ($search_type === 'order_po') {
             //search by ORDER PO NUMBER
             $order = OrderModel::objects()->filter(['po_number' => $search_string]);
 
             if (isset($order) && $order->count()) {
                 $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['order' => ['po' => $search_string]]]);
-                $this->getRequest()->redirect($url);
+                $this->redirect($url);
             }
         }
 
-        if($search_type === 'zip'){
+        if ($search_type === 'zip') {
             //search by ORDER ZIPCODE
-            $order = OrderModel::objects()->filter(new QOr([
+            $order = OrderModel::objects()->filter([new QOr([
                 's_zipcode' => $search_string,
                 'b_zipcode' => $search_string,
-            ]));
+            ])]);
 
             if (isset($order) && $order->count()) {
                 $url = Xcart::app()->router->url('dashboard:search', [], ['search' => ['customer' => ['zip_code' => $search_string]]]);
-                $this->getRequest()->redirect($url);
+                $this->redirect($url);
             }
         }
-        $this->getRequest()->redirect('admin:index');
+        $this->redirect('admin:index');
     }
 
-    public function search_ajax_suggestion()
+    public function search_ajax_suggestion(): void
     {
         $data = [];
 
