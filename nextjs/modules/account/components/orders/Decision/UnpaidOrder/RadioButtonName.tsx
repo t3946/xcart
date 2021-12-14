@@ -1,6 +1,6 @@
 import cn from "classnames";
 import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/RadioButtonName.module.scss";
-import RadioButton from "@modules/account/components/orders/Decision/RadioButton";
+import RadioButton from "@modules/ui/RadioButton";
 import React from "react";
 
 interface IProps {
