@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers\Api;
 
 use Modules\Goods\Models\ProductImageModel;
+use Xcart\App\Orm\QuerySet;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\GeoIp\Helpers\GeoIpHelper;
@@ -129,7 +130,7 @@ class ApiProductController extends AbstractCatalogController
 
     public function getQS($data = null)
     {
-        return $data->childs->getQuerySet();
+        return $data->childs->filter(['forsale' => 'Y'])->getQuerySet();
     }
 
     /**
@@ -146,7 +147,7 @@ class ApiProductController extends AbstractCatalogController
         //view_internal
         $this->model = $model;
 
-        /** @var \Xcart\App\Orm\QuerySet $pqs */
+        /** @var QuerySet $pqs */
         $pqs = $this->getQS($model);
         $fh = new ProductFilterHelper($pqs, $this->getRequest()->get->get('filter', []), $this->filters);
 
