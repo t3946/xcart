@@ -1,0 +1,65 @@
+@import "styles/utils/Utils.module";
+
+.radioMarker {
+  background: #ffffff;
+  border: 1px solid #959595;
+  border-radius: 100px;
+  cursor: pointer;
+  position: relative;
+  flex: 0 0 auto;
+  width: pxToRem(18);
+  height: pxToRem(18);
+
+  &:after {
+    content: "";
+    position: absolute;
+    background-color: #4a4949;
+    border-radius: 100px;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    transition-property: width, height;
+    transition-duration: 0.2s;
+  }
+
+  width: pxToRem(18);
+  height: pxToRem(18);
+
+  @include breakpoint(md) {
+    width: pxToRem(26);
+    height: pxToRem(26);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(20);
+    height: pxToRem(20);
+  }
+}
+
+.radioMarker_checked {
+  border-color: #4a4949;
+  cursor: default;
+  
+  &:after {
+    display: block;
+    width: pxToRem(8);
+    height: pxToRem(8);
+
+    @include breakpoint(md) {
+      width: pxToRem(12);
+      height: pxToRem(12);
+    }
+
+    @include breakpoint(lg) {
+      width: pxToRem(8);
+      height: pxToRem(8);
+    }
+  }
+}
+
+.radioMarker_disabled {
+  background-color: #e9ecef;
+  cursor: default;
+}

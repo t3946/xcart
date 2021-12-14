@@ -74,7 +74,7 @@ const StripeButton: React.FC<IProps> = (props: IProps) => {
     );
   }
 
-  return;
+  return (<></>);
 };
 
 export default StripeButton;
