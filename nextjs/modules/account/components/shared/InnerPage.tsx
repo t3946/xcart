@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import classnames from "classnames";
+import Styles from "@modules/account/components/shared/InnerPage.module.scss";
 
 interface IProps {
   beforePage?: React.ReactElement;
@@ -25,8 +26,7 @@ const InnerPage: React.FC<IProps> = function (props: IProps) {
       return (
         <h1
           className={classnames(
-            "account-page-header mb-0",
-            props.headerClasses
+            "mb-0", Styles.pageHeader, props.headerClasses,
           )}
         >
           {props.header}
@@ -39,18 +39,18 @@ const InnerPage: React.FC<IProps> = function (props: IProps) {
     <div className="account-inner-page">
       {props.beforePage}
 
-      <div className={classnames("account-page-hat", props.hatClasses)}>
+      <div className={classnames(Styles.accountPageHat,  props.hatClasses)}>
         {headerTemplate()}
         {props.hat}
       </div>
 
-      <div className={classnames("account-page-body", props.bodyClasses)}>
+      <div className={classnames(Styles.accountPageBody, props.bodyClasses)}>
         {props.body}
         {props.children}
       </div>
 
       {props.footer && (
-        <div className={classnames("account-page-footer", props.footerClasses)}>
+        <div className={classnames(Styles.accountPageFooter, props.footerClasses)}>
           {props.footer}
         </div>
       )}
