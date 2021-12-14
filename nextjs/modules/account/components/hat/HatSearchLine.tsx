@@ -13,6 +13,9 @@ import AppData from "@utils/AppData";
 import Styles from "@modules/account/components/hat/HatSearchLine.module.scss";
 import Magnifier from "@modules/icon/components/common/magnifier/Light";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import LeftColumn from "@modules/layout/components/LeftColumn";
+import Triangle from "@modules/icon/components/common/triangle/Triangle";
+import StylesRotate from "@styles/modules/Rotate.module.scss";
 
 const HatSearchLine: React.FC = (): any => {
   const dispatch = useDispatch();
@@ -40,6 +43,13 @@ const HatSearchLine: React.FC = (): any => {
       "justify-content-center",
     ],
     inputSearch: [inputSuggestionsClass, Styles.inputSearch],
+    menuArrowIcon: [
+      "ms-2",
+      Styles.triangleIcon,
+      {
+        [StylesRotate.rotate__180]: isVisibleDepartmentsMenu,
+      },
+    ],
   };
 
   function searchTemplate() {
@@ -121,6 +131,7 @@ const HatSearchLine: React.FC = (): any => {
 
       <div className="container">
         <div className="row">
+          {/*departments menu*/}
           <HoverIntent
             onMouseOver={() => {
               setDepartmentsMenuButtonHover(true);
@@ -133,20 +144,28 @@ const HatSearchLine: React.FC = (): any => {
             interval={250}
             timeout={250}
           >
-            <div className="account-page-left-column col pe-0 d-none d-lg-block">
-              <div className={Styles.categoryMenuContainer}>
+            <LeftColumn className={"col pe-0 d-none d-lg-block"}>
+              <div className={cn([Styles.categoryMenuContainer])}>
                 <div
-                  className={cn("category-menu category-menu__new", {
-                    "is-active": isVisibleDepartmentsMenu,
-                  })}
+                  className={cn(
+                    Styles.categoryMenu,
+                    "category-menu__new d-flex align-items-center justify-content-center",
+                    {
+                      [Styles.categoryMenu_active]: isVisibleDepartmentsMenu,
+                    }
+                  )}
                 >
-                  <span className="menu-icon" />
-                  <span className="category-menu-title">Departments</span>
+                  <span className={Styles.categoryMenuTitle}>Departments</span>
+
+                  <span className={cn(classes.menuArrowIcon)}>
+                    <Triangle />
+                  </span>
                 </div>
               </div>
-            </div>
+            </LeftColumn>
           </HoverIntent>
 
+          {/*product search*/}
           <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
             {searchTemplate()}
 
