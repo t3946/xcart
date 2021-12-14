@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: 1fr;
 
-  @include breakpoint(sm up) {
-    box-shadow: 0 0 rem-calc(4) rgba(0, 0, 0, 0.25);
+  @include breakpoint(sm) {
+    box-shadow: 0 0 pxToRem(4) rgba(0, 0, 0, 0.25);
   }
 }

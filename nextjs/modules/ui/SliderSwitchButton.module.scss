@@ -10,94 +10,95 @@
   position: absolute;
   height: calc(100% + 10px);
   background: linear-gradient(-90deg, #1ca839 40%, #3691d3 60%);
-  top: rem-calc(-5);
+  top: pxToRem(-5);
   z-index: 0;
   box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   @include slideTransition(left);
 }
 
 .background_enabled {
-  left: rem-calc(-134);
+  left: pxToRem(-134);
 }
 
 .background_disabled {
-  left: rem-calc(-3);
+  left: pxToRem(-3);
 }
 
 .caption {
   position: absolute;
   color: #ffffff;
   text-transform: capitalize;
-  font-size: rem-calc(18);
+  font-size: pxToRem(18);
   z-index: 3;
-
+  top: 0;
+  
   @include slideTransition(left, right, opacity);
 
-  @include breakpoint(lg up) {
-    font-size: rem-calc(16);
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
   }
 }
 
 .caption_enabledActive {
-  left: rem-calc(21);
+  left: pxToRem(21);
   opacity: 1;
 
-  @include breakpoint(lg up) {
-    left: rem-calc(19);
+  @include breakpoint(lg) {
+    left: pxToRem(19);
   }
 }
 
 .caption_enabledInactive {
-  left: rem-calc(-37);
+  left: pxToRem(-37);
   opacity: 0;
 }
 
 .caption_disabledActive {
-  right: rem-calc(25);
+  right: pxToRem(25);
   opacity: 1;
 
-  @include breakpoint(lg up) {
-    right: rem-calc(20);
+  @include breakpoint(lg) {
+    right: pxToRem(20);
   }
 }
 
 .caption_disabledInactive {
-  right: rem-calc(-37);
+  right: pxToRem(-37);
   opacity: 0;
 }
 
 .ball {
   position: absolute;
   display: block;
-  top: rem-calc(4);
-  width: rem-calc(24);
-  height: rem-calc(24);
+  top: pxToRem(4);
+  width: pxToRem(24);
+  height: pxToRem(24);
   background: #ffffff;
-  border-radius: rem-calc(13);
+  border-radius: pxToRem(13);
   z-index: 3;
-  box-shadow: 0 rem-calc(3) rem-calc(3) rem-calc(-1) rgba(0, 0, 0, 0.38);
+  box-shadow: 0 pxToRem(3) pxToRem(3) pxToRem(-1) rgba(0, 0, 0, 0.38);
 
   @include slideTransition(left);
 
-  @include breakpoint(lg up) {
-    top: rem-calc(3);
-    width: rem-calc(21);
-    height: rem-calc(21);
+  @include breakpoint(lg) {
+    top: pxToRem(3);
+    width: pxToRem(21);
+    height: pxToRem(21);
   }
 }
 
 .ball_enabled {
-  left: rem-calc(61);
+  left: pxToRem(61);
 
-  @include breakpoint(lg up) {
-    left: rem-calc(54);
+  @include breakpoint(lg) {
+    left: pxToRem(54);
   }
 }
 
 .ball_disabled {
-  left: rem-calc(4);
-  @include breakpoint(lg up) {
-    left: rem-calc(3);
+  left: pxToRem(4);
+  @include breakpoint(lg) {
+    left: pxToRem(3);
   }
 }
 
@@ -105,21 +106,21 @@
   position: relative;
   display: block;
   background: #ffffff;
-  border-radius: rem-calc(20);
-  height: rem-calc(32);
-  width: rem-calc(89);
+  border-radius: pxToRem(20);
+  height: pxToRem(32);
+  width: pxToRem(89);
   cursor: pointer;
   user-select: none;
   overflow: hidden;
-  @include breakpoint(lg up) {
-    height: rem-calc(27);
-    width: rem-calc(78);
+  @include breakpoint(lg) {
+    height: pxToRem(27);
+    width: pxToRem(78);
   }
 }
 
 .border {
-  padding: rem-calc(2);
+  padding: pxToRem(2);
   display: inline-block;
-  border-radius: rem-calc(100);
+  border-radius: pxToRem(100);
   background: linear-gradient(180deg, #cbcccb, #ececec);
 }

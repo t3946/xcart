@@ -1,61 +1,61 @@
 @import "styles/utils/Utils.module";
 
 .decision__paymentSelection {
-  margin: 0 rem-calc(-21);
+  margin: 0 pxToRem(-21);
 
-  @include breakpoint(sm up) {
+  @include breakpoint(sm) {
     margin: 0;
   }
 }
 
 .decision__button {
-  margin: 0 0 rem-calc(32) 0;
+  margin: 0 0 pxToRem(32) 0;
 
-  @include breakpoint(md up) {
-    margin: 0 0 rem-calc(43) 0;
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(43) 0;
   }
 }
 
 .button {
   width: 100%;
-  padding: rem-calc(11) 0;
-  font-size: rem-calc(20);
-  line-height: rem-calc(24);
+  padding: pxToRem(11) 0;
+  font-size: pxToRem(20);
+  line-height: pxToRem(24);
   height: auto;
 
-  @include breakpoint(md up) {
-    padding: rem-calc(13) rem-calc(38);
-    font-size: rem-calc(26);
-    line-height: rem-calc(31);
+  @include breakpoint(md) {
+    padding: pxToRem(13) pxToRem(38);
+    font-size: pxToRem(26);
+    line-height: pxToRem(31);
     width: auto;
   }
 
-  @include breakpoint(lg up) {
-    padding: rem-calc(10) rem-calc(30);
+  @include breakpoint(lg) {
+    padding: pxToRem(10) pxToRem(30);
     font-size: 1.125rem;
     line-height: 1;
   }
 }
 
 .decision__button_cancelOrder {
-  @include breakpoint(lg up) {
-    margin: rem-calc(18) rem-calc(24);
+  @include breakpoint(lg) {
+    margin: pxToRem(18) pxToRem(24);
   }
 }
 
 .decisionCaption {
-  padding: 0 rem-calc(11);
-  @include breakpoint(sm up) {
-    padding: 0 rem-calc(21);
+  padding: 0 pxToRem(11);
+  @include breakpoint(sm) {
+    padding: 0 pxToRem(21);
   }
 
-  @include breakpoint(md up) {
-    font-size: rem-calc(18);
-    line-height: rem-calc(23);
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(23);
   }
 
-  @include breakpoint(lg up) {
-    padding: 0 rem-calc(25);
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(25);
     font-size: inherit;
     line-height: inherit;
   }
@@ -66,26 +66,26 @@
 }
 
 .decision__title {
-  margin: rem-calc(26) 0 rem-calc(17);
+  margin: pxToRem(26) 0 pxToRem(17);
 
-  @include breakpoint(md up) {
-    margin: rem-calc(34) 0 rem-calc(21);
+  @include breakpoint(md) {
+    margin: pxToRem(34) 0 pxToRem(21);
   }
 
-  @include breakpoint(lg up) {
-    margin: rem-calc(42) 0 rem-calc(21);
+  @include breakpoint(lg) {
+    margin: pxToRem(42) 0 pxToRem(21);
   }
 }
 
 .decision__caption_lineIndent {
-  margin: 0 0 rem-calc(24);
+  margin: 0 0 pxToRem(24);
 
-  @include breakpoint(lg up) {
-    margin: 0 0 rem-calc(12);
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(12);
   }
 }
 
 .decision__caption_paragraphIndent {
-  margin: 0 0 rem-calc(28);
+  margin: 0 0 pxToRem(28);
 }
 
