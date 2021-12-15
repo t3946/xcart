@@ -8,7 +8,7 @@ import IncreaseInShippingCharge from "@modules/account/components/orders/Decisio
 import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
 import POAdditionalInformationRequired from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired";
 import EstimatedTimeArrival from "@modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
-import LTLFreightShipment from "modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment";
+import StreetAddressRequired from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
@@ -75,10 +75,9 @@ const Decision: React.FC = (props) => {
       {/*<IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />*/}
       {/*<OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
       {/*<AchPaymentIsRequired />*/}
-      {/* <CustomDuties /> */}
-      {/* <AdditionalShippingCharge /> */}
-      {/* <POAdditionalShippingCharge /> */}
-      <POAdditionalInformationRequired />
+      {/*<EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />*/}
+      {/*<LicenseRequire onChange={onChangeDecision} decision={decision} />*/}
+      <StreetAddressRequired />
     </div>
   );
 };

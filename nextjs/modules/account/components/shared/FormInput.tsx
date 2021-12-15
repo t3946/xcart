@@ -2,7 +2,7 @@ import React, { ChangeEvent, FocusEventHandler, MutableRefObject } from "react";
 import classnames from "classnames";
 import { FormikErrors, FormikTouched } from "formik";
 import InputMask from "react-input-mask";
-
+import Styles from "@modules/account/components/shared/FormInput.module.scss";
 interface FormInputPropsDto {
   label?: string;
   placeholder?: string;
@@ -13,6 +13,7 @@ interface FormInputPropsDto {
   handleChange: (e: string | ChangeEvent<any>) => void;
   classes?: {
     group?: string | string[] | null;
+    grid?: string | string[] | null;
     label?: string | string[] | null;
     input?: string | string[] | null;
     textArea?: string | string[] | null;
@@ -47,9 +48,13 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   return (
     <div className={classnames("form-input-container", classes?.group)}>
       <div
-        className={`d-flex alight-center form-input-${
-          label ? "space-between" : "flex-end"
-        }`}
+        className={classnames(
+          "d-flex",
+          "flex-wrap",
+          "align-items-center",
+          Styles.grid,
+          classes?.grid
+        )}
       >
         {label && (
           <label

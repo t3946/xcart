@@ -65,11 +65,6 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
 
   const editAddress = () => {
     breakpoint({
-      xs: () =>
-        history.push({
-          pathname: "/account/addresses/edit",
-          state: { addressInfo: addressInfo },
-        }),
       md: editAddressDialog.handleClickOpen,
     });
   };

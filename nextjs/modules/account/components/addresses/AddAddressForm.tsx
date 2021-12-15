@@ -1,7 +1,10 @@
 import React, { useContext } from "react";
 import { FormSelect } from "../shared/FormSelect";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { useFormik } from "formik";
+import { Form, Formik, useFormik } from "formik";
+import FormInputPhone, {
+  getPhoneNumberInnerPart,
+} from "@modules/account/components/shared/FormInputPhone";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
@@ -16,9 +19,9 @@ import { getStates } from "../../utils/get-states";
 import Store from "@redux/stores/Store";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import InputGroup from "@modules/account/components/addresses/InputGroup";
-
+import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
+import { getCountryByCode } from "@utils/Countries";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -30,7 +33,6 @@ export const AddAddressForm: React.FC<any> = ({
   const countries = useSelector((e: any) => e.main.countries);
   const states = useSelector((e: any) => e.main.states);
   const { showSnackbar } = useContext(SnackbarContext);
-
   const breakpoint = useBreakpoint();
 
   const addressFormLoading = useSelector(
@@ -61,6 +63,10 @@ export const AddAddressForm: React.FC<any> = ({
 
     dispatch(addAddress(newAddress, onPended, Store.getState().user.id));
   };
+  if (addressInfo) {
+    getCountryByCode();
+  }
+  console.log(addressInfo || initialAddAddressFormValue);
 
   const formik = useFormik({
     initialValues: addressInfo || initialAddAddressFormValue,
@@ -100,18 +106,19 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.full_name && formik.errors.full_name)}
           handleChange={formik.handleChange}
         />
-
-        <InputGroup
-          label="Phone Number"
-          value={formik.values.phone_number}
-          placeholder={"(999) 999 99 99"}
-          name={"phone_number"}
-          error={formik.touched.phone_number && formik.errors.phone_number}
-          isInvalid={
-            !!(formik.touched.phone_number && formik.errors.phone_number)
-          }
+        <FormInputPhone
+          setFieldValue={formik.setFieldValue}
           handleChange={formik.handleChange}
-          mask={"(999) 999 99 99"}
+          touched={formik.touched}
+          errors={formik.errors}
+          name={"phone_number"}
+          values={{
+            // phoneCountryCode: values.phoneCountryCode,
+            phone: formik.values.phone_number,
+            phoneExt: formik.values.phone_numberExt,
+          }}
+          mode={"ext"}
+          label={"Phone Number"}
         />
 
         <InputGroup
@@ -130,6 +137,9 @@ export const AddAddressForm: React.FC<any> = ({
           error={formik.touched.detailed && formik.errors.detailed}
           isInvalid={!!(formik.touched.detailed && formik.errors.detailed)}
           handleChange={formik.handleChange}
+          touched={formik.touched.detailed}
+          classes={{ input: "add-address-input", grid: "justify-content-end" }}
+          handleBlur={formik.handleBlur}
         />
 
         <InputGroup
@@ -181,7 +191,7 @@ export const AddAddressForm: React.FC<any> = ({
             <button
               disabled={addressFormLoading}
               type={"submit"}
-              className="form-button account-submit-btn"
+              className={cn("account-submit-btn", "w-md-auto")}
             >
               {addressInfo ? "Save changes" : "Add Address"}
             </button>

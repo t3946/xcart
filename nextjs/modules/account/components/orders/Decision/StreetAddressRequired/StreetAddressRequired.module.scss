@@ -1,0 +1,152 @@
+@import "styles/utils/Utils.module";
+
+.header {
+  @include breakpoint(md) {
+    padding: pxToRem(34) 0 0 pxToRem(13);
+  }
+  @include breakpoint(lg) {
+    padding: pxToRem(45) pxToRem(26) pxToRem(23);
+  }
+}
+
+.headerText {
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+    line-height: pxToRem(36);
+  }
+  @include breakpoint(lg) {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+.decision__text {
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(21);
+  }
+}
+
+.decisionPage {
+  font-size: pxToRem(18);
+}
+
+.text {
+  @include breakpoint(lg) {
+    line-height: pxToRem(24);
+  }
+}
+
+.decision__caption {
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(28);
+  }
+}
+
+.decision__addresses {
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-24) pxToRem(33);
+  }
+}
+
+.addresses {
+  column-gap: pxToRem(10);
+  row-gap: pxToRem(10);
+
+  @include breakpoint(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.address {
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  @include breakpoint(md) {
+    height: pxToRem(234);
+    padding: pxToRem(23) pxToRem(19) pxToRem(21) pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(244);
+    padding: pxToRem(20) pxToRem(23) pxToRem(26) pxToRem(22);
+  }
+}
+
+.addressHeader {
+  text-align: left;
+  font-weight: bold;
+  color: #000000;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(22);
+    padding: 0 0 pxToRem(25);
+  }
+}
+
+.addressBody {
+  white-space: pre-line;
+  color: #262626;
+
+  @include breakpoint(lg) {
+    line-height: pxToRem(24);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(20);
+  }
+}
+
+.addressFooter {
+  color: #055a93;
+  text-align: right;
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(19);
+  }
+}
+
+.addressFooter_disabled {
+  color: #808080;
+}
+
+.newAddressText {
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+}
+
+.button {
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(43);
+    height: pxToRem(41);
+  }
+}
+
+.decision__addAddressForm {
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-24) pxToRem(34);
+  }
+}
+
+.addAddressForm {
+  border: 1px solid #c4c4c4;
+  padding: pxToRem(35) pxToRem(25);
+  max-width: pxToRem(655);
+}
+
+.cursor_pointer {
+  cursor: pointer;
+}
