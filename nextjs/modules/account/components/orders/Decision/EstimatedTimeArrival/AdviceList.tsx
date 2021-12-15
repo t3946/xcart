@@ -47,6 +47,7 @@ const AdviceList: React.FC<IProps> = function (props: IProps) {
           checked={value === printAdviseMapKey}
           onChange={onChange}
           disabled={disabled}
+          key={printAdviseMapKey}
         />
       );
     }

@@ -124,7 +124,6 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
         initialValues={initialState}
         validationSchema={validationSchema}
         onSubmit={submit}
-        ref={React.useRef()}
       >
         {({ isSubmitting, handleChange, values, errors }) => {
           return (
@@ -137,6 +136,7 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                 <EstimatedTimeArrivalTable
                   tableType={TableTypes.inStock}
                   items={productCategories.inStock}
+                  key={"inStock"}
                 />
               )}
 
@@ -144,6 +144,7 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                 <EstimatedTimeArrivalTable
                   tableType={TableTypes.outOfStock}
                   items={productCategories.outOfStock}
+                  key={"outOfStock"}
                 />
               )}
 
@@ -151,6 +152,7 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                 <EstimatedTimeArrivalTable
                   tableType={TableTypes.discontinued}
                   items={productCategories.discontinued}
+                  key={"discontinued"}
                 />
               )}
 

@@ -90,7 +90,7 @@ const Table: React.FC<IProps> = (props: IProps) => {
   classes.hat.push(hatModifier);
 
   function rowsTemplates() {
-    return items.map((value: RowInterface) => {
+    return items.map((value: RowInterface, index) => {
       const { name, sku, amount, price, total, image } = value;
       let date = value.date;
 
@@ -111,6 +111,7 @@ const Table: React.FC<IProps> = (props: IProps) => {
           row={{ name, sku, amount, date, price, total, image }}
           qtyHeader={tableHeaders[tableType].qty}
           type={tableType}
+          key={index}
         />
       );
     });
