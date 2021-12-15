@@ -1,34 +1,33 @@
 import React from "react";
-import { useHistory, NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import { route } from "@utils/AppData";
 import { savePublicProfileAction } from "@redux/actions/account-actions/ProfileActions";
 import classnames from "classnames";
-import TimesLightIcon from "@client/jsx/components/icons/font-awesome/times/TimesLightIcon";
+import TimesLightIcon from "@modules/components/icons/font-awesome/times/TimesLightIcon";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import Alert from "@modules/account/components/shared/Alert";
 import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import AvatarEditor from "@modules/account/components/public-profile/AvatarEditor";
 import dataURItoBlob from "@utils/dataURItoBlob";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
+import { useRouter } from "next/router";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const PublicProfile = (): any => {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const user = useSelector((e: StoreDto) => e.user);
+  const router = useRouter();
+  const user = useSelectorAccount((e) => e.user);
 
   if (!user) {
-    history.push(route("account:login"));
+    router.push("/login");
   }
 
-  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
+  const alert = useSelectorAccount((e) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const alertShowTimeMs = 3000;
   const maxMB = 10;
@@ -442,19 +441,17 @@ const PublicProfile = (): any => {
                     Submit
                   </button>
 
-                  <NavLink
-                    to={route("account:dashboard")}
-                    exact={true}
-                    className={"text-decoration-none"}
-                  >
-                    <button
-                      type="button"
-                      className="form-button public-profile-footer-button form-button__outline ms-md-12"
-                      disabled={isSubmitting}
-                    >
-                      not now
-                    </button>
-                  </NavLink>
+                  <Link href={"/dashboard"}>
+                    <a className={"text-decoration-none"}>
+                      <button
+                        type="button"
+                        className="form-button public-profile-footer-button form-button__outline ms-md-12"
+                        disabled={isSubmitting}
+                      >
+                        not now
+                      </button>
+                    </a>
+                  </Link>
                 </div>
               </div>
             </Form>
