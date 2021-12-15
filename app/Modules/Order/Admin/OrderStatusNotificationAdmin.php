@@ -13,6 +13,7 @@ use Xcart\App\Orm\Model;
 
 class OrderStatusNotificationAdmin extends Admin
 {
+    public static bool $public = false;
     public string $createTemplate = 'admin/forms/_create.tpl';
     public string $updateTemplate = 'admin/forms/_update.tpl';
     public function getForm(): ?ModelForm

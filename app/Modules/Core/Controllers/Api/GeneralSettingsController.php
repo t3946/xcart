@@ -9,11 +9,28 @@ use Modules\Core\Models\LanguageModel;
 use Modules\Core\Models\ModuleModel;
 use Modules\Forms\Admin\TemplatesAdmin;
 use Modules\Forms\FormsModule;
+use Modules\Order\Admin\OrderStatusNotificationAdmin;
+use Modules\Order\OrderModule;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
 class GeneralSettingsController extends Controller
 {
+    /**
+     * @var array|array[]
+     */
+    private const OPTIONS = [
+        'Templates_OrderRelatedMessages' => [
+            'module' => FormsModule::class,
+            'admin' => TemplatesAdmin::class,
+            'routeName' => 'admin:list'
+        ],
+        'Order_Status_Notifications' => [
+            'module' => OrderModule::class,
+            'admin' => OrderStatusNotificationAdmin::class,
+            'routeName' => 'admin:list'
+        ]
+    ];
     public function getAllConfig()
     {
         $options = GlobalConfigModel::objects()
@@ -65,10 +82,12 @@ class GeneralSettingsController extends Controller
             foreach ($options as $catname) {
                 switch ($catname) {
                     case 'Templates_OrderRelatedMessages':
+                    case 'Order_Status_Notifications':
+                        $settings = self::OPTIONS[$catname];
                         $option_settings = [
-                            'link' => Xcart::app()->router->url('admin:list', [
-                                'module' => FormsModule::getName(),
-                                'admin' => TemplatesAdmin::classNameShort(),
+                            'link' => Xcart::app()->router->url($settings['routeName'], [
+                                'module' => $settings['module']::getName(),
+                                'admin' => $settings['admin']::classNameShort(),
                             ]),
                             'isNew' => false,
                             'lang' => $ar_name_opt[$catname] ?? ''
