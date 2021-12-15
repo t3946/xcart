@@ -40,7 +40,10 @@ if ($mode == "search" && $from_dashboard == "Y"){
 	        }
 	}
 	else {
-		$search_data["product_question_search"]["status"] = addslashes($status);
+		if (is_string($status)) {
+			$search_data["product_question_search"]["status"] = addslashes($status);
+
+		}
 	}
 
     }

@@ -412,7 +412,7 @@ $(function() {ldelim}
    <textarea rows="30" cols="60" id="product_question_message_body_to_distr" name="product_question_message_body_to_distr" style="width: 80%; height: 300px;" class="new_editor">{$product_info.product_question_message_body_to_distr|replace:"\n":"<br />"}</textarea>
    <br />
    <div align="left">
-    <input type="button" value="Send question to distributor/brand" onclick="javascript: submitForm(this, 'send_question_to_distr_brand');" />
+    <input type="button" value="Send question to distributor/brand" onclick="tinymce.triggerSave(); javascript: submitForm(this, 'send_question_to_distr_brand');" />
    </div>
   </div>
 
