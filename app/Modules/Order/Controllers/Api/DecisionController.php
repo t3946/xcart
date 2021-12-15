@@ -126,11 +126,17 @@ class DecisionController extends Controller
         $decision_license->save();
         $decision->setAttribute('solved', '1');
         $decision->update();
-        $this->jsonResponse($decision_license->getAttributes());
+
+        $user = Xcart::app()->auth->getUser(true);
+        $this->jsonResponse([
+            'notSolved' => DecisionController::getDecisions($user['user_id'], 0, self::LIMIT_SELECT_DECISIONS, 0, ['-created']),
+            'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
+        ]);
     }
 
     public function makeDecisionsAction()
     {
+        //todo: this method only for eta decision
         switch ($this->data['type']) {
             case DecisionModel::DECISION_TYPE_ESTIMATED_TIME_ARRIVAL:
                 $form = new ETADecisionForm();

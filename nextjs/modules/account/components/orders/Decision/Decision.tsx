@@ -6,13 +6,13 @@ import UnpaidOrder from "@modules/account/components/orders/Decision/UnpaidOrder
 import SendingCheck from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck";
 import IncreaseInShippingCharge from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge";
 import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
+import EstimatedTimeArrival from "@modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
   addAction,
   resetAction,
 } from "@redux/actions/account-actions/DecisionsActions";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 
 const Decision: React.FC = (props) => {
@@ -20,11 +20,9 @@ const Decision: React.FC = (props) => {
   const dispatch = useDispatch();
   const decision = props.decision;
 
-  console.log("PROPS", props);
-
   if (!decision) {
     if (process.browser) {
-      router.push("/orders/decision-required");
+      router.push("/orders/decisions-required");
     }
     return <span>no decision</span>;
   }
@@ -32,7 +30,7 @@ const Decision: React.FC = (props) => {
   function onChangeDecision(decision: DecisionsInterface) {
     dispatch(resetAction());
     dispatch(addAction(decision));
-    router.push("/orders/decision-required");
+    router.push("/orders/decisions-required");
   }
 
   return (
@@ -41,27 +39,39 @@ const Decision: React.FC = (props) => {
         Order # {decision.order_number}
       </h1>
       <Navigation />
-      {/*<EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />*/}
-      <LicenseRequire onChange={onChangeDecision} decision={decision} />
+      {(() => {
+        const props = {
+          onChange: onChangeDecision,
+          decision,
+        };
+
+        switch (decision.type) {
+          case "eta":
+            return <EstimatedTimeArrival {...props} />;
+          case "license":
+            return <LicenseRequire {...props} />;
+        }
+      })()}
+
       {/* <PaymentRequired /> */}
-      <UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />
-      <SendingCheck
-        firstAddress={{
-          name: "S3 Stores, Inc.",
-          address: `2885 Sanford Ave SW #12717
-          Grandville, MI, 49418
-          USA`,
-        }}
-        secondAddress={{
-          name: "S3 Stores, Inc.",
-          address: `27 Joseph St.,
-          Chatham, Ontario, N7L 3G4
-          Canada`,
-        }}
-      />
-      <IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />
-      <OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />
-      <AchPaymentIsRequired />
+      {/*<UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />*/}
+      {/*<SendingCheck*/}
+      {/*  firstAddress={{*/}
+      {/*    name: "S3 Stores, Inc.",*/}
+      {/*    address: `2885 Sanford Ave SW #12717*/}
+      {/*    Grandville, MI, 49418*/}
+      {/*    USA`,*/}
+      {/*  }}*/}
+      {/*  secondAddress={{*/}
+      {/*    name: "S3 Stores, Inc.",*/}
+      {/*    address: `27 Joseph St.,*/}
+      {/*    Chatham, Ontario, N7L 3G4*/}
+      {/*    Canada`,*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />*/}
+      {/*<OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
+      {/*<AchPaymentIsRequired />*/}
     </div>
   );
 };

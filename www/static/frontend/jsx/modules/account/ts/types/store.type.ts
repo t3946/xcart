@@ -152,6 +152,7 @@ interface StoreInterface {
       decisions: DecisionsInterface[];
     };
   };
+  routes: Record<string, string>;
 }
 
 export default StoreInterface;

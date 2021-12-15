@@ -2,14 +2,16 @@ import { takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
 import { route } from "@client/jsx/utils/AppData";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 const api = new ApiService();
 
 function* resolveDecision(action): Generator {
+  const routes = useSelectorAccount((e) => e.routes);
   const { success, data } = action.payload;
 
   yield api
-    .post<any>(route("order:api:decisions_make"), JSON.stringify(data))
+    .post<any>(routes["order:api:decisions_make"], JSON.stringify(data))
     .then(function (res) {
       success(res);
     });

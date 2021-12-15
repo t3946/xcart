@@ -1,7 +1,8 @@
 import React from "react";
 import AlertCheck from "@modules/icon/components/account/check/AlertCheck";
 import SandClock from "@modules/icon/components/account/sand-clock/SandClock";
-import classnames from "classnames";
+import cn from "classnames";
+import Styles from "@modules/account/components/orders/DecisionsPreview/Item.module.scss";
 
 interface IProps {
   decision: Record<any, any>;
@@ -13,37 +14,6 @@ interface IProps {
 const Item = React.forwardRef(function (props: IProps, ref: any) {
   const { decision } = props;
   const decisionName = ["ETA"][decision.type];
-
-  function iconTemplate() {
-    if (decision.solved) {
-      return <AlertCheck className={"decisions-item-icon_made"} />;
-    } else {
-      return <SandClock className={"decisions-item-icon_required"} />;
-    }
-  }
-
-  function statusTemplate() {
-    const text = decision.solved ? "Decision made" : "Decision required";
-    const classes = [
-      "d-flex",
-      "align-items-center",
-      "decisions-item-status",
-      {
-        "decisions-item-status_made": decision.solved,
-        "decisions-item-status_required": !decision.solved,
-      },
-    ];
-
-    return (
-      <span className={classnames(classes)}>
-        {iconTemplate()}
-        <span className={"d-none d-md-inline decisions-item__status-text"}>
-          {text}
-        </span>
-      </span>
-    );
-  }
-
   const classes = {
     container: [
       "decisions-item",
@@ -56,10 +26,41 @@ const Item = React.forwardRef(function (props: IProps, ref: any) {
       },
       props.classes?.container,
     ],
+    status: {
+      container: [
+        "d-flex",
+        "align-items-center",
+        "decisions-item-status",
+        {
+          "decisions-item-status_made": decision.solved,
+          "decisions-item-status_required": !decision.solved,
+        },
+      ],
+      text: ["d-none", "d-md-inline", "ms-10", "ms-lg-2", "lh-1"],
+    },
   };
 
+  function iconTemplate() {
+    if (decision.solved) {
+      return <AlertCheck className={"decisions-item-icon_made"} />;
+    } else {
+      return <SandClock className={"decisions-item-icon_required"} />;
+    }
+  }
+
+  function statusTemplate() {
+    const text = decision.solved ? "Decision made" : "Decision required";
+
+    return (
+      <span className={cn(classes.status.container)}>
+        {iconTemplate()}
+        <span className={cn(classes.status.text)}>{text}</span>
+      </span>
+    );
+  }
+
   return (
-    <div className={classnames(classes.container)} ref={ref}>
+    <div className={cn(classes.container)} ref={ref}>
       <span className={"decisions-item-text"}>
         <span className="d-block d-md-inline">{decision.order_number}:</span>{" "}
         <span className="d-block d-md-inline">

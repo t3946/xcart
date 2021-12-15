@@ -182,6 +182,7 @@ const Table: React.FC<IProps> = (props: IProps) => {
         <span className={"d-none d-lg-block"}>
           {tableHeaders[tableType].qtyDesktop}
         </span>
+
         <span className={"d-none d-md-block d-lg-none text-center"}>
           {tableHeaders[tableType].qty}
         </span>

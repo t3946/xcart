@@ -56,7 +56,8 @@ const List: React.FC<IProps> = function (props: IProps) {
     dispatch(
       loadMoreAction({
         data: { solved: props.solved, offset: decisions.length },
-        success(res) {
+
+        success(res: any) {
           if (res.length === 0) {
             setIsAllLoaded(true);
             onAllLoaded && onAllLoaded();
@@ -104,7 +105,7 @@ const List: React.FC<IProps> = function (props: IProps) {
 
     for (let i = 1; i <= skeletonsNumber; i++) {
       items.push(
-        <div className={"text-decoration-none p-0"}>
+        <div className={""}>
           <Item
             decision={{ solved: props.solved }}
             classes={{ container: "skeleton-box" }}

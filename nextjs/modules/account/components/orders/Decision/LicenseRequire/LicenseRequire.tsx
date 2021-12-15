@@ -28,7 +28,6 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
   };
   const [tableRows, setTableRows] = React.useState<RowInterface[]>([]);
   const inputFileRef = React.useRef<HTMLInputElement>();
-  const imageRef = React.useRef<string>();
   const maxMB = 10;
   const SUPPORTED_FORMATS = [
     "image/jpg",
@@ -73,6 +72,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
               date: null,
             });
           });
+
           setTableRows(newTableRows);
         },
       })
@@ -82,15 +82,13 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
   function submit(values, { setSubmitting }) {
     setSubmitting(false);
 
-    // if (imageRef.current) {
     const formData = new FormData();
-    // const blob = dataURItoBlob(imageRef.current);
-    // const documentFile = new File([blob], "filename");
 
     formData.append(
       "LicenseRequiredForm[license]",
       inputFileRef.current.files[0]
     );
+
     formData.append("type", decision.type.toString());
     formData.append("decision_id", decision.decision_id.toString());
 
