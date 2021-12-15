@@ -3,7 +3,11 @@
 {block 'wrapper_block_class'}admin{/block}
 
 {block 'heading'}
-    <h1>{$admin->name}</h1>
+    {if $name = $admin->getSelectName()}
+        <h1>{$name}</h1>
+    {else}
+        <h1>{$admin->name}</h1>
+    {/if}
 {/block}
 
 {block 'main_block'}

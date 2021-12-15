@@ -55,6 +55,7 @@ $(function () {
       // content_css: '/static/frontend/dist/css/main.css?t=' + new Date().getTime(),
       relative_urls: false,
       browser_spellcheck: true,
+      autosave_ask_before_unload: false,
       toolbar:
         "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image",
       height: "480",

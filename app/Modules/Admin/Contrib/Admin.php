@@ -107,6 +107,11 @@ abstract class Admin
         ];
     }
 
+    public function getSelectName(): ?string
+    {
+        return null;
+    }
+
     /**
      * @return array
      *

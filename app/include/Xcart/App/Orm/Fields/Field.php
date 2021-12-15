@@ -3,10 +3,13 @@
 namespace Xcart\App\Orm\Fields;
 
 use Closure;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Types\Type;
+use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Form\Form;
 use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Orm\Model;
@@ -65,7 +68,7 @@ abstract class Field implements ModelFieldInterface
     protected $ownerClassName;
 
     /**
-     * @var \Xcart\App\Orm\Model
+     * @var Model
      */
     private $_model;
 
@@ -140,7 +143,7 @@ abstract class Field implements ModelFieldInterface
 
     /**
      * @return Column
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws DBALException
      */
     public function getColumn()
     {
@@ -282,7 +285,7 @@ abstract class Field implements ModelFieldInterface
      */
     public function isRequired()
     {
-        return $this->null === false && is_null($this->default) === true || $this->required;
+        return ($this->null === false && is_null($this->default) === true) || $this->required;
     }
 
     /**
@@ -387,7 +390,7 @@ abstract class Field implements ModelFieldInterface
      * of this type.
      *
      * @param mixed                                     $value    The value to convert.
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
+     * @param AbstractPlatform $platform The currently used database platform.
      *
      * @return mixed The PHP representation of the value.
      */
@@ -401,7 +404,7 @@ abstract class Field implements ModelFieldInterface
      * of this type.
      *
      * @param mixed                                     $value    The value to convert.
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform The currently used database platform.
+     * @param AbstractPlatform $platform The currently used database platform.
      *
      * @return mixed The database representation of the value.
      */
@@ -414,7 +417,7 @@ abstract class Field implements ModelFieldInterface
      * Modifies the SQL expression (identifier, parameter) to convert to a PHP value.
      *
      * @param string                                    $sqlExpr
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     * @param AbstractPlatform $platform
      *
      * @return string
      */
@@ -427,7 +430,7 @@ abstract class Field implements ModelFieldInterface
      * Modifies the SQL expression (identifier, parameter) to convert to a database value.
      *
      * @param string                                    $sqlExpr
-     * @param \Doctrine\DBAL\Platforms\AbstractPlatform $platform
+     * @param AbstractPlatform $platform
      *
      * @return string
      */
@@ -441,7 +444,7 @@ abstract class Field implements ModelFieldInterface
     }
 
     /**
-     * @param \Xcart\App\Form\Form      $form
+     * @param Form      $form
      * @param null  $fieldClass
      * @param array $extra
      *
@@ -454,7 +457,7 @@ abstract class Field implements ModelFieldInterface
         }
 
         if ($fieldClass === null) {
-            $fieldClass = $this->choices ? \Xcart\App\Form\Fields\DropDownField::className() : $this->formField;
+            $fieldClass = $this->choices ? DropDownField::class : $this->formField;
         }
         elseif ($fieldClass === false) {
             return null;
@@ -471,7 +474,7 @@ abstract class Field implements ModelFieldInterface
              'label' => $this->verboseName,
              'hint' => $this->helpText,
              'validators' => array_merge($validators, $this->getValidationConstraints()),
-             'value' => $this->default ? $this->default : null
+             'value' => $this->default ?: null
         ], $extra));
     }
 }

@@ -52,11 +52,17 @@ class CategoryAdmin extends NestedAdmin
     {
         return new CategoryModel();
     }
-
-    public static function getName(): string
+    public static function getName()
     {
-        return "Categories";
+        return 'Categories';
     }
+    public function getSelectName(): string
+    {
+        return $this->getInstance()->pk
+            ? (string)$this->getInstance()
+            : static::getName();
+    }
+
 
     public function isAjaxCreate(): bool
     {

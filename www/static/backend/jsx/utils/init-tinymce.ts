@@ -2,7 +2,7 @@ import tinymce from "tinymce";
 
 const initTinymce = function (elem) {
   const { readonly, baseUrl, changedUrl } = elem.dataset;
-
+  tinymce.remove();
   tinymce.init({
     selector: "#" + elem.id,
     readonly: readonly === "true",
@@ -17,7 +17,7 @@ const initTinymce = function (elem) {
       "save table contextmenu directionality emoticons template paste textcolor contextmenu",
     ],
     relative_urls: false,
-    remove_script_host : false,
+    remove_script_host: false,
     browser_spellcheck: true,
     toolbar:
       "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent  indent | link image",
