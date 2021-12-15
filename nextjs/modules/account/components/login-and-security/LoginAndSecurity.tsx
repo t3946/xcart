@@ -1,34 +1,33 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { route } from "@utils/AppData";
 import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import classnames from "classnames";
 import { getCountryByCode } from "@utils/Countries";
 import Alert from "@modules/account/components/shared/Alert";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { setAlertAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
-import GreyGrid from "@client/modules/ui/GreyGrid";
+import GreyGrid from "@modules/ui/GreyGrid";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const LoginAndSecurity = (): any => {
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
-  const history = useHistory();
-  const user = useSelector((e: StoreDto) => e.user);
-  const countries = useSelector((e: StoreInterface) => e.countries);
-  const alert = useSelector((e: StoreInterface) => e.loginAndSecurity.alert);
+  const router = useRouter();
+  const user = useSelectorAccount((e) => e.user);
+  const countries = useSelectorAccount((e) => e.countries);
+  const alert = useSelectorAccount((e) => e.loginAndSecurity.alert);
   const [show, setShow] = React.useState(alert !== null);
   const ALERT_SHOW_TIME_MS = 3000;
 
   if (!user) {
-    history.push(route("account:login"));
+    router.push("/login");
     return;
   }
 
@@ -123,7 +122,7 @@ const LoginAndSecurity = (): any => {
             </div>
 
             <button
-              onClick={() => history.push(listItem.route)}
+              onClick={() => router.push(listItem.route)}
               className="form-button form-button__outline login-and-security-edit-button d-block d-md-inline-block mt-12 mt-md-0"
             >
               edit
@@ -171,7 +170,7 @@ const LoginAndSecurity = (): any => {
             className={
               "admin-form-control form-button w-md-auto d-inline-block"
             }
-            onClick={() => history.push(route("account:dashboard"))}
+            onClick={() => router.push("/daschboard")}
           >
             done
           </button>
