@@ -1,35 +1,9 @@
 {include file="change_states_js.tpl"}
 
 <script type="text/javascript">
-//<![CDATA[
-{literal}
-
-tinymce.init({
-    selector: "textarea",
-    resize: "both",
-    plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    forced_root_block : false,
-    force_br_newlines : true,
-    force_p_newlines : false,
-    convert_urls: false,
-    relative_urls: false
-});
-
-{/literal}
-//]]>
-</script>
-
-<script type="text/javascript">
-//<![CDATA[
 $(function() {ldelim}
   $('#question_tabs-container').tabs();
 {rdelim});
-//]]>
 </script>
 
 {assign var=productModel value=$oProductQuestion->product}
@@ -412,7 +386,7 @@ $(function() {ldelim}
    <textarea rows="30" cols="60" id="product_question_message_body_to_distr" name="product_question_message_body_to_distr" style="width: 80%; height: 300px;" class="new_editor">{$product_info.product_question_message_body_to_distr|replace:"\n":"<br />"}</textarea>
    <br />
    <div align="left">
-    <input type="button" value="Send question to distributor/brand" onclick="javascript: submitForm(this, 'send_question_to_distr_brand');" />
+    <input type="button" value="Send question to distributor/brand" onclick="tinymce.triggerSave(); javascript: submitForm(this, 'send_question_to_distr_brand');" />
    </div>
   </div>
 

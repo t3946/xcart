@@ -88,12 +88,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
     );
   }
   if (noCheck) {
-    return (
-      <NotCheckInfo
-        handleForceCheck={handleForceCheck}
-        orderId={Number(orderId)}
-      />
-    );
+    return <NotCheckInfo handleForceCheck={handleForceCheck} />;
   }
 
   return (
