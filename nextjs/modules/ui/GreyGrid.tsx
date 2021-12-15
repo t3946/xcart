@@ -13,6 +13,7 @@ interface IProps {
 const GreyGrid: React.FC<IProps> = ({ items, classes }) => {
   const itemsTemplateList = (items: React.ReactNode[]) => {
     const itemList: React.ReactNode[] = [];
+
     for (const item of items) {
       itemList.push(
         <div className={cn([Styles.item, Styles.block__item, classes?.item])}>
@@ -20,6 +21,7 @@ const GreyGrid: React.FC<IProps> = ({ items, classes }) => {
         </div>
       );
     }
+
     return itemList;
   };
 
