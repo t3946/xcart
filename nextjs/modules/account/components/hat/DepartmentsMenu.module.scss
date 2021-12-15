@@ -1,0 +1,28 @@
+@import "styles/utils/Utils.module";
+
+.categoryMenuLink {
+  text-decoration: none;
+  transition: all 0.75s ease-out;
+  color: #000000
+}
+
+//.categoryMenuLink_topLevel {
+//}
+
+.categoryMenuLink_level_2 {
+  display: block;
+  font-size: pxToRem(14);
+  font-weight: bold;
+
+  &:hover {
+    background: none;
+    color: #055a93;
+  }
+}
+
+.categoryMenuLink_level_3 {
+  font-size: pxToRem(11);
+  height: pxToRem(16);
+  display: block;
+  width: 100%;
+}

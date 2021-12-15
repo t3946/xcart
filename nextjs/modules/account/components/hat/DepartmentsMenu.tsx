@@ -1,8 +1,9 @@
 import React from "react";
 import { route } from "@utils/AppData";
-import classnames from "classnames";
+import cn from "classnames";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Styles from "@modules/account/components/hat/DepartmentsMenu.module.scss";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
@@ -16,6 +17,9 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     React.useState(false);
   const [closeTimeout, setCloseTimeOut] = React.useState<any>(null);
   const departmentsMenu = useSelectorAccount((e) => e.departmentsMenu.desktop);
+  // const classes = {
+  //   link
+  // }
 
   // close menu by timeout if cursor leave menu
   if (
@@ -60,7 +64,10 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
         <li className="category-menu-group-item" key={key}>
           <a
             href={link}
-            className="category-menu-link category-menu-link__level-3"
+            className={cn(
+              Styles.categoryMenuLink,
+              Styles.categoryMenuLink_level_3
+            )}
           >
             {name}
           </a>
@@ -85,6 +92,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     for (const i in selectedCategory.groups) {
       const group = selectedCategory.groups[i];
       const headerClasses = [
+
         "category-menu-link-level-2-header",
         {
           "category-menu-link-level-2-header__underlined": !!group.items.length,
@@ -93,7 +101,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
       const item = (
         <div className="group-links-column mb-3" key={i}>
-          <h4 className={classnames(headerClasses)}>
+          <h4 className={cn(headerClasses)}>
             <a
               href={group.link}
               className="category-menu-link category-menu-link__level-2"
@@ -136,7 +144,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
         <li className="category-menu-item has-child" key={key}>
           <a
             href={category.url}
-            className={classnames(linkClasses)}
+            className={cn(linkClasses)}
             onMouseOver={() => {
               setSelectedCategory(category);
             }}
@@ -169,7 +177,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
   return (
     <TransitionFade show={props.isVisible}>
-      <div className={classnames(containerClasses)} onClick={props.closeMenu}>
+      <div className={cn(containerClasses)} onClick={props.closeMenu}>
         <section
           className="category-menu-list-container container"
           onClick={(e) => e.stopPropagation()}
@@ -208,7 +216,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
               }}
             >
               <div
-                className={classnames([
+                className={cn([
                   "account-page-right-column bg-white h-100 category-detailed pt-2 pb-4 position-relative",
                   (isMouseOverMenuItem ||
                     isMouseOverCategoryDetails ||
