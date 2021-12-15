@@ -92,6 +92,7 @@ class AccountApi extends FrontendController
                 'cidev_header_code' => $config['cidev_header_code'],
                 'companyName' => $config['company_name'],
                 'stripePublicKey' => $stripeSettings['param01'],
+                'APP_LOCAL' => APP_LOCAL,
             ],
             'templates' => [
                 'renderStaticNotifications' => StaticMessagesLibrary::renderStaticMessages(),
@@ -103,7 +104,6 @@ class AccountApi extends FrontendController
             'params' => [
                 'get' => Xcart::app()->request->get->all(),
             ],
-            'APP_LOCAL' => APP_LOCAL,
             'countries' => AccountController::getCountryPhoneCodes(),
         ];
 
