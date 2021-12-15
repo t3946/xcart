@@ -28,6 +28,7 @@ module.exports = withBundleAnalyzer({
           "@utils": path.resolve("utils/"),
           "@services": path.resolve("services/"),
           "@styles": path.resolve("styles/"),
+          "@submodules": path.resolve("submodules/"),
         },
       },
     };
