@@ -1,10 +1,11 @@
 import React from "react";
 import Navigation from "@modules/account/components/orders/Navigation/Navigation";
 import LicenseRequire from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire";
-import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
+import OriginalPurchaseOrder from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder";
 import UnpaidOrder from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder";
 import SendingCheck from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck";
 import IncreaseInShippingCharge from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge";
+import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
@@ -41,10 +42,10 @@ const Decision: React.FC = (props) => {
       </h1>
       <Navigation />
       {/*<EstimatedTimeArrival onChange={onChangeDecision} decision={decision} />*/}
-      {/*<LicenseRequire onChange={onChangeDecision} decision={decision} />*/}
+      <LicenseRequire onChange={onChangeDecision} decision={decision} />
       {/* <PaymentRequired /> */}
       <UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />
-      {/* <SendingCheck
+      <SendingCheck
         firstAddress={{
           name: "S3 Stores, Inc.",
           address: `2885 Sanford Ave SW #12717
@@ -59,7 +60,7 @@ const Decision: React.FC = (props) => {
         }}
       />
       <IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />
-      <OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
+      <OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />
       <AchPaymentIsRequired />
     </div>
   );
