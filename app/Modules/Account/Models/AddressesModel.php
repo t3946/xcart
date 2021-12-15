@@ -42,6 +42,9 @@ class AddressesModel extends Model
             'phone_number' => [
                 'class' => CharField::class,
             ],
+            'phone_ext' => [
+                'class' => CharField::class,
+            ],
             'street' => [
                 'class' => CharField::class,
             ],
