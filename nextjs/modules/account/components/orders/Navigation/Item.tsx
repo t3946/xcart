@@ -2,6 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import Link from "next/link";
 import Badge from "@modules/account/components/orders/Navigation/Badge";
+import Styles from "@modules/account/components/orders/Navigation/Navigation.module.scss"
 
 interface IProps {
   text: string;
@@ -18,12 +19,12 @@ const Item: React.FC<IProps> = (props: IProps) => {
   const { text, path, badge } = props;
   const classes = {
     button: [
-      "orders-navigation-button",
-      "orders-navigation__button",
+      Styles.ordersNavigationButton,
+      Styles.ordersNavigation__button,
       props.classes?.button,
     ],
-    text: ["orders-navigation-text", props.classes?.text],
-    badge: ["orders-navigation-text__badge", props.classes?.badge],
+    text: [Styles.ordersNavigationText, props.classes?.text],
+    badge: [Styles.ordersNavigationText__badge, props.classes?.badge],
   };
 
   return (

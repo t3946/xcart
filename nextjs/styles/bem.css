@@ -7683,7 +7683,8 @@ div.account-page-right-column {
 .alert-content {
     font-size: 1.125rem;
     line-height: 1.8125rem;
-    text-align: center
+    text-align: center;
+    white-space: pre-line;
 }
 
 .alert-header {

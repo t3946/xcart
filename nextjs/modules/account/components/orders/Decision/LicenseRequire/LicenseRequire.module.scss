@@ -1,26 +1,25 @@
-@import "~style-modules/sass-utils";
+@import "styles/utils/Utils.module";
 
 .buttonUpload {
-  border-radius: rem-calc(4);
-  padding: rem-calc(2) rem-calc(20) rem-calc(3) rem-calc(13);
-  font-size: rem-calc(14);
-  line-height: rem-calc(22);
+  border-radius: pxToRem(4);
+  padding: pxToRem(2) pxToRem(20) pxToRem(3) pxToRem(13);
+  font-size: pxToRem(14);
+  line-height: pxToRem(22);
 }
 
-
 .description {
-  font-size: rem-calc(16);
-  line-height: rem-calc(23);
+  font-size: pxToRem(16);
+  line-height: pxToRem(23);
 }
 
 .label {
-  font-size: rem-calc(18);
-  line-height: rem-calc(23);
-  margin: rem-calc(39) 0 rem-calc(15) 0
+  font-size: pxToRem(18);
+  line-height: pxToRem(23);
+  margin: pxToRem(39) 0 pxToRem(15) 0;
 }
 
 .form__submitButton {
-  margin: rem-calc(34) 0 0;
+  margin: pxToRem(34) 0 0;
 }
 
 .submitButton {
@@ -28,17 +27,17 @@
 }
 
 //.decision {
-//  margin: rem-calc(43) 0;
+//  margin: pxToRem(43) 0;
 //}
 //
 //.decisionInnerTitle {
 //  font-family: Lato;
 //  font-style: normal;
 //  font-weight: bold;
-//  font-size: rem-calc(24);
-//  line-height: rem-calc(29);
+//  font-size: pxToRem(24);
+//  line-height: pxToRem(29);
 //  color: #000000;
-//  margin: 0 0 rem-calc(26);
+//  margin: 0 0 pxToRem(26);
 //}
 //
 //.decisionTableRow {
@@ -46,9 +45,9 @@
 //  grid-template-columns: 4fr 2fr 2fr;
 //}
 //.decisionTableRow_header {
-//      padding: rem-calc(14) 0 rem-calc(13) rem-calc(24);
+//      padding: pxToRem(14) 0 pxToRem(13) pxToRem(24);
 //      background: #F4F4F4;
-//      font-size: rem-calc(16);
-//      line-height: rem-calc(19);
+//      font-size: pxToRem(16);
+//      line-height: pxToRem(19);
 //    }
 //

@@ -19,10 +19,10 @@ import DepartmentsMenuReducer from "@redux/reducers/account/DepartmentsMenuReduc
 import DepartmentsMenuMobileReducer from "@redux/reducers/account/DepartmentsMenuMobileReducer";
 import DepartmentsMenuDesktopReducer from "@redux/reducers/account/DepartmentsMenuDesktopReducer";
 import LoginAndSecurityReducer from "@redux/reducers/account/LoginAndSecurityReducer";
-// import MobileAlertReducer from "@redux/reducers/account/MobileAlertReducer";
+import MobileAlertReducer from "@redux/reducers/account/MobileAlertReducer";
 import CartReducer from "@redux/reducers/CartReducer";
 // import MiniCartReducer from "@redux/reducers/MiniCartReducer";
-// import PublicProfileReducer from "@redux/reducers/account/PublicProfileReducer";
+import PublicProfileReducer from "@redux/reducers/account/PublicProfileReducer";
 import OrdersReducer from "@redux/reducers/account/OrdersReducer";
 // import RatingsReducer from "@redux/reducers/RatingsReducer";
 // import ReviewsReducer from "@redux/reducers/ReviewsReducer";
@@ -62,10 +62,10 @@ const reducers = combineReducers({
   departmentsMenuMobile: DepartmentsMenuMobileReducer,
   departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
   loginAndSecurity: LoginAndSecurityReducer,
-  // mobileAlert: MobileAlertReducer,
+  mobileAlert: MobileAlertReducer,
   cart: CartReducer,
   // miniCart: MiniCartReducer,
-  // publicProfile: PublicProfileReducer,
+  publicProfile: PublicProfileReducer,
   ordersStore: OrdersReducer,
   // productsRatings: RatingsReducer,
   // productsReviews: ReviewsReducer,

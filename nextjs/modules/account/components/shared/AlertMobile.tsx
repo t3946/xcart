@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import TimesIcon from "@modules/icon/components/account/ModalTimes";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import classnames from "classnames";
+import Styles from "@modules/account/components/shared/AlertMobile.module.scss";
 import {
   alertIconTemplate,
   VariantsEnum,
-} from "@modules/account/utils/alert";
+} from "@modules/account/components/shared/Alert";
 
 const AlertMobile: React.FC = function () {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const AlertMobile: React.FC = function () {
     container: [
       isVisible ? "d-flex" : "d-none",
       "mobile-alert account-inner-page_mobile-alert w-100 pos-relative",
+      Styles.mobileAlert_decision,
     ],
   };
 
@@ -75,13 +77,34 @@ const AlertMobile: React.FC = function () {
             <p className={"m-0"}>{alert.message}</p>
           </>
         );
+
+      case VariantsEnum.decisionWarning:
+      case VariantsEnum.decisionSuccess:
+        return (
+          <>
+            <p
+              className={classnames([
+                "m-0",
+                "text-center",
+                Styles.mobileAlertContent,
+              ])}
+            >
+              {alertIconTemplate(alert.variant)} {alert.message}
+            </p>
+          </>
+        );
     }
   }
 
   return (
     <div className={classnames(classes.container)}>
       <span
-        className="mobile-alert_close-button mobile-alert-close shrink-by-active"
+        className={classnames([
+          "mobile-alert_close-button",
+          "mobile-alert-close",
+          "shrink-by-active",
+          Styles.mobileAlertClose,
+        ])}
         onClick={closeAlert}
       >
         <TimesIcon />

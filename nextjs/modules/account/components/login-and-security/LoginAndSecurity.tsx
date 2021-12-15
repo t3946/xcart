@@ -9,6 +9,7 @@ import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { setAlertAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
+import GreyGrid from "@client/modules/ui/GreyGrid";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
@@ -176,7 +177,7 @@ const LoginAndSecurity = (): any => {
           </button>
         }
       >
-        <ul className={"list-unstyled m-0"}>{settingsItemsTemplate()}</ul>
+         <GreyGrid items={settingsItemsTemplate()} />
       </InnerPage>
     </>
   );

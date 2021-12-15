@@ -1,0 +1,11 @@
+@import "styles/utils/Utils.module";
+
+.paymentItemDetails {
+  font-size: pxToRem(14);
+}
+
+.paymentItemDetails__content {
+  @include breakpoint(lg) {
+    grid-column-start: 2;
+  }
+}

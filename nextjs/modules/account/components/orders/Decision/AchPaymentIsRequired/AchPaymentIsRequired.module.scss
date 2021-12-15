@@ -1,0 +1,188 @@
+@import "styles/utils/Utils.module";
+
+.decision__text {
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(21);
+  }
+}
+
+.decision__grid {
+  margin: 0 pxToRem(-10);
+}
+
+.decisionText {
+  padding: 0 pxToRem(10);
+  line-height: pxToRem(23);
+
+  @include breakpoint(md) {
+    padding: 0 0 0 pxToRem(20);
+    line-height: pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 0 0 pxToRem(24);
+    line-height: inherit;
+  }
+}
+
+.decisionGrid {
+  border: none;
+  border-top: 1px solid #c4c4c4;
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: inherit;
+  }
+
+  @include breakpoint(lg) {
+    border: 1px solid #c4c4c4;
+  }
+}
+
+.decisionContent {
+  font-size: pxToRem(16);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.decisionHeader {
+  text-transform: capitalize;
+  padding: pxToRem(26) pxToRem(4) pxToRem(14) pxToRem(2);
+
+  @include breakpoint(md) {
+    text-transform: none;
+    padding: pxToRem(34) 0 pxToRem(21) pxToRem(6);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(42) 0 pxToRem(22) pxToRem(25);
+  }
+}
+
+.decisionHeaderText {
+  font-size: pxToRem(22);
+  line-height: pxToRem(26);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+    line-height: pxToRem(36);
+  }
+  @include breakpoint(lg) {
+    font-size: pxToRem(24);
+    line-height: pxToRem(29);
+  }
+}
+
+.decisionFooter {
+  font-size: pxToRem(16);
+  padding: pxToRem(24) 0 pxToRem(55);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    padding: pxToRem(43) pxToRem(21) 0;
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    padding: pxToRem(40) pxToRem(24) 0;
+  }
+}
+
+.decisionFooter__text {
+  margin: 0 0 pxToRem(21);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(29);
+  }
+}
+
+.decisionFooterText {
+  padding: 0 pxToRem(7);
+
+  @include breakpoint(md) {
+    padding: 0 0;
+  }
+}
+
+.gridLine {
+  border: none;
+  border-bottom: 1px solid #c4c4c4;
+  padding: pxToRem(13) pxToRem(19) pxToRem(15);
+  @include breakpoint(md) {
+    padding: pxToRem(22) pxToRem(31) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(15) pxToRem(25) pxToRem(26) pxToRem(25);
+  }
+}
+
+.gridLineItem {
+  display: grid;
+  grid-template-columns: pxToRem(130) 1fr;
+  line-height: pxToRem(28);
+
+  @include breakpoint(md) {
+    grid-template-columns: pxToRem(233) 1fr;
+    line-height: pxToRem(31);
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: pxToRem(256) 1fr;
+    line-height: pxToRem(29);
+  }
+}
+
+.gridLineItemName {
+  font-weight: bold;
+  line-height: pxToRem(18);
+  margin: pxToRem(4) 0 0;
+
+  @include breakpoint(md) {
+    line-height: inherit;
+    margin: 0;
+  }
+}
+
+.gridLineItemValue {
+  white-space: pre-line;
+
+  @include breakpoint(md) {
+    line-height: pxToRem(33);
+  }
+
+  @include breakpoint(lg) {
+    line-height: inherit;
+  }
+}
+
+.button {
+  height: pxToRem(47);
+  font-size: pxToRem(20);
+  line-height: pxToRem(24);
+
+  @include breakpoint(md) {
+    height: pxToRem(57);
+    font-size: pxToRem(26);
+    line-height: pxToRem(31);
+  }
+  @include breakpoint(lg) {
+    height: pxToRem(41);
+    font-size: 18px;
+    line-height: 20px;
+  }
+}

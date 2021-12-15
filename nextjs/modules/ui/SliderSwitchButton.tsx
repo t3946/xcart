@@ -2,8 +2,15 @@ import * as React from "react";
 import Styles from "@modules/ui/SliderSwitchButton.module.scss";
 import cn from "classnames";
 
-const SliderSwitchButton: React.FC = function () {
-  const [checked, setChecked] = React.useState(false);
+interface IProps {
+  checked: boolean;
+  name: string;
+  onChange: (e: React.ChangeEvent) => void;
+  disabled?: boolean;
+}
+
+const SliderSwitchButton: React.FC<IProps> = function (props: IProps) {
+  const { checked, name, onChange, disabled } = props;
 
   const classes = {
     caption: ["d-flex", "align-items-center", "h-100", "top-0", Styles.caption],
@@ -37,14 +44,15 @@ const SliderSwitchButton: React.FC = function () {
   };
 
   return (
-    <div
-      className={Styles.border}
-      onClick={() => {
-        setChecked(!checked);
-      }}
-    >
+    <label className={Styles.border}>
       <div className={Styles.label}>
-        <input type="checkbox" />
+        <input
+          name={name}
+          type="checkbox"
+          disabled={disabled}
+          checked={checked}
+          onChange={onChange}
+        />
 
         <b className={cn(classes.caption, classes.captionEnabled)}>yes</b>
 
@@ -54,7 +62,7 @@ const SliderSwitchButton: React.FC = function () {
 
         <div className={cn(classes.background)} />
       </div>
-    </div>
+    </label>
   );
 };
 

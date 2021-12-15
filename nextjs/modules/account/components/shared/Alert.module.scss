@@ -1,0 +1,21 @@
+@import "styles/utils/Utils.module";
+
+.accountAlert_decisionSuccess {
+  background: #effedf;
+}
+
+.accountAlert_decisionWarning {
+  background: #fef7e0;
+}
+
+.alertIcon {
+  left: auto;
+  transform: translate(calc(-100% - 2px), 0px);
+
+  @include breakpoint(lg) {
+    transform: translate(calc(-100% - 6px), 0px);
+  }
+}
+.alertContent {
+  white-space: pre-line;
+}

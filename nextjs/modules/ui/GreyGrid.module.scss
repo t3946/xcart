@@ -1,0 +1,39 @@
+@import "styles/utils/Utils.module";
+
+.block {
+  border: none;
+
+  @include breakpoint(md) {
+    border: 1px solid #c4c4c4;
+  }
+}
+
+.block__item {
+  margin: 0 0 pxToRem(14) 0;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  @include breakpoint(md) {
+    margin: 0;
+  }
+}
+
+.item {
+  padding: pxToRem(8) pxToRem(10) pxToRem(23);
+  border: 1px solid #c4c4c4;
+
+  @include breakpoint(md) {
+    border: none;
+    border-bottom: 1px solid #c4c4c4;
+    padding: pxToRem(20) pxToRem(24);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(22) pxToRem(24);
+    &:last-child {
+      border: none;
+    }
+  }
+}

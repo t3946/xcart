@@ -3,12 +3,15 @@ import classnames from "classnames";
 import TableRow, {
   RowInterface,
 } from "@modules/account/components/orders/Decision/TableRow";
+import cn from "classnames";
+import Styles from "@modules/account/components/orders/Decision/Table.module.scss";
 
 export enum TableTypes {
   inStock = "inStock",
   outOfStock = "outOfStock",
   discontinued = "discontinued",
   licenseRequired = "licenseRequired",
+  increaseInShippingCharge = "increaseInShippingCharge",
 }
 
 interface IProps {
@@ -38,10 +41,22 @@ const Table: React.FC<IProps> = (props: IProps) => {
       qty: "Qty",
       qtyDesktop: "Quantity",
     },
+    increaseInShippingCharge: {
+      itemNameSkuQty: "Item name / SKU",
+      qty: "Price x Qty",
+      qtyDesktop: "Qty ordered",
+    },
   };
   const { tableType, items } = props;
   const classes = {
-    hat: ["estimate-table-row", "estimate-table-row_hat"],
+    hat: [
+      Styles.estimateTableRow,
+      Styles.estimateTableRow_hat,
+      {
+        [Styles.estimateTableRow_order]:
+          tableType === TableTypes.increaseInShippingCharge,
+      },
+    ],
   };
 
   let hatModifier;
@@ -49,29 +64,34 @@ const Table: React.FC<IProps> = (props: IProps) => {
 
   switch (tableType) {
     case TableTypes.inStock:
-      hatModifier = "estimate-table-hat_theme_green";
+      hatModifier = Styles.estimateTableHat_theme_green;
       tableCaption = "The items listed below are currently 'in stock':";
       break;
     case TableTypes.outOfStock:
-      hatModifier = "estimate-table-hat_theme_yellow";
+      hatModifier = Styles.estimateTableHat_theme_yellow;
       tableCaption =
         "The following items are currently ‘out of stock’\n ETA date(s) are shown below:";
       break;
     case TableTypes.discontinued:
-      hatModifier = "estimate-table-hat_theme_red";
+      hatModifier = Styles.estimateTableHat_theme_red;
       tableCaption =
         "All items you ordered are currently discontinued / 'out of stock' without definite re-stocking date:";
       break;
+
     case TableTypes.licenseRequired:
-      hatModifier = "estimate-table-hat_theme_grey";
+      hatModifier = Styles.estimateTableHat_theme_grey;
       tableCaption = "You have ordered the following items:";
+      break;
+
+    case TableTypes.increaseInShippingCharge:
+      hatModifier = Styles.estimateTableHat_theme_grey;
   }
 
   classes.hat.push(hatModifier);
 
   function rowsTemplates() {
     return items.map((value: RowInterface) => {
-      const { name, sku, amount } = value;
+      const { name, sku, amount, price, total, image } = value;
       let date = value.date;
 
       switch (tableType) {
@@ -81,12 +101,16 @@ const Table: React.FC<IProps> = (props: IProps) => {
           break;
         case TableTypes.discontinued:
           date = "Unknown";
+          break;
+        case TableTypes.increaseInShippingCharge:
+          date = null;
       }
 
       return (
         <TableRow
-          row={{ name, sku, amount, date }}
+          row={{ name, sku, amount, date, price, total, image }}
           qtyHeader={tableHeaders[tableType].qty}
+          type={tableType}
         />
       );
     });
@@ -98,17 +122,61 @@ const Table: React.FC<IProps> = (props: IProps) => {
     }
   }
 
+  function priceColumnTemplate(type: TableTypes) {
+    if (type === TableTypes.increaseInShippingCharge) {
+      return <span className={"d-none d-lg-block"}>Price</span>;
+    }
+  }
+
+  function extendedColumnTemplate(type: TableTypes) {
+    if (type === TableTypes.increaseInShippingCharge) {
+      return <span>Extended</span>;
+    }
+  }
+
   return (
-    <div className="estimate-table decision__estimate-table">
-      <p className="estimate-table-caption estimate-table__caption">
-        {tableCaption}
-      </p>
+    <div
+      className={cn([
+        Styles.estimateTable,
+        "decision__estimate-table",
+        {
+          [Styles.decision__table_increaseInShippingCharge]:
+            tableType === TableTypes.increaseInShippingCharge,
+        },
+      ])}
+    >
+      {tableCaption && (
+        <p
+          className={cn([
+            Styles.estimateTableCaption,
+            Styles.estimateTable__caption,
+          ])}
+        >
+          {tableCaption}
+        </p>
+      )}
 
       <div className={classnames(classes.hat)}>
-        <span className={"d-none d-lg-block text-start"}>Item name / SKU</span>
-        <span className={"d-lg-none text-start"}>
+        {tableType === TableTypes.increaseInShippingCharge && (
+          <span className="d-none d-lg-block" />
+        )}
+        <span className={cn(["d-none", "d-lg-block", "text-start"])}>
+          Item name / SKU
+        </span>
+        <span
+          className={cn([
+            "d-lg-none",
+            "text-start",
+            {
+              "text-md-center":
+                tableType === TableTypes.increaseInShippingCharge,
+            },
+          ])}
+        >
           {tableHeaders[tableType].itemNameSkuQty}
         </span>
+
+        {priceColumnTemplate(tableType)}
 
         <span className={"d-none d-lg-block"}>
           {tableHeaders[tableType].qtyDesktop}
@@ -118,6 +186,8 @@ const Table: React.FC<IProps> = (props: IProps) => {
         </span>
 
         {dateColumnTemplate(tableType)}
+
+        {extendedColumnTemplate(tableType)}
       </div>
 
       {rowsTemplates()}

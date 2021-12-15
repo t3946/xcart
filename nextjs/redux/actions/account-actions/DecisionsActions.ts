@@ -31,3 +31,44 @@ export const setDecisionsAction = (decisions: Record<any, any>): any => ({
   type: "SET_DECISIONS",
   decisions,
 });
+
+export const payOrderAction = (payload: Record<any, any>): any => ({
+  type: "PAY_ORDER_DECISION",
+  payload,
+});
+
+export const approveIncreaseInShippingChargeAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "APPROVE_INCREASE_IN_SHIPPING_CHARGE_DECISION",
+  payload,
+});
+
+export const cancelOrderAction = (payload: Record<any, any>): any => ({
+  type: "CANCEL_ORDER_DECISION",
+  payload,
+});
+
+export const checkSentAction = (payload: Record<any, any>): any => ({
+  type: "CHECK_SENT_DECISION",
+  payload,
+});
+
+export const uploadOriginalPurchaseOrderAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "UPLOAD_ORIGINAL_PURCHASE_ORDER_DECISION",
+  payload,
+});
+
+export const iSentOriginalPurchaseOrderViaFaxAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "I_SENT_ORIGINAL_PURCHASE_ORDER_VIA_FAX_DECISION",
+  payload,
+});
+
+export const sentAchTransferAction = (payload: Record<any, any>): any => ({
+  type: "SENT_ACH_TRANSFER_DECISION",
+  payload,
+});
