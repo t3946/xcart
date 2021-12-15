@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { sentAchTransferAction } from "@redux/actions/account-actions/DecisionsActions";
-import { setAlertAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
+import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import {
   setIsVisibleAction as showMobileAlertAction,
@@ -89,10 +89,7 @@ const AchPaymentIsRequired: React.FC = () => {
   const breakpoint = useBreakpoint();
   const router = useRouter();
   const [disabled, setDisabled] = React.useState<boolean>(false);
-  const alert = useSelector((e: StoreInterface) => {
-    console.log(e);
-    return e.loginAndSecurity.alert;
-  });
+  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   if (alert) {
     breakpoint({

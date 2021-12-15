@@ -78,7 +78,7 @@ function* checkSentDecision(action): Generator {
   const { success, data } = action.payload;
 
   yield api
-    .post<any>(route("order:api:make-license"), data)
+    .post<any>("/order/api/decisions/make-license", data)
     .then(function (res) {
       success(res);
     });
@@ -93,7 +93,6 @@ function* iSentOriginalPurchaseOrderViaFaxDecision(action): Generator {
       success(res);
     });
 }
-
 
 function* uploadOriginalPurchaseorderDecision(action): Generator {
   const { success, data } = action.payload;

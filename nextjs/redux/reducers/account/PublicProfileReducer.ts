@@ -1,9 +1,12 @@
 import { AnyAction } from "redux";
-import { publicProfileInitialValue } from "@modules/account/ts/consts/store-initial-value";
 import { AccountPublicProfileStore } from "@modules/account/ts/types/store.type";
 
+const initialState = {
+  alert: null,
+};
+
 const PublicProfileReducer = (
-  state: AccountPublicProfileStore = publicProfileInitialValue,
+  state: AccountPublicProfileStore = initialState,
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {

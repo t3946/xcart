@@ -14,7 +14,6 @@ import {
   getEtaProductsAction,
   uploadLicense,
 } from "@redux/actions/account-actions/DecisionsActions";
-import dataURItoBlob from "@utils/dataURItoBlob";
 import { useDispatch } from "react-redux";
 
 interface IProps {

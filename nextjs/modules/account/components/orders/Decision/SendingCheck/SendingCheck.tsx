@@ -55,7 +55,7 @@ const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
         dispatch(setMobileAlertAction(alert));
         dispatch(showMobileAlertAction(true));
         dispatch(setVisibleShadowPanelAction(true));
-        router.push("/account/orders/open-orders/decisions-required");
+        // router.push("/account/orders/open-orders/decisions-required");
       },
       md: function () {},
     });

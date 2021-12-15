@@ -1,9 +1,13 @@
 import { AnyAction } from "redux";
 import { AccountMobileAlertStore } from "@modules/account/ts/types/store.type";
-import { accountMobileAlert } from "@modules/account/ts/consts/store-initial-value";
+// import { accountMobileAlert } from "@modules/account/ts/consts/store-initial-value";
+
+const initialState = {
+  alert: null,
+};
 
 const MobileAlertReducer = (
-  state: AccountMobileAlertStore = accountMobileAlert,
+  state: AccountMobileAlertStore = initialState,
   action: AnyAction
 ): AccountMobileAlertStore => {
   switch (action.type) {
