@@ -106,7 +106,7 @@ const LoginAndSecurity = (): any => {
 
     for (const listItem of listItems) {
       items.push(
-        <li className="login-and-security-settings-item login-and-security-settings_item">
+        <div className="login-and-security-settings-item login-and-security-settings_item">
           <div className="login-and-security-settings-item-container">
             <div className={"login-and-security-settings-item-text"}>
               <b className="settings-item-title">{listItem.title}:</b>
@@ -128,7 +128,7 @@ const LoginAndSecurity = (): any => {
               edit
             </button>
           </div>
-        </li>
+        </div>
       );
     }
 

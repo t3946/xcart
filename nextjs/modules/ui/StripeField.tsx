@@ -23,7 +23,7 @@ const StripeField: React.FC<IProps> = function (props: IProps) {
   const defaultProps = {
     options: {
       classes: {
-        base: "w-100",
+        base: Styles.stripeElement,
       },
     },
     ref: cardRef,

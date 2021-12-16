@@ -1,13 +1,5 @@
 @import "styles/utils/Utils.module";
 
-.decision__paymentSelection {
-  margin: 0 pxToRem(-21);
-
-  @include breakpoint(sm) {
-    margin: 0;
-  }
-}
-
 .decision__button {
   margin: 0 0 pxToRem(32) 0;
 

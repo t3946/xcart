@@ -11,7 +11,7 @@
 }
 
 .navigationContainer {
-  @include breakpoint(md) {
+  @include breakpoint(lg) {
     padding: pxToRem(7) 0;
   }
 }
