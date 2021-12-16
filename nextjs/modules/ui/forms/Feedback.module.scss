@@ -1,0 +1,9 @@
+@import "styles/utils/Utils.module";
+
+.feedback_valid {
+  color: $valid;
+}
+
+.feedback_invalid {
+  color: $invalid;
+}
