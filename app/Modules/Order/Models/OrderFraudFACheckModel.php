@@ -4,18 +4,18 @@
 namespace Modules\Order\Models;
 
 
-use Modules\Core\Models\FraudAllQuestionModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
 /**
- * @property string fraud_result
+ * @property string compare_coefficient
  * @property mixed fraud_score
  * @property array additional_info
  * @property float outcome
@@ -25,9 +25,6 @@ use Xcart\App\Orm\Model;
 class OrderFraudFACheckModel extends Model
 {
     use AutoMetaTrait;
-
-    public const FRAUD_RESULT_POSITIVE = 'positive';
-    public const FRAUD_RESULT_NEGATIVE = 'negative';
 
     public static function tableName()
     {
@@ -63,14 +60,10 @@ class OrderFraudFACheckModel extends Model
                 'null' => true,
                 'default' => 0.00
             ],
-            'fraud_result' => [
-                'class' => CharField::class,
+            'compare_coefficient' => [
+                'class' => IntField::class,
                 'default' => null,
                 'null' => true,
-                'choices' => [
-                    self::FRAUD_RESULT_POSITIVE,
-                    self::FRAUD_RESULT_NEGATIVE,
-                ]
             ],
             'additional_info' => [
                 'class' => SerializeField::class,

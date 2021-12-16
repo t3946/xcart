@@ -47,7 +47,7 @@ class FraudCheckFAHelper
     public function fetchMelissaAddressList(): void
     {
         if ($this->compareShippingBillingAddress() == 1) {
-            // Если shipping и billing адреса примерно равны, то отправил 1 запрос вместо 2х
+            // Если shipping и billing адреса равны, то 1 запрос вместо 2
             $this->ob_melissa->setOneMelissaAddressForMany([
                 'address' => $this->order_model->b_address,
                 'city' => $this->order_model->b_city,
@@ -110,42 +110,45 @@ class FraudCheckFAHelper
     /* Address check */
     public function scoreBaseAddress(FraudFAQuestionModel $fraud): array
     {
-        $result = 'negative';
         $outcome = $this->compareShippingBillingAddress();
+
+        $ar_s_address = self::getLinesAddress($this->order_model->s_address);
+        $ar_b_address = self::getLinesAddress($this->order_model->b_address);
+
         $info = $this->getInfoAddress(
             $fraud,
             [
-                'street' => $this->order_model->s_address ?? '',
+                'street1' => $ar_s_address[0] ?? $this->order_model->s_address,
+                'street2' => $ar_s_address[1] ?? '',
                 'state' => $this->order_model->s_state,
                 'city' => $this->order_model->s_city,
                 'zipcode' => $this->order_model->s_zipcode,
                 'country' => $this->order_model->s_country ?? '',
             ],
             [
-                'street' => $this->order_model->b_address ?? '',
+                'street1' => $ar_b_address[0] ?? $this->order_model->s_address,
+                'street2' => $ar_b_address[1] ?? '',
                 'state' => $this->order_model->b_state,
                 'city' => $this->order_model->b_city,
                 'zipcode' => $this->order_model->b_zipcode,
                 'country' => $this->order_model->b_country ?? '',
             ],
         );
-        if ($outcome) {
-            $result = 'positive';
-        }
-        return [$result, $fraud->weight, $info, $outcome];
+
+        return [empty($ar_s_address[1]) ? 5 : 6, $fraud->weight, $info, $outcome];
     }
 
     private function compareShippingBillingAddress(): float
     {
-        $ar_s_address = preg_split('~\R~', $this->order_model->s_address);
-        $ar_b_address = preg_split('~\R~', $this->order_model->b_address);
+        $ar_s_address = self::getLinesAddress($this->order_model->s_address);
+        $ar_b_address = self::getLinesAddress($this->order_model->b_address);
         return $this->compareAddress(
             [
                 'country' => $this->order_model->s_country,
                 'state' => $this->order_model->s_state,
                 'city' => $this->order_model->s_city,
                 'zipcode' => $this->order_model->s_zipcode,
-                'street' => $ar_s_address[0] ?? $this->order_model->s_address,
+                'street1' => $ar_s_address[0] ?? $this->order_model->s_address,
                 'street2' => $ar_s_address[1] ?? '',
             ],
             [
@@ -153,14 +156,13 @@ class FraudCheckFAHelper
                 'state' => $this->order_model->b_state,
                 'city' => $this->order_model->b_city,
                 'zipcode' => $this->order_model->b_zipcode,
-                'street' => $ar_b_address[0] ?? $this->order_model->b_address,
+                'street1' => $ar_b_address[0] ?? $this->order_model->b_address,
                 'street2' => $ar_b_address[1] ?? '',
-            ]);
+            ], !empty($ar_s_address[1]));
     }
 
     public function scoreOwnerResidenceAddress(FraudFAQuestionModel $fraud, ?array $address_compare, string $type_address = 'shipping'): array
     {
-        $result = 'negative';
         $owner_info = $this->ob_melissa->melissa_address[$type_address]['owner'] ?? null;
         $info = $this->getNullDataInfo($fraud, $address_compare);
         $outcome = 0;
@@ -168,21 +170,20 @@ class FraudCheckFAHelper
             $zip = trim($owner_info['OwnerZip']);
             $zip = substr($zip, 0, 5);
             $owner_address_info = [
+                'country' => 'US',
                 'state' => $owner_info['OwnerState'],
                 'city' => $owner_info['OwnerCity'],
-                'zipcode' => $zip
+                'zipcode' => $zip,
+                'street1' => $owner_info['OwnerAddress'],
             ];
             $info = $this->getInfoAddress(
                 $fraud,
                 $address_compare,
                 $owner_address_info,
             );
-            $outcome = $this->compareAddress($address_compare, $owner_address_info);
-            if ($outcome) {
-                $result = 'positive';
-            }
+            $outcome = $this->compareAddress($address_compare, $owner_address_info, !empty($address_compare['street2']));
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [empty($address_compare['street2']) ? 5 : 6, $fraud->weight, $info, $outcome];
     }
 
     public static function getStringAddressByArray(?array $address): ?string
@@ -195,6 +196,9 @@ class FraudCheckFAHelper
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     public function collectAddressesGeolocation(): void
     {
         /** @var OrderAddressType $address_type */
@@ -235,6 +239,9 @@ class FraudCheckFAHelper
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function saveGeolocationData(OrderAddressType $type_model, float $latitude, float $longitude): void
     {
         $geolocation_model = new OrderAddressGeolocation([
@@ -248,7 +255,6 @@ class FraudCheckFAHelper
 
     public function scorePhoneAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
     {
-        $result = 'negative';
         $outcome = 0;
         $info = $this->getNullDataInfo($fraud, $address_compare);
         if (!is_null($this->ob_melissa->phone_data)) {
@@ -260,26 +266,23 @@ class FraudCheckFAHelper
                 $state = StateModel::objects()->get(['state' => $this->ob_melissa->phone_data['State'], 'country_code' => $country_model->code]);
             }
             $phone_address = [
+                'country' => $this->ob_melissa->phone_data['CountryCode'],
                 'state' => $state->code,
                 'city' => $this->ob_melissa->phone_data['City'],
                 'zipcode' => $this->ob_melissa->phone_data['PostalCode']
             ];
             if (!is_null($address_compare)) {
                 $info = $this->getInfoAddress($fraud, $address_compare, $phone_address);
-                $outcome = $this->compareAddress($address_compare, $phone_address);
-                if ($outcome) {
-                    $result = 'positive';
-                }
+                $outcome = $this->compareAddress($address_compare, $phone_address, !empty($address_compare['street2']));
             }
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [empty($address_compare['street2']) ? 5 : 6, $fraud->weight, $info, $outcome];
     }
 
     public function scoreIpAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
     {
-        $result = 'negative';
         $outcome = 0;
-        $info = $this->getNullDataInfo($fraud);
+        $info = $this->getNullDataInfo($fraud, $address_compare);
         if (!is_null($this->ob_melissa->ip_data)) {
             /** @var CountryModel $country_model */
             $country_model = CountryModel::objects()->get(['name' => $this->ob_melissa->ip_data['Country']]);
@@ -287,53 +290,44 @@ class FraudCheckFAHelper
                 $state = StateModel::objects()->get(['state' => $this->ob_melissa->ip_data['State'], 'country_code' => $country_model->code]);
             }
             $email_address = [
+                'country' => $country_model->code,
                 'state' => $state->code ?? $this->ob_melissa->ip_data['State'],
                 'city' => $this->ob_melissa->ip_data['City'],
                 'zipcode' => $this->ob_melissa->ip_data['PostalCode']
             ];
             if ($address_compare) {
                 $info = $this->getInfoAddress($fraud, $address_compare, $email_address);
-                $outcome = $this->compareAddress($address_compare, $email_address);
-                if ($outcome) {
-                    $result = 'positive';
-                }
+                $outcome = $this->compareAddress($address_compare, $email_address, !empty($address_compare['street2']));
             }
         }
 
-        return [$result, $fraud->weight, $info, $outcome];
+        return [empty($address_compare['street2']) ? 5 : 6, $fraud->weight, $info, $outcome];
     }
 
     /** Сравнивает два адреса по атрибутам, если они одинаковые то добавит значение к коэффициенту.
      *  Коэффициент = Количество одинаковых атрибутов в адресе / Общее количество атрибутов
      * @param array $compare_address - первый адрес в формате массива
      * @param array $addressData - второй адрес в формате массива
+     * @param bool $max_coefficient
      * @return float
      */
-    public function compareAddress(array $compare_address = [], array $addressData = []): float
+    public function compareAddress(array $compare_address, array $addressData, bool $max_coefficient): float
     {
-        if ($this->isEmptyAddress($compare_address) || $this->isEmptyAddress($addressData)) {
+        if ((!$compare_address = array_filter($compare_address)) || (!$addressData = array_filter($addressData))) {
             return 0;
         }
         $coefficient = 0;
-        foreach ($addressData as $attr => $value) {
-            if (strtoupper($value) === strtoupper($compare_address[$attr])) {
+        foreach ($compare_address as $attr => $value) {
+            $correct_compare_address = BaseFraudCheckHelperV2::addressAbbreviationsPrepare(strtoupper(trim($value)));
+            $correct_data_address = BaseFraudCheckHelperV2::addressAbbreviationsPrepare(strtoupper(trim($addressData[$attr])));
+            if ($correct_compare_address === $correct_data_address) {
                 $coefficient++;
             } else {
                 break;
             }
         }
-        return round($coefficient / count($addressData), 2);
-    }
-
-    public function isEmptyAddress(array $address): bool
-    {
-        $coef_empty = 0;
-        foreach ($address as $attr) {
-            if (empty($attr)) {
-                $coef_empty++;
-            }
-        }
-        return boolval($coef_empty / count($address) === 1);
+        $division = $max_coefficient ? 6 : 5;
+        return round($coefficient / $division, 2);
     }
 
     /* Full name check */
@@ -392,70 +386,59 @@ class FraudCheckFAHelper
     public function comparePhoneCaller($full_name): bool
     {
         $phone_data = $this->ob_melissa->phone_data;
-        if (!empty($phone_data)) {
-            if (!empty(trim($phone_data['CallerID']))) {
-                return $this->compareTelephoneClientName($full_name, $phone_data['CallerID']);
-            }
+        if (!empty($phone_data) && !empty(trim($phone_data['CallerID']))) {
+            return $this->compareTelephoneClientName($full_name, $phone_data['CallerID']);
         }
         return false;
     }
 
     public function scorePhoneCaller(FraudFAQuestionModel $fraud, ?array $compare_info): array
     {
-        $result = 'negative';
         $outcome = 0;
         $info = $this->getInfoFN($fraud, $compare_info, ['value' => $this->ob_melissa->phone_data['CallerID']]);
-        if (!is_null($compare_info['value'])) {
-            if ($this->comparePhoneCaller($compare_info['value'])) {
-                $result = 'positive';
-                $outcome = 1;
-            }
+        if (!is_null($compare_info['value']) && $this->comparePhoneCaller($compare_info['value'])) {
+            $outcome = 1;
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [null, $fraud->weight, $info, $outcome];
 
     }
 
     public function scoreCardHolder(FraudFAQuestionModel $fraud, ?array $compare_name): array
     {
-        $result = 'negative';
         $outcome = 0;
         $info = $this->getInfoFN(
             $fraud,
             $compare_name,
             ['value' => $this->order_model->b_firstname, 'zipcode' => $this->order_model->b_zipcode]
         );
-        if (!is_null($this->order_model->b_firstname) && !empty($compare_name['value'])) {
+        if ($this->order_model->b_firstname && !empty($compare_name['value'])) {
             $compare = $this->compareClientName($compare_name['value'], $this->order_model->b_firstname);
             if ($compare) {
-                $result = 'positive';
                 $outcome = 1;
             }
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [null, $fraud->weight, $info, $outcome];
     }
 
     public function scoreBaseName(FraudFAQuestionModel $fraud, ?array $names = []): array
     {
-        $result = 'negative';
         $outcome = 0;
         $info = $this->getInfoFN($fraud, $names[0], $names[1]);
         // Если какое-либо из имён имеет значение null, то его нельзя сравнить
         foreach ($names as $name) {
             if (is_null($name['value'])) {
-                return [$result, $fraud->weight, $info, 0];
+                return [null, $fraud->weight, $info, 0];
             }
         }
         $compare = $this->compareClientName($names[0]['value'], $names[1]['value']);
         if ($compare) {
             $outcome = 1;
-            $result = 'positive';
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [null, $fraud->weight, $info, $outcome];
     }
 
     public function scoreTenantAddress(FraudFAQuestionModel $fraud, ?array $compare_name, string $type_address = 'shipping'): array
     {
-        $result = 'negative';
         $outcome = 0;
         $str_address = $this->ob_melissa->melissa_address[$type_address]['address']['NameFull'];
         $info = $this->getInfoFN(
@@ -463,44 +446,33 @@ class FraudCheckFAHelper
             $compare_name,
             ['value' => $str_address, 'zipcode' => $this->ob_melissa->melissa_address[$type_address]['address']['PostOfficeZip']]
         );
-        if (!is_null($compare_name['value'])) {
-            if ($this->compareTenantAddressByName($type_address, $compare_name['value'])) {
-                $outcome = 1;
-                $result = 'positive';
-            }
+        if (!is_null($compare_name['value']) && $this->compareTenantAddressByName($type_address, $compare_name['value'])) {
+            $outcome = 1;
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [null, $fraud->weight, $info, $outcome];
     }
 
     public function scoreOwnerAddress(FraudFAQuestionModel $fraud, ?array $compare_name, string $type_address = 'shipping'): array
     {
-        $result = 'negative';
         $outcome = 0;
         $str_address = $this->ob_melissa->melissa_address[$type_address]['owner']['OwnerName1Full'];
         $zip_owner = $this->ob_melissa->melissa_address[$type_address]['owner']['OwnerZip'];
         $zip = substr($zip_owner, 0, 5);
         $info = $this->getInfoFN($fraud, $compare_name, ['value' => $str_address, 'zipcode' => $zip]);
-        if (!is_null($compare_name['value'])) {
-            if ($this->compareOwnerAddressByParams($type_address, $compare_name['value'])) {
-                $outcome = 1;
-                $result = 'positive';
-            }
+        if (!is_null($compare_name['value']) && $this->compareOwnerAddressByParams($type_address, $compare_name['value'])) {
+            $outcome = 1;
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [null, $fraud->weight, $info, $outcome];
     }
 
     public function scoreEmailAddress(FraudFAQuestionModel $fraud, ?array $compare_name): array
     {
-        $result = 'negative';
         $outcome = 0;
         $info = $this->getInfoFN($fraud, $compare_name, ['value' => $this->ob_melissa->email_data['NameFull']]);
-        if (!is_null($compare_name['value'])) {
-            if ($this->compareClientName($compare_name['value'], $this->ob_melissa->email_data['NameFull'] ?? '')) {
-                $outcome = 1;
-                $result = 'positive';
-            }
+        if (!is_null($compare_name['value']) && $this->compareClientName($compare_name['value'], $this->ob_melissa->email_data['NameFull'] ?? '')) {
+            $outcome = 1;
         }
-        return [$result, $fraud->weight, $info, $outcome];
+        return [null, $fraud->weight, $info, $outcome];
     }
 
     private function getInfoFN(FraudFAQuestionModel $question_model, array $f_value, array $t_value): array
@@ -531,10 +503,10 @@ class FraudCheckFAHelper
     {
         return [
             "value{$question_model->f_fraud->code}" => self::getStringAddressByArray($f_value)
-                ? $f_value
+                ? $this->formatAdditional($f_value)
                 : self::ADDITIONAL_INFO_NULL_CHECK,
             "value{$question_model->t_fraud->code}" => self::getStringAddressByArray($t_value)
-                ? $t_value
+                ? $this->formatAdditional($t_value)
                 : self::ADDITIONAL_INFO_NULL_CHECK
         ];
     }
@@ -544,11 +516,27 @@ class FraudCheckFAHelper
      * @param array|null $value - значение для f_fraud question
      * @return array
      */
-    private function getNullDataInfo(FraudFAQuestionModel $question_model, array $value = null): array
+    private function getNullDataInfo(FraudFAQuestionModel $question_model, ?array $value): ?array
     {
         return [
-            "value{$question_model->f_fraud->code}" => $value ?? self::ADDITIONAL_INFO_NULL_CHECK,
+            "value{$question_model->f_fraud->code}" => $value ? $this->formatAdditional($value) : self::ADDITIONAL_INFO_NULL_CHECK,
             "value{$question_model->t_fraud->code}" => self::ADDITIONAL_INFO_NULL_CHECK
         ];
+    }
+
+    private function formatAdditional(array $address): array
+    {
+        $params = [];
+        foreach (['street1', 'street2', 'city', 'state', 'zipcode', 'country'] as $attr) {
+            if (!empty($address[$attr])) {
+                $params[$attr] = $address[$attr];
+            }
+        }
+        return $params;
+    }
+
+    public static function getLinesAddress(string $address)
+    {
+        return preg_split('~\R~', $address);
     }
 }

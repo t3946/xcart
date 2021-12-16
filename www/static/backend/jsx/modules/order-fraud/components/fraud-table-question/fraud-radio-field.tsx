@@ -14,21 +14,21 @@ export const FraudRadioField: React.FC<FraudRadioField> = ({ fraudCode }) => {
     <Fragment>
       <input
         type="radio"
-        data-field={fraudCode}
-        checked={fraudResultChange[fraudCode] === "N"}
-        onChange={(e) => dispatch(changeAnswerResult(e))}
-        value="N"
-      />
-      No
-      <br />
-      <input
-        type="radio"
         checked={fraudResultChange[fraudCode] === "Y"}
         value="Y"
         data-field={fraudCode}
         onChange={(e) => dispatch(changeAnswerResult(e))}
       />
       Yes
+      <br />
+      <input
+        type="radio"
+        data-field={fraudCode}
+        checked={fraudResultChange[fraudCode] === "N"}
+        onChange={(e) => dispatch(changeAnswerResult(e))}
+        value="N"
+      />
+      No
     </Fragment>
   );
 };

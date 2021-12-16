@@ -21,7 +21,6 @@ export interface MainAnswer {
   manual_action: string;
 }
 export interface FAAnswer {
-  fraud_result: string;
   fraud_score: number;
   template: string;
   question_weight: number;
@@ -30,4 +29,5 @@ export interface FAAnswer {
   manual_action: string;
   outcome: number;
   type: string;
+  coefficient: number;
 }

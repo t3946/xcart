@@ -3,7 +3,9 @@ export const convertResult = (template) => {
     return template.fraud_score;
   } else {
     const convertOutcome =
-      (Math.round(template.outcome * 6) / 6) * template.question_weight;
+      (Math.round(template.outcome * template.coefficient) /
+        template.coefficient) *
+      template.question_weight;
     if (convertOutcome - Math.round(convertOutcome) === 0) {
       return convertOutcome.toFixed(2);
     }

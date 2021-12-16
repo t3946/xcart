@@ -131,7 +131,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             <Stack
               alignItems="center"
               spacing={3}
-              my={3}
+              my={4}
               direction="row"
               justifyContent="center"
             >
@@ -171,7 +171,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
           </div>
           <div className="fraud-check-button-apply">
             <button onClick={onApplyFrauds}>
-              Apply changes and update fraud scores
+              Apply changes and update fraud score
             </button>
           </div>
           <FraudInfoBasement />
