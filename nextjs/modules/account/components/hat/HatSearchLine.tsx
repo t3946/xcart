@@ -19,9 +19,10 @@ import StylesRotate from "@styles/modules/Rotate.module.scss";
 
 const HatSearchLine: React.FC = (): any => {
   const dispatch = useDispatch();
-  const isVisibleDepartmentsMenu = useSelectorAccount(
-    (e) => e.departmentsMenuDesktop.isVisible
-  );
+  // const isVisibleDepartmentsMenu = useSelectorAccount(
+  //   (e) => e.departmentsMenuDesktop.isVisible
+  // );
+  const isVisibleDepartmentsMenu = true;
   const routes = useSelectorAccount((e) => e.routes);
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);

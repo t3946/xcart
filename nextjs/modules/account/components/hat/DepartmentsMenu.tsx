@@ -1,13 +1,16 @@
 import React from "react";
 import { route } from "@utils/AppData";
 import cn from "classnames";
+import LeftColumn from "@modules/layout/components/LeftColumn";
+import RightColumn from "@modules/layout/components/RightColumn";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Styles from "@modules/account/components/hat/DepartmentsMenu.module.scss";
+import ViewAllDepartmentsIcon from "@modules/icon/components/header/ViewAllDepartments";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
-  const containerClasses = [props.className, "departments-menu"];
+  const containerClasses = [props.className, Styles.departmentsMenu];
   const [selectedCategory, setSelectedCategory] = React.useState<Record<
     any,
     any
@@ -61,7 +64,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
       const { link, name } = group.items[key];
 
       groupItems.push(
-        <li className="category-menu-group-item" key={key}>
+        <li className={Styles.categoryMenuGroupItem} key={key}>
           <a
             href={link}
             className={cn(
@@ -76,7 +79,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     }
 
     return (
-      <ul className="list-unstyled p-0 m-0 category-menu-group-list">
+      <ul className={cn("list-unstyled p-0 m-0", Styles.categoryMenuGroupList)}>
         {groupItems}
       </ul>
     );
@@ -92,19 +95,28 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     for (const i in selectedCategory.groups) {
       const group = selectedCategory.groups[i];
       const headerClasses = [
-
-        "category-menu-link-level-2-header",
+        Styles.categoryMenuLinkLevel2Header,
         {
-          "category-menu-link-level-2-header__underlined": !!group.items.length,
+          [Styles.categoryMenuLinkLevel2Header_underlined]:
+            !!group.items.length,
         },
       ];
 
       const item = (
-        <div className="group-links-column mb-3" key={i}>
+        <div
+          className={cn(
+            Styles.groupLinksColumn,
+            Styles.categoryDetailed__groupLinksColumn
+          )}
+          key={i}
+        >
           <h4 className={cn(headerClasses)}>
             <a
               href={group.link}
-              className="category-menu-link category-menu-link__level-2"
+              className={cn(
+                Styles.categoryMenuLink,
+                Styles.categoryMenuLink_level_2
+              )}
             >
               {group.name}
             </a>
@@ -131,9 +143,10 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     for (const key in categories) {
       const category: Record<any, any> = categories[key];
       const linkClasses = [
-        "category-menu-link category-menu-link__top-level",
+        Styles.categoryMenuLink,
+        Styles.categoryMenuLink_topLevel,
         {
-          "category-menu-link__selected":
+          [Styles.categoryMenuLink_selected]:
             selectedCategory !== null &&
             category.id === selectedCategory.id &&
             (isMouseOverMenuItem || isMouseOverCategoryDetails),
@@ -141,7 +154,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
       ];
 
       items.push(
-        <li className="category-menu-item has-child" key={key}>
+        <li className={cn("has-child")} key={key}>
           <a
             href={category.url}
             className={cn(linkClasses)}
@@ -164,11 +177,12 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     }
 
     return (
-      <div className="category-view-all">
+      <div className={Styles.categoryViewAll}>
         <a
           href={`${route("catalog:list")}#id${selectedCategory.id}`}
-          className="category-view-all-link"
+          className={Styles.categoryViewAllLink}
         >
+          <ViewAllDepartmentsIcon className={Styles.categoryViewAllLinkIcon} />
           View all {selectedCategory.name} departments
         </a>
       </div>
@@ -179,13 +193,13 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     <TransitionFade show={props.isVisible}>
       <div className={cn(containerClasses)} onClick={props.closeMenu}>
         <section
-          className="category-menu-list-container container"
+          className={cn(Styles.categoryMenuListContainer, "container")}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="row me-0">
-            <div className="account-page-left-column col pe-0">
+            <LeftColumn className="col pe-0">
               <div
-                className="category-menu-list"
+                className={cn(Styles.categoryMenuList)}
                 onMouseOver={() => {
                   setIsMouseOverMenuItem(true);
                 }}
@@ -193,17 +207,21 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
                   setIsMouseOverMenuItem(false);
                 }}
               >
-                <ul className="no-bullet list-unstyled m-0">
-                  {topLevelMenuTemplate()}
-                </ul>
+                <ul className="list-unstyled m-0">{topLevelMenuTemplate()}</ul>
 
-                <div className="view-all-container">
-                  <a href={route("catalog:list")} className="view-all">
+                <div className={cn(Styles.viewAllContainer)}>
+                  <a
+                    href={route("catalog:list")}
+                    className={cn(Styles.viewAll)}
+                  >
+                    <ViewAllDepartmentsIcon
+                      className={Styles.categoryViewAllLinkIcon}
+                    />
                     View all departments
                   </a>
                 </div>
               </div>
-            </div>
+            </LeftColumn>
 
             <div
               className="p-0 col"
@@ -215,9 +233,10 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
                 }
               }}
             >
-              <div
+              <RightColumn
                 className={cn([
-                  "account-page-right-column bg-white h-100 category-detailed pt-2 pb-4 position-relative",
+                  "position-relative",
+                  Styles.categoryDetailed,
                   (isMouseOverMenuItem ||
                     isMouseOverCategoryDetails ||
                     props.buttonHover) &&
@@ -228,7 +247,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
               >
                 {groupsTemplate()}
                 {categoryLinkTemplate()}
-              </div>
+              </RightColumn>
             </div>
           </div>
         </section>
