@@ -18,7 +18,7 @@ use Xcart\App\Orm\Model;
  * @property int|string question_id
  * @property FraudCheckColumnModel f_fraud
  * @property FraudCheckColumnModel t_fraud
- * @property mixed weight
+ * @property float weight
  * @property string template
  */
 class FraudFAQuestionModel extends Model
@@ -79,67 +79,50 @@ class FraudFAQuestionModel extends Model
     public function getScore(OrderModel $order, FraudCheckFAHelper $helper): ?array
     {
         if ($result = $this->getMethodResult($order, $helper)) {
-            [$fraud_result, $weight, $info, $outcome] = $result;
-            return [$fraud_result, round($weight * $outcome, 2), $info, $outcome];
+            [$coefficient, $weight, $info, $outcome] = $result;
+            return [$coefficient, round($weight * $outcome, 2), $info, $outcome];
         }
         return null;
     }
 
     public function getMethodResult(OrderModel $order, FraudCheckFAHelper $helper): array
     {
-        $result = [];
         $compare_value = $this->getNameValueByMatrixCode($this->f_fraud->code, $order, $helper);
         switch ($this->t_fraud->code) {
             case 'FN_BA':
-                $result = $helper->scoreBaseName($this, [$compare_value, ['value' => $order->b_firstname, 'zipcode' => $order->b_zipcode]]);
-                break;
+                return $helper->scoreBaseName($this, [$compare_value, ['value' => $order->b_firstname, 'zipcode' => $order->b_zipcode]]);
             case 'FN_SA':
-                $result = $helper->scoreBaseName($this, [
+                return $helper->scoreBaseName($this, [
                     ['value' => $order->firstname],
                     ['value' => $order->s_firstname, 'zipcode' => $order->s_zipcode]
                 ]);
-                break;
             case 'FN_CH':
-                $result = $helper->scoreCardHolder($this, $compare_value);
-                break;
+                return $helper->scoreCardHolder($this, $compare_value);
             case 'FN_T_BA':
-                $result = $helper->scoreTenantAddress($this, $compare_value, 'billing');
-                break;
+                return $helper->scoreTenantAddress($this, $compare_value, 'billing');
             case 'FN_O_BA':
-                $result = $helper->scoreOwnerAddress($this, $compare_value, 'billing');
-                break;
+                return $helper->scoreOwnerAddress($this, $compare_value, 'billing');
             case 'FN_O_SA':
-                $result = $helper->scoreOwnerAddress($this, $compare_value);
-                break;
+                return $helper->scoreOwnerAddress($this, $compare_value);
             case 'FN_T_SA':
-                $result = $helper->scoreTenantAddress($this, $compare_value);
-                break;
+                return $helper->scoreTenantAddress($this, $compare_value);
             case 'FN_TN':
-                $result = $helper->scorePhoneCaller($this, $compare_value);
-                break;
+                return $helper->scorePhoneCaller($this, $compare_value);
             case 'FN_EA':
-                $result = $helper->scoreEmailAddress($this, $compare_value);
-                break;
+                return $helper->scoreEmailAddress($this, $compare_value);
             case 'BA':
-                $result = $helper->scoreBaseAddress($this);
-                break;
+                return $helper->scoreBaseAddress($this);
             case 'CSZ_IP':
-                $result = $helper->scoreIpAddress($this, $compare_value);
-                break;
+                return $helper->scoreIpAddress($this, $compare_value);
             case 'CSZ_TN':
-                $result = $helper->scorePhoneAddress($this, $compare_value);
-                break;
+                return $helper->scorePhoneAddress($this, $compare_value);
             case 'ORA_BA':
-                $result = $helper->scoreOwnerResidenceAddress($this, $compare_value, 'billing');
-                break;
+                return $helper->scoreOwnerResidenceAddress($this, $compare_value, 'billing');
             case 'ORA_SA':
-                $result = $helper->scoreOwnerResidenceAddress($this, $compare_value);
-                break;
+                return $helper->scoreOwnerResidenceAddress($this, $compare_value);
             default:
-                $result = ['negative', $this->weight];
-                break;
+                return [6, $this->weight];
         }
-        return $result;
     }
 
     private function getNameValueByMatrixCode(string $fraud_code, OrderModel $order, FraudCheckFAHelper $helper): ?array
@@ -185,16 +168,24 @@ class FraudFAQuestionModel extends Model
             case 'FN_TN':
                 return ['value' => $helper->ob_melissa->phone_data['CallerID'] ?? null];
             case 'SA':
+                $ar_line = FraudCheckFAHelper::getLinesAddress($order->s_address);
                 return [
+                    'country' => $order->s_country,
                     'state' => $order->s_state,
                     'city' => $order->s_city,
                     'zipcode' => $order->s_zipcode,
+                    'street1' => $ar_line[0] ?? $order->s_address,
+                    'street2' => $ar_line[1] ?? '',
                 ];
             case 'BA':
+                $ar_line = FraudCheckFAHelper::getLinesAddress($order->b_address);
                 return [
+                    'country' => $order->b_country,
                     'state' => $order->b_state,
                     'city' => $order->b_city,
                     'zipcode' => $order->b_zipcode,
+                    'street1' => $ar_line[0] ?? $order->b_address,
+                    'street2' => $ar_line[1] ?? '',
                 ];
             case 'ORA_SA':
             case 'ORA_BA':
@@ -204,11 +195,14 @@ class FraudFAQuestionModel extends Model
                     // Fix от zip кода длинной более 5 символов
                     $zip = substr($zip, 0, 5);
                     return [
+                        'country' => 'US', // Вставляю напрямую, поскольку melissa работает только по США
                         'state' => $helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerState'],
                         'city' => $helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerCity'],
                         'zipcode' => $zip,
+                        'street1' => $helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerAddress']
                     ];
                 }
+                break;
             case 'CSZ_TN':
                 if (!is_null($helper->ob_melissa->phone_data)) {
                     /** @var CountryModel $country_model */
@@ -218,6 +212,7 @@ class FraudFAQuestionModel extends Model
                         $state_model = StateModel::objects()->get(['state' => $helper->ob_melissa->phone_data['State'], 'country_code' => 'US']);
                         if (!is_null($state_model)) {
                             return [
+                                'country' => $helper->ob_melissa->phone_data['CountryCode'],
                                 'state' => $state_model->code,
                                 'city' => $helper->ob_melissa->phone_data['City'],
                                 'zipcode' => $helper->ob_melissa->phone_data['PostalCode'],
@@ -225,6 +220,7 @@ class FraudFAQuestionModel extends Model
                         }
                     }
                 }
+                break;
             case 'CSZ_IP':
                 if (!is_null($helper->ob_melissa->ip_data)) {
                     /** @var CountryModel $country_model */
@@ -234,6 +230,7 @@ class FraudFAQuestionModel extends Model
                         $state_model = StateModel::objects()->get(['state' => $helper->ob_melissa->ip_data['State'], 'country_code' => $country_model->code]);
                         if (!is_null($state_model)) {
                             return [
+                                'country' => $country_model->code,
                                 'state' => $state_model->code,
                                 'city' => $helper->ob_melissa->ip_data['City'],
                                 'zipcode' => $helper->ob_melissa->ip_data['PostalCode'],

@@ -103,7 +103,6 @@ use Xcart\Order;
  * @property FraudStatusModel fraud_status_model
  * @property string fraud_status
  * @property float|string bare_fraud_score_v2
- * @property float|string overall_fraud_score_v2
  * @property CountryModel shipping_country
  */
 class OrderModel extends Model
@@ -133,7 +132,7 @@ class OrderModel extends Model
         return 'xcart_orders';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
             'orderid' => [
@@ -395,10 +394,6 @@ class OrderModel extends Model
             'bare_fraud_score_v2' => [
                 'class' => FloatField::class,
                 'default' => 0,
-            ],
-            'overall_fraud_score_v2' => [
-                'class' => FloatField::class,
-                'default' => 0
             ],
             'base_fraud_answer' => [
                 'class' => HasManyField::class,
@@ -750,9 +745,12 @@ class OrderModel extends Model
         return $this->transactions->limit(1)->order(['-date'])->get();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function orderFraudCheck(): void
     {
-        $overall_score = $bare_score = 0;
+        $bare_score = 0;
         /** @var FraudCheckBaseQuestionModel $fraud */
         foreach (FraudCheckBaseQuestionModel::objects()->order(['orderby']) as $fraud) {
             [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
@@ -766,7 +764,6 @@ class OrderModel extends Model
                     'fraud_result' => $fraud_result,
                     'additional_info' => $additional_info
                 ]);
-                $overall_score += (float)$orderFraud->fraud_score;
                 if ($fraud->question_code !== 'DC-GT') {
                     $bare_score += (float)$orderFraud->fraud_score;
                 }
@@ -778,23 +775,21 @@ class OrderModel extends Model
         $fa_helper->fetchBaseDataOrder();
         /** @var FraudFAQuestionModel $fraud_fa */
         foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
-            [$fraud_result, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, $fa_helper);
+            [$coefficient, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, $fa_helper);
             /** @var OrderFraudFACheckModel $order_fraud_fa */
             [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
                 'order_id' => $this->orderid,
                 'question_id' => $fraud_fa->question_id
             ], [
-                'fraud_result' => $fraud_result,
+                'compare_coefficient' => $coefficient,
                 'fraud_score' => $fraud_score,
                 'additional_info' => $info ?? null,
                 'outcome' => $outcome ?? 0.00
             ]);
-            $overall_score += (float)$order_fraud_fa->fraud_score;
             $bare_score += (float)$order_fraud_fa->fraud_score;
             $order_fraud_fa->save();
         }
         $fa_helper->collectAddressesGeolocation();
-        $this->overall_fraud_score_v2 = $overall_score;
         $this->bare_fraud_score_v2 = $bare_score;
         $this->save();
     }

@@ -25,17 +25,8 @@ export interface SettingsFraudOrder {
   order_prefix: string;
 }
 
-export interface FraudFAQuestion {
-  question_id: string | number;
-  f_fraud_id: string | number;
-  t_fraud_id: string | number;
-  weight: string | number;
-  template: string;
-}
-
 export interface FraudResultCheck {
   bare_result: number | string;
-  overall_result: number | string;
   risk_score: number | string;
 }
 export interface ColumnLegendData {
@@ -44,9 +35,12 @@ export interface ColumnLegendData {
   value:
     | string
     | {
+        street1?: string;
+        street2?: string;
         state: string;
         city: string;
         zipcode: string;
+        country: ?string;
       };
   link: boolean;
   linkUrl: string;

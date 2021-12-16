@@ -53,7 +53,10 @@ export const MatrixModal: React.FC<MatrixModal> = ({
           <tr>
             <td>
               {template.type === "address"
-                ? `${Math.round(template.outcome * 6)}/6`
+                ? `${Math.round(
+                    (template.fraud_score / template.question_weight) *
+                      template.coefficient
+                  )}/${template.coefficient}`
                 : template.outcome}
             </td>
             <td>{template.question_weight}</td>

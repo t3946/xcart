@@ -99,7 +99,6 @@ class OrderFraudCheckController extends Controller
             $ar_response['resultChange'] = $this->getManualAction($ar_answer);
             $ar_response['orderInfo'] = [
                 'bareResult' => $order_model->bare_fraud_score_v2,
-                'overallResult' => $order_model->overall_fraud_score_v2,
                 'fraudStatus' => [
                     'name' => $order_model->fraud_status_model->name,
                     'code' => $order_model->fraud_status
@@ -204,14 +203,15 @@ class OrderFraudCheckController extends Controller
             [$replace_template, $replace_value] = $this->getTemplateData($fraud);
             $data = [
                 'question_id' => $fraud->question_id,
-                'fraud_result' => $fraud->fraud_result,
+                'coefficient' => $fraud->compare_coefficient,
                 'fraud_score' => $fraud->fraud_score,
                 'f_fraud_name' => $fraud->question->f_fraud->name,
                 't_fraud_name' => $fraud->question->t_fraud->name,
                 'question_weight' => (float)$fraud->question->weight,
                 'template' => str_replace($replace_template, $replace_value, $fraud->question->template),
                 'outcome' => (float)$fraud->outcome,
-                'type' => $fraud->question->f_fraud->type
+                'type' => $fraud->question->f_fraud->type,
+                'arAdditional' => $fraud->additional_info["value{$fraud->question->f_fraud->code}"]
 
             ];
             $ar_answer[$fraud->question->f_fraud->type][] = $data;
@@ -392,9 +392,9 @@ HTML;
                 $order_model->orderFraudCheck();
                 $this->jsonResponse(['status' => true]);
             }
-        } catch (Throwable $exception) {
+        } catch (Throwable $e) {
             $log = "OrderID: $order_id. By force fraud check data";
-            Xcart::app()->logger->error($log, [$exception->getMessage()], 'fraud_check');
+            Xcart::app()->logger->error($log, [$e->getMessage(), $e->getFile(), $e->getLine()], 'fraud_check');
             $this->jsonResponse(['message' => 'Error by force fraud check, repeat operation later'], 400);
         }
     }
@@ -491,7 +491,6 @@ HTML;
         /** @var FraudCheckColumnModel $column */
         foreach (FraudCheckColumnModel::objects()->all() as $column) {
             /** @var OrderFraudFACheckModel $fraud_model */
-
             $fraud_model = OrderFraudFACheckModel::objects()->filter([
                 new QOr([
                     'question__f_fraud_id' => $column->fraud_id,
@@ -500,7 +499,6 @@ HTML;
                 'order_id' => $order_model->orderid
             ])->limit(1)->get();
             if ($fraud_model instanceof OrderFraudFACheckModel) {
-                $value_text = '';
                 $value = $fraud_model->additional_info["value$column->code"];
                 if ($column->type === 'full_name') {
                     $value_str = $value['full_name'] ?? $value;
