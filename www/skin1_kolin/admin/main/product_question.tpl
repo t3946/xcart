@@ -33,7 +33,7 @@ $(function() {ldelim}
  {assign var="ticket_resolver_link" value="http://helpdesk.s3stores.com/otrs/"}
 *}
 
- <td data-entity="question" data-id="{$product_question.id}"
+ <td id="otrs-resolver-order-link" data-entity="question" data-id="{$product_question.id}"
      style="font-size: 15px; display: none;  font-weight: bold; "
      data-url="{$xcartApp->router->url('api:entity_otrs_message')}">
         / <a target="_blank" style="color: #140BFC;">

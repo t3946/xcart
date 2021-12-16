@@ -24,7 +24,7 @@
         <span class="wait-text">{t 'Added'}</span>
     </a>
     <div class="{$add_to_cart_button_wrapper_class} hide">
-        <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow-white waves waves-orange waves-effect {$add_to_cart_button_checkout_class}">Checkout</a>
+        <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow-white waves waves-orange waves-effect {$add_to_cart_button_checkout_class}">{t 'Checkout'}</a>
         {if isset($noAccount) && $noAccount === true}<div class="no-account">{t "No account needed! Checkout only takes 3 minutes."}</div>{/if}
     </div>
 </div>
