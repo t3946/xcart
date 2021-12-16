@@ -17,8 +17,8 @@ interface IProps {
 const PlusPanelButton: React.FC<IProps> = function (props: IProps) {
   const { onClick, text } = props;
   const classes = {
-    icon: props.classes?.icon,
-    text: [props.classes?.text],
+    icon: [props.classes?.icon, Styles.icon],
+    text: [props.classes?.text, Styles.text],
   };
 
   return (
@@ -27,7 +27,7 @@ const PlusPanelButton: React.FC<IProps> = function (props: IProps) {
       classNames={{ container: props.classes?.container }}
       body={
         <div className={Styles.container}>
-          <Plus className={classes.icon} />
+          <Plus className={classnames(classes.icon)} />
           <div className={classnames(classes.text)}>{text}</div>
         </div>
       }

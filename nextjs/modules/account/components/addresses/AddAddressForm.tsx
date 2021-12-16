@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
 import { FormSelect } from "../shared/FormSelect";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { Form, Formik, useFormik } from "formik";
-import FormInputPhone, {
-  getPhoneNumberInnerPart,
-} from "@modules/account/components/shared/FormInputPhone";
+import { useFormik } from "formik";
+import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
@@ -14,14 +12,11 @@ import {
   addAddress,
   editAddress,
 } from "../../../../redux/actions/account-actions/AddressActions";
-import { useRouter } from "next/router";
 import { getStates } from "../../utils/get-states";
 import Store from "@redux/stores/Store";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
-import { getCountryByCode } from "@utils/Countries";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -29,11 +24,9 @@ export const AddAddressForm: React.FC<any> = ({
   children,
 }) => {
   const dispatch = useDispatch();
-  const history = useRouter();
   const countries = useSelector((e: any) => e.main.countries);
   const states = useSelector((e: any) => e.main.states);
   const { showSnackbar } = useContext(SnackbarContext);
-  const breakpoint = useBreakpoint();
 
   const addressFormLoading = useSelector(
     (e: any) => e.addresses.addressFormLoading
@@ -63,10 +56,6 @@ export const AddAddressForm: React.FC<any> = ({
 
     dispatch(addAddress(newAddress, onPended, Store.getState().user.id));
   };
-  if (addressInfo) {
-    getCountryByCode();
-  }
-  console.log(addressInfo || initialAddAddressFormValue);
 
   const formik = useFormik({
     initialValues: addressInfo || initialAddAddressFormValue,
@@ -128,6 +117,9 @@ export const AddAddressForm: React.FC<any> = ({
           error={formik.touched.street && formik.errors.street}
           isInvalid={!!(formik.touched.street && formik.errors.street)}
           handleChange={formik.handleChange}
+          touched={formik.touched.street}
+          classes={{ input: "add-address-input", group: "mb-1" }}
+          handleBlur={formik.handleBlur}
         />
 
         <InputGroup
@@ -191,7 +183,7 @@ export const AddAddressForm: React.FC<any> = ({
             <button
               disabled={addressFormLoading}
               type={"submit"}
-              className={cn("account-submit-btn", "w-md-auto")}
+              className={cn(Styles.button, "form-button", "w-md-auto")}
             >
               {addressInfo ? "Save changes" : "Add Address"}
             </button>

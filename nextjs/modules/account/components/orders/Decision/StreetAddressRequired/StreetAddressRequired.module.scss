@@ -1,22 +1,37 @@
 @import "styles/utils/Utils.module";
 
 .header {
+  text-transform: capitalize;
+  padding: pxToRem(30) 0  pxToRem(16) 0;
+
   @include breakpoint(md) {
-    padding: pxToRem(34) 0 0 pxToRem(13);
+    text-transform: none;
+    padding: pxToRem(37) 0 0 pxToRem(48);
   }
+
   @include breakpoint(lg) {
     padding: pxToRem(45) pxToRem(26) pxToRem(23);
   }
 }
 
 .headerText {
+  font-weight: bold;
+
   @include breakpoint(md) {
     font-size: pxToRem(30);
     line-height: pxToRem(36);
   }
+
   @include breakpoint(lg) {
-    font-size: inherit;
-    line-height: inherit;
+    font-size: pxToRem(24);
+    line-height: pxToRem(28);
+    text-transform: none;
+  }
+}
+
+.form__header {
+  @include breakpoint(lg) {
+    margin-top: pxToRem(45);
   }
 }
 
@@ -27,22 +42,47 @@
 }
 
 .decisionPage {
-  font-size: pxToRem(18);
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    padding: pxToRem(20) pxToRem(21) pxToRem(16);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
 }
 
 .text {
+  padding: 0 pxToRem(10);
+  line-height: pxToRem(23);
+  
+  @include breakpoint(lg) {
+    padding: 0;
+    line-height: pxToRem(26);
+  }
+
   @include breakpoint(lg) {
     line-height: pxToRem(24);
   }
 }
 
 .decision__caption {
+  @include breakpoint(md) {
+    margin: pxToRem(22) 0 pxToRem(23);
+  }
+
   @include breakpoint(lg) {
     margin: 0 0 pxToRem(28);
   }
 }
 
 .decision__addresses {
+  margin: 0 0 pxToRem(26);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(42);
+  }
+  
   @include breakpoint(lg) {
     margin: 0 pxToRem(-24) pxToRem(33);
   }
@@ -74,6 +114,10 @@
     height: pxToRem(244);
     padding: pxToRem(20) pxToRem(23) pxToRem(26) pxToRem(22);
   }
+}
+
+.addressCard_mobile {
+  gap: pxToRem(12);
 }
 
 .addressHeader {
@@ -129,6 +173,16 @@
 }
 
 .button {
+  font-size: pxToRem(20);
+  line-height: pxToRem(24);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    line-height: pxToRem(31);
+    padding: 0 pxToRem(50);
+    height: pxToRem(57);
+  }
+
   @include breakpoint(lg) {
     padding: 0 pxToRem(43);
     height: pxToRem(41);
@@ -143,7 +197,8 @@
 
 .addAddressForm {
   border: 1px solid #c4c4c4;
-  padding: pxToRem(35) pxToRem(25);
+  padding: pxToRem(19) pxToRem(24) pxToRem(14);
+
   max-width: pxToRem(655);
 }
 

@@ -58,20 +58,20 @@ const Decision: React.FC = (props) => {
       })()}
 
       {/*<UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />*/}
-      {/*<SendingCheck*/}
-      {/*  firstAddress={{*/}
-      {/*    name: "S3 Stores, Inc.",*/}
-      {/*    address: `2885 Sanford Ave SW #12717*/}
-      {/*    Grandville, MI, 49418*/}
-      {/*    USA`,*/}
-      {/*  }}*/}
-      {/*  secondAddress={{*/}
-      {/*    name: "S3 Stores, Inc.",*/}
-      {/*    address: `27 Joseph St.,*/}
-      {/*    Chatham, Ontario, N7L 3G4*/}
-      {/*    Canada`,*/}
-      {/*  }}*/}
-      {/*/>*/}
+      {/* <SendingCheck
+        firstAddress={{
+          name: "S3 Stores, Inc.",
+          address: `2885 Sanford Ave SW #12717
+         Grandville, MI, 49418
+         USA`,
+        }}
+        secondAddress={{
+          name: "S3 Stores, Inc.",
+          address: `27 Joseph St.,
+         Chatham, Ontario, N7L 3G4
+         Canada`,
+        }}
+      /> */}
       {/*<IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />*/}
       {/*<OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
       {/*<AchPaymentIsRequired />*/}

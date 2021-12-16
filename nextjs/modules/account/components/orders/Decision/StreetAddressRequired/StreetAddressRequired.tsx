@@ -19,9 +19,12 @@ import { AddNewAddress } from "@modules/account/components/addresses/AddNewAddre
 import { AddressList } from "@modules/account/components/addresses/AddressList";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import { getAddresses } from "@redux/actions/account-actions/AddressActions";
+import { useRouter } from "next/router";
+import Card from "@modules/ui/Card";
 
 const StreetAddressRequired: React.FC<any> = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const userId = useSelector((e: StoreInterface) => {
     return e.user.user_id;
   });
@@ -35,17 +38,19 @@ const StreetAddressRequired: React.FC<any> = () => {
       (address) => address.address_type === AddressTypeEnum.SHIPPING
     );
   });
-  console.log(addresses)
+  console.log(addresses);
   const addAddressDialog = useDialog();
 
   const breakpoint = useBreakpoint();
 
-  const [addAddress, setAddAddress] = React.useState<string>(null);
+  const [addAddress, setAddAddress] = React.useState<string>("");
   const initialValues = {
-    address: undefined,
+    address: null,
   };
 
-  const submit = () => {};
+  const submit = () => {
+    return;
+  };
   return (
     <InnerPage
       hatClasses={Styles.header}
@@ -54,16 +59,16 @@ const StreetAddressRequired: React.FC<any> = () => {
     >
       <Formik initialValues={initialValues} onSubmit={submit}>
         {({ values, handleChange, setValues }) => {
-          const checkedAddress = parseInt(values.address);
+          const checkedAddress = values.address && parseInt(values.address);
           const AdressesTemplate = (addresses) => {
             const addressList: React.ReactNode[] = [];
 
             for (const address of addresses) {
               addressList.push(
                 <RectangularButton
-                  onClick={() => setAddAddress(null)}
+                  onClick={() => setAddAddress("")}
                   classNames={{
-                    container: Styles.address,
+                    container: [Styles.address, "d-none", "d-md-flex"],
                     body: Styles.addressBody,
                   }}
                   header={
@@ -109,14 +114,60 @@ const StreetAddressRequired: React.FC<any> = () => {
             return addressList;
           };
 
+          const AddressTemplateMobile = (addresses) => {
+            const addressList: React.ReactNode[] = [];
+
+            for (const address of addresses) {
+              addressList.push(
+                <Card
+                  classes={{
+                    card: "d-md-none",
+                    cardBody: Styles.addressCard_mobile,
+                  }}
+                  radioButton={{
+                    checkedValue: checkedAddress,
+                    value: address.address_id,
+                    name: "address",
+                    onChange: handleChange,
+                    disabled: false,
+                  }}
+                >
+                  <div>
+                    <h4 className={Styles.addressHeader}>
+                      {address.full_name}
+                    </h4>
+                    <div className={cn(Styles.addressBody)}>
+                      <div>
+                        {address.street}, {address.detailed}
+                      </div>
+                      <div>{address.country.viewValue}</div>
+                      <div> Phone number: {address.phone_number}</div>
+                    </div>
+                  </div>
+                </Card>
+              );
+            }
+            return addressList;
+          };
+
           const addAddresClickHandler = () => {
-            setValues({ address: undefined });
-            setAddAddress((prevstate) => (prevstate === "1" ? null : "1"));
+            setValues({ address: null });
+
+            breakpoint({
+              xxl: undefined,
+              xl: undefined,
+              lg: function () {
+                setAddAddress((prevstate) => (prevstate === "1" ? "" : "1"));
+              },
+              md: undefined,
+              sm: undefined,
+              xs: addAddressDialog.handleClickOpen,
+            });
           };
 
           return (
             <Form>
-              <p className={cn(Styles.text, "mb-lg-20")}>
+              <p className={cn(Styles.text, "mb-18", "mb-lg-20")}>
                 We can't ship orders to P.O. Box addresses.
                 <br />
                 <b>
@@ -153,6 +204,7 @@ const StreetAddressRequired: React.FC<any> = () => {
                     text={"Add New Address"}
                   />
                   {addresses && AdressesTemplate(addresses)}
+                  {addresses && AddressTemplateMobile(addresses)}
                 </div>
                 <Accordion.Collapse eventKey="1">
                   <>
@@ -160,11 +212,13 @@ const StreetAddressRequired: React.FC<any> = () => {
                       className={cn(
                         Styles.header,
                         Styles.headerText,
+                        Styles.form__header,
                         "fw-bold",
-                        "pt-0"
+                        "pt-0",
+                        "ps-0"
                       )}
                     >
-                      Add New Address
+                      Add new address
                     </h1>
                     <div
                       className={cn(
@@ -172,7 +226,7 @@ const StreetAddressRequired: React.FC<any> = () => {
                         Styles.decision__addAddressForm
                       )}
                     >
-                      <AddAddressForm />
+                      {addAddress && <AddAddressForm />}
                     </div>
                   </>
                 </Accordion.Collapse>
@@ -189,32 +243,28 @@ const StreetAddressRequired: React.FC<any> = () => {
               >
                 Submit
               </button>
-              <AddNewAddress
-                onClick={() =>
-                  breakpoint({
-                    md: addAddressDialog.handleClickOpen,
-                  })
-                }
-              />
-              {addresses && <AddressList addresses={addresses} />}
-              <BootstrapDialogHOC
-                show={addAddressDialog.open}
-                title={"Add address"}
-                onClose={addAddressDialog.handleClose}
-              >
-                <AddAddressForm
-                  onCancelClick={() =>
-                    breakpoint({
-                      xs: () => history.push("/account/addresses"),
-                      md: addAddressDialog.handleClose,
-                    })
-                  }
-                />
-              </BootstrapDialogHOC>
             </Form>
           );
         }}
       </Formik>
+      <BootstrapDialogHOC
+        show={addAddressDialog.open}
+        title={"Add new address"}
+        onClose={addAddressDialog.handleClose}
+      >
+        <AddAddressForm
+          onCancelClick={() =>
+            breakpoint({
+              xxl: undefined,
+              xl: undefined,
+              lg: undefined,
+              md: undefined,
+              sm: undefined,
+              xs: addAddressDialog.handleClose,
+            })
+          }
+        />
+      </BootstrapDialogHOC>
     </InnerPage>
   );
 };

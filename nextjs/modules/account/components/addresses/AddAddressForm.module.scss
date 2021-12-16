@@ -11,3 +11,11 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.button {
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(17);
+    padding: 0 pxToRem(29);
+  }
+}
