@@ -105,7 +105,9 @@ class QueueProcessCommand extends Command
                             ProductHelper::setProductBrand($product, $data['brand_name'], $site);
                             if ($is_new) {
                                 $product->save();
-                                $product->setMainCategory($site->base_category);
+                                if ($site->base_category) {
+                                    $product->setMainCategory($site->base_category);
+                                }
                             }
                         }
 

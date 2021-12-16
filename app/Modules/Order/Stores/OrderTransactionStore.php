@@ -6,6 +6,7 @@ namespace Modules\Order\Stores;
 use Exception;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Payment\Helpers\PaymentHelper;
@@ -21,7 +22,6 @@ class OrderTransactionStore extends BaseStore
     public $model;
     public $gateway;
     public $order;
-    public $log;
     public $failed = false;
 
     public static $gatewayMethods = [
@@ -106,7 +106,11 @@ class OrderTransactionStore extends BaseStore
                             'parent_id' => $method !== 'reauthorize' ? $this->params['orderTransaction']->id : null,
                         ]
                     );
-                    $this->log .= 'Transaction:' . " {$this->params['orderTransaction']->transaction_id} --> {$model->transaction_id} <br/>";
+                    OrderLogModel::createLog(
+                        $this->params['order']->orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        "Transaction: {$this->params['orderTransaction']->transaction_id} --> $model->transaction_id"
+                    );
                 }
                 if ($type) {
                     $model->type = $type;
@@ -118,7 +122,11 @@ class OrderTransactionStore extends BaseStore
 
                 $logStatus = $model->transaction_status;
 
-                $this->log .= 'Transaction:' . " {$model->transaction_id} {$logStatus} <br/>";
+                OrderLogModel::createLog(
+                    $this->params['order']->orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "Transaction: {$model->transaction_id} $logStatus"
+                );
 
                 self::lookupParentTransactions($model);
 
@@ -141,10 +149,18 @@ class OrderTransactionStore extends BaseStore
                     $logStatus = $state;
                     self::lookupParentTransactions($this->params['orderTransaction']);
                 }
-                $this->log .= "<br/>{$result['name']}<br/>{$result['message']}";
+                OrderLogModel::createLog(
+                    $this->params['order']->orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "{$result['name']}<br/>{$result['message']}"
+                );
             }
         } catch (Exception $e) {
-            $this->log .= $e->getMessage() . "\n";
+            OrderLogModel::createLog(
+                $this->params['order']->orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                $e->getMessage()
+            );
             $this->failed = true;
             $logStatus = OrderTransactionModel::STATUS_FAILED;
         }
@@ -159,7 +175,7 @@ class OrderTransactionStore extends BaseStore
                 'transaction_currency' => isset($result['amount']) ? $result['amount']['currency'] : $this->params['currency'],
                 'transaction_total' => isset($result['amount']) ? $result['amount']['total'] : $this->params['amount'],
                 'login' => Xcart::app()->user->login,
-                'transaction_log' => array_merge($result, ['xcart_log' => $this->log])
+                'transaction_log' => array_merge($result, ['xcart_log' => nl2br(implode("\n", Xcart::app()->order_logger->messages))])
             ]
         );
 

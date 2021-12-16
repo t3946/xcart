@@ -206,7 +206,6 @@ class OrderHelper
 
     public static function cancelOrder($order_id)
     {
-        $log = null;
 
         if ($order_model = OrderModel::objects()->get(['orderid' => $order_id])) {
             $auth_transactions = array_filter($order_model->transactions->all(), function ($a) {
@@ -232,13 +231,10 @@ class OrderHelper
                 );
 
                 $trStore = new OrderTransactionStore($params, $auth_tr);
-                $model = $trStore->void();
+                $trStore->void();
 
-                $log .= "<br />{$trStore->log}";
             }
         }
-
-        return $log;
     }
 
     public static function getSubmitOperator(): ?UserModel

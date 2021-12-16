@@ -24,7 +24,7 @@ class OrderTransactionsController extends PrototypeAdminController
 {
     public function transaction_process($order_id, $mode, $id)
     {
-        $order_log = OrderTransactionStore::$gatewayMethods[$mode]['order_log']."<br>";
+        OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, OrderTransactionStore::$gatewayMethods[$mode]['order_log']);
 
         /** @var OrderModel $orderModel */
         if ($orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
@@ -50,9 +50,8 @@ class OrderTransactionsController extends PrototypeAdminController
 
                 $store = new OrderTransactionStore($params);
                 $store->$mode();
-                $order_log .= $store->log;
             }
-            OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
+
         }
 
         Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
@@ -103,7 +102,6 @@ class OrderTransactionsController extends PrototypeAdminController
             /** @var OrderTransactionModel $transaction_model */
             $store = new OrderTransactionStore($params);
             $transaction_model = $store->authorize();
-            $order_log .= $store->log;
 
             if ($transaction_model->transaction_status === OrderTransactionModel::STATUS_AUTHORIZED) {
                 [$o_log, $send_notification] = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
@@ -153,7 +151,9 @@ class OrderTransactionsController extends PrototypeAdminController
             && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
 
             /** @var OrderTransactionModel $model */
-             list($model, $isNew) = OrderTransactionModel::objects()->getOrNew(['orderid' => $orderModel->orderid, 'transaction_id' => trim($_POST['transaction_id'])]);
+             [$model, $isNew] = OrderTransactionModel::objects()->getOrNew(
+                 ['orderid' => $orderModel->orderid, 'transaction_id' => trim($_POST['transaction_id'])]
+             );
 
             $tr_type = OrderTransactionModel::TYPE_AUTHORIZATION;
              switch($_POST['transaction_status']){

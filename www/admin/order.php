@@ -1619,13 +1619,16 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
     if ($mode === 'mnf_notify' && $set_status_K !== 'Y')
     {
-        $log = "";
 
         if ($bad_time_do_not_send_email === 'Y') {
-            $log .= "'Send (Off-hours dispatch to distributor)' at '{$manufacturer_name}: Dispatch to distributor'";
+            OrderLogModel::createLog(
+                $orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "'Send (Off-hours dispatch to distributor)' at '{$manufacturer_name}: Dispatch to distributor'"
+            );
         }
 
-        $log .= OrderGroupHelper::dispatchGroup(
+        OrderGroupHelper::dispatchGroup(
             [
                 'orderid' => $orderid,
                 'mnf_id' => $mnf_id,
@@ -1639,7 +1642,11 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
             if ($current_dc_status !== 'DP') {
                 $new_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='DP'");
-                $log .= "<br/><b>$code:</b> dc_status: $current_dc_status_value -> $new_value";
+                OrderLogModel::createLog(
+                    $orderid,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    "<b>$code:</b> dc_status: $current_dc_status_value -> $new_value"
+                );
 
                 OrderGroupModel::objects()
                     ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
@@ -1657,7 +1664,6 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             else {
                 db_query("INSERT INTO $sql_tbl[off_hours_messages] (orderid, manufacturerid, message) VALUES ('$orderid', '$mnf_id', '" . addslashes($mnf_body_to_db) . "')");
             }
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
 
             if (!isset($top_message["content"])) {
@@ -1674,8 +1680,11 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
             func_header_location("order.php?orderid=" . $orderid);
         }
         else {
-            $log .= "'Send (Dispatch to distributor)' at '{$manufacturer_name}: Dispatch to distributor'";
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+            OrderLogModel::createLog(
+                $orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "'Send (Dispatch to distributor)' at '$manufacturer_name: Dispatch to distributor'"
+            );
         }
     }
 
