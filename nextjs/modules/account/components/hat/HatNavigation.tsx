@@ -10,6 +10,7 @@ import Search from "@modules/icon/components/account/search/Search";
 import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import MenuIcon from "@modules/icon/components/header/Menu";
 
 const HatNavigation: React.FC = () => {
   const dispatch = useDispatch();
@@ -79,9 +80,11 @@ const HatNavigation: React.FC = () => {
                   <a
                     href="#"
                     data-toggle="offCanvasLeft"
-                    className="mobile_menu middle-inline-block hamburger"
+                    className="d-flex"
                     onClick={toggleMobileDepartmentsMenu}
-                  />
+                  >
+                    <MenuIcon className={Styles.menuIcon} />
+                  </a>
                 </div>
 
                 <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">

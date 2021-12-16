@@ -9,6 +9,8 @@ import Card from "react-bootstrap/Card";
 import PlusIcon from "@modules/icon/components/font-awesome/plus/Light";
 import MinusIcon from "@modules/icon/components/font-awesome/minus/Light";
 import ChevronRightIcon from "@modules/icon/components/font-awesome/chevron-right/Light";
+import cn from "classnames";
+import Styles from "@modules/account/components/hat/DepartmentsMenuMobile.module.scss";
 
 const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
   const departmentsMenu = useSelector(
@@ -31,19 +33,11 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
     ],
   };
 
-  const mainWrapper = document.getElementById("main_wrapper");
-  const shiftMainWrapperClass = "account-main-wrapper_main-wrapper-shifted";
-
-  if (isVisibleMenu) {
-    mainWrapper.classList.add(shiftMainWrapperClass);
-  } else {
-    mainWrapper.classList.remove(shiftMainWrapperClass);
-  }
-
   function ContextAwareToggle({ children, eventKey, index }) {
     const currentEventKey = React.useContext(AccordionContext);
     const decoratedOnClick = useAccordionButton(eventKey);
-    const isCurrentEventKey = currentEventKey === eventKey;
+
+    const isCurrentEventKey = currentEventKey.activeEventKey === eventKey;
 
     function icon() {
       if (isCurrentEventKey) {
@@ -80,9 +74,12 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
   function subcategoryItemsTemplate(category) {
     const items = [];
 
-    for (const subCategory of category.subCategories) {
+    for (const [index, subCategory] of category.subCategories.entries()) {
       items.push(
-        <li className={"departments-menu-mobile-subcategory"}>
+        <li
+          key={`${subCategory.link}_${index}`}
+          className={"departments-menu-mobile-subcategory"}
+        >
           <a
             className="departments-menu-mobile-subcategory-link text-black"
             href={subCategory.link}
@@ -141,7 +138,7 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
       }
 
       menuItems.push(
-        <Card className={"rounded-0 border-0"}>
+        <Card key={`${i}_${category.name}`} className={"rounded-0 border-0"}>
           {header}
 
           <Accordion.Collapse eventKey={i.toString()}>
@@ -162,7 +159,9 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
     <div className={classnames(classes.container)}>
       <h3 className="departments-menu-mobile-hat m-0">Departments</h3>
 
-      <Accordion className={"departments-menu-mobile-accordion overflow-auto"}>
+      <Accordion
+        className={cn(Styles.departmentsMenuMobileAccordion, "overflow-auto")}
+      >
         {menuItemsTemplate()}
       </Accordion>
     </div>

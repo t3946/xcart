@@ -1,0 +1,15 @@
+@import "styles/utils/Utils.module";
+
+.root {
+  overflow-x: hidden;
+}
+
+.account__mainWrapper {
+  position: relative;
+  left: 0;
+  transition: left 0.33s ease-out;
+}
+
+.accountMainWrapper__mainWrapperShifted {
+  left: pxToRem(300);
+}

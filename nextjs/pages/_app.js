@@ -3,11 +3,13 @@ import "bootstrap/dist/css/bootstrap-grid.min.css";
 import { Provider } from "react-redux";
 import clientStore, { getServerStore } from "@redux/stores/Store";
 import App from "next/app";
+import React from "react";
 import getInitialState from "@services/axios/Account";
+import MainComponent from "@modules/components/MainComponent";
 
 function MyApp({ Component, pageProps, state }) {
   let store;
-
+  
   if (process.browser === false) {
     store = getServerStore(state);
   } else {
@@ -16,7 +18,9 @@ function MyApp({ Component, pageProps, state }) {
 
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <MainComponent>
+        <Component {...pageProps} />
+      </MainComponent>
     </Provider>
   );
 }

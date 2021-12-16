@@ -22,6 +22,11 @@ $view_all_height: pxToRem(22);
   line-height: $view_all_height;
   height: $view_all_height;
   text-align: center;
+  
+
+  &:hover {
+    color: #ffffff;
+  }
 }
 
 .categoryMenuList {
@@ -34,7 +39,7 @@ $view_all_height: pxToRem(22);
 
 .categoryMenuLink {
   text-decoration: none;
-  transition: all 0.75s ease-out;
+  transition: all 0.15s linear;
   color: #000000;
 }
 
