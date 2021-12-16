@@ -195,6 +195,6 @@ class SaveFilePrice
         $ar_images_rabbit['images'] = $ar_images;
         $ar_images_rabbit['product_code'] = $product_model instanceof ProductModel ? $product_model->productcode : $product_model;
 
-        Xcart::app()->queue->send('images_test', json_encode($ar_images_rabbit, JSON_THROW_ON_ERROR));
+        Xcart::app()->queue->send('images', json_encode($ar_images_rabbit, JSON_THROW_ON_ERROR));
     }
 }
