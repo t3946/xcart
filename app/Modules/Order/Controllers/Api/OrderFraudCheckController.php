@@ -203,7 +203,6 @@ class OrderFraudCheckController extends Controller
             [$replace_template, $replace_value] = $this->getTemplateData($fraud);
             $data = [
                 'question_id' => $fraud->question_id,
-                'coefficient' => $fraud->compare_coefficient,
                 'fraud_score' => $fraud->fraud_score,
                 'f_fraud_name' => $fraud->question->f_fraud->name,
                 't_fraud_name' => $fraud->question->t_fraud->name,

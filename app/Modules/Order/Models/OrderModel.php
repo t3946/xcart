@@ -775,13 +775,12 @@ class OrderModel extends Model
         $fa_helper->fetchBaseDataOrder();
         /** @var FraudFAQuestionModel $fraud_fa */
         foreach (FraudFAQuestionModel::objects()->order(['order_by']) as $fraud_fa) {
-            [$coefficient, $fraud_score, $info, $outcome] = $fraud_fa->getScore($this, $fa_helper);
+            [$fraud_score, $info, $outcome] = $fraud_fa->getScore($this, $fa_helper);
             /** @var OrderFraudFACheckModel $order_fraud_fa */
             [$order_fraud_fa] = OrderFraudFACheckModel::objects()->updateOrCreate([
                 'order_id' => $this->orderid,
                 'question_id' => $fraud_fa->question_id
             ], [
-                'compare_coefficient' => $coefficient,
                 'fraud_score' => $fraud_score,
                 'additional_info' => $info ?? null,
                 'outcome' => $outcome ?? 0.00
