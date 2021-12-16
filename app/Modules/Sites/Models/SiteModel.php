@@ -48,6 +48,7 @@ use Xcart\App\Orm\Model;
  * @property string $company_name
  * @property string $cidev_top_header_code
  * @property CountryModel country_model
+ * @property CorporateModel|null corporation
  */
 class SiteModel extends Model
 {

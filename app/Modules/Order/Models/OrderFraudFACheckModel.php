@@ -15,7 +15,6 @@ use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
 /**
- * @property string compare_coefficient
  * @property mixed fraud_score
  * @property array additional_info
  * @property float outcome
@@ -59,11 +58,6 @@ class OrderFraudFACheckModel extends Model
                 'class' => DecimalField::class,
                 'null' => true,
                 'default' => 0.00
-            ],
-            'compare_coefficient' => [
-                'class' => IntField::class,
-                'default' => null,
-                'null' => true,
             ],
             'additional_info' => [
                 'class' => SerializeField::class,

@@ -2,10 +2,12 @@
 
 namespace Modules\Payment\Gateways;
 
+use Exception;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Models\ProcessorModel;
+use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
 class Sberbank extends Gateway
@@ -15,6 +17,9 @@ class Sberbank extends Gateway
         return 'Sberbank';
     }
 
+    /**
+     * @throws Exception
+     */
     public function success($params)
     {
         $transaction_id = $params['mdOrder'];
@@ -22,7 +27,7 @@ class Sberbank extends Gateway
         if ($this->txn = OrderTransactionModel::objects()->get(['transaction_id' => $transaction_id])) {
             $transaction_response = $this->txn->transaction_response;
             $amount = $this->txn->transaction_amount * 100;
-            $data = "amount;$amount;mdOrder;{$this->txn->transaction_id};operation;{$params['operation']};orderNumber;{$transaction_response['uniqueOrderNumber']};status;{$params['status']};";
+            $data = "amount;$amount;mdOrder;{$this->txn->transaction_id};operation;approved;orderNumber;{$transaction_response['uniqueOrderNumber']};status;1;";
             $key = $this->txn->payment_method_model->frontend_processor->param03;
 
             $hmac = hash_hmac('sha256', $data, $key);
@@ -104,13 +109,15 @@ class Sberbank extends Gateway
         /** @var ProcessorModel $processor_model */
         $processor_model = $params['processor_model'];
         $this->gateway->setTestMode($processor_model->getTestMode());
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
         $this->result = $this->gateway->authorize(
             [
                 'orderNumber' => $params['orderNumber'],
                 'amount' => $params['amount'],
                 'returnUrl' => $params['returnUrl'],
-                'description' => $params['description'],
+                'description' => "$site->corporation. Заказ № {$params['order']->getOrderNumber()}",
                 'dynamicCallbackUrl' => $params['notifyUrl']
             ]
         )->setTwoStage(true)->setUserName($params['processor_model']->param01)->setPassword($params['processor_model']->param02)->send();

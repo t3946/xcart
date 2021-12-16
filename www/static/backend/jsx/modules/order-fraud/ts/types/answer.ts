@@ -29,5 +29,4 @@ export interface FAAnswer {
   manual_action: string;
   outcome: number;
   type: string;
-  coefficient: number;
 }
