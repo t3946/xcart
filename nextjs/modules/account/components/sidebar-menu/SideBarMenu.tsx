@@ -2,9 +2,9 @@ import React from "react";
 import Item from "@modules/account/components/sidebar-menu/Item";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import Styles from "@modules/account/components/sidebar-menu/Item.module.scss";
+import StylesItem from "@modules/account/components/sidebar-menu/Item.module.scss";
 import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordion";
-import cn from "classnames";
+import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.scss";
 
 const SideBarMenu: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);
@@ -44,7 +44,7 @@ const SideBarMenu: React.FC = () => {
   ];
 
   return (
-    <div className="sidebar-menu-wrapper">
+    <div className={Styles.sidebarMenuWrapper}>
       {menuItems.map((value: Record<any, any>, index) => {
         if (!value.routerItems) {
           return (
@@ -52,7 +52,7 @@ const SideBarMenu: React.FC = () => {
               to={value.to}
               label={value.label}
               badge={value.badge}
-              className={Styles.item_topLevel}
+              className={StylesItem.item_topLevel}
               onClick={value.onClick}
               key={index}
             />
@@ -64,7 +64,7 @@ const SideBarMenu: React.FC = () => {
             to={value.to}
             label={value.label}
             routerItems={value.routerItems}
-            classes={{ handlerClass: Styles.item_topLevel }}
+            classes={{ handlerClass: StylesItem.item_topLevel }}
             key={index}
           />
         );
