@@ -55,7 +55,7 @@ const LoginButtonTablet: React.FC<any> = () => {
         ref={ref}
         className={classNames(
           className,
-          "account-hat-dropdown-menu col-12 p-0 rounded-0"
+          "account-hat-dropdown-menu col-12 p-0 rounded-0 border-0"
         )}
         aria-labelledby={labeledBy}
       >

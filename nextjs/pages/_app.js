@@ -9,7 +9,7 @@ import MainComponent from "@modules/components/MainComponent";
 
 function MyApp({ Component, pageProps, state }) {
   let store;
-  
+
   if (process.browser === false) {
     store = getServerStore(state);
   } else {

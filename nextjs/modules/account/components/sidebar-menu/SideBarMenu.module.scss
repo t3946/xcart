@@ -6,7 +6,7 @@
   overflow-y: scroll;
 
   @include breakpoint(md) {
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 81px);
     overflow-y: scroll;
   }
 

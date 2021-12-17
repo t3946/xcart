@@ -30,12 +30,13 @@
   position: relative;
   z-index: 3;
   min-width: 320px;
+  box-shadow: 0 1px #c4c4c4;
 }
 
 .topHeader {
-  background-color: white;
+  background-color: $white;
 }
 
 .header_shadowPanelVisible {
-  border-bottom-color: #ffffff;
+  border-bottom-color: $white;
 }
