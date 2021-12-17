@@ -22,7 +22,6 @@ $view_all_height: pxToRem(22);
   line-height: $view_all_height;
   height: $view_all_height;
   text-align: center;
-  
 
   &:hover {
     color: #ffffff;
@@ -64,12 +63,17 @@ $view_all_height: pxToRem(22);
 .categoryMenuLink_selected {
   text-decoration: underline;
   background-color: #dfe5e8;
+  &:hover {
+    color: #000000;
+  }
 }
 
 .categoryMenuLink_topLevel {
   display: block;
   line-height: pxToRem(16);
   padding: pxToRem(8) pxToRem(10);
+  font-weight: bold;
+  font-size: pxToRem(14);
 }
 
 .categoryViewAll {
@@ -132,7 +136,7 @@ $view_all_height: pxToRem(22);
   column-gap: pxToRem(80);
   background-color: #ffffff;
   height: 100%;
-  padding: 0.5625rem 1.25rem 1.375rem;
+  padding: 0.5625rem 1.25rem 1.375rem 47px;
 }
 
 .categoryDetailed__groupLinksColumn {

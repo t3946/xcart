@@ -7,6 +7,7 @@ import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Styles from "@modules/account/components/hat/DepartmentsMenu.module.scss";
 import ViewAllDepartmentsIcon from "@modules/icon/components/header/ViewAllDepartments";
+import { isMobile } from "react-device-detect";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
@@ -158,8 +159,18 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
           <a
             href={category.url}
             className={cn(linkClasses)}
+            onClick={(e) => {
+              console.log(selectedCategory !== category);
+              if (selectedCategory !== category) {
+                setSelectedCategory(category);
+                e.preventDefault();
+              }
+            }}
+            onTouchStart={(e) => {
+              e.preventDefault();
+            }}
             onMouseOver={() => {
-              setSelectedCategory(category);
+              !isMobile && setSelectedCategory(category);
             }}
           >
             {category.name}
