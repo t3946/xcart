@@ -2,7 +2,7 @@
 
 .sidebarMenuWrapper {
   position: sticky;
-  top: pxToRem(50);
+  top: pxToRem(70);
   overflow-y: scroll;
 
   @include breakpoint(md) {
