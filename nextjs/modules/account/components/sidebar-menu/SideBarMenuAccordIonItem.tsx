@@ -1,10 +1,12 @@
 //todo: исправить опечатку в имени файла
 import React from "react";
 import { SidebarItem } from "@modules/account/ts/types/sidebar-item.type";
-import Link from "next/link";
 import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 import { useDispatch } from "react-redux";
 import Badge from "@modules/components/Badge/Badge";
+import ActiveLink from "@modules/components/ActiveLink/ActiveLink";
+import cn from "classnames";
+import Style from "@modules/account/components/sidebar-menu/SideBarMenuAccordIonItem.module.scss";
 
 export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
   to,
@@ -13,24 +15,29 @@ export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
 }) => {
   const dispatch = useDispatch();
 
-  function badgeTemplate(): any {
-    if (!badge) {
-      return;
-    }
-
-    return <Badge className={"sidebar-menu-item_badge"} text={badge} />;
-  }
-
-  //todo: у старого роутера был класс activeClassName="sidebar-menu-item__accordion-current"
   return (
-    <Link href={to}>
-      <a
-        className="sidebar-menu-item sidebar-menu-item__accordion text-decoration-none"
-        onClick={() => dispatch(hideAllMenu())}
-      >
-        {label}
-        {badgeTemplate()}
-      </a>
-    </Link>
+    <ActiveLink href={to}>
+      {(isActive) => {
+        const classes = [
+          "sidebar-menu-item",
+          "sidebar-menu-item__accordion",
+          "text-decoration-none",
+          {
+            [Style.item_active]: isActive,
+            "cursor-default": isActive,
+          },
+        ];
+
+        return (
+          <a className={cn(classes)} onClick={() => dispatch(hideAllMenu())}>
+            {label}
+
+            {!!badge && (
+              <Badge className={"sidebar-menu-item_badge"} text={badge} />
+            )}
+          </a>
+        );
+      }}
+    </ActiveLink>
   );
 };
