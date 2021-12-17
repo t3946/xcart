@@ -164,7 +164,7 @@ const PublicProfile = (): any => {
       setAvatarDataUrl(dataUrl);
     }
 
-    if (isOpenAvatarEditor) {
+    if (isOpenAvatarEditor && !show) {
       return (
         <AvatarEditor
           imageRaw={avatarRaw}
@@ -428,7 +428,7 @@ const PublicProfile = (): any => {
                     </div>
                   </RBForm.Group>
 
-                  {avatarEditorTemplate()}
+                  {!errors.avatar_image && avatarEditorTemplate()}
                 </div>
               </div>
 
