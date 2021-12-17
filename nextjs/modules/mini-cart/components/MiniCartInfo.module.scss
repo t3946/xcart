@@ -29,19 +29,22 @@
   }
 }
 
+$leftOffset: 3;
+$rightOffset: 8;
+
 .icon {
   width: pxToRem(43);
-  margin: 0 pxToRem(-8) 0 0;
+  margin: 0 pxToRem(-$rightOffset) 0 pxToRem(-$leftOffset);
   color: #0d2431;
 }
 
 .counter {
   font-size: pxToRem(19);
-  padding: 0 pxToRem(8) 0 0;
+  padding: 0 pxToRem($rightOffset) 0 pxToRem($leftOffset);
 }
 
 .counter__quantity {
-  left: 0;
+  left: pxToRem($leftOffset);
   right: pxToRem(8);
   top: pxToRem(-5);
 }

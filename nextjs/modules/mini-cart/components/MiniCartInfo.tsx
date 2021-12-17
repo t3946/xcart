@@ -26,17 +26,17 @@ const MiniCartInfo: React.FC = () => {
         "mini-cart-button-text__not-empty": cart.quantity,
       },
     ],
-    counter: ["position-relative", "d-flex", Styles.counter],
-    quantity: ["position-absolute", "d-block", Styles.counter__quantity],
+    counter: ["position-relative", Styles.counter],
+    quantity: ["position-absolute", Styles.counter__quantity],
   };
 
   return (
     <div className={Styles.miniCart} ref={buttonRef}>
       <a className={cn(classes.button)} href={routes["cart:list"]}>
-        <span className={cn(classes.counter)}>
+        <div className={cn(classes.counter)}>
           <span className={cn(classes.quantity)}>{cart.quantity}</span>
-          <IconCart className={Styles.icon} />
-        </span>
+          <IconCart className={[Styles.icon, "d-block"]} />
+        </div>
 
         <span className={cn(classes.text)}>Cart</span>
       </a>
