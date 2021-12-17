@@ -38,11 +38,10 @@ const HatSearchLine: React.FC = (): any => {
     buttonSearch: [
       Styles.buttonSearch,
       Styles.searchForm__buttonSearch,
-      "d-flex",
       "align-items-center",
       "justify-content-center",
     ],
-    inputSearch: [inputSuggestionsClass, Styles.inputSearch],
+    inputSearch: ["rounded-0", inputSuggestionsClass, Styles.inputSearch],
     menuArrowIcon: [
       "ms-2",
       Styles.triangleIcon,
@@ -88,7 +87,7 @@ const HatSearchLine: React.FC = (): any => {
           </div>
 
           <button className={cn(classes.buttonSearch)}>
-            <Magnifier />
+            <Magnifier className={"d-block"} />
           </button>
         </form>
       </div>
