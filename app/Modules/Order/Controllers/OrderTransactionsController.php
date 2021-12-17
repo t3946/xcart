@@ -24,7 +24,7 @@ class OrderTransactionsController extends PrototypeAdminController
 {
     public function transaction_process($order_id, $mode, $id)
     {
-        OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, OrderTransactionStore::$gatewayMethods[$mode]['order_log']);
+        OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_XCART, OrderTransactionStore::$gatewayMethods[$mode]['order_log']);
 
         /** @var OrderModel $orderModel */
         if ($orderModel = OrderModel::objects()->get(['orderid' => $order_id])) {
@@ -64,7 +64,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
         OrderLogModel::createLog(
             $order_id,
-            OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+            OrderLogModel::LOG_TYPE_XCART,
             OrderTransactionStore::$gatewayMethods['authorize']['order_log']
         );
 
@@ -80,7 +80,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
                     OrderLogModel::createLog(
                         $order_id,
-                        OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                        OrderLogModel::LOG_TYPE_XCART,
                         $first_error_text = 'Error: First transaction in order exception'
                     );
 
@@ -186,7 +186,7 @@ class OrderTransactionsController extends PrototypeAdminController
 
             OrderTransactionStore::lookupSelf($model);
 
-            OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
+            OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_XCART, $order_log);
 
             Xcart::app()->request->redirect("/admin/order.php?orderid=$orderModel->orderid&tab=y#main_order_tabs-VT");
         }

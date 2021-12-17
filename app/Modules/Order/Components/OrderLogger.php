@@ -30,7 +30,25 @@ class OrderLogger
     }
 
     /**
-     * Save order log massages in one record
+     * Get all log massages
+     */
+    public function getMessages(): array
+    {
+        $result = [];
+        foreach($this->messages as $user_messages) {
+            foreach ($user_messages as $messages) {
+                foreach (array_keys($messages) as $type) {
+                    foreach ($messages[$type] as $message) {
+                        $result[] = $message;
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Save order log massages in one record by order, user, type
      */
     public function save(): void
     {

@@ -193,7 +193,7 @@ class OrderHelper
 
                         OrderLogModel::createLog(
                             $model->orderid,
-                            OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                            OrderLogModel::LOG_TYPE_XCART,
                             $log
                         );
                     }

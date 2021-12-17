@@ -1463,7 +1463,7 @@ if ($mode === 'ref_notify')
                         $error_message = 'Refund error. ' . $e->getMessage();
                     }
                     if ($error_message) {
-                        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $error_message);
+                        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $error_message);
                         $top_message = [
                             'content' => $error_message,
                             'type' => 'E',
@@ -1474,7 +1474,7 @@ if ($mode === 'ref_notify')
                     }
                 } else {
                     $error_message = 'This transaction(s) has already been refunded.';
-                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $error_message);
+                    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $error_message);
                 }
             }
         }

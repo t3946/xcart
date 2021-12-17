@@ -57,7 +57,7 @@ class TransactionLog extends Data
     {
         if (!empty($this->aLogLines))
         {
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $this->getLogText());
+            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $this->getLogText());
         }
     }
 

@@ -175,7 +175,7 @@ class OrderTransactionStore extends BaseStore
                 'transaction_currency' => isset($result['amount']) ? $result['amount']['currency'] : $this->params['currency'],
                 'transaction_total' => isset($result['amount']) ? $result['amount']['total'] : $this->params['amount'],
                 'login' => Xcart::app()->user->login,
-                'transaction_log' => array_merge($result, ['xcart_log' => nl2br(implode("\n", Xcart::app()->order_logger->messages))])
+                'transaction_log' => array_merge($result, ['xcart_log' => Xcart::app()->order_logger->getMessages()])
             ]
         );
 
