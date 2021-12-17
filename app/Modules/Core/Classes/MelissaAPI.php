@@ -30,10 +30,10 @@ class MelissaAPI
                 'country' => $attr['country'],
                 'zipcode' => $attr['zipcode'],
             ]);
-            if (isset($result['MAK'])) {
+            if (isset($result['AddressLine1'])) {
                 $this->melissa_address[$key]['address'] = $result;
-                $owner_info = $this->fetchMelissaAddressOwner($result['MAK']);
-                if (!isset($owner_info['Value1'])) {
+                $owner_info = $this->fetchMelissaAddressOwner($attr);
+                if (isset($owner_info['Address'])) {
                     $this->melissa_address[$key]['owner'] = $owner_info;
                 }
             } else {
@@ -46,10 +46,10 @@ class MelissaAPI
      * @param array $address - адрес с параметрами: address, city, state, country, zipcode
      * @param array $many_address - ключи куда будут записываться адреса, напр: [billing, shipping]
      */
-    public function setOneMelissaAddressForMany(array $address, array $many_address)
+    public function setOneMelissaAddressForMany(array $address, array $many_address): void
     {
         $result = $this->fetchMelissaAddress($address);
-        $owner_info = $this->fetchMelissaAddressOwner($result['MelissaAddressKey']);
+        $owner_info = $this->fetchMelissaAddressOwner($address);
         foreach ($many_address as $name_address) {
             if (!isset($result['Value1'])) {
                 $this->melissa_address[$name_address]['address'] = $result;
@@ -126,7 +126,7 @@ class MelissaAPI
     private function fetchMelissaAddress($address)
     {
         $params = [
-            'freeForm' => self::correct("{$address['address']} {$address['city']} {$address['state']} {$address['country']} {$address['zipcode']}"),
+            'freeForm' => $this->correct("{$address['address']} {$address['city']} {$address['state']} {$address['zipcode']}"),
             'fmt' => 'json',
             'id' => $this->melissa_key
         ];
@@ -180,10 +180,12 @@ class MelissaAPI
         //throw new \Exception('Melissa has no answer');
     }
 
-    private function fetchMelissaAddressOwner($mak)
+    private function fetchMelissaAddressOwner(array $ar_address)
     {
         $params = [
-            'mak' => $mak,
+            'address' => $ar_address['address'],
+            'zip' => $ar_address['zipcode'],
+            'city' => $ar_address['city'],
             'fmt' => 'json',
             'id' => $this->melissa_key
         ];

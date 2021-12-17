@@ -21,6 +21,7 @@ use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Helpers\PhoneHelper;
 use Modules\User\Models\UserModel;
+use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
@@ -134,6 +135,9 @@ class OrderModel extends Model
 
     public static function getFields(): array
     {
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $site_lang_id = $site->lang->lang_id;
         return [
             'orderid' => [
                 'class' => AutoField::class,
@@ -267,6 +271,7 @@ class OrderModel extends Model
                 'modelClass' => OrderStatusNotificationModel::class,
                 'link' => ['cb_status' => 'code'],
                 'sqlType' => Types::STRING,
+                'extra' => ['lang_id' => $site_lang_id]
             ],
             'site' => [
                 'field' => 'storefrontid',

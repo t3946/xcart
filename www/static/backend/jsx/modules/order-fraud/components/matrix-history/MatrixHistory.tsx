@@ -9,11 +9,11 @@ export const MatrixHistory: React.FC<MatrixHistory> = ({ historyColumn }) => {
   return (
     <table border={1}>
       <tr className="history-header">
-        <th>Code</th>
+        <th style={{ width: 70 }}>Code</th>
         <th style={{ width: 140 }}>Type</th>
         <th style={{ width: 140 }}>Provided</th>
         <th style={{ width: 140 }}>Inferred from [Type]</th>
-        <th>Value</th>
+        <th style={{ width: 400 }}>Value</th>
         <th style={{ width: 90 }}>Source type</th>
         <th>Inferred by [Source]</th>
       </tr>

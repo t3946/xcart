@@ -79,8 +79,9 @@ class FraudFAQuestionModel extends Model
     public function getScore(OrderModel $order, FraudCheckFAHelper $helper): ?array
     {
         if ($result = $this->getMethodResult($order, $helper)) {
-            [$weight, $info, $outcome] = $result;
-            return [round($weight * $outcome, 2), $info, $outcome];
+            [$weight, $info, $coefficient] = $result;
+            $outcome = round($coefficient /6, 2);
+            return [round($coefficient/6 * $weight, 2), $info, $outcome];
         }
         return null;
     }

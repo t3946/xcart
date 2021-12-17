@@ -135,7 +135,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               direction="row"
               justifyContent="center"
             >
-              <AddressesMap width={596} />
+              <AddressesMap width={740} />
               <Box>
                 <Typography noWrap={true} variant="h6" align="left">
                   Comparison of two addresses: Matching degrees
