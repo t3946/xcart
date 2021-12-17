@@ -25,8 +25,8 @@ export const AddressesMap: React.FC<MapProps> = ({ width }) => {
       // bounds={addressesLocation.map((add) => [add.longitude, add.latitude])}
       zoom={4}
       scrollWheelZoom={false}
-      center={[39.09027262207749, -102.02568326959347]}
-      style={{ height: 369, width, zIndex: 0 }}
+      center={[39.09027262207749, -95.02568326959347]}
+      style={{ height: 389, width, zIndex: 0 }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

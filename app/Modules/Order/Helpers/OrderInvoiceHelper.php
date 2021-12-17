@@ -12,8 +12,10 @@ class OrderInvoiceHelper
 {
     public static function sendOrderStatusNotification(OrderModel $order, bool $send_copy = true, $status = null): void
     {
+        /** @var SiteModel $site */
+        $site = Xcart::app()->getModule('Sites')->getSite();
         if ($status) {
-            $notification = OrderStatusNotificationModel::objects()->get(['code' => $status]);
+            $notification = OrderStatusNotificationModel::objects()->get(['code' => $status, 'lang_id' => $site->lang->lang_id]);
             $xcartLabel = 'order-status-changed';
         } else {
             $notification = $order->notification;
@@ -22,8 +24,6 @@ class OrderInvoiceHelper
 
         if ($notification) {
 
-            /** @var SiteModel $site */
-            $site = Xcart::app()->getModule('Sites')->getSite();
             $config = $site->getGlobalConfig();
 
             $cs_email = $config['orders_department'] ?? 'orders@s3stores.com';

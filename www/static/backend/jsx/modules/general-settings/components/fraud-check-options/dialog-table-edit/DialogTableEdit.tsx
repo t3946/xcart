@@ -1,12 +1,4 @@
-import React, { Fragment } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@material-ui/core";
+import React from "react";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
@@ -14,6 +6,14 @@ import {
   changeFraudBaseQuestionData,
   changeFraudFAQuestionData,
 } from "@redux/actions/fraudSettingsActions";
+import Dialog from "@mui/material/Dialog";
+import {
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 interface DialogTableEdit {
   open: boolean;
@@ -47,8 +47,8 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
     onChangeTemplate({ ...template, [event.target.name]: event.target.value });
   };
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">
+    <Dialog maxWidth={"sm"} fullWidth open={open} onClose={onClose}>
+      <DialogTitle>
         Edit <b>{template.questionCode}</b> Fraud check question
       </DialogTitle>
       <DialogContent>

@@ -46,7 +46,8 @@ class FraudCheckFAHelper
     /** Устанавливает значения адреса для shipping, billing адресов из мелиссы **/
     public function fetchMelissaAddressList(): void
     {
-        if ($this->compareShippingBillingAddress() == 1) {
+        $outcome_addresses = round($this->compareShippingBillingAddress()/6, 2);
+        if ((int)$outcome_addresses === 1) {
             // Если shipping и billing адреса равны, то 1 запрос вместо 2
             $this->ob_melissa->setOneMelissaAddressForMany([
                 'address' => $this->order_model->b_address,
@@ -110,7 +111,7 @@ class FraudCheckFAHelper
     /* Address check */
     public function scoreBaseAddress(FraudFAQuestionModel $fraud): array
     {
-        $outcome = $this->compareShippingBillingAddress();
+        $coefficient = $this->compareShippingBillingAddress();
 
         $ar_s_address = self::getLinesAddress($this->order_model->s_address);
         $ar_b_address = self::getLinesAddress($this->order_model->b_address);
@@ -135,7 +136,7 @@ class FraudCheckFAHelper
             ],
         );
 
-        return [$fraud->weight, $info, $outcome];
+        return [$fraud->weight, $info, $coefficient];
     }
 
     private function compareShippingBillingAddress(): float
@@ -165,7 +166,7 @@ class FraudCheckFAHelper
     {
         $owner_info = $this->ob_melissa->melissa_address[$type_address]['owner'] ?? null;
         $info = $this->getNullDataInfo($fraud, $address_compare);
-        $outcome = 0;
+        $coefficient = 0;
         if (isset($owner_info, $address_compare)) {
             $zip = trim($owner_info['OwnerZip']);
             $zip = substr($zip, 0, 5);
@@ -181,9 +182,9 @@ class FraudCheckFAHelper
                 $address_compare,
                 $owner_address_info,
             );
-            $outcome = $this->compareAddress($address_compare, $owner_address_info);
+            $coefficient = $this->compareAddress($address_compare, $owner_address_info);
         }
-        return [$fraud->weight, $info, $outcome];
+        return [$fraud->weight, $info, $coefficient];
     }
 
     public static function getStringAddressByArray(?array $address): ?string
@@ -255,7 +256,7 @@ class FraudCheckFAHelper
 
     public function scorePhoneAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
     {
-        $outcome = 0;
+        $coefficient = 0;
         $info = $this->getNullDataInfo($fraud, $address_compare);
         if (!is_null($this->ob_melissa->phone_data)) {
             $state = $this->ob_melissa->phone_data['State'] ?? '';
@@ -273,15 +274,15 @@ class FraudCheckFAHelper
             ];
             if (!is_null($address_compare)) {
                 $info = $this->getInfoAddress($fraud, $address_compare, $phone_address);
-                $outcome = $this->compareAddress($address_compare, $phone_address);
+                $coefficient = $this->compareAddress($address_compare, $phone_address);
             }
         }
-        return [$fraud->weight, $info, $outcome];
+        return [$fraud->weight, $info, $coefficient];
     }
 
     public function scoreIpAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
     {
-        $outcome = 0;
+        $coefficient = 0;
         $info = $this->getNullDataInfo($fraud, $address_compare);
         if (!is_null($this->ob_melissa->ip_data)) {
             /** @var CountryModel $country_model */
@@ -297,11 +298,11 @@ class FraudCheckFAHelper
             ];
             if ($address_compare) {
                 $info = $this->getInfoAddress($fraud, $address_compare, $email_address);
-                $outcome = $this->compareAddress($address_compare, $email_address);
+                $coefficient = $this->compareAddress($address_compare, $email_address);
             }
         }
 
-        return [$fraud->weight, $info, $outcome];
+        return [$fraud->weight, $info, $coefficient];
     }
 
     /** Сравнивает два адреса по атрибутам, если они одинаковые то добавит значение к коэффициенту.
@@ -331,7 +332,7 @@ class FraudCheckFAHelper
                 $coefficient++;
             }
         }
-        return round($coefficient / 6, 2);
+        return $coefficient;
     }
 
     /* Full name check */
