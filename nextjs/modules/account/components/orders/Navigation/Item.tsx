@@ -1,8 +1,8 @@
 import React from "react";
 import classnames from "classnames";
 import Link from "next/link";
-import Badge from "@modules/account/components/orders/Navigation/Badge";
-import Styles from "@modules/account/components/orders/Navigation/Navigation.module.scss"
+import Badge from "@modules/components/Badge/Badge";
+import Styles from "@modules/account/components/orders/Navigation/Navigation.module.scss";
 
 interface IProps {
   text: string;

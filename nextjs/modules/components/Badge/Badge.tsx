@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import Styles from "@modules/account/components/orders/Navigation/Badge.module.scss";
+import Styles from "@modules/components/Badge/Badge.module.scss";
 
 interface IProps {
   text?: string | number;

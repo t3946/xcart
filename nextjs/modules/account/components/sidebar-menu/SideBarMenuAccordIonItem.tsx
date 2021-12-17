@@ -4,6 +4,7 @@ import { SidebarItem } from "@modules/account/ts/types/sidebar-item.type";
 import Link from "next/link";
 import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 import { useDispatch } from "react-redux";
+import Badge from "@modules/components/Badge/Badge";
 
 export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
   to,
@@ -17,11 +18,7 @@ export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
       return;
     }
 
-    return (
-      <span className="sidebar-badge sidebar-menu-item_badge d-flex align-items-center justify-content-center rounded-pill fw-bold">
-        {badge}
-      </span>
-    );
+    return <Badge className={"sidebar-menu-item_badge"} text={badge} />;
   }
 
   //todo: у старого роутера был класс activeClassName="sidebar-menu-item__accordion-current"
