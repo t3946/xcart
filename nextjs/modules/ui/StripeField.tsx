@@ -19,14 +19,12 @@ interface IProps extends CardElementProps {
 const StripeField: React.FC<IProps> = function (props: IProps) {
   const stripe = useStripe();
   const elements = useElements();
-  const cardRef = React.useRef<any>();
   const defaultProps = {
     options: {
       classes: {
         base: Styles.stripeElement,
       },
     },
-    ref: cardRef,
   };
 
   const cardElementProps = _merge(defaultProps);
@@ -55,19 +53,12 @@ const StripeField: React.FC<IProps> = function (props: IProps) {
   });
 
   return (
-    <div
-      className={cn(classes.stripeWrapper)}
-      onClick={() => {
-        if (!cardRef.current) {
-          return;
-        }
-        cardRef.current.base.click();
-      }}
-    >
+    <div className={cn(classes.stripeWrapper)}>
       <CardElement
         {...cardElementProps}
         onChange={(e) => {
           const errorMessage = e.error ? e.error.message : "";
+
           props.setError(errorMessage);
         }}
         onReady={props.onReady}

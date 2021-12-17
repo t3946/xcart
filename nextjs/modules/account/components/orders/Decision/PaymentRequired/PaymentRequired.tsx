@@ -14,6 +14,7 @@ import { Form as RBForm } from "react-bootstrap";
 import cn from "classnames";
 import SliderSwitchButton from "@modules/ui/SliderSwitchButton";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import DecisionsInterface from "@modules/account/ts/types/decision";
 
 interface IStripeProps extends CardElementProps {
   afterInit: (e: any) => any;
@@ -166,7 +167,12 @@ const Checkout: React.FC = function () {
   );
 };
 
-const PaymentRequired: React.FC = function () {
+interface IProps {
+  onChange: (decision: DecisionsInterface) => any;
+  decision: DecisionsInterface;
+}
+
+const PaymentRequired: React.FC<IProps> = function (props: IProps) {
   const publicKey = useSelectorAccount((e) => e.config.stripePublicKey);
   const stripePromise = loadStripe(publicKey, {
     locale: "en",

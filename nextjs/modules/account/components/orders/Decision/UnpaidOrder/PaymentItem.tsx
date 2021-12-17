@@ -8,15 +8,23 @@ import Accordion from "react-bootstrap/Accordion";
 interface IProps {
   value: string;
   checkedValue: string;
-  onChange: (e) => void;
+  onChange: (e: any) => void;
   paymentName: string;
   caption: string;
   children?: React.ReactNode;
+  fieldName: string;
 }
 
 const PaymentItem: React.FC<IProps> = (props: IProps) => {
-  const { value, checkedValue, onChange, paymentName, caption, children } =
-    props;
+  const {
+    value,
+    checkedValue,
+    onChange,
+    paymentName,
+    caption,
+    children,
+    fieldName,
+  } = props;
 
   return (
     <div className={Styles.paymentItem}>
@@ -32,6 +40,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
         ])}
       >
         <RadioButtonName
+          name={fieldName}
           value={value}
           checkedValue={checkedValue}
           onChange={onChange}

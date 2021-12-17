@@ -13,8 +13,10 @@ use Xcart\App\Orm\Model;
 
 class DecisionModel extends Model
 {
+    //license types enumerating
     public const DECISION_TYPE_ESTIMATED_TIME_ARRIVAL = 'eta';
     public const DECISION_LICENSE_REQUIRED = 'license';
+    public const DECISION_PAYMENT_REQUIRED = 'payment';
 
     public static function tableName()
     {

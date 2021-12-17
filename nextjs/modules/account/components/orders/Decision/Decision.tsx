@@ -6,6 +6,7 @@ import UnpaidOrder from "@modules/account/components/orders/Decision/UnpaidOrder
 import SendingCheck from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck";
 import IncreaseInShippingCharge from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge";
 import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
+import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
 import EstimatedTimeArrival from "@modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
@@ -50,10 +51,11 @@ const Decision: React.FC = (props) => {
             return <EstimatedTimeArrival {...props} />;
           case "license":
             return <LicenseRequire {...props} />;
+          case "payment":
+            return <UnpaidOrder {...props} />;
         }
       })()}
 
-      {/* <PaymentRequired /> */}
       {/*<UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />*/}
       {/*<SendingCheck*/}
       {/*  firstAddress={{*/}

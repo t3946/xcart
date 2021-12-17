@@ -2,13 +2,7 @@ import React from "react";
 import cn from "classnames";
 import PaymentItem from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem";
 import PayByCardForm from "@modules/account/components/orders/Decision/UnpaidOrder/PayByCardForm";
-import {
-  Accordion,
-  Card,
-  useAccordionButton,
-  AccordionContext,
-  AccordionCollapseProps,
-} from "react-bootstrap";
+import { Accordion } from "react-bootstrap";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import unpaidOrderStyles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
 import paymentItemStyles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem.module.scss";
@@ -16,36 +10,30 @@ import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/Paym
 
 interface IProps {
   checkedValue: string;
-  onChange: (e) => void;
-  onChangeDecision: (decision: DecisionsInterface) => any;
+  fieldName: string;
+  onChange: (e: any) => void;
   decision: DecisionsInterface;
-  classes: any;
-}
-
-function CustomToggle({ children, eventKey, callback }) {
-  const { activeEventKey } = React.useContext(AccordionContext);
-
-  const decoratedOnClick = useAccordionButton(
-    eventKey,
-    () => callback && callback(eventKey)
-  );
-
-  const isCurrentEventKey = activeEventKey === eventKey;
-
-  return (
-    <button
-      type="button"
-      style={{ backgroundColor: isCurrentEventKey ? "pink" : "lavender" }}
-      onClick={decoratedOnClick}
-    >
-      {children}
-    </button>
-  );
+  classes?: any;
+  isSubmitting: boolean;
+  errors: Record<any, any>;
+  values: Record<any, any>;
+  touched: Record<any, any>;
+  setCreatePaymentMethod: any;
 }
 
 const PaymentSelection: React.FC<IProps> = (props: IProps) => {
-  const { checkedValue, onChange, onChangeDecision, decision } = props;
+  const {
+    checkedValue,
+    onChange,
+    fieldName,
+    isSubmitting,
+    errors,
+    values,
+    touched,
+    setCreatePaymentMethod,
+  } = props;
   const classes = [Styles.paymentSelector, props.classes];
+
   return (
     <Accordion
       className={cn(["mb-4", "mb-md-5", classes])}
@@ -59,15 +47,21 @@ const PaymentSelection: React.FC<IProps> = (props: IProps) => {
         caption={
           "Secure Visa, MasterCard, and AmEx payment through our secure server."
         }
+        fieldName={fieldName}
       >
         <PayByCardForm
-          onChangeDecision={onChangeDecision}
-          decision={decision}
+          isSubmitting={isSubmitting}
+          errors={errors}
+          values={values}
+          touched={touched}
+          onChange={onChange}
+          setCreatePaymentMethod={setCreatePaymentMethod}
         />
       </PaymentItem>
 
       <PaymentItem
         value={"paypal"}
+        fieldName={fieldName}
         checkedValue={checkedValue}
         onChange={onChange}
         paymentName={"Pay by PayPal Balance"}

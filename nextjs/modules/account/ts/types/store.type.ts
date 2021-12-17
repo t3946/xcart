@@ -147,6 +147,7 @@ interface StoreInterface {
       decisions: DecisionsInterface[];
     };
   };
+  config: Record<any, any>;
 }
 
 export default StoreInterface;

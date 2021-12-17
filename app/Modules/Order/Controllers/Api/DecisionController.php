@@ -134,6 +134,59 @@ class DecisionController extends Controller
         ]);
     }
 
+    public function makePaymentRequiredDecisionsAction()
+    {
+        $decision = DecisionModel::objects()->get(['decision_id' => $_POST['decision_id']]);
+
+        //already solved
+        if ($decision->solved === true) {
+            return;
+        }
+
+        //incorrect decision
+        if ($decision->type !== DecisionModel::DECISION_PAYMENT_REQUIRED) {
+            return;
+        }
+
+        $form = new LicenseRequiredForm();
+        $form->populate($_POST, $_FILES);
+
+        if (!$form->isValid()) {
+            return;
+        }
+
+        $files = $_FILES['LicenseRequiredForm'];
+        $extension = pathinfo($files['name']['license'])['extension'];
+
+        //unsupported file
+        if (!in_array($extension, self::SUPPORTED_LICENSE_FORMATS)) {
+            return;
+        }
+
+        $uploaded_file = new UploadedFile(
+            $files['tmp_name']['license'],
+            $files['name']['license'],
+            $files['type']['license'],
+            (int)$files['size']['license'],
+            (int)$files['error']['license'],
+        );
+
+        $decision_license =  new DecisionLicenseModel([
+            'path' => $uploaded_file,
+            'decision_id' => $_POST['decision_id'],
+        ]);
+
+        $decision_license->save();
+        $decision->setAttribute('solved', '1');
+        $decision->update();
+
+        $user = Xcart::app()->auth->getUser(true);
+        $this->jsonResponse([
+            'notSolved' => DecisionController::getDecisions($user['user_id'], 0, self::LIMIT_SELECT_DECISIONS, 0, ['-created']),
+            'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
+        ]);
+    }
+
     public function makeDecisionsAction()
     {
         //todo: this method only for eta decision

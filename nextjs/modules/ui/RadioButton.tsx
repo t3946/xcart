@@ -26,6 +26,7 @@ const RadioButton: React.FC<IProps> = (props: IProps) => {
   return (
     <>
       <div className={cn(classes)} />
+
       <input
         type="radio"
         value={value}
@@ -33,6 +34,7 @@ const RadioButton: React.FC<IProps> = (props: IProps) => {
         onChange={onChange}
         name={name}
         className={"d-none"}
+        checked={checkedValue === value}
       />
     </>
   );

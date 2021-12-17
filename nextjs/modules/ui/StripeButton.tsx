@@ -5,6 +5,7 @@ import {
 } from "@stripe/react-stripe-js";
 import _merge from "lodash/merge";
 import cn from "classnames";
+
 interface IProps {
   payOptions?: {
     country: string;
@@ -16,7 +17,7 @@ interface IProps {
 const StripeButton: React.FC<IProps> = (props: IProps) => {
   const clientSecret = "secret_key";
   const stripe = useStripe();
-  const [paymentRequest, setPaymentRequest] = React.useState(null);
+  const [paymentRequest, setPaymentRequest] = React.useState<any>(null);
   const defaultOptions = {
     country: "US",
     currency: "usd",
@@ -28,11 +29,12 @@ const StripeButton: React.FC<IProps> = (props: IProps) => {
     requestPayerEmail: true,
   };
   const paymentRequestOptions = _merge(defaultOptions, props.payOptions);
+
   React.useEffect(() => {
     if (stripe) {
       const pr = stripe.paymentRequest(paymentRequestOptions);
+
       pr.canMakePayment().then((result) => {
-        console.log({ result, pr });
         if (result) {
           setPaymentRequest(pr);
         }
@@ -74,7 +76,7 @@ const StripeButton: React.FC<IProps> = (props: IProps) => {
     );
   }
 
-  return (<></>);
+  return null;
 };
 
 export default StripeButton;

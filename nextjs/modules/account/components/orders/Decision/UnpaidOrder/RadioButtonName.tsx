@@ -6,18 +6,17 @@ import React from "react";
 interface IProps {
   value: string;
   checkedValue: string;
-  onChange: (e) => void;
+  onChange: (e: any) => void;
   children: React.ReactNode;
+  name: string;
 }
 const RadioButtonName = (props: IProps) => {
-  const { value, checkedValue, onChange, children } = props;
+  const { value, checkedValue, onChange, children, name } = props;
 
   return (
-    <div
-      className={cn(["d-flex align-items-center", Styles.paymentItemName])}
-    >
+    <div className={cn(["d-flex align-items-center", Styles.paymentItemName])}>
       <RadioButton
-        name={"payment"}
+        name={name}
         value={value}
         checkedValue={checkedValue}
         disabled={false}
