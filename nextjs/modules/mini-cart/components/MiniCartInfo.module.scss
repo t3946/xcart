@@ -1,10 +1,10 @@
 @import "styles/utils/Utils.module";
 
 .miniCart {
-  background-color: #ffb400;
 }
 
 .button {
+  $bgColor: #ffb400;
   display: block;
   color: #0a0a0a;
   text-decoration: none;
@@ -14,6 +14,15 @@
   height: pxToRem(50);
   font-size: pxToRem(16);
   font-weight: 700;
+  background-color: $bgColor;
+
+  &:hover {
+    background-color: darken($bgColor, 2%);
+  }
+
+  &:active {
+    background-color: darken($bgColor, 4%);
+  }
 
   &:hover, &:focus {
     color: currentColor;

@@ -43,6 +43,7 @@ const LoginButtonDesktop: React.FC = function () {
       "justify-content-center",
       "position-relative",
       "cursor-pointer",
+      "text-decoration-none",
     ],
 
     username: ["hat-login-button-username"],
