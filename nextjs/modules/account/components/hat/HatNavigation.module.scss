@@ -19,9 +19,23 @@
 .menuIcon {
   width: 1.5625rem;
   height: 1.1875rem;
-  
+
   @include breakpoint(md) {
     width: 2.4375rem;
     height: 1.875rem;
   }
+}
+
+.topHeaderMenu {
+  position: relative;
+  z-index: 3;
+  min-width: 320px;
+}
+
+.topHeader {
+  background-color: white;
+}
+
+.header_shadowPanelVisible {
+  border-bottom-color: #ffffff;
 }

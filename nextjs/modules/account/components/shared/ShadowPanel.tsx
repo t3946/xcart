@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
+import Styles from "@modules/account/components/shared/ShadowPanel.module.scss";
 
 const ShadowPanel = (): any => {
   const dispatch = useDispatch();
@@ -11,16 +12,6 @@ const ShadowPanel = (): any => {
 
   function clickHandler() {
     HideAllMenu(dispatch);
-  }
-
-  const topHeader = document.getElementById("top-header");
-
-  if (isVisible) {
-    document.body.style.overflowY = "hidden";
-    topHeader && topHeader.classList.add("header__shadow-panel-visible");
-  } else {
-    document.body.style.overflowY = "";
-    topHeader && topHeader.classList.remove("header__shadow-panel-visible");
   }
 
   const transitionFadeStyles = {
@@ -34,7 +25,7 @@ const ShadowPanel = (): any => {
 
   return (
     <TransitionFade show={isVisible} styles={transitionFadeStyles}>
-      <div className={"shadow-panel"} onClick={clickHandler} />
+      <div className={Styles.shadowPanel} onClick={clickHandler} />
     </TransitionFade>
   );
 };

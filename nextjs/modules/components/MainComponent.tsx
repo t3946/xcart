@@ -12,7 +12,7 @@ const MainComponent: React.FC = ({ children }) => {
   return (
     <div className={Styles.root}>
       <div
-        className={cn(Styles.account__mainWrapper, {
+        className={cn(Styles.account__mainWrapper, Styles.accountMainWrapper, {
           [Styles.accountMainWrapper__mainWrapperShifted]: isVisibleMobileMenu,
         })}
       >

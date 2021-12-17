@@ -14,7 +14,6 @@ const hideAllMenu = function (dispatch: (payload: any) => void): void {
   dispatch(setDepartmentsMenuMobileIsVisibleAction(false));
   dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
   dispatch(setVisibleShadowPanelAction(false));
-  dispatch(setVisibleShadowPanelAction(false));
   dispatch(setIsVisibleAction(false));
   dispatch(setMiniCartIsVisibleAction(false));
 };

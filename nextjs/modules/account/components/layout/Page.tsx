@@ -7,6 +7,7 @@ import MenuMobile from "@modules/account/components/hat/MenuMobile";
 import Snackbar from "@modules/account/components/snackbar/Snackbar";
 import BreadCrumbs from "@modules/account/components/bread-crumbs/BreadCrumbs";
 import _merge from "lodash/merge";
+import ShadowPanel from "@modules/account/components/shared/ShadowPanel";
 
 interface IProps {
   showBreadcrumbs?: boolean;
@@ -20,6 +21,7 @@ const Page: React.FC<IProps> = (props: IProps): any => {
 
   return (
     <>
+      <ShadowPanel />
       <Snackbar>
         <DepartmentsMenuMobile />
         <HatNavigation />
