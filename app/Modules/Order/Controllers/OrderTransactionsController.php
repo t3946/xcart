@@ -59,10 +59,14 @@ class OrderTransactionsController extends PrototypeAdminController
 
     public function authorise($order_id)
     {
-        $method = $transaction_model = null;
+        $transaction_model = null;
         $send_notification = false;
 
-        $order_log = OrderTransactionStore::$gatewayMethods['authorize']['order_log']."<br>";
+        OrderLogModel::createLog(
+            $order_id,
+            OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+            OrderTransactionStore::$gatewayMethods['authorize']['order_log']
+        );
 
         /** @var OrderModel $orderModel */
         if (isset($_POST['paypal_vt']) && $order_id && ($orderModel = OrderModel::objects()->get(['orderid' => $order_id]))) {
@@ -71,15 +75,18 @@ class OrderTransactionsController extends PrototypeAdminController
 
             $count = $orderModel->transactions->count();
 
-            if (!($isAllowed = PaymentHelper::isAuthorizeAllowed($orderModel, $count))) {
+            if (!(PaymentHelper::isAuthorizeAllowed($orderModel, $count))) {
                 if (!$count && (empty($AJAX_SUBMIT) || $AJAX_SUBMIT !== 'Y')) {
 
-                    $order_log .= $f_order = 'Error: First transaction in order exception';
-                    OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
+                    OrderLogModel::createLog(
+                        $order_id,
+                        OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                        $first_error_text = 'Error: First transaction in order exception'
+                    );
 
                     $top_message = [
                         'type' => 'E',
-                        'content' => $f_order
+                        'content' => $first_error_text
                     ];
 
                     Xcart::app()->request->session->add('top_message', $top_message);
@@ -104,29 +111,23 @@ class OrderTransactionsController extends PrototypeAdminController
             $transaction_model = $store->authorize();
 
             if ($transaction_model->transaction_status === OrderTransactionModel::STATUS_AUTHORIZED) {
-                [$o_log, $send_notification] = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                if ($o_log) {
-                    $order_log .= '<br />' . $o_log;
-                }
+
+                $send_notification = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
+
                 Xcart::app()->event->trigger('payment:authorize', ['model' => $orderModel, 'order_before' => $order_before, 'transaction' => $transaction_model]);
             }
 
             if ($send_notification) {
                 func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
             }
-
-
         }
-        OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_PAYMENT_PROCESS, $order_log);
 
         if (!$this->getRequest()->getIsAjax()) {
             Xcart::app()->request->redirect("/admin/order.php?orderid={$order_id}&tab=y#main_order_tabs-VT");
+        } elseif ($transaction_model && $transaction_model->id){
+            print("Authorized");
         } else {
-            if ($transaction_model && $transaction_model->id){
-                print("Authorized");
-            } else {
-                print("Failed");
-            }
+            print("Failed");
         }
     }
 

@@ -100,9 +100,13 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
                     $result = $orderTransaction->transaction_response;
 
-                    list ($o_log, $send_notification) = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
-                    $log .= "<br />Transaction:" . $orderTransaction->transaction_id;
-                    $log .= $o_log;
+                    OrderLogModel::createLog(
+                        $orderid,
+                        OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                        "Transaction:" . $orderTransaction->transaction_id
+                    );
+
+                    $send_notification = OrderHelper::changeOrderCBStatus($orderModel, OrderStatusModel::ORDER_STATUS_AUTHORIZED);
 
                     if (!$countTr && $send_notification) {
                         func_send_order_status_notification($orderModel->orderid, OrderStatusModel::ORDER_STATUS_AUTHORIZED, true);
@@ -116,7 +120,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
                         $orderTransaction->save();
                     }
 
-                    $log .= "<br/>{$result['name']}<br/>{$result['message']}";
+                    OrderLogModel::createLog(
+                        $orderid,
+                        OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                        "{$result['name']}<br/>{$result['message']}"
+                    );
 
                 }
                 $logStatus = $orderTransaction->transaction_status;
@@ -124,7 +132,11 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
 
 
         } catch (\Exception $e) {
-            $log .= "<br/>{$gw->getProcessorName()} Processing Error: {$e->getMessage()}";
+            OrderLogModel::createLog(
+                $orderid,
+                OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                "{$gw::getProcessorName()} Processing Error: {$e->getMessage()}"
+            );
             $logStatus = OrderTransactionModel::STATUS_FAILED;
         }
 

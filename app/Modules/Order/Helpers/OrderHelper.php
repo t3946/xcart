@@ -170,11 +170,10 @@ class OrderHelper
      * @param OrderModel $model
      * @param $status
      *
-     * @return array
+     * @return bool
      */
-    public static function changeOrderCBStatus(OrderModel $model, $status): array
+    public static function changeOrderCBStatus(OrderModel $model, $status): bool
     {
-        $log = null;
         $send = false;
         if ($model->groups) {
             /** @var OrderGroupModel $group */
@@ -189,7 +188,14 @@ class OrderHelper
                         OrderStatusModel::ORDER_STATUS_DECLINED,
                     ], true)) {
                     if ($group->cb_status !== $status) {
-                        $log = "<br/><b>{$group->manufacturer->code}:</b> cb_status: {$group->cb_status_model->name} -> " . OrderStatusModel::objects()->get(['code' => $status])->name;
+                        $log = "<b>{$group->manufacturer->code}:</b> cb_status: {$group->cb_status_model->name} -> " . OrderStatusModel::objects(
+                            )->get(['code' => $status])->name;
+
+                        OrderLogModel::createLog(
+                            $model->orderid,
+                            OrderLogModel::LOG_TYPE_PAYMENT_PROCESS,
+                            $log
+                        );
                     }
                     $send = true;
                     $group->cb_status = $status;
@@ -201,7 +207,7 @@ class OrderHelper
                 $model->save();
             }
         }
-        return [$log, $send];
+        return $send;
     }
 
     public static function cancelOrder($order_id)
