@@ -2,7 +2,9 @@ import { AnyAction } from "redux";
 import { shadowPanelInitialValue } from "@modules/account/ts/consts/store-initial-value";
 
 const ShadowPanelReducer = (
-  state: Record<any, any> = shadowPanelInitialValue,
+  state: Record<any, any> = {
+    isVisible: false,
+  },
   action: AnyAction
 ): any => {
   switch (action.type) {

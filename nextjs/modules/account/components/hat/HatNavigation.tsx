@@ -7,16 +7,21 @@ import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import AppData from "@utils/AppData";
 import Search from "@modules/icon/components/account/search/Search";
-import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import MenuIcon from "@modules/icon/components/header/Menu";
+import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
 
 const HatNavigation: React.FC = () => {
   const dispatch = useDispatch();
+  const isVisibleShadowPanel = useSelectorAccount(
+    (e: Record<any, any>) => e.shadowPanel.isVisible
+  );
   const cart = useSelectorAccount((e) => e.cart);
   const isVisibleMenu = useSelectorAccount(
     (e) => e.departmentsMenuMobile.isVisible
   );
+
   const classes = {
     navigationContainer: ["d-flex", Styles.navigationContainer],
   };
@@ -57,12 +62,13 @@ const HatNavigation: React.FC = () => {
   }
 
   return (
-    <div id="top-header-content">
-      <div id="top-header-menu">
+    <div className={Styles.topHeaderContent}>
+      <div className={Styles.topHeaderMenu}>
         <TopLine />
-
         <header
-          id="top-header"
+          className={cn(Styles.topHeader, {
+            [Styles.header_shadowPanelVisible]: isVisibleShadowPanel,
+          })}
           itemScope
           itemType="https://schema.org/WPHeader"
         >
@@ -79,9 +85,11 @@ const HatNavigation: React.FC = () => {
                   <a
                     href="#"
                     data-toggle="offCanvasLeft"
-                    className="mobile_menu middle-inline-block hamburger"
+                    className="d-flex"
                     onClick={toggleMobileDepartmentsMenu}
-                  />
+                  >
+                    <MenuIcon className={Styles.menuIcon} />
+                  </a>
                 </div>
 
                 <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">

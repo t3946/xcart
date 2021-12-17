@@ -29,9 +29,9 @@
   color: #ffffff;
   text-transform: capitalize;
   font-size: pxToRem(18);
-  z-index: 3;
+  z-index: 1;
   top: 0;
-  
+
   @include slideTransition(left, right, opacity);
 
   @include breakpoint(lg) {
@@ -75,7 +75,7 @@
   height: pxToRem(24);
   background: #ffffff;
   border-radius: pxToRem(13);
-  z-index: 3;
+  z-index: 1;
   box-shadow: 0 pxToRem(3) pxToRem(3) pxToRem(-1) rgba(0, 0, 0, 0.38);
 
   @include slideTransition(left);

@@ -1,11 +1,13 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import DepartmentsMenuMobile from "@modules/account/components/hat/DepartmentsMenuMobile";
 import HatNavigation from "@modules/account/components/hat/HatNavigation";
 import HatSearchLine from "@modules/account/components/hat/HatSearchLine";
 import MenuMobile from "@modules/account/components/hat/MenuMobile";
 import Snackbar from "@modules/account/components/snackbar/Snackbar";
 import BreadCrumbs from "@modules/account/components/bread-crumbs/BreadCrumbs";
 import _merge from "lodash/merge";
+import ShadowPanel from "@modules/account/components/shared/ShadowPanel";
 
 interface IProps {
   showBreadcrumbs?: boolean;
@@ -19,7 +21,9 @@ const Page: React.FC<IProps> = (props: IProps): any => {
 
   return (
     <>
+      <ShadowPanel />
       <Snackbar>
+        <DepartmentsMenuMobile />
         <HatNavigation />
         <HatSearchLine />
         <MenuMobile />
