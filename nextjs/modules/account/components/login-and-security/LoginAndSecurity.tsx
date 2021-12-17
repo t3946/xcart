@@ -106,7 +106,7 @@ const LoginAndSecurity = (): any => {
 
     for (const listItem of listItems) {
       items.push(
-        <div className="login-and-security-settings-item login-and-security-settings_item">
+        <div className="login-and-security-settings_item">
           <div className="login-and-security-settings-item-container">
             <div className={"login-and-security-settings-item-text"}>
               <b className="settings-item-title">{listItem.title}:</b>
@@ -164,19 +164,19 @@ const LoginAndSecurity = (): any => {
       <InnerPage
         beforePage={beforePage()}
         header={"Login & security"}
-        bodyClasses={"content-panel login-and-security-content-panel p-0"}
+        bodyClasses={"p-0"}
         footer={
           <button
             className={
               "admin-form-control form-button w-md-auto d-inline-block"
             }
-            onClick={() => router.push("/daschboard")}
+            onClick={() => router.push("/dashboard")}
           >
             done
           </button>
         }
       >
-         <GreyGrid items={settingsItemsTemplate()} />
+        <GreyGrid items={settingsItemsTemplate()} />
       </InnerPage>
     </>
   );

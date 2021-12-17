@@ -5,6 +5,10 @@
 
   @include breakpoint(md) {
     border: 1px solid #c4c4c4;
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 }
 

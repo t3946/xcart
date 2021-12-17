@@ -3,6 +3,15 @@
 .account__mainWrapper {
   position: relative;
   left: 0;
+  padding: 0 0 pxToRem(26) 0;
+
+  @include breakpoint(md) {
+    padding: 0 0 pxToRem(30) 0;
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 0 pxToRem(24) 0;
+  }
 }
 
 .accountMainWrapper {
