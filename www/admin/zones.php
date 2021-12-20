@@ -75,6 +75,8 @@ $zones[] = array("zone" => "AN", "title" => func_get_langvar_by_name("lbl_an"));
 if (!in_array($mode, array("add", "details", "delete", "rename", "clone")))
 	$mode = "";
 
+$single_mode = true;
+
 $provider_condition = ($single_mode ? "" : "AND provider='$login'");
 
 $zoneid = intval(@$zoneid);
@@ -390,5 +392,5 @@ $smarty->assign("location", $location);
 $smarty->assign("dialog_tools_data", $dialog_tools_data);
 
 @include $xcart_dir."/modules/gold_display.php";
-func_display("provider/home.tpl",$smarty);
+func_display("admin/home.tpl",$smarty);
 ?>
