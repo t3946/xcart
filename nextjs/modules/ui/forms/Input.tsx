@@ -1,10 +1,10 @@
-import { Form } from "react-bootstrap";
+import { Form, FormControlProps } from "react-bootstrap";
 
 import React, { ChangeEvent } from "react";
 import Styles from "@modules/ui/forms/Input.module.scss";
 import cn from "classnames";
 
-interface IProps {
+interface IProps extends FormControlProps {
   name: string;
   value?: any;
   disabled?: boolean;
