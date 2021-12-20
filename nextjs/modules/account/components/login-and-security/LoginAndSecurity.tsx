@@ -1,7 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { route } from "@utils/AppData";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import classnames from "classnames";
 import { getCountryByCode } from "@utils/Countries";
 import Alert from "@modules/account/components/shared/Alert";
@@ -35,22 +34,22 @@ const LoginAndSecurity = (): any => {
     {
       title: "full name",
       caption: user.name,
-      route: route("account:edit-name"),
+      route: "/login-and-security/edit-name",
     },
     {
       title: "email",
       caption: user.email,
-      route: route("account:edit-email"),
+      route: "/login-and-security/edit-email",
     },
     {
       title: "mobile phone number",
       caption: formatPhoneNumber(),
-      route: route("account:edit-phone"),
+      route: "/login-and-security/edit-phone",
     },
     {
       title: "password",
       caption: "********",
-      route: route("account:edit-password"),
+      route: "/login-and-security/edit-password",
     },
     {
       title: "two-step verification (2SV) settings",
@@ -58,7 +57,7 @@ const LoginAndSecurity = (): any => {
       classes: {
         caption: "settings-item-caption__small",
       },
-      route: route("account:two-step-verification-settings"),
+      route: "/login-and-security/two-step-verification-settings",
     },
     {
       title: "secure your account",
@@ -104,9 +103,11 @@ const LoginAndSecurity = (): any => {
   function settingsItemsTemplate() {
     const items = [];
 
-    for (const listItem of listItems) {
+    for (const i in listItems) {
+      const listItem = listItems[i];
+
       items.push(
-        <div className="login-and-security-settings_item">
+        <div className="login-and-security-settings_item" key={i}>
           <div className="login-and-security-settings-item-container">
             <div className={"login-and-security-settings-item-text"}>
               <b className="settings-item-title">{listItem.title}:</b>

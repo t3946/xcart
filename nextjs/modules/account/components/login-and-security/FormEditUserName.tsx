@@ -1,5 +1,4 @@
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
+import { useRouter } from "next/router";
 import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
@@ -13,9 +12,12 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import Input from "@modules/ui/forms/Input";
+import cn from "classnames";
 
 const FormEditUserName = (): any => {
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const initialValues = {
@@ -31,9 +33,10 @@ const FormEditUserName = (): any => {
       editNameAction({
         form: values,
 
-        success(res) {
+        success(res: any) {
           dispatch(userSetAction(res.user));
-          history.push(route("account:login-and-security"));
+          router.push("/login-and-security");
+
           dispatch(
             setAlertAction({
               variant: "success",
@@ -42,7 +45,7 @@ const FormEditUserName = (): any => {
           );
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors(err);
         },
 
@@ -64,7 +67,7 @@ const FormEditUserName = (): any => {
           <Form>
             <InnerPage
               header={"Change your name"}
-              bodyClasses={"content-panel"}
+              bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
               footerClasses={"text-center text-lg-start"}
               footer={
                 <SubmitCancelButtonsGroup
@@ -75,7 +78,7 @@ const FormEditUserName = (): any => {
                     "d-md-flex justify-content-center justify-content-lg-start"
                   }
                   onCancel={() => {
-                    history.push(route("account:login-and-security"));
+                    router.push("/login-and-security");
                   }}
                 />
               }
@@ -86,10 +89,13 @@ const FormEditUserName = (): any => {
                 <b>Save Changes</b> button when you are done.
               </p>
 
-              <RBForm.Group controlId="EditUserName" className={"row"}>
+              <RBForm.Group
+                controlId="EditUserName"
+                className={cn(["row", StylesLoginAndSecurity.formContainer])}
+              >
                 <div
                   className={
-                    "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
+                    "col-12 col-md-6 col-lg-6 text-md-end text-lg-start d-flex align-items-center"
                   }
                 >
                   <RBForm.Label
@@ -102,7 +108,7 @@ const FormEditUserName = (): any => {
                 </div>
 
                 <div className={"col-12 col-md-6 col-lg-6"}>
-                  <RBForm.Control
+                  <Input
                     type="text"
                     name="name"
                     value={values.name}

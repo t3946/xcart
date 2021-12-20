@@ -1,0 +1,19 @@
+@import "styles/utils/Utils.module";
+
+.pageBody {
+  padding: 0;
+
+  @include breakpoint(md) {
+    padding: pxToRem(15) pxToRem(20) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(20) pxToRem(26) pxToRem(35);
+  }
+}
+
+.formContainer {
+  @include breakpoint(lg) {
+    max-width: pxToRem(600);
+  }
+}
