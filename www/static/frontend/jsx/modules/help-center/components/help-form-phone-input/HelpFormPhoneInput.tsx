@@ -55,9 +55,9 @@ const HelpFormPhoneInput: React.FC<HelpFormPhoneInputPropsDto> = ({
                 as={as}
                 name={extName}
                 type={type}
-                label={null}
+                label={label}
                 error={errorExt}
-                required={false}
+                required={required}
               />
               {valueExt.trim() ? (
                 <p onClick={() => clear(extName, "")}>

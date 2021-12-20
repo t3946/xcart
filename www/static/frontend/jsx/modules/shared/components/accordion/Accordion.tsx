@@ -8,11 +8,11 @@ const Accordion: React.FC<AccordionPropsDto> = ({
   lastChild = false,
 }) => {
   return (
-    <React.Fragment>
+    <>
       <hr className="Collapsible__hr" />
       <Collapsible trigger={text}>{children}</Collapsible>
       {lastChild ? <hr className="Collapsible__hr" /> : null}
-    </React.Fragment>
+    </>
   );
 };
 

@@ -9,9 +9,11 @@ export const initialFormValue = {
 };
 
 export const categoryFormValidationSchema = Yup.object().shape({
-  name: Yup.string().required("Required field"),
-  email: Yup.string().required("Required field").email("Invalid email"),
-  phone: Yup.string().required("Required field").min(6, "Invalid phone"),
-  phone_ext: Yup.string().required("Required field").min(3, "Invalid phone"),
-  question: Yup.string().required("Required field"),
+  name: Yup.string()
+    .email("Введите email правильно")
+    .required("Обязательное поле"),
+  email: Yup.string().required("Обязательное поле"),
+  phone: Yup.string().required("Обязательное поле"),
+  phone_ext: Yup.string().required("Обязательное поле"),
+  question: Yup.string().required("Обязательное поле"),
 });

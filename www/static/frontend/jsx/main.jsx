@@ -3,7 +3,6 @@
 import "@/js/main";
 import "preact/debug";
 import "./_head.jsx";
-import "./_binds/pages/help";
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 

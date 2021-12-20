@@ -26,7 +26,7 @@ const YourOrderForm: React.FC = () => {
                 valid={!Boolean(errors.name) && touched.name}
                 errorMessage={errors.name}
                 name="name"
-                label="Your first name*"
+                label="Название"
               />
               <HelpFormInput
                 value={values.email}
@@ -36,7 +36,7 @@ const YourOrderForm: React.FC = () => {
                 valid={!Boolean(errors.email) && touched.email}
                 errorMessage={errors.email}
                 name="email"
-                label="Your email"
+                label="Описание"
               />
               <HelpFormPhoneInput
                 value={values.phone}
@@ -46,7 +46,7 @@ const YourOrderForm: React.FC = () => {
                 error={Boolean(errors.phone) && touched.phone}
                 errorMessage={errors.phone || errors.phone_ext}
                 name="phone"
-                label="Your phone"
+                label="Цена"
                 extName="phone_ext"
                 valueExt={values.phone_ext}
                 valid={!Boolean(errors.phone) && touched.phone}
@@ -60,7 +60,7 @@ const YourOrderForm: React.FC = () => {
                 valid={!Boolean(errors.question) && touched.question}
                 errorMessage={errors.question}
                 name="question"
-                label="Product question"
+                label="Количество"
                 as={"textarea"}
               />
               <div className="formik-input-wrap">
