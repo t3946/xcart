@@ -13,6 +13,7 @@ interface IProps {
   caption: string;
   children?: React.ReactNode;
   fieldName: string;
+  disabled: any;
 }
 
 const PaymentItem: React.FC<IProps> = (props: IProps) => {
@@ -24,6 +25,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
     caption,
     children,
     fieldName,
+    disabled,
   } = props;
 
   return (
@@ -35,7 +37,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
           Styles.paymentItemGrid,
           Styles.paymentItemGrid_verticalLayout,
           {
-            [Styles.cursorPointer]: checkedValue !== value,
+            [Styles.cursorPointer]: checkedValue !== value && !disabled,
           },
         ])}
       >
@@ -44,6 +46,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
           value={value}
           checkedValue={checkedValue}
           onChange={onChange}
+          disabled={disabled}
         >
           <b>{paymentName}</b>
         </RadioButtonName>

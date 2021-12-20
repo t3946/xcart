@@ -3,6 +3,10 @@
 
 .form {
   max-width: 100%;
+  
+  @include breakpoint(lg) {
+    max-width: pxToRem(360);
+  }
 }
 
 .form__caption {
@@ -41,7 +45,6 @@
 
 .formInput {
   height: pxToRem(40);
-  background-color: $white;
   padding: 0;
 
   @include breakpoint(lg) {
@@ -62,5 +65,9 @@
   @include breakpoint(lg) {
     font-size: pxToRem(12);
     line-height: pxToRem(14);
+  }
+
+  @include breakpoint(xl) {
+    white-space: nowrap;
   }
 }

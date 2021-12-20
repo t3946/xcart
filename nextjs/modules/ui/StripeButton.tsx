@@ -15,7 +15,7 @@ interface IProps {
   classNames?: any;
 }
 const StripeButton: React.FC<IProps> = (props: IProps) => {
-  const clientSecret = "secret_key";
+  const clientSecret = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
   const stripe = useStripe();
   const [paymentRequest, setPaymentRequest] = React.useState<any>(null);
   const defaultOptions = {

@@ -9,9 +9,10 @@ interface IProps {
   onChange: (e: any) => void;
   children: React.ReactNode;
   name: string;
+  disabled: any;
 }
 const RadioButtonName = (props: IProps) => {
-  const { value, checkedValue, onChange, children, name } = props;
+  const { value, checkedValue, onChange, children, name, disabled } = props;
 
   return (
     <div className={cn(["d-flex align-items-center", Styles.paymentItemName])}>
@@ -19,7 +20,7 @@ const RadioButtonName = (props: IProps) => {
         name={name}
         value={value}
         checkedValue={checkedValue}
-        disabled={false}
+        disabled={disabled}
         onChange={onChange}
       />
 
