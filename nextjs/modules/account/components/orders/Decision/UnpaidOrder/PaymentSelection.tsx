@@ -1,37 +1,27 @@
 import React from "react";
 import cn from "classnames";
 import PaymentItem from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem";
-import PayByCardForm from "@modules/account/components/orders/Decision/UnpaidOrder/PayByCardForm";
 import { Accordion } from "react-bootstrap";
-import DecisionsInterface from "@modules/account/ts/types/decision";
-import unpaidOrderStyles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
-import paymentItemStyles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem.module.scss";
 import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentSelection.module.scss";
+
+export interface IAccordionItem {
+  value: any;
+  label: any;
+  caption: any;
+  template: any;
+}
 
 interface IProps {
   checkedValue: string;
-  fieldName: string;
+  name: string;
   onChange: (e: any) => void;
-  decision: DecisionsInterface;
+  disabled: any;
   classes?: any;
-  isSubmitting: boolean;
-  errors: Record<any, any>;
-  values: Record<any, any>;
-  touched: Record<any, any>;
-  setCreatePaymentMethod: any;
+  options: IAccordionItem[];
 }
 
 const PaymentSelection: React.FC<IProps> = (props: IProps) => {
-  const {
-    checkedValue,
-    onChange,
-    fieldName,
-    isSubmitting,
-    errors,
-    values,
-    touched,
-    setCreatePaymentMethod,
-  } = props;
+  const { checkedValue, name, onChange, disabled, options } = props;
   const classes = [Styles.paymentSelector, props.classes];
 
   return (
@@ -39,62 +29,20 @@ const PaymentSelection: React.FC<IProps> = (props: IProps) => {
       className={cn(["mb-4", "mb-md-5", classes])}
       activeKey={checkedValue}
     >
-      <PaymentItem
-        value={"debit"}
-        checkedValue={checkedValue}
-        onChange={onChange}
-        paymentName={"Pay by Credit / Debit card, Apple Pay and Google Pay"}
-        caption={
-          "Secure Visa, MasterCard, and AmEx payment through our secure server."
-        }
-        fieldName={fieldName}
-      >
-        <PayByCardForm
-          isSubmitting={isSubmitting}
-          errors={errors}
-          values={values}
-          touched={touched}
+      {options.map((option, index) => (
+        <PaymentItem
+          key={`${index}_${option.label}`}
+          value={option.value}
+          checkedValue={checkedValue}
           onChange={onChange}
-          setCreatePaymentMethod={setCreatePaymentMethod}
-        />
-      </PaymentItem>
-
-      <PaymentItem
-        value={"paypal"}
-        fieldName={fieldName}
-        checkedValue={checkedValue}
-        onChange={onChange}
-        paymentName={"Pay by PayPal Balance"}
-        caption={
-          "Secure payment by PayPal Balance (click Create an Account to also access VISA, MC, AmEx, and Discover payments)."
-        }
-      >
-        <div className="w-100">
-          <p
-            className={cn([
-              paymentItemStyles.paymentItemCaption,
-              paymentItemStyles.paymentItemCaption_accent,
-            ])}
-          >
-            You will be transferred to PayPal website to complete your payment.
-          </p>
-
-          <div
-            className={"d-flex justify-content-center justify-content-lg-start"}
-          >
-            <button
-              type={"button"}
-              className={cn([
-                "form-button",
-                unpaidOrderStyles.button,
-                unpaidOrderStyles.decision__button,
-              ])}
-            >
-              Pay by PayPal
-            </button>
-          </div>
-        </div>
-      </PaymentItem>
+          paymentName={option.label}
+          caption={option.caption}
+          fieldName={name}
+          disabled={disabled}
+        >
+          {option.template}
+        </PaymentItem>
+      ))}
     </Accordion>
   );
 };

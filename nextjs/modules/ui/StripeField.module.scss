@@ -1,4 +1,5 @@
 @import "styles/utils/Utils.module";
+@import "styles/Variables.scss";
 
 .stripe_focus {
   border-color: #f2b405;
@@ -14,6 +15,7 @@
   display: flex;
   width: 100%;
   height: 100%;
+  background-color: $white;
   align-items: center;
   padding: 0 pxToRem(14);
   cursor: text;
@@ -21,4 +23,8 @@
   & > div {
     flex-grow: 1;
   }
+}
+
+.stripeElement_disabled {
+  background: none;
 }

@@ -27,8 +27,10 @@ const StripeField: React.FC<IProps> = function (props: IProps) {
     },
   };
 
-  const cardElementProps = _merge(defaultProps);
-  const hasErrors = props.error !== "";
+  const cardElementProps = _merge(defaultProps, {
+    options: { ...props.options },
+  });
+  const hasErrors = !!props.error;
   const [isFocus, setIsFocus] = React.useState(false);
   const classes = {
     stripeWrapper: [

@@ -17,15 +17,29 @@ interface IProps {
   errors: Record<any, any>;
   values: Record<any, any>;
   touched: Record<any, any>;
+  disabled?: boolean;
   onChange: (e: any) => void;
+  SetErrors: (e: Record<any, any>) => void;
   onStripeInit: (stripe: any, elements: any) => void;
 }
 
 const PayByCardForm: React.FC<IProps> = (props: IProps) => {
-  const { isSubmitting, errors, values, touched, onChange, onStripeInit } =
-    props;
+  const {
+    isSubmitting,
+    errors,
+    values,
+    touched,
+    onChange,
+    setErrors,
+    onStripeInit,
+  } = props;
 
-  const { stripePublicKey } = useSelectorAccount((e) => e.config);
+  const stripePublicKey = "pk_test_TYooMQauvdEDq54NiTphI7jx";
+  const { APP_LOCAL } = useSelectorAccount((e) => e.config);
+  if (!APP_LOCAL) {
+    stripePublicKey = useSelectorAccount((e) => e.config.stripePublicKey);
+  }
+
   const [stripePromise] = React.useState(
     loadStripe(stripePublicKey, {
       locale: "en",
@@ -35,12 +49,14 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
   const [stripe, setStripe] = React.useState<any>(null);
   const [elements, setElements] = React.useState<any>(null);
   const [stripeReady, setStripeReady] = React.useState(false);
-  const [stripeError, setStripeError] = React.useState("");
   const stripeCardElemProps = {
     afterInit: stripeInitHandler,
     onReady: () => setStripeReady(true),
-    error: stripeError,
-    setError: setStripeError,
+    options: { disabled: isSubmitting },
+    error: errors.stripe,
+    setError: (e: string) => {
+      setErrors({ stripe: e });
+    },
   };
 
   function stripeInitHandler({ stripe, elements }) {
@@ -50,7 +66,7 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
   }
 
   return (
-    <div className={"cn([Styles.form])"}>
+    <div className={Styles.form}>
       <Elements stripe={stripePromise}>
         <StripeButton classNames={Styles.formInput} />
       </Elements>
@@ -95,20 +111,17 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
         </RBForm.Label>
 
         <Elements stripe={stripePromise}>
-          <StripeField
-            {...stripeCardElemProps}
-            className={cn([Styles.formInput])}
-          />
+          <StripeField className={Styles.formInput} {...stripeCardElemProps} />
         </Elements>
 
         <Feedback
-          type={stripeError ? "invalid" : "valid"}
+          type={errors.stripe ? "invalid" : "valid"}
           className={cn({
-            "d-none": stripeError === "",
-            "d-block": stripeError !== "",
+            "d-none": errors.stripe === "",
+            "d-block": errors.stripe !== "",
           })}
         >
-          {stripeError}
+          {errors.stripe}
         </Feedback>
       </RBForm.Group>
 

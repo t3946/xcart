@@ -72,3 +72,13 @@ export const sentAchTransferAction = (payload: Record<any, any>): any => ({
   type: "SENT_ACH_TRANSFER_DECISION",
   payload,
 });
+
+export const payOrderByCardAction = (payload: Record<any, any>): any => ({
+  type: "PAY_ORDER_BY_CARD_DECISION",
+  payload,
+});
+
+export const payOrderByPaypalAction = (payload: Record<any, any>): any => ({
+  type: "PAY_ORDER_BY_PAYPAL_DECISION",
+  payload,
+});
