@@ -263,7 +263,8 @@ class SiteModel extends Model
                 'link' => ['country' => 'code'],
                 'null' => true,
                 'default' => null,
-                'verboseName' => 'Country',
+                'sqlType' => Types::STRING,
+                'verboseName' => 'Preferred served country',
             ],
             'currency' => [
                 'field' => 'currency_id',
