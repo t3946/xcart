@@ -25,9 +25,7 @@ const InnerPage: React.FC<IProps> = function (props: IProps) {
     if (props.header) {
       return (
         <h1
-          className={classnames(
-            "mb-0", Styles.pageHeader, props.headerClasses,
-          )}
+          className={classnames("mb-0", Styles.pageHeader, props.headerClasses)}
         >
           {props.header}
         </h1>
@@ -39,7 +37,7 @@ const InnerPage: React.FC<IProps> = function (props: IProps) {
     <div className="account-inner-page">
       {props.beforePage}
 
-      <div className={classnames(Styles.accountPageHat,  props.hatClasses)}>
+      <div className={classnames(Styles.accountPageHat, props.hatClasses)}>
         {headerTemplate()}
         {props.hat}
       </div>
@@ -50,7 +48,9 @@ const InnerPage: React.FC<IProps> = function (props: IProps) {
       </div>
 
       {props.footer && (
-        <div className={classnames(Styles.accountPageFooter, props.footerClasses)}>
+        <div
+          className={classnames(Styles.accountPageFooter, props.footerClasses)}
+        >
           {props.footer}
         </div>
       )}

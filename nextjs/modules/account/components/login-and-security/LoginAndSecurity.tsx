@@ -14,6 +14,8 @@ import {
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import cn from "classnames";
+import Styles from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const LoginAndSecurity = (): any => {
   const dispatch = useDispatch();
@@ -55,7 +57,7 @@ const LoginAndSecurity = (): any => {
       title: "two-step verification (2SV) settings",
       caption: "Manage your Two-Step Verification (2SV) Authenticators",
       classes: {
-        caption: "settings-item-caption__small",
+        caption: Styles.gridItemCaption_small,
       },
       route: "/login-and-security/two-step-verification-settings",
     },
@@ -64,7 +66,7 @@ const LoginAndSecurity = (): any => {
       caption:
         "If you think your S3 Stores account has been compromised, follow these steps to make your account more secure",
       classes: {
-        caption: "settings-item-caption__small",
+        caption: Styles.gridItemCaption_small,
       },
       route: "",
     },
@@ -108,9 +110,9 @@ const LoginAndSecurity = (): any => {
 
       items.push(
         <div className="login-and-security-settings_item" key={i}>
-          <div className="login-and-security-settings-item-container">
+          <div className={cn(Styles.gridItemContainer)}>
             <div className={"login-and-security-settings-item-text"}>
-              <b className="settings-item-title">{listItem.title}:</b>
+              <b className={Styles.gridItemTitle}>{listItem.title}:</b>
               <br />
               <span
                 className={classnames(
@@ -124,7 +126,16 @@ const LoginAndSecurity = (): any => {
 
             <button
               onClick={() => router.push(listItem.route)}
-              className="form-button form-button__outline login-and-security-edit-button d-block d-md-inline-block mt-12 mt-md-0"
+              className={cn(
+                "form-button",
+                "form-button__outline",
+                "login-and-security-edit-button",
+                "d-block",
+                "d-md-inline-block",
+                "mt-12",
+                "mt-md-0",
+                Styles.button_edit
+              )}
             >
               edit
             </button>
@@ -161,25 +172,31 @@ const LoginAndSecurity = (): any => {
   }
 
   return (
-    <>
-      <InnerPage
-        beforePage={beforePage()}
-        header={"Login & security"}
-        bodyClasses={"p-0"}
-        footer={
-          <button
-            className={
-              "admin-form-control form-button w-md-auto d-inline-block"
-            }
-            onClick={() => router.push("/dashboard")}
-          >
-            done
-          </button>
-        }
-      >
-        <GreyGrid items={settingsItemsTemplate()} />
-      </InnerPage>
-    </>
+    <InnerPage
+      beforePage={beforePage()}
+      hatClasses={Styles.pageHat}
+      header={"Login & security"}
+      bodyClasses={["p-0", Styles.pageBody]}
+      footerClasses={["d-md-flex", "justify-content-md-center", "d-lg-block"]}
+      footer={
+        <button
+          className={cn(
+            "form-button",
+            "w-md-auto",
+            "d-inline-block",
+            Styles.button
+          )}
+          onClick={() => router.push("/dashboard")}
+        >
+          done
+        </button>
+      }
+    >
+      <GreyGrid
+        classes={{ item: [Styles.gridItem, Styles.grid__item] }}
+        items={settingsItemsTemplate()}
+      />
+    </InnerPage>
   );
 };
 

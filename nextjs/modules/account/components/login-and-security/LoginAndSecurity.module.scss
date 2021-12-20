@@ -1,5 +1,11 @@
 @import "styles/utils/Utils.module";
 
+.pageHat {
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20) pxToRem(28);
+  }
+}
+
 .pageBody {
   padding: 0;
 
@@ -15,5 +21,76 @@
 .formContainer {
   @include breakpoint(lg) {
     max-width: pxToRem(600);
+  }
+}
+
+.button {
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    padding: 0 pxToRem(54);
+    height: pxToRem(57);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    padding: 0 pxToRem(62);
+    height: pxToRem(39);
+  }
+}
+
+.button_edit {
+  font-weight: bold;
+}
+
+.gridItem {
+  @include breakpoint(md) {
+    padding: pxToRem(23) pxToRem(21);
+  }
+}
+
+.grid__item {
+  margin: 0 0 pxToRem(14) 0;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}
+
+.gridItem_small {
+  @include breakpoint(md) {
+    padding: pxToRem(10) pxToRem(21);
+  }
+}
+
+.gridItemContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+
+  @include breakpoint(md) {
+    gap: pxToRem(5);
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.gridItemTitle {
+  font-weight: 700;
+  font-size: rem-calc(16);
+  text-transform: capitalize;
+  @include breakpoint(md) {
+    font-size: rem-calc(18);
+  }
+}
+
+.gridItemCaption_small {
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
   }
 }
