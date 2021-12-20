@@ -12,8 +12,7 @@ class OrderInvoiceHelper
 {
     public static function sendOrderStatusNotification(OrderModel $order, bool $send_copy = true, $status = null): void
     {
-        /** @var SiteModel $site */
-        $site = Xcart::app()->getModule('Sites')->getSite();
+        $site = $order->site;
         if ($status) {
             $notification = OrderStatusNotificationModel::objects()->get(['code' => $status, 'lang_id' => $site->lang->lang_id]);
             $xcartLabel = 'order-status-changed';
