@@ -32,12 +32,12 @@ class HelpAdmin extends Admin
 
     public function isAjaxUpdate(): bool
     {
-        return true;
+        return false;
     }
 
     public function isAjaxCreate(): bool
     {
-        return true;
+        return false;
     }
     public static function getName()
     {

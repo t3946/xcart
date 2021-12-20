@@ -19,8 +19,8 @@ class HelpItemsForm extends ModelForm
     {
         return [[
             'form_type',
-            'answer',
             'question',
+            'answer',
         ]];
     }
 }
