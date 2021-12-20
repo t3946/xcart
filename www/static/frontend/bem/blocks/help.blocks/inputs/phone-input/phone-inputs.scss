@@ -12,9 +12,10 @@
   &-right {
     width: 40% !important;
     display: flex;
+    align-items: flex-end;
 
     &-text {
-      line-height: 85px;
+      line-height: 70px;
       margin-right: 10px;
     }
   }

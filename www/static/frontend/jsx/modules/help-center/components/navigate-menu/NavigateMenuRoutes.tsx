@@ -21,6 +21,7 @@ const NavigateMenuRoutes: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <img src="/static/frontend/dist/images/page-bg/help-center-header.png" />
       {menuItems ? (
         <div className="row">
           <div className="help-wrap">

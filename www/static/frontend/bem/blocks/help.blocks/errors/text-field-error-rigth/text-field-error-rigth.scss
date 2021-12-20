@@ -1,6 +1,8 @@
 .error-right {
   &-margin {
-    margin-top: 20px;
+    padding: 0 10px;
+    margin: 0;
+    margin-left: 15px;
   }
 
   &::before {
@@ -21,6 +23,8 @@
 
 .error-message-right {
   display: flex;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .input-validate-icons {
@@ -28,9 +32,8 @@
 
   @media (min-width: 1024px) {
     display: block;
-    padding-top: 5px;
     width: 20px;
-    height: 80px;
+    height: 25px;
     margin-left: 15px;
   }
 
