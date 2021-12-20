@@ -19,7 +19,7 @@ interface IProps {
   touched: Record<any, any>;
   disabled?: boolean;
   onChange: (e: any) => void;
-  SetErrors: (e: Record<any, any>) => void;
+  setErrors: (e: Record<any, any>) => void;
   onStripeInit: (stripe: any, elements: any) => void;
 }
 
@@ -36,6 +36,7 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
 
   const stripePublicKey = "pk_test_TYooMQauvdEDq54NiTphI7jx";
   const { APP_LOCAL } = useSelectorAccount((e) => e.config);
+
   if (!APP_LOCAL) {
     stripePublicKey = useSelectorAccount((e) => e.config.stripePublicKey);
   }

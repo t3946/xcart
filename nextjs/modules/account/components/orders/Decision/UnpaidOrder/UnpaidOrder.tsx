@@ -24,7 +24,7 @@ interface IProps {
 const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-  const { onChange, decision } = props;
+  const { decision } = props;
 
   const classes = {
     p: [
