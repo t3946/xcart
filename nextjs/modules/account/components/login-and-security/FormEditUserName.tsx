@@ -3,8 +3,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import { useDispatch } from "react-redux";
 import {
   editNameAction,
   setAlertAction,
@@ -15,11 +14,12 @@ import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitC
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import Input from "@modules/ui/forms/Input";
 import cn from "classnames";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const FormEditUserName = (): any => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelectorAccount((e) => e.user);
   const initialValues = {
     name: user.name,
   };
@@ -28,7 +28,7 @@ const FormEditUserName = (): any => {
     name: yup.string().required("Name is a required field"),
   });
 
-  function submit(values, actions) {
+  function submit(values: any, actions: any) {
     dispatch(
       editNameAction({
         form: values,
