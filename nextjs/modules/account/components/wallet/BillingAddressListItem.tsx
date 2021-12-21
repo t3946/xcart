@@ -1,5 +1,4 @@
 import React, { Dispatch } from "react";
-import { Grid } from "@material-ui/core";
 
 interface BillingAddressListItemProps {
   id: number;
@@ -19,10 +18,8 @@ export const BillingAddressListItem: React.FC<BillingAddressListItemProps> = ({
   name,
 }) => {
   return (
-    <Grid
-      alignContent={"center"}
-      container
-      className={`billing-address-item-container form-radio ${
+    <div
+      className={`d-flex alight-center billing-address-item-container form-radio ${
         groupValue === radioValue && "form-radio-checked"
       }`}
     >
@@ -35,6 +32,6 @@ export const BillingAddressListItem: React.FC<BillingAddressListItemProps> = ({
         checked={groupValue === radioValue}
       />
       <label htmlFor={String(id)}>{viewValue}</label>
-    </Grid>
+    </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { Dispatch, ReactNode } from "react";
-import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 
 interface RadioBtnProps {
@@ -25,9 +24,7 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
   groupClasses,
 }) => {
   return (
-    <Grid
-      alignContent={"center"}
-      container
+    <div
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -35,7 +32,7 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
       }}
       className={
         classnames(groupClasses?.group) +
-        ` form-radio ${
+        ` form-radio d-flex align-center" ${
           groupValue === radioValue && classnames(groupClasses?.checked)
         }`
       }
@@ -48,6 +45,6 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
         checked={groupValue === radioValue}
       />
       <label htmlFor={String(id)}>{viewValue}</label>
-    </Grid>
+    </div>
   );
 };

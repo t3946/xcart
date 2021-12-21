@@ -1,6 +1,4 @@
 import React from "react";
-import { Dialog } from "@material-ui/core";
-import { DialogHeader } from "../dialog/DialogHeader";
 import { RemoveCard } from "./RemoveCard";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";

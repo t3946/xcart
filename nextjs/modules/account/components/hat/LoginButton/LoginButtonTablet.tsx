@@ -4,18 +4,17 @@ import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setTabletMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
-import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount"
 
 const LoginButtonTablet: React.FC<any> = () => {
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelectorAccount((e) => e.user);
   const text = user ? user.name : "log in";
 
-  const CustomToggle = React.forwardRef((props: any, ref: any) => {
+  const CustomToggle = React.forwardRef((props, ref) => {
     const { onClick } = props;
 
     return (
@@ -31,8 +30,6 @@ const LoginButtonTablet: React.FC<any> = () => {
           }
         )}
       >
-        <UserIcon />
-
         {text}
 
         <i
@@ -47,22 +44,22 @@ const LoginButtonTablet: React.FC<any> = () => {
     );
   });
 
-  const CustomMenu = React.forwardRef((props: any, ref: any) => {
-    const { className, "aria-labelledby": labeledBy } = props;
-
-    return (
-      <div
-        ref={ref}
-        className={classNames(
-          className,
-          "account-hat-dropdown-menu col-12 p-0 rounded-0 border-0"
-        )}
-        aria-labelledby={labeledBy}
-      >
-        <SidebarMenu />
-      </div>
-    );
-  });
+  const CustomMenu = React.forwardRef(
+    ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+      return (
+        <div
+          ref={ref}
+          className={classNames(
+            className,
+            "account-hat-dropdown-menu col-12 p-0 rounded-0"
+          )}
+          aria-labelledby={labeledBy}
+        >
+          <SidebarMenu />
+        </div>
+      );
+    }
+  );
 
   const isTabletMenuVisible = useSelector(
     (e: any) => e.mobileMenu.isTabletMenuVisible

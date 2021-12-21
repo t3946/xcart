@@ -1,13 +1,12 @@
 import React, { useContext, useState } from "react";
 import { BillingAddressList } from "./BillingAddressList";
-import { Button } from "@material-ui/core";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCard,
   addDataFromSubmitCardForm,
-} from "../../../../redux/actions/account-actions/PaymentsActions";
+} from "@redux/actions/account-actions/PaymentsActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { CardItemDto } from "../../ts/types/wallet.type";
 import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
@@ -74,22 +73,22 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
         addresses={billingAddresses}
       />
       <div className="billing-address-butns">
-        <Button
+        <button
           type={"submit"}
           onClick={() => context.setContent(BillingAddressFormEnum.ADD_ADDRESS)}
-          className="account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+          className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
           disabled={submitCardFormLoading}
         >
           ADD new ADDRESS
-        </Button>
-        <Button
+        </button>
+        <button
           type={"submit"}
-          className="account-submit-btn auto-width-button"
+          className="form-button account-submit-btn auto-width-button"
           disabled={!value || submitCardFormLoading}
           onClick={onSubmit}
         >
           USE THIS ADDRESS
-        </Button>
+        </button>
       </div>
     </div>
   );

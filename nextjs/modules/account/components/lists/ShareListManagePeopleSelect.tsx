@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useCLickListener from "../../hooks/useClickListener";
-import { Grid } from "@material-ui/core";
 import classnames from "classnames";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
@@ -18,79 +17,82 @@ interface ShareListManagePeopleSelectProps {
   id?: string;
 }
 
-export const ShareListManagePeopleSelect: React.FC<ShareListManagePeopleSelectProps> =
-  ({ items, onClick, value, name, classes, id }) => {
-    const selectedItem = value;
-    const [open, setOpen] = useState(false);
+export const ShareListManagePeopleSelect: React.FC<
+  ShareListManagePeopleSelectProps
+> = ({ items, onClick, value, name, classes, id }) => {
+  const selectedItem = value;
+  const [open, setOpen] = useState(false);
 
-    const clickListener = useCLickListener(setOpen, id);
+  const clickListener = useCLickListener(setOpen, id);
 
-    useEffect(() => {
-      clickListener.startListen();
+  useEffect(() => {
+    clickListener.startListen();
 
-      return () => {
-        clickListener.endListen();
-      };
-    });
+    return () => {
+      clickListener.endListen();
+    };
+  });
 
-    return (
-      <Grid
-        className={classnames(
-          `select select-send share-list-select  ${open && "open"}`,
-          classes?.group
-        )}
-        container
-        alignItems="center"
-        justifyContent="space-between"
+  return (
+    <div
+      className={classnames(
+        `select select-send share-list-select d-flex justify-content-between align-center ${
+          open && "open"
+        }`,
+        classes?.group
+      )}
+      container
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <div
+        onClick={() => {
+          setOpen(!open);
+        }}
+        className={classnames("share-list-select-wrapper", classes?.input)}
       >
-        <div
-          onClick={() => {
-            setOpen(!open);
-          }}
-          className={classnames("share-list-select-wrapper", classes?.input)}
-        >
-          <input
-            value={selectedItem.value}
-            className="select__input"
-            type="hidden"
-            name={name}
-          />
-          <div id={id} className="share-list-select-head">
-            {selectedItem.viewValue}
-          </div>
-          {open && (
-            <ul
-              className={classnames(
-                "share-list-select-list",
-                classes?.selectList
-              )}
-            >
-              {items.map((item) => {
-                return (
-                  <li
-                    onClick={() => onClick(item)}
-                    className={`share-list-select-item ${
-                      item.value === value.value &&
-                      "share-list-select-item-selected"
-                    }`}
-                  >
-                    {item.viewValue}
-                  </li>
-                );
-              })}
-              <li
-                onClick={() =>
-                  onClick({
-                    value: UserRightsActionsEnum.DELETE,
-                  })
-                }
-                className="share-list-remove-user"
-              >
-                Remove
-              </li>
-            </ul>
-          )}
+        <input
+          value={selectedItem.value}
+          className="select__input"
+          type="hidden"
+          name={name}
+        />
+        <div id={id} className="share-list-select-head">
+          {selectedItem.viewValue}
         </div>
-      </Grid>
-    );
-  };
+        {open && (
+          <ul
+            className={classnames(
+              "share-list-select-list",
+              classes?.selectList
+            )}
+          >
+            {items.map((item) => {
+              return (
+                <li
+                  onClick={() => onClick(item)}
+                  className={`share-list-select-item ${
+                    item.value === value.value &&
+                    "share-list-select-item-selected"
+                  }`}
+                >
+                  {item.viewValue}
+                </li>
+              );
+            })}
+            <li
+              onClick={() =>
+                onClick({
+                  value: UserRightsActionsEnum.DELETE,
+                })
+              }
+              className="share-list-remove-user"
+            >
+              Remove
+            </li>
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};

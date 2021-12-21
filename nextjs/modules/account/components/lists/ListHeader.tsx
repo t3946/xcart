@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-// import ShareIcon from "@material-ui/icons/Share";
 import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
@@ -12,6 +11,7 @@ import { List } from "@modules/account/ts/types/list.type";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import ShareIcon from "@modules/icon/components/account/share/ShareIcon";
 
 interface ListHeaderProps {
   label: string;
@@ -111,7 +111,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
       </div>
       {edit && (
         <div className="list-header-shared-block">
-          {/*<ShareIcon className="list-header-share-btn blue" />*/}
+          <ShareIcon className="list-header-share-btn blue" />
           <div
             className="list-header-share-text blue"
             onClick={shareDialog.handleClickOpen}

@@ -3,7 +3,6 @@ import Item from "@modules/account/components/orders/Navigation/Item";
 // import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import NavigationMobile from "@modules/account/components/orders/Navigation/NavigationMobile";
-import { route } from "@utils/AppData";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Styles from "@modules/account/components/orders/Navigation/Navigation.module.scss"
 

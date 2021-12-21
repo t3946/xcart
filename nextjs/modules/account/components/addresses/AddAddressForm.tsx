@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { FormSelect } from "../shared/FormSelect";
-import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { Form, Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
@@ -18,6 +17,8 @@ import Store from "@redux/stores/Store";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import InputGroup from "@modules/account/components/addresses/InputGroup";
+
+import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -165,32 +166,28 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.zip && formik.errors.zip)}
           handleChange={formik.handleChange}
         />
-        <Grid
-          className="add-address-checkbox"
-          container
-          justifyContent="flex-end"
-        >
-          <Grid className="add-address-input">
+        <div className={Styles.addAddressCheckbox}>
+          <div className="add-address-input">
             <FormCheckBox
               label={"Make this my default address"}
               value={formik.values.is_default}
               name={"is_default"}
               handleChange={formik.handleChange}
             />
-          </Grid>
-        </Grid>
-        <Grid container justifyContent="flex-end">
-          <Grid className="add-address-input">
-            <Button
+          </div>
+        </div>
+        <div className={Styles.addAddressInputContainer}>
+          <div className="add-address-input">
+            <button
               disabled={addressFormLoading}
               type={"submit"}
-              className="account-submit-btn"
+              className="form-button account-submit-btn"
             >
               {addressInfo ? "Save changes" : "Add Address"}
-            </Button>
+            </button>
             {children}
-          </Grid>
-        </Grid>
+          </div>
+        </div>
       </form>
     </div>
   );

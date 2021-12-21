@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { useRouter } from "next/router";
-import { route } from "@utils/AppData";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";

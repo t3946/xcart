@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { BillingAddressList } from "@modules/account/components/wallet/BillingAddressList";
-import { Button } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@modules/account/ts/types/store.type";
 import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { useHistory, useParams } from "react-router-dom";
+import { useRouter } from "next/router";
 import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 import { ApiService } from "@modules/shared/services/api.service";
 import Store from "@redux/stores/Store";
@@ -25,14 +25,12 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
   const [selectedValue, setSelectedValue] = useState(null);
 
   const [loading, setLoading] = useState(false);
-
-  const urlParams = useParams<OrderPageURLParams>();
-
   const apiService = new ApiService();
 
   const breakpoint = useBreakpoint();
 
-  const history = useHistory();
+  const router = useRouter();
+  const urlParams = router.query;
 
   const onChangeAddress = () => {
     setLoading(true);
@@ -67,7 +65,7 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
         setLoading(false);
         breakpoint({
           xs: () =>
-            history.push(
+            router.push(
               `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`
             ),
           md: handleClose,
@@ -95,13 +93,13 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
 
       {isAddingAddress ? (
         <AddAddressForm onCancelClick={() => setIsAddingAddress(false)}>
-          <Button
+          <button
             style={{ marginTop: 10 }}
             onClick={() => setIsAddingAddress(false)}
-            className="account-submit-btn account-submit-btn-outline"
+            className="form-button account-submit-btn account-submit-btn-outline"
           >
             Back
-          </Button>
+          </button>
         </AddAddressForm>
       ) : (
         <div className="billing-address-container">
@@ -115,21 +113,21 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
           )}
 
           <div className="billing-address-butns">
-            <Button
+            <button
               type={"submit"}
               onClick={() => setIsAddingAddress(true)}
-              className="account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+              className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
             >
               ADD new ADDRESS
-            </Button>
-            <Button
+            </button>
+            <button
               disabled={!selectedValue || loading}
               type={"submit"}
-              className="account-submit-btn auto-width-button"
+              className="form-button account-submit-btn auto-width-button"
               onClick={onChangeAddress}
             >
               {loading ? "PEnding..." : "use this address"}
-            </Button>
+            </button>
           </div>
         </div>
       )}

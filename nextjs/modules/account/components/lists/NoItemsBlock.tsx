@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { List } from "@modules/account/ts/types/list.type";
 
@@ -24,13 +23,13 @@ export const NoItemsBlock: React.FC<NoItemsBlockProps> = ({ listInfo }) => {
         There are no items in this List. Add items you want to shop for.
       </div>
 
-      <Button
+      <button
         onClick={addIdea}
         type={"submit"}
-        className="account-submit-btn account-submit-btn-outline full-width d-md-none"
+        className="form-button account-submit-btn account-submit-btn-outline full-width d-md-none"
       >
         Add idea to list
-      </Button>
+      </button>
     </div>
   );
 };

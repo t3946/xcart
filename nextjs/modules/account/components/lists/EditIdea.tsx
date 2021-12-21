@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "@material-ui/core";
 import { FormInput } from "@modules/account/components/shared/FormInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -71,20 +70,20 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
             value={formik.values.name}
           />
           <div className="edit-idea-btns">
-            <Button
+            <button
               type={"submit"}
               disabled={isLoading}
-              className="account-submit-btn auto-width-button confirm-edit-idea-btn"
+              className="form-button account-submit-btn auto-width-button confirm-edit-idea-btn"
             >
               Confirm
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => onSetEdit()}
               disabled={isLoading}
-              className="account-submit-btn account-submit-btn-outline auto-width-button "
+              className="form-button account-submit-btn account-submit-btn-outline auto-width-button "
             >
               Cancel
-            </Button>
+            </button>
           </div>
         </form>
       ) : (

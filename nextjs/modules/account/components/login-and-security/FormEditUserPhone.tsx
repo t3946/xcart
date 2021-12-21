@@ -71,7 +71,7 @@ const FormEditUserPhone = (props: IProps): any => {
         success(res) {
           dispatch(userSetAction(res.user));
           const path =
-            location?.state?.from || route("account:login-and-security");
+            location?.state?.from || "/login-and-security";
           history.push(path);
 
           dispatch(

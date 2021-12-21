@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
 import { setMobileMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 
 const MobileTemplate: React.FC<any> = () => {
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelector((e) => e.user);
   const classes = ["navigation-login-button d-flex align-items-center"];
   const dispatch = useDispatch();
 

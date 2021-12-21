@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import Link from "next/link";
+
 import { Dropdown } from "react-bootstrap";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
@@ -9,114 +11,106 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
-import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
-import RotateStyles from "styles/modules/Rotate.module.scss";
-import Styles from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
-import cn from "classnames";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-const AccountLink: React.FC = function () {
-  const classes = [
-    "sidebar-menu-item",
-    "sidebar-menu_top-level-item",
-    "text-decoration-none",
-  ];
+interface PropsInterface {
+  isStatic: boolean;
+}
 
-  return (
-    <Link href={"/"}>
-      <a className={classnames(classes)}>Account</a>
-    </Link>
-  );
-};
-
-const LoginButtonDesktop: React.FC = function () {
+const LoginButtonDesktop: React.FC<PropsInterface> = function (
+  props: PropsInterface
+) {
+  const maxUsernameLength = 10;
   const dispatch = useDispatch();
-  const user = useSelector((e: any) => e.user);
-  const isTabletMenuVisible = useSelector(
-    (e: any) => e.mobileMenu.isTabletMenuVisible
-  );
-  const classes = {
-    button: [
-      Styles.hatLoginButton,
-      "d-flex",
-      "align-items-center",
-      "justify-content-center",
-      "position-relative",
-      "cursor-pointer",
-      "text-decoration-none",
-    ],
+  const user = useSelector((e) => e.user);
+  const isStatic = props.isStatic || false;
 
-    username: ["hat-login-button-username"],
-
-    iconArrow: [
-      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-      "login-button-desktop__arrow",
-      "login-button-desktop-arrow",
-      {
-        "login-button-desktop-arrow__flip": isTabletMenuVisible,
-      },
-    ],
-  };
-  const routes = useSelectorAccount((e) => e.routes);
-
-  function toggleMenu(isVisible: boolean) {
+  function toggleMenu(isVisible) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
     isVisible && dispatch(setVisibleShadowPanelAction(true));
   }
 
   if (!user) {
-    return (
-      <Link href={routes["account:login"]}>
-        <a className={cn(classes.button)}>
-          <UserIcon />
-          <span className="hat-login-button-username">log in</span>
+    const path = "/login";
+    const className = "hat-login-button";
+    const text = "log in";
+
+    if (isStatic) {
+      return (
+        <a href={path} className={className}>
+          {text}
         </a>
-      </Link>
-    );
+      );
+    } else {
+      return (
+        <Link href={path}>
+          <a className={className}>{text}</a>
+        </Link>
+      );
+    }
   }
+
+  function truncateUsername(username) {
+    if (username.length <= maxUsernameLength) {
+      return username;
+    } else {
+      return username.substr(0, maxUsernameLength - 1) + "…";
+    }
+  }
+
+  const username = truncateUsername(user.name);
+  const title = username === user.name ? "" : user.name;
+  const className = "hat-login-button";
+
+  const isTabletMenuVisible = useSelector(
+    (e: any) => e.mobileMenu.isTabletMenuVisible
+  );
 
   function logoutButtonClickHandler() {
     HideAllMenu(dispatch);
     dispatch(setVisibleShadowPanelAction(false));
   }
 
-  const CustomMenu = React.forwardRef((menuProps: any, ref: any) => {
-    const { className, "aria-labelledby": labeledBy } = menuProps;
-
-    return (
-      <div
-        ref={ref}
-        className={classnames(
-          className,
-          "account-hat-dropdown-menu col-12 p-0 rounded-0 border-0"
-        )}
-        aria-labelledby={labeledBy}
-      >
-        <div className="sidebar-menu-wrapper">
-          <AccountLink />
-          <LogoutButton onClick={logoutButtonClickHandler} />
+  const CustomMenu = React.forwardRef(
+    ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+      return (
+        <div
+          ref={ref}
+          className={classnames(
+            className,
+            "account-hat-dropdown-menu col-12 p-0 rounded-0"
+          )}
+          aria-labelledby={labeledBy}
+        >
+          <div className="sidebar-menu-wrapper">
+            <LogoutButton onClick={logoutButtonClickHandler} />
+          </div>
         </div>
-      </div>
-    );
-  });
+      );
+    }
+  );
 
-  const CustomToggle = React.forwardRef((props: any, ref: any) => {
+  const CustomToggle = React.forwardRef((props, ref) => {
     const { onClick } = props;
+
+    const arrowClasses = [
+      "login-button-desktop__arrow login-button-desktop-arrow",
+      {
+        "login-button-desktop-arrow__flip": isTabletMenuVisible,
+      },
+    ];
 
     return (
       <span
-        className={cn(classes.button)}
-        title={user.name}
+        className={className}
+        title={title}
         ref={ref}
         onClick={(e) => {
           onClick(e);
         }}
       >
-        <UserIcon />
-        <span className={classnames(classes.username)}>{user.name}</span>
-
-        <ArrowIconMobileDesktop className={classnames(classes.iconArrow)} />
+        {username}
+        <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );
   });
@@ -127,10 +121,9 @@ const LoginButtonDesktop: React.FC = function () {
       onToggle={(prop) => {
         toggleMenu(prop);
       }}
-      onClick={(e: any) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
     >
       <Dropdown.Toggle id="dropdown-basic" as={CustomToggle} />
-
       <TransitionFade show={isTabletMenuVisible}>
         <Dropdown.Menu as={CustomMenu} />
       </TransitionFade>

@@ -1,6 +1,4 @@
 import React from "react";
-import { Button, Grid } from "@material-ui/core";
-import GetAppIcon from "@material-ui/icons/GetApp";
 
 interface EmailAttachmentItem {
   file: any;
@@ -29,12 +27,12 @@ export const EmailAttachmentItem: React.FC<EmailAttachmentItem> = ({
           </div>
           <div className="incoming-file-footer">
             <span>
-              <Grid alignItems="center" container>
+              <div className="d-flex align-center">
                 <img className="mini-icon" src={file.iconMini} />
                 <span className={`incoming-file-footer-text `}>
                   {incomingFile.filename}
                 </span>
-              </Grid>
+              </div>
             </span>
           </div>
         </div>
@@ -47,7 +45,7 @@ export const EmailAttachmentItem: React.FC<EmailAttachmentItem> = ({
           <div className="hover-items-icon-background" />
           <div className="hover-items-content">
             <div className="hover-items-content-text-wrapper">
-              <Grid container alignItems="center">
+              <div className="d-flex  align-center">
                 <img className="mini-icon" src={file.iconMini} />
                 <span
                   className={`hover-items-content-name ${
@@ -56,12 +54,11 @@ export const EmailAttachmentItem: React.FC<EmailAttachmentItem> = ({
                 >
                   {incomingFile.filename}
                 </span>
-              </Grid>
+              </div>
             </div>
-            <Button className="hover-items-content-btn">
-              <GetAppIcon />
+            <button className="form-button hover-items-content-btn">
               <span>DOWNLOAD</span>
-            </Button>
+            </button>
           </div>
         </div>
       </a>

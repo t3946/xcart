@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
-import { Button } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import {
   initialAddAddressFormValue,
@@ -190,23 +189,23 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
               />
               <div className="billing-address-add-btns">
                 <div className="billing-address-add-btns-container">
-                  <Button
+                  <button
                     onClick={() =>
                       context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
                     }
                     type={"submit"}
                     disabled={submitCardFormLoading}
-                    className="account-submit-btn account-submit-btn-outline auto-width-button billing-address-back-btn"
+                    className="form-button account-submit-btn account-submit-btn-outline auto-width-button billing-address-back-btn"
                   >
                     Back
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     disabled={submitCardFormLoading}
                     type={"submit"}
-                    className="account-submit-btn auto-width-button"
+                    className="form-button account-submit-btn auto-width-button"
                   >
                     USE tHIS aDDRESS
-                  </Button>
+                  </button>
                 </div>
               </div>
             </Form>

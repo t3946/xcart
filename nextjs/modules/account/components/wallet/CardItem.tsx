@@ -1,6 +1,5 @@
 import React from "react";
 import { useAccordion } from "../../hooks/useAccordion";
-import { Button } from "@material-ui/core";
 import { useDialog } from "../../hooks/useDialog";
 import { CardDialog } from "./CardDialog";
 import { RemoveCardDialog } from "./RemoveCardDialog";
@@ -106,8 +105,8 @@ export const CardItem: React.FC<CardItemProps> = ({
             ),
             md: (
               <div className="wallet-card-buttons">
-                <Button
-                  className="account-submit-btn edit-card-btn"
+                <button
+                  className="form-button account-submit-btn edit-card-btn"
                   onClick={() =>
                     openCardDialog(
                       cardInfo,
@@ -117,8 +116,8 @@ export const CardItem: React.FC<CardItemProps> = ({
                   }
                 >
                   Edit
-                </Button>
-                <Button
+                </button>
+                <button
                   onClick={() =>
                     openCardDialog(
                       cardInfo,
@@ -126,10 +125,10 @@ export const CardItem: React.FC<CardItemProps> = ({
                       "/account/payments/wallet/remove"
                     )
                   }
-                  className="account-submit-btn account-submit-btn-outline"
+                  className="form-button account-submit-btn account-submit-btn-outline"
                 >
                   Remove
-                </Button>
+                </button>
               </div>
             ),
           })}

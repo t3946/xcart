@@ -4,9 +4,7 @@ import OneTimePasswordInputForm from "@modules/account/components/password-assis
 import ChangePasswordForm from "@modules/account/components/password-assistance/ChangePasswordForm";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
-
+import { useRouter } from "next/router";
 const PasswordAssistance: React.FC<any> = function () {
   const INPUT_LOGIN_MODE = 0;
   const INPUT_OTP_MODE = 1;
@@ -17,7 +15,7 @@ const PasswordAssistance: React.FC<any> = function () {
   const [resetPasswordToken, setResetPasswordToken] = React.useState();
   const user = useSelector((e: StoreInterface) => e.user);
 
-  user && useHistory().push(route("account:dashboard"));
+  user && useRouter().push("/dashboard");
 
   function goToOTPInput(login) {
     setLogin(login);

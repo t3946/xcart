@@ -4,8 +4,7 @@ import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { resetPasswordAction } from "@redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
-import { route } from "@utils/AppData";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 
 interface IProps {
   resetPasswordToken: string;
@@ -15,7 +14,7 @@ interface IProps {
 const ChangePasswordForm: React.FC<any> = function (props: IProps) {
   const { resetPasswordToken, goToLoginInput } = props;
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useRouter();
   const initialState = {
     password: "",
     confirmPassword: "",
@@ -44,7 +43,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
         },
 
         success: function () {
-          history.push(route("account:login"));
+          router.push("/login");
         },
 
         error(err) {

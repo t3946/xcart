@@ -1,8 +1,6 @@
-import CallReceivedIcon from "@material-ui/icons/CallReceived";
-import CallMadeIcon from "@material-ui/icons/CallMade";
+import CallReceivedIcon from "@modules/icon/components/account/call/CallReceivedIcon";
+import CallMadeIcon from "@modules/icon/components/account/call/CallMadeIcon";
 import React from "react";
-import { Grid, Paper } from "@material-ui/core";
-import moment from "moment";
 
 interface ItemProps {
   theme: string;
@@ -24,18 +22,9 @@ function editEmailListItemIcon(type: string) {
 
 const Item: React.FC<ItemProps> = ({ itemData, theme, handleClick }) => {
   return (
-    <Paper
-      onClick={handleClick}
-      square={true}
-      className={`list-item-wrap ${theme}`}
-    >
-      <Grid
-        zeroMinWidth
-        alignItems="center"
-        justifyContent="space-between"
-        container
-      >
-        <Grid xs={3}>
+    <div onClick={handleClick} className={`list-item-wrap ${theme}`}>
+      <div className="d-flex align-items-center justify-content-between">
+        <div>
           <div className="faxage-text">
             <span>
               {itemData.type === "inbox"
@@ -43,21 +32,21 @@ const Item: React.FC<ItemProps> = ({ itemData, theme, handleClick }) => {
                 : itemData.to_address}
             </span>
           </div>
-        </Grid>
-        <Grid container justifyContent="flex-start" xs={5}>
+        </div>
+        <div className="d-flex  justify-content-between">
           <div className="text-name">
             <span>{itemData.subject}</span>
           </div>
-        </Grid>
-        <Grid justifyContent={"center"} container xs={1} />
+        </div>
+        <div className="d-flex justify-content-between" />
         <div className="date">
-          <span>{moment(itemData.date).format("D MMM")}</span>
+          <span>{new Date(itemData.date)}</span>
         </div>
         <div className={`message-type-wrap icon-${theme}`}>
           {editEmailListItemIcon(itemData.type)}
         </div>
-      </Grid>
-    </Paper>
+      </div>
+    </div>
   );
 };
 
