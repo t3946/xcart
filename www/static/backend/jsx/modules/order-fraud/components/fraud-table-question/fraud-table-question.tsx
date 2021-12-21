@@ -6,15 +6,17 @@ import { MainAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 interface FraudTableQuestion {
   listAnswer: MainAnswer[];
   title: string;
+  colorTitle?: string;
 }
 
 export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
   listAnswer,
   title,
+  colorTitle = "black",
 }) => {
   return (
     <Fragment>
-      <Typography variant="h6" align="center">
+      <Typography color={colorTitle} variant="h6" align="center">
         {title}
       </Typography>
       <table className="table-base-question" border={1}>

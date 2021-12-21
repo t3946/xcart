@@ -46,7 +46,7 @@ class FraudCheckFAHelper
     /** Устанавливает значения адреса для shipping, billing адресов из мелиссы **/
     public function fetchMelissaAddressList(): void
     {
-        $outcome_addresses = round($this->compareShippingBillingAddress()/6, 2);
+        $outcome_addresses = round($this->compareShippingBillingAddress() / 6, 2);
         if ((int)$outcome_addresses === 1) {
             // Если shipping и billing адреса равны, то 1 запрос вместо 2
             $this->ob_melissa->setOneMelissaAddressForMany([
@@ -309,7 +309,6 @@ class FraudCheckFAHelper
      *  Коэффициент = Количество одинаковых атрибутов в адресе / Общее количество атрибутов
      * @param array $compare_address - первый адрес в формате массива
      * @param array $addressData - второй адрес в формате массива
-     * @param bool $max_coefficient
      * @return float
      */
     public function compareAddress(array $compare_address, array $addressData): float
@@ -327,36 +326,39 @@ class FraudCheckFAHelper
                 break;
             }
         }
-        if ($coefficient === 5) {
-            if (empty($compare_address['street2']) && empty($addressData['street2'])) {
-                $coefficient++;
-            }
+        if (($coefficient === 5) && empty($compare_address['street2']) && empty($addressData['street2'])) {
+            $coefficient++;
         }
         return $coefficient;
     }
 
     /* Full name check */
 
-    private function compareOwnerAddressByParams(string $name_address, string $full_name): bool
+    private function compareOwnerAddress(string $name_address, $full_name): array
     {
-        if (!is_null($this->ob_melissa->melissa_address[$name_address]['owner']['OwnerName1Full'])) {
-            $result_compare = $this->compareClientName($full_name, $this->ob_melissa->melissa_address[$name_address]['owner']['OwnerName1Full']);
-            if ($result_compare) {
-                return true;
+        $best_owner = '';
+        $best_outcome = 0;
+        $best_compare = '';
+        foreach (['OwnerName1Full', 'OwnerName2Full'] as $owner_type) {
+            if ($name_owner = $this->ob_melissa->melissa_address[$name_address]['owner'][$owner_type]) {
+                if (is_array($full_name)) {
+                    [$outcome, $best_compare_name] = self::compareManyName(array_filter($full_name), $name_owner);
+                } else {
+                    $outcome = self::compareClientName($full_name, trim($name_owner));
+                    $best_compare_name = $full_name;
+                }
+                if ($outcome >= $best_outcome) {
+                    $best_outcome = $outcome;
+                    $best_owner = $name_owner;
+                    $best_compare = $best_compare_name;
+                }
             }
         }
-        return false;
+        return [$best_outcome, $best_owner, $best_compare];
     }
 
-    private function compareTenantAddressByName(string $name_address, string $full_name): bool
-    {
-        if (!is_null($this->ob_melissa->melissa_address[$name_address]['address']['NameFull'])) {
-            return $this->compareClientName($full_name, $this->ob_melissa->melissa_address[$name_address]['address']['NameFull']);
-        }
-        return false;
-    }
 
-    private function compareTelephoneClientName(string $f_full_name, string $t_full_name): bool
+    private static function compareTelephoneClientName(string $f_full_name, string $t_full_name): bool
     {
         $ar_f = explode(' ', $f_full_name);
         $ar_t = explode(' ', $t_full_name);
@@ -371,7 +373,7 @@ class FraudCheckFAHelper
                 }
             }
         }
-        return $this->compareClientName($f_full_name, $t_full_name);
+        return self::compareClientName($f_full_name, $t_full_name);
     }
 
     /** Парсит полное имя и сравнивает фамилию(последний элемент) в формате upperCase со вторым
@@ -379,31 +381,46 @@ class FraudCheckFAHelper
      * @param string $t_full_name - Полное имя второго
      * @return bool
      */
-    private function compareClientName(string $f_full_name, string $t_full_name): bool
+    private static function compareClientName(string $f_full_name, string $t_full_name): bool
     {
+        if (empty(trim($f_full_name)) || empty(trim($t_full_name))) {
+            return false;
+        }
         $ar_f = explode(' ', $f_full_name);
         $ar_t = explode(' ', $t_full_name);
+
+        $unique_attr = array_intersect($ar_f, $ar_t);
+        if (count($unique_attr) === count($ar_t)) {
+            return true;
+        }
 
         return strtoupper($ar_f[count($ar_f) - 1]) === strtoupper($ar_t[count($ar_t) - 1])
             || soundex($ar_f[count($ar_f) - 1]) === soundex($ar_t[count($ar_t) - 1]);
     }
 
-    public function comparePhoneCaller($full_name): bool
-    {
-        $phone_data = $this->ob_melissa->phone_data;
-        if (!empty($phone_data) && !empty(trim($phone_data['CallerID']))) {
-            return $this->compareTelephoneClientName($full_name, $phone_data['CallerID']);
-        }
-        return false;
-    }
-
     public function scorePhoneCaller(FraudFAQuestionModel $fraud, ?array $compare_info): array
     {
         $outcome = 0;
-        $info = $this->getInfoFN($fraud, $compare_info, ['value' => $this->ob_melissa->phone_data['CallerID']]);
-        if (!is_null($compare_info['value']) && $this->comparePhoneCaller($compare_info['value'])) {
-            $outcome = 1;
+        $caller_name = $this->ob_melissa->phone_data['CallerID'];
+        if (!$caller_name) { // Если имя владельца телефона не известно
+            $info = $this->getInfoFN($fraud,
+                array_merge($compare_info, ['value' => self::getFrontendValue($compare_info['value'])]),
+                ['value' => '']
+            );
+            return [$fraud->weight, $info, 0];
         }
+        $name = $compare_info['value'];
+        if ($compare_info['value']) {
+            if (is_array($compare_info['value'])) {
+                [$outcome, $name] = self::compareManyName(array_filter($compare_info['value']), $caller_name, true);
+            } else {
+                $outcome = self::compareTelephoneClientName($compare_info['value'], $caller_name);
+            }
+        }
+        $info = $this->getInfoFN($fraud,
+            array_merge($compare_info, ['value' => $name]),
+            ['value' => $caller_name]
+        );
         return [$fraud->weight, $info, $outcome];
 
     }
@@ -417,10 +434,7 @@ class FraudCheckFAHelper
             ['value' => $this->order_model->b_firstname, 'zipcode' => $this->order_model->b_zipcode]
         );
         if ($this->order_model->b_firstname && !empty($compare_name['value'])) {
-            $compare = $this->compareClientName($compare_name['value'], $this->order_model->b_firstname);
-            if ($compare) {
-                $outcome = 1;
-            }
+            $outcome = self::compareClientName($compare_name['value'], $this->order_model->b_firstname);
         }
         return [$fraud->weight, $info, $outcome];
     }
@@ -435,7 +449,7 @@ class FraudCheckFAHelper
                 return [null, $fraud->weight, $info, 0];
             }
         }
-        $compare = $this->compareClientName($names[0]['value'], $names[1]['value']);
+        $compare = self::compareClientName($names[0]['value'], $names[1]['value']);
         if ($compare) {
             $outcome = 1;
         }
@@ -445,38 +459,107 @@ class FraudCheckFAHelper
     public function scoreTenantAddress(FraudFAQuestionModel $fraud, ?array $compare_name, string $type_address = 'shipping'): array
     {
         $outcome = 0;
-        $str_address = $this->ob_melissa->melissa_address[$type_address]['address']['NameFull'];
+        $tenant_name = $this->ob_melissa->melissa_address[$type_address]['address']['NameFull'];
+
+        if (!$tenant_name) { // Если Tenant не указан
+            $info = $this->getInfoFN(
+                $fraud,
+                ['value' => is_array($compare_name['value']) ? $compare_name['value'][0] : $compare_name['value'], 'zipcode' => $compare_name['zipcode']],
+                ['value' => $tenant_name, 'zipcode' => $this->ob_melissa->melissa_address[$type_address]['address']['PostOfficeZip']]
+            );
+            return [$fraud->weight, $info, 0];
+        }
+
+        $name_value = $compare_name['value'];
+        if ($compare_name['value']) {
+            if (is_array($compare_name['value'])) { // Если сравнение с владельцами адреса(т.к их много)
+                [$outcome, $name_value] = self::compareManyName(array_filter($compare_name['value']), $tenant_name);
+            } else {
+                $outcome = self::compareClientName($compare_name['value'], $tenant_name);
+            }
+        }
         $info = $this->getInfoFN(
             $fraud,
-            $compare_name,
-            ['value' => $str_address, 'zipcode' => $this->ob_melissa->melissa_address[$type_address]['address']['PostOfficeZip']]
+            ['value' => $name_value, 'zipcode' => $compare_name['zipcode']],
+            ['value' => $tenant_name, 'zipcode' => $this->ob_melissa->melissa_address[$type_address]['address']['PostOfficeZip']]
         );
-        if (!is_null($compare_name['value']) && $this->compareTenantAddressByName($type_address, $compare_name['value'])) {
-            $outcome = 1;
-        }
         return [$fraud->weight, $info, $outcome];
+    }
+
+
+    private static function compareManyName(array $compare_names, string $full_name, bool $phone_compare = false): array
+    {
+        $outcome = 0;
+        $best_result_name = '';
+        if (empty($compare_names)) {
+            return [$outcome, null];
+        }
+        foreach ($compare_names as $name_item) {
+            if ($phone_compare) {
+                $compare_outcome = self::compareTelephoneClientName($name_item, $full_name);
+            } else {
+                $compare_outcome = self::compareClientName($name_item, $full_name);
+            }
+            if ($compare_outcome >= $outcome) {
+                $outcome = $compare_outcome;
+                $best_result_name = $name_item;
+            }
+        }
+        return [$outcome, $best_result_name];
     }
 
     public function scoreOwnerAddress(FraudFAQuestionModel $fraud, ?array $compare_name, string $type_address = 'shipping'): array
     {
         $outcome = 0;
-        $str_address = $this->ob_melissa->melissa_address[$type_address]['owner']['OwnerName1Full'];
-        $zip_owner = $this->ob_melissa->melissa_address[$type_address]['owner']['OwnerZip'];
-        $zip = substr($zip_owner, 0, 5);
-        $info = $this->getInfoFN($fraud, $compare_name, ['value' => $str_address, 'zipcode' => $zip]);
-        if (!is_null($compare_name['value']) && $this->compareOwnerAddressByParams($type_address, $compare_name['value'])) {
-            $outcome = 1;
+        $owner_data = $this->ob_melissa->melissa_address[$type_address]['owner'];
+        if (!$owner_data) {
+            $info = $this->getInfoFN(
+                $fraud,
+                array_merge($compare_name, ['value' => self::getFrontendValue($compare_name['value'])]),
+                ['value' => '']
+            );
+            return [$fraud->weight, $info, 0];
         }
+        $zip_owner = $owner_data['OwnerZip'];
+        $zip = substr($zip_owner, 0, 5);
+
+        if ($name = $compare_name['value']) {
+            [$outcome, $owner_name, $name] = $this->compareOwnerAddress($type_address, $compare_name['value']);
+        }
+
+        $info = $this->getInfoFN(
+            $fraud,
+            array_merge($compare_name, ['value' => $name ?? '']),
+            ['value' => $owner_name ?? '', 'zipcode' => $zip]
+        );
         return [$fraud->weight, $info, $outcome];
     }
 
     public function scoreEmailAddress(FraudFAQuestionModel $fraud, ?array $compare_name): array
     {
         $outcome = 0;
-        $info = $this->getInfoFN($fraud, $compare_name, ['value' => $this->ob_melissa->email_data['NameFull']]);
-        if (!is_null($compare_name['value']) && $this->compareClientName($compare_name['value'], $this->ob_melissa->email_data['NameFull'] ?? '')) {
-            $outcome = 1;
+        $email_name = $this->ob_melissa->email_data['NameFull'];
+        if (!$email_name) {
+            $info = $this->getInfoFN(
+                $fraud,
+                array_merge($compare_name, ['value' => self::getFrontendValue($compare_name['value'])]),
+                ['value' => $email_name]
+            );
+            return [$fraud->weight, $info, 0];
         }
+        $name = $compare_name['value'];
+        if ($compare_name['value']) {
+            if (is_array($compare_name['value'])) {
+                [$outcome, $name] = self::compareManyName(array_filter($compare_name['value']), $email_name);
+            } else {
+                $outcome = self::compareClientName($compare_name['value'], $email_name);
+            }
+        }
+        $info = $this->getInfoFN(
+            $fraud,
+            array_merge($compare_name, ['value' => $name]),
+            ['value' => $this->ob_melissa->email_data['NameFull']]
+        );
         return [$fraud->weight, $info, $outcome];
     }
 
@@ -543,5 +626,10 @@ class FraudCheckFAHelper
     public static function getLinesAddress(string $address)
     {
         return preg_split('~\R~', $address);
+    }
+
+    private static function getFrontendValue($full_name)
+    {
+        return is_array($full_name) ? $full_name[0] : $full_name;
     }
 }

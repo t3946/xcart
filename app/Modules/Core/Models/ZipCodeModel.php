@@ -9,6 +9,12 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property string zip
+ * @property int state
+ * @property StateModel state_model
+ * @property string city
+ */
 class ZipCodeModel extends Model
 {
     use AutoMetaTrait;
@@ -30,7 +36,11 @@ class ZipCodeModel extends Model
                 'modelClass' => StateModel::class,
                 'link' => ['state' => 'code', 'country' => 'country_code'],
             ],
-
+            'city' => [
+                'class' => CharField::class,
+                'default' => '',
+                'null' => false
+            ]
         ];
     }
 }

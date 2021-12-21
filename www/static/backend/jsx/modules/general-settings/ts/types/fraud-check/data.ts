@@ -30,4 +30,5 @@ export interface ChangeQuestionDataForm {
   orderBy?: number;
   questionId: number;
   type: string;
+  avail?: number;
 }

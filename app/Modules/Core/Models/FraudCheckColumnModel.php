@@ -24,28 +24,32 @@ use Xcart\App\Orm\Model;
  */
 class FraudCheckColumnModel extends Model
 {
-	public static function tableName()
-	{
-		return 'xcart_fraud_columns';
-	}
-	public static function getFields()
-	{
-		return [
-			'fraud_id' => [
-				'class' => AutoField::class,
-				'primary' => true,
-				'null' => false,
-			],
-			'code' => [
-				'class' => CharField::class,
-				'default' => null,
-				'null' => true,
-			],
-			'name' => [
-				'class' => CharField::class,
-				'default' => null,
-				'null' => true,
-			],
+    public const COLUMN_TYPE_ADDRESS = 'address';
+    public const COLUMN_TYPE_FULL_NAME = 'full_name';
+
+    public static function tableName()
+    {
+        return 'xcart_fraud_columns';
+    }
+
+    public static function getFields()
+    {
+        return [
+            'fraud_id' => [
+                'class' => AutoField::class,
+                'primary' => true,
+                'null' => false,
+            ],
+            'code' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true,
+            ],
+            'name' => [
+                'class' => CharField::class,
+                'default' => null,
+                'null' => true,
+            ],
             'type' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -61,6 +65,6 @@ class FraudCheckColumnModel extends Model
             'source_type' => CharField::class,
             'is_melissa_data' => BooleanField::class,
             'inferred_from' => CharField::class
-		];
-	}
+        ];
+    }
 }

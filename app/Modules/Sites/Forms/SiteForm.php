@@ -91,7 +91,7 @@ class SiteForm extends ModelForm
                 'class' => CheckboxField::class,
                 'label' => 'Enable surf stats',
             ],
-            'country' => [
+            'country_model' => [
                 'class' => Select2Field::class,
                 'label' => 'Preferred served country',
                 'choices' => function () {

@@ -20,6 +20,7 @@ export const TableBaseQuestions: React.FC = () => {
       template: question.template,
       type: question.type,
       orderBy: question.orderBy,
+      avail: question.avail,
     });
     setOpen(!open);
   };
@@ -32,6 +33,7 @@ export const TableBaseQuestions: React.FC = () => {
           <th>Auto</th>
           <th>Question weight</th>
           <th>Question type Type</th>
+          <th>Avail</th>
           <th>Order by</th>
           <th>Edit</th>
         </tr>
@@ -44,6 +46,7 @@ export const TableBaseQuestions: React.FC = () => {
             <td>{question.auto}</td>
             <td>{question.weight}</td>
             <td>{question.type}</td>
+            <td>{question.avail ? "Y" : "N"}</td>
             <td>{question.orderBy}</td>
             <td style={{ cursor: "pointer" }}>
               <EditIcon onClick={() => onClickEditHandler(question)} />

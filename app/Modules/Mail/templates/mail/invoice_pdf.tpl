@@ -40,7 +40,7 @@
 <body>
 
 {if $mode!=='print'}
-{set $message = $order->notification->email_body}
+{set $message = $order->getNotification()->email_body}
 {$message|replace:"{{c-fullname}}":$order->firstname}
 {/if}
 

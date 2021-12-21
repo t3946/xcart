@@ -14,4 +14,5 @@ export interface TableBaseQuestion {
   weight: number;
   type: string;
   orderBy: number;
+  avail: number;
 }

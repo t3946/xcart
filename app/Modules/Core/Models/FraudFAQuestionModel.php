@@ -79,8 +79,13 @@ class FraudFAQuestionModel extends Model
     public function getScore(OrderModel $order, FraudCheckFAHelper $helper): ?array
     {
         if ($result = $this->getMethodResult($order, $helper)) {
+            // Для full_name вопросов их методы в переменную $coefficient будут сразу возвращать outcome, а для address вопросов коэффициент
             [$weight, $info, $coefficient] = $result;
-            $outcome = round($coefficient /6, 2);
+            $outcome = (int)$coefficient;
+            // outcome у адресных вопросов = коэффициент / максимальное кол-во параметров в адресе
+            if ($this->f_fraud->type === FraudCheckColumnModel::COLUMN_TYPE_ADDRESS) {
+                $outcome = round($coefficient / 6, 2);
+            }
             return [round($coefficient/6 * $weight, 2), $info, $outcome];
         }
         return null;
@@ -147,23 +152,22 @@ class FraudFAQuestionModel extends Model
                     'value' => $helper->ob_melissa->melissa_address['shipping']['address']['NameFull'] ?? null,
                     'zipcode' => $helper->ob_melissa->melissa_address['shipping']['address']['PostOfficeZip'] ?? null
                 ];
-            case 'FN_O_SA':
-                $zip = trim($helper->ob_melissa->melissa_address['shipping']['owner']['OwnerZip']);
-                $zip = substr($zip, 0, 5);
-                return [
-                    'value' => $helper->ob_melissa->melissa_address['shipping']['owner']['OwnerName1Full'] ?? null,
-                    'zipcode' => $zip ?? null
-                ];
             case 'FN_T_BA':
                 return [
                     'value' => $helper->ob_melissa->melissa_address['billing']['address']['NameFull'] ?? null,
                     'zipcode' => $helper->ob_melissa->melissa_address['billing']['address']['PostOfficeZip'] ?? null
                 ];
             case 'FN_O_BA':
-                $zip = trim($helper->ob_melissa->melissa_address['billing']['owner']['OwnerZip']);
+            case 'FN_O_SA':
+                $type_address = ($fraud_code === 'FN_O_SA') ? 'shipping' : 'billing';
+                $zip = trim($helper->ob_melissa->melissa_address[$type_address]['owner']['OwnerZip']);
                 $zip = substr($zip, 0, 5);
+
+                foreach (['OwnerName1Full', 'OwnerName2Full'] as $name_item) {
+                    $ar_name[] = $helper->ob_melissa->melissa_address[$type_address]['owner'][$name_item];
+                }
                 return [
-                    'value' => $helper->ob_melissa->melissa_address['billing']['owner']['OwnerName1Full'] ?? null,
+                    'value' => $ar_name ?? null,
                     'zipcode' => $zip ?? null
                 ];
             case 'FN_TN':

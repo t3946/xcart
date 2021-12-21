@@ -49,6 +49,7 @@ use Xcart\App\Orm\Model;
  * @property string $cidev_top_header_code
  * @property CountryModel country_model
  * @property CorporateModel|null corporation
+ * @property bool show_full_state_country
  */
 class SiteModel extends Model
 {
@@ -263,7 +264,8 @@ class SiteModel extends Model
                 'link' => ['country' => 'code'],
                 'null' => true,
                 'default' => null,
-                'verboseName' => 'Country',
+                'sqlType' => Types::STRING,
+                'verboseName' => 'Preferred served country',
             ],
             'currency' => [
                 'field' => 'currency_id',
