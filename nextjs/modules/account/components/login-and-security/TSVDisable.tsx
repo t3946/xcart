@@ -4,18 +4,19 @@ import { Form as RBForm } from "react-bootstrap";
 import { disableAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
+import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const TSVDisable: React.FC<any> = function () {
   const [isConfirm, setIsConfirm] = React.useState(false);
   const confirmRef = React.useRef<HTMLInputElement>();
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const router = useRouter();
 
   function disableTSVHandler() {
     setIsDisableTsvSending(true);
@@ -25,7 +26,7 @@ const TSVDisable: React.FC<any> = function () {
         success(res) {
           setIsDisableTsvSending(false);
           dispatch(userSetAction(res.user));
-          history.push(route("account:two-step-verification-settings"));
+          router.push("/login-and-security/two-step-verification-settings");
         },
       })
     );
@@ -38,7 +39,7 @@ const TSVDisable: React.FC<any> = function () {
           <button
             className={"form-button form-button__outline rounded-0 w-auto"}
             onClick={() =>
-              history.push(route("account:two-step-verification-settings"))
+              router.push("/login-and-security/two-step-verification-settings")
             }
           >
             <FontAwesomeIcon icon={faArrowLeft} className={"me-3"} />
@@ -47,7 +48,10 @@ const TSVDisable: React.FC<any> = function () {
         </div>
       </div>
 
-      <InnerPage header="Disable 2SV ?">
+      <InnerPage
+        header="Disable 2SV ?"
+        bodyClasses={StylesLoginAndSecurity.pageBody}
+      >
         <div className={"px-10 px-lg-0"}>
           <p className={"m-0"}>
             By disabling Two-Step Verification, OTP will no longer be required
@@ -85,7 +89,7 @@ const TSVDisable: React.FC<any> = function () {
           <button
             className="form-button form-button__outline d-inline-block mt-14 mt-lg-0"
             onClick={() =>
-              history.push(route("account:two-step-verification-settings"))
+              router.push("/login-and-security/two-step-verification-settings")
             }
           >
             cancel

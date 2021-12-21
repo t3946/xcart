@@ -6,7 +6,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import accountRootSaga from "../sagas/account/MainSaga";
 
 import UserReducer from "../reducers/account/UserReducer";
-// import accountAddressesReducer from "../reducers/account/AddressesReducer";
+import accountAddressesReducer from "../reducers/account/AddressesReducer";
 import accountMainReducer from "../reducers/account/MainReducer";
 // import WalletReducer from "../reducers/account/PaymentsReducer";
 import MenuReducer from "../reducers/account/MenuReducer";
@@ -50,7 +50,7 @@ if (process.browser) {
 const reducers = combineReducers({
   user: UserReducer,
   routes: RoutesReducer,
-  // addresses: accountAddressesReducer,
+  addresses: accountAddressesReducer,
   main: accountMainReducer,
   // payments: WalletReducer,
   mobileMenu: MenuReducer,

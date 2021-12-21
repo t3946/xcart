@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { FormInput } from "../shared/FormInput";
 import { FormSelect } from "../shared/FormSelect";
 import { Button, Grid } from "@material-ui/core";
 import { FormCheckBox } from "../shared/FormCheckBox";
@@ -13,11 +12,12 @@ import {
   addAddress,
   editAddress,
 } from "../../../../redux/actions/account-actions/AddressActions";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { getStates } from "../../utils/get-states";
 import Store from "@redux/stores/Store";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import InputGroup from "@modules/account/components/addresses/InputGroup";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -25,7 +25,7 @@ export const AddAddressForm: React.FC<any> = ({
   children,
 }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const history = useRouter();
   const countries = useSelector((e: any) => e.main.countries);
   const states = useSelector((e: any) => e.main.states);
   const { showSnackbar } = useContext(SnackbarContext);
@@ -48,6 +48,7 @@ export const AddAddressForm: React.FC<any> = ({
   const submitForm = () => {
     const newAddress = {
       ...formik.values,
+      phone_number: formik.values.phone_number.replace(/[+()\-\s]/gim, ""),
       country: formik.values.country.value,
       state: formik.values.state.value,
     };
@@ -85,61 +86,59 @@ export const AddAddressForm: React.FC<any> = ({
           }}
           name={"state"}
           id={"add-address-country"}
-          errorMessage={formik.errors.country?.value}
+          errorMessage={
+            formik.touched.country?.value && formik.errors.country?.value
+          }
         />
-        <FormInput
-          label={"Full Name (First and Last name)"}
+        <InputGroup
+          label="Full Name (First and Last name)"
           placeholder={"Albert H. Einstein"}
           value={formik.values.full_name}
           name={"full_name"}
-          errorMessage={formik.errors.full_name}
-          touched={formik.touched.full_name}
-          classes={{ input: "add-address-input" }}
-          handleBlur={formik.handleBlur}
+          error={formik.touched.full_name && formik.errors.full_name}
+          isInvalid={!!(formik.touched.full_name && formik.errors.full_name)}
           handleChange={formik.handleChange}
         />
-        <FormInput
-          label={"Phone Number"}
+
+        <InputGroup
+          label="Phone Number"
           value={formik.values.phone_number}
+          placeholder={"(999) 999 99 99"}
           name={"phone_number"}
-          errorMessage={formik.errors.phone_number}
+          error={formik.touched.phone_number && formik.errors.phone_number}
+          isInvalid={
+            !!(formik.touched.phone_number && formik.errors.phone_number)
+          }
           handleChange={formik.handleChange}
-          touched={formik.touched.phone_number}
-          classes={{ input: "add-address-input" }}
-          handleBlur={formik.handleBlur}
-          mask={"+9 (999) 999 99 99"}
+          mask={"(999) 999 99 99"}
         />
-        <FormInput
-          placeholder="Street address or P.O. Box"
-          label={"Address"}
+
+        <InputGroup
+          label="Address"
           value={formik.values.street}
           name={"street"}
-          errorMessage={formik.errors.street}
+          error={formik.touched.street && formik.errors.street}
+          isInvalid={!!(formik.touched.street && formik.errors.street)}
           handleChange={formik.handleChange}
-          touched={formik.touched.street}
-          classes={{ input: "add-address-input" }}
-          handleBlur={formik.handleBlur}
         />
-        <FormInput
+
+        <InputGroup
           placeholder="Apt, suite, unit, building, floor, etc."
           value={formik.values.detailed}
           name={"detailed"}
-          errorMessage={formik.errors.detailed}
+          error={formik.touched.detailed && formik.errors.detailed}
+          isInvalid={!!(formik.touched.detailed && formik.errors.detailed)}
           handleChange={formik.handleChange}
-          touched={formik.touched.detailed}
-          classes={{ input: "add-address-input" }}
-          handleBlur={formik.handleBlur}
         />
-        <FormInput
+
+        <InputGroup
           label={"City"}
           placeholder="Jackson"
           value={formik.values.city}
           name={"city"}
-          errorMessage={formik.errors.city}
+          error={formik.touched.city && formik.errors.city}
+          isInvalid={!!(formik.touched.city && formik.errors.city)}
           handleChange={formik.handleChange}
-          touched={formik.touched.city}
-          classes={{ input: "add-address-input" }}
-          handleBlur={formik.handleBlur}
         />
         <FormSelect
           classes={{ input: "add-address-input", group: "mb-20" }}
@@ -152,18 +151,19 @@ export const AddAddressForm: React.FC<any> = ({
           }}
           name={"state"}
           id={"add-address-state"}
-          errorMessage={formik.errors.state?.value}
+          errorMessage={
+            formik.touched.state?.value && formik.errors.state?.value
+          }
         />
-        <FormInput
+
+        <InputGroup
           label={"Zip/Postal Code"}
           placeholder="39213"
           value={formik.values.zip}
-          errorMessage={formik.errors.zip}
           name={"zip"}
+          error={formik.touched.zip && formik.errors.zip}
+          isInvalid={!!(formik.touched.zip && formik.errors.zip)}
           handleChange={formik.handleChange}
-          touched={formik.touched.zip}
-          classes={{ input: "add-address-input" }}
-          handleBlur={formik.handleBlur}
         />
         <Grid
           className="add-address-checkbox"

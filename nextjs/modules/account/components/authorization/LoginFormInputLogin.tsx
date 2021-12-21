@@ -1,5 +1,8 @@
 import React from "react";
 import { Formik, Form } from "formik";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
 import { checkUserLoginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { Form as RBForm } from "react-bootstrap";
@@ -54,8 +57,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
           actions.setErrors({ login: err.login[0] });
         },
 
-        complete() {
-        },
+        complete() {},
       })
     );
   }
@@ -67,30 +69,24 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {({ isSubmitting, handleChange, values, errors }) => {
+        {({ isSubmitting, handleChange, values, errors, touched }) => {
           return (
             <Form>
               <RBForm.Group
                 controlId="LoginFormLogin"
                 className={"px-12 px-sm-0"}
               >
-                <RBForm.Label className={"form-input-label"}>
-                  Email or mobile phone number
-                </RBForm.Label>
-
-                <RBForm.Control
+                <Label>Email or mobile phone number</Label>
+                <Input
                   ref={inputRef}
-                  type="text"
                   name="login"
                   value={values.login}
                   onChange={handleChange}
-                  className={"form-input"}
-                  isInvalid={!!errors.login}
+                  isInvalid={!!errors.login && !!touched.login}
                 />
-
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.login}
-                </RBForm.Control.Feedback>
+                <Feedback type="invalid">
+                  {!!touched.login && errors.login}
+                </Feedback>
               </RBForm.Group>
 
               <button

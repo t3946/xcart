@@ -1,5 +1,8 @@
 import React from "react";
 import { Formik, Form } from "formik";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -86,11 +89,8 @@ const RegisterForm: React.FC<any> = () => {
                 <h1 className="account-form-header">Create account</h1>
 
                 <RBForm.Group controlId="RegisterFormName">
-                  <RBForm.Label className={"form-input-label"}>
-                    Your Name
-                  </RBForm.Label>
-
-                  <RBForm.Control
+                  <Label>Your Name</Label>
+                  {/* <RBForm.Control
                     type="text"
                     name="name"
                     value={values.name}
@@ -98,52 +98,45 @@ const RegisterForm: React.FC<any> = () => {
                     className={"form-input"}
                     isInvalid={!!touched.name && !!errors.name}
                     isValid={touched.name && !errors.name}
+                  /> */}
+                  <Input
+                    name="name"
+                    value={values.name}
+                    onChange={handleChange}
+                    isInvalid={!!touched.name && !!errors.name}
+                    isValid={touched.name && !errors.name}
                   />
 
-                  <RBForm.Control.Feedback type="invalid">
+                  {/* <RBForm.Control.Feedback type="invalid">
                     {errors.name}
-                  </RBForm.Control.Feedback>
+                  </RBForm.Control.Feedback> */}
+                  <Feedback type="invalid">{errors.name}</Feedback>
                 </RBForm.Group>
 
                 <RBForm.Group controlId="RegisterFormEmail">
-                  <RBForm.Label className={"form-input-label"}>
-                    Email
-                  </RBForm.Label>
-
-                  <RBForm.Control
-                    type="text"
+                  <Label>Email</Label>
+                  <Input
                     name="email"
                     value={values.email}
                     onChange={handleChange}
-                    className={"form-input"}
                     isInvalid={!!touched.email && !!errors.email}
                     isValid={touched.email && !errors.email}
                   />
-
-                  <RBForm.Control.Feedback type="invalid">
-                    {errors.email}
-                  </RBForm.Control.Feedback>
+                  <Feedback type="invalid">{errors.email}</Feedback>
                 </RBForm.Group>
 
                 <RBForm.Group controlId="RegisterFormPassword">
-                  <RBForm.Label className={"form-input-label"}>
-                    Password
-                  </RBForm.Label>
-
-                  <RBForm.Control
+                  <Label>Password</Label>
+                  <Input
                     type="password"
                     name="password"
                     value={values.password}
                     onChange={handleChange}
-                    className={"form-input"}
                     isInvalid={touched.password && !!errors.password}
                     isValid={touched.password && !errors.password}
                     placeholder={"At least 8 characters "}
                   />
-
-                  <RBForm.Control.Feedback type="invalid">
-                    {errors.password}
-                  </RBForm.Control.Feedback>
+                  <Feedback type="invalid">{errors.password}</Feedback>
 
                   {!(touched.password && errors.password) && (
                     <RBForm.Text className={"auth-form-info_input-caption"}>
@@ -153,16 +146,12 @@ const RegisterForm: React.FC<any> = () => {
                 </RBForm.Group>
 
                 <RBForm.Group controlId="RegisterForm">
-                  <RBForm.Label className={"form-input-label"}>
-                    Re-Enter password
-                  </RBForm.Label>
-
-                  <RBForm.Control
+                  <Label>Re-Enter password</Label>
+                  <Input
                     type="password"
                     name="password_confirm"
                     value={values.password_confirm}
                     onChange={handleChange}
-                    className={"form-input"}
                     isInvalid={
                       touched.password_confirm && !!errors.password_confirm
                     }
@@ -170,10 +159,7 @@ const RegisterForm: React.FC<any> = () => {
                       touched.password_confirm && !errors.password_confirm
                     }
                   />
-
-                  <RBForm.Control.Feedback type="invalid">
-                    {errors.password_confirm}
-                  </RBForm.Control.Feedback>
+                  <Feedback type="invalid">{errors.password_confirm}</Feedback>
                 </RBForm.Group>
               </div>
 

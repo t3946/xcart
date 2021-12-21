@@ -8,9 +8,21 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "../hooks/useDialog";
 import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
+import { getTerritory } from "@redux/actions/account-actions/MainActions";
 
 export const Addresses: React.FC = () => {
+  const dispatch = useDispatch();
+  const userId = useSelector((e: StoreInterface) => {
+    return e.user?.user_id;
+  });
+  React.useEffect(() => {
+    dispatch(getAddresses(userId));
+    dispatch(getTerritory());
+  }, []);
+
   const addresses = useSelector((e: StoreInterface) => {
     return e.addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.SHIPPING
@@ -19,7 +31,7 @@ export const Addresses: React.FC = () => {
 
   const addAddressDialog = useDialog();
 
-  const history = useHistory();
+  const history = useRouter();
 
   const breakpoint = useBreakpoint();
 

@@ -1,10 +1,10 @@
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
+import { useRouter } from "next/router";
+
 import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import {
   editPhoneAction,
   setAlertAction,
@@ -15,16 +15,18 @@ import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+
 interface IProps {
   location: any;
 }
 
 const FormEditUserPhone = (props: IProps): any => {
   const { location } = props;
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
-  const countries = useSelector((e: StoreDto) => e.countries);
+  const user = useSelectorAccount((e) => e.user);
+  const countries = useSelector((e) => e.countries);
 
   /**
    * Get phone number without country code prefix
@@ -110,7 +112,7 @@ const FormEditUserPhone = (props: IProps): any => {
             <InnerPage
               header={"Change Mobile Phone Number"}
               headerClasses={"text-center text-lg-start"}
-              bodyClasses={"content-panel"}
+              bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
               footerClasses={"text-center text-lg-start"}
               footer={
                 <SubmitCancelButtonsGroup
@@ -121,7 +123,7 @@ const FormEditUserPhone = (props: IProps): any => {
                     "d-md-flex justify-content-center justify-content-lg-start"
                   }
                   onCancel={() => {
-                    history.push(route("account:login-and-security"));
+                    router.push("/login-and-security");
                   }}
                 />
               }

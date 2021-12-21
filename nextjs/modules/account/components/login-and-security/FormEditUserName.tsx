@@ -11,10 +11,10 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import Input from "@modules/ui/forms/Input";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const FormEditUserName = (): any => {
   const router = useRouter();

@@ -1,0 +1,14 @@
+@import "styles/utils/Utils.module";
+
+.input {
+  width: 50%;
+}
+
+.feedback {
+  width: 50%;
+  font-size: 0.75rem;
+}
+
+.group__feedback {
+  margin: pxToRem(8) 0 0 50%;
+}

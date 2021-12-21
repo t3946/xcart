@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
-import { useHistory } from "react-router-dom";
+
+import { useRouter } from "next/router";
 import { route } from "@utils/AppData";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,11 +10,15 @@ import * as yup from "yup";
 import { Form, Formik } from "formik";
 import { confirmCodeAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
+
+import Styles from "@modules/account/components/login-and-security/TSVAddNewApp.module.scss";
 
 const TSVAddNewApp = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
   const initialValues = {
     code: "",
@@ -25,7 +29,7 @@ const TSVAddNewApp = (): any => {
   });
 
   if (user === null) {
-    history.push(route("account:login"));
+    router.push("/account/login");
   }
 
   function submit(values, actions) {
@@ -35,7 +39,7 @@ const TSVAddNewApp = (): any => {
 
         success(res) {
           dispatch(userSetAction(res.user));
-          history.push(route("account:two-step-verification-settings"));
+          router.push("/login-and-security/two-step-verification-settings");
         },
 
         error(err) {
@@ -81,6 +85,7 @@ const TSVAddNewApp = (): any => {
           <li>
             <b>Open</b> your Authenticator App.
             <OverlayTrigger
+              trigger="click"
               placement="top"
               delay={{ show: 250, hide: 1000 }}
               overlay={
@@ -98,10 +103,10 @@ const TSVAddNewApp = (): any => {
                     will be included as an option to receive the One Time
                     Password (OTP). To change your phone number,{" "}
                     <Link
-                      to={{
-                        pathname: route("account:edit-phone"),
-                        state: {
-                          from: route("account:two-step-verification-add-new"),
+                      href={{
+                        pathname: "/login-and-security/edit-phone",
+                        query: {
+                          from: "/login-and-security/two-step-verification-add-new",
                         },
                       }}
                     >
@@ -136,6 +141,7 @@ const TSVAddNewApp = (): any => {
 
               <OverlayTrigger
                 placement="top"
+                trigger="click"
                 delay={{ show: 250, hide: 250 }}
                 overlay={
                   <Tooltip
@@ -206,12 +212,12 @@ const TSVAddNewApp = (): any => {
                       className="row mb-4 mb-md-0"
                     >
                       <div className={"col-12"}>
-                        <RBForm.Control
+                        <Input
                           type="text"
                           name="code"
                           value={values.code}
                           onChange={handleChange}
-                          className={"form-input tsv-code-field d-inline-block"}
+                          className={[Styles.tsvCodeField, "d-inline-block"]}
                           isInvalid={!!touched.code && !!errors.code}
                           isValid={touched.code && !errors.code}
                           autoComplete={"off"}
@@ -226,9 +232,9 @@ const TSVAddNewApp = (): any => {
                           Verify OTP and continue
                         </button>
 
-                        <RBForm.Control.Feedback type="invalid">
-                          {errors.code}
-                        </RBForm.Control.Feedback>
+                        <Feedback type="invalid">
+                          {touched.code && errors.code}
+                        </Feedback>
                       </div>
                     </RBForm.Group>
 

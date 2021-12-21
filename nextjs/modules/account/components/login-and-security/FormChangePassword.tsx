@@ -1,11 +1,10 @@
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
+import { useRouter } from "next/router";
 import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import {
   changePasswordAction,
   setAlertAction,
@@ -13,9 +12,14 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
+
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const FormChangePassword = (): any => {
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
   const initialValues = {
@@ -44,7 +48,7 @@ const FormChangePassword = (): any => {
 
         success(res) {
           dispatch(userSetAction(res.user));
-          history.push(route("account:login-and-security"));
+          router.push("/login-and-security");
 
           dispatch(
             setAlertAction({
@@ -78,7 +82,7 @@ const FormChangePassword = (): any => {
               <InnerPage
                 header={"Change password"}
                 headerClasses={"text-center text-lg-start"}
-                bodyClasses={"content-panel"}
+                bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
                 footerClasses={"text-center text-lg-start"}
                 footer={
                   <SubmitCancelButtonsGroup
@@ -89,7 +93,7 @@ const FormChangePassword = (): any => {
                       "d-md-flex justify-content-center justify-content-lg-start"
                     }
                     onCancel={() => {
-                      history.push(route("account:login-and-security"));
+                      router.push("/login-and-security");
                     }}
                   />
                 }
@@ -99,7 +103,7 @@ const FormChangePassword = (): any => {
                   account
                 </p>
 
-                <RBForm.Control
+                <Input
                   className={"d-none"}
                   type="text"
                   name="login"
@@ -112,18 +116,15 @@ const FormChangePassword = (): any => {
                       "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                     }
                   >
-                    <RBForm.Label className={"form-input-label mb-2 mb-md-0"}>
-                      Current password
-                    </RBForm.Label>
+                    <Label className={"mb-2 mb-md-0"}>Current password</Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
-                    <RBForm.Control
+                    <Input
                       type="password"
                       name="old_password"
                       value={values.old_password}
                       onChange={handleChange}
-                      className={"form-input"}
                       isInvalid={
                         !!touched.old_password && !!errors.old_password
                       }
@@ -131,9 +132,9 @@ const FormChangePassword = (): any => {
                       autoComplete={"current-password"}
                     />
 
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.old_password}
-                    </RBForm.Control.Feedback>
+                    <Feedback type="invalid">
+                      {touched.old_password && errors.old_password}
+                    </Feedback>
                   </div>
                 </RBForm.Group>
 
@@ -146,18 +147,15 @@ const FormChangePassword = (): any => {
                       "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                     }
                   >
-                    <RBForm.Label className={"form-input-label mb-2 mb-md-0"}>
-                      New password
-                    </RBForm.Label>
+                    <Label className={"mb-2 mb-md-0"}>New password</Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
-                    <RBForm.Control
+                    <Input
                       type="password"
                       name="new_password"
                       value={values.new_password}
                       onChange={handleChange}
-                      className={"form-input"}
                       isInvalid={
                         !!touched.new_password && !!errors.new_password
                       }
@@ -165,9 +163,9 @@ const FormChangePassword = (): any => {
                       autoComplete="new-password"
                     />
 
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.new_password}
-                    </RBForm.Control.Feedback>
+                    <Feedback type="invalid">
+                      {touched.new_password && errors.new_password}
+                    </Feedback>
                   </div>
                 </RBForm.Group>
 
@@ -177,18 +175,17 @@ const FormChangePassword = (): any => {
                       "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                     }
                   >
-                    <RBForm.Label className={"form-input-label mb-2 mb-md-0"}>
+                    <Label className={"mb-2 mb-md-0"}>
                       Reenter new password
-                    </RBForm.Label>
+                    </Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
-                    <RBForm.Control
+                    <Input
                       type="password"
                       name="confirm_password"
                       value={values.confirm_password}
                       onChange={handleChange}
-                      className={"form-input"}
                       isInvalid={
                         !!touched.confirm_password && !!errors.confirm_password
                       }
@@ -198,9 +195,9 @@ const FormChangePassword = (): any => {
                       autoComplete="new-password"
                     />
 
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.confirm_password}
-                    </RBForm.Control.Feedback>
+                    <Feedback type="invalid">
+                      {touched.confirm_password && errors.confirm_password}
+                    </Feedback>
                   </div>
                 </RBForm.Group>
               </InnerPage>

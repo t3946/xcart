@@ -3,7 +3,10 @@ import { AccountAddressesStore } from "@modules/account/ts/types/store.type";
 import { accountAddressesInitialValue } from "@modules/account/ts/consts/store-initial-value";
 
 const accountAddressesReducer = (
-  state: AccountAddressesStore = accountAddressesInitialValue,
+  state: AccountAddressesStore = {
+    loading: false,
+    addressesList: undefined,
+  },
   action: AnyAction
 ): AccountAddressesStore => {
   switch (action.type) {

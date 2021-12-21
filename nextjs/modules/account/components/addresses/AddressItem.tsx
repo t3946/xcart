@@ -4,7 +4,7 @@ import {
   changeDefaultAddress,
   removeAddress,
 } from "../../../../redux/actions/account-actions/AddressActions";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 import Store from "@redux/stores/Store";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
@@ -24,7 +24,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   addressInfo,
 }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const history = useRouter();
 
   const breakpoint = useBreakpoint();
 

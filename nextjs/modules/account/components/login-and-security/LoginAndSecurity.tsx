@@ -26,10 +26,14 @@ const LoginAndSecurity = (): any => {
   const alert = useSelectorAccount((e) => e.loginAndSecurity.alert);
   const [show, setShow] = React.useState(alert !== null);
   const ALERT_SHOW_TIME_MS = 3000;
-
+  
+  React.useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, []);
   if (!user) {
-    router.push("/login");
-    return;
+    return <></>;
   }
 
   const listItems = [

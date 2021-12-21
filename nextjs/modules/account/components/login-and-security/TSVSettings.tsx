@@ -3,8 +3,8 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
-import { route } from "@utils/AppData";
-import { useHistory, NavLink } from "react-router-dom";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import { disableAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
@@ -13,19 +13,20 @@ import ModalTSVDisable from "@modules/account/components/login-and-security/Moda
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const TSVSettings = (): any => {
   const breakpoint = useBreakpoint();
   const disableTSVModal = useDialog();
   const user = useSelector((e: StoreInterface) => e.user);
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
 
   useSelector((e: StoreInterface) => e.main.breakpoint);
 
   if (user === null) {
-    history.push(route("account:login"));
+    router.push("/account/login");
   }
 
   function tsvCountTemplate() {
@@ -53,13 +54,13 @@ const TSVSettings = (): any => {
 
     return breakpoint({
       xs: (
-        <NavLink
+        <Link
           className={className}
-          to={route("account:two-step-verification-settings-disable")}
+          href={"/login-and-security/two-step-verification-settings-disable"}
           exact={true}
         >
-          disable
-        </NavLink>
+          <span className={className}> disable</span>
+        </Link>
       ),
       lg: (
         <button className={className} onClick={disableTSVModal.handleClickOpen}>
@@ -103,7 +104,7 @@ const TSVSettings = (): any => {
       <InnerPage
         header={"Two-Step Verification (2SV) Settings"}
         hat={<>{disableTSVTemplate()}</>}
-        bodyClasses={"content-panel"}
+        bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
       >
         <div className="row two-step-row__bordered two-step-row__header mx-0 pb-lg-2 lg-2">
           <div className="col-12 px-lg-0">
@@ -120,25 +121,23 @@ const TSVSettings = (): any => {
           </div>
 
           <div className="col-6 col-lg-5">
-            <NavLink
-              className={"common-link"}
+            <Link
               exact={true}
-              to={route("account:two-step-verification-add-new")}
+              href={"/login-and-security/two-step-verification-add-new"}
             >
-              Add new app
-            </NavLink>
+              <span className={"common-link"}>Add new app</span>
+            </Link>
           </div>
 
           <div className="col-6 col-lg-2 text-end text-lg-start">
-            <NavLink
-              className={"common-link"}
+            <Link
               exact={true}
-              to={route(
-                "account:two-step-verification-settings-preferred-method"
-              )}
+              href={
+                "/login-and-security/two-step-verification-settings-preferred-method"
+              }
             >
-              Change
-            </NavLink>
+              <span className={"common-link"}>Change</span>
+            </Link>
           </div>
 
           <div className="d-none d-lg-block col-lg-2 pe-0" />
@@ -164,6 +163,7 @@ const TSVSettings = (): any => {
 
             <OverlayTrigger
               placement="top"
+              trigger="click"
               delay={{ show: 250, hide: 1000 }}
               overlay={
                 <Tooltip
@@ -197,7 +197,7 @@ const TSVSettings = (): any => {
             </OverlayTrigger>
           </div>
 
-          <div className="col-6 col-lg-2 d-flex d-lg-block align-items-end justify-content-end">
+          <div className="col-6 col-lg-2 d-flex d-lg-block align-items-end text-end justify-content-end">
             <a href="#">Change</a>
           </div>
 

@@ -1,6 +1,9 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 //todo: remove this dependencies
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
@@ -11,6 +14,8 @@ import { loginAction } from "@redux/actions/account-actions/AutorizationActions"
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import cn from "classnames";
+import Styles from "@modules/account/components/authorization/LoginFormInputPassword.module.scss";
 
 interface IProps {
   login: string;
@@ -26,7 +31,7 @@ const LoginFormInputPassword = function (props: IProps): any {
 
   React.useEffect(() => {
     inputRef.current.focus();
-  });
+  }, []);
 
   const initialState = {
     password: "",
@@ -99,7 +104,8 @@ const LoginFormInputPassword = function (props: IProps): any {
         onSubmit={submit}
       >
         {(formikProps) => {
-          const { isSubmitting, handleChange, values, errors } = formikProps;
+          const { isSubmitting, handleChange, values, errors, touched } =
+            formikProps;
 
           return (
             <Form>
@@ -117,7 +123,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                 </p>
 
                 <RBForm.Group controlId="LoginFormPassword">
-                  <RBForm.Label className="d-flex justify-content-between align-items-center">
+                  <Label className="d-flex justify-content-between align-items-center">
                     <span className={"form-input-label"}>Password</span>
 
                     <Link
@@ -125,25 +131,23 @@ const LoginFormInputPassword = function (props: IProps): any {
                         "/login-and-security/two-step-verification/password-assistance"
                       }
                     >
-                      <a className={"common-link auth-form-info"}>
+                      <a className={cn(Styles.authFormInfo, Styles.commonLink)}>
                         Forgot your password?
                       </a>
                     </Link>
-                  </RBForm.Label>
+                  </Label>
 
-                  <RBForm.Control
+                  <Input
                     ref={inputRef}
                     type="password"
                     name="password"
                     value={values.password}
                     onChange={handleChange}
-                    className={"form-input"}
-                    isInvalid={!!errors.password}
+                    isInvalid={!!errors.password && !!touched.password}
                   />
-
-                  <RBForm.Control.Feedback type="invalid">
-                    {errors.password}
-                  </RBForm.Control.Feedback>
+                  <Feedback type="invalid">
+                    {!!touched.password && errors.password}
+                  </Feedback>
                 </RBForm.Group>
               </div>
 

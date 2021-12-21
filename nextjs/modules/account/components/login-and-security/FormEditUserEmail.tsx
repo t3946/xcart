@@ -1,11 +1,10 @@
-import { useHistory } from "react-router-dom";
-import { route } from "@utils/AppData";
+import { useRouter } from "next/router";
 import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import { useDispatch } from "react-redux";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import {
   editEmailAction,
   setAlertAction,
@@ -13,11 +12,16 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
+
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const FormEditUserEmail = (): any => {
-  const history = useHistory();
+  const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelectorAccount((e) => e.user);
   const initialValues = {
     email: user.email,
   };
@@ -36,7 +40,7 @@ const FormEditUserEmail = (): any => {
 
         success(res) {
           dispatch(userSetAction(res.user));
-          history.push(route("account:login-and-security"));
+          router.push("/login-and-security");
 
           dispatch(
             setAlertAction({
@@ -70,7 +74,7 @@ const FormEditUserEmail = (): any => {
               <InnerPage
                 header={"Change your email address"}
                 headerClasses={"text-center text-lg-start"}
-                bodyClasses={"content-panel"}
+                bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
                 footer={
                   <SubmitCancelButtonsGroup
                     submitText={"save changes"}
@@ -80,7 +84,7 @@ const FormEditUserEmail = (): any => {
                       "d-md-flex justify-content-center justify-content-lg-start"
                     }
                     onCancel={() => {
-                      history.push(route("account:login-and-security"));
+                      router.push("/login-and-security");
                     }}
                   />
                 }
@@ -99,25 +103,23 @@ const FormEditUserEmail = (): any => {
                       "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                     }
                   >
-                    <RBForm.Label className={"form-input-label mb-1 mb-md-0"}>
+                    <Label className={"mb-1 mb-md-0"}>
                       Change your email address
-                    </RBForm.Label>
+                    </Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
-                    <RBForm.Control
+                    <Input
                       type="text"
                       name="email"
                       value={values.email}
                       onChange={handleChange}
-                      className={"form-input"}
                       isInvalid={!!touched.email && !!errors.email}
                       isValid={touched.email && !errors.email}
                     />
-
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.email}
-                    </RBForm.Control.Feedback>
+                    <Feedback type="invalid">
+                      {touched.email && errors.email}
+                    </Feedback>
                   </div>
                 </RBForm.Group>
               </InnerPage>

@@ -14,9 +14,13 @@ const LoginForm: React.FC<any> = () => {
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
-
+  React.useEffect(() => {
+    if (user !== null) {
+      router.push("/");
+    }
+  }, []);
   if (user !== null) {
-    router.push("/");
+    return <></>;
   }
 
   const INPUT_LOGIN_MODE = 0;

@@ -3,6 +3,9 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
 import { savePublicProfileAction } from "@redux/actions/account-actions/ProfileActions";
 import classnames from "classnames";
@@ -292,13 +295,9 @@ const PublicProfile = (): any => {
                         "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
                       }
                     >
-                      <RBForm.Label
-                        className={
-                          "form-input-label form-input-label__required mb-0"
-                        }
-                      >
+                      <Label className={"mb-0"} required>
                         Public Name
-                      </RBForm.Label>
+                      </Label>
 
                       <RBForm.Text
                         className={
@@ -311,20 +310,15 @@ const PublicProfile = (): any => {
                     </div>
 
                     <div className={"col-12 col-md-6 col-lg-6"}>
-                      <RBForm.Control
-                        type="text"
+                      <Input
                         name="publicName"
                         value={values.publicName}
                         onChange={handleChange}
-                        className={"form-input"}
                         isInvalid={!!touched.publicName && !!errors.publicName}
                         isValid={touched.publicName && !errors.publicName}
                         autoComplete={"off"}
                       />
-
-                      <RBForm.Control.Feedback type="invalid">
-                        {errors.publicName}
-                      </RBForm.Control.Feedback>
+                      <Feedback type="invalid">{errors.publicName}</Feedback>
                     </div>
                   </RBForm.Group>
 
@@ -333,30 +327,21 @@ const PublicProfile = (): any => {
                     className={"row mt-20 mt-md-4 mt-lg-10"}
                   >
                     <div className="col-12 col-md-6 col-lg-6 text-md-end text-lg-start">
-                      <RBForm.Label
-                        className={
-                          "form-input-label form-input-label__optional"
-                        }
-                      >
+                      <Label className={"mb-0"} optional>
                         Location
-                      </RBForm.Label>
+                      </Label>
                     </div>
 
                     <div className={"col-12 col-md-6 col-lg-6"}>
-                      <RBForm.Control
-                        type="text"
+                      <Input
                         name="location"
                         value={values.location}
                         onChange={handleChange}
-                        className={"form-input"}
                         isInvalid={!!touched.location && !!errors.location}
                         isValid={touched.location && !errors.location}
                         autoComplete={"off"}
                       />
-
-                      <RBForm.Control.Feedback type="invalid">
-                        {errors.location}
-                      </RBForm.Control.Feedback>
+                      <Feedback type="invalid">{errors.location}</Feedback>
                     </div>
                   </RBForm.Group>
 
@@ -365,13 +350,9 @@ const PublicProfile = (): any => {
                     className="mt-md-4 row"
                   >
                     <div className="d-block d-md-none d-lg-flex col-12 col-lg-6 align-items-center">
-                      <RBForm.Label
-                        className={
-                          "form-input-label form-input-label__optional mt-20 md-lg-0"
-                        }
-                      >
+                      <Label className={"mt-20 md-lg-0"} optional>
                         Upload a public profile picture
-                      </RBForm.Label>
+                      </Label>
                     </div>
 
                     <div className="mb-md-3 col-12 col-lg-6">
@@ -406,24 +387,20 @@ const PublicProfile = (): any => {
                         </div>
                       </div>
 
-                      <RBForm.Control.Feedback
+                      <Feedback
                         type="invalid"
                         className={classnames("text-center text-lg-start", {
                           "d-block": !!errors.avatar_image,
                         })}
                       >
                         {errors.avatar_image}
-                      </RBForm.Control.Feedback>
+                      </Feedback>
                     </div>
 
                     <div className="d-none d-md-block d-lg-none col-12 text-center">
-                      <RBForm.Label
-                        className={
-                          "form-input-label form-input-label__optional text-align--center"
-                        }
-                      >
+                      <Label className={"text-align--center"} optional>
                         Upload a public profile picture
-                      </RBForm.Label>
+                      </Label>
                     </div>
                   </RBForm.Group>
 

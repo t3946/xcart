@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FormInput } from "@modules/account/components/shared/FormInput";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import { useDispatch, useSelector } from "react-redux";
 import { createList } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
@@ -99,20 +102,22 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
         </div>
       ) : (
         <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-          <FormInput
-            autoFocus={true}
-            name={"name"}
-            classes={{
-              input: "list-input",
-            }}
-            label={"List Name"}
-            handleChange={formik.handleChange}
-            errorMessage={formik.errors.name}
-            handleBlur={formik.handleBlur}
-            touched={formik.touched.name}
-            inputRef={ref}
-            value={formik.values.name}
-          />
+          <div className="d-flex flex-dir-column">
+            <Label error={!!formik.errors.name}>List Name</Label>
+            <Input
+              ref={ref}
+              name={"name"}
+              onChange={formik.handleChange}
+              value={formik.values.name}
+              isInvalid={!!formik.errors.name}
+            />
+            <Feedback
+              className="form-input-caption"
+              type={formik.errors.name ? "invalid" : "valid"}
+            >
+              {formik.errors.name}
+            </Feedback>
+          </div>
           <p>
             Use lists to save items for later. All lists are private unless you
             share them with others.

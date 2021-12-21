@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+
 const TSVChangePreferredMethod: React.FC<any> = function () {
   const countries = useSelector((e: StoreInterface) => e.countries);
   const dispatch = useDispatch();
@@ -60,7 +62,7 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
           whenever you sign in to your S3 Stores account.
         </p>
       }
-      bodyClasses={"p-0"}
+      bodyClasses={["p-0", StylesLoginAndSecurity.pageBody]}
       headerClasses={"mb-3"}
     >
       <Formik

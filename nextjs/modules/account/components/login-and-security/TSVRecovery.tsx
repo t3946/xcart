@@ -1,11 +1,14 @@
 import React from "react";
 import InnerPage from "@modules/account/components/shared/InnerPage";
+import cn from "classnames";
+
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const TSVRecovery: React.FC<any> = function () {
   return (
     <InnerPage
       header={"Two-Step Verification Account Recovery"}
-      bodyClasses={"p-0"}
+      bodyClasses={cn("p-0", StylesLoginAndSecurity.pageBody)}
     >
       <div className={"content-panel"}>
         <p>

@@ -5,6 +5,7 @@ import Styles from "@modules/ui/forms/Input.module.scss";
 import cn from "classnames";
 
 interface IProps extends FormControlProps {
+  type?: string;
   name: string;
   value?: any;
   disabled?: boolean;
@@ -13,33 +14,26 @@ interface IProps extends FormControlProps {
   isValid?: boolean;
   isInvalid?: boolean;
   autoComplete?: string;
+  placeholder?: string;
 }
-
-const Input: React.FC<IProps> = (props: IProps) => {
-  const { name, value, onChange, disabled, isValid, isInvalid, autoComplete } = props;
-
-  const classes = [
-    Styles.input,
-    props.className,
-    {
-      [Styles.input_valid]: isValid,
-      [Styles.input_invalid]: isInvalid,
-    },
-  ];
-
-  return (
-    <Form.Control
-      type="text"
-      name={name}
-      value={value}
-      onChange={onChange}
-      className={cn(classes)}
-      isInvalid={isInvalid}
-      isValid={isValid}
-      autoComplete={autoComplete}
-      disabled={disabled}
-    />
-  );
-};
+const Input = React.forwardRef<HTMLInputElement | null, IProps>(
+  (props, ref) => {
+    const classes = [
+      Styles.input,
+      props.className,
+      {
+        [Styles.input_valid]: props.isValid,
+        [Styles.input_invalid]: props.isInvalid,
+      },
+    ];
+    const mergeProps = {
+      ...props,
+      type: props.type ? props.type : "text",
+      className: cn(classes),
+      ref: ref,
+    };
+    return <Form.Control {...mergeProps} />;
+  }
+);
 
 export default Input;

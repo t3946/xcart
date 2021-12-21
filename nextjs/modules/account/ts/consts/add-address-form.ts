@@ -21,7 +21,8 @@ export const addAddressFormValidationSchema = Yup.object().shape({
     .max(50, "The maximum number of characters is 50"),
   phone_number: Yup.string()
     .required("Required field")
-    .max(50, "The maximum number of characters is 50"),
+    .max(50, "The maximum number of characters is 50")
+    .matches(/[(]\d{3}[)] \d{3} \d{2} \d{2}/, 'Is not in correct format'),
   street: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),
