@@ -31,6 +31,12 @@ class MetricsProductCommand extends Command
             $str_result .= MetricsDataHelper::convertToMetricsWithParams('products_dx_without_picture', $count_without_picture, [
                 'dx_code' => $name
             ]);
+            $str_result .= MetricsDataHelper::convertToMetricsWithParams('distributor_shipping_value', $distributor_model->free_shipping_on_orders_over_value, [
+               'dx_code' => $name
+            ]);
+            $str_result .= MetricsDataHelper::convertToMetricsWithParams('distributor_max_lead_time', $distributor_model->dx_leadtime_to, [
+               'dx_code' => $name
+            ]);
         }
         foreach (SiteModel::getAllEnabled() as $site_model) {
             $products_count = $site_model->products->filter(['is_group_root' => false, 'forsale' => 'Y'])->count();
@@ -47,6 +53,6 @@ class MetricsProductCommand extends Command
                'site' => (string)$site_model
             ]);
         }
-        MetricsDataHelper::pushMetrics('products', "$str_result\n");
+//        MetricsDataHelper::pushMetrics('products', "$str_result\n");
     }
 }

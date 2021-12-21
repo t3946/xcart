@@ -30,6 +30,7 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\DateTimeField;
+use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
@@ -71,6 +72,8 @@ use Xcart\Manufacturer;
  * @property int active_products
  * @property int total_products
  * @property int ads_products
+ * @property float free_shipping_on_orders_over_value
+ * @property int dx_leadtime_to
  */
 class DistributorModel extends Model
 {
@@ -380,6 +383,11 @@ class DistributorModel extends Model
                 'class' => BooleanField::class,
                 'default' => false,
                 'verboseName' => '<b>narcotics, steroids,</b> certain controlled substances or other products that present a risk to consumer safety',
+            ],
+            'free_shipping_on_orders_over_value' => [
+                'class' => DecimalField::class,
+                'default' => 0.00,
+                'null' => false,
             ],
             'd_questionable_2' => [
                 'class' => BooleanField::class,
