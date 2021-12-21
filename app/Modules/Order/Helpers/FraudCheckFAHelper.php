@@ -165,7 +165,7 @@ class FraudCheckFAHelper
     public function scoreOwnerResidenceAddress(FraudFAQuestionModel $fraud, ?array $address_compare, string $type_address = 'shipping'): array
     {
         $owner_info = $this->ob_melissa->melissa_address[$type_address]['owner'] ?? null;
-        $info = $this->getNullDataInfo($fraud, $address_compare);
+        $info = $this->getNullDataInfo($fraud, $address_compare, null);
         $coefficient = 0;
         if (isset($owner_info, $address_compare)) {
             $zip = trim($owner_info['OwnerZip']);
@@ -257,7 +257,7 @@ class FraudCheckFAHelper
     public function scorePhoneAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
     {
         $coefficient = 0;
-        $info = $this->getNullDataInfo($fraud, $address_compare);
+        $info = $this->getNullDataInfo($fraud, $address_compare, null);
         if (!is_null($this->ob_melissa->phone_data)) {
             $state = $this->ob_melissa->phone_data['State'] ?? '';
             /** @var CountryModel $country_model */
@@ -272,8 +272,8 @@ class FraudCheckFAHelper
                 'city' => $this->ob_melissa->phone_data['City'],
                 'zipcode' => $this->ob_melissa->phone_data['PostalCode']
             ];
-            if (!is_null($address_compare)) {
-                $info = $this->getInfoAddress($fraud, $address_compare, $phone_address);
+            $info = $this->getInfoAddress($fraud, $address_compare ?? [], $phone_address);
+            if ($address_compare) {
                 $coefficient = $this->compareAddress($address_compare, $phone_address);
             }
         }
@@ -283,7 +283,7 @@ class FraudCheckFAHelper
     public function scoreIpAddress(FraudFAQuestionModel $fraud, ?array $address_compare): array
     {
         $coefficient = 0;
-        $info = $this->getNullDataInfo($fraud, $address_compare);
+        $info = $this->getNullDataInfo($fraud, $address_compare, null);
         if (!is_null($this->ob_melissa->ip_data)) {
             /** @var CountryModel $country_model */
             $country_model = CountryModel::objects()->get(['name' => $this->ob_melissa->ip_data['Country']]);
@@ -296,8 +296,8 @@ class FraudCheckFAHelper
                 'city' => $this->ob_melissa->ip_data['City'],
                 'zipcode' => $this->ob_melissa->ip_data['PostalCode']
             ];
+            $info = $this->getNullDataInfo($fraud, $address_compare ?? [], $email_address);
             if ($address_compare) {
-                $info = $this->getInfoAddress($fraud, $address_compare, $email_address);
                 $coefficient = $this->compareAddress($address_compare, $email_address);
             }
         }
@@ -601,14 +601,14 @@ class FraudCheckFAHelper
 
     /** Вывод массива пустых значений в поле additional info
      * @param FraudFAQuestionModel $question_model - модель вопроса, чтобы узнать что с чем сравнивается.
-     * @param array|null $value - значение для f_fraud question
+     * @param array|null $from_value
      * @return array
      */
-    private function getNullDataInfo(FraudFAQuestionModel $question_model, ?array $value): ?array
+    private function getNullDataInfo(FraudFAQuestionModel $question_model, ?array $from_value, ?array $to_value): ?array
     {
         return [
-            "value{$question_model->f_fraud->code}" => $value ? $this->formatAdditional($value) : self::ADDITIONAL_INFO_NULL_CHECK,
-            "value{$question_model->t_fraud->code}" => self::ADDITIONAL_INFO_NULL_CHECK
+            "value{$question_model->f_fraud->code}" => $from_value ? $this->formatAdditional($from_value) : self::ADDITIONAL_INFO_NULL_CHECK,
+            "value{$question_model->t_fraud->code}" => $to_value ? $this->formatAdditional($to_value) : self::ADDITIONAL_INFO_NULL_CHECK
         ];
     }
 
