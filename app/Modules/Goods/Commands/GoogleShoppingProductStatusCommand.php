@@ -21,7 +21,6 @@ class GoogleShoppingProductStatusCommand extends Command
         $log_text = " * * *  Cron started  * * * ";
         func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
-        GoogleProductsModel::objects()->delete();
         GoogleProductQualityIssueModel::objects()->delete();
 
         foreach (SiteModel::objects() as $site) {
@@ -37,8 +36,8 @@ class GoogleShoppingProductStatusCommand extends Command
 
         $pid_diff = $current_time - $start_time;
 
-        $hour = intval($pid_diff / (60 * 60));
-        $minutes = intval(($pid_diff - $hour * 60 * 60) / 60);
+        $hour = (int)($pid_diff / (60 * 60));
+        $minutes = (int)(($pid_diff - $hour * 60 * 60) / 60);
         $seconds = ($pid_diff - $hour * 60 * 60 - $minutes * 60);
         $str_time = sprintf("%02d:%02d:%02d", $hour, $minutes, $seconds);
 
