@@ -307,15 +307,24 @@ class CheckoutController extends FrontendController
         if ($country = Xcart::app()->request->get->get('country')) {
             $filter['country'] = $country;
         }
-
+        /** @var SiteModel $site_model */
+        $site_model = Xcart::app()->getModule('Sites')->getSite();
         if ($search = Xcart::app()->request->get->get('search')) {
             $zips = ZipCodeModel::objects()
                 ->filter(array_merge(['zip__startswith' => $search],$filter ?? []))
-                ->limit(10)
-                ->valuesList(['zip', 'primary_city' => 'city', 'state', 'state_name' => 'state_model__state'], false);
+                ->limit(10);
+            /** @var ZipCodeModel $zip_model */
+            foreach ($zips as $zip_model) {
+                $ar_zip[] = [
+                    'zip' => $zip_model->zip,
+                    'primary_city' => $zip_model->city,
+                    'state_name' => (string)$zip_model->state_model,
+                    'state' => $site_model->show_full_state_country ? (string)$zip_model->state_model : $zip_model->state
+                ];
+            }
         }
 
-        $this->jsonResponse($zips ?? []);
+        $this->jsonResponse($ar_zip ?? []);
     }
 
     /**
