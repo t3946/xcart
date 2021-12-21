@@ -53,6 +53,6 @@ class MetricsProductCommand extends Command
                'site' => (string)$site_model
             ]);
         }
-//        MetricsDataHelper::pushMetrics('products', "$str_result\n");
+        MetricsDataHelper::pushMetrics('products', "$str_result\n");
     }
 }
