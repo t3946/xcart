@@ -129,11 +129,11 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             </Typography>
             <MatrixHistory historyColumn={data.legend.address} />
             <Stack
-              alignItems="center"
-              spacing={3}
+              alignItems="flex-start"
               my={4}
+              spacing={3}
               direction="row"
-              justifyContent="center"
+              justifyContent="flex-start"
             >
               <AddressesMap width={740} />
               <Box>
@@ -163,6 +163,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             <FraudTableQuestion
               title="Red flags"
               listAnswer={data.answer.red_flags}
+              colorTitle={"red"}
             />
           </div>
           <FraudPaymentAnswer answer={data.answer.payment} />

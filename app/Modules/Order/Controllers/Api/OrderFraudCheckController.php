@@ -248,12 +248,16 @@ class OrderFraudCheckController extends Controller
                     $template = ['{{card_owner_name}}' => $value];
                     break;
                 case 'FN_T_SA':
+                    $template = ['{{tenant_s_name}}' => $value];
+                    break;
                 case 'FN_T_BA':
-                    $template = ['{{tenant_name}}' => $value];
+                    $template = ['{{tenant_b_name}}' => $value];
                     break;
                 case 'FN_O_SA':
+                    $template = ['{{owner_s_name}}' => $value];
+                    break;
                 case 'FN_O_BA':
-                    $template = ['{{owner_name}}' => $value];
+                    $template = ['{{owner_b_name}}' => $value];
                     break;
                 case 'FN_TN':
                     $template = ['{{telephone_name}}' => $value];
@@ -268,8 +272,10 @@ class OrderFraudCheckController extends Controller
                     $template = ['{{billing_address}}' => $value];
                     break;
                 case 'ORA_SA':
+                    $template = ['{{owner_s_residence_address}}' => $value];
+                    break;
                 case 'ORA_BA':
-                    $template = ['{{owner_residence_address}}' => $value];
+                    $template = ['{{owner_b_residence_address}}' => $value];
                     break;
                 case 'CSZ_TN':
                     $template = ['{{telephone_address}}' => $value];

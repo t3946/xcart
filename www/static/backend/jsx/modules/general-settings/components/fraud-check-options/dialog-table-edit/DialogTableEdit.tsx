@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { ChangeQuestionDataForm } from "@admin/modules/general-settings/ts/types/fraud-check/data";
 import { Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
@@ -63,7 +63,7 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
               value={template.template}
               name="template"
               rows={6}
-              disabled
+              // disabled={!isBase}
               onChange={onChangeField}
             />
           </Form.Group>
@@ -77,15 +77,29 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
             />
           </Form.Group>
           {isBase && (
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Order by</Form.Label>
+            <Fragment>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Order by</Form.Label>
+                <Form.Control
+                  value={template.orderBy}
+                  type="text"
+                  name="orderBy"
+                  onChange={onChangeField}
+                />
+              </Form.Group>
               <Form.Control
-                value={template.orderBy}
-                type="text"
-                name="orderBy"
+                as="select"
+                name="avail"
                 onChange={onChangeField}
-              />
-            </Form.Group>
+                value={template.avail}
+              >
+                <option value={1}>Enable</option>
+                <option value={0}>Disable</option>
+              </Form.Control>
+            </Fragment>
           )}
         </Form>
       </DialogContent>

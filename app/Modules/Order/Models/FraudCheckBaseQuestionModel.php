@@ -7,6 +7,7 @@ use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\FloatField;
 use Xcart\App\Orm\Fields\IntField;
@@ -20,6 +21,7 @@ use Xcart\App\Orm\Model;
  * @property string type
  * @property int|string question_id
  * @property int orderby
+ * @property bool avail
  */
 class FraudCheckBaseQuestionModel extends Model
 {
@@ -39,7 +41,7 @@ class FraudCheckBaseQuestionModel extends Model
 
     public static function tableName(): string
     {
-        return 'xcart_fraud_check_v2';
+        return 'xcart_fraud_base_questions';
     }
 
     public static function getFields(): array
@@ -58,15 +60,6 @@ class FraudCheckBaseQuestionModel extends Model
                 'null' => true,
                 'default' => 0,
             ],
-            'active' => [
-                'class' => CharField::class,
-                'null' => true,
-                'default' => null,
-                'choices' => [
-                    'Y' => 'Y',
-                    'N' => 'N',
-                ],
-            ],
             'type' => [
                 'class' => CharField::class,
                 'null' => true,
@@ -81,6 +74,11 @@ class FraudCheckBaseQuestionModel extends Model
                 'null' => false,
                 'default' => 0,
             ],
+            'avail' => [
+                'class' => BooleanField::class,
+                'null' => true,
+                'default' => true
+            ]
         ];
     }
 

@@ -14,10 +14,10 @@ class OrderInvoiceHelper
     {
         $site = $order->site;
         if ($status) {
-            $notification = OrderStatusNotificationModel::objects()->get(['code' => $status, 'lang_id' => $site->lang->lang_id]);
+            $notification = $order->getNotification($status);
             $xcartLabel = 'order-status-changed';
         } else {
-            $notification = $order->notification;
+            $notification = $order->getNotification();
             $xcartLabel = 'order-status-init';
         }
 
@@ -63,7 +63,7 @@ class OrderInvoiceHelper
 
     public static function getInvoiceHtml(OrderModel $order, $template = 'mail/invoice.tpl', $mode = null)
     {
-        if ($notification = $order->notification) {
+        if ($notification = $order->getNotification()) {
             /** @var SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
             $config = $site->getGlobalConfig();

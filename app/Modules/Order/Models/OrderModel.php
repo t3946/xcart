@@ -128,7 +128,7 @@ class OrderModel extends Model
         return Order::class;
     }
 
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'xcart_orders';
     }
@@ -757,7 +757,7 @@ class OrderModel extends Model
     {
         $bare_score = 0;
         /** @var FraudCheckBaseQuestionModel $fraud */
-        foreach (FraudCheckBaseQuestionModel::objects()->order(['orderby']) as $fraud) {
+        foreach (FraudCheckBaseQuestionModel::objects()->filter(['avail' => true])->order(['orderby']) as $fraud) {
             [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
             if (!is_null($fraud_result)) {
                 [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
@@ -796,5 +796,10 @@ class OrderModel extends Model
         $fa_helper->collectAddressesGeolocation();
         $this->bare_fraud_score_v2 = $bare_score;
         $this->save();
+    }
+    public function getNotification(string $status = null): ?OrderStatusNotificationModel
+    {
+        $site_model = $this->site;
+        return OrderStatusNotificationModel::objects()->get(['lang_id' => $site_model->lang->lang_id, 'code' => $status ?? $this->cb_status]);
     }
 }

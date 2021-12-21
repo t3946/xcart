@@ -65,6 +65,7 @@ class FraudCheckController extends Controller
                 'weight' => $question->weight,
                 'type' => $question->type,
                 'orderBy' => $question->orderby,
+                'avail' => (int)$question->avail,
             ];
         }
         return $ar_result;
@@ -148,6 +149,7 @@ class FraudCheckController extends Controller
         $question_model->orderby = $update_data['orderBy'];
         $question_model->question_template_body = $update_data['template'];
         $question_model->weight = $update_data['weight'];
+        $question_model->avail = $update_data['avail'];
         $this->jsonResponse(['update' => $question_model->save()]);
     }
 }
