@@ -4,6 +4,7 @@ namespace Modules\Cart;
 
 use Modules\Admin\Traits\AdminTrait;
 use Modules\Cart\Admin\CouponKitAdmin;
+use Modules\Cart\Admin\ShoppingCartAdmin;
 use Modules\Cart\Helpers\CouponOldCart;
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Cart\Models\CouponKitModel;
@@ -91,11 +92,18 @@ class CartModule extends Module
                     'admin' => CouponKitAdmin::classNameShort()
                 ]),
             ],
-
             [
-                'name' => 'Shopping Cart',
-                'route' => $router->url('admin_cart:show'),
+                'name' => ShoppingCartAdmin::getName(),
+                'route' => $router->url('admin:list', [
+                    'module' => static::getModuleName(),
+                    'admin' => ShoppingCartAdmin::classNameShort()
+                ]),
             ],
+//
+//            [
+//                'name' => 'Shopping Cart',
+//                'route' => $router->url('admin_cart:show'),
+//            ],
         ];
     }
 
