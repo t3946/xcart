@@ -1,8 +1,6 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useDispatch } from "react-redux";
 import Link from "next/link";
-
 import { Dropdown } from "react-bootstrap";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
@@ -11,20 +9,13 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface PropsInterface {
-  isStatic: boolean;
-}
-
-const LoginButtonDesktop: React.FC<PropsInterface> = function (
-  props: PropsInterface
-) {
-  const maxUsernameLength = 10;
+const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
-  const user = useSelector((e) => e.user);
-  const isStatic = props.isStatic || false;
+  const user = useSelectorAccount((e) => e.user);
 
-  function toggleMenu(isVisible) {
+  function toggleMenu(isVisible: boolean) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
     isVisible && dispatch(setVisibleShadowPanelAction(true));
@@ -35,35 +26,16 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
     const className = "hat-login-button";
     const text = "log in";
 
-    if (isStatic) {
-      return (
-        <a href={path} className={className}>
-          {text}
-        </a>
-      );
-    } else {
-      return (
-        <Link href={path}>
-          <a className={className}>{text}</a>
-        </Link>
-      );
-    }
+    return (
+      <Link href={path}>
+        <a className={className}>{text}</a>
+      </Link>
+    );
   }
 
-  function truncateUsername(username) {
-    if (username.length <= maxUsernameLength) {
-      return username;
-    } else {
-      return username.substr(0, maxUsernameLength - 1) + "…";
-    }
-  }
-
-  const username = truncateUsername(user.name);
-  const title = username === user.name ? "" : user.name;
   const className = "hat-login-button";
-
-  const isTabletMenuVisible = useSelector(
-    (e: any) => e.mobileMenu.isTabletMenuVisible
+  const isTabletMenuVisible = useSelectorAccount(
+    (e) => e.mobileMenu.isTabletMenuVisible
   );
 
   function logoutButtonClickHandler() {
@@ -72,7 +44,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
   }
 
   const CustomMenu = React.forwardRef(
-    ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+    ({ className, "aria-labelledby": labeledBy }: any, ref: any) => {
       return (
         <div
           ref={ref}
@@ -90,7 +62,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
     }
   );
 
-  const CustomToggle = React.forwardRef((props, ref) => {
+  const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
 
     const arrowClasses = [
@@ -103,13 +75,13 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
     return (
       <span
         className={className}
-        title={title}
+        title={user.name}
         ref={ref}
         onClick={(e) => {
           onClick(e);
         }}
       >
-        {username}
+        {user.name}
         <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );
