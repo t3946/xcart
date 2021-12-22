@@ -22,14 +22,20 @@ import { useRouter } from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const PublicProfile = (): any => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
 
+  React.useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  });
+
   if (!user) {
-    router.push("/login");
+    return null;
   }
 
+  const dispatch = useDispatch();
   const alert = useSelectorAccount((e) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const alertShowTimeMs = 3000;
