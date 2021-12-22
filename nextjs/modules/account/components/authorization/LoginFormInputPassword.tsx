@@ -75,21 +75,18 @@ const LoginFormInputPassword = function (props: IProps): any {
           },
 
           success(res: any) {
-            if (!res.user) {
-              goToOTPInput();
-            } else {
+            if (res.user) {
+              dispatch(userSetAction(res.user));
               router.push("/");
+            } else {
+              actions.setSubmitting(false);
+              goToOTPInput();
             }
-
-            res.user && dispatch(userSetAction(res.user));
           },
 
           error(err: any) {
-            actions.setErrors({ password: err.password[0] });
-          },
-
-          complete() {
             actions.setSubmitting(false);
+            actions.setErrors({ password: err.password[0] });
           },
         })
       );

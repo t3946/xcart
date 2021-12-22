@@ -32,7 +32,7 @@ function* login(action: AnyAction) {
   yield api.post(`/api/account/authorization/login`, data).then((res) => {
     res.errors ? error(res.errors) : success(res);
 
-    complete();
+    complete && complete();
 
     return res;
   });
