@@ -10,6 +10,7 @@ import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 
 const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
@@ -20,13 +21,10 @@ const LoginButtonDesktop: React.FC = function () {
   );
 
   if (!user) {
-    const path = "/login";
-    const className = "hat-login-button";
-    const text = "log in";
-
     return (
-      <Link href={path}>
-        <a className={className}>{text}</a>
+      <Link href={"/login"}>
+        <UserIcon />
+        <a className={"hat-login-button"}>log in</a>
       </Link>
     );
   }
@@ -80,6 +78,7 @@ const LoginButtonDesktop: React.FC = function () {
           onClick(e);
         }}
       >
+        <UserIcon />
         {user.name}
         <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>

@@ -7,7 +7,8 @@ import { setTabletMenuIsVisible } from "@redux/actions/account-actions/MenuActio
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount"
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 
 const LoginButtonTablet: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,8 @@ const LoginButtonTablet: React.FC<any> = () => {
           }
         )}
       >
+        <UserIcon />
+
         {text}
 
         <i
