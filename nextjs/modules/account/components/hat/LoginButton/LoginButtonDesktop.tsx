@@ -23,8 +23,10 @@ const LoginButtonDesktop: React.FC = function () {
   if (!user) {
     return (
       <Link href={"/login"}>
-        <UserIcon />
-        <a className={"hat-login-button"}>log in</a>
+        <a className={"hat-login-button"}>
+          <UserIcon />
+          log in
+        </a>
       </Link>
     );
   }
