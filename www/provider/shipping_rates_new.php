@@ -149,7 +149,7 @@ $method_condition = ($shippingid!=""?"and $sql_tbl[shipping_rates].shippingid='$
 $manufacturer_condition = "and $sql_tbl[shipping_rates].manufacturerid='$manufacturerid'";
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
-$realtime_condition = ($config["Shipping"]["realtime_shipping"]=="Y"?"and $sql_tbl[shipping].code=''":"");
+$realtime_condition = ($config["Shipping"]["realtime_shipping"] === "Y"?"and $sql_tbl[shipping].code is null":"");
 
 if ($active_modules["UPS_OnLine_Tools"] && $config["Shipping"]["use_intershipper"] != "Y") {
 	include $xcart_dir."/modules/UPS_OnLine_Tools/ups_shipping_methods.php";
@@ -160,7 +160,7 @@ else {
 }
 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
-$shipping_rates = func_query($qqq="SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].shipping, $sql_tbl[shipping].shipping_time, $sql_tbl[shipping].destination FROM $sql_tbl[shipping], $sql_tbl[shipping_rates] WHERE $sql_tbl[shipping_rates].shippingid=$sql_tbl[shipping].shippingid AND $sql_tbl[shipping].active='Y' $provider_condition $type_condition $zone_condition $method_condition $manufacturer_condition ".($type=="R"?" AND code!='' ":$realtime_condition)." ORDER BY $sql_tbl[shipping].orderby, $sql_tbl[shipping_rates].maxweight");
+$shipping_rates = func_query($qqq="SELECT $sql_tbl[shipping_rates].*, $sql_tbl[shipping].shipping, $sql_tbl[shipping].shipping_time, $sql_tbl[shipping].destination FROM $sql_tbl[shipping], $sql_tbl[shipping_rates] WHERE $sql_tbl[shipping_rates].shippingid=$sql_tbl[shipping].shippingid AND $sql_tbl[shipping].active='Y' $provider_condition $type_condition $zone_condition $method_condition $manufacturer_condition ".($type=="R"?" AND code IS NOT NULL ":$realtime_condition)." ORDER BY $sql_tbl[shipping].orderby, $sql_tbl[shipping_rates].maxweight");
 # END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 
 //func_print_r($shipping_rates, $qqq);
