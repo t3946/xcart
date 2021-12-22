@@ -3,7 +3,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import {
   changePasswordAction,
@@ -21,7 +21,7 @@ import StylesLoginAndSecurity from "@modules/account/components/login-and-securi
 const FormChangePassword = (): any => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const user = useSelector((e: StoreDto) => e.user);
+  const user = useSelectorAccount((e) => e.user);
   const initialValues = {
     old_password: "",
     new_password: "",
@@ -41,12 +41,12 @@ const FormChangePassword = (): any => {
       .oneOf([yup.ref("new_password"), null], "Passwords must match"),
   });
 
-  function submit(values, actions) {
+  function submit(values: any, actions: any) {
     dispatch(
       changePasswordAction({
         form: values,
 
-        success(res) {
+        success(res: any) {
           dispatch(userSetAction(res.user));
           router.push("/login-and-security");
 
@@ -58,7 +58,7 @@ const FormChangePassword = (): any => {
           );
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors(err);
         },
 
@@ -103,12 +103,7 @@ const FormChangePassword = (): any => {
                   account
                 </p>
 
-                <Input
-                  className={"d-none"}
-                  type="text"
-                  name="login"
-                  value={user.email}
-                />
+                <Input type="hidden" name="login" value={user.email} />
 
                 <RBForm.Group controlId="ChangePassword" className="row mb-10">
                   <div
