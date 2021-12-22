@@ -22,15 +22,29 @@ class GoogleShoppingProductStatusCommand extends Command
         func_backprocess_log(self::BACK_PROCESS_LOG_NAME, $log_text);
 
         GoogleProductQualityIssueModel::objects()->delete();
+        $products = [];
 
         foreach (SiteModel::objects() as $site) {
             foreach (StoreFrontMarketPlace::getMarketPlacesByStoreFront($site->pk) as $oMarketPlace) {
                 if ($oMarketPlace instanceof GMC) {
                     func_backprocess_log(self::BACK_PROCESS_LOG_NAME, sprintf('---Storefront %d---', $site->pk));
-                    $oMarketPlace->getProductStatuses();
+                    $products = array_merge($products, $oMarketPlace->getProductStatuses());
                 }
             }
         }
+
+        echo sprintf("%s products processed\n", count($products));
+
+        $deleted = 0;
+
+        foreach (GoogleProductsModel::objects()->valuesList(['product_id'], true) as $product_id) {
+            if (!in_array((int)$product_id, $products, true)){
+                $deleted ++;
+                GoogleProductsModel::objects()->delete(['product_id' => $product_id]);
+            }
+        }
+
+        echo sprintf("%s products deleted\n", count($products));
 
         $current_time = time();
 
