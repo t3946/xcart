@@ -185,11 +185,11 @@ class GMC extends StoreFrontMarketPlace
         func_backprocess_log('google_product_statuses', sprintf('%d products added for update queue.', $iUpdateProductCount));
         func_backprocess_log('google_product_statuses', sprintf('%d total products.', $totalCounter));
 
-        foreach (GoogleProductsModel::objects()->valuesList(['product_id'], true) as $product_id) {
+        /*foreach (GoogleProductsModel::objects()->valuesList(['product_id'], true) as $product_id) {
             if (!in_array((int)$product_id, $products, true)){
                 GoogleProductsModel::objects()->delete(['product_id' => $product_id]);
             }
-        }
+        }*/
 
         return $this;
     }
