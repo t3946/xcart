@@ -30,6 +30,7 @@ import OrdersReducer from "@redux/reducers/account/OrdersReducer";
 // import PhotoSwipeReducer from "@redux/reducers/PhotoSwipeReducer";
 import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
 import ConfigReducer from "@redux/reducers/ConfigReducer";
+import MainMenuReducer from "@redux/reducers/MainMenuReducer";
 
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
 
@@ -72,6 +73,7 @@ const reducers = combineReducers({
   // product: ProductReducer,
   decisions: DecisionsReducer,
   // photoswipe: PhotoSwipeReducer,
+  mainMenu: MainMenuReducer,
   config: ConfigReducer,
 });
 

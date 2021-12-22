@@ -78,11 +78,6 @@ class AccountApi extends FrontendController
             'user' => $user,
             'routes' => AdminHelper::getRoutesMap(),
             'mainMenu' => MenuLibrary::getData("main-menu"),
-            'site' => [
-                'code' => strtolower($site->code),
-                'shortName' => $site->short_name,
-                'workingDayTimeNow' => WorkingTimeHelper::workingDayTimeNow(),
-            ],
             'cart' => [
                 'quantity' => Xcart::app()->cart->getQuantity(),
                 'checkoutUrl' => OrderHelper::getCheckoutUrl(),
@@ -93,16 +88,15 @@ class AccountApi extends FrontendController
                 'companyName' => $config['company_name'],
                 'stripePublicKey' => $stripeSettings['param01'],
                 'APP_LOCAL' => APP_LOCAL,
-            ],
-            'templates' => [
-                'renderStaticNotifications' => StaticMessagesLibrary::renderStaticMessages(),
+                'site' => [
+                    'code' => strtolower($site->code),
+                    'shortName' => $site->short_name,
+                    'workingDayTimeNow' => WorkingTimeHelper::workingDayTimeNow(),
+                ],
             ],
             'departmentsMenu' => [
                 'desktop' => GoodsMenuLibrary::toArrayDesktop(),
                 'mobile' => GoodsMenuLibrary::toArrayMobile(),
-            ],
-            'params' => [
-                'get' => Xcart::app()->request->get->all(),
             ],
             'countries' => AccountController::getCountryPhoneCodes(),
         ];
