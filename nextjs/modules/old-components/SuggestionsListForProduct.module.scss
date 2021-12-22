@@ -1,0 +1,34 @@
+@import "styles/utils/Utils.module";
+
+.suggestion_product {
+  height: auto;
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.link {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: black;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.icon {
+  display: block;
+  flex-shrink: 0;
+  width: pxToRem(70);
+  min-height: pxToRem(70);
+  background-size: cover;
+  background-position: center center;
+}
+
+.label {
+  display: block;
+  padding-left: 1rem;
+  line-height: 1.2;
+}

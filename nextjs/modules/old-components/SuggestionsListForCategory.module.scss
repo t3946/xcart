@@ -1,0 +1,21 @@
+@import "styles/utils/Utils.module";
+
+.suggestion_category {
+  display: none;
+
+  @include breakpoint(lg) {
+    display: block;
+  }
+}
+
+.link {
+  color: black;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

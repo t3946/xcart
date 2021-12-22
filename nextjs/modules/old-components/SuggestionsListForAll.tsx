@@ -47,10 +47,10 @@ const SuggestionsListForAll: React.FC<IProps> = function (props: IProps) {
     ) {
       return (
         <SuggestionsListForCategory
-          suggestions={props.suggestions.category_suggestions}
-          search={props.search}
+          suggestions={suggestions.category_suggestions}
+          searchString={searchString}
           title="Categories"
-          parent={props.parent}
+          parent={parent}
         />
       );
     }
@@ -63,10 +63,10 @@ const SuggestionsListForAll: React.FC<IProps> = function (props: IProps) {
     ) {
       return (
         <SuggestionsListForProduct
-          suggestions={props.suggestions.product_suggestions}
-          search={props.search}
+          suggestions={suggestions.product_suggestions}
+          searchString={searchString}
           title="Products"
-          parent={props.parent}
+          parent={parent}
         />
       );
     }
@@ -75,8 +75,8 @@ const SuggestionsListForAll: React.FC<IProps> = function (props: IProps) {
   return (
     <div className={classnames(Styles.mainContainer, props.classes?.container)}>
       {renderPhrase()}
-      {/*{renderCategory()}*/}
-      {/*{renderProduct()}*/}
+      {renderCategory()}
+      {renderProduct()}
     </div>
   );
 };

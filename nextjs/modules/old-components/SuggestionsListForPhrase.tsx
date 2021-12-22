@@ -2,30 +2,17 @@ import React from "react";
 import map from "lodash/map";
 import ReactDOMServer from "react-dom/server";
 import cn from "classnames";
-import Styles from "@modules/old-components/SuggestionsListForPhrase.module.scss";
+import SuggestionsList, { ISuggestion } from "./SuggestionsList";
 
-interface IProps {
-  searchString: string;
-  suggestions: [];
-  title: string;
-  parent: any;
-}
+const SuggestionsListForPhrase: React.FC<ISuggestion> = function (
+  props: ISuggestion
+) {
+  const { suggestions } = props;
 
-const SuggestionsListForPhrase: React.FC<IProps> = function (props: IProps) {
-  const { searchString, suggestions, title, parent } = props;
+  function renderListItem(item, regExp) {
+    const string = ReactDOMServer.renderToString(item.name);
 
-  function initState() {
-    const re = new RegExp("(" + searchString.split(" ").join("|") + ")", "gi");
-    const suggestionsTemplates = map(suggestions, (item, n) => {
-      // экранирует спецсимволы если они были в строке
-      const string = ReactDOMServer.renderToString(item + "");
-      return {
-        value: string,
-        html: string.replace(re, "<b>$1</b>"),
-      };
-    });
-
-    return suggestionsTemplates;
+    return string.replace(regExp, "<b>$1</b>");
   }
 
   function chooseItem(item) {
@@ -40,33 +27,15 @@ const SuggestionsListForPhrase: React.FC<IProps> = function (props: IProps) {
     // todo: non-translatable
     // this.props.parent.dispatchEvent(event);
   }
-
-  function items() {
-    // Добавляет в состояние найденные строки, шифрует экранированы
-    const list = initState(props);
-
-    // Строка, выведенная в dangerouslySetInnerHTML предварительно экранирована
-    return map(list, (item, index) => {
-      const classes = ["item" + index, "px-3", Styles.item];
-
-      return (
-        <li
-          onClick={(e) => {
-            chooseItem(item.value);
-          }}
-          dangerouslySetInnerHTML={{ __html: item.html }}
-          className={cn(classes)}
-          key={index}
-        />
-      );
-    });
-  }
-
+  const suggestionList = suggestions.map((item) => {
+    return { name: item };
+  });
   return (
-    <div className="phrase suggestions">
-      <div className={cn(Styles.suggestionsTitle, "text-end")}>{title}</div>
-      <ul className="list-unstyled m-0 pb-2">{items()}</ul>
-    </div>
+    <SuggestionsList
+      suggestion={{ ...props, suggestions: suggestionList }}
+      renderListItem={renderListItem}
+      chooseItem={chooseItem}
+    />
   );
 };
 

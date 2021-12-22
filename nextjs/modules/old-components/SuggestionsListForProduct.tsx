@@ -1,39 +1,23 @@
 import { h } from "preact";
 import map from "lodash/map";
 import renderToStringr from "preact-render-to-string";
-import SuggestionsListForPhrase from "./SuggestionsListForPhrase";
+import SuggestionsList, { ISuggestion } from "./SuggestionsList";
+import SuggestionsListStyles from "@modules/old-components/SuggestionsList.module.scss";
+import Styles from "@modules/old-components/SuggestionsListForProduct.module.scss";
 
-export default class SuggestionsListForProduct extends SuggestionsListForPhrase {
-  initState(props) {
-    let regExp = new RegExp(
-      "(" + props.search.split(" ").join("|") + ")",
-      "gi"
-    );
-    let suggestions = map(props.suggestions, (item, n) => {
-      return {
-        // экранирует спецсимволы если они были в строке
-        value: renderToStringr(item.name),
-        html: this.renderListItem(item, regExp),
-      };
-    });
+const SuggestionsListForProduct: React.FC<ISuggestion> = function (
+  props: ISuggestion
+) {
+  function renderListItem(item, regExp) {
+    const name = renderToStringr(item.name);
+    const src = item.image;
+    const href = item.link;
+    const label = name.replace(regExp, "<b>$1</b>");
 
-    this.state = {
-      search: renderToStringr(props.search),
-      // Можно безопасно выводить html
-      list: suggestions,
-    };
-  }
-
-  renderListItem(item, regExp) {
-    let name = renderToStringr(item.name);
-    let src = item.image;
-    let href = item.link;
-    let label = name.replace(regExp, "<b>$1</b>");
-
-    let icon = h(
+    const icon = h(
       "span",
       {
-        className: "icon",
+        className: Styles.icon,
         style: src ? 'background-image: url("' + src + '")' : "",
       },
       h(
@@ -46,35 +30,26 @@ export default class SuggestionsListForProduct extends SuggestionsListForPhrase 
     );
 
     return renderToStringr(
-      <a href={href}>
+      <a className={Styles.link} href={href}>
         {icon}
         <span
-          className="label"
+          className={Styles.label}
           dangerouslySetInnerHTML={{ __html: label }}
         ></span>
       </a>
     );
   }
 
-  items(props) {
-    // Добавляет в состояние найденные строки, шифрует экранированы
-    this.initState(props);
+  return (
+    <SuggestionsList
+      suggestion={props}
+      classes={[
+        SuggestionsListStyles.suggestion_d_none,
+        Styles.suggestion_product,
+      ]}
+      renderListItem={renderListItem}
+    />
+  );
+};
 
-    // Строка, выведенная в dangerouslySetInnerHTML предварительно экранирована
-    return map(this.state.list, (item, n) => (
-      <li
-        className={"item" + n}
-        dangerouslySetInnerHTML={{ __html: item.html }}
-      ></li>
-    ));
-  }
-
-  render(props, state) {
-    return (
-      <div className="product suggestions">
-        <div className="suggestionsTitle">{props.title}</div>
-        <ul>{this.items(props)}</ul>
-      </div>
-    );
-  }
-}
+export default SuggestionsListForProduct;
