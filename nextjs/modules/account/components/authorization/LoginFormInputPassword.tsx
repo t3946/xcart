@@ -30,7 +30,7 @@ const LoginFormInputPassword = function (props: IProps): any {
   const { goToInputLogin, goToOTPInput, login } = props;
 
   React.useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
   const initialState = {
@@ -60,7 +60,7 @@ const LoginFormInputPassword = function (props: IProps): any {
     })();
   }
 
-  function submit(values, actions) {
+  function submit(values: any, actions: any) {
     //function submit must be synchronous because need wrap async part
     (async function wrapAsyncFunc() {
       actions.setSubmitting(true);
@@ -163,7 +163,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                   id="rememberMe"
                   className="form-checkbox d-none"
                   type="checkbox"
-                  value={values.rememberMe}
+                  checked={values.rememberMe}
                 />
 
                 <RBForm.Label

@@ -3,7 +3,7 @@ import cn from "classnames";
 import Styles from "@modules/ui/forms/Label.module.scss";
 
 interface IProps {
-  children: string;
+  children: string | React.ReactNode;
   required?: boolean;
   optional?: boolean;
   error?: boolean;
