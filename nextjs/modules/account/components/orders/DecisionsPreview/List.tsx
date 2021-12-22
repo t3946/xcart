@@ -36,13 +36,15 @@ const List: React.FC<IProps> = function (props: IProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isAllLoaded, setIsAllLoaded] = React.useState(false);
 
-  if (
-    !isAllLoaded &&
-    (decisions.length === 0 || (isIntersecting && !isLoading))
-  ) {
-    // getMoreDecision();
-    // setIsIntersecting(false);
-  }
+  React.useEffect(() => {
+    if (
+      !isAllLoaded &&
+      (decisions.length === 0 || (isIntersecting && !isLoading))
+    ) {
+      getMoreDecision();
+      setIsIntersecting(false);
+    }
+  });
 
   function getMoreDecision() {
     setIsIntersecting(false);
@@ -89,7 +91,10 @@ const List: React.FC<IProps> = function (props: IProps) {
     const theLast = i === decisions.length - 1;
 
     items.push(
-      <Link href={"/orders/decision/" + decision.decision_id} key={i}>
+      <Link
+        href={"/orders/decision/" + decision.decision_id}
+        key={`${i}_${decision.decision_id}`}
+      >
         <a className={"text-decoration-none p-0"}>
           <Item
             decision={decision}
@@ -105,7 +110,7 @@ const List: React.FC<IProps> = function (props: IProps) {
 
     for (let i = 1; i <= skeletonsNumber; i++) {
       items.push(
-        <div className={""}>
+        <div key={i} className={""}>
           <Item
             decision={{ solved: props.solved }}
             classes={{ container: "skeleton-box" }}
@@ -117,7 +122,7 @@ const List: React.FC<IProps> = function (props: IProps) {
 
   useEffect(function () {
     let reviewLoadedObserver = null;
-    const target = theLastItemRef.current?.base;
+    const target = theLastItemRef.current;
 
     if (!target || isLoading || isAllLoaded) {
       return;
