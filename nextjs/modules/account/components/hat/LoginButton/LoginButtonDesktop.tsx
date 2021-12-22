@@ -14,12 +14,10 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-
-  function toggleMenu(isVisible: boolean) {
-    HideAllMenu(dispatch);
-    isVisible && dispatch(setTabletMenuIsVisible(true));
-    isVisible && dispatch(setVisibleShadowPanelAction(true));
-  }
+  const className = "hat-login-button";
+  const isTabletMenuVisible = useSelectorAccount(
+    (e) => e.mobileMenu.isTabletMenuVisible
+  );
 
   if (!user) {
     const path = "/login";
@@ -33,10 +31,11 @@ const LoginButtonDesktop: React.FC = function () {
     );
   }
 
-  const className = "hat-login-button";
-  const isTabletMenuVisible = useSelectorAccount(
-    (e) => e.mobileMenu.isTabletMenuVisible
-  );
+  function toggleMenu(isVisible: boolean) {
+    HideAllMenu(dispatch);
+    isVisible && dispatch(setTabletMenuIsVisible(true));
+    isVisible && dispatch(setVisibleShadowPanelAction(true));
+  }
 
   function logoutButtonClickHandler() {
     HideAllMenu(dispatch);
