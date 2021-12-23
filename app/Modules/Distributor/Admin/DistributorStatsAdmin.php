@@ -7,10 +7,12 @@ use DateTime;
 use Modules\Admin\Contrib\Admin;
 use Modules\Distributor\Forms\DistributorStatsFilterForm;
 use Modules\Distributor\Models\DistributorModel;
+use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 class DistributorStatsAdmin extends Admin
 {
@@ -34,6 +36,7 @@ class DistributorStatsAdmin extends Admin
      */
     public function getItemProperty(Model $item, $property): string
     {
+        $base_filter = ['cb_status__in' => [OrderStatusModel::ORDER_STATUS_AUTHORIZED, OrderStatusModel::ORDER_STATUS_COMPLETED]];
         $request = Xcart::app()->request;
         if ($request->getIsGet() && $filter_form = $this->getFilterForm()) {
             $filter_form->populate($_GET, $_FILES);
@@ -42,21 +45,16 @@ class DistributorStatsAdmin extends Admin
                 if (!empty($period_value)) {
                     $date = new DateTime();
                     $date->sub(new DateInterval("P{$period_value}D"));
+                    $base_filter = array_merge($base_filter, ['order__date__gte' => $date->getTimestamp()]);
                 }
 
             }
         }
         switch ($property) {
             case 'orders':
-                if ($period_value) {
-                    return $item->order_groups->filter(['order__date__gte' => $date->getTimestamp()])->group(['orderid'])->count();
-                }
-                return $item->order_groups->group(["orderid"])->count();
+                return $item->order_groups->filter($base_filter)->group(['orderid'])->count();
             case 'sales':
-                if ($period_value) {
-                    return $item->order_groups->filter(['order__date__gte' => $date->getTimestamp()])->sum('total_gross');
-                }
-                return $item->order_groups->sum('total_gross');
+                return $item->order_groups->filter($base_filter)->group(['orderid'])->sum('total_gross');
         }
         return parent::getItemProperty($item, $property);
     }
@@ -84,5 +82,13 @@ class DistributorStatsAdmin extends Admin
     public function getFilterForm(): ?Form
     {
         return new DistributorStatsFilterForm();
+    }
+
+    public function handleFilter($qs, $form)
+    {
+        if (($dx_field = $form->getField('manufacturer_code')) && $dx_value = trim($dx_field->getValue())) {
+            $qs->filter(['manufacturer' => new QOr(['manufacturer__contains' => $dx_value, 'code' => $dx_value])]);
+        }
+        return parent::handleFilter($qs, $form);
     }
 }
