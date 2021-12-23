@@ -59,9 +59,6 @@ const HatSearchLine: React.FC = (): any => {
 
   function closeDepartmentsMenu() {
     HideAllMenu(dispatch);
-    // dispatch(setVisibleShadowPanelAction(false));
-    // dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
-    // setDepartmentsMenuButtonHover(false);
   }
 
   return (
@@ -73,7 +70,7 @@ const HatSearchLine: React.FC = (): any => {
         closeMenu={closeDepartmentsMenu}
       />
 
-      <div className={cn("container", Styles.hatSearchLine)}>
+      <div className="container-lg">
         <div className="row">
           {/*departments menu*/}
           <HoverIntent

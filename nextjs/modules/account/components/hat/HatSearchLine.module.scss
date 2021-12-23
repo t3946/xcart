@@ -13,7 +13,7 @@
   top: 0;
   z-index: 100;
   height: pxToRem(50);
-  
+
   @include breakpoint(lg) {
     background: #0d2431;
   }
@@ -60,22 +60,4 @@
 
 .triangleIcon {
   transition: all 0.15s ease-out;
-}
-
-.hatSearchLine {
-  @include breakpoint(sm) {
-    max-width: none;
-  }
-
-  @include breakpoint(lg) {
-    max-width: pxToRem(960);
-  }
-
-  @include breakpoint(xl) {
-    max-width: pxToRem(1140);
-  }
-
-  @include breakpoint(xxl) {
-    max-width: pxToRem(1320);
-  }
 }
