@@ -6,9 +6,13 @@ namespace Modules\Admin\Contrib;
 use DateTime;
 use Doctrine\DBAL\DBALException;
 use Exception;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use UnexpectedValueException;
 use Xcart\App\Form\Fields\DropDownField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\DateField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\TreeManager;
 use Xcart\App\Orm\TreeModel;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -759,6 +763,71 @@ abstract class Admin
         return ($value->$property instanceof Model) ? (string)$value->$property : $value->$property;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function getExportItemProperty(Model $item, $property): string
+    {
+        if ($field = $item->getField($property)) {
+            if ($field instanceof BooleanField) {
+                return $field->getValue() ? 'Yes' : 'No';
+            } else if ($field instanceof ImageField) {
+                return $field->getValue() ?? '';
+            }
+        }
+        if ($form = $this->getForm()) {
+            $form->setInstance($item);
+            if ($field = $form->getField($property)) {
+                if ($field instanceof DropDownField && $field->inline_editor) {
+                    $value_id = $field->getValue();
+                    $choices = $field->getChoices();
+                    return $choices[$value_id] ?? '';
+                }
+            }
+        }
+        $value = $this->getItemProperty($item, $property);
+        return strip_tags($value);
+    }
+
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws Exception
+     */
+    public function exportFile(QuerySet $qs): void
+    {
+        $name_admin = static::getName();
+
+        $style_first_row = [
+            'font' => [
+                'bold' => true,
+            ]
+        ];
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $ar_rows[] = $this->getListColumns();
+        /** @var Model $model */
+        foreach ($qs->all() as $model) {
+            $row_items = [];
+            foreach ($this->getListColumns() as $column) {
+                $row_items[] = $this->getExportItemProperty($model, $column);
+            }
+            $ar_rows[] = $row_items;
+        }
+        $sheet->fromArray($ar_rows);
+        foreach ($sheet->getColumnIterator() as $column) {
+            $sheet->getColumnDimension($column->getColumnIndex())->setAutoSize(true);
+        }
+        $highestColumn = $sheet->getHighestColumn();
+        $sheet->getStyle('A1:' . $highestColumn . '1')->applyFromArray($style_first_row);
+
+        header('Content-Type: application/vnd.ms-excel');
+        header("Content-Disposition: attachment;filename=$name_admin.xlsx");
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+    }
+
     public function all($pk = null)
     {
         $request = Xcart::app()->request;
@@ -774,6 +843,10 @@ abstract class Admin
 
         $qs = $this->handleSearch($qs, $search);
         $qs = $this->applyOrder($qs);
+        if ($request->get['export']) {
+            $this->exportFile($qs);
+            exit();
+        }
 
         $pagination = new Pagination($qs, [
             'pageSize' => $this->getConfig()->page_size ?: $this->pageSize,

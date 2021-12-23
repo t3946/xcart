@@ -11,6 +11,7 @@ import "./pages/s3stores-price";
 import "./pages/s3stores-mail-to-dx";
 import "./pages/s3stores-settings";
 import "./pages/s3stores-fraud-order";
+import "./pages/s3stores-shopping-card";
 
 import "@/../components/jquery.shapeshift/core/jquery.shapeshift";
 import "@/js/ajaxTooltip";

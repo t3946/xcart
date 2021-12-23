@@ -31,27 +31,30 @@
 //}
 
 
-
 namespace Modules\Cart\Controllers;
 
+use Exception;
 use Modules\Admin\Controllers\BackendController;
 use Modules\Cart\CartModule;
 use Modules\Cart\Forms\ShoppingCartForm;
 use Modules\Cart\Models\CartModel;
+use Modules\Forms\Models\EmailModel;
 use Modules\Goods\Models\ProductModel;
+use Throwable;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 
 class ShoppingCartController extends BackendController
 {
-    public function actionView() {
+    public function actionView()
+    {
 
         $qs = CartModel::objects()->order(['-id']);
         $request = $this->getRequest();
 
-        if (!empty($request->get->get('ShoppingCartForm')['id'])){
-            $qs->filter(['id' => $request->get->get('ShoppingCartForm')['id'] ]);
+        if (!empty($request->get->get('ShoppingCartForm')['id'])) {
+            $qs->filter(['id' => $request->get->get('ShoppingCartForm')['id']]);
         }
 
         $cart = Xcart::app()->getModule('Cart')->getComponent('cart');
@@ -74,7 +77,7 @@ class ShoppingCartController extends BackendController
 //            $breakpoint = 1;
 //        }
 
-        $pager = new Pagination($qs,['pageSize' => 25], new QuerySetDataSource());
+        $pager = new Pagination($qs, ['pageSize' => 25], new QuerySetDataSource());
 
         $pageTitle = CartModule::t('Shopping Cart');
 
@@ -87,6 +90,37 @@ class ShoppingCartController extends BackendController
             'form' => $form,
         ]);
 
+    }
+
+    public function getListCart(int $page): void
+    {
+        $qs = CartModel::objects()->getQuerySet()->order(['-created_at']);
+        $pagination = new Pagination($qs, [
+            'page' => $page,
+            'pageSize' => 20,
+        ], new QuerySetDataSource());
+        try {
+            /** @var CartModel $cart_model */
+            foreach ($pagination->paginate() as $cart_model) {
+                $ar_item[] = [
+                    'id' => $cart_model->pk,
+                    'products' => $cart_model->getProducts()
+                ];
+            }
+            $this->jsonResponse(['items' => $ar_item ?? [], 'maxPage' => $pagination->getPagesCount()]);
+        } catch (Throwable $e) {
+            Xcart::app()->logger->error('Error crud shopping cart', [$e->getMessage(), $e->getFile(), $e->getLine()], 'shopping_cart');
+            $this->jsonResponse(['message' => 'Internal error']);
+        }
+    }
+    public function getCartItem(int $id): void
+    {
+        /** @var CartModel $cart_model */
+        $cart_model = CartModel::objects()->get(['pk' => $id]);
+        if ($cart_model) {
+            $item = ['id' => $cart_model->pk, 'products' => $cart_model->getProducts()];
+        }
+        $this->jsonResponse(['items' => $item ? [$item] :[], 'maxPage' => null]);
     }
 
 }

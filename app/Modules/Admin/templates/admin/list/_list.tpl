@@ -1,7 +1,10 @@
 {var $id = $admin->getId()}
 {add $isNested = false}
 {var $actions = $admin->getListGroupActions()}
-
+{var $emptyGet = $.request->get->count() === 0}
+<div class="btn-export-crud">
+    <a target="_blank" href="{$.request->getUrl()}{$emptyGet ? '?' : '&' }export=Y">Export to excel</a>
+</div>
 <div class="list-block" data-list data-id="{$id}-list">
     {if $search}
         <div class="list-top clearfix">
@@ -12,7 +15,6 @@
     {/if}
     <div class="list-wrapper">
         <div class="list-update-block">
-            {*            {dd(property_exists($admin, 'ownerPk'))}*}
             <table data-list-table
                    {if property_exists($admin, 'ownerPk')}data-owner-pk={$admin->ownerPk} {/if} {if $admin->sort}data-sorting{/if}
                    style="border-collapse: collapse;">
