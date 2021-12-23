@@ -10,6 +10,8 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import hideAllMenu from "@modules/account/utils/hide-all-menu";
 
+import Styles from "@modules/mini-cart/components/MiniCart.module.scss";
+
 const MiniCart: React.FC = () => {
   const cart = useSelector((e: StoreInterface) => e.cart);
   const [isEnter, setIsEnter] = React.useState(false);
@@ -46,7 +48,7 @@ const MiniCart: React.FC = () => {
       interval={250}
       timeout={250}
     >
-      <div className={"mini-cart-container"}>
+      <div className={Styles.container}>
         <Provider store={storeCart}>
           <TransitionFade show={isEnter && cart.quantity > 0}>
             <MiniCartItems store={storeCart} checkoutUrl={cart.checkoutUrl} />

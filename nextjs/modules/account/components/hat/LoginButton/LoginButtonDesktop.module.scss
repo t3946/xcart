@@ -1,0 +1,6 @@
+@import "styles/utils/Utils.module";
+
+.button {
+  padding: 0 0 0 pxToRem(31);
+  width: pxToRem(147);
+}
