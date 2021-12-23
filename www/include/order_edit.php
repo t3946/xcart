@@ -1643,7 +1643,7 @@ if ($REQUEST_METHOD === 'POST')
                                                 'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),
                                                 'qty_inv' => floatval($invoice_data["add_extra_value_qty"][$key]),
                                                 'unit_cost_total' => round(floatval($invoice_data["add_extra_value_cost"][$key]) * floatval($invoice_data["add_extra_value_qty"][$key]), 2),
-                                                'customer_id' => Xcart\App\Main\Xcart::app()->user->id,
+                                                'customer_id' => Xcart::app()->user->id,
                                                 'item_type' => $invoice_data["add_extra_value_type"][$key],
                                                 'item_string' => $invoice_data["add_extra_value_string"][$key]
                                             ]));
