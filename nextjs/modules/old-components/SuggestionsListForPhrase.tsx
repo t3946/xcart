@@ -14,8 +14,8 @@ const SuggestionsListForPhrase: React.FC<ISuggestion> = function (
     return string.replace(regExp, "<b>$1</b>");
   }
 
-  function chooseItem(value) {
-    router.push(`/search?q=${value}`);
+  function chooseItem(value: string) {
+    document.location.href = `/search?q=${value.replaceAll(" ", "+")}`;
   }
 
   const suggestionList = suggestions.map((item) => {
