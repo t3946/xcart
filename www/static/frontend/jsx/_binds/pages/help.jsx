@@ -3,7 +3,9 @@ import ReactDOM from "react-dom";
 import NavigateMenuRoutes from "@/modules/help-center/components/navigate-menu/NavigateMenuRoutes";
 
 (() => {
-  const elem = document.getElementsByClassName("help")[0];
+  const elem = document.querySelector(".help");
+
+  if (!elem) return;
 
   ReactDOM.render(<NavigateMenuRoutes />, elem);
 })();

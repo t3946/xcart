@@ -167,6 +167,12 @@
                                     {elseif $main eq "referred_sales"}
                                         {include file="main/referred_sales.tpl"}
 
+                                    {elseif $main eq "zones"}
+                                        {include file="admin/main/zones.tpl"}
+
+                                    {elseif $main eq "zone_edit"}
+                                        {include file="admin/main/zone_edit.tpl"}
+
                                     {elseif $main eq "affiliates"}
                                         {include file="main/affiliates.tpl"}
 

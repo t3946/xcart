@@ -7,6 +7,7 @@ use Google\Service\ShoppingContent;
 use Modules\Goods\Models\GoogleProductQualityIssueModel;
 use Modules\Goods\Models\GoogleProductsModel;
 use Modules\Goods\Models\GoogleIssuesProcessingRuleModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Xcart\External_Marketplaces\StoreFrontMarketPlace;
@@ -94,10 +95,11 @@ class GMC extends StoreFrontMarketPlace
         return true;
     }
 
-    public function getProductStatuses(): GMC
+    public function getProductStatuses(): array
     {
         $iUpdateProductCount = $iNewIssues = $totalCounter = 0;
         $pageToken = null;
+        $products = [];
         do {
             $oResponse = null;
             if (!empty($pageToken)) {
@@ -113,9 +115,13 @@ class GMC extends StoreFrontMarketPlace
                     foreach ($aProducts as $oProduct) {
                         [,,,$iProductId] = explode(':', $oProduct->getProductId());
 
+                        $products[] = (int)$iProductId;
+
                         foreach ($oProduct->getDestinationStatuses() as $destinationStatus) {
                             if ($destinationStatus->getDestination() === 'Shopping') {
-                                GoogleProductsModel::objects()->updateOrCreate(['product_id' => $iProductId],['shopping_status' => $destinationStatus->getStatus()]);
+                                if (ProductModel::objects()->get(['productid' => $iProductId])) {
+                                    GoogleProductsModel::objects()->updateOrCreate(['product_id' => $iProductId],['shopping_status' => $destinationStatus->getStatus()]);
+                                }
                             }
                         }
 
@@ -179,6 +185,6 @@ class GMC extends StoreFrontMarketPlace
         func_backprocess_log('google_product_statuses', sprintf('%d products added for update queue.', $iUpdateProductCount));
         func_backprocess_log('google_product_statuses', sprintf('%d total products.', $totalCounter));
 
-        return $this;
+        return $products;
     }
 }

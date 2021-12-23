@@ -147,7 +147,7 @@ SQL;
         if (empty($this->aShippingMethods[$iShippingZone])) {
             $this->aShippingMethods[$iShippingZone] = Shipping::model()->findAll(
                 SQLBuilder::getInstance()->
-                addInnerJoin('shipping_carrier', 'sc', 'main.code = sc.carrier_code OR (main.code = "" AND sc.carrier_code = "Flat") ')->
+                addInnerJoin('shipping_carrier', 'sc', 'main.code = sc.carrier_code OR (main.code IS NULL AND sc.carrier_code = "Flat") ')->
                 addInnerJoin('shipping_rates', 'sr', 'main.shippingid = sr.shippingid')->
                 addCondition("active = 'Y'")->
                 addCondition('manufacturerid = ' . $oManufacturer->manufacturerid)->

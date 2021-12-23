@@ -10,9 +10,11 @@
   }
   &-items{
     width: 100%;
+    padding-right: 10px;
   }
 
   &-title{
+    font-size: 30px;
     padding-left: 10px;
     @media (max-width: 769px) {
       text-align: center;
