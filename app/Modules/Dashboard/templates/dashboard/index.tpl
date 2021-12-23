@@ -107,10 +107,12 @@
                 </div>
                 <div id="cart_retrieval">
                     {smarty_admin_block name= 'Cart retrieval'}
-                        <form action="{url "admin_cart:show"}" method="get">
+                        <form>
                             <b>Cart number:</b>
                             <input name="ShoppingCartForm[id]" size="10" value="" id="cart_number" type="number">
-                            <input type="submit" value="Search cart"  />
+                            <button data-url="{$.app->router->url('admin:list', ['module' => 'Cart', 'admin' => 'ShoppingCartAdmin'])}" id="search-cart-dashboard">
+                                Search Cart
+                            </button>
                         </form>
                     {/smarty_admin_block}
                 </div>

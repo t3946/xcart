@@ -13,16 +13,23 @@ import { CartItem } from "@admin/modules/admin-cruds/shopping-card/ts/types/cart
 import { LoadCartItems } from "@admin/modules/admin-cruds/shopping-card/components/load-cart-items/LoadCartItems";
 import Button from "react-bootstrap/esm/Button";
 import { Form } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 export const ShoppingCardAdmin: React.FC = () => {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<CartItem[]>(null);
   const [maxPage, setMaxPage] = useState(null);
   const [search, setSearch] = useState("");
+  const { cartId }: { cartId: string } = useParams();
   useEffect(() => {
-    handleFetchItems(`/admin/cart/api/cart-items/${page}`);
+    if (cartId) {
+      setSearch(cartId);
+      handleSubmit(cartId);
+    } else {
+      handleFetchItems(`/admin/cart/api/cart-items/${page}`);
+    }
   }, [page]);
-  const handleSubmit = (e) => {
-    handleFetchItems(`/admin/cart/api/cart-item/${search}`);
+  const handleSubmit = (id = null) => {
+    handleFetchItems(`/admin/cart/api/cart-item/${id ?? search}`);
   };
   const handleClearFilter = () => {
     setSearch("");
@@ -63,7 +70,11 @@ export const ShoppingCardAdmin: React.FC = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Button disabled={!items} onClick={handleSubmit} variant="warning">
+          <Button
+            disabled={!items}
+            onClick={() => handleSubmit(null)}
+            variant="warning"
+          >
             Search
           </Button>
           <Button

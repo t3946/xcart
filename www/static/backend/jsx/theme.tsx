@@ -349,6 +349,17 @@ $("a.select-order").click(function () {
     });
   });
 })();
+$(function () {
+  $("#search-cart-dashboard").on("click", (e) => {
+    e.preventDefault();
+    const value = $("#cart_number").val();
+    let url = e.target.dataset.url;
+    if (value) {
+      url += `/${value}`;
+    }
+    window.location.href = url;
+  });
+});
 
 $(function () {
   $(document).on("change", ".list-update-block .updates-admin", (event) => {
