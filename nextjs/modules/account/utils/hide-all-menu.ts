@@ -6,6 +6,8 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import { setDepartmentsMenuMobileIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuMobileActions";
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import { setIsVisibleAction } from "@redux/actions/account-actions/MobileMenuActions";
+import { setSearchIsVisibleAction } from "@redux/actions/account-actions/MobileSearchActions";
+import { setSuggestionsAction } from "@redux/actions/account-actions/SuggestionActions";
 import { setMiniCartIsVisibleAction } from "@redux/actions/MiniCartActions";
 
 const hideAllMenu = function (dispatch: (payload: any) => void): void {
@@ -16,6 +18,8 @@ const hideAllMenu = function (dispatch: (payload: any) => void): void {
   dispatch(setVisibleShadowPanelAction(false));
   dispatch(setIsVisibleAction(false));
   dispatch(setMiniCartIsVisibleAction(false));
+  dispatch(setSearchIsVisibleAction(false));
+  dispatch(setSuggestionsAction(null));
 };
 
 export default hideAllMenu;

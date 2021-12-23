@@ -8,12 +8,11 @@ export interface ISuggestion {
   searchString: string;
   suggestions: any[];
   title: string;
-  parent: any;
 }
 
 interface IProps {
   suggestion: ISuggestion;
-  classes: any;
+  classes?: any;
   renderListItem: any;
   chooseItem?: any;
 }

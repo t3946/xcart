@@ -18,6 +18,8 @@ import ListsReducer from "@redux/reducers/account/ListsReducer";
 import DepartmentsMenuReducer from "@redux/reducers/account/DepartmentsMenuReducer";
 import DepartmentsMenuMobileReducer from "@redux/reducers/account/DepartmentsMenuMobileReducer";
 import DepartmentsMenuDesktopReducer from "@redux/reducers/account/DepartmentsMenuDesktopReducer";
+import MobileSearchReducer from "@redux/reducers/account/MobileSearchReducer";
+import SuggestionReducer from "@redux/reducers/account/SuggestionReducer";
 import LoginAndSecurityReducer from "@redux/reducers/account/LoginAndSecurityReducer";
 import MobileAlertReducer from "@redux/reducers/account/MobileAlertReducer";
 import CartReducer from "@redux/reducers/CartReducer";
@@ -61,6 +63,8 @@ const reducers = combineReducers({
   departmentsMenu: DepartmentsMenuReducer,
   departmentsMenuMobile: DepartmentsMenuMobileReducer,
   departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
+  searchMobile: MobileSearchReducer,
+  suggestion: SuggestionReducer,
   loginAndSecurity: LoginAndSecurityReducer,
   mobileAlert: MobileAlertReducer,
   cart: CartReducer,

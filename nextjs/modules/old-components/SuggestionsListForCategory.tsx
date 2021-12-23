@@ -17,18 +17,11 @@ const SuggestionsListForCategory: React.FC<ISuggestion> = function (
         className={Styles.link}
         href={href}
         dangerouslySetInnerHTML={{ __html: label }}
-      >
-      </a>
+      />
     );
   }
 
-  return (
-    <SuggestionsList
-      suggestion={props}
-      classes={Styles.suggestion_category}
-      renderListItem={renderListItem}
-    />
-  );
+  return <SuggestionsList suggestion={props} renderListItem={renderListItem} />;
 };
 
 export default SuggestionsListForCategory;

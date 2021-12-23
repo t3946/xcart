@@ -1,5 +1,4 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import DepartmentsMenuMobile from "@modules/account/components/hat/DepartmentsMenuMobile";
 import HatNavigation from "@modules/account/components/hat/HatNavigation";
 import HatSearchLine from "@modules/account/components/hat/HatSearchLine";

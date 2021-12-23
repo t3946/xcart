@@ -14,11 +14,8 @@ const Switch: React.FC<IProps> = (props: IProps) => {
       x="0px"
       y="0px"
       viewBox="0 0 17.667 17.667"
-      // style="enable-background:new 0 0 17.667 17.667;"
-      // style={{enableBackground}}
       className={cn(props.className)}
     >
-      <style type="text/css"></style>
       <g>
         <path
           style={{ fillRule: "evenodd", clipRule: "evenodd", fill: "#D2D2D2" }}

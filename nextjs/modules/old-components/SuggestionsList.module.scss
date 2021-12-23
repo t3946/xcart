@@ -64,20 +64,6 @@
     background-color: #edf0f2;
   }
 
-  // &:after {
-  //   content: url("../images/icons/search/switch.svg");
-  //   display: block;
-  //   width: pxToRem(12);
-  //   height: pxToRem(12);
-  //   position: absolute;
-  //   right: pxToRem(11);
-  //   top: 0;
-
-  //   @include breakpoint(lg) {
-  //     display: none;
-  //   }
-  // }
-
   @include breakpoint(lg) {
     padding: 0 1rem;
     line-height: pxToRem(26);

@@ -1,14 +1,23 @@
 @import "styles/utils/Utils.module.scss";
 @import "styles/modules/Theme.module.scss";
 
+.searchFormContainer__suggestion {
+  position: absolute;
+  left: 0;
+  top: pxToRem(36);
+  right: 0;
+}
+
 .mainContainer {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #0d2431;
   height: pxToRem(50);
+  
+  @include breakpoint(lg) {
+    background: #0d2431;
+  }
 }
-
 
 .buttonSearch {
   height: pxToRem(36);
@@ -18,38 +27,9 @@
   cursor: pointer;
 }
 
-
-.searchForm {
-  position: relative;
-}
-
-.searchForm__buttonSearch {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-
-.inputSearch {
-  height: pxToRem(36);
-  font-size: pxToRem(14);
-  width: 100%;
-  padding: 0 pxToRem(36) 0 pxToRem(10);
-  border-top: none;
-  border-bottom: none;
-  border-left: 1px solid #0d2431;
-  border-right: 1px solid #0d2431;
-
-  &:focus {
-    outline: none;
-  }
-}
-
-
 .categoryMenuContainer {
   color: #ffffff;
 }
-
 
 .categoryMenu {
   width: 100%;
@@ -68,7 +48,7 @@
     color: #ffffff;
     font-size: pxToRem(14);
     font-weight: 800;
-    margin-left: 5px;
+    margin-left: pxToRem(5);
     text-transform: uppercase;
   }
 }
@@ -78,7 +58,24 @@
   color: $darkBlue;
 }
 
-
 .triangleIcon {
   transition: all 0.15s ease-out;
+}
+
+.hatSearchLine {
+  @include breakpoint(sm) {
+    max-width: none;
+  }
+
+  @include breakpoint(lg) {
+    max-width: pxToRem(960);
+  }
+
+  @include breakpoint(xl) {
+    max-width: pxToRem(1140);
+  }
+
+  @include breakpoint(xxl) {
+    max-width: pxToRem(1320);
+  }
 }
