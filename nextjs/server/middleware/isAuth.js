@@ -1,0 +1,36 @@
+const passport = require("../auth/Passport");
+const authConfig = require("../config/auth");
+const PrismaClient = require("@prisma/client").PrismaClient;
+const prisma = new PrismaClient();
+
+module.exports = [
+  passport.authenticate("jwt", { session: false }),
+
+  async function (req, res, next) {
+    const nowTimeS = new Date().getTime() / 1000;
+
+    //session outdated
+    if (req.user.iat + authConfig.jwtLifeTimeS < nowTimeS) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        user_id: req.user.userId,
+      },
+    });
+
+    //user not found
+    if (!user) {
+      return res.sendStatus(401);
+    }
+
+    //session unauthorised
+    if (user.access_token !== req.user.accessToken) {
+      return res.sendStatus(401);
+    }
+
+    next();
+  },
+];

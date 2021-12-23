@@ -61,13 +61,15 @@ function* changePassword(action: AnyAction) {
     ChangePasswordForm: form,
   });
 
-  yield api.post<any>(route("account:api:edit-password"), data).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+  yield api
+    .post<any>("/api/account/login-and-security/edit-password", data)
+    .then((res) => {
+      res.errors ? error(res.errors) : success(res);
 
-    complete();
+      complete();
 
-    return res;
-  });
+      return res;
+    });
 }
 
 function* loginAndSecuritySaga(): SagaIterator {
