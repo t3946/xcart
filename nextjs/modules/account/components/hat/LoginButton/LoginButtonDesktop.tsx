@@ -9,8 +9,27 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
+import RotateStyles from "styles/modules/Rotate.module.scss";
+import StylesCommon from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
+import cn from "classnames";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+
+import Styles from "@modules/account/components/hat/LoginButton/LoginButtonDesktop.module.scss";
+
+const AccountLink: React.FC = function () {
+  const classes = [
+    "sidebar-menu-item",
+    "sidebar-menu_top-level-item",
+    "text-decoration-none",
+  ];
+
+  return (
+    <Link href={"/"}>
+      <a className={classnames(classes)}>Account</a>
+    </Link>
+  );
+};
 
 const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
@@ -20,21 +39,45 @@ const LoginButtonDesktop: React.FC = function () {
     (e) => e.mobileMenu.isTabletMenuVisible
   );
 
-  if (!user) {
-    return (
-      <Link href={"/login"}>
-        <a className={"hat-login-button"}>
-          <UserIcon />
-          log in
-        </a>
-      </Link>
-    );
-  }
+  const classes = {
+    button: [
+      StylesCommon.hatLoginButton,
+      Styles.button,
+      "d-flex",
+      "align-items-center",
+      "position-relative",
+      "cursor-pointer",
+      "text-decoration-none",
+    ],
+
+    username: ["hat-login-button-username"],
+
+    iconArrow: [
+      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
+      "login-button-desktop__arrow",
+      "login-button-desktop-arrow",
+      {
+        "login-button-desktop-arrow__flip": isTabletMenuVisible,
+      },
+    ],
+  };
+  const routes = useSelectorAccount((e) => e.routes);
 
   function toggleMenu(isVisible: boolean) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
     isVisible && dispatch(setVisibleShadowPanelAction(true));
+  }
+
+  if (!user) {
+    return (
+      <Link href={"/login"}>
+        <a className={cn(classes.button)}>
+          <UserIcon />
+          <span className="hat-login-button-username">log in</span>
+        </a>
+      </Link>
+    );
   }
 
   function logoutButtonClickHandler() {
@@ -73,7 +116,7 @@ const LoginButtonDesktop: React.FC = function () {
 
     return (
       <span
-        className={className}
+        className={cn(classes.button)}
         title={user.name}
         ref={ref}
         onClick={(e) => {
@@ -81,7 +124,8 @@ const LoginButtonDesktop: React.FC = function () {
         }}
       >
         <UserIcon />
-        {user.name}
+        <span className={classnames(classes.username)}>{user.name}</span>
+        
         <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );
