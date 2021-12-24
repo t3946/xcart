@@ -134,6 +134,16 @@ function* payOrderByPaypalDecision(action): Generator {
     });
 }
 
+function* submitResponsibilityForCustomDutiesDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>("/submit-responsibility-for-custom-duties", data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
@@ -157,4 +167,8 @@ export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SENT_ACH_TRANSFER_DECISION", sentAchTransferDecision);
   yield takeLatest("PAY_ORDER_BY_CARD_DECISION", payOrderByCardDecision);
   yield takeLatest("PAY_ORDER_BY_PAYPAL_DECISION", payOrderByPaypalDecision);
+  yield takeLatest(
+    "SUBMIT_RESPONSIBILITY_FOR_CUSTOM_DUTIES_DECISION",
+    submitResponsibilityForCustomDutiesDecision
+  );
 }

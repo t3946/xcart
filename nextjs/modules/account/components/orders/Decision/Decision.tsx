@@ -7,6 +7,7 @@ import SendingCheck from "@modules/account/components/orders/Decision/SendingChe
 import IncreaseInShippingCharge from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge";
 import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
 import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
+import CustomDuties from "@modules/account/components/orders/Decision/CustomDuties/CustomDuties";
 import EstimatedTimeArrival from "@modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
@@ -74,6 +75,7 @@ const Decision: React.FC = (props) => {
       {/*<IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />*/}
       {/*<OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
       {/*<AchPaymentIsRequired />*/}
+      <CustomDuties />
     </div>
   );
 };
