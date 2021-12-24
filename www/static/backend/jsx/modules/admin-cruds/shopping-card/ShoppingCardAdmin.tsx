@@ -86,59 +86,61 @@ export const ShoppingCardAdmin: React.FC = () => {
           </Button>
         </Stack>
       </Stack>
-      {items ? (
-        items.map((item) => (
-          <Accordion key={item.id}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>ID: {item.id}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <table
-                className="custom-crud"
-                border={1}
-                style={{ borderCollapse: "collapse" }}
+      <Stack direction="column" justifyContent="center">
+        {items ? (
+          items.map((item) => (
+            <Accordion key={item.id}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
               >
-                <thead>
-                  <tr>
-                    <th className="column-crud">Preview</th>
-                    <th className="column-crud">SKU</th>
-                    <th className="column-crud">Name</th>
-                    <th className="column-crud">Price</th>
-                    <th className="column-crud">Quantity</th>
-                    <th className="column-crud">Total Price</th>
-                  </tr>
-                </thead>
-                <tbody className="row-list">
-                  {item.products.map((product) => (
+                <Typography>ID: {item.id}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <table
+                  className="custom-crud"
+                  border={1}
+                  style={{ borderCollapse: "collapse" }}
+                >
+                  <thead>
                     <tr>
-                      <td>
-                        <img
-                          width={60}
-                          alt="Product photo"
-                          src={product.image}
-                        />
-                      </td>
-                      <td>
-                        <a href={product.urlProduct}>{product.sku}</a>
-                      </td>
-                      <td>{product.name}</td>
-                      <td>{product.price}</td>
-                      <td>{product.quantity}</td>
-                      <td>{product.totalPrice.toFixed(2)}</td>
+                      <th className="column-crud">Preview</th>
+                      <th className="column-crud">SKU</th>
+                      <th className="column-crud">Name</th>
+                      <th className="column-crud">Price</th>
+                      <th className="column-crud">Quantity</th>
+                      <th className="column-crud">Total Price</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </AccordionDetails>
-          </Accordion>
-        ))
-      ) : (
-        <LoadCartItems />
-      )}
+                  </thead>
+                  <tbody className="row-list">
+                    {item.products.map((product) => (
+                      <tr>
+                        <td>
+                          <img
+                            width={60}
+                            alt="Product photo"
+                            src={product.image}
+                          />
+                        </td>
+                        <td>
+                          <a href={product.urlProduct}>{product.sku}</a>
+                        </td>
+                        <td>{product.name}</td>
+                        <td>{product.price}</td>
+                        <td>{product.quantity}</td>
+                        <td>{product.totalPrice.toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </AccordionDetails>
+            </Accordion>
+          ))
+        ) : (
+          <LoadCartItems />
+        )}
+      </Stack>
       {maxPage && (
         <Stack alignItems="center" justifyContent="center">
           <Pagination
