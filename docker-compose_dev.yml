@@ -101,8 +101,23 @@ services:
     #  - NODE_ENV=production
     volumes:
       - ./:/home/node/app
-    command: npm run dev
+    command: npm run dev-client
 
+  node-server:
+    container_name: node-server
+    image: "node:14"
+    user: "node"
+    working_dir: /home/node/app/nextjs
+    tty: true
+    ports:
+      - "8081:3000"
+    networks:
+      - frontend
+    #environment:
+    #  - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
+    command: npm run dev-server
 
 networks:
   frontend:

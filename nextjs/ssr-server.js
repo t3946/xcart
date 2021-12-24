@@ -6,11 +6,10 @@ const mainApp = express();
 const apiApp = express();
 const UserApi = require("./server/api/User");
 //set true if you need debug server only
-const backendOnly = process.env.RUN_BACKEND_ONLY === "true" || true;
 const cookieParser = require("cookie-parser");
 
 function listen() {
-  const port = process.env.PORT || 3000;
+  const port = 3001;
 
   mainApp.listen(port, (err) => {
     if (err) throw err;
@@ -25,7 +24,7 @@ mainApp.use(cookieParser());
 apiApp.use("/user", UserApi);
 mainApp.use("/api-client", apiApp);
 
-if (backendOnly) {
+if (process.env.RUN_BACKEND_ONLY === "true") {
   listen();
 } else {
   const nextApp = next({ dev });
