@@ -1,0 +1,81 @@
+@import "styles/utils/Utils.module";
+
+.checkbox {
+  gap: pxToRem(14);
+  cursor: pointer;
+  font-size: pxToRem(16);
+  line-height: pxToRem(19);
+
+  &:before {
+    content: "";
+    display: inline-block;
+    position: relative;
+    vertical-align: text-top;
+    width: 1.875rem;
+    min-width: 1.875rem;
+    height: 1.875rem;
+    background: #fff;
+    border: 1px solid #c4c4c4;
+    -webkit-transition: all 0.15s ease-out;
+    transition: all 0.15s ease-out;
+  }
+  &:hover {
+    &:before {
+      background: #fffaef;
+    }
+  }
+
+  @include breakpoint(md) {
+    gap: pxToRem(15);
+    font-size: pxToRem(18);
+    line-height: pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    gap: pxToRem(11);
+    font-size: pxToRem(16);
+    line-height: pxToRem(19);
+  }
+}
+
+.checkbox_disabled {
+  cursor: default;
+  color: #b8b8b8;
+
+  &:hover {
+    &:before {
+      background: #ddd;
+    }
+  }
+
+  &:before {
+    background: #ddd;
+  }
+}
+
+.checkboxMarker {
+  top: pxToRem(7);
+  display: none;
+  position: absolute;
+  left: 0.5rem;
+  width: 0.9375rem;
+  height: 0.9375rem;
+
+  @include breakpoint(lg) {
+    top: auto;
+  }
+}
+
+.checkboxMarker_active {
+  display: block;
+}
+
+.label {
+  padding: pxToRem(6) 0 0 0;
+  line-height: pxToRem(22);
+  
+  @include breakpoint(md) {
+    line-height: inherit;
+    padding: 0;
+  }
+}

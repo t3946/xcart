@@ -82,3 +82,10 @@ export const payOrderByPaypalAction = (payload: Record<any, any>): any => ({
   type: "PAY_ORDER_BY_PAYPAL_DECISION",
   payload,
 });
+
+export const submitResponsibilityForCustomDutiesAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "SUBMIT_RESPONSIBILITY_FOR_CUSTOM_DUTIES_DECISION",
+  payload,
+});

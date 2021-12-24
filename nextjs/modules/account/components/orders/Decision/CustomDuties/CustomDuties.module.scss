@@ -1,0 +1,113 @@
+@import "styles/utils/Utils.module";
+
+.decision__hat {
+  @include breakpoint(lg) {
+    margin: pxToRem(45) 0 0;
+  }
+}
+
+.decisionCaption {
+  padding: 0 pxToRem(10);
+  line-height: pxToRem(23);
+  font-size: pxToRem(16);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0;
+    font-size: pxToRem(16);
+    line-height: pxToRem(24);
+  }
+}
+
+.decision__caption1 {
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(23);
+  }
+}
+
+.decisionHat {
+  padding: pxToRem(27) 0 pxToRem(17);
+  @include breakpoint(md) {
+    padding: pxToRem(34) 0 pxToRem(26) pxToRem(6);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24) pxToRem(24);
+  }
+}
+
+.decisionHeader {
+  text-transform: capitalize;
+  line-height: pxToRem(24);
+
+  @include breakpoint(md) {
+    text-transform: none;
+  }
+}
+
+.checkbox__container {
+  margin: pxToRem(23) pxToRem(-10) pxToRem(25);
+
+  @include breakpoint(sm) {
+    margin: pxToRem(23) 0 pxToRem(25);
+  }
+
+  @include breakpoint(md) {
+    margin: pxToRem(28) pxToRem(-20) pxToRem(34);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(28) pxToRem(-23) pxToRem(34);
+  }
+}
+
+.checkboxContainer {
+  background-color: #fff7dc;
+  padding: pxToRem(16) pxToRem(20) pxToRem(26);
+
+  @include breakpoint(sm) {
+    padding: pxToRem(16) pxToRem(10) pxToRem(26);
+  }
+
+  @include breakpoint(md) {
+    padding: pxToRem(25) pxToRem(29) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(26) pxToRem(25);
+  }
+}
+
+.checkboxContainer_active {
+  background-color: #effedf;
+}
+
+.decision__button {
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(3);
+  }
+}
+
+.button {
+  font-size: pxToRem(20);
+  height: pxToRem(47);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    height: pxToRem(57);
+    padding: 0 pxToRem(48);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    height: pxToRem(41);
+    padding: 0 pxToRem(42);
+  }
+}
+
+.link {
+  word-break: break-all;
+}
