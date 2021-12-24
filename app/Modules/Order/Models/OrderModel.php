@@ -758,7 +758,7 @@ class OrderModel extends Model
         $bare_score = 0;
         /** @var FraudCheckBaseQuestionModel $fraud */
         foreach (FraudCheckBaseQuestionModel::objects()->filter(['avail' => true])->order(['orderby']) as $fraud) {
-            [$fraud_result, $fraud_score, $additional_info, $manual_action] = $fraud->getScore($this);
+            [$fraud_result, $fraud_score, $additional_info, $manual_action, $outcome] = $fraud->getScore($this);
             if (!is_null($fraud_result)) {
                 [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
                     'order_id' => $this->orderid,
@@ -767,7 +767,8 @@ class OrderModel extends Model
                     'manual_action' => $manual_action,
                     'fraud_score' => $fraud_score,
                     'fraud_result' => $fraud_result,
-                    'additional_info' => $additional_info
+                    'additional_info' => $additional_info,
+                    'outcome' => $outcome
                 ]);
                 if ($fraud->question_code !== 'DC-GT') {
                     $bare_score += (float)$orderFraud->fraud_score;

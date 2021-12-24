@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { FraudCheckStore } from "@admin/modules/order-fraud/ts/types/redux";
 import {
@@ -18,44 +18,32 @@ export const FraudInfoStatuses: React.FC = ({}) => {
   );
   return (
     <div className="fraud-info-status-block">
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="flex-start"
-      >
-        <div>
-          <Grid
-            container
-            justifyContent="center"
-            direction="row"
-            alignItems="center"
-          >
-            <span>Change fraud check status to:</span>
-            <div className="select-statuses">
-              <select
-                onChange={(e) =>
-                  dispatch(changeFraudCheckStatus(e.target.value))
-                }
-                value={fraudStatus.code}
-              >
-                {statuses.map((status) => (
-                  <option value={status.code}>{status.name}</option>
-                ))}
-              </select>
-            </div>
-          </Grid>
-        </div>
-        <div>
-          <button
-            onClick={() =>
-              dispatch(updateFraudCheckStatus(orderId, fraudStatus.code))
-            }
-          >
-            Apply changes, update fraud score and change fraud check status
-          </button>
-        </div>
-      </Grid>
+      <Stack direction="column" spacing={1} alignItems="flex-start">
+        <Stack
+          direction="row"
+          justifyContent={"flex-start"}
+          alignItems="flex-start"
+        >
+          <span>Change fraud check status to:</span>
+          <div className="select-statuses">
+            <select
+              onChange={(e) => dispatch(changeFraudCheckStatus(e.target.value))}
+              value={fraudStatus.code}
+            >
+              {statuses.map((status) => (
+                <option value={status.code}>{status.name}</option>
+              ))}
+            </select>
+          </div>
+        </Stack>
+        <button
+          onClick={() =>
+            dispatch(updateFraudCheckStatus(orderId, fraudStatus.code))
+          }
+        >
+          Apply changes, update fraud score and change fraud check status
+        </button>
+      </Stack>
     </div>
   );
 };

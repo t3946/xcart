@@ -7,12 +7,14 @@ interface FraudTableQuestion {
   listAnswer: MainAnswer[];
   title: string;
   colorTitle?: string;
+  type?: string;
 }
 
 export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
   listAnswer,
   title,
   colorTitle = "black",
+  type,
 }) => {
   return (
     <Fragment>
@@ -61,10 +63,12 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                     <FraudRadioField fraudCode={answer.question_code} />
                   )}
                 </td>
+                <td className="center-header-item">{answer.outcome}</td>
                 <td className="center-header-item">
-                  {answer.fraud_result === "positive" ? 1 : 0}
+                  {answer.question_weight > 0
+                    ? answer.question_weight
+                    : `(${answer.question_weight})`}
                 </td>
-                <td className="center-header-item">{answer.question_weight}</td>
                 <td className="center-header-item">{answer.fraud_score}</td>
               </tr>
             );

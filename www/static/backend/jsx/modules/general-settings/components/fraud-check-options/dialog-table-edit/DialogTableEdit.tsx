@@ -52,12 +52,24 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
         Edit <b>{template.questionCode}</b> Fraud check question
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Below you can edit question weight.
-        </DialogContentText>
         <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Question template</Form.Label>
+          <Form.Group className="mb-3">
+            {isBase && (
+              <Fragment>
+                <Form.Label className="label-fraud-settings">
+                  Order by
+                </Form.Label>
+                <Form.Control
+                  value={template.orderBy}
+                  type="text"
+                  name="orderBy"
+                  onChange={onChangeField}
+                />
+              </Fragment>
+            )}
+            <Form.Label className="label-fraud-settings">
+              Question template
+            </Form.Label>
             <Form.Control
               as="textarea"
               value={template.template}
@@ -66,41 +78,30 @@ export const DialogTableEdit: React.FC<DialogTableEdit> = ({
               // disabled={!isBase}
               onChange={onChangeField}
             />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Label>Question weight</Form.Label>
+            <Form.Label className="label-fraud-settings">
+              Question weight
+            </Form.Label>
             <Form.Control
               value={template.weight}
               type="text"
               name="weight"
               onChange={onChangeField}
             />
-          </Form.Group>
-          {isBase && (
-            <Fragment>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Order by</Form.Label>
+            {isBase && (
+              <div>
+                <Form.Label className="label-fraud-settings">Toggle</Form.Label>
                 <Form.Control
-                  value={template.orderBy}
-                  type="text"
-                  name="orderBy"
+                  as="select"
+                  name="avail"
                   onChange={onChangeField}
-                />
-              </Form.Group>
-              <Form.Control
-                as="select"
-                name="avail"
-                onChange={onChangeField}
-                value={template.avail}
-              >
-                <option value={1}>Enable</option>
-                <option value={0}>Disable</option>
-              </Form.Control>
-            </Fragment>
-          )}
+                  value={template.avail}
+                >
+                  <option value={1}>Enable</option>
+                  <option value={0}>Disable</option>
+                </Form.Control>
+              </div>
+            )}
+          </Form.Group>
         </Form>
       </DialogContent>
       <DialogActions>

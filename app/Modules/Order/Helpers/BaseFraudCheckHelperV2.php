@@ -101,7 +101,7 @@ class BaseFraudCheckHelperV2
     public static function scoreRF_CB(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'positive';
-        $outcome = 1;
+        $outcome = 0;
         $additional_info = [];
         foreach ($order->getProducts() as $product_model) {
             /** @var OrderDetailModel[]|Manager $order_chargeback */
@@ -110,7 +110,7 @@ class BaseFraudCheckHelperV2
                 'order__fraud_status__in' => [FraudStatusModel::STATUS_FRAUD_PURE, FraudStatusModel::STATUS_FRAUD_PROBABLY, FraudStatusModel::STATUS_FRAUD_CHARGEBACK]
             ]);
             if ($order_chargeback->count()) {
-                $outcome = 0;
+                $outcome = 1;
                 $fraud_result = 'negative';
                 foreach ($order_chargeback as $order_detail) {
                     $additional_info[] = $order_detail->orderid;
@@ -142,10 +142,10 @@ class BaseFraudCheckHelperV2
     public static function scoreRF_EM(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'positive';
-        $outcome = 1;
+        $outcome = 0;
         if (strpos($order->email, "@mail.com") !== false) {
             $fraud_result = 'negative';
-            $outcome = 0;
+            $outcome = 1;
         }
         return [$fraud_result, $fraud->weight, null, null, $outcome];
 
@@ -272,7 +272,7 @@ class BaseFraudCheckHelperV2
 
     public static function scoreRF_MF(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
-        $fraud_result = 'negative';
+        $fraud_result = 'positive';
         $outcome = 0;
 
         return [
@@ -437,11 +437,11 @@ class BaseFraudCheckHelperV2
     public static function scoreRF_PO(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
         $fraud_result = 'negative';
-        $outcome = 0;
+        $outcome = 1;
 
         if ($order->paymentid === 2) {
             $fraud_result = 'positive';
-            $outcome = 1;
+            $outcome = 0;
         }
 
         return [$fraud_result, $fraud->weight, null, null, $outcome];
@@ -451,7 +451,7 @@ class BaseFraudCheckHelperV2
     {
         $fraud_result = 'negative';
         $maxOrderPriceAmount = 0;
-        $outcome = 0;
+        $outcome = 1;
         foreach ($order->detail_models as $detailModel) {
             $maxOrderPriceAmount = max($detailModel->price * $detailModel->amount, $maxOrderPriceAmount);
             if ($hardResellModel = ProductHardResellModel::objects()->get(['product_id' => $detailModel->productid])) {
@@ -477,10 +477,11 @@ class BaseFraudCheckHelperV2
         switch ($fraud_result) {
             case 'positive':
                 $manual = 'N';
-                $outcome = 1;
+                $outcome = 0;
                 break;
             case 'negative':
                 $manual = 'Y';
+                $outcome = 1;
                 break;
         }
 

@@ -12,11 +12,12 @@ export interface PaymentAnswer {
 }
 export interface MainAnswer {
   fraud_result: string;
-  fraud_score: string | number;
-  question_id: string | number;
+  fraud_score: number;
+  question_id: number;
   template: string;
   question_code: string;
-  question_weight: number | string;
+  question_weight: number;
+  outcome: number;
   question_auto: string;
   manual_action: string;
 }

@@ -86,7 +86,7 @@ class FraudFAQuestionModel extends Model
             if ($this->f_fraud->type === FraudCheckColumnModel::COLUMN_TYPE_ADDRESS) {
                 $outcome = round($coefficient / 6, 2);
             }
-            return [round($coefficient/6 * $weight, 2), $info, $outcome];
+            return [round($outcome * $weight, 2), $info, $outcome];
         }
         return null;
     }
@@ -183,7 +183,7 @@ class FraudFAQuestionModel extends Model
                     'street2' => $ar_line[1] ?? '',
                 ];
             case 'BA':
-                $ar_line = FraudCheckFAHelper::getLinesAddress($order->b_address);
+                $ar_line = FraudCheckFAHelper::getLinesAddress($order->b_address ?? '');
                 return [
                     'country' => $order->b_country,
                     'state' => $order->b_state,

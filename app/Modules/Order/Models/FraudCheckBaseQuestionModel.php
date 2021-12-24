@@ -87,7 +87,7 @@ class FraudCheckBaseQuestionModel extends Model
         if ($result = $this->getMethodResult($order)) {
             [$fraud_result, $weight, $add_info, $action, $outcome] = $result;
             $fraud_score = (int)$outcome * $weight;
-            return [$fraud_result, round($fraud_score, 2), $add_info, $action];
+            return [$fraud_result, round($fraud_score, 2), $add_info, $action, $outcome];
         }
         return null;
     }
