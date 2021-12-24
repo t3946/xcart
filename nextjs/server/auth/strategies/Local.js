@@ -1,7 +1,7 @@
 const passwordUtils = require("../../utils/password");
 const LocalStrategy = require("passport-local").Strategy;
 const strategyOptions = {
-  usernameField: "email",
+  usernameField: "login",
   passwordField: "password",
 };
 const PrismaClient = require("@prisma/client").PrismaClient;
@@ -9,15 +9,22 @@ const prisma = new PrismaClient();
 
 module.exports = function (passport) {
   passport.use(
-    new LocalStrategy(strategyOptions, async function (email, password, done) {
-      const user = await prisma.user.findUnique({
+    new LocalStrategy(strategyOptions, async function (login, password, done) {
+      const user = await prisma.user.findFirst({
         where: {
-          email,
+          OR: [
+            {
+              email: login,
+            },
+            {
+              phone: login,
+            },
+          ],
         },
       });
 
       if (!user) {
-        return done(null, null);
+        return done({ message: "User not found" }, null);
       }
 
       const isPasswordsMatch = await passwordUtils.comparePassword(
@@ -26,16 +33,19 @@ module.exports = function (passport) {
       );
 
       if (!isPasswordsMatch) {
-        return done(null, null);
+        return done({ message: "Wrong password" }, null);
       }
 
-      if (user) {
-        done(null, {
+      delete user.password;
+
+      done(null, {
+        payload: {
           userId: user.user_id,
           createdTime: new Date().getTime(),
           accessToken: user.access_token,
-        });
-      }
+        },
+        user,
+      });
     })
   );
 };

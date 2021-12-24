@@ -9,22 +9,23 @@ const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 
 app.post("/login", function (req, res) {
-  passport.authenticate("local", { session: false }, (err, user) => {
-    if (!user) {
-      return res.sendStatus(401);
+  passport.authenticate("local", { session: false }, async (err, result) => {
+    if (!result) {
+      return res.send({ error: err.message });
     }
 
-    req.login(user, { session: false }, (err) => {
+    req.login(result.user, { session: false }, (err) => {
       if (err) {
         return res.send(err);
       }
 
-      const token = jwt.sign(user, authConfig.jwtSecret);
+      const token = jwt.sign(result.payload, authConfig.jwtSecret);
 
       res.status(200);
       res.header("Authorization", `bearer ${token}`);
       res.cookie("session", `${token}`);
-      res.send();
+
+      res.send({ user: result.user });
     });
   })(req, res);
 });
@@ -58,6 +59,7 @@ app.get("/info", isAuthMiddleware, async (req, res) => {
 
   delete user.password;
 
+  console.log("USER", user);
   res.json(user);
 });
 
@@ -71,13 +73,11 @@ app.get("/logout", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  res.header("Authorization", "");
-  res.cookie("Authorization", "");
-  res.status(200);
-  res.send();
+  res.clearCookie("session", "");
+  res.sendStatus(200);
 });
 
-app.get("/check-login", async function (req, res) {
+app.post("/check-login", async function (req, res) {
   const user = await prisma.user.findFirst({
     where: {
       OR: [
@@ -91,8 +91,11 @@ app.get("/check-login", async function (req, res) {
     },
   });
 
-  res.status(user ? 200 : 404);
-  res.send();
+  if (user) {
+    res.send();
+  } else {
+    res.json({ error: "User not found", user: req.body });
+  }
 });
 
 module.exports = app;

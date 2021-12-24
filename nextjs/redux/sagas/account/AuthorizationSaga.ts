@@ -2,6 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
+import axios from "axios";
 
 const api = new ApiService();
 
@@ -23,37 +24,21 @@ function* register(action: AnyAction) {
 }
 
 function* login(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { form, success, complete } = action.payload;
 
-  const data = JSON.stringify({
-    LoginForm: form,
-  });
-
-  yield api.post(`/api/account/authorization/login`, data).then((res) => {
-    res.errors ? error(res.errors) : success(res);
-
-    complete && complete();
-
-    return res;
-  });
+  yield axios
+    .post("/api-client/user/login", form)
+    .then(success)
+    .finally(complete);
 }
 
 function* checkUserLogin(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { data, success, complete } = action.payload;
 
-  const data = JSON.stringify({
-    LoginForm: form,
-  });
-
-  yield api
-    .post<any>("/api/account/authorization/check-login", data)
-    .then((res) => {
-      res.errors ? error(res.errors) : success(res);
-
-      complete();
-
-      return res;
-    });
+  yield axios
+    .post("/api-client/user/check-login", data)
+    .then(success)
+    .finally(complete);
 }
 
 function* logout(action: AnyAction) {
@@ -68,7 +53,7 @@ function* logout(action: AnyAction) {
     lists: null,
   });
 
-  yield api.get("/api/account/authorization/logout").then((response) => {
+  yield axios.get("/api-client/user/logout").then((response) => {
     callback();
     return response;
   });

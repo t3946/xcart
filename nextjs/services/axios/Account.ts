@@ -2,16 +2,16 @@ import axios from "axios";
 
 const getInitialState = async function (req: any) {
   let initialState: any;
-  let xidCookieMatches;
+  let sessionCookieMatches;
 
   if (req.headers.cookie) {
-    xidCookieMatches = req.headers.cookie.match(/xid\d+=.+?;/);
+    sessionCookieMatches = req.headers.cookie.match(/session=[^;]+/);
   }
 
   let cookie = "";
 
-  if (xidCookieMatches) {
-    cookie = xidCookieMatches[0];
+  if (sessionCookieMatches) {
+    cookie = sessionCookieMatches[0];
   }
 
   const instance = axios.create({
@@ -24,6 +24,16 @@ const getInitialState = async function (req: any) {
   await instance.get("/api/account/get-initial-data").then((res) => {
     initialState = res.data;
   });
+
+  await instance
+    .get("/api-client/user/info")
+    .then((res) => {
+      console.log(res.data);
+      initialState.user = res.data;
+    })
+    .catch(() => {
+      initialState.user = null;
+    });
 
   return initialState;
 };

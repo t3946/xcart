@@ -46,18 +46,20 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
 
     dispatch(
       checkUserLoginAction({
-        form,
+        data: form,
 
-        success() {
-          props.goToPasswordInput();
-          props.setLastSentForm(form);
+        success(res: any) {
+          const error = res.data.error;
+
+          actions.setSubmitting(false);
+
+          if (error) {
+            actions.setErrors({ login: error });
+          } else {
+            props.goToPasswordInput();
+            props.setLastSentForm(form);
+          }
         },
-
-        error(err: any) {
-          actions.setErrors({ login: err.login[0] });
-        },
-
-        complete() {},
       })
     );
   }
