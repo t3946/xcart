@@ -6,6 +6,7 @@ import App from "next/app";
 import React from "react";
 import getInitialState from "@services/axios/Account";
 import MainComponent from "@modules/components/MainComponent";
+import { SSRProvider } from "react-bootstrap";
 
 function MyApp({ Component, pageProps, state }) {
   let store;
@@ -18,9 +19,11 @@ function MyApp({ Component, pageProps, state }) {
 
   return (
     <Provider store={store}>
-      <MainComponent>
-        <Component {...pageProps} />
-      </MainComponent>
+      <SSRProvider>
+        <MainComponent>
+          <Component {...pageProps} />
+        </MainComponent>
+      </SSRProvider>
     </Provider>
   );
 }
