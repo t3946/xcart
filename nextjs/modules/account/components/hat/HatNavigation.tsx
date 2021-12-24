@@ -81,7 +81,7 @@ const HatNavigation: React.FC = () => {
           />
 
           <div className={cn(classes.navigationContainer)}>
-            <div className="container">
+            <div className="container-lg">
               <div className="row">
                 <div className="col-md-1 col-auto d-flex align-items-center d-lg-none">
                   <a
