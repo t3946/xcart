@@ -20,11 +20,11 @@
   padding: pxToRem(18) pxToRem(0) pxToRem(22);
 
   @include breakpoint(md) {
-    padding: 0 pxToRem(24) pxToRem(20);
+    padding: 0 pxToRem(24) pxToRem(27);
   }
 
   @include breakpoint(lg) {
-    padding: 0 pxToRem(24) pxToRem(30);
+    padding: 0 pxToRem(24) pxToRem(23);
   }
 }
 
