@@ -21,9 +21,6 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     React.useState(false);
   const [closeTimeout, setCloseTimeOut] = React.useState<any>(null);
   const departmentsMenu = useSelectorAccount((e) => e.departmentsMenu.desktop);
-  // const classes = {
-  //   link
-  // }
 
   // close menu by timeout if cursor leave menu
   if (
