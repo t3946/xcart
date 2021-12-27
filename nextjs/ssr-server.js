@@ -9,7 +9,7 @@ const UserApi = require("./server/api/User");
 const cookieParser = require("cookie-parser");
 
 function listen() {
-  const port = 3001;
+  const port = process.env.PORT;
 
   mainApp.listen(port, (err) => {
     if (err) throw err;
