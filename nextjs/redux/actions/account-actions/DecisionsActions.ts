@@ -104,3 +104,10 @@ export const poAdditionalInformationRequiredAction = (
   type: "PO_ADDITIONAL_INFORMATION_REQUIRED_DECISION",
   payload,
 });
+
+export const submitAlternativeItemsOffer = (
+  payload: Record<any, any>
+): any => ({
+  type: "SUBMIT_ALTERNATIVE_ITEMS_OFFER_DECISION",
+  payload,
+});
