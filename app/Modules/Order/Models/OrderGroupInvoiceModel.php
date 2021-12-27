@@ -4,6 +4,8 @@ namespace Modules\Order\Models;
 use DateInterval;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -35,6 +37,7 @@ class OrderGroupInvoiceModel extends Model
     public static function getFields()
     {
         return [
+            'invoice_id' => AutoField::class,
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::class,
@@ -56,6 +59,10 @@ class OrderGroupInvoiceModel extends Model
                 'null' => false,
                 'primary' => true,
                 'default' => 0
+            ],
+            'invoice_received' => [
+                'class' => BooleanCharField::class,
+                'default' => true
             ],
             'invoice_date' => [
                 'class' => DateField::class,

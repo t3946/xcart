@@ -4,6 +4,7 @@ namespace Modules\Order\Models;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
@@ -22,13 +23,13 @@ class OrderGroupInvoiceProductModel extends Model
     public static function getFields()
     {
         return [
+            'invoice_detail_id' => AutoField::class,
             'order' => [
                 'field' => 'orderid',
                 'class' => ForeignField::class,
                 'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
-                'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
@@ -36,12 +37,10 @@ class OrderGroupInvoiceProductModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
-                'primary' => true,
             ],
             'invoice_number' => [
                 'class' => IntField::class,
                 'null' => false,
-                'primary' => true,
                 'default' => 0
             ],
             'item' => [
@@ -70,6 +69,12 @@ class OrderGroupInvoiceProductModel extends Model
             'updated_at' => [
                 'class' => TimestampField::class,
             ],
+            'invoice' => [
+                'field' => 'invoice_id',
+                'class' => ForeignField::class,
+                'modelClass' => OrderGroupInvoiceModel::class,
+                'link' => ['invoice_id' => 'invoice_id'],
+            ]
         ];
     }
 }

@@ -12,6 +12,7 @@ use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\GroundMapModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
+use Modules\Order\Models\OrderGroupInvoiceProductModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderLogModel;
@@ -21,6 +22,7 @@ use Modules\Order\Stores\OrderStore;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\PBX\Helpers\AnveoAssignCalls;
+use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 use Xcart\Customer;
@@ -1116,7 +1118,7 @@ elseif ($mode === 'send_ip' && $orderid) {
     #
     # Send customer IP address to Anti Fraud server
     #
-    list($a, $result) = func_send_ip_to_af($orderid, $reason);
+    [$a, $result] = func_send_ip_to_af($orderid, $reason);
     if ($result == "1") {
         $top_message["content"] = func_get_langvar_by_name("msg_antifraud_ip_added");
         $top_message["type"]    = "I";
@@ -1187,92 +1189,110 @@ if ($REQUEST_METHOD === "POST") {
 
         if (!empty($certain_mid) && !empty($order["shipping_groups"][$certain_mid]["products"]))
         {
+            [$order_group_invoice, $is_new_invoice] = OrderGroupInvoiceModel::objects()->getOrNew([
+                'orderid' => $orderid,
+                'manufacturerid' => $certain_mid,
+                'invoice_number' => 1,
+            ]);
+            if ($is_new_invoice) {
+                $order_group_invoice->status = ($order["amazon_fulfillment_channel"] === 'AFN') ? 'R' : 'A';
+                $order_group_invoice->drop_ship_fee_charged = $order["shipping_groups"][$certain_mid]["drop_ship_fee_charged"] ?? 0;
+
+                $order_group_invoice->save();
+            }
+
             $cost_to_us_for_products_charged = 0;
+
             foreach ($order["shipping_groups"][$certain_mid]["products"] as $k => $product) {
 
-                if (!empty($order["refund_groups"][$certain_mid]["products"][$product["itemid"]]["ref_qty"])) {
-                    $ref_qty = $order["refund_groups"][$certain_mid]["products"][$product["itemid"]]["ref_qty"];
-                }
-                else {
-                    $ref_qty = 0;
-                }
+                $ref_qty = $order["refund_groups"][$certain_mid]["products"][$product["itemid"]]["ref_qty"] ?? 0;
 
                 $qty_inv         = $product["amount"] - $ref_qty;
                 $unit_cost       = $product["cost_to_us"];
-                $unit_cost_total = price_format($qty_inv * $unit_cost);
+                $unit_cost_total = $qty_inv * $unit_cost;
 
-                $is_such_record = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_invoices_products] WHERE orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='1' AND itemid='$product[itemid]'");
+                [$order_group_product, $is_group_product_new] =
+                    OrderGroupInvoiceProductModel::objects()->getOrNew([
+                        'orderid' => $orderid,
+                        'manufacturerid' => $certain_mid,
+                        'invoice_number' => 1
+                    ]);
 
-                if (empty($is_such_record)) {
-                    db_query("INSERT INTO $sql_tbl[order_group_invoices_products] (orderid, manufacturerid, invoice_number, itemid, unit_cost, qty_inv, unit_cost_total) VALUES ('$orderid', '$certain_mid', '1', '$product[itemid]', '$unit_cost', '$qty_inv', '$unit_cost_total')");
+                if ($is_group_product_new) {
+                    $order_group_product->setAttributes([
+                        'itemid' => $product['itemid'],
+                        'unit_cost' => $unit_cost,
+                        'qty_inv' => $qty_inv,
+                        'unit_cost_total' => $unit_cost_total,
+                        'invoice' => $order_group_invoice
+                    ]);
+                    $order_group_product->save();
                 }
 
                 $cost_to_us_for_products_charged += $unit_cost_total;
             }
 
-            $cost_to_us_for_products_charged = price_format($cost_to_us_for_products_charged);
-            $tax_charged_except_HST          = 0;
-            $products_total                  = price_format($cost_to_us_for_products_charged + $tax_charged_except_HST);
-
-            $shipping_charged = 0;
-            if (!empty($order["shipping_groups"][$certain_mid]["drop_ship_fee_charged"])) {
-                $drop_ship_fee_charged = $order["shipping_groups"][$certain_mid]["drop_ship_fee_charged"];
-            }
-            else {
-                $drop_ship_fee_charged = 0;
-            }
+            $order_group_invoice->cost_to_us_for_products_charged = $products_total = $cost_to_us_for_products_charged;
 
             if (!empty($order["shipping_groups"][$certain_mid]["shippingid"])) {
-                $real_drop_ship_fee    = func_query_first_cell("SELECT real_drop_ship_fee FROM $sql_tbl[shipping_rates] WHERE shippingid='" . $order["shipping_groups"][$certain_mid]["shippingid"] . "' AND manufacturerid='$certain_mid' AND mintotal <= '" . $products_total . "' AND maxtotal >= '" . $products_total . "'");
-                $drop_ship_fee_charged = $real_drop_ship_fee;
+                $shipping_rate_model = ShippingRateModel::objects()->get([
+                    'shippingid' => $order["shipping_groups"][$certain_mid]["shippingid"],
+                    'manufacturerid' => $certain_mid,
+                    'mintotal__gte' => $products_total,
+                    'maxtotal__lte' => $products_total
+                ]);
+                if ($shipping_rate_model) {
+                    $order_group_invoice->drop_ship_fee_charged = $shipping_rate_model->real_drop_ship_fee;
+                }
             }
 
-            $shipping_total = price_format($shipping_charged + $drop_ship_fee_charged);
+            $order_group_invoice->shipping_total = $order_group_invoice->drop_ship_fee_charged;
 
-            $HST_charged = 0;
+            $order_group_invoice->invoice_total = $products_total + $order_group_invoice->shipping_total;
 
-            $invoice_total = price_format($products_total + $shipping_total + $HST_charged);
+            $order_group_invoice->save();
 
-            $is_such_record = func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='1'");
-
-            if (empty($is_such_record)) {
-
-                if ($order["amazon_fulfillment_channel"] === "AFN") {
-                    $status = "R";
-                }
-                else {
-                    $status = "A";
-                }
-
-                db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, cost_to_us_for_products_charged, tax_charged_except_HST, products_total, shipping_charged, drop_ship_fee_charged, shipping_total, HST_charged, invoice_total, status) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$cost_to_us_for_products_charged', '$tax_charged_except_HST', '$products_total', '$shipping_charged', '$drop_ship_fee_charged', '$shipping_total', '$HST_charged', '$invoice_total', '$status')");
-            }
         }
 
-        func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
+        Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
     }
     elseif ($mode === "additional_invoice_received") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
 
         if (!empty($certain_mid) && !empty($order["shipping_groups"][$certain_mid]["products"])) {
+            $invoice_number = OrderGroupInvoiceModel::objects()
+                ->filter([
+                    'orderid' => $orderid,
+                    'manufacturerid' => $certain_mid,
+                ])->max('invoice_number');
 
-            $invoice_number = func_query_first_cell("SELECT MAX(invoice_number) FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$certain_mid'") + 1;
+            $invoice_number++;
 
-            foreach ($order["shipping_groups"][$certain_mid]["products"] as $k => $product) {
-                db_query("INSERT INTO $sql_tbl[order_group_invoices_products] (orderid, manufacturerid, invoice_number, itemid) VALUES ('$orderid', '$certain_mid', '$invoice_number', '$product[itemid]')");
+            [$invoice] = OrderGroupInvoiceModel::objects()->getOrCreate([
+                'orderid' => $orderid,
+                'manufacturerid' => $certain_mid,
+                'invoice_number' => $invoice_number,
+            ]);
+
+            $invoice->setAttributes([
+                'status' => $order["amazon_fulfillment_channel"] === 'AFN' ? 'R' : 'A',
+            ]);
+
+            $invoice->save();
+
+            foreach ($order["shipping_groups"][$certain_mid]["products"] as $product) {
+                OrderGroupInvoiceProductModel::objects()->create([
+                    'orderid' => $orderid,
+                    'manufacturerid' => $certain_mid,
+                    'invoice_number' => $invoice_number,
+                    'itemid' => $product['itemid'],
+                    'invoice' => $invoice
+                ]);
             }
-
-            if ($order["amazon_fulfillment_channel"] === "AFN") {
-                $status = "R";
-            }
-            else {
-                $status = "A";
-            }
-
-            db_query("INSERT INTO $sql_tbl[order_group_invoices] (orderid, manufacturerid, invoice_number, invoice_received, status) VALUES ('$orderid', '$certain_mid', $invoice_number, 'Y', '$status')");
         }
 
-        func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
+        Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
     }
     elseif ($mode === 'invoice_back_to_updated') {
         if (!empty($certain_mid) && !empty($certain_invoice_number)) {
@@ -1293,7 +1313,7 @@ if ($REQUEST_METHOD === "POST") {
                     "Invoice #$invoice_group status <b>Tentatively paid</b> -> <b>Updated</b>"
                 );
             }
-            Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
+            Xcart::app()->request->redirect("order.php?orderid=$orderid#main_order_tabs-accounting");
         }
     }
     elseif ($mode === "delete_invoice") {
@@ -1302,11 +1322,14 @@ if ($REQUEST_METHOD === "POST") {
         x_session_save("section_name");
 
         if (!empty($certain_mid) && !empty($certain_invoice_number)) {
-            db_query($q1 = "DELETE FROM $sql_tbl[order_group_invoices_products] WHERE invoice_number='$certain_invoice_number' AND manufacturerid='$certain_mid' AND orderid='$orderid'");
-            db_query($q2 = "DELETE FROM $sql_tbl[order_group_invoices] WHERE invoice_number='$certain_invoice_number' AND manufacturerid='$certain_mid' AND orderid='$orderid'");
+            OrderGroupInvoiceModel::objects()->delete([
+                'invoice_number' => $certain_invoice_number,
+                'manufacturerid' => $certain_mid,
+                'orderid' => $orderid
+            ]);
         }
 
-        func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
+        Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
     }
     elseif ($mode === "memo_received" && !empty($certain_mid)) {
         $section_name = "main_order_tabs-accounting";
@@ -1321,7 +1344,7 @@ if ($REQUEST_METHOD === "POST") {
 
         db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received, status) VALUES ('$orderid', '$certain_mid', '1', 'Y', '$status')");
 
-        func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
+        Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
     }
     elseif ($mode === "additional_memo_received" && !empty($certain_mid)) {
         $section_name = "main_order_tabs-accounting";
@@ -1338,7 +1361,7 @@ if ($REQUEST_METHOD === "POST") {
 
         db_query("INSERT INTO $sql_tbl[order_group_memos] (orderid, manufacturerid, memo_number, memo_received, status) VALUES ('$orderid', '$certain_mid', $memo_number, 'Y', '$status')");
 
-        func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-accounting");
+        Xcart::app()->request->redirect("order.php?orderid={$orderid}#main_order_tabs-accounting");
     }
 }
 
