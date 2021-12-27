@@ -1815,7 +1815,11 @@ if ($REQUEST_METHOD === 'POST')
                             }
                         }
 
-                        $invoice_total                   = price_format(floatval($products_total) + floatval($shipping_total) + floatval($HST_charged));
+                        $invoice_total = price_format(
+                            floatval($products_total) + floatval($shipping_total) + floatval($HST_charged) - floatval(
+                                $group_invoices['dx_credit']
+                            )
+                        );
                         $group_invoices["invoice_total"] = $invoice_total;
 
                         if ($order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["status"] !== "R") {
