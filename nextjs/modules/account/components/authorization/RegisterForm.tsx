@@ -29,7 +29,6 @@ const RegisterForm: React.FC<any> = () => {
     password: "",
     password_confirm: "",
   };
-  const formRef = React.useRef();
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
@@ -89,15 +88,7 @@ const RegisterForm: React.FC<any> = () => {
 
                 <RBForm.Group controlId="RegisterFormName">
                   <Label>Your Name</Label>
-                  {/* <RBForm.Control
-                    type="text"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    className={"form-input"}
-                    isInvalid={!!touched.name && !!errors.name}
-                    isValid={touched.name && !errors.name}
-                  /> */}
+
                   <Input
                     name="name"
                     value={values.name}
@@ -106,9 +97,6 @@ const RegisterForm: React.FC<any> = () => {
                     isValid={touched.name && !errors.name}
                   />
 
-                  {/* <RBForm.Control.Feedback type="invalid">
-                    {errors.name}
-                  </RBForm.Control.Feedback> */}
                   <Feedback type="invalid">{errors.name}</Feedback>
                 </RBForm.Group>
 
