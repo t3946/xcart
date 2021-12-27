@@ -88,6 +88,17 @@ class OrderGroupInvoices extends Data
         return $fRes;
     }
 
+    public function getDistributorCredit()
+    {
+        $fRes = 0;
+        if (!empty($this->aGroupInvoices)) {
+            foreach ($this->aGroupInvoices as $oGroupInvoice) {
+                $fRes += $oGroupInvoice->getOrderGroupDistributorCredit();
+            }
+        }
+        return $fRes;
+    }
+
     public function getLastInvoice()
     {
         $oLastInvoice = null;

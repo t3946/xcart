@@ -8,6 +8,7 @@ use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateField;
+use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -67,6 +68,11 @@ class OrderGroupInvoiceModel extends Model
             'invoice_date' => [
                 'class' => DateField::class,
                 'null' => true
+            ],
+            'dx_credit' => [
+                'class' => DecimalField::class,
+                'null' => false,
+                'default' => 0
             ],
             'dx_invoice_number' => [
                 'class' => CharField::class,
