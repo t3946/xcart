@@ -79,6 +79,10 @@ class OrderGroupInvoice extends Data
         return floatval($this->getField('HST_charged'));
     }
 
+    public function getOrderGroupDistributorCredit() {
+        return floatval($this->getField('dx_credit'));
+    }
+
     public function setOrderGroupInvoicesHST($fSumma) {
         $this->setField('HST_charged', $fSumma);
         return $this;

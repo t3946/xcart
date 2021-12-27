@@ -1,8 +1,3 @@
-{*
-$Id: order_accounting_table.tpl, v 1.0.0 2010/04/09 17:03:56 random Exp $
-vim: set ts=2 sw=2 sts=2 et:
-*}
-
 <script type="text/javascript">
 //<![CDATA[
 $(function() {ldelim}
@@ -104,7 +99,9 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 
         var HST_charged = parseFloat($("#manufacturer_invoices_data_HST_charged_"+m_id+"_"+invoice_number).val());
 
-        var Invoice_total = Products_total + Shipping_total + HST_charged;
+        const dx_credit = parseFloat($("#manufacturer_invoices_data_dx_credit_"+m_id+"_"+invoice_number).val());
+
+        var Invoice_total = Products_total + Shipping_total + HST_charged - dx_credit ;
         $("#Invoice_total_"+m_id+"_"+invoice_number).text(price_format(isNaN(Invoice_total) ? '' : Invoice_total));
 }
 
@@ -113,15 +110,12 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
 //]]>
 </script>
 
-
 <div id="order_tabs-groups_container">
 
 <script type="text/javascript">
-        <!--
-                var lbl_add = '{$lng.lbl_add|escape}';
-                var lbl_remove_row = '{$lng.lbl_remove_row|escape}';
-                var ImagesDir = '{$ImagesDir}';
-        -->
+    var lbl_add = '{$lng.lbl_add|escape}';
+    var lbl_remove_row = '{$lng.lbl_remove_row|escape}';
+    var ImagesDir = '{$ImagesDir}';
 </script>
 
 {include file="main/include_js.tpl" src="main/manage_distributor_links.js"}
@@ -323,9 +317,6 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
   {/section}
   <td>{include file="currency2.tpl" value=$v.accounting[5].net show_minus_brackets='Y'}</td>
   <td>
-{*
-    {if $v.profit_margin lt 0}({/if}{$v.profit_margin|price_format|replace:"-":""}%{if $v.profit_margin lt 0}){/if}
-*}
 
 {if $v.accounting[5].net ne 0}
 
@@ -340,9 +331,7 @@ function func_recalculate_manufacturer_invoices_data(m_id, invoice_number){
     {/if}
     %
 
-{*
-    {$v.profit_margin|price_format|replace:"-":""|replace:"0.00":"&infin;"}%
-*}
+
 
     {if $v.profit_margin lt 0 || $v.accounting[5].net lt 0}){/if}
 
@@ -924,6 +913,27 @@ Drop-ship fee in X-cart
 
     <tr>
         <td>
+            Distributor credit
+        </td>
+        <td colspan="4"></td>
+        <td align="center">
+            <input id="manufacturer_invoices_data_dx_credit_{$m_id}_{$invoice_number}"
+                   name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][dx_credit]" size="8"
+                   value="{$invoice.dx_credit}"
+                   onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
+                   onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')"
+                   {if $invoice.status eq "R"}readonly="readonly"{/if} />
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="6">
+            <hr/>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
             <span style="font-weight: bold; font-size: 14px;">Invoice total</span>
         </td>
         <td colspan="4"></td>
@@ -1321,6 +1331,7 @@ Link to distributor credit memo&nbsp;<input type="text" size="40" name="links_to
             .remove();
         return false;
     });
+
     $('.manufacturer_add_extra_value_checkbox input[type=checkbox]').change(function(){
         var add_extra_values = $(this).closest('tr.manufacturer_add_extra_value_checkbox').siblings('tr.manufacturer_add_extra_value');
         $(this).prop('checked') ? add_extra_values.show() : add_extra_values.hide();

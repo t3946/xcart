@@ -867,9 +867,12 @@ class OrderGroup extends Data
                     setAccountingHSTCostToUs($this->getOrderGroupInvoices()->getOrderGroupInvoicesHST());
                 }
 
-                if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0) {
+                if ($this->getOrderGroupMemos()->countOrderGroupMemos() > 0 || $this->getOrderGroupInvoices()->getDistributorCredit() > 0) {
                     $this->setAccountingHSTRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsHST());
-                    $this->setAccountingGrossRefundToUs($this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal());
+                    $this->setAccountingGrossRefundToUs(
+                        $this->getOrderGroupMemos()->getOrderGroupMemoRefToUsTotal()
+                        + $this->getOrderGroupInvoices()->getDistributorCredit()
+                    );
                 }
 
                 if ($this->getOrderRefundGroups()->countOrderRefundGroups() > 0) {

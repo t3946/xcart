@@ -1620,6 +1620,12 @@ if ($REQUEST_METHOD === 'POST')
                             }
                         }
 
+                        $invoiceModel = OrderGroupInvoiceModel::objects()->get([
+                            'orderid' => $orderid,
+                            'manufacturerid' => $certain_mid,
+                            'invoice_number' => $invoice_number
+                        ]);
+
                         $params = [
                             'orderid' => $orderid,
                             'manufacturerid' => $certain_mid,
@@ -1638,14 +1644,17 @@ if ($REQUEST_METHOD === 'POST')
                                                 $params['product_id'] = $pModel->productid;
                                             }
                                         }
+
+
                                         $orderGroupProductModel = new OrderGroupInvoiceProductModel(
                                             array_merge($params, [
                                                 'unit_cost' => floatval($invoice_data["add_extra_value_cost"][$key]),
                                                 'qty_inv' => floatval($invoice_data["add_extra_value_qty"][$key]),
                                                 'unit_cost_total' => round(floatval($invoice_data["add_extra_value_cost"][$key]) * floatval($invoice_data["add_extra_value_qty"][$key]), 2),
-                                                'customer_id' => Xcart\App\Main\Xcart::app()->user->id,
+                                                'customer_id' => Xcart::app()->user->id,
                                                 'item_type' => $invoice_data["add_extra_value_type"][$key],
-                                                'item_string' => $invoice_data["add_extra_value_string"][$key]
+                                                'item_string' => $invoice_data["add_extra_value_string"][$key],
+                                                'invoice_id' => $invoiceModel->invoice_id
                                             ]));
                                         $cost_to_us_for_products_charged += $orderGroupProductModel->unit_cost_total;
                                         $orderGroupProductModel->save();
@@ -1655,6 +1664,8 @@ if ($REQUEST_METHOD === 'POST')
                         }
 
                         $group_invoices = [];
+
+                        $group_invoices['dx_credit'] = $invoice_data['dx_credit'] ?? 0;
 
                         $cost_to_us_for_products_charged = price_format($cost_to_us_for_products_charged);
                         $SUM_cost_to_us_for_products_charged += floatval($cost_to_us_for_products_charged);
@@ -1813,13 +1824,21 @@ if ($REQUEST_METHOD === 'POST')
                         }
 
                         if ($update_invoices_table_flag) {
-                            func_array2update("order_group_invoices", $group_invoices, "orderid='$orderid' AND manufacturerid='$certain_mid' AND invoice_number='$invoice_number'");
 
-                            if ($invoice_model = OrderGroupInvoiceModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'invoice_number' => $invoice_number])) {
+                            $invoice_model = OrderGroupInvoiceModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'invoice_number' => $invoice_number]);
+
+                            if ($invoice_model) {
+
+                                $invoice_model->setAttributes($group_invoices ?? []);
+
                                 $t_invdate = trim($groups[$certain_mid]["invoice_date"][$invoice_number]);
+
                                 $t_invdate = empty($t_invdate) ? new DateTime() : DateTime::createFromFormat('m/d/Y', $t_invdate);
+
                                 $invoice_model->invoice_date = $t_invdate;
+
                                 $invoice_model->save();
+
                                 if ($t_invdate && $t_invdate->format('Y-m-d') !== $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"]) {
                                     $log .= "<br />invoice_number-" . $invoice_number . ': Invoice date: ' . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["invoice_date"] . ' -> ' . $t_invdate->format('Y-m-d');
                                 }
@@ -1918,7 +1937,7 @@ if ($REQUEST_METHOD === 'POST')
         if ($mode == "table_accounting_apply" || $mode == "accounting_apply") {
             $oOrder->recalculateAccounting();
         }
-        func_header_location("order.php?orderid=$orderid");
+        Xcart::app()->request->redirect("order.php?orderid=$orderid");
     }
 }
 
