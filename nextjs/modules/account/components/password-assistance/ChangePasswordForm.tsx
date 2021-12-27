@@ -68,7 +68,6 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
       initialValues={initialState}
       validationSchema={validationSchema}
       onSubmit={submit}
-      ref={React.useRef()}
     >
       {({ touched, isSubmitting, handleChange, values, errors }) => {
         return (

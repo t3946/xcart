@@ -3,7 +3,6 @@ import LoginFormInputLogin from "@modules/account/components/authorization/Login
 import LoginFormInputPassword from "@modules/account/components/authorization/LoginFormInputPassword";
 import LoginFormInputOTP from "@modules/account/components/authorization/LoginFormInputOTP";
 import classNames from "classnames";
-import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
@@ -101,9 +100,7 @@ const LoginForm: React.FC<any> = () => {
   }
 
   return (
-    <div
-      className={classNames(noSidebarClasses, "account-auth-form-container")}
-    >
+    <div className={"account-auth-form-container"}>
       <div className="account-auth-form account_auth-form">
         <h1 className="account-form-header px-12 px-sm-0">
           {headerTemplate()}

@@ -108,7 +108,6 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
       initialValues={initialState}
       validationSchema={validationSchema}
       onSubmit={submit}
-      ref={React.useRef()}
     >
       {({ isSubmitting, handleChange, values, errors }) => {
         return (

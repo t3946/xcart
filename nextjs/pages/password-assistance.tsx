@@ -1,12 +1,12 @@
 import * as React from "react";
 import Page from "@modules/account/components/layout/Page";
-import LoginForm from "@modules/account/components/authorization/LoginForm";
+import PasswordAssistance from "@modules/account/components/password-assistance/PasswordAssistance";
 
 function Login() {
   return (
     <Page showBreadcrumbs={false}>
       <div className="d-flex justify-content-center">
-        <LoginForm />
+        <PasswordAssistance />
       </div>
     </Page>
   );

@@ -121,7 +121,7 @@ const LoginFormInputPassword = function (props: IProps): any {
 
                     <Link
                       href={
-                        "/login-and-security/two-step-verification/password-assistance"
+                        "/password-assistance"
                       }
                     >
                       <a className={cn(Styles.authFormInfo, Styles.commonLink)}>
