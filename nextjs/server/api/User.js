@@ -20,10 +20,12 @@ app.post("/login", function (req, res) {
       }
 
       const token = jwt.sign(result.payload, authConfig.jwtSecret);
+      const timeDayMS = 1000 * 60 * 60 * 24;
 
       res.status(200);
-      res.header("Authorization", `bearer ${token}`);
-      res.cookie("session", `${token}`);
+      res.cookie("session", `${token}`, {
+        maxAge: timeDayMS * 60,
+      });
 
       res.send({ user: result.user });
     });
@@ -59,7 +61,6 @@ app.get("/info", isAuthMiddleware, async (req, res) => {
 
   delete user.password;
 
-  console.log("USER", user);
   res.json(user);
 });
 
