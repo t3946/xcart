@@ -39,11 +39,6 @@ module.exports = function (passport) {
       delete user.password;
 
       done(null, {
-        payload: {
-          userId: user.user_id,
-          createdTime: new Date().getTime(),
-          accessToken: user.access_token,
-        },
         user,
       });
     })

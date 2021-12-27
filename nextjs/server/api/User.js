@@ -1,9 +1,8 @@
 const app = require("express")();
 const passport = require("../auth/Passport");
-const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/generateToken");
 const isAuthMiddleware = require("../middleware/isAuth");
-const authConfig = require("../config/auth");
+const setSessionCookie = require("../utils/session").setCookie;
 const passwordUtils = require("../utils/password");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
@@ -14,20 +13,14 @@ app.post("/login", function (req, res) {
       return res.send({ error: err.message });
     }
 
-    req.login(result.user, { session: false }, (err) => {
+    req.login(result.user, { session: false }, async (err) => {
       if (err) {
         return res.send(err);
       }
 
-      const token = jwt.sign(result.payload, authConfig.jwtSecret);
-      const timeDayMS = 1000 * 60 * 60 * 24;
+      await setSessionCookie(res, result.user.user_id);
 
-      res.status(200);
-      res.cookie("session", `${token}`, {
-        maxAge: timeDayMS * 60,
-      });
-
-      res.send({ user: result.user });
+      res.json({ user: result.user });
     });
   })(req, res);
 });
@@ -74,7 +67,7 @@ app.get("/logout", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  res.clearCookie("session", "");
+  res.clearCookie("session");
   res.sendStatus(200);
 });
 
@@ -96,6 +89,37 @@ app.post("/check-login", async function (req, res) {
     res.send();
   } else {
     res.json({ error: "User not found", user: req.body });
+  }
+});
+
+app.post("/create", async function (req, res) {
+  const { email, name, password } = req.body;
+  let user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (user) {
+    res.json({ error: { email: "This email already registered" } });
+  } else {
+    await prisma.user.create({
+      data: {
+        email,
+        name,
+        password: await passwordUtils.encryptPassword(password),
+      },
+    });
+
+    user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    await setSessionCookie(res, result.user.user_id);
+
+    res.json(user);
   }
 });
 

@@ -1,5 +1,5 @@
 module.exports = {
   jwtSecret: "h93h84fp83",
-  jwtLifeTimeS: 60 * 60 * 24 * 30,
+  userSessionTimeoutS: 60 * 60 * 24 * 60,
   passwordSalt: "salt",
 };

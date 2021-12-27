@@ -50,22 +50,26 @@ const RegisterForm: React.FC<any> = () => {
       .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
 
-  function submit(values, actions) {
+  function submit(values: Record<any, any>, actions: Record<any, any>) {
+    const { email, name, password } = values;
+
     dispatch(
       registerAction({
-        form: values,
+        data: {
+          email,
+          name,
+          password,
+        },
 
         success(res: any) {
-          dispatch(userSetAction(res));
-          router.push(routes["account:index"]);
-        },
-
-        error(err: any) {
-          actions.setErrors(err);
-        },
-
-        complete() {
           actions.setSubmitting(false);
+
+          if (res.data.error) {
+            actions.setErrors(res.data.error);
+          } else {
+            dispatch(userSetAction(res.data));
+            router.push("/");
+          }
         },
       })
     );

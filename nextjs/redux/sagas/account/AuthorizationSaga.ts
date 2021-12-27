@@ -1,26 +1,12 @@
 import { put, takeLatest } from "redux-saga/effects";
-import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import axios from "axios";
 
-const api = new ApiService();
-
 function* register(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
-  const postData = {
-    RegistrationForm: form,
-  };
+  const { data, success } = action.payload;
 
-  yield api
-    .post<any>(`/api/account/authorization/register`, JSON.stringify(postData))
-    .then((res) => {
-      res.errors ? error(res.errors) : success(res);
-
-      complete(res);
-
-      return res;
-    });
+  yield axios.post("/api-client/user/create", data).then(success);
 }
 
 function* login(action: AnyAction) {
