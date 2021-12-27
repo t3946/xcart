@@ -81,7 +81,6 @@ const RegisterForm: React.FC<any> = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={submit}
-          ref={formRef}
         >
           {({ isSubmitting, values, errors, touched, handleChange }) => (
             <Form>
