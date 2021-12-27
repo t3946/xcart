@@ -110,7 +110,7 @@ services:
     working_dir: /home/node/app/nextjs
     tty: true
     ports:
-      - "8081:3000"
+      - "8081:3001"
     networks:
       - frontend
     #environment:
