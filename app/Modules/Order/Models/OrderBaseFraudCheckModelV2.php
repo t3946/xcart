@@ -6,6 +6,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
@@ -19,6 +20,7 @@ use Xcart\App\Orm\Model;
  * @property string|int question_id
  * @property string manual_action
  * @property string additional_info
+ * @property int outcome
  */
 class OrderBaseFraudCheckModelV2 extends Model
 {
@@ -73,6 +75,11 @@ class OrderBaseFraudCheckModelV2 extends Model
                     'Y',
                     'N'
                 ]
+            ],
+            'outcome' => [
+                'class' => IntField::class,
+                'default' => 0,
+                'null' => false
             ]
         ];
     }

@@ -189,6 +189,7 @@ class OrderFraudCheckController extends Controller
                 'question_id' => $answer_item->question_id,
                 'question_code' => $answer_item->question->question_code,
                 'question_auto' => $answer_item->question->auto,
+                'outcome' => $answer_item->outcome,
                 'question_weight' => (float)$answer_item->question->weight
             ];
         }
@@ -365,6 +366,7 @@ HTML;
                 'question_id' => $answer->question_id,
                 'question_auto' => $answer->question->auto,
                 'question_weight' => (float)$answer->question->weight,
+                'outcome' => $answer->outcome,
                 'manual_action' => $answer->manual_action ?? null
             ];
             $ar_res_answer[$answer->question->type][] = $ar_answer;
@@ -392,11 +394,10 @@ HTML;
     public function forceFraudCheck(int $order_id = null): void
     {
         try {
+            /** @var OrderModel $order_model */
             $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
-            if ($order_model instanceof OrderModel) {
-                $order_model->orderFraudCheck();
-                $this->jsonResponse(['status' => true]);
-            }
+            $order_model->orderFraudCheck();
+            $this->jsonResponse(['status' => true]);
         } catch (Throwable $e) {
             $log = "OrderID: $order_id. By force fraud check data";
             Xcart::app()->logger->error($log, [$e->getMessage(), $e->getFile(), $e->getLine()], 'fraud_check');
@@ -438,31 +439,34 @@ HTML;
                     switch ($value) {
                         case 'Y':
                             $result = 'positive';
-                            $score = $order_answer->question->weight;
+                            $outcome = 1;
                             if ($is_red_flag) {
+                                $outcome = 0;
                                 $result = 'negative';
-                                $score = 0.00;
                             }
                             $order_model->bare_fraud_score_v2 += $weight;
                             break;
                         case 'N':
                             $result = 'negative';
-                            $score = 0.00;
+                            $outcome = 0;
                             if ($is_red_flag) {
                                 $result = 'positive';
-                                $score = $order_answer->question->weight;
+                                $outcome = 1;
                             }
                             $order_model->bare_fraud_score_v2 -= $weight;
                             break;
                     }
+                    $score = $outcome * $order_answer->question->weight;
                     $order_answer->fraud_result = $result;
                     $order_answer->fraud_score = $score;
+                    $order_answer->outcome = $outcome ?? 0;
                     $order_answer->manual_action = $value;
 
                     $order_answer->save();
                     $ar_answer[] = [
                         'fraud_result' => $result,
                         'fraud_score' => $score,
+                        'outcome' => $outcome ?? 0,
                         'question_code' => $order_answer->question->question_code,
                     ];
 

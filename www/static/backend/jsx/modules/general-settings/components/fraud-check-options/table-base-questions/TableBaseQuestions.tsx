@@ -28,17 +28,19 @@ export const TableBaseQuestions: React.FC = () => {
     <Fragment>
       <table border="1">
         <tr>
+          <th>Order by</th>
           <th>Question code</th>
           <th>Question template</th>
           <th>Auto</th>
           <th>Question weight</th>
-          <th>Question type Type</th>
-          <th>Avail</th>
-          <th>Order by</th>
+          <th>Question type</th>
+          <th>Toggle</th>
           <th>Edit</th>
         </tr>
         {baseQuestion.map((question) => (
           <tr>
+            <td>{question.orderBy}</td>
+
             <td className="base-question-table-item-code">
               {question.questionCode}
             </td>
@@ -46,8 +48,7 @@ export const TableBaseQuestions: React.FC = () => {
             <td>{question.auto}</td>
             <td>{question.weight}</td>
             <td>{question.type}</td>
-            <td>{question.avail ? "Y" : "N"}</td>
-            <td>{question.orderBy}</td>
+            <td>{question.avail ? "Enable" : "Disable"}</td>
             <td style={{ cursor: "pointer" }}>
               <EditIcon onClick={() => onClickEditHandler(question)} />
             </td>

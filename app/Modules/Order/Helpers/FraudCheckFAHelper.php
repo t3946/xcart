@@ -114,7 +114,7 @@ class FraudCheckFAHelper
         $coefficient = $this->compareShippingBillingAddress();
 
         $ar_s_address = self::getLinesAddress($this->order_model->s_address);
-        $ar_b_address = self::getLinesAddress($this->order_model->b_address);
+        $ar_b_address = self::getLinesAddress($this->order_model->b_address ?? '');
 
         $info = $this->getInfoAddress(
             $fraud,
@@ -142,7 +142,7 @@ class FraudCheckFAHelper
     private function compareShippingBillingAddress(): float
     {
         $ar_s_address = self::getLinesAddress($this->order_model->s_address);
-        $ar_b_address = self::getLinesAddress($this->order_model->b_address);
+        $ar_b_address = self::getLinesAddress($this->order_model->b_address ?? '');
         return $this->compareAddress(
             [
                 'country' => $this->order_model->s_country,
@@ -446,7 +446,7 @@ class FraudCheckFAHelper
         // Если какое-либо из имён имеет значение null, то его нельзя сравнить
         foreach ($names as $name) {
             if (is_null($name['value'])) {
-                return [null, $fraud->weight, $info, 0];
+                return [$fraud->weight, $info, 0];
             }
         }
         $compare = self::compareClientName($names[0]['value'], $names[1]['value']);

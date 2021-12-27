@@ -2,6 +2,7 @@
 
 namespace Modules\Distributor\Commands;
 
+use Exception;
 use JsonException;
 use League\Flysystem\FileNotFoundException;
 use Modules\Core\Classes\SaveFilePrice;
@@ -35,6 +36,12 @@ class UploadFileCommand extends Command
             /** @var DistributorUploadPriceModel $upload_model */
             $upload_model = DistributorUploadPriceModel::objects()->get(['pk' => $data['upload_id']]);
             try {
+                /** @var DistributorModel $dx */
+                $dx = DistributorModel::objects()->get(['pk' => $upload_model->manufacturer_id]);
+                if (!$dx) {
+                    throw new Exception("Not found dx by pk {$data['dx']}");
+                }
+
                 [$file, $info_file] = DistributorHelper::getResourceGooglePriceFile($data['pathFile']);
                 $file_name = md5($info_file['name']);
                 $path_save = Paths::get('runtime') . "/tmp/$file_name.{$info_file['extension']}";
@@ -52,11 +59,6 @@ class UploadFileCommand extends Command
                     foreach ($excel_obj->getSheet($i)->toArray() as $column) {
                         $ar_save[$i][] = $column;
                     }
-                }
-                /** @var DistributorModel $dx */
-                $dx = DistributorModel::objects()->get(['pk' => $data['dx']]);
-                if (!$dx) {
-                    throw new RuntimeException("Not found dx by pk {$data['dx']}");
                 }
 
                 $ob_save_price = new SaveFilePrice($dx, (array)$search_by);
@@ -78,29 +80,31 @@ class UploadFileCommand extends Command
                 if (isset($path_save) && file_exists($path_save)) {
                     unlink($path_save);
                 }
-                // overwriting column order in Excel table
-                $id_list = ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx->pk])->valuesList(['id'], true);
-                if ($id_list) {
-                    ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
-                }
-                foreach ($select as $table_index => $fields) {
-                    foreach ($fields as $key => $field) {
-                        $column = new ColumnTableSaveModel();
-                        $column->num_column = $key;
-                        $column->option_name = $field;
-                        $column->manufacture = $dx;
-                        $column->num_table = $table_index;
-                        $column->save();
+                if ($dx) {
+                    // overwriting column order in Excel table
+                    $id_list = ColumnTableSaveModel::objects()->filter(['manufacturer_id' => $dx->pk])->valuesList(['id'], true);
+                    if ($id_list) {
+                        ColumnTableSaveModel::objects()->delete(['id__in' => $id_list]);
                     }
-                }
-                if (!empty($active_products)) {
-                    foreach ($active_products as $table_index => $value) {
-                        $column = new ColumnTableSaveModel();
-                        $column->num_table = $table_index;
-                        $column->is_for_sale_value = true;
-                        $column->manufacture = $dx;
-                        $column->option_name = $value;
-                        $column->save();
+                    foreach ($select as $table_index => $fields) {
+                        foreach ($fields as $key => $field) {
+                            $column = new ColumnTableSaveModel();
+                            $column->num_column = $key;
+                            $column->option_name = $field;
+                            $column->manufacture = $dx;
+                            $column->num_table = $table_index;
+                            $column->save();
+                        }
+                    }
+                    if (!empty($active_products)) {
+                        foreach ($active_products as $table_index => $value) {
+                            $column = new ColumnTableSaveModel();
+                            $column->num_table = $table_index;
+                            $column->is_for_sale_value = true;
+                            $column->manufacture = $dx;
+                            $column->option_name = $value;
+                            $column->save();
+                        }
                     }
                 }
                 $upload_model->save();

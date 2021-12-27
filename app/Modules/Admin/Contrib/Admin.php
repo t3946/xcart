@@ -473,7 +473,7 @@ abstract class Admin
                 if ($model_field instanceof ManyToManyField) {
                     $key = "{$model_field->getName()}__{$model_field->getRelatedModelPk()}";
                     if (is_array($value)) {
-                        if ($value = array_filter($value)) {
+                        if ($value = array_filter($value, fn($item) => $item !== '')) {
                             $qs->filter(["{$key}__in" => $value]);
                         }
                     } else {

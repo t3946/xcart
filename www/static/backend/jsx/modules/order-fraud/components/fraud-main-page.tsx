@@ -168,12 +168,18 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
           </div>
           <FraudPaymentAnswer answer={data.answer.payment} />
           <div className="table-wrapper__fraud-check-question">
-            <FraudScoreResult />
-          </div>
-          <div className="fraud-check-button-apply">
-            <button onClick={onApplyFrauds}>
-              Apply changes and update fraud score
-            </button>
+            <Stack
+              direction="column"
+              justifyContent="flex-start"
+              alignItems="flex-start"
+            >
+              <FraudScoreResult />
+              <div className="fraud-check-button-apply">
+                <button onClick={onApplyFrauds}>
+                  Apply changes and update fraud score
+                </button>
+              </div>
+            </Stack>
           </div>
           <FraudInfoBasement />
         </Grid>

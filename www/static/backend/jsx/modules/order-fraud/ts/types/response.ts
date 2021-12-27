@@ -20,7 +20,8 @@ export interface ResponseAnswerResult {
   overallResult: number;
   answerList: {
     fraud_result: string;
-    fraud_score: string;
+    fraud_score: number;
     question_code: string;
+    outcome: number;
   }[];
 }
