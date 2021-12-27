@@ -42,7 +42,7 @@ function* checkUserLogin(action: AnyAction) {
 }
 
 function* logout(action: AnyAction) {
-  const { callback } = action.payload;
+  const { success, error } = action.payload;
 
   yield put({
     type: "USER_CLEAR",
@@ -53,10 +53,7 @@ function* logout(action: AnyAction) {
     lists: null,
   });
 
-  yield axios.get("/api-client/user/logout").then((response) => {
-    callback();
-    return response;
-  });
+  yield axios.get("/api-client/user/logout").then(success).catch(error);
 }
 
 function* authorizationActionWatcher(): SagaIterator {

@@ -11,8 +11,7 @@ module.exports = [
 
     //session outdated
     if (req.user.iat + authConfig.jwtLifeTimeS < nowTimeS) {
-      res.sendStatus(401);
-      return;
+      return res.sendStatus(401);
     }
 
     const user = await prisma.user.findUnique({

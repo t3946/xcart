@@ -30,7 +30,11 @@ const LogoutButton: React.FC<IProps> = function (props: IProps) {
 
     dispatch(
       logoutAction({
-        callback() {
+        success() {
+          dispatch(userClearAction());
+          router.push("/login");
+        },
+        error() {
           dispatch(userClearAction());
           router.push("/login");
         },
