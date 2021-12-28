@@ -567,6 +567,7 @@ if ($REQUEST_METHOD === "POST" && $mode === "delete_rma_request" && !empty($orde
 
     func_header_location("order.php?orderid=" . $orderid . "&tab=y#main_order_tabs-RMA");
 }
+
 if ($REQUEST_METHOD === "POST" && $mode === "note_is_taken_care_of") {
 
     $log = "'Customer notes' removed<br /><B>Customer notes:</B> ";
@@ -628,7 +629,6 @@ if (!empty($_GET["orderid"]) && !empty($section_name)) {
 
     func_header_location($redirect_url);
 }
-
 
 Xcart::app()->event->trigger('order:view', ['order_id' => $orderid]);
 

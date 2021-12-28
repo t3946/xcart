@@ -585,13 +585,11 @@ function check_r_fields() {
 
                         {if !($order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y")}
                             <script type="text/javascript">
-                                <!--
                                 {literal}
                                 $(function () {
                                     $("#eta_date_mm_dd_yyyy_{/literal}{$product.itemid}{literal}").datepicker({ language: 'en' });
                                 });
                                 {/literal}
-                                -->
                             </script>
                         {/if}
 
@@ -600,18 +598,18 @@ function check_r_fields() {
                             {if !$static}
 
                                 {if $v.dc_status eq 'K' || $v.dc_status eq 'E'}
-                                    {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
+                                    {$product.oProduct.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
                                     <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="hidden"
                                            name="items[{$product.itemid}][eta_date_mm_dd_yyyy]"
-                                           value="{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}"/>
+                                           value="{$product.oProduct.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}"/>
                                 {else}
-                                    <input id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9"
+                                    <input autocomplete="off" id="eta_date_mm_dd_yyyy_{$product.itemid}" type="text" size="9"
                                            style="width: 98%;" name="items[{$product.itemid}][eta_date_mm_dd_yyyy]"
-                                           value="{if $product.eta_date_mm_dd_yyyy ne "0"}{$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}{/if}"
+                                           value="{if $product.oProduct.eta_date_mm_dd_yyyy}{$product.oProduct.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}{/if}"
                                            {if $order.amazonorderid ne "" || $v.allow_dispatch_off_working_hours_functionality_enabled eq "Y"}readonly="readonly"{/if} />
                                 {/if}
                             {else}
-                                {$product.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
+                                {$product.oProduct.eta_date_mm_dd_yyyy|date_format:'%m/%d/%Y'}
                             {/if}
                         </td>
 
