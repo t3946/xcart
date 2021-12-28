@@ -7,12 +7,13 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
 interface IProps {
+  login: string;
   resetPasswordToken: string;
   goToLoginInput: () => void;
 }
 
 const ChangePasswordForm: React.FC<any> = function (props: IProps) {
-  const { resetPasswordToken, goToLoginInput } = props;
+  const { resetPasswordToken, goToLoginInput, login } = props;
   const dispatch = useDispatch();
   const router = useRouter();
   const initialState = {
@@ -38,6 +39,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
     dispatch(
       resetPasswordAction({
         form: {
+          login: login,
           password: values.password,
           resetPasswordToken,
         },
@@ -92,7 +94,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
                   className={"form-input"}
                   isInvalid={!!touched.password && !!errors.password}
                   isValid={touched.password && !errors.password}
-                  placeholder={"At least 6 characters"}
+                  placeholder={"At least 8 characters"}
                 />
 
                 {(!errors.password || !touched.password) && (

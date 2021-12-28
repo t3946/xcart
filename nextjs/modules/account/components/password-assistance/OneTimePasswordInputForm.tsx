@@ -10,6 +10,7 @@ import {
 } from "@redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
 import ResendOtpButton from "@modules/account/components/password-assistance/ResendOtpButton";
+import Styles from "@modules/account/components/password-assistance/OneTimePasswordInputForm.module.scss";
 
 const OneTimePasswordInputForm: React.FC<any> = function (props) {
   const {
@@ -24,16 +25,16 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
-    one_time_password: yup.string().required("OTP is a required field"),
+    otp: yup.string().required("OTP is a required field"),
   });
 
   const initialState = {
-    one_time_password: "",
+    otp: "",
   };
 
-  function submit(values, actions) {
+  function submit(values: Record<any, any>, actions: Record<any, any>) {
     const form = {
-      one_time_password: values.one_time_password,
+      otp: values.otp,
       login: props.login,
     };
 
@@ -41,20 +42,26 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
       verifyOneTimePasswordAction({
         form,
 
-        success(res) {
-          goToResetPassword(res.resetPasswordToken);
-          setShowNewCodeSent(false);
-        },
+        success(res: any) {
+          const { errors, otp, resetPasswordToken } = res.data;
 
-        error(err) {
-          if (err.errors.otp === "outdated") {
-            alert("Session outdated. Please try again!");
-            goToLoginInput();
+          if (otp) {
+            oneTimePasswordChanged(otp);
+          }
+
+          if (errors) {
+            if (errors.otp === "outdated") {
+              alert("Session outdated. Please try again!");
+              goToLoginInput();
+            } else {
+              actions.setErrors(errors);
+            }
+
             return;
           }
 
-          actions.setErrors({ login: err.errors.one_time_password[0] });
-          oneTimePasswordChanged(err.one_time_password);
+          goToResetPassword(resetPasswordToken);
+          setShowNewCodeSent(false);
         },
 
         complete() {
@@ -82,15 +89,15 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
     oneTimePasswordChanged(oneTimePassword);
   }
 
-  function sendOneTimePassword(complete) {
+  function sendOneTimePassword(complete: any) {
     dispatch(
       sendOneTimePasswordAction({
         form: {
           login,
         },
 
-        success(res) {
-          props.oneTimePasswordChanged(res.one_time_password);
+        success(res: Record<any, any>) {
+          props.oneTimePasswordChanged(res.data);
           setShowNewCodeSent(true);
         },
 
@@ -134,11 +141,12 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
 
                 <RBForm.Control
                   type="text"
-                  name="one_time_password"
-                  value={values.one_time_password}
+                  name="otp"
+                  value={values.otp}
                   onChange={handleChange}
-                  className={"form-input"}
-                  isInvalid={!!errors.one_time_password}
+                  className={classnames("form-input", Styles.input)}
+                  isInvalid={!!errors.otp}
+                  maxLength={6}
                 />
 
                 <RBForm.Text className={classnames(classes.newCodeSent)}>
@@ -146,7 +154,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
                 </RBForm.Text>
 
                 <RBForm.Control.Feedback type="invalid">
-                  {errors.one_time_password}
+                  {errors.otp}
                 </RBForm.Control.Feedback>
               </RBForm.Group>
             </div>

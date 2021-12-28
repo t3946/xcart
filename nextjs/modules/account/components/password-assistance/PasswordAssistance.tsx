@@ -53,6 +53,7 @@ const PasswordAssistance: React.FC<any> = function () {
       case CHANGE_PASSWORD_MODE:
         return (
           <ChangePasswordForm
+            login={login}
             goToLoginInput={() => setMode(INPUT_LOGIN_MODE)}
             resetPasswordToken={resetPasswordToken}
           />

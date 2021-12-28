@@ -1,57 +1,41 @@
 import { takeLatest } from "redux-saga/effects";
-import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
-import { route } from "@utils/AppData";
-
-const api = new ApiService();
+import axios from "axios";
 
 function* sendOneTimePassword(action: AnyAction) {
   const { form, success, error, complete } = action.payload;
 
-  yield api
-    .post<any>(
-      route("account:api:send-one-time-password"),
-      JSON.stringify(form)
-    )
-    .then((res) => {
-      res.errors ? error(res.errors) : success(res);
+  yield axios.post("/api-client/user/send-otp", form).then((res) => {
+    res.errors ? error(res.errors) : success(res);
 
-      complete && complete();
+    complete && complete();
 
-      return res;
-    });
+    return res;
+  });
 }
 
 function* verifyOneTimePassword(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { form, success, complete } = action.payload;
 
-  yield api
-    .post<any>(
-      route("account:api:verify-one-time-password"),
-      JSON.stringify(form)
-    )
-    .then((res) => {
-      res.errors ? error(res) : success(res);
+  yield axios.post("/api-client/user/verify-otp", form).then((res) => {
+    success(res);
+    complete(res);
 
-      complete(res);
-
-      return res;
-    });
+    return res;
+  });
 }
 
 function* resetPassword(action: AnyAction) {
   const { form, success, error, complete } = action.payload;
 
-  yield api
-    .post<any>(route("account:api:reset-password"), JSON.stringify(form))
-    .then((res) => {
-      res.errors ? error(res.errors) : success(res);
+  yield axios.post("/api-client/user/reset-password", form).then((res) => {
+    res.errors ? error(res.errors) : success(res);
 
-      complete && complete();
+    complete && complete();
 
-      return res;
-    });
+    return res;
+  });
 }
 
 function* ResetPasswordSaga(): SagaIterator {

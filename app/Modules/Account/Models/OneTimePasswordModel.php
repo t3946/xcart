@@ -16,8 +16,8 @@ use Xcart\App\Orm\Model;
  */
 class OneTimePasswordModel extends Model
 {
-    private const OUTDATED_LIMIT_S = 33330 * 1;
-    private const NEW_LIMIT_S = 2220;
+    private const OUTDATED_LIMIT_S = 60 * 5;
+    private const NEW_LIMIT_S = 60 * 2;
     private const ATTEMPTS_LIMIT_NUMBER = 3;
 
     public function beforeSave($owner, $isNew)

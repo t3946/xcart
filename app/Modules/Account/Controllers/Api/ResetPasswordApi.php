@@ -31,7 +31,7 @@ class ResetPasswordApi extends FrontendController
     {
         [$otp, $is_new] = self::getOneTimePassword($user->user_id);
 
-        if ($is_new && REALLY_APP_LOCAL !== true) {
+        if ($is_new) {
             Xcart::app()->mail->raw(
                 $user->email,
                 'Password Assistance OTP',
@@ -42,7 +42,7 @@ class ResetPasswordApi extends FrontendController
             );
         }
 
-        $this->jsonResponse(['one_time_password' => $otp->toArray()]);
+        $this->jsonResponse($otp->toArray());
     }
 
     private function sendSMS($user): void
@@ -102,33 +102,42 @@ class ResetPasswordApi extends FrontendController
         $user_id = $user->getAttribute('user_id');
 
         /**
-         * @var OneTimePasswordModel $one_time_password
+         * @var OneTimePasswordModel $otp
          */
-        $one_time_password = OneTimePasswordModel::objects()->get(['user_id' => $user_id]);
+        $otp = OneTimePasswordModel::objects()->get(['user_id' => $user_id]);
 
-        if ($one_time_password === null || $one_time_password->isOutdated()) {
+        // old otp
+        if ($otp === null || $otp->isOutdated()) {
             $this->jsonResponse(['errors' => ['otp' => 'outdated']]);
 
-            if ($one_time_password) {
-                $one_time_password->delete();
+            if ($otp) {
+                $otp->delete();
             }
 
             return;
         }
 
-        if ($one_time_password->matchCode($data['one_time_password'])) {
+        // limit attempts exhausted
+        if ($otp->isLimitExhausted()) {
+            $this->jsonResponse(['errors' => ['otp' => 'Limit attempts exhausted']]);
+            return;
+        }
+
+        //wrong otp
+        $is_code_correct = $otp->matchCode($data['otp']);
+
+        if ($is_code_correct) {
             $jwt_key = Xcart::app()->globals['jwt_key'];
-            $payload = [
-                'user' => $user->toArray(),
+            $jwt_payload = [
                 'action' => 'reset_password',
-                'one_time_password' => $data['one_time_password'],
+                'user_id' => $user->user_id,
+                'otp_code' => $data['otp'],
             ];
-            $this->jsonResponse(['resetPasswordToken' => JWT::encode($payload, $jwt_key)]);
+            $this->jsonResponse(['resetPasswordToken' => JWT::encode($jwt_payload, $jwt_key)]);
         } else {
-            $error_text = $one_time_password->isOutdated() ? 'OTP is deprecated' : 'OTP is wrong';
             $this->jsonResponse([
-                'errors' => ['one_time_password' => [$error_text]],
-                'one_time_password' => $one_time_password->toArray(),
+                'errors' => ['otp' => ['OTP is wrong']],
+                'otp' => $otp->toArray(),
             ]);
         }
     }
@@ -138,13 +147,14 @@ class ResetPasswordApi extends FrontendController
         $data = json_decode(file_get_contents('php://input'), true);
         $jwt_key = Xcart::app()->globals['jwt_key'];
         $jwt_decoded = JWT::decode($data['resetPasswordToken'], $jwt_key, array('HS256'));
+        $user = UserModel::objects()->get(["user_id" => $jwt_decoded->user_id]);
         /**
          * @var $one_time_password OneTimePasswordModel
          */
         $one_time_password = OneTimePasswordModel::objects()->get(
             [
-                'user_id' => $jwt_decoded->user->id,
-                'one_time_password' => $jwt_decoded->one_time_password,
+                'user_id' => $user->user_id,
+                'one_time_password' => $jwt_decoded->otp_code,
             ],
         );
 
@@ -160,11 +170,8 @@ class ResetPasswordApi extends FrontendController
             return;
         }
 
-        /**
-         * @var UserModel $user
-         */
-        $user = UserModel::objects()->get(['user_id' => $jwt_decoded->user->id]);
-        $user->changePassword($data['password']);
-        $this->jsonResponse(['user' => $user]);
+        $user->password = $data['password'];
+        $user->save();
+        $this->jsonResponse([]);
     }
 }

@@ -6,6 +6,7 @@ const setSessionCookie = require("../utils/session").setCookie;
 const passwordUtils = require("../utils/password");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
+const axios = require("axios");
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (err, result) => {
@@ -24,8 +25,6 @@ app.post("/login", function (req, res) {
     });
   })(req, res);
 });
-
-app.post("/reset-password", isAuthMiddleware, (req, res) => {});
 
 app.post("/register");
 
@@ -123,4 +122,42 @@ app.post("/create", async function (req, res) {
   }
 });
 
+app.post("/send-otp", async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/reset-password/send-one-time-password", {
+      login: req.body.login,
+    })
+    .then((phpRes) => {
+      res.json(phpRes.data);
+    });
+});
+
+app.post("/verify-otp", async function (req, res) {
+  axios
+    .post("http://nginx/api/account/reset-password/verify-one-time-password", {
+      login: req.body.login,
+      otp: req.body.otp,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+    });
+});
+
+app.post("/reset-password", async function (req, res) {
+  axios
+    .post("http://nginx/api/account/reset-password/reset-password", {
+      resetPasswordToken: req.body.resetPasswordToken,
+      login: req.body.login,
+      password: await passwordUtils.encryptPassword(req.body.password),
+    })
+    .then(() => {
+      res.sendStatus(200);
+    });
+});
+
+/**
+ * /verify-one-time-password
+ * /send-one-time-password
+ * /reset-password
+ * */
 module.exports = app;

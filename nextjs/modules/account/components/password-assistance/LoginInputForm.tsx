@@ -27,7 +27,7 @@ const LoginInputForm: React.FC<any> = function (props) {
         form: values,
 
         success(res) {
-          props.oneTimePasswordChanged(res.one_time_password);
+          props.oneTimePasswordChanged(res.data);
           props.goToOTPInput(values.login);
         },
 

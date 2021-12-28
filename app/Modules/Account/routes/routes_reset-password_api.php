@@ -10,12 +10,6 @@ return [
     ],
 
     [
-        'route' => '/send-email',
-        'target' => [ResetPasswordApi::class, 'sendEmail'],
-        'name' => 'send-email',
-    ],
-
-    [
         'route' => '/send-one-time-password',
         'target' => [ResetPasswordApi::class, 'sendOneTimePassword'],
         'name' => 'send-one-time-password',

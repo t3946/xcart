@@ -4,7 +4,7 @@ import classnames from "classnames";
 interface IProps {
   leftResendTime: number;
   decLeftResendTime: () => void;
-  sendOneTimePassword: (any) => void;
+  sendOneTimePassword: (arg0: any) => void;
 }
 
 const ResendOtpButton: React.FC<any> = function (props: IProps) {
@@ -28,9 +28,10 @@ const ResendOtpButton: React.FC<any> = function (props: IProps) {
     };
   });
 
-  function formatTime(time) {
+  function formatTime(time: number) {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
+
     return `${minutes}:${seconds >= 10 ? seconds : "0" + seconds}`;
   }
 
@@ -58,17 +59,17 @@ const ResendOtpButton: React.FC<any> = function (props: IProps) {
             return;
           }
 
-          setDisabled(true);
-
           if (leftResendTime === 0) {
             sendOneTimePassword(function () {
               setDisabled(false);
             });
+            setDisabled(true);
           }
         }}
       >
         Resend OTP
       </span>
+
       <span className={classnames(classes.timer)}>
         {formatTime(leftResendTime)}
       </span>
