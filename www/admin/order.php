@@ -1216,12 +1216,12 @@ if ($REQUEST_METHOD === "POST") {
                     OrderGroupInvoiceProductModel::objects()->getOrNew([
                         'orderid' => $orderid,
                         'manufacturerid' => $certain_mid,
-                        'invoice_number' => 1
+                        'invoice_number' => 1,
+                        'itemid' => $product['itemid'],
                     ]);
 
                 if ($is_group_product_new) {
                     $order_group_product->setAttributes([
-                        'itemid' => $product['itemid'],
                         'unit_cost' => $unit_cost,
                         'qty_inv' => $qty_inv,
                         'unit_cost_total' => $unit_cost_total,
