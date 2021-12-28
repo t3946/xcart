@@ -24,7 +24,7 @@ const Page: React.FC<IProps> = (props: IProps): any => {
       <Snackbar>
         <DepartmentsMenuMobile />
         <HatNavigation />
-        <HatSearchLine />
+        <HatSearchLine className={"d-none d-lg-block"} />
         <MenuMobile />
 
         <div className="container">

@@ -13,27 +13,26 @@ import LeftColumn from "@modules/layout/components/LeftColumn";
 import Triangle from "@modules/icon/components/common/triangle/Triangle";
 import StylesRotate from "@styles/modules/Rotate.module.scss";
 import Search from "./Search";
-
 import Styles from "@modules/account/components/hat/HatSearchLine.module.scss";
 
-const HatSearchLine: React.FC = (): any => {
-  const dispatch = useDispatch();
+interface IProps {
+  className: any;
+}
 
+const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
+  const dispatch = useDispatch();
   const isVisibleDepartmentsMenu = useSelectorAccount(
     (e) => e.departmentsMenuDesktop.isVisible
   );
-
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
   const inputSuggestionsClass = "input-search";
   const containerSuggestionsClass = Styles.searchFormContainer__suggestion;
   const classes = {
     container: [
-      "d-block",
-      // "d-lg-block",
-      "p-0",
       Styles.mainContainer,
       containerSuggestionsClass,
+      props.className,
     ],
     buttonSearch: [
       Styles.buttonSearch,
