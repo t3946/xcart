@@ -795,6 +795,8 @@ abstract class Admin
      */
     public function exportFile(QuerySet $qs): void
     {
+        set_time_limit(0);
+
         $name_admin = static::getName();
 
         $style_first_row = [

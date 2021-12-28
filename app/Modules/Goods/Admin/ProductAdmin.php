@@ -106,8 +106,9 @@ class ProductAdmin extends Admin
         }
 
         if ($property === 'product') {
-            $len = mb_strlen($item->$property);
-            $name = ($len > 30) ? mb_substr($item->$property, 0, 30) . '...' : $item->$property;
+            $name = $item->getFrontendName();
+            $len = mb_strlen($name);
+            $name = ($len > 30) ? mb_substr($name, 0, 30) . '...' : $name;
             return "<a target='_blank' href='{$item->getAbsoluteUrl(true)}'>{$name}</a>";
         }
 
