@@ -283,8 +283,8 @@ class ProductAdminForm extends ModelForm
             'lock_forsale' => [
                 'class' => DropDownField::class,
                 'choices' => [
-                    'N' => 'Unlocked',
-                    'Y' => 'Locked forever',
+                    'Unlocked',
+                    'Locked forever',
                 ],
                 'label' => "Lock 'Availability' status",
             ],
@@ -446,8 +446,4 @@ class ProductAdminForm extends ModelForm
         ]];
     }
 
-    public function beforeInstanceSave($instance)
-    {
-        $instance->last_modify_id = Xcart::app()->user->pk;
-    }
 }

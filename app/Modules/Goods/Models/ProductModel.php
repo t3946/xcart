@@ -155,6 +155,11 @@ class ProductModel extends Model implements ICartItem
                 'class' => CharField::class,
                 'default' => 'Y'
             ],
+            'lock_forsale' => [
+                'class' => BooleanCharField::class,
+                'null' => false,
+                'default' => false,
+            ],
             'amazon_offer_model' => [
                 'class' => HasToOneField::class,
                 'modelClass' => AmazonOfferModel::class,
@@ -1115,6 +1120,13 @@ class ProductModel extends Model implements ICartItem
                 return "{$date->format('d')} $month_name {$date->format('Y')}";
             default:
                 return date_format($date, "d F Y");
+        }
+    }
+
+    public function beforeSave($owner, $isNew)
+    {
+        if (Xcart::app()->user) {
+            $owner->last_modify_id = Xcart::app()->user->pk;
         }
     }
 

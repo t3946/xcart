@@ -17,6 +17,7 @@ use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderStore;
 use Modules\Order\Stores\OrderTransactionStore;
@@ -2016,8 +2017,11 @@ elseif ($mode === 'mode_info_request_survey') {
 
     $section_name = "main_order_tabs-stock_request";
     x_session_save("section_name");
-    $log = "'Update the order' at '" . $manufacturer_name . ": Stock request'";
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+    OrderLogModel::createLog(
+        $orderid,
+        OrderLogModel::LOG_TYPE_XCART,
+        "'Update the order' at '" . $manufacturer_name . ": Stock request'"
+    );
 
     $log = "";
 
@@ -2034,7 +2038,6 @@ elseif ($mode === 'mode_info_request_survey') {
                 ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
                 ->setAttribute('stock_request_shipping_cost', $actual_shipping_net)
                 ->save();
-//            db_query("UPDATE $sql_tbl[order_groups] SET stock_request_shipping_cost='$actual_shipping_net' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
         }
     }
 
@@ -2044,7 +2047,11 @@ elseif ($mode === 'mode_info_request_survey') {
 
         if ($current_actual_shipping_net != $actual_shipping_net)
         {
-            $log .= "<b>" . $code . ":</b> actual_shipping_net: " . $current_actual_shipping_net . " -> " . $actual_shipping_net . "<br />";
+            OrderLogModel::createLog(
+                $orderid,
+                OrderLogModel::LOG_TYPE_XCART,
+                "<b>{$code}:</b> actual_shipping_net: {$current_actual_shipping_net} -> {$actual_shipping_net}"
+            );
 
             $actual_shipping_gross = $actual_shipping_net;
 
@@ -2086,45 +2093,74 @@ elseif ($mode === 'mode_info_request_survey') {
                     if ($v["productid"] == $ks) {
                         $productid = $v["productid"];
 
-                        db_query("UPDATE $sql_tbl[order_details] SET stock_request_status='$vs' WHERE orderid='$orderid' AND productid='$productid'");
+                        $product_model = ProductModel::objects()->get(['productid' => $productid]);
+                        $order_detail_model = OrderDetailModel::objects()->get(['orderid' => $orderid, 'productid' => $productid]);
+                        $order_detail_model->setAttributes([
+                            'stock_request_status' => $vs
+                        ]);
+                        $order_detail_model->save();
+
 
                         $amount     = $v["amount"];
                         $item_stock = trim($items_stock[$productid]);
 
-                        $current_item_stock = func_query_first_cell("SELECT items_stock FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$productid'");
-                        $current_back       = func_query_first_cell("SELECT back FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$productid'");
+                        $current_item_stock = $order_detail_model->items_stock;
+                        $current_back       = $order_detail_model->back;
 
                         $update_in_db = false;
+
+                        $product_model->lock_forsale = false;
+                        $product_model->save();
 
                         if ($item_stock != '' && $vs === 'some_in_stock') {
                             $item_stock   = abs(intval($item_stock));
                             $back         = $amount - $item_stock;
                             $update_in_db = true;
+                            $product_model->forsale = 'Y';
                         }
                         elseif ($vs === 'discontinued' || $vs === 'out_of_stock') {
                             $item_stock   = 0;
                             $back         = $amount;
                             $update_in_db = true;
+                            $product_model->forsale = 'Y';
+
                         }
                         elseif ($vs === 'all_in_stock') {
                             $item_stock   = $amount;
                             $back         = 0;
                             $update_in_db = true;
+                            $product_model->forsale = 'Y';
                         }
 
                         if ($vs === 'discontinued') {
-                            ProductModel::objects()->filter(['productid' => $productid])->update(['forsale' => 'N', 'lock_forsale' => 'Y']);
+                            $product_model->setAttributes([
+                                'forsale' => 'N',
+                                'lock_forsale' => true,
+                            ]);
                         }
+                        $product_model->save();
 
                         if ($update_in_db) {
-                            db_query("UPDATE $sql_tbl[order_details] SET items_stock='$item_stock', back='$back' WHERE orderid='$orderid' AND productid='$productid'");
+                            $order_detail_model->setAttributes([
+                                'items_stock' => $item_stock,
+                                'back' => $back,
+                            ]);
+                            $order_detail_model->save();
 
                             if ($current_item_stock != $item_stock) {
-                                $log .= "<B>" . $v["productcode"] . ":</B> items_stock: " . $current_item_stock . " -> " . $item_stock . "<br />";
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>{$v["productcode"]}:</b> items_stock: {$current_item_stock} -> {$item_stock}"
+                                );
                             }
 
                             if ($current_back != $back) {
-                                $log .= "<B>" . $v["productcode"] . ":</B> back: " . $current_back . " -> " . $back . "<br />";
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>{$v["productcode"]}:</b> back: {$current_back} -> {$back}"
+                                );
                             }
                         }
                     }
@@ -2140,60 +2176,90 @@ elseif ($mode === 'mode_info_request_survey') {
                         $productid = $v["productid"];
                         $eta_date  = trim($eta_date_mm_dd_yyyy[$productid]);
 
-                        $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+                        $product_model = ProductModel::objects()->get(['productid' => $productid]);
+
+                        $order_detail_model = OrderDetailModel::objects()->get(['orderid' => $orderid, 'productid' => $productid]);
+
+                        $current_eta_date_mm_dd_yyyy = $product_model->eta_date_mm_dd_yyyy;
                         $current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
-                        $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
-                        $current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
+                        $current_forsale = $product_model->forsale;
+                        $current_r_avail = (int)$product_model->r_avail;
 
                         if ($vs === "some_in_stock" || $vs === "out_of_stock") {
 
                             if ($current_eta_date_mm_dd_yyyy != $eta_date) {
-                                $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>{$v["productcode"]}:</b> eta_date_mm_dd_yyyy: {$current_eta_date_mm_dd_yyyy} -> {$eta_date}"
+                                );
                             }
 
                             $eta_date = func_convert_date_mm_dd_yyyy($eta_date, 'seconds');
 
-                            $eta_date_lock = $v[$eta_date_lock];
-
                             if ($v["manufacturer_feed_fields"]["eta_date_mm_dd_yyyy"]["disable"] === "Y") {
-
-                                if ($eta_date) {
-                                    $eta_date_lock = "Y";
-                                }
-                                else  $eta_date_lock = "N";
+                                $eta_date_lock = (bool)$eta_date;
                             }
-
-                            db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$eta_date', eta_date_lock = '$eta_date_lock' WHERE productid='$productid'");
+                            $product_model->eta_date_lock = false;
+                            $product_model->eta_date_mm_dd_yyyy = $eta_date;
+                            $product_model->eta_date_lock = $eta_date_lock ?? false;
 
                             $p_offer_backorder = $offer_backorder[$productid];
                             if (empty($p_offer_backorder)) {
                                 $p_offer_backorder = "N";
                             }
 
-                            db_query("UPDATE $sql_tbl[order_details] SET offer_backorder='$p_offer_backorder' WHERE productid='$productid' AND orderid='$orderid'");
+                            $order_detail_model->setAttributes([
+                                'offer_backorder' => $p_offer_backorder
+                            ]);
+
+                            $order_detail_model->save();
 
                             if ($current_forsale === 'N') {
-                                $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> Y <br />";
-                                db_query("UPDATE $sql_tbl[products] SET forsale='Y', r_avail='0' WHERE productid='$productid'");
+                                $product_model->setAttributes([
+                                    'forsale' => 'Y',
+                                    'r_avail' => 0
+                                ]);
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>" . $v["productcode"] . ":</b> forsale: " . $current_forsale . " -> Y"
+                                );
                             }
                         }
                         elseif ($vs === "discontinued") {
 
                             if ($current_eta_date_mm_dd_yyyy != '') {
-                                $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> <br />";
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>{$v["productcode"]}:</b> eta_date_mm_dd_yyyy: {$current_eta_date_mm_dd_yyyy} ->"
+                                );
                             }
 
                             if ($current_forsale !== 'N') {
-                                $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> N <br />";
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>{$v["productcode"]}:</b> forsale: {$current_forsale} -> N"
+                                );
                             }
 
-                            if ($current_r_avail != '0') {
-                                $log .= "<B>" . $v["productcode"] . ":</B> r_avail: " . $current_r_avail . " -> 0 <br />";
+                            if ($current_r_avail !== 0) {
+                                OrderLogModel::createLog(
+                                    $orderid,
+                                    OrderLogModel::LOG_TYPE_XCART,
+                                    "<b>{$v["productcode"]}:</b> r_avail: {$current_r_avail} -> 0"
+                                );
                             }
-
-                            db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy=null, forsale='N', r_avail='0' WHERE productid='$productid'");
+                            $product_model->setAttributes([
+                                'eta_date_mm_dd_yyyy' => null,
+                                'forsale' => 'N',
+                                'r_avail' => 0
+                            ]);
                         }
+                        $product_model->save();
                     }
                 }
             }
@@ -2210,40 +2276,52 @@ elseif ($mode === 'mode_info_request_survey') {
                         {
                             if (!empty($v["eta_date_mm_dd_yyyy"]) || $v["r_avail"] == "0")
                             {
-                                $current_eta_date_mm_dd_yyyy = func_query_first_cell("SELECT eta_date_mm_dd_yyyy FROM $sql_tbl[products] WHERE productid='$productid'");
+                                $product_model = ProductModel::objects()->get(['productid' => $productid]);
+
+                                $current_eta_date_mm_dd_yyyy = $product_model->eta_date_mm_dd_yyyy;
                                 $current_eta_date_mm_dd_yyyy = func_convert_date_mm_dd_yyyy($current_eta_date_mm_dd_yyyy, "m/d/Y");
 
-                                $current_forsale = func_query_first_cell("SELECT forsale FROM $sql_tbl[products] WHERE productid='$productid'");
-                                $current_r_avail = func_query_first_cell("SELECT r_avail FROM $sql_tbl[products] WHERE productid='$productid'");
+                                $current_forsale = $product_model->forsale;
+                                $current_r_avail = (int)$product_model->r_avail;
 
                                 if (!empty($v["eta_date_mm_dd_yyyy"])) {
                                     $tmp_mktime = time() - 24 * 60 * 60;
                                     $eta_date   = date("m/d/Y", $tmp_mktime);
 
                                     if ($current_eta_date_mm_dd_yyyy != $eta_date) {
-                                        $log .= "<B>" . $v["productcode"] . ":</B> eta_date_mm_dd_yyyy: " . $current_eta_date_mm_dd_yyyy . " -> " . $eta_date . "<br />";
+                                        OrderLogModel::createLog(
+                                            $orderid,
+                                            OrderLogModel::LOG_TYPE_XCART,
+                                            "<b>{$v["productcode"]}:</b> eta_date_mm_dd_yyyy: {$current_eta_date_mm_dd_yyyy} -> {$eta_date}"
+                                        );
                                     }
-
-                                    db_query("UPDATE $sql_tbl[products] SET eta_date_mm_dd_yyyy='$tmp_mktime' WHERE productid='$productid'");
+                                    $product_model->eta_date_mm_dd_yyyy = $tmp_mktime;
                                 }
 
-                                if ($v["r_avail"] == "0") {
+                                if ((int)$v["r_avail"] === 0) {
 
-                                    if ($current_r_avail != '1000000') {
-                                        $log .= "<B>" . $v["productcode"] . ":</B> r_avail: " . $current_r_avail . " -> 1000000 <br />";
+                                    if ($current_r_avail !== 1000000) {
+                                        OrderLogModel::createLog(
+                                            $orderid,
+                                            OrderLogModel::LOG_TYPE_XCART,
+                                            "<b>{$v["productcode"]}:</b> r_avail: {$current_r_avail} -> 1000000"
+                                        );
                                     }
-
-                                    db_query("UPDATE $sql_tbl[products] SET r_avail='1000000' WHERE productid='$productid'");
+                                    $product_model->r_avail = 1000000;
                                 }
 
                                 if ($v["forsale"] === "N") {
 
                                     if ($current_forsale !== 'Y') {
-                                        $log .= "<B>" . $v["productcode"] . ":</B> forsale: " . $current_forsale . " -> Y <br />";
+                                        OrderLogModel::createLog(
+                                            $orderid,
+                                            OrderLogModel::LOG_TYPE_XCART,
+                                            "<b>{$v["productcode"]}:</b> forsale: {$current_forsale} -> Y"
+                                        );
                                     }
-
-                                    db_query("UPDATE $sql_tbl[products] SET forsale='Y' WHERE productid='$productid'");
+                                    $product_model->forsale = 'Y';
                                 }
+                                $product_model->save();
                             }
                         }
                     }
@@ -2264,23 +2342,32 @@ elseif ($mode === 'mode_info_request_survey') {
             $v = trim($v);
             if ($v != "") {
                 $v = str_replace([",", " "], [".", ""], $v);
-
-                $current_item_cost_to_us = func_query_first_cell("SELECT item_cost_to_us FROM $sql_tbl[order_details] WHERE orderid='$orderid' AND productid='$k'");
+                $order_detail_model = OrderDetailModel::objects()->get(['orderid' => $orderid, 'productid' => $k]);
+                $current_item_cost_to_us = $order_detail_model->item_cost_to_us;
 
                 if ($current_item_cost_to_us != $v) {
-                    $product_code = func_query_first_cell("SELECT productcode FROM $sql_tbl[products] WHERE productid='$k'");
-                    $log .= "<B>" . $product_code . ":</B> item_cost_to_us: " . $current_item_cost_to_us . " -> " . $v . "<br />";
+                    $product_model = ProductModel::objects()->get(['productid' => $productid]);
+                    OrderLogModel::createLog(
+                        $orderid,
+                        OrderLogModel::LOG_TYPE_XCART,
+                        "<b>{$product_model->productcode}:</b> item_cost_to_us: {$current_item_cost_to_us} -> {$v}"
+                    );
                 }
 
-                db_query("UPDATE $sql_tbl[order_details] SET item_cost_to_us='$v' WHERE orderid='$orderid' AND productid='$k'");
+                $order_detail_model->item_cost_to_us = $v;
+                $order_detail_model->save();
             }
         }
     }
 
-    if ($current_dc_status !== "M") {
-        $current_dc_status_value = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='$current_dc_status'");
-        $new_value               = func_query_first_cell("SELECT name FROM $sql_tbl[order_statuses] WHERE code='M'");
-        $log .= "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
+    if ($current_dc_status !== 'M') {
+        $current_dc_status_model = OrderStatusModel::objects()->get(['code' => $current_dc_status]);
+        $new_status_model = OrderStatusModel::objects()->get(['code' => 'M']);
+        OrderLogModel::createLog(
+            $orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            "<b>{$code}:</b> dc_status: {$current_dc_status_model->name} -> {$new_status_model->name}"
+        );
     }
 
     OrderGroupModel::objects()
@@ -2288,10 +2375,8 @@ elseif ($mode === 'mode_info_request_survey') {
         ->setAttribute('dc_status', 'M')
         ->save();
 
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
-
     $top_message = ["content" => "Done."];
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid=$orderid");
 }
 
 #
@@ -2303,7 +2388,7 @@ if ($mode === "printable") {
 }
 elseif ($mode === "delete") {
     func_delete_order($orderid);
-    func_header_location("orders.php?" . $query_string);
+    Xcart::app()->request->redirect("orders.php?{$query_string}");
 }
 
 $smarty->assign("main", "history_order");
@@ -2311,29 +2396,11 @@ $smarty->assign("main", "history_order");
 if (!empty($active_modules["Advanced_Order_Management"]) && $mode === "edit") {
     include $xcart_dir . "/modules/Advanced_Order_Management/order_edit.php";
 }
-elseif (!empty($active_modules["Anti_Fraud"]) && $mode === "anti_fraud") {
-    if ($order['extra']) {
-        $userinfo           = $order_data["userinfo"];
-        $extra              = $order['extra'];
-        $extras['ip']       = $extra['ip'];
-        $extras['proxy_ip'] = $extra['proxy_ip'];
-        include $xcart_dir . "/modules/Anti_Fraud/anti_fraud.php";
-        db_query("UPDATE $sql_tbl[orders] SET extra = '" . addslashes(serialize($extra)) . "' WHERE orderid = '$orderid'");
-    }
-
-    func_header_location("order.php?orderid=" . $orderid);
-}
-elseif (!empty($active_modules["Stop_List"]) && $mode === "block_ip") {
-    func_add_ip_to_slist($order['extra']['ip']);
-    $top_message["content"] = func_get_langvar_by_name("msg_stoplist_ip_added");
-    $top_message["type"]    = "I";
-    func_header_location("order.php?orderid=" . $orderid);
-}
 
 $mnfs = func_get_order_manufacturers($orderid);
 
 if ($mnfs["reload_page"] === "Y") {
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid={$orderid}");
 }
 
 require $xcart_dir . "/admin/ground_map.php";
