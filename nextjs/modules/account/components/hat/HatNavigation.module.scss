@@ -29,7 +29,7 @@
 .topHeaderMenu {
   position: relative;
   z-index: 3;
-  min-width: 320px;
+  min-width: pxToRem(320);
   box-shadow: 0 1px #c4c4c4;
 }
 
@@ -39,4 +39,58 @@
 
 .header_shadowPanelVisible {
   border-bottom-color: $white;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.cart {
+  width: pxToRem(40);
+  height: pxToRem(30);
+  position: relative;
+  color: #000000;
+
+  &:hover {
+    text-decoration: none;
+    color: #000000;
+  }
+
+  @include breakpoint(md) {
+    width: pxToRem(63);
+    height: pxToRem(48);
+  }
+}
+
+.cartCount {
+  border-radius: pxToRem(10);
+  background: #f12d2d;
+  font-weight: 800;
+  padding: 0 pxToRem(5);
+  color: $white;
+  display: inline-block;
+  position: absolute;
+  left: pxToRem(-3);
+  top: pxToRem(-1);
+  line-height: 1.2;
+  min-width: pxToRem(18);
+
+  text-align: center;
+
+  @include breakpoint(md) {
+    min-width: 1.5em;
+  }
+}
+
+.mcCount {
+  display: inline-block;
+  padding-top: 0.12em;
+  line-height: pxToRem(14);
+  vertical-align: top;
+  font-size: 0.75em;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(19);
+    padding: pxToRem(5);
+  }
 }

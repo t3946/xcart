@@ -3,6 +3,7 @@ import LoginButton from "@modules/account/components/hat/LoginButton/LoginButton
 import TopLine from "@modules/account/components/hat/TopLine";
 import { useDispatch } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuMobileActions";
+import { toggleSearchIsVisibleAction } from "@redux/actions/account-actions/MobileSearchActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import AppData from "@utils/AppData";
@@ -10,6 +11,7 @@ import Search from "@modules/icon/components/account/search/Search";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import MenuIcon from "@modules/icon/components/header/Menu";
+import IconCart from "@modules/icon/components/common/cart/Cart";
 import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
 
 const HatNavigation: React.FC = () => {
@@ -125,7 +127,9 @@ const HatNavigation: React.FC = () => {
 
                     <a
                       className="d-flex align-items-center justify-content-center hat-navigation-item-wrapper"
-                      data-swich="search_container"
+                      onClick={() => {
+                        dispatch(toggleSearchIsVisibleAction());
+                      }}
                     >
                       <Search className={Styles.searchIcon} />
                     </a>
@@ -136,12 +140,27 @@ const HatNavigation: React.FC = () => {
 
                     <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">
                       <a
-                        href={AppData.routes["cart:list"]}
-                        className="mobile__cart middle-inline-block hat-navigation-item"
+                        href={"/cart"}
+                        className={cn(
+                          Styles.h100,
+                          "d-flex align-items-center justify-content-center w-auto"
+                        )}
                       >
-                        <span className="count">
-                          <span className="mc_count">{cart.quantity}</span>
-                        </span>
+                        <div className={Styles.cart}>
+                          <IconCart />
+                          <span
+                            className={cn(
+                              "d-flex",
+                              "align-items-center",
+                              "justify-content-center",
+                              Styles.cartCount
+                            )}
+                          >
+                            <span className={Styles.mcCount}>
+                              {cart.quantity}
+                            </span>
+                          </span>
+                        </div>
                       </a>
                     </div>
                   </div>
