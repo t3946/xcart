@@ -13,7 +13,6 @@ import { List } from "@modules/account/ts/types/list.type";
 import Styles from "@modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
 import AppData from "@utils/AppData";
 import Medium from "@modules/icon/components/account/chevron-down/Medium";
-import StyleUtils from "@client/style-modules/style-utils.module.scss";
 import Plus from "@modules/icon/components/account/plus/Plus";
 
 interface IProps {
@@ -32,7 +31,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const { name, label = "", product } = props;
   const lists = Store.getState().lists.lists;
   const productInfo = product || Object.keys(AppData?.products)[0];
-  // const id = "1";
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);
@@ -115,7 +113,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       "overflow-hidden",
       props.classes?.selectHeader,
       Styles.addToListHeader,
-      StyleUtils.cursorPointer,
+      "cursor-pointer",
     ],
 
     container: [
@@ -150,7 +148,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       "align-items-center",
       "w-100",
       Styles.createListButton,
-      StyleUtils.cursorPointer,
+      "cursor-pointer",
     ],
   };
 
@@ -172,12 +170,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
         className={classnames("select-wrapper", props.classes?.input)}
         ref={buttonRef}
       >
-        <input
-          value={null}
-          className="select__input"
-          type="hidden"
-          name={name}
-        />
+        <input value={""} className="select__input" type="hidden" name={name} />
 
         <div className={classnames(classes.selectHeader)}>
           <div className={classnames(classes.label)}>ADD TO LIST</div>

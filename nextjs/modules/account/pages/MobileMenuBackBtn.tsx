@@ -1,5 +1,5 @@
 import React from "react";
-import ArrowBackIcon from "@client/modules/icon/components/account/arrows/ArrowBackIcon";
+import ArrowBackIcon from "@modules/icon/components/account/arrows/ArrowBackIcon";
 import { useRouter } from "next/router";
 
 interface MobileMenuBackBtnProps {

@@ -1,6 +1,11 @@
-import React from "react";
+import React, { ReactElement } from "react";
+import cn from "classnames";
 
-const ArrowBackIcon = (props: Record<any, any>): any => {
+interface IProps {
+  className?: any;
+}
+
+const ArrowBackIcon: React.FC<IProps> = (props: IProps): ReactElement => {
   return (
     <svg
       width="15"
@@ -8,13 +13,14 @@ const ArrowBackIcon = (props: Record<any, any>): any => {
       viewBox="0 0 15 13"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={cn(props.className)}
     >
       <path
         d="M13 6.72917L2 6.72917M2 6.72917L7.06 2M2 6.72917L7.06 11"
-        stroke="#4A4949"
-        stroke-width="3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

@@ -1,19 +1,26 @@
 import React from "react";
 import ReactToPrint from "react-to-print";
-import PrintIcon from "@client/modules/icon/components/account/print/PrintIcon";
-import PictureAsPdfIcon from "@client/modules/icon/components/account/pdf/PictureAsPdfIcon";
+import PrintIcon from "@modules/icon/components/account/print/PrintIcon";
+import PictureAsPdfIcon from "@modules/icon/components/account/pdf/PictureAsPdfIcon";
 
-export const TransactionItemTopBlock = ({
-  componentRef,
-  refund = undefined,
-  transactionInfo,
-}) => {
+interface IProps {
+  componentRef: any;
+  refund: any;
+  transactionInfo: Record<any, any>;
+}
+
+export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
+  const { componentRef, refund, transactionInfo } = props;
+
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
         <div className="transaction-name-block">
           <div className="transaction-top-block-logo">
-            <img src="/static/frontend/dist/images/icons/account/s3stores-logo.svg" />
+            <img
+              src="/static/frontend/dist/images/icons/account/s3stores-logo.svg"
+              alt={""}
+            />
           </div>
           <div className="transaction-top-name-btns">
             <div className="transaction-name">
