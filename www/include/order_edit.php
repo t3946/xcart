@@ -314,13 +314,18 @@ if ($REQUEST_METHOD === 'POST')
                 }
 
                 ### LOG: START
-                if (($current_eta_date_mm_dd_yyyy !== false) && !empty($v['eta_date_mm_dd_yyyy']) && $current_eta_date_mm_dd_yyyy != $v['eta_date_mm_dd_yyyy']) {
+                if ($current_eta_date_mm_dd_yyyy != $v['eta_date_mm_dd_yyyy']) {
                     /** @var ProductModel $pModel */
                     if ($pModel = ProductModel::objects()->get(['productid' => $productid])) {
                         $pModel->eta_date_mm_dd_yyyy = $new_eta_date_mm_dd_yyyy_time;
+
                         $pModel->save();
-                        $log = "<b>{$product_code}</b> ETA date: {$current_eta_date_mm_dd_yyyy} -> {$v['eta_date_mm_dd_yyyy']}";
-                        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+
+                        OrderLogModel::createLog(
+                            $orderid,
+                            OrderLogModel::LOG_TYPE_XCART,
+                            "<b>{$product_code}</b> ETA date: {$current_eta_date_mm_dd_yyyy} -> {$v['eta_date_mm_dd_yyyy']}"
+                        );
                     }
                 }
                 ### LOG: END
