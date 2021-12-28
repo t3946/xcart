@@ -1225,7 +1225,7 @@ if ($REQUEST_METHOD === "POST") {
                         'unit_cost' => $unit_cost,
                         'qty_inv' => $qty_inv,
                         'unit_cost_total' => $unit_cost_total,
-                        'invoice' => $order_group_invoice
+                        'invoice_id' => $order_group_invoice->pk
                     ]);
                     $order_group_product->save();
                 }
