@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderAmazonDetails extends Data
 {
     const TYPE_REFUND = 'Refund';

@@ -9,6 +9,9 @@ use Xcart\Cart;
 use Xcart\Product;
 use Xcart\ProductAmazonRates;
 
+/**
+ * @deprecated deprecated class
+ */
 class Amazon extends ShippingProcessor
 {
     public function isProcessorApplicable()

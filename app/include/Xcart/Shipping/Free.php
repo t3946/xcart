@@ -4,6 +4,9 @@ namespace Xcart\Shipping;
 
 use Xcart\Product;
 
+/**
+ * @deprecated deprecated class
+ */
 class Free extends ShippingProcessor
 {
     public function isProcessorApplicable()

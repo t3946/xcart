@@ -5,6 +5,9 @@ namespace Xcart;
 
 use Modules\Core\Classes\SoapClientTimeout;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderToTicketResolver {
     protected $user;
     protected $pass;

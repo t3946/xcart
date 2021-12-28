@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class OrderCxInvoice extends Data
 {
     public function __construct($aParam = null)

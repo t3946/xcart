@@ -3,6 +3,9 @@
 namespace Xcart;
 
 
+/**
+ * @deprecated deprecated class
+ */
 class ShippingZone extends Data
 {
     public function __construct($aParams = [])

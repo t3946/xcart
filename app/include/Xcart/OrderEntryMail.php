@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class OrderEntryMail extends Mail
 {
     /**

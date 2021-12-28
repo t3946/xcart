@@ -3,6 +3,9 @@ namespace Xcart;
 
 use Modules\Order\Models\OrderLogModel;
 
+/**
+ * @deprecated deprecated class
+ */
 class TransactionLog extends Data
 {
     private $aLogLines = [];

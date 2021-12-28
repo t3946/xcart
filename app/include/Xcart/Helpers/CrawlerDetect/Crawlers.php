@@ -4,6 +4,9 @@ namespace Xcart\Helpers\CrawlerDetect;
 
 use Jaybizzle\CrawlerDetect\Fixtures\AbstractProvider;
 
+/**
+ * @deprecated deprecated class
+ */
 class Crawlers extends AbstractProvider
 {
     protected $data = null;

@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderGroups extends OrderGroup
 {
     public function __construct($aParams = [])

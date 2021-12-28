@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderGroupInvoices extends Data
 {
     /**

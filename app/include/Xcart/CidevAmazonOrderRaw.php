@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class CidevAmazonOrderRaw extends Data
 {
     public function __construct($aData = null)

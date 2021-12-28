@@ -21,6 +21,9 @@ use Xcart\ShippingRate;
 use Xcart\SQLBuilder;
 use Xcart\Cart;
 
+/**
+ * @deprecated deprecated class
+ */
 abstract class ShippingProcessor
 {
     protected $oManufacturer;

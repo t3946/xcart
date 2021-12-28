@@ -10,6 +10,9 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\ReferrerModel;
 use Xcart\App\Main\Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class Order extends Data
 {
     const ORDER_VERIFICATION_STATUS_PRODUCT_VERIFIED = 'PV';

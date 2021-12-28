@@ -1,6 +1,9 @@
 <?php
 namespace Xcart\Helpers\CrawlerDetect;
 
+/**
+ * @deprecated deprecated class
+ */
 class CrawlerDetect extends \Jaybizzle\CrawlerDetect\CrawlerDetect
 {
     const MODE_DEFAULT = 1;

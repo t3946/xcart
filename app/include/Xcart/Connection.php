@@ -7,9 +7,7 @@ use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\DefaultConnection;
 
 /**
- * Class Connection
- *
- * @package Xcart
+ * @deprecated deprecated class
  */
 class Connection
 {

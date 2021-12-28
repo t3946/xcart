@@ -8,6 +8,9 @@ use Modules\Goods\Models\ProductModel;
 use Modules\Main\Helpers\CurrencyHelper;
 use Modules\Shipping\Helpers\ShippingHelper;
 
+/**
+ * @deprecated deprecated class
+ */
 class ShippingRate extends Data
 {
     private $fShippingQuote;

@@ -2,6 +2,9 @@
 namespace Xcart\Payments;
 use Xcart\PaymentMethod;
 
+/**
+ * @deprecated deprecated class
+ */
 class PaymentMethodpayment_cc extends PaymentMethod
 {
     public function __construct($aParams = [])

@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class ApproximationShippingRates extends Data
 {
     public function __construct($aParams = [])

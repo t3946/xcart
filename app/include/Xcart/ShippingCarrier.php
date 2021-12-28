@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class ShippingCarrier extends Data
 {
     public function __construct($iId = null)

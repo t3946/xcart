@@ -17,6 +17,9 @@ use Ups\Rate;
 use Xcart\App\Main\Xcart;
 use Xcart\ShippingRate;
 
+/**
+ * @deprecated deprecated class
+ */
 class UPS extends ShippingProcessor
 {
     const APPROXIMATION_MAX_VALID_TIME = 5184000; //2 months

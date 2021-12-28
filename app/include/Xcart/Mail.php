@@ -2,6 +2,9 @@
 
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class Mail extends Data
 {
     private $sTo = null;

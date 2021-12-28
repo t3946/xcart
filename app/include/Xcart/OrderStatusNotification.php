@@ -6,6 +6,9 @@ use Modules\Core\Models\StateModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Sites\Models\SiteConfigModel;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderStatusNotification extends Mail
 {
     /**

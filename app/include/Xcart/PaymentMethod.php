@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class PaymentMethod extends Data
 {
     public function __construct($aParams = [])

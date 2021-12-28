@@ -7,6 +7,9 @@ use Xcart\App\QueryBuilder\Database\Mysql\Adapter;
 use Xcart\App\QueryBuilder\LookupBuilder\LookupBuilder;
 use Xcart\App\QueryBuilder\QueryBuilderFactory;
 
+/**
+ * @deprecated deprecated class
+ */
 class Banners
 {
     /***

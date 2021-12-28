@@ -4,6 +4,9 @@ namespace Session;
 
 use Xcart\Data;
 
+/**
+ * @deprecated deprecated class
+ */
 class Session extends Data
 {
     public function __construct($aParams = [])

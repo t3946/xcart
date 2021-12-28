@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class ProductsAmazonFields extends Data
 {
     public function __construct($iId = null)

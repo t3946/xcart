@@ -6,6 +6,9 @@ namespace Xcart;
 use Modules\Goods\Models\ProductModel;
 use Modules\Shipping\Models\ShippingProductModel;
 
+/**
+ * @deprecated deprecated class
+ */
 class CartElement
 {
     /**

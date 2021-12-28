@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderTransaction extends Data
 {
     const TRANSACTION_FAILED_TEXT = "Capture transaction ID:%s - failed\n";

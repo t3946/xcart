@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderRefundGroup extends Data
 {
     public function __construct($aParams = [])

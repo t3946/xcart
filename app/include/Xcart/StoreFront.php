@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class StoreFront extends Data
 {
     private $Enable_CDN = null;

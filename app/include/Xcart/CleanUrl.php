@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class CleanUrl extends Data
 {
     const CLEANURL_TYPE_PRODUCT = 'P';

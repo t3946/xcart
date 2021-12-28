@@ -6,6 +6,9 @@ use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Distributor\Models\DistributorModel;
 use Xcart\App\Main\Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class Reconciliation extends Data
 {
     public function __construct($aParams = [])

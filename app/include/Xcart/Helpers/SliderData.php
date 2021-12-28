@@ -9,6 +9,9 @@ use Xcart\Brands;
 use Xcart\ElasticSearch;
 use Xcart\Product;
 
+/**
+ * @deprecated deprecated class
+ */
 class SliderData
 {
     /***

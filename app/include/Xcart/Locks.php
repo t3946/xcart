@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class Locks extends Data
 {
     private $aLockMessage = ['orders' => 'This order is locked by %s (%s) until %s. If you need to make urgent changes to the order, ask %s to unlock it.',

@@ -3,6 +3,9 @@ namespace Xcart;
 
 use Modules\Goods\Models\CategoryModel;
 
+/**
+ * @deprecated deprecated class
+ */
 class Category extends Data
 {
     /**

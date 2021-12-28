@@ -4,6 +4,9 @@ namespace Xcart\Images;
 
 use Xcart\Data;
 
+/**
+ * @deprecated deprecated class
+ */
 class Splash extends Data
 {
     public function __construct($aParams = [])

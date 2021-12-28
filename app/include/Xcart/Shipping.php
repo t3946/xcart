@@ -8,6 +8,9 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\User\Models\UserModel;
 use Xcart\Shipping\ShippingProcessor;
 
+/**
+ * @deprecated deprecated class
+ */
 class Shipping extends Data
 {
     /**

@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class HTMLShot extends Data
 {
     const PATH_TO_HTMLS_SHOT_IMAGES = "/images/HTML/%d_%d/";

@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class Brands extends CloneData
 {
     public function __construct($iId = null)

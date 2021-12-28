@@ -14,6 +14,9 @@ use PayPal\Api\InvoiceAddress;
 use PayPal\Api\InvoiceItem;
 use PayPal\Api\Capture;
 
+/**
+ * @deprecated deprecated class
+ */
 class Paypal
 {
     private $sAccessToken = null;

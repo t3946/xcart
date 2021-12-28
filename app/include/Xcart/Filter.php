@@ -5,6 +5,9 @@ namespace Xcart;
 
 use Modules\Core\Helpers\Cache;
 
+/**
+ * @deprecated deprecated class
+ */
 class Filter extends Data
 {
     /**

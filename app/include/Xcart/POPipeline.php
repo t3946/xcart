@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class POPipeline extends Data
 {
     const PO_LINK_ON_MODIFY = "PO# %s corresponds to the following order(s): <a href='%s' target='_blank'>%s</a>";

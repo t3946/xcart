@@ -2,6 +2,9 @@
 namespace Xcart;
 
 
+/**
+ * @deprecated deprecated class
+ */
 class FbaMissingSku extends Data
 {
     /**

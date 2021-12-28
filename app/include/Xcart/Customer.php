@@ -2,6 +2,9 @@
 namespace Xcart;
 use Xcart\External_Product_Verification\ExternalVerificationBatch;
 
+/**
+ * @deprecated deprecated class
+ */
 class Customer extends Data
 {
     const LINK_TO_MODIFY = '/admin/user_modify.php?user=%s&usertype=%s';

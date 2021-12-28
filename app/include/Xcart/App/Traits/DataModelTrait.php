@@ -5,6 +5,9 @@ use Exception;
 use Xcart\App\Orm\ModelInterface;
 use Xcart\Data;
 
+/**
+ * @deprecated deprecated class
+ */
 trait DataModelTrait
 {
     /**

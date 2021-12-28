@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class SQLBuilder
 {
     protected static $sql_tbl = [];

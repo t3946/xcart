@@ -6,6 +6,9 @@ use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAndNot;
 use Xcart\App\QueryBuilder\QueryBuilder;
 
+/**
+ * @deprecated deprecated class
+ */
 class Product extends Data
 {
     const ADMIN_PRODUCT_MODIFY_URL = '/admin/product_modify.php?productid=%d&sf=%d';

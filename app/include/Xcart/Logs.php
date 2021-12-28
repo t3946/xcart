@@ -5,6 +5,9 @@ use Modules\Order\Models\LogModel;
 use Modules\Order\Models\OrderLogModel;
 use Xcart\App\Main\Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class Logs extends Data
 {
     const LOG_TYPE_CLIENT = 'C';

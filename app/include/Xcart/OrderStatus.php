@@ -2,6 +2,9 @@
 
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderStatus extends Data
 {
     public function __construct($aOrderData = null)

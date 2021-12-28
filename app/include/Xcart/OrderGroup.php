@@ -8,6 +8,9 @@ use Modules\Order\Models\OrderModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Modules\User\Models\UserModel;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderGroup extends Data
 {
     const RECONCILED_NONE = 0;

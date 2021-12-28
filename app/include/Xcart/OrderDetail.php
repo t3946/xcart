@@ -4,6 +4,9 @@ namespace Xcart;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Models\OrderLogModel;
 
+/**
+ * @deprecated deprecated class
+ */
 class OrderDetail extends Data
 {
     /**

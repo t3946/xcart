@@ -5,6 +5,9 @@ use Xcart\App\Helpers\ClassNames;
 use Xcart\App\Helpers\SmartProperties;
 use Xcart\App\Orm\Legacy\OrmLegacy;
 
+/**
+ * @deprecated deprecated class
+ */
 class Data extends OrmLegacy
 {
     use ClassNames, SmartProperties;

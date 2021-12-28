@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class ProductQuestion extends Data
 {
     const PRODUCT_QUESTION_MODIFY_LINK = "product_question.php?id=%d";

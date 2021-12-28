@@ -3,6 +3,9 @@ namespace Xcart;
 
 use GuzzleHttp\Client;
 
+/**
+ * @deprecated deprecated class
+ */
 class ElasticSearch
 {
     private $server;

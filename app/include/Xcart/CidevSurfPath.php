@@ -2,7 +2,9 @@
 
 namespace Xcart;
 
-
+/**
+ * @deprecated deprecated class
+ */
 class CidevSurfPath extends Data
 {
     const SURFPATH_TYPE_PRODUCT = 'P';

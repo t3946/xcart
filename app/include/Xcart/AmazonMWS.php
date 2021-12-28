@@ -83,6 +83,9 @@ define('APPLICATION_VERSION', '1');
 define('MERCHANT_ID', 'A2SWKX6V1OVQ89');
 define('MARKETPLACE_ID', 'ATVPDKIKX0DER');
 
+/**
+ * @deprecated deprecated class
+ */
 class AmazonMWS
 {
     const BACK_PROCESS_LOG_NAME = 'AmazonFeeReport';

@@ -5,6 +5,9 @@ use Modules\Core\Components\GlobalConfig;
 use Xcart\App\Main\Xcart;
 use Xcart\ElasticSearch;
 
+/**
+ * @deprecated deprecated class
+ */
 class ViewedRelatedProducts
 {
     private $categories = null;

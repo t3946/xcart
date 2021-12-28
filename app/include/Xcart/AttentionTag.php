@@ -1,6 +1,9 @@
 <?php
 namespace Xcart;
 
+/**
+ * @deprecated deprecated class
+ */
 class AttentionTag extends Data
 {
     public function __construct($aParams = [])

@@ -5,6 +5,9 @@ namespace Xcart;
 
 use Modules\Shipping\Helpers\ShippingHelper;
 
+/**
+ * @deprecated deprecated class
+ */
 class Cart
 {
     private $fCost = null;
