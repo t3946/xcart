@@ -225,11 +225,7 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
                               "paypal",
                               setSubmitting
                             )}
-                            className={cn([
-                              "form-button",
-                              Styles.button,
-                              Styles.decision__button,
-                            ])}
+                            className={cn(["form-button", Styles.button])}
                           >
                             Pay by PayPal
                           </button>

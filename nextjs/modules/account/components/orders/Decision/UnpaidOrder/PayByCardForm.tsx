@@ -164,7 +164,6 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
             "w-lg-auto",
             "fw-bold",
             unpaidOrderStyles.button,
-            unpaidOrderStyles.decision__button,
           ])}
         >
           Submit payment
