@@ -5,29 +5,31 @@ import ChangePasswordForm from "@modules/account/components/password-assistance/
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { useRouter } from "next/router";
+
 const PasswordAssistance: React.FC<any> = function () {
   const INPUT_LOGIN_MODE = 0;
   const INPUT_OTP_MODE = 1;
   const CHANGE_PASSWORD_MODE = 2;
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
   const [login, setLogin] = React.useState("");
-  const [oneTimePassword, setOneTimePassword] = React.useState();
-  const [resetPasswordToken, setResetPasswordToken] = React.useState();
+  const [oneTimePassword, setOneTimePassword] =
+    React.useState<Record<any, any>>();
+  const [resetPasswordToken, setResetPasswordToken] = React.useState("");
   const user = useSelector((e: StoreInterface) => e.user);
 
   user && useRouter().push("/dashboard");
 
-  function goToOTPInput(login) {
+  function goToOTPInput(login: string) {
     setLogin(login);
     setMode(INPUT_OTP_MODE);
   }
 
-  function goToResetPassword(resetPasswordToken) {
+  function goToResetPassword(resetPasswordToken: string) {
     setResetPasswordToken(resetPasswordToken);
     setMode(CHANGE_PASSWORD_MODE);
   }
 
-  function oneTimePasswordChanged(oneTimePassword) {
+  function oneTimePasswordChanged(oneTimePassword: Record<any, any>) {
     setOneTimePassword({ ...oneTimePassword });
   }
 
