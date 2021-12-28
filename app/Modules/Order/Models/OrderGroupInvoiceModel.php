@@ -45,7 +45,6 @@ class OrderGroupInvoiceModel extends Model
                 'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
-                'primary' => true,
             ],
             'manufacturer' => [
                 'field' => 'manufacturerid',
@@ -53,12 +52,10 @@ class OrderGroupInvoiceModel extends Model
                 'modelClass' => DistributorModel::class,
                 'link' => ['manufacturerid' => 'manufacturerid'],
                 'null' => false,
-                'primary' => true,
             ],
             'invoice_number' => [
                 'class' => IntField::class,
                 'null' => false,
-                'primary' => true,
                 'default' => 0
             ],
             'invoice_received' => [
