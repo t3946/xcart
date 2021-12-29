@@ -115,6 +115,7 @@ const PublicProfile = (): any => {
 
           setTimeout(() => {
             setTimeout(() => {
+              setShow(false);
               dispatch(setAlertAction(null));
             }, 500);
           }, alertShowTimeMs);
@@ -257,7 +258,7 @@ const PublicProfile = (): any => {
 
             const file = inputFileRef.current.files[0];
             const fr = new FileReader();
-
+            
             fr.onload = () => {
               if (typeof fr.result === "string") {
                 imageRef.current.src = fr.result;

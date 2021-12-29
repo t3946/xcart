@@ -70,6 +70,7 @@ const LoginAndSecurity = (): any => {
       caption:
         "If you think your S3 Stores account has been compromised, follow these steps to make your account more secure",
       classes: {
+        container: Styles.gridItemContainer_small,
         caption: Styles.gridItemCaption_small,
       },
       route: "",
@@ -114,12 +115,17 @@ const LoginAndSecurity = (): any => {
 
       items.push(
         <div className="login-and-security-settings_item" key={i}>
-          <div className={cn(Styles.gridItemContainer)}>
+          <div
+            className={cn(
+              Styles.gridItemContainer,
+              listItem.classes?.container
+            )}
+          >
             <div className={"login-and-security-settings-item-text"}>
               <b className={Styles.gridItemTitle}>{listItem.title}:</b>
-              <br />
               <span
                 className={classnames(
+                  "d-block",
                   "settings-item-caption",
                   listItem.classes?.caption
                 )}

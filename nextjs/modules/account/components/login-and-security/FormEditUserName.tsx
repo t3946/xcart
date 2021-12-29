@@ -73,7 +73,10 @@ const FormEditUserName = (): any => {
                 <SubmitCancelButtonsGroup
                   submitText={"save changes"}
                   disabled={isSubmitting}
-                  buttonAdvancedClasses={"form-button__submit-and-cancel p-0"}
+                  buttonAdvancedClasses={[
+                    StylesLoginAndSecurity.button_editPage,
+                    "form-button__submit-and-cancel p-0",
+                  ]}
                   groupAdvancedClasses={
                     "d-md-flex justify-content-center justify-content-lg-start"
                   }
@@ -95,7 +98,7 @@ const FormEditUserName = (): any => {
               >
                 <div
                   className={
-                    "col-12 col-md-6 col-lg-6 text-md-end text-lg-start d-flex align-items-center"
+                    "col-12 col-md-6 col-lg-6 text-md-end text-lg-start d-flex align-items-center justify-content-md-end justify-content-lg-start"
                   }
                 >
                   <RBForm.Label
