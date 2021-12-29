@@ -14,7 +14,7 @@ module.exports = [
       return res.sendStatus(401);
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.xcart_users.findUnique({
       where: {
         user_id: req.user.userId,
       },

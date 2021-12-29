@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function generateJWT(userId) {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.xcart_users.findUnique({
     where: {
       user_id: userId,
     },

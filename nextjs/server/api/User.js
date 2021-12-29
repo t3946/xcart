@@ -31,7 +31,7 @@ app.post("/register");
 app.post("/change-password", isAuthMiddleware, async (req, res) => {
   const hashed = await passwordUtils.encryptPassword(req.body.password);
 
-  await prisma.user.update({
+  await prisma.xcart_users.update({
     where: {
       user_id: req.user.userId,
     },
@@ -45,7 +45,7 @@ app.post("/change-password", isAuthMiddleware, async (req, res) => {
 });
 
 app.get("/info", isAuthMiddleware, async (req, res) => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.xcart_users.findUnique({
     where: {
       user_id: req.user.userId,
     },
@@ -57,7 +57,7 @@ app.get("/info", isAuthMiddleware, async (req, res) => {
 });
 
 app.get("/logout", isAuthMiddleware, async function (req, res) {
-  await prisma.user.update({
+  await prisma.xcart_users.update({
     where: {
       user_id: req.user.userId,
     },
@@ -71,7 +71,7 @@ app.get("/logout", isAuthMiddleware, async function (req, res) {
 });
 
 app.post("/check-login", async function (req, res) {
-  const user = await prisma.user.findFirst({
+  const user = await prisma.xcart_users.findFirst({
     where: {
       OR: [
         {
@@ -93,7 +93,7 @@ app.post("/check-login", async function (req, res) {
 
 app.post("/create", async function (req, res) {
   const { email, name, password } = req.body;
-  let user = await prisma.user.findUnique({
+  let user = await prisma.xcart_users.findUnique({
     where: {
       email,
     },
@@ -102,7 +102,7 @@ app.post("/create", async function (req, res) {
   if (user) {
     res.json({ error: { email: "This email already registered" } });
   } else {
-    await prisma.user.create({
+    await prisma.xcart_users.create({
       data: {
         email,
         name,
@@ -110,7 +110,7 @@ app.post("/create", async function (req, res) {
       },
     });
 
-    user = await prisma.user.findUnique({
+    user = await prisma.xcart_users.findUnique({
       where: {
         email,
       },

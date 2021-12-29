@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 module.exports = function (passport) {
   passport.use(
     new LocalStrategy(strategyOptions, async function (login, password, done) {
-      const user = await prisma.user.findFirst({
+      const user = await prisma.xcart_users.findFirst({
         where: {
           OR: [
             {
