@@ -35,6 +35,10 @@ class UploadFileCommand extends Command
         if ($message->body && $data = json_decode($message->body, true, 512, JSON_THROW_ON_ERROR)) {
             /** @var DistributorUploadPriceModel $upload_model */
             $upload_model = DistributorUploadPriceModel::objects()->get(['pk' => $data['upload_id']]);
+            if (!$upload_model) {
+                $message->ack();
+                return;
+            }
             try {
                 /** @var DistributorModel $dx */
                 $dx = DistributorModel::objects()->get(['pk' => $upload_model->manufacturer_id]);
