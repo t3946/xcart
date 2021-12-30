@@ -123,6 +123,7 @@ class SaveFilePrice
      */
     private function sendProduct(array $ar_field): void
     {
+        print_r($ar_field);
         Xcart::app()->queue->send('products', json_encode($ar_field, JSON_THROW_ON_ERROR));
     }
 
