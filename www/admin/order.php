@@ -2123,6 +2123,7 @@ elseif ($mode === 'mode_info_request_survey') {
                             $back         = $amount;
                             $update_in_db = true;
                             $product_model->forsale = 'Y';
+                            $product_model->r_avail = $item_stock;
 
                         }
                         elseif ($vs === 'all_in_stock') {
