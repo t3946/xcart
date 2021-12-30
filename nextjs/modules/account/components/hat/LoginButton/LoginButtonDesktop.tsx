@@ -51,7 +51,7 @@ const LoginButtonDesktop: React.FC = function () {
       { [Styles.button_logined]: user },
     ],
 
-    username: ["hat-login-button-username"],
+    username: ["hat-login-button-username", Styles.username],
 
     iconArrow: [
       isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
@@ -93,7 +93,8 @@ const LoginButtonDesktop: React.FC = function () {
           ref={ref}
           className={classnames(
             className,
-            "account-hat-dropdown-menu col-12 p-0 rounded-0"
+            "account-hat-dropdown-menu col-12 p-0 rounded-0",
+            Styles.dropdown
           )}
           aria-labelledby={labeledBy}
         >
@@ -107,9 +108,10 @@ const LoginButtonDesktop: React.FC = function () {
 
   const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
-
     const arrowClasses = [
-      "login-button-desktop__arrow login-button-desktop-arrow",
+      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
+      Styles.arrowIcon,
+      "flex-shrink-0",
       {
         "login-button-desktop-arrow__flip": isTabletMenuVisible,
       },
@@ -126,7 +128,7 @@ const LoginButtonDesktop: React.FC = function () {
       >
         <UserIcon />
         <span className={classnames(classes.username)}>{user.name}</span>
-        
+
         <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );

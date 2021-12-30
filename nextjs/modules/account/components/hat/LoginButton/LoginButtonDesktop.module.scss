@@ -6,6 +6,21 @@
 }
 
 .button_logined {
-  padding: 0 0 0 pxToRem(19);
+  padding: 0 pxToRem(15);
   width: pxToRem(180);
+}
+
+.dropdown {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: none;
+}
+
+.username {
+  flex: auto;
+}
+
+.arrowIcon {
+  width: pxToRem(13);
+  height: pxToRem(13);
+  transition: transform 0.2s ease-out;
 }
