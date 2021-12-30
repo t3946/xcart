@@ -96,3 +96,10 @@ export const formAnswersLTLFreightShipmentAction = (
   type: "FORM_ANSWERS_LTL_FREIGHT_SHIPMENT_DECISION",
   payload,
 });
+
+export const poAdditionalInformationRequiredAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "PO_ADDITIONAL_INFORMATION_REQUIRED_DECISION",
+  payload,
+});
