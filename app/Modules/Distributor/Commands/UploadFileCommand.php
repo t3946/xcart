@@ -89,8 +89,8 @@ class UploadFileCommand extends Command
                 if ($dx) {
                     // overwriting column order in Excel table
                     ColumnTableSaveModel::objects()->delete(['manufacturer_id' => $dx->pk]);
-                    foreach ($select as $table_index => $fields) {
-                        foreach ($fields as $key => $field) {
+                    foreach ($select ?? [] as $table_index => $fields) {
+                        foreach (array_filter($fields) as $key => $field) {
                             $column = new ColumnTableSaveModel();
                             $column->num_column = $key;
                             $column->option_name = $field;
