@@ -52,7 +52,8 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
   const { showSnackbar } = useContext(SnackbarContext);
 
   const onSaveHandler = () => {
-    if (storefront === "") {
+    if (create && storefront === "") {
+      console.log(select);
       showSnackbar("Please, select storefront", "info");
       return;
     }
@@ -122,6 +123,26 @@ export const DialogTablePrice: React.FC<IDialogTablePrice> = ({
       setSites(res.sites);
     });
   }, []);
+  /* Затирание не нужных сохранённых столбцов */
+  useEffect(() => {
+    arTable.forEach((table, indexTable) => {
+      const columnsTable = table[0].map((item, key) => key);
+      if (select[indexTable]) {
+        const arData = [];
+        Object.keys(select[indexTable]).forEach((indexColumn) => {
+          if (columnsTable.includes(Number(indexColumn))) {
+            arData[indexColumn] = select[indexTable][indexColumn];
+          }
+        });
+        setSelect((prev) => ({
+          ...prev,
+          ...{
+            [indexTable]: arData,
+          },
+        }));
+      }
+    });
+  }, [arTable]);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: string) => {
     setTabIndex(newValue);
   };
