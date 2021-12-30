@@ -5,9 +5,12 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesItem from "@modules/account/components/sidebar-menu/Item.module.scss";
 import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordion";
 import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.scss";
+import { useDispatch } from "react-redux";
+import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
 
 const SideBarMenu: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);
+  const dispatch = useDispatch();
   const menuItems = [
     { to: "/dashboard", label: "Dashboard" },
     {
@@ -42,6 +45,14 @@ const SideBarMenu: React.FC = () => {
     { to: "/public-profile", label: "Public profile" },
     { to: "/rewards", label: "Rewards" },
   ];
+
+  React.useEffect(() => {
+    let sidebar = [];
+    for (const item of menuItems) {
+      sidebar.push({ to: item.to, active: false });
+    }
+    dispatch(setMenuItemsAction({ menuItems: sidebar }));
+  }, []);
 
   return (
     <div className={Styles.sidebarMenuWrapper}>

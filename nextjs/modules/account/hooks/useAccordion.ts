@@ -7,10 +7,10 @@ interface AccordionData {
   onItemClick: () => void;
 }
 
-export function useAccordion(timeout = 300): AccordionData {
-  const [height, setHeight] = useState<string | number>(0);
+export function useAccordion(timeout = 300, initOpen = false): AccordionData {
+  const [height, setHeight] = useState<string | number>(initOpen ? "auto" : 0);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initOpen);
 
   const ref = useRef<HTMLDivElement>();
 

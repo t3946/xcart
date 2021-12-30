@@ -5,6 +5,9 @@ import { useAccordion } from "@modules/account/hooks/useAccordion";
 import classnames from "classnames";
 import ArrowIconTablet from "@modules/icon/components/account/chevron-down/AccountSidebarTablet";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import { useDispatch, useSelector } from "react-redux";
+import { setMenuItemActiveAction } from "@redux/actions/account-actions/SideBarMenuActions";
 
 interface sideBarMenuItemPropsDto extends SidebarItem {
   routerItems: SidebarItem[];
@@ -17,7 +20,12 @@ const ItemAccordion: React.FC<sideBarMenuItemPropsDto> = (
   props: Record<any, any>
 ) => {
   const { label, routerItems } = props;
-  const accordion = useAccordion();
+  const initActive = useSelector(
+    (e: StoreInterface) =>
+      e.sidebar.menuItems.find((item) => item.to === props.to)?.active
+  );
+  const dispatch = useDispatch();
+  const accordion = useAccordion(300, !!initActive);
 
   const classes = {
     handlerClasses: [
@@ -52,7 +60,10 @@ const ItemAccordion: React.FC<sideBarMenuItemPropsDto> = (
   return (
     <React.Fragment>
       <div
-        onClick={accordion.onItemClick}
+        onClick={() => {
+          dispatch(setMenuItemActiveAction(props.to, !accordion.open));
+          accordion.onItemClick();
+        }}
         className={classnames(classes.handlerClasses)}
       >
         <div>{label}</div>
