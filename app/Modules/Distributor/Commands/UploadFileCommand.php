@@ -77,9 +77,11 @@ class UploadFileCommand extends Command
 
                 $upload_model->count_rows = $ob_save_price->count_send;
                 $upload_model->status = DistributorUploadPriceModel::UPLOAD_STATUS_SUCCESS;
+                $message->ack();
             } catch (Throwable $e) {
                 $upload_model->status = DistributorUploadPriceModel::UPLOAD_STATUS_ERROR;
                 Xcart::app()->logger->error('error consume dx price', [$e->getMessage(), $e->getFile(), $e->getLine()], 'upload dx file');
+                $message->nack(true);
             } finally {
                 if (isset($path_save) && file_exists($path_save)) {
                     unlink($path_save);
@@ -114,7 +116,7 @@ class UploadFileCommand extends Command
                 $upload_model->save();
             }
         }
-        $message->ack();
+
 
     }
 }
