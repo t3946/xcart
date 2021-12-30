@@ -78,7 +78,7 @@ const InputGroup: React.FC<IProps> = (props) => {
   return (
     <div className="d-flex justify-content-end mb-20 flex-wrap">
       {label && (
-        <Label error={isInvalid} className={"flex-grow-1 mb-0"}>
+        <Label className={"flex-grow-1 mb-0"}>
           {label}
         </Label>
       )}

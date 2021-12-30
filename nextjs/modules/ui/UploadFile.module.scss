@@ -2,6 +2,7 @@
 
 .button {
   cursor: pointer;
+  user-select: none;
   border-radius: pxToRem(4);
   font-size: pxToRem(14);
   width: pxToRem(117);
@@ -18,6 +19,35 @@
     height: pxToRem(27);
   }
 }
+
+.button_disabled {
+  background: #f5f5f5;
+  &:hover,
+  &:active,
+  &:focus {
+    box-shadow: none;
+    background: #f5f5f5;
+  }
+}
+
+.button_valid {
+  border-color: $valid;
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $valid;
+  }
+}
+
+.button_invalid {
+  border-color: $invalid;
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $invalid;
+  }
+}
+
 .log {
   margin: pxToRem(13) 0 0;
   display: grid;
@@ -31,6 +61,7 @@
     width: fit-content;
   }
 }
+
 .fileDetails {
   line-height: 19px;
 }
@@ -47,9 +78,12 @@
   color: #494949;
   cursor: pointer;
 }
+
 .fileDetailsRemoveTimes {
   width: pxToRem(16);
   height: pxToRem(16);
 }
-.error {
+
+.h100 {
+  height: 100%;
 }

@@ -7,9 +7,11 @@ import Styles from "@modules/ui/forms/Checkbox.module.scss";
 
 interface IProps {
   name: string;
-  label: string;
+  label: string | React.ReactNode;
   checked: any;
   disabled?: any;
+  isValid?: boolean;
+  isInvalid?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   classes?: {
     container?: any;
@@ -23,14 +25,20 @@ const Checkbox: React.FC<IProps> = ({
   disabled,
   onChange,
   classes,
+  isValid,
+  isInvalid,
 }) => {
   return (
     <RBForm.Label
       className={cn(
         Styles.checkbox,
         classes?.container,
-        "mb-0 align-items-start align-items-lg-center d-flex position-relative",
-        { [Styles.checkbox_disabled]: disabled }
+        "mb-0 align-items-start align-items-md-center d-flex position-relative",
+        {
+          [Styles.checkbox_disabled]: disabled,
+          [Styles.checkbox_valid]: isValid,
+          [Styles.checkbox_invalid]: isInvalid,
+        }
       )}
     >
       <input

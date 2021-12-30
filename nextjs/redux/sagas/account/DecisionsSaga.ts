@@ -144,6 +144,24 @@ function* submitResponsibilityForCustomDutiesDecision(action): Generator {
     });
 }
 
+function* formAnswersLTLFreightShipmentDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api.post<any>("/send-answers-for-ltl-form", data).then(function (res) {
+    success(res);
+  });
+}
+
+function* poAdditionalInformationRequiredDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>("/po-additional-information-required", data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("LOAD_MORE_DECISION", loadMore);
@@ -170,5 +188,13 @@ export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest(
     "SUBMIT_RESPONSIBILITY_FOR_CUSTOM_DUTIES_DECISION",
     submitResponsibilityForCustomDutiesDecision
+  );
+  yield takeLatest(
+    "FORM_ANSWERS_LTL_FREIGHT_SHIPMENT_DECISION",
+    formAnswersLTLFreightShipmentDecision
+  );
+  yield takeLatest(
+    "PO_ADDITIONAL_INFORMATION_REQUIRED_DECISION",
+    poAdditionalInformationRequiredDecision
   );
 }

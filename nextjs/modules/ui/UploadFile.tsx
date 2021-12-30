@@ -1,15 +1,19 @@
 import React, { Ref } from "react";
 import cn from "classnames";
 import Styles from "@modules/ui/UploadFile.module.scss";
+import Feedback from "@modules/ui/forms/Feedback";
 import Light from "@modules/icon/components/font-awesome/times/Light";
 
 interface IProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   multiple?: boolean;
-  error: string;
+  error?: string;
+  touched?: boolean;
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   name: string;
+  disabled?: boolean;
+  isValid?: boolean;
   classNames?: any;
   formats: string[];
   maxSize: number;
@@ -27,6 +31,8 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
       classNames,
       formats,
       maxSize,
+      touched,
+      disabled,
     },
     ref
   ) => {
@@ -38,11 +44,11 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
       onChange(e);
       for (const index in e.target.files) {
         const file = e.target.files[index];
-        const fr = new FileReader();
+
         if (file instanceof File) {
           if (formats.includes(file.type) && file.size <= maxSize * sizes.MB) {
             if (multiple) {
-              setFiles((prevstate) => [...prevstate, file]);
+              setFiles((prevState) => [...prevState, file]);
             } else {
               setFiles([file]);
             }
@@ -60,12 +66,12 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
       return <span>{Math.ceil(size / sizes.MB)}MB</span>;
     };
     const deleteFile = (file: File) => {
-      setFiles((prevstate) => [...prevstate.filter((item) => item !== file)]);
+      setFiles((prevState) => [...prevState.filter((item) => item !== file)]);
     };
     return (
       <div className={cn(classNames)}>
         <label
-          className={cn([
+          className={cn(
             "form-button__theme-grey",
             "estimate-table-caption",
             "d-flex",
@@ -73,7 +79,13 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
             "align-items-center",
             "p-0",
             Styles.button,
-          ])}
+            {
+              [Styles.button_invalid]: touched && error,
+              [Styles.button_valid]: touched && !error,
+              [Styles.button_disabled]: disabled,
+              "cursor-default": disabled,
+            }
+          )}
         >
           Choose file
           <input
@@ -81,13 +93,14 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
             className="d-none"
             name={name}
             ref={ref}
+            disabled={disabled}
             onChange={fileChangeHandler}
             multiple={!!multiple}
           />
         </label>
         <div className={Styles.log}>
-          {files.map((item) => (
-            <>
+          {files.map((item, index) => (
+            <React.Fragment key={`${item.name}_${index}`}>
               <div className={cn(["me-14", Styles.fileDetails])}>
                 <span className={Styles.fileDetailsName}>{item.name} </span>
                 <span className={Styles.fileDetailsSize}>
@@ -95,13 +108,17 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
                 </span>
               </div>
               <span
-                className={cn(["d-inline-block", Styles.fileDetailsRemove])}
-                onClick={() => deleteFile(item)}
+                className={cn([
+                  "d-inline-block",
+                  Styles.fileDetailsRemove,
+                  { "cursor-default": disabled },
+                ])}
+                onClick={() => !disabled && deleteFile(item)}
               >
                 <div
                   className={cn([
                     "d-flex",
-                    "h-100",
+                    Styles.h100,
                     "justify-content-center",
                     "align-items-center",
                   ])}
@@ -109,12 +126,10 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
                   <Light className={Styles.fileDetailsRemoveTimes} />
                 </div>
               </span>
-            </>
+            </React.Fragment>
           ))}
         </div>
-        {error && (
-          <div className={cn(["text-danger", Styles.error])}>{error}</div>
-        )}
+        {error && <Feedback type="invalid">{error}</Feedback>}
       </div>
     );
   }

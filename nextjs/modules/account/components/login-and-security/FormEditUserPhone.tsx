@@ -50,8 +50,8 @@ const FormEditUserPhone = (props: IProps): any => {
   }
 
   const validationSchema = yup.object().shape({
-    phone: yup.string().required("Name is a required field"),
-    phoneCountryCode: yup.string().required("Name is a required field"),
+    phone: yup.string().required("Phone is a required field"),
+    phoneCountryCode: yup.string().required("Country code is a required field"),
   });
 
   function submit(values, actions) {

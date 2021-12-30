@@ -89,3 +89,17 @@ export const submitResponsibilityForCustomDutiesAction = (
   type: "SUBMIT_RESPONSIBILITY_FOR_CUSTOM_DUTIES_DECISION",
   payload,
 });
+
+export const formAnswersLTLFreightShipmentAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "FORM_ANSWERS_LTL_FREIGHT_SHIPMENT_DECISION",
+  payload,
+});
+
+export const poAdditionalInformationRequiredAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "PO_ADDITIONAL_INFORMATION_REQUIRED_DECISION",
+  payload,
+});

@@ -7,14 +7,14 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 
 const MobileTemplate: React.FC<any> = () => {
   const user = useSelector((e) => e.user);
-  const classes = ["navigation-login-button d-flex align-items-center"];
+  const classes = [
+    "navigation-login-button d-flex align-items-center",
+    {
+      "navigation-login-button__logged": user,
+      "navigation-login-button__not-logged": !user,
+    },
+  ];
   const dispatch = useDispatch();
-
-  if (user) {
-    classes.push("navigation-login-button__logged");
-  } else {
-    classes.push("navigation-login-button__not-logged");
-  }
 
   function openMenu(e) {
     e.stopPropagation();

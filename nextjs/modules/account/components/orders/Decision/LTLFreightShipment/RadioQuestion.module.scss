@@ -1,0 +1,85 @@
+@import "styles/utils/Utils.module";
+
+.question {
+  padding: 0;
+  border-bottom: 1px solid #c4c4c4;
+}
+
+.question__radios {
+  gap: pxToRem(7);
+
+  @include breakpoint(md) {
+    gap: 17px;
+    padding: 0 pxToRem(20) pxToRem(27);
+  }
+  @include breakpoint(lg) {
+    gap: pxToRem(13);
+    padding: 0 pxToRem(25) pxToRem(28);
+  }
+}
+
+.question__label {
+  margin: 0 0 pxToRem(20);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(35);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(19);
+  }
+}
+
+.questionLabel_ext {
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(23);
+  }
+}
+
+.questionLabelFeedback {
+  font-size: pxToRem(16);
+  font-weight: normal;
+}
+
+.questionLabel {
+  font-size: pxToRem(18);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.questionLabelExt {
+  padding: pxToRem(6) pxToRem(7) 0 0;
+  line-height: pxToRem(21);
+  font-size: pxToRem(16);
+  font-weight: normal;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+}
+
+.radioLine {
+  border: 1px solid #c4c4c4;
+  box-shadow: 0 0 pxToRem(4) rgba(0, 0, 0, 0.25);
+  padding: pxToRem(10) pxToRem(10) pxToRem(9);
+  gap: pxToRem(32);
+
+  @include breakpoint(md) {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    font-size: pxToRem(18);
+    gap: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    gap: pxToRem(23);
+  }
+}

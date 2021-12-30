@@ -25,7 +25,7 @@
     font-size: pxToRem(14);
   }
 
-  &::placeholder{
+  &::placeholder {
     font-style: italic;
     font-size: pxToRem(14);
     color: #959595;
@@ -34,6 +34,10 @@
   &:focus {
     border-color: #f2b405;
     box-shadow: 0 0 0 pxToRem(3) rgba(242, 180, 5, 0.34);
+  }
+
+  &:disabled {
+    background-color: #f5f5f5;
   }
 }
 
