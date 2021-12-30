@@ -3,6 +3,9 @@ import useCLickListener from "../../hooks/useClickListener";
 import classnames from "classnames";
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
 import { FormikErrors } from "formik";
+import Input from "@modules/ui/forms/Input";
+
+import Styles from "@modules/account/components/shared/FormSelect.module.scss";
 
 interface Item {
   viewValue: string;
@@ -17,6 +20,9 @@ interface IProps {
   name?: any;
   errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[];
   label?: any;
+  disabled?: boolean;
+  isValid?: boolean;
+  isInvalid?: boolean;
   classes?: {
     input?: any;
     group?: any;
@@ -35,6 +41,9 @@ export const FormSelect: React.FC<IProps> = ({
   label = null,
   classes = undefined,
   id = undefined,
+  disabled,
+  isValid,
+  isInvalid,
 }: IProps) => {
   const selectedItem = value;
   const [open, setOpen] = useState(false);
@@ -42,10 +51,10 @@ export const FormSelect: React.FC<IProps> = ({
   const clickListener = useCLickListener(setOpen, id);
 
   useEffect(() => {
-    clickListener.startListen();
+    clickListener && clickListener.startListen();
 
     return () => {
-      clickListener.endListen();
+      clickListener && clickListener.endListen();
     };
   });
 
@@ -71,33 +80,37 @@ export const FormSelect: React.FC<IProps> = ({
         <div
           onClick={(e) => {
             e.stopPropagation();
-            setOpen(!open);
+            if (!disabled) {
+              setOpen(!open);
+            }
           }}
-          className={classnames("select-wrapper")}
+          className={classnames("select-wrapper", Styles.chevron, {
+            [Styles.chevron_rotate]: open,
+          })}
         >
-          <input
-            value={selectedItem}
-            className="select__input"
-            type="hidden"
-            name={name}
-          />
-          <div
+          <Input
             id={id}
+            name={name}
+            value={selectedItem?.previewValue || selectedItem?.viewValue}
+            disabled={disabled}
+            isValid={isValid}
+            isInvalid={isInvalid}
+            readOnly
             className={classnames(
               classes?.selectHeader,
-              "form-select-head",
-              `${errorMessage && "form-input_error"}`
+              `${errorMessage && "form-input_error"}`,
+              { "cursor-default": disabled, "cursor-pointer": !disabled }
             )}
-          >
-            {selectedItem?.previewValue || selectedItem?.viewValue}
-          </div>
+          />
+
           {open && (
             <ul className={classnames("form-select-list", classes?.selectList)}>
-              {items.map((item) => {
+              {items.map((item, i) => {
                 return (
                   <li
                     onClick={() => onClick(item)}
                     className="form-select-item"
+                    key={`${i}_${item.viewValue}`}
                   >
                     {item.viewValue}
                   </li>

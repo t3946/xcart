@@ -12,6 +12,8 @@ import MaskedInput from "@modules/ui/forms/MaskedInput";
 import Feedback from "@modules/ui/forms/Feedback";
 import classNames from "classnames";
 
+import Styles from "@modules/account/components/shared/FormInputPhone.module.scss";
+
 interface IProps {
   handleChange: () => any;
   setFieldValue: (arg0: string, arg1: any) => void;
@@ -25,6 +27,7 @@ interface IProps {
     phone: string; // phone without counter code
     phoneExt?: string; // external phone code
   };
+  disabled?: boolean;
   mode?: string; // mobile or ext
   label: string;
   classes?: {
@@ -47,6 +50,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
     values,
     mode,
     label,
+    disabled,
   } = props;
   const countries = useSelector((e: StoreInterface) => e.countries);
   const countryCodeFieldName = name + "CountryCode";
@@ -137,12 +141,17 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
                 selectHeader: "",
               }}
               value={countryCodeValue}
+              disabled={disabled}
               onClick={(item) => {
                 setFieldValue(countryCodeFieldName, item.value);
                 setCountryCodeValue(item);
               }}
               name={countryCodeFieldName}
               id={countryCodeFieldName}
+              isValid={!!touched.phoneCountryCode && !errors.phoneCountryCode}
+              isInvalid={
+                !!touched.phoneCountryCode && !!errors.phoneCountryCode
+              }
             />
             {!!touched.phoneCountryCode && !!errors.phoneCountryCode && (
               <Feedback className="position-absolute" type="invalid">
@@ -162,6 +171,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
                 isInvalid={!!touched[name] && !!errors[name]}
                 isValid={!!touched[name] && !errors[name]}
                 mask={phoneMask}
+                disabled={disabled}
               />
               {!!touched[name] && !!errors[name] && (
                 <Feedback className="position-absolute" type="invalid">
@@ -175,11 +185,9 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
             className={classnames(classes.inputPhoneExt)}
             controlId={phoneExtFieldName}
           >
-            <Label className={"mb-0 me-2 fw-normal"}>
-              {breakpoint({
-                xs: "X",
-                md: "ext",
-              })}
+            <Label className={classnames("mb-0 me-2", Styles.label_ext)}>
+              <span className="d-md-none">x</span>
+              <span className="d-none d-md-inline">ext</span>
             </Label>
 
             <Input
@@ -187,11 +195,13 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
               name={phoneExtFieldName}
               value={values[phoneExtFieldName]}
               onChange={handleChange}
+              disabled={disabled}
               isInvalid={
                 !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
               }
               isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
               autoComplete={"off"}
+              placeholder="12345"
             />
 
             <Feedback className="position-absolute" type="invalid">

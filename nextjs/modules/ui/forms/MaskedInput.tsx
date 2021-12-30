@@ -33,7 +33,12 @@ const MaskedInput: React.FC<IProps> = React.forwardRef<
     placeholder,
   } = props;
   return (
-    <InputMask mask={mask} value={value} onChange={onChange}>
+    <InputMask
+      mask={mask}
+      value={value}
+      disabled={disabled}
+      onChange={onChange}
+    >
       {() => (
         <Input
           type="text"
@@ -43,6 +48,7 @@ const MaskedInput: React.FC<IProps> = React.forwardRef<
           isInvalid={isInvalid}
           autoComplete={autoComplete}
           placeholder={placeholder}
+          disabled={disabled}
         />
       )}
     </InputMask>
