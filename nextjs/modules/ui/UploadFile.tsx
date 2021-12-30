@@ -44,11 +44,11 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
       onChange(e);
       for (const index in e.target.files) {
         const file = e.target.files[index];
-        const fr = new FileReader();
+
         if (file instanceof File) {
           if (formats.includes(file.type) && file.size <= maxSize * sizes.MB) {
             if (multiple) {
-              setFiles((prevstate) => [...prevstate, file]);
+              setFiles((prevState) => [...prevState, file]);
             } else {
               setFiles([file]);
             }
@@ -66,7 +66,7 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
       return <span>{Math.ceil(size / sizes.MB)}MB</span>;
     };
     const deleteFile = (file: File) => {
-      setFiles((prevstate) => [...prevstate.filter((item) => item !== file)]);
+      setFiles((prevState) => [...prevState.filter((item) => item !== file)]);
     };
     return (
       <div className={cn(classNames)}>
@@ -113,7 +113,7 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
                   Styles.fileDetailsRemove,
                   { "cursor-default": disabled },
                 ])}
-                onClick={disabled ? null : () => deleteFile(item)}
+                onClick={() => !disabled && deleteFile(item)}
               >
                 <div
                   className={cn([

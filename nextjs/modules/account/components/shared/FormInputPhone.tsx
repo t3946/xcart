@@ -113,7 +113,6 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
     classes.inputPhoneExt.push("d-none");
   } else if (mode === "ext") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
-    // classes.selectCountryCodeColumn.push("d-none");
     classes.inputPhoneColumn.push("col");
     classes.inputPhoneExt.push("d-lg-flex");
   }

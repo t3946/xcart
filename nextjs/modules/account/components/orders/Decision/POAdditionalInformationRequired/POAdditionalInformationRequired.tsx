@@ -7,7 +7,6 @@ import { Form, Formik } from "formik";
 import * as yup from "yup";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
-import validatorFileRequired from "@utils/yup/validatorFileRequired";
 import cn from "classnames";
 import Feedback from "@modules/ui/forms/Feedback";
 import StoreInterface from "@modules/account/ts/types/store.type";
@@ -105,7 +104,6 @@ const POAdditionalInformationRequired: React.FC = () => {
 
   const submit = (values, actions) => {
     actions.setSubmitting(true);
-    console.log(files.length);
     if (!files.length) {
       actions.setFieldError("file", "Need to upload PO order");
       actions.setSubmitting(false);
@@ -193,7 +191,6 @@ const POAdditionalInformationRequired: React.FC = () => {
         touched,
         setFieldValue,
       }) => {
-        console.log(errors.file);
         return (
           <Form>
             <InnerPage
