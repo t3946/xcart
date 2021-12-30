@@ -128,7 +128,7 @@ class ProductAdminForm extends ModelForm
         $category = $product->getMainCategory();
         $user = $product->last_modify_user;
         $user_modified_login = $user->login ?? $product->provider;
-        $modify_time = (new DateTime())->setTimestamp($product->mod_date)->format('d M Y H:s');
+        $modify_time = (new DateTime())->setTimestamp($product->mod_date)->format('d M Y H:i');
         return [
             'weight' => [
                 'class' => CharField::class,
