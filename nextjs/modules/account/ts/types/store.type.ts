@@ -147,12 +147,12 @@ interface StoreInterface {
   };
   decisions: {
     solved: {
-      pagination_offset: number;
-      decisions: DecisionsInterface[];
+      total: number;
+      items: DecisionsInterface[];
     };
     notSolved: {
-      pagination_offset: number;
-      decisions: DecisionsInterface[];
+      total: number;
+      items: DecisionsInterface[];
     };
   };
   config: Record<any, any>;

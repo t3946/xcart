@@ -44,7 +44,6 @@ const ReviewForm = (): any => {
   const { maxImageSizeMB, maxVideoSizeMB, maxAttachments } =
     AppData.reviews.limits;
 
-  console.log({ maxImageSizeMB, maxVideoSizeMB, maxAttachments });
   const [attachmentsNumber, setAttachmentsNumber] = React.useState(0);
 
   const validationSchema = yup.object().shape({

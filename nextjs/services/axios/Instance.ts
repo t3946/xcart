@@ -2,16 +2,16 @@ import axios from "axios";
 
 //get axios SERVER(works only on server) query instance for requests to API-Sever
 export const getInstance = function (req: Record<any, any>) {
-  let xidCookieMatches;
+  let sessionCookieMatches;
 
   if (req.headers.cookie) {
-    xidCookieMatches = req.headers.cookie.match(/xid\d+=.+?;/);
+    sessionCookieMatches = req.headers.cookie.match(/session+=[^;]*/);
   }
 
   let cookie = "";
 
-  if (xidCookieMatches) {
-    cookie = xidCookieMatches[0];
+  if (sessionCookieMatches) {
+    cookie = sessionCookieMatches[0];
   }
 
   return axios.create({

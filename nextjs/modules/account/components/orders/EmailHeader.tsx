@@ -11,7 +11,6 @@ export const EmailHeader: React.FC<EmailHeaderProps> = ({
   info,
   contentRef,
 }) => {
-  console.log(contentRef);
   return (
     <div className="header-wrap info">
       <div className="d-flex align-items-center justify-content-between">

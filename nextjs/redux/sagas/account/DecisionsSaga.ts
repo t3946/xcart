@@ -2,6 +2,7 @@ import { takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import { route } from "@utils/AppData";
+import axios from "axios";
 
 const api = new ApiService();
 
@@ -15,14 +16,10 @@ function* resolveDecision(action): Generator {
     });
 }
 
-function* loadMore(action): Generator {
+function* getDecisions(action: any): Generator {
   const { success, data } = action.payload;
 
-  yield api
-    .post<any>(route("order:api:decisions_get"), JSON.stringify(data))
-    .then(function (res) {
-      success(res);
-    });
+  yield axios.post("/api-client/decisions/get", data).then(success);
 }
 
 function* getEtaProductsDecision(action): Generator {
@@ -164,7 +161,7 @@ function* poAdditionalInformationRequiredDecision(action): Generator {
 
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
-  yield takeLatest("LOAD_MORE_DECISION", loadMore);
+  yield takeLatest("GET_DECISIONS", getDecisions);
   yield takeLatest("UPLOAD_LICENSE_DECISION", uploadLicense);
   yield takeLatest("GET_ETA_PRODUCTS_DECISION", getEtaProductsDecision);
   yield takeLatest("PAY_ORDER_DECISION", payOrder);

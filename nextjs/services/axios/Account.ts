@@ -28,7 +28,6 @@ const getInitialState = async function (req: any) {
   await instance
     .get("/api-client/user/info")
     .then((res) => {
-      console.log(res.data);
       initialState.user = res.data;
     })
     .catch(() => {

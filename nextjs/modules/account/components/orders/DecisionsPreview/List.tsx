@@ -4,51 +4,48 @@ import classnames from "classnames";
 import Link from "next/link";
 import style from "@modules/account/components/orders/DecisionsPreview/List.module.scss";
 import {
-  loadMoreAction,
+  getAction,
   addAction as addDecisionsAction,
 } from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 
 interface IProps {
-  decisions: Record<any, any>[];
+  items: Record<any, any>[];
+  total: number;
   className?: any;
   solved: boolean;
-  onAllLoaded?: () => void;
 }
 
 const List: React.FC<IProps> = function (props: IProps) {
-  const { decisions, className, onAllLoaded } = props;
+  const itemsPerPaginationPage = 3;
+  const { items: decisions, total: totalDecisions, className } = props;
   const items = [];
   const classes = {
     list: [
       className,
-      style["decisions-list-items"],
+      style.decisionsListItems,
       "pe-lg-3",
       {
-        "overflow-hidden": decisions.length <= 3,
+        "overflow-hidden": decisions.length <= itemsPerPaginationPage,
       },
     ],
   };
-  const [isIntersecting, setIsIntersecting] = React.useState(false);
+  const [isIntersected, setIsIntersected] = React.useState(false);
   const dispatch = useDispatch();
   const theLastItemRef = React.useRef(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isAllLoaded, setIsAllLoaded] = React.useState(false);
 
-  React.useEffect(() => {
-    if (
-      !isAllLoaded &&
-      (decisions.length === 0 || (isIntersecting && !isLoading))
-    ) {
-      getMoreDecision();
-      setIsIntersecting(false);
-    }
-  });
+  function isAllLoaded() {
+    return decisions.length === totalDecisions;
+  }
+
+  if (isIntersected && !isAllLoaded()) {
+    setIsIntersected(false);
+    getMoreDecision();
+  }
 
   function getMoreDecision() {
-    setIsIntersecting(false);
-
     if (isLoading) {
       return;
     }
@@ -56,31 +53,16 @@ const List: React.FC<IProps> = function (props: IProps) {
     setIsLoading(true);
 
     dispatch(
-      loadMoreAction({
-        data: { solved: props.solved, offset: decisions.length },
+      getAction({
+        data: {
+          solved: props.solved ? 1 : 0,
+          skip: decisions.length,
+          take: itemsPerPaginationPage,
+        },
 
         success(res: any) {
-          if (res.length === 0) {
-            setIsAllLoaded(true);
-            onAllLoaded && onAllLoaded();
-          }
-
-          let actionData;
-
-          if (props.solved) {
-            actionData = {
-              solved: res,
-              notSolved: [],
-            };
-          } else {
-            actionData = {
-              solved: [],
-              notSolved: res,
-            };
-          }
-
-          dispatch(addDecisionsAction(actionData));
           setIsLoading(false);
+          dispatch(addDecisionsAction(res.data));
         },
       })
     );
@@ -106,7 +88,10 @@ const List: React.FC<IProps> = function (props: IProps) {
   }
 
   if (isLoading) {
-    const skeletonsNumber = 3;
+    const skeletonsNumber = Math.min(
+      totalDecisions - decisions.length,
+      itemsPerPaginationPage
+    );
 
     for (let i = 1; i <= skeletonsNumber; i++) {
       items.push(
@@ -124,7 +109,7 @@ const List: React.FC<IProps> = function (props: IProps) {
     let reviewLoadedObserver = null;
     const target = theLastItemRef.current;
 
-    if (!target || isLoading || isAllLoaded) {
+    if (!target || isLoading) {
       return;
     }
 
@@ -136,7 +121,7 @@ const List: React.FC<IProps> = function (props: IProps) {
 
     reviewLoadedObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
-        setIsIntersecting(!isLoading && entry.isIntersecting);
+        setIsIntersected(!isLoading && entry.isIntersecting);
 
         if (entry.isIntersecting) {
           observer.unobserve(target);

@@ -66,7 +66,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       return;
     }
 
-    console.log("anyway");
     setCountProductsOnCart(value);
   };
 

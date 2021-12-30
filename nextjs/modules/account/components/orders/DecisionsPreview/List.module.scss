@@ -2,15 +2,15 @@
 
 $items-in-viewport: 3;
 
-.decisions-list-items {
+.decisionsListItems {
   overflow-y: scroll;
-  height: pxToRem(70*$items-in-viewport);
+  max-height: pxToRem(70*$items-in-viewport);
 
   @include breakpoint(md) {
-    height: pxToRem(75*$items-in-viewport);
+    max-height: pxToRem(75*$items-in-viewport);
   }
 
   @include breakpoint(lg) {
-    height: pxToRem(70*$items-in-viewport);
+    max-height: pxToRem(70*$items-in-viewport);
   }
 }

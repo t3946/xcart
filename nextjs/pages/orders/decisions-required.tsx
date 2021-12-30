@@ -7,31 +7,14 @@ import { useDispatch } from "react-redux";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
-  const decisions: { solved: []; notSolved: [] } = {
-    solved: [],
-    notSolved: [],
-  };
+  let decisions: { solved: []; notSolved: [] };
 
   await instance
-    .get("/order/api/decisions/get", {
-      data: {
-        solved: 0,
-        offset: 0,
-      },
+    .get("/api-client/decisions/get-initial-state", {
+      data: { skip: 0, take: 5 },
     })
     .then((res) => {
-      decisions.notSolved = res.data;
-    });
-
-  await instance
-    .get("/order/api/decisions/get", {
-      data: {
-        solved: 1,
-        offset: 0,
-      },
-    })
-    .then((res) => {
-      decisions.solved = res.data;
+      decisions = res.data;
     });
 
   return {

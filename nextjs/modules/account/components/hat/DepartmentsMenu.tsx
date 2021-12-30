@@ -157,7 +157,6 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
             href={category.url}
             className={cn(linkClasses)}
             onClick={(e) => {
-              console.log(selectedCategory !== category);
               if (selectedCategory !== category) {
                 setSelectedCategory(category);
                 e.preventDefault();

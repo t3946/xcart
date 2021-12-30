@@ -1,3 +1,4 @@
+//todo: looks like file some congested, need refactoring maybe
 export const solveDecisionAction = (payload: Record<any, any>): any => ({
   type: "SOLVE_DECISION",
   payload,
@@ -12,8 +13,8 @@ export const addAction = (decisions: Record<any, any>): any => ({
   decisions,
 });
 
-export const loadMoreAction = (payload: Record<any, any>): any => ({
-  type: "LOAD_MORE_DECISION",
+export const getAction = (payload: Record<any, any>): any => ({
+  type: "GET_DECISIONS",
   payload,
 });
 
