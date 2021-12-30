@@ -103,7 +103,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
       ) : (
         <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
           <div className="d-flex flex-dir-column">
-            <Label error={!!formik.errors.name}>List Name</Label>
+            <Label>List Name</Label>
             <Input
               ref={ref}
               name={"name"}
