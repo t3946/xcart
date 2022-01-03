@@ -54,7 +54,7 @@ class DistributorStatsAdmin extends Admin
             case 'orders':
                 return $item->order_groups->filter($base_filter)->group(['orderid'])->count();
             case 'sales':
-                return $item->order_groups->filter($base_filter)->group(['orderid'])->sum('total_gross');
+                return $item->order_groups->filter($base_filter)->sum('total_gross');
         }
         return parent::getItemProperty($item, $property);
     }
