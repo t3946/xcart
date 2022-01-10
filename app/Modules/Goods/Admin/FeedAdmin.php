@@ -113,8 +113,7 @@ class FeedAdmin extends Admin
         if ($property === 'average_update_period') {
             return $item->getAverageUpdatePeriod();
         }
-        if ($property === 'site') {
-            $site = $item->site;
+        if ($property === 'site' && $site = $item->site) {
             return "[$site->code] {$site->getName()}";
         }
         if ($property === 'last_update_time') {
