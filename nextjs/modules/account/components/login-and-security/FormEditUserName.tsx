@@ -1,14 +1,14 @@
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
-import {Formik, Form} from "formik";
-import {Form as RBForm} from "react-bootstrap";
+import { Formik, Form } from "formik";
+import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   editNameAction,
   setAlertAction,
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
-import {userSetAction} from "@redux/actions/account-actions/UserActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import Input from "@modules/ui/forms/Input";
@@ -62,7 +62,7 @@ const FormEditUserName = (): any => {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {function ({isSubmitting, values, errors, touched, handleChange}) {
+      {function ({ isSubmitting, values, errors, touched, handleChange }) {
         return (
           <Form>
             <InnerPage
@@ -104,7 +104,7 @@ const FormEditUserName = (): any => {
                   >
                     <RBForm.Label
                       className={
-                        "form-input-label mb-1 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
+                        "form-input-label mb-10 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
                       }
                     >
                       New Full name
