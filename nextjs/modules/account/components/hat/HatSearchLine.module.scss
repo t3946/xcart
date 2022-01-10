@@ -12,9 +12,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  height: pxToRem(50);
+  height: 0;
 
   @include breakpoint(lg) {
+    height: pxToRem(50);
     background: #0d2431;
   }
 }
