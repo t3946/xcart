@@ -43,16 +43,12 @@ function* editPhone(action: AnyAction) {
 }
 
 function* changePassword(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { data, success, error, complete } = action.payload;
 
-  const data = JSON.stringify({
-    ChangePasswordForm: form,
-  });
-
-  yield api
-    .post<any>("/api/account/login-and-security/edit-password", data)
+  yield axios
+    .post<any>("/api-client/user/change-password", data)
     .then((res) => {
-      res.errors ? error(res.errors) : success(res);
+      res.data.errors ? error(res.data.errors) : success(res);
 
       complete();
 

@@ -28,22 +28,6 @@ app.post("/login", function (req, res) {
 
 app.post("/register");
 
-app.post("/change-password", isAuthMiddleware, async (req, res) => {
-  const hashed = await passwordUtils.encryptPassword(req.body.password);
-
-  await prisma.xcart_users.update({
-    where: {
-      user_id: req.user.userId,
-    },
-    data: {
-      password: hashed,
-      access_token: generateToken(),
-    },
-  });
-
-  res.sendStatus(200);
-});
-
 app.get("/info", isAuthMiddleware, async (req, res) => {
   const user = await prisma.xcart_users.findUnique({
     where: {
@@ -93,13 +77,13 @@ app.post("/check-login", async function (req, res) {
 
 app.post("/create", async function (req, res) {
   const { email, name, password } = req.body;
-  let user = await prisma.xcart_users.findUnique({
+  let users = await prisma.xcart_users.findMany({
     where: {
       email,
     },
   });
 
-  if (user) {
+  if (users.length) {
     res.json({ error: { email: "This email already registered" } });
   } else {
     await prisma.xcart_users.create({
@@ -110,7 +94,7 @@ app.post("/create", async function (req, res) {
       },
     });
 
-    user = await prisma.xcart_users.findUnique({
+    const user = await prisma.xcart_users.findUnique({
       where: {
         email,
       },
@@ -199,7 +183,6 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
 
   res.json({ user });
 
-  res.clearCookie("session");
   res.sendStatus(200);
 });
 
@@ -232,8 +215,39 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
 
   delete user.password;
 
-  res.json({user});
-  res.clearCookie("session");
+  res.json({ user });
+  res.sendStatus(200);
+});
+
+app.post("/change-password", isAuthMiddleware, async function (req, res) {
+  const { oldPassword, newPassword } = req.body;
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  const isPasswordsMatch = await passwordUtils.comparePassword(
+    oldPassword,
+    user.password
+  );
+
+  if (!isPasswordsMatch) {
+    res.json({ errors: { oldPassword: "Wrong password" } });
+    return;
+  }
+
+  const hashed = await passwordUtils.encryptPassword(newPassword);
+
+  await prisma.xcart_users.update({
+    where: {
+      user_id: user.user_id,
+    },
+    data: {
+      password: hashed,
+    },
+  });
+
   res.sendStatus(200);
 });
 

@@ -23,31 +23,29 @@ const FormChangePassword = (): any => {
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
   const initialValues = {
-    old_password: "",
-    new_password: "",
-    confirm_password: "",
+    oldPassword: "",
+    newPassword: "",
   };
 
   const validationSchema = yup.object().shape({
-    old_password: yup.string().required("Old Password required"),
-    new_password: yup
+    oldPassword: yup.string().required("Old Password required"),
+    newPassword: yup
       .string()
       .required("New password required")
       .min(8, "Password must be at least 8 characters")
       .max(32, "Password must be at most 32 characters"),
-    confirm_password: yup
+    confirmPassword: yup
       .string()
       .required("Password confirm required")
-      .oneOf([yup.ref("new_password"), null], "Passwords must match"),
+      .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
   });
 
   function submit(values: any, actions: any) {
     dispatch(
       changePasswordAction({
-        form: values,
+        data: values,
 
-        success(res: any) {
-          dispatch(userSetAction(res.user));
+        success() {
           router.push("/login-and-security");
 
           dispatch(
@@ -59,6 +57,7 @@ const FormChangePassword = (): any => {
         },
 
         error(err: any) {
+          console.log(err);
           actions.setErrors(err);
         },
 
@@ -121,18 +120,18 @@ const FormChangePassword = (): any => {
                     <div className={"col-12 col-md-6 col-lg-6"}>
                       <Input
                         type="password"
-                        name="old_password"
-                        value={values.old_password}
+                        name="oldPassword"
+                        value={values.oldPassword}
                         onChange={handleChange}
                         isInvalid={
-                          !!touched.old_password && !!errors.old_password
+                          !!touched.oldPassword && !!errors.oldPassword
                         }
-                        isValid={touched.old_password && !errors.old_password}
+                        isValid={touched.oldPassword && !errors.oldPassword}
                         autoComplete={"current-password"}
                       />
 
                       <Feedback type="invalid">
-                        {touched.old_password && errors.old_password}
+                        {touched.oldPassword && errors.oldPassword}
                       </Feedback>
                     </div>
                   </RBForm.Group>
@@ -152,18 +151,18 @@ const FormChangePassword = (): any => {
                     <div className={"col-12 col-md-6 col-lg-6"}>
                       <Input
                         type="password"
-                        name="new_password"
-                        value={values.new_password}
+                        name="newPassword"
+                        value={values.newPassword}
                         onChange={handleChange}
                         isInvalid={
-                          !!touched.new_password && !!errors.new_password
+                          !!touched.newPassword && !!errors.newPassword
                         }
-                        isValid={touched.new_password && !errors.new_password}
+                        isValid={touched.newPassword && !errors.newPassword}
                         autoComplete="new-password"
                       />
 
                       <Feedback type="invalid">
-                        {touched.new_password && errors.new_password}
+                        {touched.newPassword && errors.newPassword}
                       </Feedback>
                     </div>
                   </RBForm.Group>
@@ -185,21 +184,20 @@ const FormChangePassword = (): any => {
                     <div className={"col-12 col-md-6 col-lg-6"}>
                       <Input
                         type="password"
-                        name="confirm_password"
-                        value={values.confirm_password}
+                        name="confirmPassword"
+                        value={values.confirmPassword}
                         onChange={handleChange}
                         isInvalid={
-                          !!touched.confirm_password &&
-                          !!errors.confirm_password
+                          !!touched.confirmPassword && !!errors.confirmPassword
                         }
                         isValid={
-                          touched.confirm_password && !errors.confirm_password
+                          touched.confirmPassword && !errors.confirmPassword
                         }
                         autoComplete="new-password"
                       />
 
                       <Feedback type="invalid">
-                        {touched.confirm_password && errors.confirm_password}
+                        {touched.confirmPassword && errors.confirmPassword}
                       </Feedback>
                     </div>
                   </RBForm.Group>
