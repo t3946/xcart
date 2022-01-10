@@ -8,6 +8,10 @@ import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.
 import { useDispatch } from "react-redux";
 import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
 
+const classes = {
+  dropdownItem: [StylesItem.item_topLevel, StylesItem.item],
+};
+
 const SideBarMenu: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
@@ -63,7 +67,7 @@ const SideBarMenu: React.FC = () => {
               to={value.to}
               label={value.label}
               badge={value.badge}
-              className={StylesItem.item_topLevel}
+              className={classes.dropdownItem}
               onClick={value.onClick}
               key={index}
             />
@@ -75,13 +79,13 @@ const SideBarMenu: React.FC = () => {
             to={value.to}
             label={value.label}
             routerItems={value.routerItems}
-            classes={{ handlerClass: StylesItem.item_topLevel }}
+            classes={{ handlerClass: classes.dropdownItem }}
             key={index}
           />
         );
       })}
 
-      <LogoutButton classes={"d-lg-none"} />
+      <LogoutButton classes={[...classes.dropdownItem, "d-lg-none"]} />
     </div>
   );
 };

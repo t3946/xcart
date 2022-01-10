@@ -51,7 +51,7 @@ const LoginButtonDesktop: React.FC = function () {
       { [Styles.button_logined]: user },
     ],
 
-    username: ["hat-login-button-username", Styles.username],
+    username: ["hat-login-button-username", Styles.username, "text-center"],
 
     iconArrow: [
       isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
@@ -61,6 +61,8 @@ const LoginButtonDesktop: React.FC = function () {
         "login-button-desktop-arrow__flip": isTabletMenuVisible,
       },
     ],
+
+    dropdownItem: ["justify-content-center"],
   };
   const routes = useSelectorAccount((e) => e.routes);
 
@@ -93,13 +95,15 @@ const LoginButtonDesktop: React.FC = function () {
           ref={ref}
           className={classnames(
             className,
-            "account-hat-dropdown-menu col-12 p-0 rounded-0",
-            Styles.dropdown
+            "account-hat-dropdown-menu col-12 p-0 rounded-0 border-0"
           )}
           aria-labelledby={labeledBy}
         >
           <div className="sidebar-menu-wrapper">
-            <LogoutButton onClick={logoutButtonClickHandler} />
+            <LogoutButton
+              onClick={logoutButtonClickHandler}
+              classes={classes.dropdownItem}
+            />
           </div>
         </div>
       );

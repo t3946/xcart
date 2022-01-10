@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import classnames from "classnames";
 
+import Styles from "@modules/account/components/sidebar-menu/Item.module.scss";
+
 interface sideBarMenuItemProps {
   to: string;
   label: string | React.ReactNode;
@@ -33,10 +35,7 @@ const Item: React.FC<sideBarMenuItemProps> = ({
   return (
     <Link href={to}>
       <a
-        className={classnames(
-          "sidebar-menu-item text-decoration-none",
-          className
-        )}
+        className={classnames(Styles.item, "text-decoration-none", className)}
         onClick={onClick}
       >
         {label}

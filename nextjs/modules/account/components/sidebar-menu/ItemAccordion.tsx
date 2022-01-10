@@ -9,6 +9,8 @@ import StoreInterface from "@modules/account/ts/types/store.type";
 import { useDispatch, useSelector } from "react-redux";
 import { setMenuItemActiveAction } from "@redux/actions/account-actions/SideBarMenuActions";
 
+import StylesItem from "@modules/account/components/sidebar-menu/Item.module.scss";
+
 interface sideBarMenuItemPropsDto extends SidebarItem {
   routerItems: SidebarItem[];
   classes?: {
@@ -29,8 +31,8 @@ const ItemAccordion: React.FC<sideBarMenuItemPropsDto> = (
 
   const classes = {
     handlerClasses: [
-      "sidebar-menu-item accordion",
-      { "sidebar-menu-item__opened-accordion": accordion.open },
+      "accordion",
+      { [StylesItem.item_accordion_opened]: accordion.open },
       props.classes.handlerClass,
     ],
     icon: [
