@@ -3,17 +3,14 @@ import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import { route } from "@utils/AppData";
+import axios from "axios";
 
 const api = new ApiService();
 
 function* editName(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { data, success, error, complete } = action.payload;
 
-  const data = JSON.stringify({
-    EditNameForm: form,
-  });
-
-  yield api.post<any>(route("account:api:edit-name"), data).then((res) => {
+  yield axios.post("/api-client/user/change-name", data).then((res) => {
     res.errors ? error(res.errors) : success(res);
 
     complete();

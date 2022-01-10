@@ -31,10 +31,10 @@ const FormEditUserName = (): any => {
   function submit(values: any, actions: any) {
     dispatch(
       editNameAction({
-        form: values,
+        data: values,
 
         success(res: any) {
-          dispatch(userSetAction(res.user));
+          dispatch(userSetAction(res.data.user));
           router.push("/login-and-security");
 
           dispatch(
