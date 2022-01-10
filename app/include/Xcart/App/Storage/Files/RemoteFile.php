@@ -12,7 +12,7 @@ class RemoteFile extends ResourceFile
 {
     private Client $client;
 
-    public function __construct($url, $name = null, $tempDir = null)
+    public function __construct($url, $name = null, $params = [])
     {
         $this->client = new Client(['verify' => false, 'timeout' => 30]);
 
@@ -21,7 +21,9 @@ class RemoteFile extends ResourceFile
         }
 
         $name = $name ?: basename(strtok($url, '?'));
-        parent::__construct($this->client->get($url, ['http_errors' => false])->getBody()->getContents(), $name);
+        $response = $this->client->get($url, array_merge(['http_errors' => false], $params));
+        $content = $response->getBody()->getContents();
+        parent::__construct($content, $name);
     }
 
     public function urlExists($url)
