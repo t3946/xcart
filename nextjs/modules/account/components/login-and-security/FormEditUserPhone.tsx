@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 
 import React from "react";
-import { Formik, Form } from "formik";
+import {Formik, Form, FormikValues} from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -16,6 +16,7 @@ import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import {AxiosResponse} from "axios";
 
 interface IProps {
   location: any;
@@ -54,24 +55,21 @@ const FormEditUserPhone = (props: IProps): any => {
     phoneCountryCode: yup.string().required("Country code is a required field"),
   });
 
-  function submit(values, actions) {
+  function submit(values: FormikValues, actions: any) {
     const phoneCode = getCountryByCode(
       values.phoneCountryCode,
       countries
     ).phone_code;
-    const form = {
-      phone_country_code: values.phoneCountryCode,
-      phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
-    };
 
     dispatch(
       editPhoneAction({
-        form,
+        data: {
+          phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
+        },
 
-        success(res) {
-          dispatch(userSetAction(res.user));
-          const path = location?.state?.from || "/login-and-security";
-          history.push(path);
+        success(res: AxiosResponse) {
+          dispatch(userSetAction(res.data.user));
+          router.push(location?.state?.from || "/login-and-security");
 
           dispatch(
             setAlertAction({
@@ -81,7 +79,7 @@ const FormEditUserPhone = (props: IProps): any => {
           );
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors(err);
         },
 

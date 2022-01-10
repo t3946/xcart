@@ -203,6 +203,40 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
+app.post("/change-phone", isAuthMiddleware, async function (req, res) {
+  //check phone
+  const phone = req.body.phone;
+  const countryCode = parseInt(phone.slice(1, -10));
+
+  const country = await prisma.xcart_countries.findUnique({
+    where: {
+      phone_code: countryCode,
+    },
+  });
+
+  await prisma.xcart_users.update({
+    where: {
+      user_id: req.user.userId,
+    },
+    data: {
+      phone,
+      phone_country_code: country.code,
+    },
+  });
+
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  delete user.password;
+
+  res.json({user});
+  res.clearCookie("session");
+  res.sendStatus(200);
+});
+
 /**
  * /verify-one-time-password
  * /send-one-time-password

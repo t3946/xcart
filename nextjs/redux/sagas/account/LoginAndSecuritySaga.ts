@@ -2,16 +2,15 @@ import { takeLatest } from "redux-saga/effects";
 import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
-import { route } from "@utils/AppData";
 import axios from "axios";
 
 const api = new ApiService();
 
 function* editName(action: AnyAction) {
-  const { data, success, error, complete } = action.payload;
+  const { data, success, complete } = action.payload;
 
   yield axios.post("/api-client/user/change-name", data).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+    success(res);
 
     complete();
 
@@ -20,10 +19,10 @@ function* editName(action: AnyAction) {
 }
 
 function* editEmail(action: AnyAction) {
-  const { data, success, error, complete } = action.payload;
+  const { data, success, complete } = action.payload;
 
   yield axios.post("/api-client/user/change-email", data).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+    success(res);
 
     complete();
 
@@ -32,14 +31,10 @@ function* editEmail(action: AnyAction) {
 }
 
 function* editPhone(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { data, success, complete } = action.payload;
 
-  const data = JSON.stringify({
-    EditPhoneForm: form,
-  });
-
-  yield api.post<any>(route("account:api:edit-phone"), data).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+  yield axios.post<any>("/api-client/user/change-phone", data).then((res) => {
+    success(res);
 
     complete();
 
