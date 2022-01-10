@@ -20,13 +20,9 @@ function* editName(action: AnyAction) {
 }
 
 function* editEmail(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { data, success, error, complete } = action.payload;
 
-  const data = JSON.stringify({
-    EditEmailForm: form,
-  });
-
-  yield api.post<any>(route("account:api:edit-email"), data).then((res) => {
+  yield axios.post("/api-client/user/change-email", data).then((res) => {
     res.errors ? error(res.errors) : success(res);
 
     complete();

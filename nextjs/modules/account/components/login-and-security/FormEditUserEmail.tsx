@@ -12,7 +12,6 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
@@ -40,7 +39,7 @@ const FormEditUserEmail = (): any => {
         form: values,
 
         success(res: any) {
-          dispatch(userSetAction(res.user));
+          dispatch(userSetAction(res.data.user));
           router.push("/login-and-security");
 
           dispatch(

@@ -179,6 +179,30 @@ app.post("/change-name", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
+app.post("/change-email", isAuthMiddleware, async function (req, res) {
+  await prisma.xcart_users.update({
+    where: {
+      user_id: req.user.userId,
+    },
+    data: {
+      email: req.body.email,
+    },
+  });
+
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  delete user.password;
+
+  res.json({ user });
+
+  res.clearCookie("session");
+  res.sendStatus(200);
+});
+
 /**
  * /verify-one-time-password
  * /send-one-time-password
