@@ -43,7 +43,7 @@ class Manager extends ManyToManyManager
     /**
      * @param array $conditions
      *
-     * @return ModelInterface|null|array
+     * @return ModelInterface|null
      * @throws Exception\MultipleObjectsReturned
      */
     public function get(array $conditions = [])

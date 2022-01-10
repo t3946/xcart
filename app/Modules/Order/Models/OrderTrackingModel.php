@@ -5,9 +5,9 @@ namespace Modules\Order\Models;
 
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTrackingHelper;
+use Modules\Payment\Models\ProcessorModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
 use Modules\Shipping\Models\TrackingLinksModel;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
@@ -90,35 +90,50 @@ class OrderTrackingModel extends Model
     {
         parent::afterSave($owner, $isNew);
         if ($isNew) {
-            $current_dc_status = $this->order_group;
-            OrderLogModel::createLog(
-                $current_dc_status->orderid,
-                OrderLogModel::LOG_TYPE_XCART,
-                "<b>Tracking numbers:</b>"
-            );
-            OrderLogModel::createLog(
-                $current_dc_status->orderid,
-                OrderLogModel::LOG_TYPE_XCART,
+            $order_group = $this->order_group;
+            $head_log = [
+                "<b>Tracking numbers:</b>",
                 "<b>Added:</b> {$owner->carrier->carrier} {$owner->link->shipping}: $owner->tracknum"
-            );
+            ];
+            foreach ($head_log as $log) {
+                OrderLogModel::createLog($order_group->orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+            }
 
-            if (!in_array($current_dc_status->dc_status, [OrderStatusModel::ORDER_DC_STATUS_SHIPPED, OrderStatusModel::ORDER_DC_STATUS_DELIVERED], true)) {
-                $current_dc_status_value = $current_dc_status->dc_status_model->name;
-                $current_dc_status->dc_status = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
-                $new_value = $current_dc_status->dc_status_model->name;
-                $current_dc_status->save();
+            if (!in_array(
+                $order_group->dc_status,
+                [OrderStatusModel::ORDER_DC_STATUS_SHIPPED, OrderStatusModel::ORDER_DC_STATUS_DELIVERED],
+                true
+            )) {
+                $current_dc_status_value = $order_group->dc_status_model->name;
+                $order_group->dc_status = OrderStatusModel::ORDER_DC_STATUS_SHIPPED;
+                $new_value = $order_group->dc_status_model->name;
+                $order_group->save();
                 OrderLogModel::createLog(
-                    $current_dc_status->orderid,
+                    $order_group->orderid,
                     OrderLogModel::LOG_TYPE_XCART,
-                    "<b>{$current_dc_status->manufacturer->code}:</b> dc_status: $current_dc_status_value -> $new_value"
+                    "<b>{$order_group->manufacturer->code}:</b> dc_status: $current_dc_status_value -> $new_value"
                 );
             }
 
-            OrderHelper::checkOrderTrackedAll($current_dc_status->order);
+            OrderHelper::checkOrderTrackedAll($order_group->order);
 
             if (($r = OrderTrackingHelper::trackAfterShip($owner)) && isset($r['data']['tracking']['id'])) {
                 $this->aftership_id = $r['data']['tracking']['id'];
                 $this->update(['aftership_id']);
+            }
+
+            $order = $order_group->order;
+
+            /** @var OrderTransactionModel $transaction */
+            $transaction = $order->transactions
+                ->filter(['transaction_status' => OrderTransactionModel::STATUS_CAPTURED])
+                ->order(['id'])
+                ->limit(1)
+                ->get();
+
+            if ($transaction && $transaction->payment_method_model->processor->processor_name === ProcessorModel::PAYMENT_NAME_STRIPE) {
+                // TODO need to be tested
+                //OrderTrackingHelper::trackStripe($owner, $order, $transaction);
             }
         }
     }

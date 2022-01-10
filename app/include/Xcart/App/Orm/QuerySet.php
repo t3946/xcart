@@ -279,7 +279,7 @@ class QuerySet extends QuerySetBase
      *
      * @param array $filter
      *
-     * @return null|array|ModelInterface
+     * @return null|ModelInterface
      * @throws Exception
      * @throws MultipleObjectsReturned
      */

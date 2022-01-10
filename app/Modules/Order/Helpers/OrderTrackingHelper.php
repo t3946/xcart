@@ -7,16 +7,19 @@ namespace Modules\Order\Helpers;
 use AfterShip\Couriers;
 use AfterShip\Trackings;
 use Exception;
+use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTrackingModel;
+use Modules\Order\Models\OrderTransactionModel;
+use Modules\Payment\Gateways\Gateway;
 
 class OrderTrackingHelper
 {
-    private static $key = '88b94002-c64e-44a2-aa62-4052f33dadf0';
+    private static string $key = '88b94002-c64e-44a2-aa62-4052f33dadf0';
 
     public static function trackAfterShip(OrderTrackingModel $track): ?array
     {
         $order = $track->order_group->order;
-        $trackings = new Trackings(self::$key);
+        $tracking_numbers = new Trackings(self::$key);
         $tracking_info = [
             'slug' => $track->carrier->aftership_code ?: strtolower($track->carrier->carrier),
             'title' => $order->getOrderNumber(),
@@ -28,7 +31,7 @@ class OrderTrackingHelper
             $tracking_info['smses'] = [$order->getPhoneNormalized()];
         }
         try {
-            $response = $trackings->create($track->tracknum, $tracking_info);
+            $response = $tracking_numbers->create($track->tracknum, $tracking_info);
         } catch (Exception $e) {
 
         }
@@ -62,5 +65,29 @@ class OrderTrackingHelper
         }
 
         return $arr;
+    }
+
+    public static function trackStripe(OrderTrackingModel $tracking, OrderModel $order, OrderTransactionModel $transaction)
+    {
+        if ($gw = Gateway::getGateway($transaction->payment_method_model->processor)) {
+            $address = $order->getAddressInfo();
+            $gw->gateway->update([
+                'paymentIntentReference' => $transaction->transaction_id,
+                'shipping' => [
+                    'address' => [
+                        'city' => $order->s_city,
+                        'country' => $order->s_country,
+                        'line1' => $address['address'][0],
+                        'line2' => $address['address'][1] ?? '',
+                        'postal_code' => $order->s_zipcode,
+                        'state' => $order->s_state,
+                    ],
+                    'name' => $order->s_firstname,
+                    'carrier' => $tracking->carrier->carrier,
+                    'phone' => $order->phone . ($order->phone_ext ? ' (' . $order->phone_ext .')'  : ''),
+                    'tracking_number' => $tracking->tracknum
+                ]
+            ]);
+        }
     }
 }

@@ -12,7 +12,7 @@ interface QuerySetInterface
 {
     /**
      * @param array $conditions
-     * @return array|null|ModelInterface
+     * @return null|ModelInterface
      */
     public function get(array $conditions = []);
 
