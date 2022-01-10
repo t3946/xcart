@@ -53,6 +53,7 @@ class AbandonedOrderCommand extends Command
             }
 
             $order->groups->update(['cb_status' => OrderStatusModel::ORDER_STATUS_UNPAID]);
+            $old_cb_status = $order->cb_status;
             $order->cb_status = OrderStatusModel::ORDER_STATUS_UNPAID;
             $order->save();
 
@@ -64,7 +65,7 @@ class AbandonedOrderCommand extends Command
 
             echo "Abandoned: Unpaid notification sent to Cx {$order->getOrderNumber()}\n";
 
-            OrderInvoiceHelper::sendOrderStatusNotification($order, true);
+            OrderInvoiceHelper::sendOrderStatusNotification($order, $old_cb_status !== OrderStatusModel::ORDER_STATUS_NOT_FINISHED);
         }
     }
 }
