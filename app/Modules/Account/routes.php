@@ -14,11 +14,6 @@ return [
         'target' => [AccountController::class, 'actionProductIndex'],
         'name' => 'add-list',
     ],
-    [
-        'route' => '/',
-        'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'account:index'
-    ],
 
     [
         'route' => '/create-review/{*:product_id}',
