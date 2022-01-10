@@ -320,9 +320,10 @@ class AdminHelper
         $data["date"] = $est_time->format('F j, Y');
 
         //holiday
-        $holiday = WorkingTimeHelper::getNextHoliday(date_create('now', timezone_open('EST')));
-        $days = $holiday->getDaysUntil();
-        $data["holiday"] = sprintf("%d day%s until %s", $days, $days > 1 ? 's' : '', (string)$holiday);
+        if ($holiday = WorkingTimeHelper::getNextHoliday(date_create('now', timezone_open('EST')))) {
+            $days = $holiday->getDaysUntil();
+            $data["holiday"] = sprintf("%d day%s until %s", $days, $days > 1 ? 's' : '', (string)$holiday);
+        }
 
         //user
         $data["user"] = Xcart::app()->getUser()->login;
