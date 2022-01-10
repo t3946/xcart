@@ -33,6 +33,7 @@ interface IProps {
   classes?: {
     container?: any;
     label?: any;
+    labelExt?: any;
     labelContainer?: any;
     select?: any;
     phone?: any;
@@ -105,6 +106,8 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
       "col phone-ext-column d-flex ps-0 align-items-center",
       props.classes?.ext,
     ],
+    label: ["mb-10", "mb-md-0", props.classes?.label],
+    labelExt: props.classes?.labelExt,
   };
 
   if (mode === "mobile") {
@@ -125,9 +128,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           props.classes?.labelContainer
         )}
       >
-        <Label className={["mb-1 mb-md-0", props.classes?.label]}>
-          {label}
-        </Label>
+        <Label className={classes.label}>{label}</Label>
       </div>
 
       <div className="col">
@@ -184,7 +185,13 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
             className={classnames(classes.inputPhoneExt)}
             controlId={phoneExtFieldName}
           >
-            <Label className={classnames("mb-0 me-2", Styles.label_ext)}>
+            <Label
+              className={classnames(
+                "mb-0 me-2",
+                Styles.label_ext,
+                classes.labelExt
+              )}
+            >
               <span className="d-md-none">x</span>
               <span className="d-none d-md-inline">ext</span>
             </Label>

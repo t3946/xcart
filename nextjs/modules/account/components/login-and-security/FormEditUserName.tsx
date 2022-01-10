@@ -1,14 +1,14 @@
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import React from "react";
-import { Formik, Form } from "formik";
-import { Form as RBForm } from "react-bootstrap";
+import {Formik, Form} from "formik";
+import {Form as RBForm} from "react-bootstrap";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import {
   editNameAction,
   setAlertAction,
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
-import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import {userSetAction} from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import Input from "@modules/ui/forms/Input";
@@ -62,7 +62,7 @@ const FormEditUserName = (): any => {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {function ({ isSubmitting, values, errors, touched, handleChange }) {
+      {function ({isSubmitting, values, errors, touched, handleChange}) {
         return (
           <Form>
             <InnerPage
@@ -86,46 +86,48 @@ const FormEditUserName = (): any => {
                 />
               }
             >
-              <p className="form-info">
-                If you want to change the name associated with your S3 Stores
-                customer account, you may do so below. Be sure to click the{" "}
-                <b>Save Changes</b> button when you are done.
-              </p>
+              <div className="px-10 px-md-0">
+                <p className="form-info">
+                  If you want to change the name associated with your S3 Stores
+                  customer account, you may do so below. Be sure to click the{" "}
+                  <b>Save Changes</b> button when you are done.
+                </p>
 
-              <RBForm.Group
-                controlId="EditUserName"
-                className={cn(["row", StylesLoginAndSecurity.formContainer])}
-              >
-                <div
-                  className={
-                    "col-12 col-md-6 col-lg-6 text-md-end text-lg-start d-flex align-items-center justify-content-md-end justify-content-lg-start"
-                  }
+                <RBForm.Group
+                  controlId="EditUserName"
+                  className={cn(["row", StylesLoginAndSecurity.formContainer])}
                 >
-                  <RBForm.Label
+                  <div
                     className={
-                      "form-input-label mb-1 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
+                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start d-flex align-items-center justify-content-md-end justify-content-lg-start"
                     }
                   >
-                    New Full name
-                  </RBForm.Label>
-                </div>
+                    <RBForm.Label
+                      className={
+                        "form-input-label mb-1 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
+                      }
+                    >
+                      New Full name
+                    </RBForm.Label>
+                  </div>
 
-                <div className={"col-12 col-md-6 col-lg-6"}>
-                  <Input
-                    type="text"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    className={"form-input"}
-                    isInvalid={!!touched.name && !!errors.name}
-                    isValid={touched.name && !errors.name}
-                  />
+                  <div className={"col-12 col-md-6 col-lg-6"}>
+                    <Input
+                      type="text"
+                      name="name"
+                      value={values.name}
+                      onChange={handleChange}
+                      className={"form-input"}
+                      isInvalid={!!touched.name && !!errors.name}
+                      isValid={touched.name && !errors.name}
+                    />
 
-                  <RBForm.Control.Feedback type="invalid">
-                    {errors.name}
-                  </RBForm.Control.Feedback>
-                </div>
-              </RBForm.Group>
+                    <RBForm.Control.Feedback type="invalid">
+                      {errors.name}
+                    </RBForm.Control.Feedback>
+                  </div>
+                </RBForm.Group>
+              </div>
             </InnerPage>
           </Form>
         );

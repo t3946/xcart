@@ -15,7 +15,8 @@ import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitC
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
-
+import cn from "classnames";
+import styles from "@modules/account/components/login-and-security/FormEditUserEmail.module.scss";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const FormEditUserEmail = (): any => {
@@ -33,12 +34,12 @@ const FormEditUserEmail = (): any => {
       .email("Email must be a valid email"),
   });
 
-  function submit(values, actions) {
+  function submit(values: any, actions: any) {
     dispatch(
       editEmailAction({
         form: values,
 
-        success(res) {
+        success(res: any) {
           dispatch(userSetAction(res.user));
           router.push("/login-and-security");
 
@@ -50,7 +51,7 @@ const FormEditUserEmail = (): any => {
           );
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors(err);
         },
 
@@ -89,39 +90,48 @@ const FormEditUserEmail = (): any => {
                   />
                 }
               >
-                <p className="form-info">
-                  Current email address: <b>{user.email}</b>
-                  <br />
-                  Enter the new email address you would like to associate with
-                  your account below. We will send a One Time Password (OTP) to
-                  that address.
-                </p>
-
-                <RBForm.Group controlId="EditUserEmail" className={"row"}>
-                  <div
-                    className={
-                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
-                    }
+                <div className="px-10 px-md-0">
+                  <p
+                    className={cn("form-info", styles.currentEmailText, "mb-0")}
                   >
-                    <Label className={"mb-1 mb-md-0"}>
-                      Change your email address
-                    </Label>
-                  </div>
+                    Current email address: <b>{user.email}</b>
+                  </p>
 
-                  <div className={"col-12 col-md-6 col-lg-6"}>
-                    <Input
-                      type="text"
-                      name="email"
-                      value={values.email}
-                      onChange={handleChange}
-                      isInvalid={!!touched.email && !!errors.email}
-                      isValid={touched.email && !errors.email}
-                    />
-                    <Feedback type="invalid">
-                      {touched.email && errors.email}
-                    </Feedback>
-                  </div>
-                </RBForm.Group>
+                  <p className="form-info">
+                    Enter the new email address you would like to associate with
+                    your account below. We will send a One Time Password (OTP)
+                    to that address.
+                  </p>
+
+                  <RBForm.Group
+                    controlId={"EditUserEmail"}
+                    className={cn("row", StylesLoginAndSecurity.formContainer)}
+                  >
+                    <div
+                      className={
+                        "col-12 col-md-6 col-lg-6 mb-10 mb-md-0 d-flex align-items-center justify-content-md-end justify-content-lg-start"
+                      }
+                    >
+                      <RBForm.Label className={"fw-bold"}>
+                        New Email Address
+                      </RBForm.Label>
+                    </div>
+
+                    <div className={"col-12 col-md-6 col-lg-6"}>
+                      <Input
+                        type="text"
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        isInvalid={!!touched.email && !!errors.email}
+                        isValid={touched.email && !errors.email}
+                      />
+                      <Feedback type="invalid">
+                        {touched.email && errors.email}
+                      </Feedback>
+                    </div>
+                  </RBForm.Group>
+                </div>
               </InnerPage>
             </Form>
           );

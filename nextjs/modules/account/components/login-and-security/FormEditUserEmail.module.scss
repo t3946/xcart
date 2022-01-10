@@ -1,0 +1,7 @@
+@import "styles/utils/Utils.module";
+
+.currentEmailText {
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}

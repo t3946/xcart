@@ -10,6 +10,7 @@
   }
 }
 
+
 .pageBody {
   padding: 0;
 
@@ -22,11 +23,13 @@
   }
 }
 
+
 .formContainer {
   @include breakpoint(lg) {
     max-width: pxToRem(600);
   }
 }
+
 
 .button {
   @include breakpoint(md) {
@@ -46,6 +49,21 @@
   font-weight: bold;
 }
 
+.button_editPage {
+  @include breakpoint(md) {
+    font-size: pxToRem(20);
+    padding: 0 pxToRem(39);
+    height: pxToRem(48);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    padding: 0 pxToRem(62);
+    height: pxToRem(39);
+  }
+}
+
+
 .gridItem {
   padding: pxToRem(8) pxToRem(10) pxToRem(21);
   @include breakpoint(md) {
@@ -63,6 +81,13 @@
   }
 }
 
+.gridItem_small {
+  @include breakpoint(md) {
+    padding: pxToRem(10) pxToRem(21);
+  }
+}
+
+
 .grid__item {
   margin: 0 0 pxToRem(14) 0;
 
@@ -75,11 +100,6 @@
   }
 }
 
-.gridItem_small {
-  @include breakpoint(md) {
-    padding: pxToRem(10) pxToRem(21);
-  }
-}
 
 .gridItemContainer {
   display: flex;
@@ -95,6 +115,7 @@
   }
 }
 
+
 .gridItemContainer_small {
   @include breakpoint(md) {
     margin: 0 0 pxToRem(-8);
@@ -105,6 +126,7 @@
   }
 }
 
+
 .gridItemTitle {
   font-weight: 700;
   font-size: pxToRem(16);
@@ -114,6 +136,7 @@
     font-size: pxToRem(18);
   }
 }
+
 
 .gridItemCaption_small {
   font-size: pxToRem(16);
@@ -130,19 +153,6 @@
   }
 }
 
-.button_editPage {
-  @include breakpoint(md) {
-    font-size: pxToRem(20);
-    padding: 0 pxToRem(39);
-    height: pxToRem(48);
-  }
-
-  @include breakpoint(lg) {
-    font-size: pxToRem(16);
-    padding: 0 pxToRem(62);
-    height: pxToRem(39);
-  }
-}
 
 .fromInfo {
   @include breakpoint(md) {

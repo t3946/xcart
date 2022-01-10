@@ -70,8 +70,7 @@ const FormEditUserPhone = (props: IProps): any => {
 
         success(res) {
           dispatch(userSetAction(res.user));
-          const path =
-            location?.state?.from || "/login-and-security";
+          const path = location?.state?.from || "/login-and-security";
           history.push(path);
 
           dispatch(
@@ -128,27 +127,32 @@ const FormEditUserPhone = (props: IProps): any => {
                 />
               }
             >
-              <FormInputPhone
-                setFieldValue={setFieldValue}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                name={"phone"}
-                values={{
-                  phoneCountryCode: values.phoneCountryCode,
-                  phone: values.phone,
-                }}
-                mode={"mobile"}
-                label={"New Mobile number"}
-              />
+              <div className="px-10 px-md-0">
+                <FormInputPhone
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  touched={touched}
+                  errors={errors}
+                  name={"phone"}
+                  values={{
+                    phoneCountryCode: values.phoneCountryCode,
+                    phone: values.phone,
+                  }}
+                  mode={"mobile"}
+                  label={"New Mobile number"}
+                  classes={{
+                    label: "mb-10 mb-md-0",
+                  }}
+                />
 
-              <p className="form-info mb-0">
-                By enrolling a mobile phone number, you consent to receive
-                automated text messages from or on behalf of S3 Stores related
-                to account management and security. Remove your number in{" "}
-                <b>Login & Security</b> to cancel. Message and data rates may
-                apply.
-              </p>
+                <p className="form-info mb-0">
+                  By enrolling a mobile phone number, you consent to receive
+                  automated text messages from or on behalf of S3 Stores related
+                  to account management and security. Remove your number in{" "}
+                  <b>Login & Security</b> to cancel. Message and data rates may
+                  apply.
+                </p>
+              </div>
             </InnerPage>
           </Form>
         );

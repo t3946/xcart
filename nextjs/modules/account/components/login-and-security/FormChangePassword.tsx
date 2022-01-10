@@ -98,103 +98,112 @@ const FormChangePassword = (): any => {
                   />
                 }
               >
-                <p className="form-info">
-                  Use the form below to change the password for your S3 Stores
-                  account
-                </p>
+                <div className="px-10 px-md-0">
+                  <p className="form-info">
+                    Use the form below to change the password for your S3 Stores
+                    account
+                  </p>
 
-                <Input type="hidden" name="login" value={user.email} />
+                  <Input type="hidden" name="login" value={user.email} />
 
-                <RBForm.Group controlId="ChangePassword" className="row mb-10">
-                  <div
-                    className={
-                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
-                    }
+                  <RBForm.Group
+                    controlId="ChangePassword"
+                    className="row mb-10"
                   >
-                    <Label className={"mb-2 mb-md-0"}>Current password</Label>
-                  </div>
-
-                  <div className={"col-12 col-md-6 col-lg-6"}>
-                    <Input
-                      type="password"
-                      name="old_password"
-                      value={values.old_password}
-                      onChange={handleChange}
-                      isInvalid={
-                        !!touched.old_password && !!errors.old_password
+                    <div
+                      className={
+                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start mb-10 mb-md-0"
                       }
-                      isValid={touched.old_password && !errors.old_password}
-                      autoComplete={"current-password"}
-                    />
+                    >
+                      <Label className={"mb-2 mb-md-0"}>Current password</Label>
+                    </div>
 
-                    <Feedback type="invalid">
-                      {touched.old_password && errors.old_password}
-                    </Feedback>
-                  </div>
-                </RBForm.Group>
+                    <div className={"col-12 col-md-6 col-lg-6"}>
+                      <Input
+                        type="password"
+                        name="old_password"
+                        value={values.old_password}
+                        onChange={handleChange}
+                        isInvalid={
+                          !!touched.old_password && !!errors.old_password
+                        }
+                        isValid={touched.old_password && !errors.old_password}
+                        autoComplete={"current-password"}
+                      />
 
-                <RBForm.Group
-                  controlId="ChangePasswordNew"
-                  className="row mb-10"
-                >
-                  <div
-                    className={
-                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
-                    }
+                      <Feedback type="invalid">
+                        {touched.old_password && errors.old_password}
+                      </Feedback>
+                    </div>
+                  </RBForm.Group>
+
+                  <RBForm.Group
+                    controlId="ChangePasswordNew"
+                    className="row mb-10"
                   >
-                    <Label className={"mb-2 mb-md-0"}>New password</Label>
-                  </div>
-
-                  <div className={"col-12 col-md-6 col-lg-6"}>
-                    <Input
-                      type="password"
-                      name="new_password"
-                      value={values.new_password}
-                      onChange={handleChange}
-                      isInvalid={
-                        !!touched.new_password && !!errors.new_password
+                    <div
+                      className={
+                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start mb-10 mb-md-0"
                       }
-                      isValid={touched.new_password && !errors.new_password}
-                      autoComplete="new-password"
-                    />
+                    >
+                      <Label className={"mb-2 mb-md-0"}>New password</Label>
+                    </div>
 
-                    <Feedback type="invalid">
-                      {touched.new_password && errors.new_password}
-                    </Feedback>
-                  </div>
-                </RBForm.Group>
+                    <div className={"col-12 col-md-6 col-lg-6"}>
+                      <Input
+                        type="password"
+                        name="new_password"
+                        value={values.new_password}
+                        onChange={handleChange}
+                        isInvalid={
+                          !!touched.new_password && !!errors.new_password
+                        }
+                        isValid={touched.new_password && !errors.new_password}
+                        autoComplete="new-password"
+                      />
 
-                <RBForm.Group controlId="ChangePasswordConfirm" className="row">
-                  <div
-                    className={
-                      "col-12 col-md-6 col-lg-6 text-md-end text-lg-start"
-                    }
+                      <Feedback type="invalid">
+                        {touched.new_password && errors.new_password}
+                      </Feedback>
+                    </div>
+                  </RBForm.Group>
+
+                  <RBForm.Group
+                    controlId="ChangePasswordConfirm"
+                    className="row"
                   >
-                    <Label className={"mb-2 mb-md-0"}>
-                      Reenter new password
-                    </Label>
-                  </div>
-
-                  <div className={"col-12 col-md-6 col-lg-6"}>
-                    <Input
-                      type="password"
-                      name="confirm_password"
-                      value={values.confirm_password}
-                      onChange={handleChange}
-                      isInvalid={
-                        !!touched.confirm_password && !!errors.confirm_password
+                    <div
+                      className={
+                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start mb-10 mb-md-0"
                       }
-                      isValid={
-                        touched.confirm_password && !errors.confirm_password
-                      }
-                      autoComplete="new-password"
-                    />
+                    >
+                      <Label className={"mb-2 mb-md-0"}>
+                        Reenter new password
+                      </Label>
+                    </div>
 
-                    <Feedback type="invalid">
-                      {touched.confirm_password && errors.confirm_password}
-                    </Feedback>
-                  </div>
-                </RBForm.Group>
+                    <div className={"col-12 col-md-6 col-lg-6"}>
+                      <Input
+                        type="password"
+                        name="confirm_password"
+                        value={values.confirm_password}
+                        onChange={handleChange}
+                        isInvalid={
+                          !!touched.confirm_password &&
+                          !!errors.confirm_password
+                        }
+                        isValid={
+                          touched.confirm_password && !errors.confirm_password
+                        }
+                        autoComplete="new-password"
+                      />
+
+                      <Feedback type="invalid">
+                        {touched.confirm_password && errors.confirm_password}
+                      </Feedback>
+                    </div>
+                  </RBForm.Group>
+                </div>
               </InnerPage>
             </Form>
           );
