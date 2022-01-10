@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-
 import React from "react";
-import {Formik, Form, FormikValues} from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import {
   editPhoneAction,
@@ -14,9 +13,9 @@ import { getCountryByCode } from "@utils/Countries";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
+import { FormikProps } from "formik/dist/types";
 
 interface IProps {
   location: any;
@@ -27,12 +26,12 @@ const FormEditUserPhone = (props: IProps): any => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-  const countries = useSelector((e) => e.countries);
+  const countries = useSelectorAccount((e) => e.countries);
 
   /**
    * Get phone number without country code prefix
    */
-  function getPhoneNumberInnerPart(countryCode, phoneNumber) {
+  function getPhoneNumberInnerPart(countryCode: string, phoneNumber: string) {
     const phoneCountryCodePrefix =
       "+" + getCountryByCode(countryCode, countries).phone_code;
     return phoneNumber.replace(phoneCountryCodePrefix, "");
@@ -55,11 +54,14 @@ const FormEditUserPhone = (props: IProps): any => {
     phoneCountryCode: yup.string().required("Country code is a required field"),
   });
 
-  function submit(values: FormikValues, actions: any) {
-    const phoneCode = getCountryByCode(
-      values.phoneCountryCode,
-      countries
-    ).phone_code;
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>): void {
+    const country = getCountryByCode(values.phoneCountryCode, countries);
+
+    if (!country) {
+      return;
+    }
+
+    const phoneCode = country.phone_code;
 
     dispatch(
       editPhoneAction({
@@ -77,10 +79,6 @@ const FormEditUserPhone = (props: IProps): any => {
               message: "You have successfully modified your account!",
             })
           );
-        },
-
-        error(err: any) {
-          actions.setErrors(err);
         },
 
         complete() {
