@@ -26,7 +26,7 @@ const LoginAndSecurity = (): any => {
   const alert = useSelectorAccount((e) => e.loginAndSecurity.alert);
   const [show, setShow] = React.useState(alert !== null);
   const ALERT_SHOW_TIME_MS = 3000;
-  
+
   React.useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -164,21 +164,17 @@ const LoginAndSecurity = (): any => {
   });
 
   function beforePage(): any {
-    return breakpoint({
-      md: function () {
-        return (
-          <Alert
-            show={show}
-            variant={alert?.variant}
-            message={alert?.message}
-            classes={{
-              container: "pt-20 pb-5 pt-lg-0",
-              alert: "account-inner-page_alert",
-            }}
-          />
-        );
-      },
-    });
+    return (
+      <Alert
+        show={show}
+        variant={alert?.variant}
+        message={alert?.message}
+        classes={{
+          container: "d-none d-md-block pt-20 pb-5 pt-lg-0",
+          alert: "account-inner-page_alert",
+        }}
+      />
+    );
   }
 
   return (

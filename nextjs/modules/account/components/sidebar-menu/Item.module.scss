@@ -9,9 +9,13 @@
   padding: 0 pxToRem(36) 0 pxToRem(16);
   text-decoration: none;
   cursor: pointer;
-  color: black;
+  color: $black;
   transition: all 0.3s ease-out;
   position: relative;
+
+  &:hover, &:focus {
+    color: $black;
+  }
 
   @include breakpoint(md) {
     height: pxToRem(60);

@@ -1,6 +1,8 @@
 import React from "react";
 import classnames from "classnames";
 
+import Styles from "@modules/account/components/shared/SubmitCancelButtonsGroup.module.scss";
+
 interface IPropsd {
   submitText?: string;
   cancelText?: string;
@@ -32,11 +34,17 @@ const SubmitCancelButtonsGroup: React.FC<IPropsd> = function ({
   onConfirm,
 }) {
   const classes = {
-    submitButton: ["form-button", submitAdvancedClasses, buttonAdvancedClasses],
+    submitButton: [
+      "form-button",
+      submitAdvancedClasses,
+      buttonAdvancedClasses,
+      Styles.button,
+    ],
     cancelButton: [
-      "form-button form-button__outline mt-14 mt-md-0 ms-md-12",
+      "form-button fw-bold form-button__outline mt-14 mt-md-0 ms-md-12",
       cancelAdvancedClasses,
       buttonAdvancedClasses,
+      Styles.button,
     ],
   };
 

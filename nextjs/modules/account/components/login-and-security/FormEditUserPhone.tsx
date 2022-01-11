@@ -51,7 +51,10 @@ const FormEditUserPhone = (props: IProps): any => {
   }
 
   const validationSchema = yup.object().shape({
-    phone: yup.string().required("Phone is a required field"),
+    phone: yup
+      .string()
+      .required("Phone is a required field")
+      .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format"),
     phoneCountryCode: yup.string().required("Country code is a required field"),
   });
 
@@ -129,6 +132,7 @@ const FormEditUserPhone = (props: IProps): any => {
                 <FormInputPhone
                   setFieldValue={setFieldValue}
                   handleChange={handleChange}
+                  disabled={isSubmitting}
                   touched={touched}
                   errors={errors}
                   name={"phone"}
@@ -137,7 +141,7 @@ const FormEditUserPhone = (props: IProps): any => {
                     phone: values.phone,
                   }}
                   mode={"mobile"}
-                  label={"New Mobile number"}
+                  label={"New Mobile Number"}
                   classes={{
                     label: "mb-10 mb-md-0",
                   }}
