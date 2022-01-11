@@ -20,7 +20,7 @@ class MailboxForwardingAdmin extends Admin
             'file',
             'type',
             'date',
-            'unique_id',
+            'source',
         ];
     }
 
@@ -56,7 +56,6 @@ class MailboxForwardingAdmin extends Admin
                 return $item->$property->getValue() ? "<div style='text-align: center'><img src=\"{$item->getImagePath()}\" width='60'/></div>" : '';
             case 'file':
                 return $item->$property->getValue() ? "<a target='_blank' href=\"{$item->getFilePath()}\">File</a>" : '';
-            case 'unique_id':
             case 'status':
                 return $item->$property ?? '';
         }

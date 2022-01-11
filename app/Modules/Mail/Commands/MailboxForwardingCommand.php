@@ -77,8 +77,10 @@ class MailboxForwardingCommand extends Command
                                 break;
                         }
                     }
-                    $mail->source = 'auto';
-//                    $mail->save();
+                    if ($mail) {
+                        $mail->source = 'auto';
+                        $mail->save();
+                    }
                 }
             }
         } catch (Throwable $e) {
