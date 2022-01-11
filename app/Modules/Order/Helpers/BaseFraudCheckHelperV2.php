@@ -169,8 +169,11 @@ class BaseFraudCheckHelperV2
         return [$fraud_result, $fraud->weight, ['name_card' => $name_card], null, $outcome];
     }
 
-    private static function checksIsPassByType(array $transaction_response, string $type = 'address_line1_check'): bool
+    private static function checksIsPassByType(?array $transaction_response, string $type = 'address_line1_check'): bool
     {
+        if (!$transaction_response) {
+            return false;
+        }
         foreach ($transaction_response['charges']['data'] as $details) {
             if ($details['payment_method_details']['card']['checks'][$type] === 'pass') {
                 return true;

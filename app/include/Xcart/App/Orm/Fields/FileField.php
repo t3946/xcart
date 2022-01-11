@@ -2,13 +2,18 @@
 
 namespace Xcart\App\Orm\Fields;
 
+use Closure;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Exception;
+use GuzzleHttp\Psr7\Stream;
+use League\Flysystem\FileExistsException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\File as FlyFile;
 use League\Flysystem\FilesystemInterface;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Orm\Model;
 use Xcart\App\Storage\Adapters\AdapterExtInterface;
 use Xcart\App\Storage\FileNameHasher\FileNameHasherInterface;
 use Xcart\App\Storage\FileNameHasher\MD5NameHasher;
@@ -35,7 +40,7 @@ class FileField extends CharField
      * %s - Current seconds
      * %O - Current object class (lower-based).
      *
-     * @var string|callable|\Closure
+     * @var string|callable|Closure
      */
     public $uploadTo = '%M/%O/%Y-%m-%d';
 
@@ -168,7 +173,7 @@ class FileField extends CharField
             return 0;
         }
         if ($this->getFilesystem()->has($this->value)) {
-            /** @var \League\Flysystem\File $file */
+            /** @var FlyFile $file */
             $file = $this->getFilesystem()->get($this->value);
 
             return $file->getSize();
@@ -178,7 +183,7 @@ class FileField extends CharField
     }
 
     /**
-     * @param \Xcart\App\Orm\Model|ModelInterface $model
+     * @param Model|ModelInterface $model
      * @param $value
      */
     public function afterDelete(ModelInterface $model, $value)
@@ -282,8 +287,7 @@ class FileField extends CharField
 
         if ($value instanceof UploadedFile) {
             $value = $this->saveUploadedFile($value);
-        }
-        elseif ($value instanceof File) {
+        } elseif ($value instanceof File) {
             $value = $this->saveFile($value);
         }
         elseif (is_null($value)) {
@@ -311,6 +315,12 @@ class FileField extends CharField
         return str_replace('//', '/', $value);
     }
 
+    /**
+     * @param UploadedFile $file
+     * @return false|string
+     * @throws FileExistsException
+     * @throws UnknownPropertyException
+     */
     public function saveUploadedFile(UploadedFile $file)
     {
         if (false === $file->isValid()) {
@@ -368,9 +378,9 @@ class FileField extends CharField
     }
 
     /**
-     * @return \League\Flysystem\Filesystem
-     * @throws \Exception
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @return Filesystem
+     * @throws Exception
+     * @throws UnknownPropertyException
      */
     public function getFilesystem()
     {

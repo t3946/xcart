@@ -12,7 +12,6 @@ class MetricsDistributorsCommand extends Command
     public function handle($arguments = [])
     {
         $str_result = '';
-        $count_dx = DistributorModel::objects()->count();
         /** @var DistributorModel $distributor_model */
         foreach (DistributorModel::objects()->filter(['avail' => 'Y'])->all() as $distributor_model) {
             $name = preg_replace('/[^a-zA-Z0-9\s]/iu', '', (string)$distributor_model);
@@ -25,7 +24,8 @@ class MetricsDistributorsCommand extends Command
                 'dx_code' => $name
             ]);
         }
-        $str_result .= MetricsDataHelper::convertToMetrics('distributor_count', $count_dx);
+        $str_result .= MetricsDataHelper::convertToMetrics('distributors_enable_count', DistributorModel::objects()->filter(['avail' => 'N'])->count());
+        $str_result .= MetricsDataHelper::convertToMetrics('distributors_disable_count', DistributorModel::objects()->filter(['avail' => 'Y'])->count());
         if (!empty($str_result)) {
             MetricsDataHelper::pushMetrics('distributor-data', "$str_result\n");
         }

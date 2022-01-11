@@ -1,6 +1,8 @@
 <?php
+
 namespace Modules\Dashboard;
 
+use Modules\Dashboard\Admin\MailboxForwardingAdmin;
 use Modules\Dashboard\Helpers\NoticeTestCheckout;
 use Modules\Sites\SitesModule;
 use Xcart\App\Main\Xcart;
@@ -13,41 +15,37 @@ class DashboardModule extends Module
     {
         $template = Xcart::app()->template->getRenderer();
 
-        $template->addModifier('max_eta_colors', function($max_eta = 0)
-        {
+        $template->addModifier('max_eta_colors', function ($max_eta = 0) {
             $config = $GLOBALS['config'];
 
-            if ($max_eta > 0){
+            if ($max_eta > 0) {
 
-                $eta_date_x = $max_eta - ($config["backorder_decision_request"]["backorder_eta_date_x"]*60*60*24);
-                $eta_date_y = $max_eta + ($config["backorder_decision_request"]["backorder_eta_date_y"]*60*60*24);
+                $eta_date_x = $max_eta - ($config["backorder_decision_request"]["backorder_eta_date_x"] * 60 * 60 * 24);
+                $eta_date_y = $max_eta + ($config["backorder_decision_request"]["backorder_eta_date_y"] * 60 * 60 * 24);
 
-                if (time() < $eta_date_x){
+                if (time() < $eta_date_x) {
                     return '#cfe2f3';
                 }
 
-                if ($eta_date_x < time() && time() < $eta_date_y){
+                if ($eta_date_x < time() && time() < $eta_date_y) {
                     return '#F4CCCC';
                 }
 
-                if (time() > $eta_date_y){
-                   return 'do_not_show';
+                if (time() > $eta_date_y) {
+                    return 'do_not_show';
                 }
             }
             return '';
         });
 
-        $template->addModifier('get_filtered', function($models, $gid, $uid = null)
-        {
+        $template->addModifier('get_filtered', function ($models, $gid, $uid = null) {
             $t_models = [];
-            foreach ($models as $model)
-            {
+            foreach ($models as $model) {
                 if (null === $gid && empty($model->group_id)) {
                     if ($uid === null || $model->users->filter(['id' => $uid])->count()) {
                         $t_models[] = $model;
                     }
-                }
-                elseif ($model->group_id == $gid) {
+                } elseif ($model->group_id == $gid) {
                     if ($uid === null || $model->users->filter(['id' => $uid])->count()) {
                         $t_models[] = $model;
                     }
@@ -60,8 +58,7 @@ class DashboardModule extends Module
             return $t_models;
         });
 
-        $template->addFunction('orders_test_checkout', function()
-        {
+        $template->addFunction('orders_test_checkout', function () {
             if (NoticeTestCheckout::test()) {
                 return Xcart::app()->template->render('dashboard/test_checkout_message.tpl', []);
             }
@@ -70,7 +67,7 @@ class DashboardModule extends Module
 
     public static function getAdminMenu()
     {
-        if (Xcart::app()->user->hasRoles(['vrs','vrv', 'fqa'])) {
+        if (Xcart::app()->user->hasRoles(['vrs', 'vrv', 'fqa'])) {
             return [];
         }
 
@@ -97,6 +94,19 @@ class DashboardModule extends Module
                         'route' => $router->url('dashboard:admin_groups'),
                     ],
                 ] : false,
+            ],
+            [
+                'name' => 'Mailbox Forwarding',
+                'adminClassName' => MailboxForwardingAdmin::class,
+                'adminClassNameShort' => MailboxForwardingAdmin::classNameShort(),
+                'moduleName' => static::getName(),
+                'route' => Xcart::app()->router->url(
+                    'admin:list',
+                    [
+                        'module' => static::getName(),
+                        'admin' => MailboxForwardingAdmin::classNameShort()
+                    ]
+                )
             ],
         ];
     }

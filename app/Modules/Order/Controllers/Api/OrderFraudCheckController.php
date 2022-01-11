@@ -98,7 +98,7 @@ class OrderFraudCheckController extends Controller
             $ar_response['legend'] = $this->getLegendInfo($order_model);
             $ar_response['resultChange'] = $this->getManualAction($ar_answer);
             $ar_response['orderInfo'] = [
-                'bareResult' => $order_model->bare_fraud_score_v2,
+                'bareResult' => (float)$order_model->bare_fraud_score_v2,
                 'fraudStatus' => [
                     'name' => $order_model->fraud_status_model->name,
                     'code' => $order_model->fraud_status
@@ -433,9 +433,6 @@ HTML;
                 if ($order_answer->manual_action !== $value) {
                     $weight = $order_answer->question->weight;
                     $is_red_flag = $order_answer->question->type === FraudCheckBaseQuestionModel::FRAUD_TYPE_RED_FLAGS;
-                    if ($is_red_flag) {
-                        $weight = -$weight;
-                    }
                     switch ($value) {
                         case 'Y':
                             $result = 'positive';

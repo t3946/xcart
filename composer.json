@@ -33,7 +33,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "hellogerard/jobby": "^3.4.0",
         "icamys/php-sitemap-generator": "^4.3",
-        "imagine/imagine": "^0.7.1",
+        "imagine/imagine": "^1.2.4",
         "jaybizzle/crawler-detect": "^1.2",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",

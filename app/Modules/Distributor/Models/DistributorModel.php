@@ -15,6 +15,7 @@ use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledDxModel;
 use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Marketplace\Models\ExternalMarketPlaceModel;
+use Modules\Metrics\Helpers\MetricsDataHelper;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\Models\TrackingLinksCarrierModel;
@@ -46,6 +47,7 @@ use Xcart\Manufacturer;
 
 /**
  * @property int manufacturerid
+ * @property string manufacturer
  * @property float price_coef_x
  * @property float price_coef_y
  * @property float price_coef_z
@@ -691,10 +693,10 @@ class DistributorModel extends Model
     {
         $result = $r = [];
         foreach ($this->shipping_rates as $rate) {
-            array_push($r,  ...$rate->zone_element_country->all());
+            array_push($r, ...$rate->zone_element_country->all());
         }
         if ($r) {
-            foreach($r as $zone_element) {
+            foreach ($r as $zone_element) {
                 $result[] = $zone_element->field;
             }
         }
@@ -842,6 +844,13 @@ class DistributorModel extends Model
                 'type' => 'R',
                 'cost_marcup' => 1
             ]);
+        } else {
+            if ($this->getOldAttribute('avail') !== $this->avail) {
+                $str_metric = MetricsDataHelper::convertToMetricsWithParams('distributor_avail', (int)$this->avail, [
+                    'dx' => $this->manufacturer
+                ]);
+                MetricsDataHelper::pushMetrics('distributor-data', "$str_metric\n");
+            }
         }
     }
 }
