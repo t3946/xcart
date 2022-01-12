@@ -31,7 +31,7 @@ const LoginButtonDesktop: React.FC<PropsInterface> = function (
   }
 
   if (!user) {
-    const path = route("account:login");
+    const path = "/account/login";
     const className = "hat-login-button";
     const text = "log in";
 

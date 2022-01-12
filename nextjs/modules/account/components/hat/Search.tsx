@@ -79,11 +79,26 @@ const Search: React.FC = () => {
       xl: undefined,
       xxl: undefined,
     });
-  });
+  }, [suggests, isVisibleSearchMobile]);
 
   const clearSearch = () => {
     setQuery("");
     dispatch(setSuggests(null));
+  };
+
+  const getSuggest = (query: string) => {
+    dispatch(
+      getSuggestionsAction({
+        query: query,
+        success(res) {
+          if (hasNoSuggests(res.suggests)) {
+            dispatch(setSuggests(null));
+            return;
+          }
+          dispatch(setSuggests(res.suggests));
+        },
+      })
+    );
   };
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,21 +106,16 @@ const Search: React.FC = () => {
     setQuery(e.target.value);
     if (checkValue(e.target.value)) {
       timerRef.current = setTimeout(() => {
-        dispatch(
-          getSuggestionsAction({
-            query: e.target.value,
-            success(res) {
-              if (hasNoSuggests(res.suggests)) {
-                dispatch(setSuggests(null));
-                return;
-              }
-              dispatch(setSuggests(res.suggests));
-            },
-          })
-        );
+        getSuggest(e.target.value);
       }, timeout);
     } else {
       suggests && dispatch(setSuggests(null));
+    }
+  };
+
+  const onClickInput = () => {
+    if (!suggests && checkValue(query)) {
+      getSuggest(query);
     }
   };
 
@@ -123,13 +133,14 @@ const Search: React.FC = () => {
         itemType="https://schema.org/SearchAction"
         className={Styles.searchForm}
       >
-        <div className={"pos-relative"}>
+        <div>
           <input
             type="text"
             name="q"
             className={cn(classes.inputSearch)}
             value={query}
             onChange={onChangeInput}
+            onClick={onClickInput}
             placeholder={placeholder}
             itemProp="query-input"
             autoComplete="off"

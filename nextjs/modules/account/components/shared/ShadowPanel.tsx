@@ -10,10 +10,6 @@ const ShadowPanel = (): any => {
     (e: Record<any, any>) => e.shadowPanel.isVisible
   );
 
-  const isVisibleSearch = useSelector(
-    (e: Record<any, any>) => e.searchMobile.isVisible
-  );
-
   function clickHandler() {
     HideAllMenu(dispatch);
   }

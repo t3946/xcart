@@ -11,14 +11,15 @@ import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonDesktop";
 import AppData, { route } from "@client/jsx/utils/AppData";
+import Search from "@client/jsx/modules/account/components/hat/Search";
+
+import Styles from "@client/jsx/modules/account/components/hat/HatSearchLine.module.scss";
 
 interface IProps {
   isStatic?: boolean;
 }
 
-const HatSearchLine: React.FC<IProps> = (
-  props: IProps
-): any => {
+const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
   const isStatic = props.isStatic || false;
   const dispatch = useDispatch();
   const isVisibleDepartmentsMenu = useSelector(
@@ -26,45 +27,6 @@ const HatSearchLine: React.FC<IProps> = (
   );
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
-
-  function searchTemplate() {
-    return (
-      <div className="search-form-container flex-grow-1">
-        <form
-          action={route("catalog:search")}
-          method="get"
-          itemProp="potentialAction"
-          itemScope
-          itemType="https://schema.org/SearchAction"
-        >
-          <div className={"pos-relative"}>
-            <input
-              type="text"
-              name="q"
-              className="input-search"
-              placeholder={AppData.config.cidev_header_code}
-              value={AppData.params.get.q}
-              itemProp="query-input"
-              data-suggestion-url={route("catalog:search:suggestion")}
-              autoComplete="off"
-            />
-
-            <meta
-              itemProp="target"
-              content={route("catalog:search") + "?q={query}"}
-            />
-
-            <a
-              className={classnames("button-clear", {
-                active: AppData.params.get.q,
-              })}
-            />
-          </div>
-          <button className="button-search show-for-large" />
-        </form>
-      </div>
-    );
-  }
 
   function openDepartmentsMenu() {
     HideAllMenu(dispatch);
@@ -79,18 +41,12 @@ const HatSearchLine: React.FC<IProps> = (
     setDepartmentsMenuButtonHover(false);
   }
 
-  React.useEffect(() => {
-    new SearchSuggestion(".input-search", {
-      container: "search-form-container_suggestion",
-    });
-  });
-
   return (
     <div className="sticky-menu-container">
       <div className="sticky def-zi2">
         <div
           id="search_container"
-          className="desktop_menu_search_cart show-for-large position-relative"
+          className="desktop_menu_search_cart position-relative"
           data-toggler="show-for-large"
         >
           <DepartmentsMenu
@@ -100,7 +56,7 @@ const HatSearchLine: React.FC<IProps> = (
             closeMenu={closeDepartmentsMenu}
           />
 
-          <div className="container">
+          <div className="container-lg">
             <div className="row">
               <HoverIntent
                 onMouseOver={() => {
@@ -132,7 +88,7 @@ const HatSearchLine: React.FC<IProps> = (
               </HoverIntent>
 
               <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
-                {searchTemplate()}
+                <Search />
 
                 <div className={"d-none d-lg-flex search-line_buttons"}>
                   <LoginButtonDesktop isStatic={isStatic} />

@@ -25,7 +25,7 @@ const PublicProfile = (): any => {
   const user = useSelector((e: StoreDto) => e.user);
 
   if (!user) {
-    history.push(route("account:login"));
+    history.push("/account/login");
   }
 
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);

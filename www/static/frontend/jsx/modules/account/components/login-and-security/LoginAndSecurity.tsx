@@ -27,7 +27,7 @@ const LoginAndSecurity = (): any => {
   const ALERT_SHOW_TIME_MS = 3000;
 
   if (!user) {
-    history.push(route("account:login"));
+    history.push("/account/login");
     return;
   }
 

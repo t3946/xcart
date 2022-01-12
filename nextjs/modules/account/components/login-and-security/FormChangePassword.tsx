@@ -9,7 +9,6 @@ import {
   changePasswordAction,
   setAlertAction,
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
-import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import Label from "@modules/ui/forms/Label";
@@ -17,6 +16,7 @@ import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import Styles from "@modules/account/components/login-and-security/FormChangePassword.module.scss";
 
 const FormChangePassword = (): any => {
   const router = useRouter();
@@ -25,6 +25,7 @@ const FormChangePassword = (): any => {
   const initialValues = {
     oldPassword: "",
     newPassword: "",
+    confirmPassword: "",
   };
 
   const validationSchema = yup.object().shape({
@@ -98,31 +99,37 @@ const FormChangePassword = (): any => {
                 }
               >
                 <div className="px-10 px-md-0">
-                  <p className="form-info">
+                  <p className={Styles.formInfo}>
                     Use the form below to change the password for your S3 Stores
                     account
                   </p>
 
-                  <Input type="hidden" name="login" value={user.email} />
+                  <Input
+                    type="hidden"
+                    disabled={isSubmitting}
+                    name="login"
+                    value={user.email}
+                  />
 
                   <RBForm.Group
                     controlId="ChangePassword"
-                    className="row mb-10"
+                    className="row mb-10 mb-md-20 align-items-center"
                   >
                     <div
                       className={
-                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start mb-10 mb-md-0"
+                        "col-12 col-md-6 col-lg-4 text-md-end text-lg-start mb-10 mb-md-0"
                       }
                     >
                       <Label className={"mb-2 mb-md-0"}>Current password</Label>
                     </div>
 
-                    <div className={"col-12 col-md-6 col-lg-6"}>
+                    <div className={"col-12 col-md-6 col-lg-5 col-xl-4"}>
                       <Input
                         type="password"
                         name="oldPassword"
                         value={values.oldPassword}
                         onChange={handleChange}
+                        disabled={isSubmitting}
                         isInvalid={
                           !!touched.oldPassword && !!errors.oldPassword
                         }
@@ -138,20 +145,21 @@ const FormChangePassword = (): any => {
 
                   <RBForm.Group
                     controlId="ChangePasswordNew"
-                    className="row mb-10"
+                    className="row mb-10 mb-md-4 align-items-center"
                   >
                     <div
                       className={
-                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start mb-10 mb-md-0"
+                        "col-12 col-md-6 col-lg-4 text-md-end text-lg-start mb-10 mb-md-0"
                       }
                     >
                       <Label className={"mb-2 mb-md-0"}>New password</Label>
                     </div>
 
-                    <div className={"col-12 col-md-6 col-lg-6"}>
+                    <div className={"col-12 col-md-6 col-lg-5 col-xl-4"}>
                       <Input
                         type="password"
                         name="newPassword"
+                        disabled={isSubmitting}
                         value={values.newPassword}
                         onChange={handleChange}
                         isInvalid={
@@ -169,11 +177,11 @@ const FormChangePassword = (): any => {
 
                   <RBForm.Group
                     controlId="ChangePasswordConfirm"
-                    className="row"
+                    className="row align-items-center"
                   >
                     <div
                       className={
-                        "col-12 col-md-6 col-lg-6 text-md-end text-lg-start mb-10 mb-md-0"
+                        "col-12 col-md-6 col-lg-4 text-md-end text-lg-start mb-10 mb-md-0"
                       }
                     >
                       <Label className={"mb-2 mb-md-0"}>
@@ -181,12 +189,13 @@ const FormChangePassword = (): any => {
                       </Label>
                     </div>
 
-                    <div className={"col-12 col-md-6 col-lg-6"}>
+                    <div className={"col-12 col-md-6 col-lg-5 col-xl-4"}>
                       <Input
                         type="password"
                         name="confirmPassword"
                         value={values.confirmPassword}
                         onChange={handleChange}
+                        disabled={isSubmitting}
                         isInvalid={
                           !!touched.confirmPassword && !!errors.confirmPassword
                         }

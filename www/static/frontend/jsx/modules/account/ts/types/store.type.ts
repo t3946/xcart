@@ -126,6 +126,14 @@ interface StoreInterface {
   departmentsMenuDesktop: {
     isVisible: boolean;
   };
+  searchMobile: {
+    isVisible: boolean;
+  };
+  suggestion: {
+    category_suggestions: any[];
+    phrase_suggestions: any[];
+    product_suggestions: string | null;
+  } | null;
   countries: any;
   loginAndSecurity: AccountLoginAndSecurityStore;
   mobileAlert: AccountMobileAlertStore;

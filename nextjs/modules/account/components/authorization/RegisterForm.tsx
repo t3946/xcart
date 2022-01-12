@@ -101,7 +101,9 @@ const RegisterForm: React.FC<any> = () => {
                     isValid={touched.name && !errors.name}
                   />
 
-                  <Feedback type="invalid">{errors.name}</Feedback>
+                  <Feedback type="invalid">
+                    {!!touched.name && errors.name}
+                  </Feedback>
                 </RBForm.Group>
 
                 <RBForm.Group controlId="RegisterFormEmail">
@@ -113,7 +115,9 @@ const RegisterForm: React.FC<any> = () => {
                     isInvalid={!!touched.email && !!errors.email}
                     isValid={touched.email && !errors.email}
                   />
-                  <Feedback type="invalid">{errors.email}</Feedback>
+                  <Feedback type="invalid">
+                    {!!touched.email && errors.email}
+                  </Feedback>
                 </RBForm.Group>
 
                 <RBForm.Group controlId="RegisterFormPassword">
@@ -127,7 +131,9 @@ const RegisterForm: React.FC<any> = () => {
                     isValid={touched.password && !errors.password}
                     placeholder={"At least 8 characters "}
                   />
-                  <Feedback type="invalid">{errors.password}</Feedback>
+                  <Feedback type="invalid">
+                    {touched.password && errors.password}
+                  </Feedback>
 
                   {!(touched.password && errors.password) && (
                     <RBForm.Text className={"auth-form-info_input-caption"}>
@@ -150,7 +156,9 @@ const RegisterForm: React.FC<any> = () => {
                       touched.password_confirm && !errors.password_confirm
                     }
                   />
-                  <Feedback type="invalid">{errors.password_confirm}</Feedback>
+                  <Feedback type="invalid">
+                    {touched.password_confirm && errors.password_confirm}
+                  </Feedback>
                 </RBForm.Group>
               </div>
 

@@ -202,7 +202,7 @@ const RegisterForm: React.FC<any> = () => {
                 </div>
 
                 <NavLink
-                  to={route("account:login")}
+                  to={"/account/login"}
                   exact={true}
                   className="form-button form-button__outline common-link"
                 >
@@ -220,7 +220,7 @@ const RegisterForm: React.FC<any> = () => {
                 >
                   Already have an account?{" "}
                   <NavLink
-                    to={route("account:login")}
+                    to={"/account/login"}
                     className="common-link"
                     exact={true}
                   >

@@ -3,16 +3,16 @@ import { logoutAction } from "@client/jsx/redux/actions/account-actions/Autoriza
 import { userClearAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import cn from "classnames";
+
+import Styles from "@client/jsx/modules/account/components/sidebar-menu/LogoutButton.module.scss";
 
 interface IProps {
   onClick?: () => void;
 }
 
-const LogoutButton: React.FC<IProps> = function (
-  props: IProps
-) {
+const LogoutButton: React.FC<IProps> = function (props: IProps) {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ const LogoutButton: React.FC<IProps> = function (
           dispatch(userClearAction());
 
           if (history) {
-            history.push(route("account:login"));
+            history.push("/account/login");
           }
         },
       })
@@ -36,9 +36,13 @@ const LogoutButton: React.FC<IProps> = function (
 
   return (
     <button
-      className={
-        "sidebar-menu-item sidebar-menu_top-level-item text-start w-100 sidebar-menu-item__logout"
-      }
+      className={cn(
+        "sidebar-menu-item",
+        "sidebar-menu_top-level-item",
+        "text-start",
+        "w-100",
+        Styles.logoutButton
+      )}
       onClick={logout}
     >
       Log out

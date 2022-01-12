@@ -98,6 +98,13 @@ export interface AccountPublicProfileStore {
   alert: Record<any, any>;
 }
 
+export interface SideBarMenuStore {
+  menuItems: {
+    to: string;
+    active: boolean;
+  }[];
+}
+
 interface StoreInterface {
   breadcrumbs: Record<any, any>[];
   routes: any;
@@ -125,6 +132,7 @@ interface StoreInterface {
   searchMobile: {
     isVisible: boolean;
   };
+  sidebar: SideBarMenuStore;
   suggestion: {
     category_suggestions: any[];
     phrase_suggestions: any[];

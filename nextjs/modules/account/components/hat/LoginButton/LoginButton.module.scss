@@ -36,7 +36,8 @@
     background-color: darken($bgColor, 2%);
   }
 
-  &:active {
+  &:active,
+  &:focus {
     background-color: darken($bgColor, 4%);
   }
 

@@ -26,6 +26,7 @@ import CartReducer from "@redux/reducers/CartReducer";
 // import MiniCartReducer from "@redux/reducers/MiniCartReducer";
 import PublicProfileReducer from "@redux/reducers/account/PublicProfileReducer";
 import OrdersReducer from "@redux/reducers/account/OrdersReducer";
+import SideBarMenuReducer from "@redux/reducers/account/SideBarMenuReducer";
 // import RatingsReducer from "@redux/reducers/RatingsReducer";
 // import ReviewsReducer from "@redux/reducers/ReviewsReducer";
 // import ProductReducer from "@redux/reducers/ProductReducer";
@@ -69,6 +70,7 @@ const reducers = combineReducers({
   loginAndSecurity: LoginAndSecurityReducer,
   mobileAlert: MobileAlertReducer,
   cart: CartReducer,
+  sidebar: SideBarMenuReducer,
   // miniCart: MiniCartReducer,
   publicProfile: PublicProfileReducer,
   ordersStore: OrdersReducer,

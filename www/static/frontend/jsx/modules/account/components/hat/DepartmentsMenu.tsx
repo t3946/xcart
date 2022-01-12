@@ -1,18 +1,24 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { route } from "@client/jsx/utils/AppData";
-import classnames from "classnames";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import cn from "classnames";
 import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
+import { useSelector } from "react-redux";
+import { StoreDto } from "@s3stores-mail/ts/types";
+import Styles from "@client/jsx/modules/account/components/hat/DepartmentsMenu.module.scss";
+import ViewAllDepartmentsIcon from "@client/jsx/modules/icon/components/header/ViewAllDepartments";
+import { isMobile } from "react-device-detect";
 
 const DepartmentsMenu = (props: Record<any, any>): any => {
   const MAX_CATEGORIES_NUMBER = 11;
-  const containerClasses = [props.className, "departments-menu"];
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const containerClasses = [props.className, Styles.departmentsMenu];
+  const [selectedCategory, setSelectedCategory] = React.useState<Record<
+    any,
+    any
+  > | null>(null);
   const [isMouseOverMenuItem, setIsMouseOverMenuItem] = React.useState(false);
   const [isMouseOverCategoryDetails, setIsMouseOverCategoryDetails] =
     React.useState(false);
-  const [closeTimeout, setCloseTimeOut] = React.useState(null);
+  const [closeTimeout, setCloseTimeOut] = React.useState<any>(null);
   const departmentsMenu = useSelector(
     (e: StoreDto) => e.departmentsMenu.desktop
   );
@@ -53,21 +59,26 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   function groupItemsTemplate(group: Record<any, any>): any {
     const groupItems = [];
 
-    for (const item of group.items) {
+    for (const key in group.items) {
+      const { link, name } = group.items[key];
+
       groupItems.push(
-        <li className="category-menu-group-item">
+        <li className={Styles.categoryMenuGroupItem} key={key}>
           <a
-            href={item.link}
-            className="category-menu-link category-menu-link__level-3"
+            href={link}
+            className={cn(
+              Styles.categoryMenuLink,
+              Styles.categoryMenuLink_level_3
+            )}
           >
-            {item.name}
+            {name}
           </a>
         </li>
       );
     }
 
     return (
-      <ul className="list-unstyled p-0 m-0 category-menu-group-list">
+      <ul className={cn("list-unstyled p-0 m-0", Styles.categoryMenuGroupList)}>
         {groupItems}
       </ul>
     );
@@ -80,24 +91,36 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
     const groups = [];
 
-    for (const group of selectedCategory.groups) {
+    for (const i in selectedCategory.groups) {
+      const group = selectedCategory.groups[i];
       const headerClasses = [
-        "category-menu-link-level-2-header",
+        Styles.categoryMenuLinkLevel2Header,
         {
-          "category-menu-link-level-2-header__underlined": !!group.items.length,
+          [Styles.categoryMenuLinkLevel2Header_underlined]:
+            !!group.items.length,
         },
       ];
 
       const item = (
-        <div className="group-links-column mb-3">
-          <h4 className={classnames(headerClasses)}>
+        <div
+          className={cn(
+            Styles.groupLinksColumn,
+            Styles.categoryDetailed__groupLinksColumn
+          )}
+          key={i}
+        >
+          <h4 className={cn(headerClasses)}>
             <a
               href={group.link}
-              className="category-menu-link category-menu-link__level-2"
+              className={cn(
+                Styles.categoryMenuLink,
+                Styles.categoryMenuLink_level_2
+              )}
             >
               {group.name}
             </a>
           </h4>
+
           {groupItemsTemplate(group)}
         </div>
       );
@@ -116,11 +139,13 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     const items = [];
     const categories = departmentsMenu.slice(0, MAX_CATEGORIES_NUMBER);
 
-    for (const category of categories) {
+    for (const key in categories) {
+      const category: Record<any, any> = categories[key];
       const linkClasses = [
-        "category-menu-link category-menu-link__top-level",
+        Styles.categoryMenuLink,
+        Styles.categoryMenuLink_topLevel,
         {
-          "category-menu-link__selected":
+          [Styles.categoryMenuLink_selected]:
             selectedCategory !== null &&
             category.id === selectedCategory.id &&
             (isMouseOverMenuItem || isMouseOverCategoryDetails),
@@ -128,12 +153,21 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
       ];
 
       items.push(
-        <li className="category-menu-item has-child">
+        <li className={cn("has-child")} key={key}>
           <a
             href={category.url}
-            className={classnames(linkClasses)}
+            className={cn(linkClasses)}
+            onClick={(e) => {
+              if (selectedCategory !== category) {
+                setSelectedCategory(category);
+                e.preventDefault();
+              }
+            }}
+            onTouchStart={(e) => {
+              e.preventDefault();
+            }}
             onMouseOver={() => {
-              setSelectedCategory(category);
+              !isMobile && setSelectedCategory(category);
             }}
           >
             {category.name}
@@ -151,11 +185,12 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     }
 
     return (
-      <div className="category-view-all">
+      <div className={Styles.categoryViewAll}>
         <a
           href={`${route("catalog:list")}#id${selectedCategory.id}`}
-          className="category-view-all-link"
+          className={Styles.categoryViewAllLink}
         >
+          <ViewAllDepartmentsIcon className={Styles.categoryViewAllLinkIcon} />
           View all {selectedCategory.name} departments
         </a>
       </div>
@@ -164,15 +199,15 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
   return (
     <TransitionFade show={props.isVisible}>
-      <div className={classnames(containerClasses)} onClick={props.closeMenu}>
+      <div className={cn(containerClasses)} onClick={props.closeMenu}>
         <section
-          className="category-menu-list-container container"
+          className={cn(Styles.categoryMenuListContainer, "container")}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="row me-0">
             <div className="account-page-left-column col pe-0">
               <div
-                className="category-menu-list"
+                className={cn(Styles.categoryMenuList)}
                 onMouseOver={() => {
                   setIsMouseOverMenuItem(true);
                 }}
@@ -180,12 +215,16 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
                   setIsMouseOverMenuItem(false);
                 }}
               >
-                <ul className="no-bullet list-unstyled m-0">
-                  {topLevelMenuTemplate()}
-                </ul>
+                <ul className="list-unstyled m-0">{topLevelMenuTemplate()}</ul>
 
-                <div className="view-all-container">
-                  <a href={route("catalog:list")} className="view-all">
+                <div className={cn(Styles.viewAllContainer)}>
+                  <a
+                    href={route("catalog:list")}
+                    className={cn(Styles.viewAll)}
+                  >
+                    <ViewAllDepartmentsIcon
+                      className={Styles.categoryViewAllLinkIcon}
+                    />
                     View all departments
                   </a>
                 </div>
@@ -203,7 +242,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
               }}
             >
               <div
-                className={classnames([
+                className={cn([
                   "account-page-right-column bg-white h-100 category-detailed pt-2 pb-4 position-relative",
                   (isMouseOverMenuItem ||
                     isMouseOverCategoryDetails ||

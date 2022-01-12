@@ -12,6 +12,7 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
@@ -36,7 +37,7 @@ const FormEditUserEmail = (): any => {
   function submit(values: any, actions: any) {
     dispatch(
       editEmailAction({
-        form: values,
+        data: values,
 
         success(res: any) {
           dispatch(userSetAction(res.data.user));
@@ -111,9 +112,7 @@ const FormEditUserEmail = (): any => {
                         "col-12 col-md-6 col-lg-6 mb-10 mb-md-0 d-flex align-items-center justify-content-md-end justify-content-lg-start"
                       }
                     >
-                      <RBForm.Label className={"fw-bold"}>
-                        New Email Address
-                      </RBForm.Label>
+                      <Label>New Email Address</Label>
                     </div>
 
                     <div className={"col-12 col-md-6 col-lg-6"}>
@@ -122,10 +121,11 @@ const FormEditUserEmail = (): any => {
                         name="email"
                         value={values.email}
                         onChange={handleChange}
+                        disabled={isSubmitting}
                         isInvalid={!!touched.email && !!errors.email}
                         isValid={touched.email && !errors.email}
                       />
-                      <Feedback type="invalid">
+                      <Feedback className="position-absolute" type="invalid">
                         {touched.email && errors.email}
                       </Feedback>
                     </div>

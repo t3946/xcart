@@ -25,7 +25,7 @@ const TSVSettings = (): any => {
   useSelector((e: StoreInterface) => e.main.breakpoint);
 
   if (user === null) {
-    history.push(route("account:login"));
+    history.push("/account/login");
   }
 
   function tsvCountTemplate() {

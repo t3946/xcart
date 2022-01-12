@@ -9,12 +9,14 @@ const UserIcon: React.FC = () => {
   const avatarUrl = user?.avatar_image;
 
   if (!user || !avatarUrl) {
-    return <SVGUserIcon className={classnames(Styles.userIcon)} />;
+    return (
+      <SVGUserIcon className={classnames(Styles.userIcon, "flex-shrink-0")} />
+    );
   }
 
   return (
     <img
-      className={classnames(Styles.userAvatar)}
+      className={classnames(Styles.userAvatar, "flex-shrink-0")}
       src={`/${avatarUrl}`}
       alt="avatar"
     />
