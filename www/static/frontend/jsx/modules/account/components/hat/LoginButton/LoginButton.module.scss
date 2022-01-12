@@ -18,3 +18,10 @@
     width: rem-calc(30);
   }
 }
+
+.hatLoginButton {
+  &:hover, &:focus {
+    color: #ffffff;
+    background-color: #135982;
+  }
+}
