@@ -84,7 +84,7 @@
   }
 }
 .buttonClear__svg {
-  margin: 0;
+  margin: pxToRem(7);
 
   @include breakpoint(lg) {
     margin: pxToRem(5);

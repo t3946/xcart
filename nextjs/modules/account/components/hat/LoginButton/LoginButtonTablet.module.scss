@@ -1,0 +1,8 @@
+@import "styles/utils/Utils.module";
+
+.button {
+  &:hover,
+  &:focus {
+    color: $white;
+  }
+}

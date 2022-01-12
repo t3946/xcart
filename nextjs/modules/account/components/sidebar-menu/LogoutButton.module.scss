@@ -13,8 +13,7 @@
   position: relative;
 
   &:hover {
-    background-color: #e2e2e2;
-    color: #87121f;
+    background-color: #ffffff;
   }
 
   @include breakpoint(md) {
