@@ -1,22 +1,30 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { confirmCodeAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import Link from "next/link";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
-
 import Styles from "@modules/account/components/login-and-security/TSVAddNewApp.module.scss";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { AxiosResponse } from "axios";
 
-const TSVAddNewApp = (): any => {
-  const user = useSelector((e: StoreDto) => e.user);
+interface IProps {
+  tsv: {
+    url: string;
+    secret: string;
+  };
+}
+
+const TSVAddNewApp = (props: IProps): any => {
+  const { tsv } = props;
+  const user = useSelectorAccount((e) => e.user);
   const router = useRouter();
   const dispatch = useDispatch();
   const initialValues = {
@@ -31,17 +39,17 @@ const TSVAddNewApp = (): any => {
     router.push("/account/login");
   }
 
-  function submit(values, actions) {
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     dispatch(
       confirmCodeAction({
-        form: values,
+        data: values,
 
-        success(res) {
-          dispatch(userSetAction(res.user));
+        success(res: AxiosResponse) {
+          dispatch(userSetAction(res.data.user));
           router.push("/login-and-security/two-step-verification-settings");
         },
 
-        error(err) {
+        error(err: any) {
           actions.setErrors(err);
         },
 
@@ -131,7 +139,7 @@ const TSVAddNewApp = (): any => {
               <div>
                 <img
                   className={"tsv-qr-code my-12 my-md-14"}
-                  src={user.tsv.url}
+                  src={tsv.url}
                   alt="Scan QR Code"
                   width="120"
                   height="120"
@@ -164,7 +172,7 @@ const TSVAddNewApp = (): any => {
                           In "Enter your key" type the following key (space not
                           required):
                           <br />
-                          <b>{user.tsv.secret}</b>
+                          <b>{tsv.secret}</b>
                         </li>
                         <li>Set key type to "Time based"</li>
                         <li>Tap Add</li>

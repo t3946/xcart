@@ -245,6 +245,40 @@ app.post("/change-password", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
+app.post("/tsv/confirm-code", isAuthMiddleware, async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/tsv/confirm-code", {
+      code: req.body.code,
+      userId: req.user.userId,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
+});
+
+app.get("/tsv/disable", isAuthMiddleware, async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/tsv/disable", {
+      userId: req.user.userId,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
+});
+
+app.get("/tsv/get", isAuthMiddleware, async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/tsv/get", {
+      userId: req.user.userId,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
+});
+
 /**
  * /verify-one-time-password
  * /send-one-time-password

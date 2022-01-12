@@ -10,19 +10,22 @@ use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 
 class TSVApi extends FrontendController
 {
-    public function confirmCode()
+    //create new QR-code and send url to it
+    public function emit($account_name): array
     {
-        /**
-         * @var $user UserModel
-         */
-        $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            return;
-        }
-
         $g = new GoogleAuthenticator();
+        $secret = $g->generateSecret();
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $issuer = $site->getCompanyName();
+
+        return $secret;
+    }
+
+    public function confirmCodeAction()
+    {
         $data = json_decode(file_get_contents('php://input'), true);
+        $user = UserModel::objects()->get(["user_id" => $data["userId"]]);
+        $g = new GoogleAuthenticator();
         $code = $data["code"];
         $secret = $user->getAttribute('tsv_secret');
         $count = $user->getAttribute('tsv_count');
@@ -38,7 +41,9 @@ class TSVApi extends FrontendController
         if ($g->checkCode($secret, $code)) {
             $user->setAttribute('tsv_count', $count + 1);
             $user->save();
-            $this->jsonResponse(["user" => $user->toArray()]);
+            $attributes = $user->getAttributes();
+            unset($attributes["password"]);
+            $this->jsonResponse(["user" => $attributes]);
         } else {
             $this->jsonResponse(["errors" => [
                 "code" => "Code is invalid",
@@ -46,32 +51,38 @@ class TSVApi extends FrontendController
         }
     }
 
-    public function disable() {
-        /**
-         * @var $user UserModel
-         */
-        $user = Xcart::app()->auth->getUser(true);
+    public function getAction()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $user = UserModel::objects()->get(["user_id" => $data["userId"]]);
+        $secret = $user->tsv_secret;
 
-        if ($user->getIsGuest()) {
-            return;
+        if (!$secret) {
+            $g = new GoogleAuthenticator();
+            $secret = $g->generateSecret();
+            $user->setAttribute('tsv_secret', $secret);
+            $user->save();
         }
 
-        $g = new GoogleAuthenticator();
-        $secret = $g->generateSecret();
-        $account_name = $user->email;
         $site = Xcart::app()->getModule('Sites')->getSite();
         $issuer = $site->getCompanyName();
-        $url = GoogleQrUrl::generate($account_name, $secret, $issuer);
-        $user->setAttribute('tsv_secret', $secret);
+        $url = GoogleQrUrl::generate($user->email, $secret, $issuer);
+        $this->jsonResponse(["url" => $url, "secret" => $secret]);
+    }
+
+    public function disableAction()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $user = UserModel::objects()->get(["user_id" => $data["userId"]]);
+        $g = new GoogleAuthenticator();
+        $secret = $g->generateSecret();
         $user->setAttribute('tsv_count', 0);
+        $user->setAttribute('tsv_secret', $secret);
         $user->save();
 
-        $this->jsonResponse([
-            "user" => $user->toArray(),
-            "tsv" => [
-                "url" => $url,
-                "secret" => $secret,
-            ],
-        ]);
+        $attributes = $user->getAttributes();
+        unset($attributes["password"]);
+
+        $this->jsonResponse(["user" => $attributes]);
     }
 }

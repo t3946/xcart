@@ -1,35 +1,26 @@
 import { takeLatest } from "redux-saga/effects";
-import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
-import { route } from "@utils/AppData";
-
-const api = new ApiService();
+import axios from "axios";
 
 function* confirmCode(action: AnyAction) {
-  const { form, success, error, complete } = action.payload;
+  const { data, success, error, complete } = action.payload;
 
-  const data = JSON.stringify(form);
+  yield axios
+    .post<any>("/api-client/user/tsv/confirm-code", data)
+    .then((res) => {
+      res.data.errors ? error(res.data.errors) : success(res);
 
-  yield api.post<any>(route("account:api:confirm-code"), data).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+      complete();
 
-    complete();
-
-    return res;
-  });
+      return res;
+    });
 }
 
 function* disable(action: AnyAction) {
-  const { form, success } = action.payload;
+  const { data, success } = action.payload;
 
-  const data = JSON.stringify(form);
-
-  yield api.post<any>(route("account:api:disable"), data).then((res) => {
-    success(res);
-
-    return res;
-  });
+  yield axios.get<any>("/api-client/user/tsv/disable", data).then(success);
 }
 
 function* TSVSaga(): SagaIterator {

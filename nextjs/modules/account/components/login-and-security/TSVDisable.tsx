@@ -10,6 +10,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import {AxiosResponse} from "axios";
 
 const TSVDisable: React.FC<any> = function () {
   const [isConfirm, setIsConfirm] = React.useState(false);
@@ -23,9 +24,9 @@ const TSVDisable: React.FC<any> = function () {
 
     dispatch(
       disableAction({
-        success(res) {
+        success(res: AxiosResponse) {
           setIsDisableTsvSending(false);
-          dispatch(userSetAction(res.user));
+          dispatch(userSetAction(res.data.user));
           router.push("/login-and-security/two-step-verification-settings");
         },
       })

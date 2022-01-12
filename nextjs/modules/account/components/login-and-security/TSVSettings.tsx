@@ -11,12 +11,12 @@ import { useDispatch } from "react-redux";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import ModalTSVDisable from "@modules/account/components/login-and-security/ModalTSVDisable";
 import InnerPage from "@modules/account/components/shared/InnerPage";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import cn from "classnames";
+import {AxiosResponse} from "axios";
 
 const TSVSettings = (): any => {
-  const breakpoint = useBreakpoint();
   const disableTSVModal = useDialog();
   const user = useSelector((e: StoreInterface) => e.user);
   const router = useRouter();
@@ -30,8 +30,8 @@ const TSVSettings = (): any => {
   }
 
   function tsvCountTemplate() {
-    if (user.tsv.count) {
-      return <div>{user.tsv.count} app(s) enrolled</div>;
+    if (user.tsv_count) {
+      return <div>{user.tsv_count} app(s) enrolled</div>;
     }
   }
 
@@ -39,39 +39,48 @@ const TSVSettings = (): any => {
     setIsDisableTsvSending(true);
     dispatch(
       disableAction({
-        success(res) {
+        success(res: AxiosResponse) {
           disableTSVModal.handleClose();
           setIsDisableTsvSending(false);
-          dispatch(userSetAction(res.user));
+          dispatch(userSetAction(res.data.user));
         },
       })
     );
   }
 
   function disableTSVButtonTemplate() {
-    const className =
-      "form-button form-button__outline w-100 w-sm-auto form-button__micro";
+    const classes = {
+      base: [
+        "form-button",
+        "form-button__outline",
+        "w-100",
+        "w-sm-auto",
+        "form-button__micro",
+      ],
+      link: ["d-block", "d-lg-none"],
+      button: ["d-none", "d-lg-block"],
+    };
 
-    return breakpoint({
-      xs: (
+    return (
+      <>
         <Link
-          className={className}
           href={"/login-and-security/two-step-verification-settings-disable"}
-          exact={true}
         >
-          <span className={className}> disable</span>
+          <span className={cn(classes.base, classes.link)}> disable</span>
         </Link>
-      ),
-      lg: (
-        <button className={className} onClick={disableTSVModal.handleClickOpen}>
+
+        <button
+          className={cn(classes.base, classes.button)}
+          onClick={disableTSVModal.handleClickOpen}
+        >
           disable
         </button>
-      ),
-    });
+      </>
+    );
   }
 
   function disableTSVTemplate() {
-    if (user.tsv.count === 0) {
+    if (user.tsv_count === 0) {
       return;
     }
 

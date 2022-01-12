@@ -33,11 +33,14 @@
   width: pxToRem(180);
 
   &:hover {
-    color: $white;
     background-color: darken($bgColor, 2%);
   }
 
   &:active {
     background-color: darken($bgColor, 4%);
+  }
+
+  &:hover, &:focus {
+    color: $white;
   }
 }
