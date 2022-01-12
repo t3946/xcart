@@ -42,7 +42,7 @@ export default class SliderProducts extends Component {
     });
   }
 
-  onFlagClick(e, inList, productId) {
+  onFlagClick = (e, inList, productId) => {
     e.stopPropagation();
 
     if (!inList) {
@@ -54,7 +54,7 @@ export default class SliderProducts extends Component {
     Store.dispatch(
       deleteProduct(this.state.lists.product_list_id, productId, () => {})
     );
-  }
+  };
 
   loadNewItems() {
     const url = "/api" + this.props.url + "?page=" + this.paginationPage;
@@ -83,8 +83,6 @@ export default class SliderProducts extends Component {
   }
 
   componentDidMount() {
-    //TODO: debug
-    return;
     this.loadNewItems();
   }
 
