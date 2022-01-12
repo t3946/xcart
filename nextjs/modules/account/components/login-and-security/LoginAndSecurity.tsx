@@ -32,9 +32,6 @@ const LoginAndSecurity = (): any => {
       router.push("/login");
     }
   }, []);
-  if (!user) {
-    return <></>;
-  }
 
   const listItems = [
     {

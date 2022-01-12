@@ -10,26 +10,7 @@ import classnames from "classnames";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
-import RotateStyles from "styles/modules/Rotate.module.scss";
-import StylesCommon from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
-import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-
-import Styles from "@modules/account/components/hat/LoginButton/LoginButtonDesktop.module.scss";
-
-const AccountLink: React.FC = function () {
-  const classes = [
-    "sidebar-menu-item",
-    "sidebar-menu_top-level-item",
-    "text-decoration-none",
-  ];
-
-  return (
-    <Link href={"/"}>
-      <a className={classnames(classes)}>Account</a>
-    </Link>
-  );
-};
 
 const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
@@ -39,48 +20,10 @@ const LoginButtonDesktop: React.FC = function () {
     (e) => e.mobileMenu.isTabletMenuVisible
   );
 
-  const classes = {
-    button: [
-      StylesCommon.hatLoginButton,
-      Styles.button,
-      "d-flex",
-      "align-items-center",
-      "position-relative",
-      "cursor-pointer",
-      "text-decoration-none",
-      { [Styles.button_logined]: user },
-    ],
-
-    username: ["hat-login-button-username", Styles.username, "text-center"],
-
-    iconArrow: [
-      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-      "login-button-desktop__arrow",
-      "login-button-desktop-arrow",
-      {
-        "login-button-desktop-arrow__flip": isTabletMenuVisible,
-      },
-    ],
-
-    dropdownItem: ["justify-content-center"],
-  };
-  const routes = useSelectorAccount((e) => e.routes);
-
   function toggleMenu(isVisible: boolean) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
     isVisible && dispatch(setVisibleShadowPanelAction(true));
-  }
-
-  if (!user) {
-    return (
-      <Link href={"/login"}>
-        <a className={cn(classes.button)}>
-          <UserIcon />
-          <span className="hat-login-button-username">log in</span>
-        </a>
-      </Link>
-    );
   }
 
   function logoutButtonClickHandler() {
@@ -95,15 +38,12 @@ const LoginButtonDesktop: React.FC = function () {
           ref={ref}
           className={classnames(
             className,
-            "account-hat-dropdown-menu col-12 p-0 rounded-0 border-0"
+            "account-hat-dropdown-menu col-12 p-0 rounded-0"
           )}
           aria-labelledby={labeledBy}
         >
           <div className="sidebar-menu-wrapper">
-            <LogoutButton
-              onClick={logoutButtonClickHandler}
-              classes={classes.dropdownItem}
-            />
+            <LogoutButton onClick={logoutButtonClickHandler} />
           </div>
         </div>
       );
@@ -112,10 +52,9 @@ const LoginButtonDesktop: React.FC = function () {
 
   const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
+
     const arrowClasses = [
-      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-      Styles.arrowIcon,
-      "flex-shrink-0",
+      "login-button-desktop__arrow login-button-desktop-arrow",
       {
         "login-button-desktop-arrow__flip": isTabletMenuVisible,
       },
@@ -123,7 +62,7 @@ const LoginButtonDesktop: React.FC = function () {
 
     return (
       <span
-        className={cn(classes.button)}
+        className={className}
         title={user.name}
         ref={ref}
         onClick={(e) => {
@@ -131,12 +70,23 @@ const LoginButtonDesktop: React.FC = function () {
         }}
       >
         <UserIcon />
-        <span className={classnames(classes.username)}>{user.name}</span>
-
+        {user.name}
         <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );
   });
+
+  if (!user) {
+    const path = "/login";
+    const className = "hat-login-button";
+    const text = "log in";
+
+    return (
+      <Link href={path}>
+        <a className={className}>{text}</a>
+      </Link>
+    );
+  }
 
   return (
     <Dropdown
