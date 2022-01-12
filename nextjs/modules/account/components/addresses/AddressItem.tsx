@@ -3,8 +3,7 @@ import { useDispatch } from "react-redux";
 import {
   changeDefaultAddress,
   removeAddress,
-} from "../../../../redux/actions/account-actions/AddressActions";
-import { useRouter } from "next/router";
+} from "@redux/actions/account-actions/AddressActions";
 import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
 import Store from "@redux/stores/Store";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
@@ -24,16 +23,10 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   addressInfo,
 }) => {
   const dispatch = useDispatch();
-  const history = useRouter();
-
   const breakpoint = useBreakpoint();
-
   const { showSnackbar } = useContext(SnackbarContext);
-
   const editAddressDialog = useDialog();
-
   const deleteAddressDialog = useDialog();
-
   const onPended = (message: string) => {
     showSnackbar({
       header: "Success",
