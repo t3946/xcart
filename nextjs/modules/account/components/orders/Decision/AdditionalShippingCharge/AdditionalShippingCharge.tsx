@@ -215,6 +215,7 @@ const AdditionalShippingCharge: React.FC<IProps> = (props) => {
           values,
           handleChange,
           isSubmitting,
+          setSubmitting,
           errors,
           setErrors,
           touched,
