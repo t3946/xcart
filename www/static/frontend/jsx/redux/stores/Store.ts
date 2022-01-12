@@ -1,4 +1,6 @@
 import "regenerator-runtime/runtime";
+import axios from "axios";
+import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 
 import {
   applyMiddleware,
@@ -36,6 +38,8 @@ import ReviewsReducer from "@client/jsx/redux/reduсers/ReviewsReducer";
 import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
 import PhotoSwipeReducer from "@client/jsx/redux/reduсers/PhotoSwipeReducer";
 import DecisionsReducer from "@client/jsx/redux/reduсers/account/DecisionsReducer";
+import MobileSearchReducer from "@client/jsx/redux/reduсers/MobileSearchReducer";
+import SuggestionReducer from "@client/jsx/redux/reduсers/SuggestionReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -50,6 +54,8 @@ const Store: ReduxStore<StoreInterface> = createStore(
     shadowPanel: ShadowPanelReducer,
     countries: CountriesReducer,
     lists: ListsReducer,
+    searchMobile: MobileSearchReducer,
+    suggestion: SuggestionReducer,
     departmentsMenu: DepartmentsMenuReducer,
     departmentsMenuMobile: DepartmentsMenuMobileReducer,
     departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
@@ -70,5 +76,9 @@ const Store: ReduxStore<StoreInterface> = createStore(
 );
 
 sagaMiddleware.run(accountRootSaga);
+
+axios.get("/api-client/user/info").then(({ data: user }) => {
+  Store.dispatch(userSetAction(user));
+});
 
 export default Store;

@@ -3,20 +3,32 @@ import LoginButton from "@client/jsx/modules/account/components/hat/LoginButton/
 import TopLine from "@client/modules/account/components/hat/TopLine";
 import { useDispatch, useSelector } from "react-redux";
 import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
+import { toggleSearchIsVisibleAction } from "@client/jsx/redux/actions/MobileSearchActions";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import AppData from "@client/jsx/utils/AppData";
 import Search from "@client/modules/icon/components/account/search/Search";
-import Styles from "@client/jsx/modules/account/components/hat/Hat.module.scss";
+import MenuIcon from "@client/jsx/modules/icon/components/menu/Menu";
+import TimesIcon from "@client/jsx/modules/icon/components/font-awesome/times/Light";
+import IconCart from "@client/jsx/modules/icon/components/common/cart/Cart";
+import cn from "classnames";
+
+import Styles from "@client/jsx/modules/account/components/hat/HatNavigation.module.scss";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
   const cart = useSelector((e: StoreInterface) => e.cart);
-
+  const isVisibleShadowPanel = useSelector(
+    (e: StoreInterface) => e.shadowPanel.isVisible
+  );
   const isVisibleMenu = useSelector(
     (e: StoreInterface) => e.departmentsMenuMobile.isVisible
   );
+
+  const classes = {
+    navigationContainer: ["d-flex", Styles.navigationContainer],
+  };
 
   function toggleMobileDepartmentsMenu(e) {
     e.stopPropagation();
@@ -48,12 +60,18 @@ const HatNavigation = (): any => {
   }
 
   return (
-    <div id="top-header-content">
-      <div id="top-header-menu">
+    <div className={Styles.topHeaderContent}>
+      <div
+        className={cn(Styles.topHeaderMenu, {
+          [Styles.topHeaderMenu_boxShadow_none]: isVisibleShadowPanel,
+        })}
+      >
         <TopLine />
 
         <header
-          id="top-header"
+          className={cn(Styles.topHeader, {
+            [Styles.header_shadowPanelVisible]: isVisibleShadowPanel,
+          })}
           itemScope
           itemType="https://schema.org/WPHeader"
         >
@@ -63,16 +81,18 @@ const HatNavigation = (): any => {
             }}
           />
 
-          <div className="logo_menu d-flex">
+          <div className={cn(classes.navigationContainer)}>
             <div className="container">
               <div className="row">
                 <div className="col-md-1 col-auto d-flex align-items-center d-lg-none">
                   <a
                     href="#"
                     data-toggle="offCanvasLeft"
-                    className="mobile_menu middle-inline-block hamburger"
+                    className="mobile_menu middle-inline-block h-auto d-flex align-items-center"
                     onClick={toggleMobileDepartmentsMenu}
-                  />
+                  >
+                    {isVisibleMenu ? <TimesIcon /> : <MenuIcon />}
+                  </a>
                 </div>
 
                 <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
@@ -108,7 +128,9 @@ const HatNavigation = (): any => {
 
                     <a
                       className="d-flex align-items-center justify-content-center hat-navigation-item-wrapper"
-                      data-swich="search_container"
+                      onClick={() => {
+                        dispatch(toggleSearchIsVisibleAction());
+                      }}
                     >
                       <Search className={Styles.searchIcon} />
                     </a>
@@ -119,12 +141,27 @@ const HatNavigation = (): any => {
 
                     <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">
                       <a
-                        href={AppData.routes["cart:list"]}
-                        className="mobile__cart middle-inline-block hat-navigation-item"
+                        href={"/cart"}
+                        className={cn(
+                          Styles.h100,
+                          "d-flex align-items-center justify-content-center w-auto"
+                        )}
                       >
-                        <span className="count">
-                          <span className="mc_count">{cart.quantity}</span>
-                        </span>
+                        <div className={Styles.cart}>
+                          <IconCart />
+                          <span
+                            className={cn(
+                              "d-flex",
+                              "align-items-center",
+                              "justify-content-center",
+                              Styles.cartCount
+                            )}
+                          >
+                            <span className={Styles.mcCount}>
+                              {cart.quantity}
+                            </span>
+                          </span>
+                        </div>
                       </a>
                     </div>
                   </div>
