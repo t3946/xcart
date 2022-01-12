@@ -82,7 +82,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
    */
   function getSelectItems(): any {
     const codes = [];
-
+    if (!countries) return codes;
     for (const country of countries) {
       if (country.phone_code) {
         codes.push({
@@ -112,7 +112,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
 
   if (mode === "mobile") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
-    classes.inputPhoneColumn.push("col");
+    classes.inputPhone.push("col");
     classes.inputPhoneExt.push("d-none");
   } else if (mode === "ext") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");

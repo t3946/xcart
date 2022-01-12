@@ -10,7 +10,9 @@ import {
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@utils/Countries";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  getPhoneNumberInnerPart,
+} from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
@@ -28,15 +30,6 @@ const FormEditUserPhone = (props: IProps): any => {
   const user = useSelectorAccount((e) => e.user);
   const countries = useSelectorAccount((e) => e.countries);
 
-  /**
-   * Get phone number without country code prefix
-   */
-  function getPhoneNumberInnerPart(countryCode: string, phoneNumber: string) {
-    const phoneCountryCodePrefix =
-      "+" + getCountryByCode(countryCode, countries).phone_code;
-    return phoneNumber.replace(phoneCountryCodePrefix, "");
-  }
-
   const initialValues = {
     phone: "",
     phoneCountryCode: user.phone_country_code,
@@ -45,7 +38,8 @@ const FormEditUserPhone = (props: IProps): any => {
   if (user.phone) {
     initialValues.phone = getPhoneNumberInnerPart(
       user.phone_country_code,
-      user.phone
+      user.phone,
+      countries
     );
   }
 

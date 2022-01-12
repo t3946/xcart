@@ -1,0 +1,54 @@
+@import "styles/utils/Utils.module";
+
+.accountModalHat {
+  height: pxToRem(48);
+  background-color: #f4f4f4;
+
+  @include breakpoint(sm) {
+    height: pxToRem(66);
+    padding: 0 pxToRem(18);
+  }
+}
+.accountModalHat__closeButton {
+  position: absolute;
+  width: auto;
+  left: pxToRem(10);
+  bottom: 0;
+  
+  @include breakpoint(sm) {
+    right: pxToRem(10);
+    left: initial;
+  }
+}
+
+.accountModalHatCloseButton_mobile {
+  border-radius: 0;
+  font-weight: bold;
+  font-size: pxToRem(13);
+  line-height: pxToRem(16);
+  padding: pxToRem(11) pxToRem(15);
+  width: auto;
+  height: pxToRem(38);
+  gap: pxToRem(17);
+}
+
+.accountModalHatCloseButtonIcon {
+  width: pxToRem(15);
+  height: pxToRem(15);
+}
+
+.modal {
+  @include breakpoint(sm) {
+    padding: pxToRem(18);
+  }
+}
+
+.modalBody {
+  @include breakpoint(sm) {
+    padding: pxToRem(16) pxToRem(60);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(16);
+  }
+}
