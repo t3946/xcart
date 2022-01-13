@@ -27,8 +27,6 @@ app.post("/login", function (req, res) {
   })(req, res);
 });
 
-app.post("/register");
-
 app.get("/info", isAuthMiddleware, async (req, res) => {
   const user = await prisma.xcart_users.findUnique({
     where: {
@@ -97,7 +95,8 @@ app.post("/create", async function (req, res) {
 
     await setSessionCookie(res, user.user_id);
 
-    res.json(user);
+    delete user.password;
+    res.json({ user });
   }
 });
 
