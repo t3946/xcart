@@ -1,5 +1,4 @@
 import "@styles/globals.scss";
-import "bootstrap/dist/css/bootstrap-grid.min.css";
 import { Provider } from "react-redux";
 import clientStore, { getServerStore } from "@redux/stores/Store";
 import App from "next/app";

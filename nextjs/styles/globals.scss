@@ -1,9 +1,10 @@
-@import "bem.css";
+@import "@submodules/bootstrap/dist/css/bootstrap";
+@import "@submodules/bootstrap/dist/css/bootstrap-grid";
+@import "~swiper/swiper-bundle";
+@import "~cropperjs/dist/cropper";
+@import "bem";
 @import "@styles/fonts/lato";
 @import "@styles/utils-style/utils-style";
-@import "~swiper/swiper-bundle.css";
-@import "@submodules/bootstrap/dist/css/bootstrap.min.css";
-@import "~cropperjs/dist/cropper.css";
 
 * {
   font-family: Lato, sans-serif;
