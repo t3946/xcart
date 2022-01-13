@@ -44,9 +44,16 @@ const SuppressedDevices: React.FC<any> = function () {
         <b>You have {user.tsv_suppressed} devices where OTP is suppressed</b>
       </div>
 
-      <div className="col-12 col-lg-6 d-md-flex justify-content-lg-end px-1 pe-lg-0">
+      <div className="col-12 col-lg-6 d-md-flex justify-content-lg-end px-1 px-md-3 pe-lg-0">
         <Button
-          className="form-button form-button__theme-dark-grey w-100 w-md-auto px-0 px-md-3"
+          className={cn(
+            StylesTSVSettings.button_requireOtp,
+            "form-button",
+            "form-button__theme-dark-grey",
+            "w-100",
+            "w-md-auto",
+            "px-0 px-md-3"
+          )}
           onClick={requireForAllSubmit}
           disabled={disabled}
           type={EType.themeDarkGrey}

@@ -12,6 +12,25 @@
 .button_disable {
   font-size: pxToRem(20);
   height: pxToRem(47);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    height: pxToRem(34);
+  }
+}
+
+.button_requireOtp {
+  font-size: pxToRem(18);
+  height: pxToRem(47);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    height: pxToRem(34);
+  }
 }
 
 .commonLink {
@@ -24,10 +43,28 @@
   &:hover {
     text-decoration: underline;
   }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
 }
 
 .text {
   @include breakpoint(md) {
     font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.caption {
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
   }
 }

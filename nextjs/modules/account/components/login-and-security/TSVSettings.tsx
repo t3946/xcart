@@ -131,7 +131,7 @@ const TSVSettings = (): any => {
           <div className="col-12 px-lg-0">
             <h3
               className={cn(
-                Styles.text,
+                Styles.caption,
                 "mb-0",
                 "content-h3",
                 "tsv-settings-box-header"
@@ -184,7 +184,7 @@ const TSVSettings = (): any => {
           <div className="col-12 px-lg-0">
             <h3
               className={cn(
-                Styles.text,
+                Styles.caption,
                 "mb-0",
                 "content-h3",
                 "tsv-settings-box-header"
@@ -286,13 +286,13 @@ const TSVSettings = (): any => {
           </div>
         </div>
 
-        <div className="row m-0">
+        <div className="row m-0 mb-lg-2">
           <h3
             className={
-              "content-h3 two-step_otp-header otp-header tsv-settings-box-header"
+              "content-h3 two-step_otp-header otp-header tsv-settings-box-header p-lg-0 mb-lg-10"
             }
           >
-            <div className={cn(Styles.text, "col-12")}>
+            <div className={cn(Styles.caption, "col-12")}>
               Devices that suppress OTP
             </div>
           </h3>
@@ -301,7 +301,7 @@ const TSVSettings = (): any => {
         <div className="py-2 py-lg-0">
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
-              <p className={"two-step-info mb-md-1"}>
+              <p className={"two-step-info mb-md-1 mb-lg-4"}>
                 You may suppress future OTP challenges by selecting "Don't
                 require OTP on this browser". As long as the OTP suppression
                 cookie is present, a Sign-In from that browser or application
@@ -313,7 +313,7 @@ const TSVSettings = (): any => {
 
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
-              <p className={"two-step-info mb-md-20"}>
+              <p className={"two-step-info mb-md-20 mb-lg-14"}>
                 To make sure your account is protected, some actions like
                 changing your account security settings, may still require you
                 to enter an OTP
@@ -325,7 +325,7 @@ const TSVSettings = (): any => {
 
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
-              <h3 className={"content-h3"}>
+              <h3 className={cn(Styles.caption, "content-h3")}>
                 Setting an app as your preferred method
               </h3>
             </div>
@@ -333,7 +333,7 @@ const TSVSettings = (): any => {
 
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
-              <p className={"two-step-info"}>
+              <p className={"two-step-info mb-md-2"}>
                 If you want to generate one time passwords from an app instead
                 of having them sent to your phone, you'll need to clear your
                 two-step verification settings. To do so, tap or click disable,
@@ -347,7 +347,9 @@ const TSVSettings = (): any => {
 
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
-              <a href="#">Get help with Two-Step Verification</a>
+              <a className={Styles.commonLink} href="#">
+                Get help with Two-Step Verification
+              </a>
             </div>
           </div>
         </div>
