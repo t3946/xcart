@@ -44,7 +44,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
         },
 
         success: function () {
-          history.push(route("account:login"));
+          history.push("/account/login");
         },
 
         error(err) {

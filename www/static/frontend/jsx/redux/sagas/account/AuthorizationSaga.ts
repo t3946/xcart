@@ -3,6 +3,7 @@ import { ApiService } from "@client/modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import { route } from "@client/jsx/utils/AppData";
+import axios from "axios";
 
 const api = new ApiService();
 
@@ -69,7 +70,7 @@ function* logout(action: AnyAction) {
     lists: null,
   });
 
-  yield api.get(route("account:authorization_api:logout")).then((response) => {
+  yield axios.get("/api-client/user/logout").then((response) => {
     callback();
     return response;
   });

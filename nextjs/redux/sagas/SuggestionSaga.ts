@@ -6,7 +6,7 @@ const api = new ApiService();
 
 function* getSuggestions(action): Generator {
   const { query, success } = action.payload;
-
+  
   yield api.get<any>(`/search/suggestion?q=${query}`).then(function (res) {
     success(res);
   });

@@ -7,6 +7,7 @@
 
   @include breakpoint(md) {
     display: grid;
+    grid-gap: 0;
     grid-template-columns: 1fr pxToRem(69) 1fr;
     max-width: pxToRem(747);
   }
@@ -17,59 +18,6 @@
   }
 }
 
-.card {
-  box-shadow: 0 0 pxToRem(4) rgb(0 0 0 / 25%);
-  border-radius: pxToRem(4);
-  width: 100%;
-
-  @include breakpoint(sm) {
-    height: 100%;
-  }
-}
-
-.cardBody {
-  padding: pxToRem(15) pxToRem(11) pxToRem(31);
-
-  @include breakpoint(md) {
-    padding: pxToRem(19) pxToRem(21) pxToRem(39);
-  }
-
-  @include breakpoint(lg) {
-    padding: pxToRem(19) pxToRem(25) pxToRem(37);
-  }
-}
-
-.cursor_pointer {
-  cursor: pointer;
-}
-
-.card_radio {
-  transition: background-color 0.2s ease-out;
-
-  &:hover {
-    background: #fffbee;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  }
-
-  &:active {
-    background: #fff8e0;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  }
-}
-
-.card_radio_active {
-  background-color: #fff8e0;
-
-  &:hover {
-    background: #fff8e0;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  }
-}
-
-.radioMarker {
-  background-color: transparent;
-}
-
 .or {
   width: pxToRem(35);
   height: pxToRem(35);
@@ -78,6 +26,7 @@
   font-size: pxToRem(14);
   line-height: pxToRem(23);
   user-select: none;
+  text-transform: uppercase;
 
   @include breakpoint(lg) {
     font-size: inherit;

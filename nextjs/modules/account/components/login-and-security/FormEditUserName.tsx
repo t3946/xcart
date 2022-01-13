@@ -11,7 +11,9 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
@@ -102,13 +104,13 @@ const FormEditUserName = (): any => {
                       "col-12 col-md-6 col-lg-6 text-md-end text-lg-start d-flex align-items-center justify-content-md-end justify-content-lg-start"
                     }
                   >
-                    <RBForm.Label
+                    <Label
                       className={
-                        "form-input-label mb-10 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
+                        "mb-10 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
                       }
                     >
-                      New Full name
-                    </RBForm.Label>
+                      New Full Name
+                    </Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
@@ -118,13 +120,16 @@ const FormEditUserName = (): any => {
                       value={values.name}
                       onChange={handleChange}
                       className={"form-input"}
+                      disabled={isSubmitting}
                       isInvalid={!!touched.name && !!errors.name}
                       isValid={touched.name && !errors.name}
                     />
 
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.name}
-                    </RBForm.Control.Feedback>
+                    {!!touched.name && !!errors.name && (
+                      <Feedback className="position-absolute" type="invalid">
+                        {errors.name}
+                      </Feedback>
+                    )}
                   </div>
                 </RBForm.Group>
               </div>

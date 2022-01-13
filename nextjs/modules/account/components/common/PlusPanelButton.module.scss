@@ -1,0 +1,32 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: pxToRem(33);
+
+  @include breakpoint(md) {
+    flex-direction: column;
+  }
+}
+
+.icon {
+  width: pxToRem(26);
+  height: pxToRem(53);
+  
+  @include breakpoint(md) {
+    width: pxToRem(46);
+    height: pxToRem(46);
+  }
+}
+
+.text {
+  font-size: pxToRem(18);
+  line-height: pxToRem(22);
+
+  @include breakpoint(md) {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}

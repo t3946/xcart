@@ -10,7 +10,9 @@ import {
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@utils/Countries";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  getPhoneNumberInnerPart,
+} from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
@@ -28,15 +30,6 @@ const FormEditUserPhone = (props: IProps): any => {
   const user = useSelectorAccount((e) => e.user);
   const countries = useSelectorAccount((e) => e.countries);
 
-  /**
-   * Get phone number without country code prefix
-   */
-  function getPhoneNumberInnerPart(countryCode: string, phoneNumber: string) {
-    const phoneCountryCodePrefix =
-      "+" + getCountryByCode(countryCode, countries).phone_code;
-    return phoneNumber.replace(phoneCountryCodePrefix, "");
-  }
-
   const initialValues = {
     phone: "",
     phoneCountryCode: user.phone_country_code,
@@ -45,12 +38,16 @@ const FormEditUserPhone = (props: IProps): any => {
   if (user.phone) {
     initialValues.phone = getPhoneNumberInnerPart(
       user.phone_country_code,
-      user.phone
+      user.phone,
+      countries
     );
   }
 
   const validationSchema = yup.object().shape({
-    phone: yup.string().required("Phone is a required field"),
+    phone: yup
+      .string()
+      .required("Phone is a required field")
+      .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format"),
     phoneCountryCode: yup.string().required("Country code is a required field"),
   });
 
@@ -127,6 +124,7 @@ const FormEditUserPhone = (props: IProps): any => {
                 <FormInputPhone
                   setFieldValue={setFieldValue}
                   handleChange={handleChange}
+                  disabled={isSubmitting}
                   touched={touched}
                   errors={errors}
                   name={"phone"}
@@ -135,7 +133,7 @@ const FormEditUserPhone = (props: IProps): any => {
                     phone: values.phone,
                   }}
                   mode={"mobile"}
-                  label={"New Mobile number"}
+                  label={"New Mobile Number"}
                   classes={{
                     label: "mb-10 mb-md-0",
                   }}

@@ -8,10 +8,11 @@ use Modules\Account\Forms\EditPhoneForm;
 use Modules\Account\Forms\ChangePasswordForm;
 use Modules\User\Helpers\PasswordHelper;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-class LoginAndSecuritiesApi extends FrontendController
+class LoginAndSecuritiesApi extends Controller
 {
     /**
      * edit current user

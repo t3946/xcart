@@ -1,6 +1,10 @@
 import { AnyAction } from "redux";
 import { AccountAddressesStore } from "@modules/account/ts/types/store.type";
-import { accountAddressesInitialValue } from "@modules/account/ts/consts/store-initial-value";
+
+const initialState = {
+  loading: false,
+  addressesList: undefined,
+};
 
 const accountAddressesReducer = (
   state: AccountAddressesStore = {

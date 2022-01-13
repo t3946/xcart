@@ -16,13 +16,14 @@ use Modules\Order\Models\RMADetailModel;
 use Modules\Order\Models\RMAModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Throwable;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use function Clue\StreamFilter\fun;
 
-class OrdersApi extends FrontendController
+class OrdersApi extends Controller
 {
     private const ORDERS_TYPE_CLOSED = 'closed';
     private const ORDER_TYPE_COMPLETED = 'completed';

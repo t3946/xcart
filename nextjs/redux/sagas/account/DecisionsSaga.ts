@@ -159,6 +159,16 @@ function* poAdditionalInformationRequiredDecision(action): Generator {
     });
 }
 
+function* submitAlternativeItemsOfferDecision(action): Generator {
+  const { success, data } = action.payload;
+
+  yield api
+    .post<any>("/submit-alternative-items-offer", data)
+    .then(function (res) {
+      success(res);
+    });
+}
+
 export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", resolveDecision);
   yield takeLatest("GET_DECISIONS", getDecisions);
@@ -193,5 +203,9 @@ export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest(
     "PO_ADDITIONAL_INFORMATION_REQUIRED_DECISION",
     poAdditionalInformationRequiredDecision
+  );
+  yield takeLatest(
+    "SUBMIT_ALTERNATIVE_ITEMS_OFFER_DECISION",
+    submitAlternativeItemsOfferDecision
   );
 }

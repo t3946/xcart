@@ -212,11 +212,11 @@ class UserModel extends Model
         //TODO: delete $attributes['id'] = $this->user_id;
         $attributes['id'] = $this->user_id;
         $attributes['avatar_image'] = $avatar_image ? '/' . $avatar_image : '';
-        $attributes['tsv'] = [
+        $attributes['tsv'] = $this->tsv_secret ? [
             'url' => GoogleQrUrl::generate($this->email, $this->tsv_secret, $issuer),
             'secret' => $this->tsv_secret,
             'count' => (int)$this->tsv_count,
-        ];
+        ] : [];
 
         return $attributes;
     }

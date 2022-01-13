@@ -1,0 +1,15 @@
+@import "~style-modules/sass-utils";
+
+.loginButton__sidebarItem {
+  @include breakpoint(lg up) {
+    height: rem-calc(45);
+    font-size: rem-calc(18);
+    background-color: #ffffff;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 0 rem-calc(40) 0 rem-calc(20);
+
+    &:hover, &:focus {
+      background-color: #ffffff;
+    }
+  }
+}

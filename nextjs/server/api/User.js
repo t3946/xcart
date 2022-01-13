@@ -86,7 +86,7 @@ app.post("/create", async function (req, res) {
   if (users.length) {
     res.json({ error: { email: "This email already registered" } });
   } else {
-    await prisma.xcart_users.create({
+    const user = await prisma.xcart_users.create({
       data: {
         email,
         name,
@@ -94,13 +94,7 @@ app.post("/create", async function (req, res) {
       },
     });
 
-    const user = await prisma.xcart_users.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    await setSessionCookie(res, result.user.user_id);
+    await setSessionCookie(res, user.user_id);
 
     res.json(user);
   }
@@ -249,6 +243,40 @@ app.post("/change-password", isAuthMiddleware, async function (req, res) {
   });
 
   res.sendStatus(200);
+});
+
+app.post("/tsv/confirm-code", isAuthMiddleware, async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/tsv/confirm-code", {
+      code: req.body.code,
+      userId: req.user.userId,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
+});
+
+app.get("/tsv/disable", isAuthMiddleware, async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/tsv/disable", {
+      userId: req.user.userId,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
+});
+
+app.get("/tsv/get", isAuthMiddleware, async function (req, res) {
+  await axios
+    .post("http://nginx/api/account/tsv/get", {
+      userId: req.user.userId,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
 });
 
 /**

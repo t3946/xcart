@@ -205,7 +205,7 @@ const PublicProfile = (): any => {
       <>
         <img
           className={classnames(classes.image)}
-          src={getAvatarUrl()}
+          src={`/${getAvatarUrl()}`}
           alt="avatar"
           ref={imageRef}
         />
@@ -258,7 +258,7 @@ const PublicProfile = (): any => {
 
             const file = inputFileRef.current.files[0];
             const fr = new FileReader();
-            
+
             fr.onload = () => {
               if (typeof fr.result === "string") {
                 imageRef.current.src = fr.result;
@@ -354,7 +354,7 @@ const PublicProfile = (): any => {
 
                   <RBForm.Group
                     controlId="avatar_image"
-                    className="mt-md-4 row"
+                    className="mt-20 mt-md-4 row"
                   >
                     <div className="d-block d-md-none d-lg-flex col-12 col-lg-6 align-items-center">
                       <Label className={"mt-20 md-lg-0"} optional>

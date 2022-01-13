@@ -206,6 +206,12 @@ JSON;
 
     public function mixed_suggestion($count = 5, $self_include = false)
     {
-        return array_merge($this->elastic_suggestion($count), $this->elastic_category_suggestion(4), ['phrase_suggestions' => $this->suggestion_phrase($count, $self_include)]);
+        return array_merge(
+            $this->elastic_suggestion($count),
+            $this->elastic_category_suggestion(4),
+            [
+                'phrase_suggestions' => $this->suggestion_phrase($count, $self_include)
+            ]
+        );
     }
 }

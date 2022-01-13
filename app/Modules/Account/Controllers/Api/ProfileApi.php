@@ -4,10 +4,11 @@ namespace Modules\Account\Controllers\Api;
 
 use Modules\Account\Forms\PublicProfileForm;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-class ProfileApi extends FrontendController
+class ProfileApi extends Controller
 {
     public function savePublicProfile()
     {

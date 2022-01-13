@@ -14,6 +14,7 @@ interface IProps {
   children?: React.ReactNode;
   fieldName: string;
   disabled: any;
+  integrated?: boolean;
 }
 
 const PaymentItem: React.FC<IProps> = (props: IProps) => {
@@ -26,6 +27,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
     children,
     fieldName,
     disabled,
+    integrated,
   } = props;
 
   return (
@@ -38,6 +40,7 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
           Styles.paymentItemGrid_verticalLayout,
           {
             [Styles.cursorPointer]: checkedValue !== value && !disabled,
+            [Styles.paymentItemGrid_integrated]: integrated,
           },
         ])}
       >
@@ -53,9 +56,9 @@ const PaymentItem: React.FC<IProps> = (props: IProps) => {
 
         <p className={cn(["m-0", Styles.paymentItemCaption])}>{caption}</p>
       </label>
-      {/* <Accordion.Item bsPrefix={Styles.show} eventKey={value}> */}
+
       <Accordion.Collapse eventKey={value}>
-        <RadioButtonDescription>
+        <RadioButtonDescription integrated={integrated}>
           <div
             className={cn([
               "d-flex",

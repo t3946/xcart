@@ -25,7 +25,6 @@ export default class Image extends Component {
     const containerClasses = [classes.container];
     const linkClasses = [classes.link];
     const noImageClasses = [classes.noImage];
-    console.log("image");
 
     return (
       <div className={classnames(containerClasses)}>

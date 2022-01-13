@@ -1,0 +1,15 @@
+@import "~style-modules/sass-utils";
+
+
+.link {
+  color: #000000;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    text-decoration: none;
+    color: #000000;
+  }
+}

@@ -2,6 +2,7 @@
 namespace Modules\User\Components;
 
 
+use Firebase\JWT\JWT;
 use Modules\User\Models\UserModel;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Helpers\SmartProperties;
@@ -127,8 +128,11 @@ class Auth implements AuthInterface
 
     public function getCookieUser($new_user = false)
     {
-        $cookie = $this->getCookie();
+        $cookie = $this->getCookie($new_user);
         if ($cookie) {
+            if ($new_user) {
+                return $this->findUser($cookie->userId, $new_user);;
+            }
             $data = explode(':', $cookie);
             if (count($data) == 2) {
                 $id = $data[0];
@@ -186,8 +190,12 @@ class Auth implements AuthInterface
         Xcart::app()->request->cookie->add($this->authCookieName, $cookie, time() + $this->expire, '/');
     }
     
-    public function getCookie()
+    public function getCookie($new_user = false)
     {
+        if ($new_user) {
+            $jwt_cookie = Xcart::app()->request->cookie->get('session');
+            return JWT::decode($jwt_cookie, 'h93h84fp83', array('HS256'));
+        }
         return Xcart::app()->request->cookie->get($this->authCookieName);
     }
 

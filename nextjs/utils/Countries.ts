@@ -1,5 +1,3 @@
-// import CountryDto from "@client/modules/account/ts/types/country.type";
-
 export const getCountryByCode = (
   countryCode: string,
   countries: Record<any, any>[]
