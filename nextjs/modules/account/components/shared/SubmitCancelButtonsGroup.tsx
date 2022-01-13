@@ -3,7 +3,7 @@ import classnames from "classnames";
 
 import Styles from "@modules/account/components/shared/SubmitCancelButtonsGroup.module.scss";
 
-interface IPropsd {
+interface IProps {
   submitText?: string;
   cancelText?: string;
 
@@ -20,7 +20,7 @@ interface IPropsd {
   onConfirm?: () => void;
 }
 
-const SubmitCancelButtonsGroup: React.FC<IPropsd> = function ({
+const SubmitCancelButtonsGroup: React.FC<IProps> = function ({
   submitText,
   cancelText,
   submitDisabled,

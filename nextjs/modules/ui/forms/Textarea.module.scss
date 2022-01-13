@@ -1,0 +1,10 @@
+@import "styles/utils/Utils.module";
+
+.textarea {
+  border: 1px solid #c4c4c4;
+  resize: none;
+  display: block;
+  width: 100%;
+  outline: none;
+  padding: pxToRem(15) pxToRem(20);
+}
