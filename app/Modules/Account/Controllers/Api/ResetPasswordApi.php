@@ -5,11 +5,12 @@ namespace Modules\Account\Controllers\Api;
 use Aws\Sns\SnsClient;
 use Modules\Account\Models\OneTimePasswordModel;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Firebase\JWT\JWT;
 
-class ResetPasswordApi extends FrontendController
+class ResetPasswordApi extends Controller
 {
     private static function getOneTimePassword(int $user_id): array
     {

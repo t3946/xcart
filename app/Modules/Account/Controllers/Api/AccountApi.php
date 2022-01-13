@@ -16,10 +16,11 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
-class AccountApi extends FrontendController
+class AccountApi extends Controller
 {
     public function getTerritory()
     {
@@ -64,7 +65,7 @@ class AccountApi extends FrontendController
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $config = $site->getConfig();
-        $user = $this->getUser();
+        $user = Xcart::app()->auth->getUser(true);
 
         if ($user->getIsGuest()) {
             $user = null;

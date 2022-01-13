@@ -4,11 +4,12 @@ namespace Modules\Account\Controllers\Api;
 
 use Modules\User\Models\UserAccount\UserModel;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 
-class TSVApi extends FrontendController
+class TSVApi extends Controller
 {
     //create new QR-code and send url to it
     public function emit($account_name): array

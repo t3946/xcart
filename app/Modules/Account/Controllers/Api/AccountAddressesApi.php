@@ -7,10 +7,10 @@ namespace Modules\Account\Controllers\Api;
 use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\DeliveryTypesModel;
 use Modules\User\Models\UserAccount\UserModel;
-use Xcart\App\Controller\FrontendController;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
-class AccountAddressesApi extends FrontendController
+class AccountAddressesApi extends Controller
 {
     public function getAddresses()
     {

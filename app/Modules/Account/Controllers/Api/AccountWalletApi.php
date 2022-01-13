@@ -10,9 +10,10 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 
-class AccountWalletApi  extends FrontendController
+class AccountWalletApi  extends Controller
 {
     public function getCards()
     {

@@ -5,6 +5,7 @@ namespace Modules\Account\Controllers\Api;
 use Modules\User\Models\FingerprintModel;
 use Modules\Account\Models\UserListModel;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Modules\Account\Forms\LoginForm;
@@ -12,7 +13,7 @@ use Modules\Account\Forms\RegistrationForm;
 use Modules\Account\Models\ProductListsModel;
 
 
-class AccountAuthorizationApi extends FrontendController
+class AccountAuthorizationApi extends Controller
 {
     public function register()
     {

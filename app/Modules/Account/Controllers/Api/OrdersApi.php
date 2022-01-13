@@ -15,13 +15,14 @@ use Modules\Order\Models\OrderTrackingModel;
 use Modules\Order\Models\RMADetailModel;
 use Modules\Order\Models\RMAModel;
 use Throwable;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
 use Xcart\App\Pagination\Pagination;
 use function Clue\StreamFilter\fun;
 
-class OrdersApi extends FrontendController
+class OrdersApi extends Controller
 {
     public function getOrders($orders_type, $to_date)
     {
