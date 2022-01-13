@@ -9,11 +9,10 @@ import { Form as RBForm } from "react-bootstrap";
 import Link from "next/link";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const LoginFormInputLogin: React.FC<any> = (props: any) => {
+  const { setLogin } = props;
   const dispatch = useDispatch();
-  const routes = useSelectorAccount((e) => e.routes);
   const validationSchema = yup.object().shape({
     login: yup
       .string()
@@ -56,6 +55,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
           if (error) {
             actions.setErrors({ login: error });
           } else {
+            setLogin(form.login);
             props.goToPasswordInput();
             props.setLastSentForm(form);
           }

@@ -21,13 +21,14 @@ interface IProps {
   login: string;
   goToInputLogin: () => void;
   goToOTPInput: () => void;
+  setPassword: (password: string) => void;
 }
 
 const LoginFormInputPassword = function (props: IProps): any {
   const dispatch = useDispatch();
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
-  const { goToInputLogin, goToOTPInput, login } = props;
+  const { goToInputLogin, goToOTPInput, login, setPassword } = props;
 
   React.useEffect(() => {
     inputRef.current?.focus();
@@ -65,14 +66,16 @@ const LoginFormInputPassword = function (props: IProps): any {
     (async function wrapAsyncFunc() {
       actions.setSubmitting(true);
 
+      const data = {
+        login,
+        password: values.password,
+        remember_me: values.rememberMe,
+        fingerprint: await generateFp(),
+      };
+
       dispatch(
         loginAction({
-          form: {
-            login,
-            password: values.password,
-            remember_me: values.rememberMe,
-            fingerprint: await generateFp(),
-          },
+          form: data,
 
           success(res: any) {
             actions.setSubmitting(false);
@@ -80,9 +83,16 @@ const LoginFormInputPassword = function (props: IProps): any {
             if (res.data.user) {
               dispatch(userSetAction(res.data.user));
               router.push("/");
-            } else {
-              actions.setErrors({ password: res.data.error });
+              return;
             }
+
+            if (res.data.error === "Need OTP") {
+              setPassword(data.password);
+              goToOTPInput();
+              return;
+            }
+
+            actions.setErrors({ password: res.data.error.password });
           },
         })
       );
@@ -119,11 +129,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                   <Label className="d-flex justify-content-between align-items-center">
                     <span className={"form-input-label"}>Password</span>
 
-                    <Link
-                      href={
-                        "/password-assistance"
-                      }
-                    >
+                    <Link href={"/password-assistance"}>
                       <a className={cn(Styles.authFormInfo, Styles.commonLink)}>
                         Forgot your password?
                       </a>

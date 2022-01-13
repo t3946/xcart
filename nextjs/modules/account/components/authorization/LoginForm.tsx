@@ -12,12 +12,13 @@ const LoginForm: React.FC<any> = () => {
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
-
   const INPUT_LOGIN_MODE = 0;
   const INPUT_PASSWORD_MODE = 1;
   const INPUT_OTP_MODE = 2;
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
   const [lastSentForm, setLastSentForm] = React.useState<any>({});
+  const [password, setPassword] = React.useState<any>("");
+  const [login, setLogin] = React.useState<any>("");
 
   React.useEffect(() => {
     if (user !== null) {
@@ -48,6 +49,7 @@ const LoginForm: React.FC<any> = () => {
             setLastSentForm={setLastSentForm}
             goToPasswordInput={goToPasswordInput}
             submit={submit}
+            setLogin={setLogin}
           />
         );
       case INPUT_PASSWORD_MODE:
@@ -56,11 +58,16 @@ const LoginForm: React.FC<any> = () => {
             login={lastSentForm.login}
             goToInputLogin={goToInputLogin}
             goToOTPInput={goToOTPInput}
+            setPassword={setPassword}
           />
         );
       case INPUT_OTP_MODE:
         return (
-          <LoginFormInputOTP lastSentForm={lastSentForm} submit={submit} />
+          <LoginFormInputOTP
+            submit={submit}
+            password={password}
+            login={login}
+          />
         );
     }
   }

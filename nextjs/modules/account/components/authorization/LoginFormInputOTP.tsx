@@ -1,44 +1,50 @@
 import React from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import * as yup from "yup";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { useDispatch } from "react-redux";
 
 const LoginFormInputOTP = function (props: Record<any, any>): any {
+  const { login, password } = props;
   const routes = useSelectorAccount((e) => e.routes);
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     inputRef.current.focus();
   });
 
   const initialState = {
-    otp: "",
+    code: "",
     rememberBrowser: false,
   };
   const validationSchema = yup.object().shape({
-    otp: yup.string().required("OTP is a required field"),
+    code: yup.string().required("OTP is a required field"),
     rememberBrowser: yup.bool(),
   });
 
-  async function submit(values, actions) {
-    const form = props.lastSentForm;
-    form.otp = values.otp;
-    form.rememberBrowser = values.rememberBrowser;
-
+  async function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     props.submit({
       actions,
-      form,
+      form: { ...values, password, login },
 
-      success() {
-        router.push(routes["account:dashboard"]);
-      },
+      success(res: AxiosResponse) {
+        if (res.data.error) {
+          actions.setErrors(res.data.error);
+          return;
+        }
 
-      error(err) {
-        actions.setErrors({ otp: err.otp[0] });
+        if (res.data.user) {
+          dispatch(userSetAction(res.data.user));
+          router.push("/dashboard");
+          return;
+        }
       },
     });
   }
@@ -48,7 +54,6 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
       initialValues={initialState}
       validationSchema={validationSchema}
       onSubmit={submit}
-      ref={React.useRef()}
     >
       {({ isSubmitting, handleChange, values, errors }) => {
         return (
@@ -61,21 +66,21 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
 
               <RBForm.Group controlId="LoginFormPassword">
                 <RBForm.Label className="d-flex justify-content-between align-items-center">
-                  <span className={"form-input-label"}>Enter OTP </span>
+                  <span className={"form-input-label"}>Enter OTP</span>
                 </RBForm.Label>
 
                 <RBForm.Control
                   ref={inputRef}
                   type="text"
-                  name="otp"
-                  value={values.otp}
+                  name="code"
+                  value={values.code}
                   onChange={handleChange}
                   className={"form-input"}
-                  isInvalid={!!errors.otp}
+                  isInvalid={!!errors.code}
                 />
 
                 <RBForm.Control.Feedback type="invalid">
-                  {errors.otp}
+                  {errors.code}
                 </RBForm.Control.Feedback>
               </RBForm.Group>
 

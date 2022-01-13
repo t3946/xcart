@@ -1,4 +1,5 @@
 const passwordUtils = require("../../utils/password");
+const axios = require("axios");
 const LocalStrategy = require("passport-local").Strategy;
 const strategyOptions = {
   usernameField: "login",
@@ -39,18 +40,37 @@ module.exports = function (passport) {
       );
 
       if (!isPasswordsMatch) {
-        return done({ message: "Wrong password" }, null);
+        return done({ message: { password: "Wrong password" } }, null);
       }
 
       delete user.password;
 
-      if (user.tsv_count > 0) {
+      if (user.tsv_count === 0) {
+        done(null, {
+          user,
+        });
+
+        return;
+      }
+
+      if (req.body.code === undefined) {
         return done({ message: "Need OTP" }, null);
       }
 
-      done(null, {
-        user,
-      });
+      await axios
+        .post("http://nginx/api/account/tsv/confirm-code", {
+          code: req.body.code,
+          userId: user.user_id,
+        })
+        .then((apiRes) => {
+          if (apiRes.data.user) {
+            done(null, {
+              user,
+            });
+          } else {
+            done({ message: { code: "Code is invalid" } }, null);
+          }
+        });
     })
   );
 };
