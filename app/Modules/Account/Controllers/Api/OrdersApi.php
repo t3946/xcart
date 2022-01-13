@@ -29,11 +29,11 @@ class OrdersApi extends Controller
     private const ORDER_TYPE_COMPLETED = 'completed';
     private const ORDER_TYPE_OPEN = 'open';
 
-    public function getOrders($user_id, $orders_type, $to_date)
+    public function getOrders($orders_type, $to_date)
     {
         $filter = [];
         /** @var UserModel $user */
-        $user = UserModel::objects()->get(['user_id' => $user_id]);
+        $user = Xcart::app()->auth->getUser(true);
         if ($to_date !== 'undefined') {
             $filter = ['date__gte' => $to_date];
         }
@@ -152,13 +152,28 @@ class OrdersApi extends Controller
 //        $this->jsonResponse(['data' => $mass]);
     }
 
-    public function getOneOrder($order_id)
+    public function getOrder($order_id)
     {
         $user = Xcart::app()->auth->getUser(true);
-
-        $orderModel = $user->orders->get(["orderid" => $order_id]);
-
-        $order = [];
+        /** @var OrderModel $order_model */
+        $order_model = $user->orders->get(["pk" => $order_id]);
+        foreach ($order_model->groups as $group_model) {
+            foreach ($group_model->trackings as $tracking_model) {
+                $tracks[] = [
+                    'number' => $tracking_model->tracknum,
+                    'link' => $tracking_model->link->shipping,
+                ];
+            }
+            $groups[] = [
+                'tracks' => $tracks ?? []
+            ];
+        }
+        $order = [
+            'orderNumber' => $order_model->getOrderNumber(),
+            'groups' => $groups ?? [],
+            'orderId' => $order_model->orderid,
+        ];
+        $this->jsonResponse($order);
 
         $order['orderInfo'] = $orderModel->getAttributes();
         $order['orderInfo']["payment_status"] = OrderStatusModel::objects()->get(['code' => $order['orderInfo']['cb_status']])->description;

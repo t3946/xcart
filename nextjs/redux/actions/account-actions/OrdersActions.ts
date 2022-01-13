@@ -19,3 +19,7 @@ export const sendEmail = (email: any, onSend: () => void): any => ({
   email,
   onSend,
 });
+export const setOrderView = (orderId: number) => ({
+  type: "FETCH_ORDER_VIEW",
+  orderId,
+});

@@ -36,6 +36,7 @@ export interface OrderAddress {
   shippingCity: string;
   shippingAddress: string;
   shippingZip: string;
+  shippingState?: string;
 }
 
 export interface SelectDate {

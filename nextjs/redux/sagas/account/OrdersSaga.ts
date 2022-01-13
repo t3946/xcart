@@ -8,8 +8,8 @@ const api = new ApiService();
 
 function* getCards(action: AnyAction): Generator {
   const date = Store.getState().ordersStore.selectDate.value;
-  const orders: any = yield api
-    .get(`/api-client/orders/get/${action.ordersType}/${date}`)
+  const orders = yield api
+    .get(`/api/account/orders/get/${action.ordersType}/${date}`)
     .then((response) => response);
   yield put({
     type: "SET_ORDERS",
@@ -43,8 +43,18 @@ function* sendEmail(action: AnyAction): Generator {
     });
   } catch (e) {}
 }
+function* fetchOrder(action: AnyAction): Generator {
+  const order = yield api
+    .get(`/api/account/orders/get-one/${action.orderId}`)
+    .then((response) => response);
+  yield put({
+    type: "SET_ORDER_VIEW",
+    order,
+  });
+}
 
 export function* ordersActionWatcher(): SagaIterator {
   yield takeLatest("GET_ORDERS", getCards);
   yield takeLatest("SEND_EMAIL", sendEmail);
+  yield takeLatest("FETCH_ORDER_VIEW", fetchOrder);
 }

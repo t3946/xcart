@@ -4,23 +4,21 @@ import { OrderTrackingGroup } from "@modules/account/components/orders/OrderTrac
 import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import Store from "@redux/stores/Store";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 
-interface OrderTrackingPageProps {
-  orderItem?: any;
-}
-
-export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
-  orderItem,
-}) => {
+export const OrderTrackingPage: React.FC = () => {
+  const order: OrderView = useSelectorAccount((store) => store.orderView);
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
       .get(
-        `https://nominatim.openstreetmap.org/search.php?street=${orderItem.orderInfo.s_address}&city=${orderItem.orderInfo.s_city}&state=${orderItem.orderInfo.s_state}&postalcode=${orderItem.orderInfo.s_zipcode}&polygon_geojson=1&format=jsonv2`
+        `https://nominatim.openstreetmap.org/search.php?street=${order.address.shippingAddress}&city=${order.address.shippingCity}&state=${order.address.shippingState}&postalcode=${order.address.shippingZip}&polygon_geojson=1&format=jsonv2`
       )
       .then((e) => setShippingPos([e[0].lat, e[0].lon]))
       .catch((e) => console.log(e));
   }, []);
+  console.log("IS ORDER", order);
 
   const [shippingPos, setShippingPos] = useState(null);
   const api = new ApiService();
@@ -38,7 +36,7 @@ export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
       <div className="order-tracking-container order-tracking-footer">
         <p>
           <b>Payment status: </b>
-          <span>{orderItem.orderInfo.payment_status}</span>
+          <span>{"TEST"}</span>
         </p>
         <div>
           <b>Payment date: </b>

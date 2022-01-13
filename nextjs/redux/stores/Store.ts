@@ -36,6 +36,7 @@ import ConfigReducer from "@redux/reducers/ConfigReducer";
 import MainMenuReducer from "@redux/reducers/MainMenuReducer";
 
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
+import OrderViewReducer from "@redux/reducers/account/OrderViewReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 let clientPreloadedState;
@@ -74,6 +75,7 @@ const reducers = combineReducers({
   // miniCart: MiniCartReducer,
   publicProfile: PublicProfileReducer,
   ordersStore: OrdersReducer,
+  orderView: OrderViewReducer,
   // productsRatings: RatingsReducer,
   // productsReviews: ReviewsReducer,
   // product: ProductReducer,

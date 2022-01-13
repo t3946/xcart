@@ -1,4 +1,4 @@
-import { SelectDate } from "@modules/account/ts/types/orders-store.types";
+import { SelectDate } from "@modules/account/ts/types/order/orders-store.types";
 
 export const ordersHeaderSelectValues: SelectDate[] = [
   {

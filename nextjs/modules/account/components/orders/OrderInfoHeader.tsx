@@ -1,59 +1,59 @@
 import React from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface OrderInfoHeaderProps {
-  orderItem: any;
+  orderNumber?: string;
+  orderId: number;
 }
 
 export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
-  orderItem,
+  orderNumber = "",
+  orderId,
 }) => {
-  const urlParams = useParams<OrderPageURLParams>();
-
+  const router = useRouter();
   const headerItems = [
     {
       label: "Order tracking",
-      to: `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/order-tracking`,
+      path: "order-tracking",
     },
     {
       label: "Products ordered",
-      to: `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/products-ordered`,
+      path: "products-ordered",
     },
     {
       label: "Addresses and contacts",
-      to: `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`,
+      path: "addresses",
     },
     {
       label: "Order actions",
-      to: `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/order-actions`,
+      path: "order-actions",
     },
     {
       label: "Order communication",
-      to: `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/communication`,
+      path: "communication",
     },
     {
       label: "Order log",
-      to: `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/log`,
+      path: "log",
     },
   ];
-  const headerTitle =
-    orderItem.orderInfo.order_prefix + orderItem.orderInfo.orderid;
   return (
     <div>
-      <div className={"order-info-header-title"}>Order # {headerTitle}</div>
+      <div className={"order-info-header-title"}>Order #{orderNumber}</div>
       <div className="order-info-header">
-        {headerItems.map((e) => {
-          return (
-            <NavLink
-              activeClassName="order-info-header-item-selected"
-              to={e.to}
-              className="order-info-header-item"
+        {headerItems.map((item) => (
+          <Link href={`/order/${orderId}/${item.path}`}>
+            <a
+              className={`order-info-header-item ${
+                router.query.type === item.path &&
+                "order-info-header-item-selected"
+              }`}
             >
-              {e.label}
-            </NavLink>
-          );
-        })}
+              {item.label}
+            </a>
+          </Link>
+        ))}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { ordersHeaderSelectValues } from "@modules/account/ts/consts/orders-header-select-values";
-import { OrdersStore } from "@modules/account/ts/types/orders-store.types";
+import { OrdersStore } from "@modules/account/ts/types/order/orders-store.types";
 
 const initialValue: OrdersStore = {
   loading: false,

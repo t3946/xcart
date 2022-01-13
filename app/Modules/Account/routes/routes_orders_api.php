@@ -4,13 +4,13 @@ use Modules\Account\Controllers\Api\OrdersApi;
 
 return [
     [
-        'route' => '/get/{*:user_id}/{*:orders_type}/{*:to_date}',
+        'route' => '/get/{*:orders_type}/{*:to_date}',
         'target' => [OrdersApi::class, 'getOrders'],
         'name' => 'get-orders',
     ],
     [
-        'route' => '/get-one-order/{*:order_id}',
-        'target' => [OrdersApi::class, 'getOneOrder'],
+        'route' => '/get-one/{*:order_id}',
+        'target' => [OrdersApi::class, 'getOrder'],
         'name' => 'get-order',
     ],
     [
