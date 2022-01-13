@@ -4,7 +4,6 @@ import { FormSelect } from "@modules/account/components/shared/FormSelect";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { getCountryByCode } from "@utils/Countries";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import classnames from "classnames";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
@@ -58,8 +57,6 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   const phoneExtFieldName = name + "Ext";
   const phoneMask = "(999) 999-9999";
 
-  const breakpoint = useBreakpoint();
-
   let initialCountryCode;
 
   if (values.phoneCountryCode) {
@@ -109,7 +106,6 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
 
   if (mode === "mobile") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
-    classes.inputPhone.push("col");
     classes.inputPhoneExt.push("d-none");
   } else if (mode === "ext") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
