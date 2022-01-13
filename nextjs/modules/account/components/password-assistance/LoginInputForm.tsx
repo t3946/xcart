@@ -1,9 +1,10 @@
 import React from "react";
 import * as yup from "yup";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { sendOneTimePasswordAction } from "@redux/actions/account-actions/ResetPasswordActions";
+import { AxiosResponse } from "axios";
 
 const LoginInputForm: React.FC<any> = function (props) {
   const firstInputRef = React.createRef<HTMLInputElement>();
@@ -21,18 +22,20 @@ const LoginInputForm: React.FC<any> = function (props) {
     login: "",
   };
 
-  function submit(values, actions) {
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>): void {
+    actions.setSubmitting(true);
+
     dispatch(
       sendOneTimePasswordAction({
         form: values,
 
-        success(res) {
+        success(res: AxiosResponse) {
           props.oneTimePasswordChanged(res.data);
           props.goToOTPInput(values.login);
         },
 
-        error(err) {
-          actions.setErrors({ login: err.login[0] });
+        error(err: any) {
+          actions.setErrors({ login: err.login });
         },
 
         complete() {

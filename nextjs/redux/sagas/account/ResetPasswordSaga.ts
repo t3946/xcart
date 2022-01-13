@@ -7,7 +7,7 @@ function* sendOneTimePassword(action: AnyAction) {
   const { form, success, error, complete } = action.payload;
 
   yield axios.post("/api-client/user/send-otp", form).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+    res.data.error ? error(res.data.error) : success(res);
 
     complete && complete();
 
@@ -30,7 +30,7 @@ function* resetPassword(action: AnyAction) {
   const { form, success, error, complete } = action.payload;
 
   yield axios.post("/api-client/user/reset-password", form).then((res) => {
-    res.errors ? error(res.errors) : success(res);
+    res.data.errors ? error(res.data.errors) : success(res);
 
     complete && complete();
 

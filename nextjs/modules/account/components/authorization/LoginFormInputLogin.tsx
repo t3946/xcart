@@ -127,7 +127,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                   </a>
                   {showHelpInfo && (
                     <div className={"mt-1"}>
-                      <Link href={routes["api:account:reset-password:reset"]}>
+                      <Link href={"/password-assistance"}>
                         <a className="common-link">Forgot your password?</a>
                       </Link>
                       <br />

@@ -101,6 +101,24 @@ app.post("/create", async function (req, res) {
 });
 
 app.post("/send-otp", async function (req, res) {
+  const user = await prisma.xcart_users.findFirst({
+    where: {
+      OR: [
+        {
+          email: req.body.login,
+        },
+        {
+          phone: req.body.login,
+        },
+      ],
+    },
+  });
+
+  if (!user) {
+    res.json({ error: { login: "User not found" } });
+    return;
+  }
+
   await axios
     .post("http://nginx/api/account/reset-password/send-one-time-password", {
       login: req.body.login,
