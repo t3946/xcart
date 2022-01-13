@@ -62,7 +62,7 @@ class Auth implements AuthInterface
      */
     public function getUser($new_user = false)
     {
-        if (!$this->_user) {
+        if (!$this->_user || $new_user) {
             $this->_user = $this->fetchUser($new_user);
         }
         return $this->_user;
@@ -84,7 +84,9 @@ class Auth implements AuthInterface
 
             if (!$user) {
                 if ($user = $this->getCookieUser($new_user)) {
-                    $this->updateSession($user);
+                    if (!$new_user) {
+                        $this->updateSession($user);
+                    }
                 }
             }
         }
@@ -117,6 +119,10 @@ class Auth implements AuthInterface
 
     public function getSessionUser($new_user = false)
     {
+        if ($new_user) {
+            return null;
+        }
+
         $user_id = $this->getSession();
 
         if ($user_id) {
@@ -192,8 +198,7 @@ class Auth implements AuthInterface
     
     public function getCookie($new_user = false)
     {
-        if ($new_user) {
-            $jwt_cookie = Xcart::app()->request->cookie->get('session');
+        if ($new_user && $jwt_cookie = Xcart::app()->request->cookie->get('session')) {
             return JWT::decode($jwt_cookie, 'h93h84fp83', array('HS256'));
         }
         return Xcart::app()->request->cookie->get($this->authCookieName);
