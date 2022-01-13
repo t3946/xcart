@@ -13,6 +13,7 @@ import ReviewSaga from "@redux/sagas/account/ReviewSaga";
 import { ordersActionWatcher } from "@redux/sagas/account/OrdersSaga";
 import DecisionsSaga from "@redux/sagas/account/DecisionsSaga";
 import SuggestionSaga from "@redux/sagas/SuggestionSaga";
+import FeedbackSaga from "@redux/sagas/account/FeedbackSaga";
 
 export default function* accountRootSaga(): Generator {
   yield all([
@@ -30,5 +31,6 @@ export default function* accountRootSaga(): Generator {
     ReviewSaga(),
     DecisionsSaga(),
     SuggestionSaga(),
+    FeedbackSaga(),
   ]);
 }

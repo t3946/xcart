@@ -6,8 +6,14 @@ import Textarea from "@modules/ui/forms/Textarea";
 import cn from "classnames";
 import Styles from "@modules/account/components/leave-feedback/LeaveFeedback.module.scss";
 import StylesInnerPage from "@modules/account/components/shared/InnerPage.module.scss";
+import { sendFeedback } from "@redux/actions/account-actions/FeedbackActions";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 const LeaveFeedback: React.FC<any> = function () {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const initialFormValue = {
     message: "",
   };
@@ -19,14 +25,25 @@ const LeaveFeedback: React.FC<any> = function () {
   function submit(values: Record<any, any>, helpers: FormikHelpers<any>) {
     helpers.setSubmitting(true);
 
-    setTimeout(() => {
-      helpers.setSubmitting(false);
-    }, 2000);
+    dispatch(
+      sendFeedback({
+        data: values,
+
+        success() {
+          helpers.setSubmitting(false);
+          router.push("/dashboard");
+        },
+      })
+    );
   }
 
   return (
     <div>
-      <h1 className={cn(StylesInnerPage.pageHeader, Styles.LeaveFeedback__header)}>Leave feedback</h1>
+      <h1
+        className={cn(StylesInnerPage.pageHeader, Styles.LeaveFeedback__header)}
+      >
+        Leave feedback
+      </h1>
 
       <p
         className={cn(
