@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import cn from "classnames";
 
+import Styles from "@modules/account/components/sidebar-menu/LogoutButton.module.scss";
+
 interface IProps {
   onClick?: () => void;
   classes?: any;
@@ -16,11 +18,9 @@ const LogoutButton: React.FC<IProps> = function (props: IProps) {
   const router = useRouter();
   const classes = {
     button: [
-      "sidebar-menu-item",
-      "sidebar-menu_top-level-item",
+      Styles.button,
       "text-start",
       "w-100",
-      "sidebar-menu-item__logout",
       props.classes,
     ],
   };

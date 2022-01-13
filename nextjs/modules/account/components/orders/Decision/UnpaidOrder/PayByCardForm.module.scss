@@ -3,7 +3,7 @@
 
 .form {
   max-width: 100%;
-  
+
   @include breakpoint(lg) {
     max-width: pxToRem(360);
   }
@@ -34,7 +34,6 @@
   @include breakpoint(md) {
     font-size: pxToRem(18);
     line-height: pxToRem(22);
-    width: max-content;
   }
 
   @include breakpoint(lg) {

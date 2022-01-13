@@ -1,5 +1,4 @@
 import { h } from "preact";
-import map from "lodash/map";
 import renderToStringr from "preact-render-to-string";
 import SuggestionsList, { ISuggestion } from "./SuggestionsList";
 import SuggestionsListStyles from "@modules/old-components/SuggestionsList.module.scss";

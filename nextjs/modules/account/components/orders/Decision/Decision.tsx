@@ -6,9 +6,13 @@ import UnpaidOrder from "@modules/account/components/orders/Decision/UnpaidOrder
 import SendingCheck from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck";
 import IncreaseInShippingCharge from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge";
 import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
-import POAdditionalInformationRequired from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired";
+import AdditionalShippingCharge from "@modules/account/components/orders/Decision/AdditionalShippingCharge/AdditionalShippingCharge";
+import CustomDuties from "@modules/account/components/orders/Decision/CustomDuties/CustomDuties";
+import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
+import AlternativeItemsOffer from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer";
 import EstimatedTimeArrival from "@modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
-import LTLFreightShipment from "modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment";
+import LTLFreightShipment from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment";
+import POAdditionalInformationRequired from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired"
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {

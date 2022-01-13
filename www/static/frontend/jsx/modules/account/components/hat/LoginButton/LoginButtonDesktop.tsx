@@ -12,7 +12,9 @@ import classnames from "classnames";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
+
 import RotateStyles from "@client/style-modules/common/Rotate.module.scss";
+import Styles from "@client/modules/account/components/hat/LoginButton/LoginButtonDesktop.module.scss";
 
 interface IProps {
   isStatic: boolean;
@@ -24,11 +26,12 @@ const AccountLink: React.FC = function () {
     "sidebar-menu-item",
     "sidebar-menu_top-level-item",
     "text-decoration-none",
+    Styles.loginButton__sidebarItem,
   ];
 
   if (isStatic) {
     return (
-      <a className={classnames(classes)} href={route("account:index")}>
+      <a className={classnames(classes)} href={"/account"}>
         Account
       </a>
     );
@@ -50,7 +53,7 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
   }
 
   if (!user) {
-    const path = route("account:login");
+    const path = "/account/login";
     const text = "log in";
 
     if (isStatic) {

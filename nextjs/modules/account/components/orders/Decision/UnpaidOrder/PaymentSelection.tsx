@@ -18,10 +18,11 @@ interface IProps {
   disabled: any;
   classes?: any;
   options: IAccordionItem[];
+  integrated?: boolean;
 }
 
 const PaymentSelection: React.FC<IProps> = (props: IProps) => {
-  const { checkedValue, name, onChange, disabled, options } = props;
+  const { checkedValue, name, onChange, disabled, options, integrated } = props;
   const classes = [Styles.paymentSelector, props.classes];
 
   return (
@@ -39,6 +40,7 @@ const PaymentSelection: React.FC<IProps> = (props: IProps) => {
           caption={option.caption}
           fieldName={name}
           disabled={disabled}
+          integrated={integrated}
         >
           {option.template}
         </PaymentItem>

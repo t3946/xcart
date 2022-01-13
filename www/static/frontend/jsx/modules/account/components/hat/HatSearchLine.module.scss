@@ -1,0 +1,27 @@
+@import "~style-modules/sass-utils";
+
+.searchInput {
+  border-top: none;
+  border-bottom: 1px solid #0d2431;
+  border-left: 1px solid #0d2431;
+  border-right: 1px solid #0d2431;
+  height: rem-calc(44);
+  width: 100%;
+  padding: 0 rem-calc(30) 0 rem-calc(10);
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(84) 0 rem-calc(16);
+    height: rem-calc(36);
+  }
+
+  &::placeholder {
+    font-style: italic;
+  }
+}
+
+.searchFormContainer__suggestion {
+  position: absolute;
+  left: 0;
+  top: rem-calc(36);
+  right: 0;
+}

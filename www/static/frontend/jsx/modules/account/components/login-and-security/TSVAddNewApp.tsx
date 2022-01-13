@@ -25,7 +25,7 @@ const TSVAddNewApp = (): any => {
   });
 
   if (user === null) {
-    history.push(route("account:login"));
+    history.push("/account/login");
   }
 
   function submit(values, actions) {

@@ -12,6 +12,8 @@ export enum TableTypes {
   discontinued = "discontinued",
   licenseRequired = "licenseRequired",
   increaseInShippingCharge = "increaseInShippingCharge",
+  alternativeItemsOfferOutOfStock = "alternativeItemsOfferOutOfStock",
+  alternativeItemsOfferInStock = "alternativeItemsOfferInStock",
 }
 
 interface IProps {
@@ -42,6 +44,16 @@ const Table: React.FC<IProps> = (props: IProps) => {
       qtyDesktop: "Quantity",
     },
     increaseInShippingCharge: {
+      itemNameSkuQty: "Item name / SKU",
+      qty: "Price x Qty",
+      qtyDesktop: "Qty ordered",
+    },
+    alternativeItemsOfferOutOfStock: {
+      itemNameSkuQty: "Item name / SKU",
+      qty: "Price x Qty",
+      qtyDesktop: "Qty ordered",
+    },
+    alternativeItemsOfferInStock: {
       itemNameSkuQty: "Item name / SKU",
       qty: "Price x Qty",
       qtyDesktop: "Qty ordered",
@@ -85,6 +97,23 @@ const Table: React.FC<IProps> = (props: IProps) => {
 
     case TableTypes.increaseInShippingCharge:
       hatModifier = Styles.estimateTableHat_theme_grey;
+
+    case TableTypes.licenseRequired:
+      hatModifier = Styles.estimateTableHat_theme_grey;
+      tableCaption = "You have ordered the following items:";
+      break;
+
+    case TableTypes.alternativeItemsOfferOutOfStock:
+      hatModifier = Styles.estimateTableHat_theme_yellow;
+      tableCaption =
+        "The following item(s) which you have ordered are 'out of stock':";
+      break;
+
+    case TableTypes.alternativeItemsOfferInStock:
+      hatModifier = Styles.estimateTableHat_theme_green;
+      tableCaption =
+        "As an alternative we can offer the following item(s) which are 'in stock':";
+      break;
   }
 
   classes.hat.push(hatModifier);
@@ -97,6 +126,7 @@ const Table: React.FC<IProps> = (props: IProps) => {
       switch (tableType) {
         case TableTypes.inStock:
         case TableTypes.licenseRequired:
+        case TableTypes.alternativeItemsOfferInStock:
           date = "";
           break;
         case TableTypes.discontinued:
@@ -118,7 +148,13 @@ const Table: React.FC<IProps> = (props: IProps) => {
   }
 
   function dateColumnTemplate(type: TableTypes) {
-    if ([TableTypes.outOfStock, TableTypes.discontinued].includes(type)) {
+    if (
+      [
+        TableTypes.outOfStock,
+        TableTypes.discontinued,
+        TableTypes.alternativeItemsOfferOutOfStock,
+      ].includes(type)
+    ) {
       return <span>ETA date</span>;
     }
   }

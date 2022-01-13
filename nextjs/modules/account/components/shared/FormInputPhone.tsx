@@ -82,7 +82,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
    */
   function getSelectItems(): any {
     const codes = [];
-
+    if (!countries) return codes;
     for (const country of countries) {
       if (country.phone_code) {
         codes.push({
@@ -97,10 +97,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   }
 
   const classes = {
-    selectCountryCodeColumn: [
-      "col pe-0 phone-country-code-column",
-      props.classes?.select,
-    ],
+    selectCountryCodeColumn: ["pe-0", Styles.select, props.classes?.select],
     inputPhoneColumn: [props.classes?.phone],
     inputPhoneExt: [
       "col phone-ext-column d-flex ps-0 align-items-center",
@@ -112,7 +109,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
 
   if (mode === "mobile") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
-    classes.inputPhoneColumn.push("col");
+    classes.inputPhone.push("col");
     classes.inputPhoneExt.push("d-none");
   } else if (mode === "ext") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
@@ -121,7 +118,14 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   }
 
   return (
-    <div className={classNames("form-group row", props.classes?.container)}>
+    <div
+      className={classNames("form-group row", props.classes?.container, {
+        "mb-4":
+          (!!touched.phoneCountryCode && !!errors.phoneCountryCode) ||
+          (!!touched[name] && !!errors[name]) ||
+          (!!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]),
+      })}
+    >
       <div
         className={classnames(
           "col-12 col-md-6 col-lg-4 label-column",
@@ -209,10 +213,12 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
               autoComplete={"off"}
               placeholder="12345"
             />
-
-            <Feedback className="position-absolute" type="invalid">
-              {errors[phoneExtFieldName]}
-            </Feedback>
+            
+            {!!touched[phoneExtFieldName] && !!errors[phoneExtFieldName] && (
+              <Feedback className="position-absolute" type="invalid">
+                {errors[phoneExtFieldName]}
+              </Feedback>
+            )}
           </RBForm.Group>
         </div>
       </div>

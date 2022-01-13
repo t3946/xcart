@@ -3,3 +3,15 @@
 .label_ext {
   font-weight: normal;
 }
+
+.select {
+  width: pxToRem(115);
+
+  @include breakpoint(md) {
+    width: pxToRem(125);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(105);
+  }
+}

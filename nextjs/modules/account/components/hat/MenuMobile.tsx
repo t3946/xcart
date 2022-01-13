@@ -42,7 +42,11 @@ const MenuMobile: React.FC = () => {
   function userAvatarTemplate() {
     if (user && user.avatar_image) {
       return (
-        <img src={user.avatar_image} className={"mobile-menu-avatar"} alt="" />
+        <img
+          src={`/${user.avatar_image}`}
+          className={"mobile-menu-avatar"}
+          alt=""
+        />
       );
     }
 

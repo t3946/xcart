@@ -10,6 +10,7 @@ import AppData from "@utils/AppData";
 import Search from "@modules/icon/components/account/search/Search";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import TimesIcon from "@modules/icon/components/font-awesome/times/Light";
 import MenuIcon from "@modules/icon/components/header/Menu";
 import IconCart from "@modules/icon/components/common/cart/Cart";
 import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
@@ -65,7 +66,11 @@ const HatNavigation: React.FC = () => {
 
   return (
     <div className={Styles.topHeaderContent}>
-      <div className={Styles.topHeaderMenu}>
+      <div
+        className={cn(Styles.topHeaderMenu, {
+          [Styles.topHeaderMenu_boxShadow_none]: isVisibleShadowPanel,
+        })}
+      >
         <TopLine />
         <header
           className={cn(Styles.topHeader, {
@@ -90,7 +95,11 @@ const HatNavigation: React.FC = () => {
                     className="d-flex"
                     onClick={toggleMobileDepartmentsMenu}
                   >
-                    <MenuIcon className={Styles.menuIcon} />
+                    {isVisibleMenu ? (
+                      <TimesIcon className={Styles.menuIcon} />
+                    ) : (
+                      <MenuIcon className={Styles.menuIcon} />
+                    )}
                   </a>
                 </div>
 

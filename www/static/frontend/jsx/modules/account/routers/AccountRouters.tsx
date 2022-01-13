@@ -253,11 +253,7 @@ export const AccountRouters = (): any => {
                     <ListsPage />
                   )}
                 />
-                <Route
-                  exact
-                  path={route("account:login")}
-                  component={LoginForm}
-                />
+                <Route exact path={"/account/login"} component={LoginForm} />
                 <Route
                   exact
                   path={route("account:register")}

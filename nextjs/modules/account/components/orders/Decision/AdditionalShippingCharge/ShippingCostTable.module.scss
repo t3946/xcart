@@ -1,0 +1,46 @@
+@import "styles/utils/Utils.module";
+
+.gridItemSublinesItem {
+  padding: pxToRem(11) 0;
+
+  &:first-child {
+    color: #2a8c3e;
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(9) 0;
+  }
+}
+
+.gridItem {
+  padding: 0;
+  &:last-child {
+    padding: pxToRem(11) pxToRem(9);
+    border-top: 1px solid #c4c4c4;
+    background: #fff1f0;
+    @include breakpoint(lg) {
+      padding: pxToRem(8) pxToRem(25);
+    }
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.gridItem_border_none {
+  border: none;
+}
+
+.gridShipping {
+  border: 1px solid #c4c4c4;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}

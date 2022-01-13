@@ -1,0 +1,17 @@
+@import "styles/utils/Utils.module";
+
+.hat {
+  padding: pxToRem(27) pxToRem(1) pxToRem(16) 0;
+
+  @include breakpoint(md) {
+    padding: pxToRem(40) 0 pxToRem(24) pxToRem(45);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(45) pxToRem(24) pxToRem(26);
+  }
+}
+
+.pageBody {
+  padding: 0;
+}
