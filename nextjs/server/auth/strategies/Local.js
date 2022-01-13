@@ -3,13 +3,19 @@ const LocalStrategy = require("passport-local").Strategy;
 const strategyOptions = {
   usernameField: "login",
   passwordField: "password",
+  passReqToCallback: true,
 };
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 
 module.exports = function (passport) {
   passport.use(
-    new LocalStrategy(strategyOptions, async function (login, password, done) {
+    new LocalStrategy(strategyOptions, async function (
+      req,
+      login,
+      password,
+      done
+    ) {
       const user = await prisma.xcart_users.findFirst({
         where: {
           OR: [
@@ -37,6 +43,10 @@ module.exports = function (passport) {
       }
 
       delete user.password;
+
+      if (user.tsv_count > 0) {
+        return done({ message: "Need OTP" }, null);
+      }
 
       done(null, {
         user,
