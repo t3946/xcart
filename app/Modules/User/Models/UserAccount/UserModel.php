@@ -34,6 +34,7 @@ use Xcart\App\QueryBuilder\Q\QOr;
  * @property string phone_country_code
  * @property string tsv_secret
  * @property string tsv_count
+ * @property OrderModel[] orders
  */
 class UserModel extends Model
 {

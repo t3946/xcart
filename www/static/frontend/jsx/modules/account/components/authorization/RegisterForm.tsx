@@ -9,7 +9,7 @@ import { registerAction } from "@client/jsx/redux/actions/account-actions/Autori
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 import { route } from "@client/jsx/utils/AppData";
 import classNames from "classnames";
-import { noSidebarClasses } from "@client/modules/account/ts/consts/no-sidebar-classes";
+import { noSidebarClasses } from "../../../../../../../../nextjs/modules/account/ts/consts/no-sidebar-classes";
 
 const RegisterForm: React.FC<any> = () => {
   const user = useSelector((e: StoreDto) => e.user);

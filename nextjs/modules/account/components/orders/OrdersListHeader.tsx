@@ -8,17 +8,15 @@ import { changeTimeGap } from "@redux/actions/account-actions/OrdersActions";
 interface OrdersListHeaderProps {
   label: string;
   selectValue: SelectValue<number, string>;
-  orderType: string;
 }
 
 export const OrdersListHeader: React.FC<OrdersListHeaderProps> = ({
   label,
   selectValue,
-  orderType,
 }) => {
   const dispatch = useDispatch();
   const onSelectValueChange = (value) => {
-    dispatch(changeTimeGap(orderType, value));
+    dispatch(changeTimeGap(value));
   };
   return (
     <div className="orders-list-header">

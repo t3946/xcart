@@ -4,6 +4,7 @@ import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@modules/account/utils/alert";
 import { List } from "@modules/account/ts/types/list.type";
 import DecisionsInterface from "@modules/account/ts/types/decision";
+import { OrdersStore as OrdersMainStore } from "@modules/account/ts/types/orders-store.types";
 
 export interface AccountStore {
   addresses: AccountAddressesStore;
@@ -141,10 +142,7 @@ interface StoreInterface {
   productsRatings: any;
   productsReviews: any;
   product: any;
-  ordersStore?: {
-    orders: any;
-    ordersLoading: any;
-  };
+  ordersStore: OrdersMainStore;
   decisions: {
     solved: {
       total: number;

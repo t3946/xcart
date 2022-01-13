@@ -1,23 +1,11 @@
 import { AnyAction } from "redux";
-import { OrdersStore } from "@modules/account/ts/types/store.type";
 import { ordersHeaderSelectValues } from "@modules/account/ts/consts/orders-header-select-values";
+import { OrdersStore } from "@modules/account/ts/types/orders-store.types";
 
-const initialValue = {
-  ordersLoading: false,
-  orders: {
-    open: {
-      items: null,
-      selectValue: ordersHeaderSelectValues[0],
-    },
-    cancelled: {
-      items: null,
-      selectValue: ordersHeaderSelectValues[0],
-    },
-    completed: {
-      items: null,
-      selectValue: ordersHeaderSelectValues[0],
-    },
-  },
+const initialValue: OrdersStore = {
+  loading: false,
+  selectDate: ordersHeaderSelectValues[0],
+  orders: [],
 };
 
 const OrdersReducer = (
@@ -26,33 +14,27 @@ const OrdersReducer = (
 ): OrdersStore => {
   switch (action.type) {
     case "GET_ORDERS":
-      return { ...state, ordersLoading: true };
+      return { ...state, loading: true };
     case "SET_ORDERS":
-      state.orders[action.orderType].items = action.orders;
       return {
         ...state,
-        ordersLoading: false,
-        orders: {
-          ...state.orders,
-        },
+        loading: false,
+        orders: action.orders,
       };
     case "CHANGE_TIME_GAP":
-      state.orders[action.ordersType].selectValue = action.newValue;
       return {
         ...state,
-        orders: {
-          ...state.orders,
-        },
+        selectDate: action.newValue,
       };
     case "SEND_EMAIL":
       return {
         ...state,
-        ordersLoading: true,
+        loading: true,
       };
     case "STOP_LOADING":
       return {
         ...state,
-        ordersLoading: false,
+        loading: false,
       };
     default:
       return state;

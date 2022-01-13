@@ -11,42 +11,33 @@ interface OrdersPageProps {
   type: string;
 }
 
-const OrdersPage: React.FC<OrdersPageProps> = (props: OrdersPageProps) => {
-  const { label, type } = props;
+const OrdersPage: React.FC<OrdersPageProps> = ({ label, type }) => {
   const dispatch = useDispatch();
 
-  const orders = useSelectorAccount((e) => e.ordersStore.orders);
-
-  const ordersLoading = useSelectorAccount((e) => e.ordersStore.ordersLoading);
-
+  const { orders, loading, selectDate } = useSelectorAccount(
+    (store) => store.ordersStore
+  );
   useEffect(() => {
     dispatch(getOrders(type));
-  }, [orders[type].selectValue]);
-
+  }, [selectDate]);
   return (
     <div>
       <OrdersListHeader
         orderType={type}
-        selectValue={orders[type].selectValue}
+        selectValue={selectDate}
         label={label}
       />
-      {ordersLoading ? (
+      {loading ? (
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
       ) : (
         <div>
-          {orders[type]?.items?.length ? (
+          {orders?.length ? (
             <div>
-              {orders[type].items?.map((e: any) => {
-                return (
-                  <OrderItem
-                    orderType={type}
-                    key={e?.orderInfo?.orderid}
-                    order={e}
-                  />
-                );
-              })}
+              {orders.map((order) => (
+                <OrderItem orderType={type} key={order.orderId} order={order} />
+              ))}
             </div>
           ) : (
             <div className="no-items-block-container">

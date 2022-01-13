@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Models;
 
 use Modules\Goods\Models\ProductModel;
@@ -16,8 +17,10 @@ use Xcart\OrderDetail;
 
 /**
  * @property int order_group_id
+ * @property ProductModel product_model
+ * @property int amount
  */
-class OrderDetailModel  extends Model
+class OrderDetailModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
@@ -71,10 +74,13 @@ class OrderDetailModel  extends Model
                 'link' => ['order_group_id' => 'order_group_id'],
                 'null' => false,
             ],
+            'amount' => [
+                'class' => IntField::class,
+            ]
         ];
     }
 
-    public function getAmazonCompetitorMinPrice():? array
+    public function getAmazonCompetitorMinPrice(): ?array
     {
         $result = null;
 
@@ -104,7 +110,7 @@ class OrderDetailModel  extends Model
             $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->productid, 'slug' => '']);
 
             if ($full && $site = $this->order_group->order->site) {
-                $url = '//' . $site->domain . rtrim($url, '/') .'/';
+                $url = '//' . $site->domain . rtrim($url, '/') . '/';
             }
 
             return $url;

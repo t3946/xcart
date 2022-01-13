@@ -7,18 +7,13 @@ import Store from "@redux/stores/Store";
 const api = new ApiService();
 
 function* getCards(action: AnyAction): Generator {
+  const date = Store.getState().ordersStore.selectDate.value;
   const orders: any = yield api
-    .get<any>(
-      `/api/account/orders/get-orders/${action.ordersType}/${
-        Store.getState().ordersStore.orders[action.ordersType].selectValue.value
-      }`
-    )
+    .get(`/api-client/orders/get/${action.ordersType}/${date}`)
     .then((response) => response);
-
   yield put({
     type: "SET_ORDERS",
-    orders: orders.data,
-    orderType: action.ordersType,
+    orders,
   });
 }
 
