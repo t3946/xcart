@@ -46,7 +46,7 @@ class OrderEventHelper
     {
         if ($model && $app = Xcart::app()) {
 
-            $user = $app->user;
+            $user = $app->auth->getUser(true);
 
             /** @var OrderExtraModel $order_extra_model */
 
@@ -77,7 +77,7 @@ class OrderEventHelper
             (new OrderLogModel([
                     'orderid' => $model->orderid,
                     'type' => OrderLogModel::LOG_TYPE_CUSTOMER,
-                    'login' => Xcart::app()->user->login,
+                    'login' => $user->email,
                     'log' => nl2br(implode(PHP_EOL, $log_message))
                 ])
             )->save();
@@ -96,10 +96,9 @@ class OrderEventHelper
             }
 
             $model->setAttributes([
-                'is_mobile_checkout' => (new Mobile_Detect)->isMobile(),
+                'is_mobile_checkout' => (new Mobile_Detect())->isMobile(),
                 'order_prefix' => $app->getModule('Sites')->getSite()->getOrderPrefix(),
-                'login' => $user->login,
-                'user_id' => $user->id,
+                'user_id' => $user->user_id,
                 'phone' => preg_replace('/\D/S', '', $model->phone),
                 'storefrontid' => Xcart::app()->getModule('Sites')->getSite()->storefrontid,
             ]);

@@ -94,11 +94,11 @@ const LoginAndSecurity = (): any => {
   }
 
   function formatPhoneNumber() {
-    const phoneCountry = getCountryByCode(user.phone_country_code, countries);
-
-    if (!phoneCountry) {
+    if (!user.phone || !user.phone_country_code) {
       return "N/A";
     }
+
+    const phoneCountry = getCountryByCode(user.phone_country_code, countries);
 
     const countryPrefix = "+" + phoneCountry.phone_code;
     return user.phone.replace(countryPrefix, `${countryPrefix} `);

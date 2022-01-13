@@ -1,0 +1,80 @@
+@import "styles/utils/Utils.module";
+
+.LeaveFeedback__textarea {
+  margin: 0 0 pxToRem(26);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(24);
+  }
+}
+
+.LeaveFeedback__howCanWeDo {
+  margin: 0 0 pxToRem(8);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(14);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(20);
+  }
+}
+
+.LeaveFeedback__header {
+  margin: 0 0 pxToRem(17);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(19);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(16);
+  }
+}
+
+
+
+.textarea {
+  height: pxToRem(200);
+
+  @include breakpoint(md) {
+    height: pxToRem(120);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(130);
+    max-width: pxToRem(670);
+  }
+}
+
+
+.button {
+  @include breakpoint(md) {
+    width: pxToRem(200);
+    font-size: pxToRem(26);
+    height: pxToRem(57);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(160);
+    font-size: pxToRem(16);
+    height: pxToRem(39);
+  }
+}
+
+
+.howCanWeDo {
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(16);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}

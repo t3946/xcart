@@ -7,6 +7,7 @@ const passwordUtils = require("../utils/password");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 const axios = require("axios");
+const mail = require("../services/mail");
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (err, result) => {
@@ -25,8 +26,6 @@ app.post("/login", function (req, res) {
     });
   })(req, res);
 });
-
-app.post("/register");
 
 app.get("/info", isAuthMiddleware, async (req, res) => {
   const user = await prisma.xcart_users.findUnique({
@@ -96,7 +95,8 @@ app.post("/create", async function (req, res) {
 
     await setSessionCookie(res, user.user_id);
 
-    res.json(user);
+    delete user.password;
+    res.json({ user });
   }
 });
 
@@ -277,6 +277,26 @@ app.get("/tsv/get", isAuthMiddleware, async function (req, res) {
       res.json(apiRes.data);
       res.send();
     });
+});
+
+app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  const data = {
+    from: "vl0809081@gmail.com",
+    to: user.email,
+    subject: "Feedback from " + user.name,
+    text: req.body.message,
+    html: `<p>${req.body.message}</p>`,
+  };
+
+  mail.sendMail(data, function () {
+    res.sendStatus(200);
+  });
 });
 
 /**

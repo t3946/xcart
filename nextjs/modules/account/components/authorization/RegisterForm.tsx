@@ -20,7 +20,7 @@ const RegisterForm: React.FC<any> = () => {
   const user = useSelectorAccount((e) => e.user);
 
   if (user) {
-    router.push(routes["account:index"]);
+    router.push("/");
   }
 
   const initialValues = {
@@ -62,13 +62,14 @@ const RegisterForm: React.FC<any> = () => {
         },
 
         success(res: any) {
+          console.log("RES", res);
           actions.setSubmitting(false);
 
           if (res.data.error) {
             actions.setErrors(res.data.error);
           } else {
-            dispatch(userSetAction(res.data));
-            router.push("/");
+            dispatch(userSetAction(res.data.user));
+            router.push("/dashboard");
           }
         },
       })

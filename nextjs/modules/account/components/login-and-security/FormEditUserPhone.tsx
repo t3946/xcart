@@ -10,14 +10,12 @@ import {
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@utils/Countries";
-import FormInputPhone, {
-  getPhoneNumberInnerPart,
-} from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import { AxiosResponse } from "axios";
-import { FormikProps } from "formik/dist/types";
+import getPhoneNumberInnerPart from "@utils/getPhoneNumberInnerPart";
 
 interface IProps {
   location: any;
