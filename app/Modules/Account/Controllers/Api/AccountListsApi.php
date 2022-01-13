@@ -10,11 +10,12 @@ use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Orm\Base;
 use Xcart\App\Main\Xcart;
 
-class AccountListsApi extends FrontendController
+class AccountListsApi extends Controller
 {
     public static function getLists(UserModel $user): array
     {
