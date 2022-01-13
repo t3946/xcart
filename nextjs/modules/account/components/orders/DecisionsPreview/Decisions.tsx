@@ -3,6 +3,11 @@ import List from "@modules/account/components/orders/DecisionsPreview/List";
 import { Row } from "react-bootstrap";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
+import NoItems from "@modules/account/components/common/NoItems";
+
+function totalDecisions(decisions: Record<any, any>): number {
+  return decisions.notSolved.items.length + decisions.solved.items.length;
+}
 
 const Decisions: React.FC = function () {
   const decisions = useSelectorAccount((state) => state.decisions);
@@ -52,7 +57,11 @@ const Decisions: React.FC = function () {
     );
   }
 
-  return <div className={"decisions-lists"}>{lists}</div>;
+  if (totalDecisions(decisions) > 0) {
+    return <div className={"decisions-lists"}>{lists}</div>;
+  } else {
+    return <NoItems message={"You have not any decisions"} />;
+  }
 };
 
 export default Decisions;
