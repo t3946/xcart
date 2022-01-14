@@ -1,5 +1,5 @@
 import { ordersHeaderSelectValues } from "@modules/account/ts/consts/orders-header-select-values";
-import getInitialState from "@services/Account";
+//import getInitialState from "@services/Account";
 
 const appData: any = null;
 
@@ -10,7 +10,7 @@ export const accountMainStoreInitialValue = {
 };
 
 export const accountPaymentsStoreInitialValue = {
-  cards: undefined,
+  cards: [],
   cardsLoading: false,
   transactions: undefined,
 };
@@ -26,11 +26,11 @@ export const accountMenuInitialValue = {
 };
 
 export const accountListsInitialValue = {
-  lists: appData.user ? appData.user.lists : [],
+  lists: appData?.user ? appData?.user.lists : [],
   listLoading: false,
 };
 
-export const accountUserInitialValue = appData.user || null;
+export const accountUserInitialValue = appData?.user || null;
 
 export const accountLoginAndSecurityValue = {
   alert: null,
@@ -63,9 +63,9 @@ export const shadowPanelInitialValue = {
   isVisible: false,
 };
 
-export const countries = appData.countries || [];
+export const countries = appData?.countries || [];
 
-export const departmentsMenu = appData.departmentsMenu || {
+export const departmentsMenu = appData?.departmentsMenu || {
   desktop: [],
   mobile: [],
 };
@@ -80,10 +80,10 @@ export const departmentsMenuDesktop = {
 
 export const TSV = appData?.tsv || null;
 
-export const cartInitialValue = appData.cart || {};
+export const cartInitialValue = appData?.cart || {};
 
-const solved = appData.decisions?.solved || [];
-const notSolved = appData.decisions?.notSolved || [];
+const solved = appData?.decisions?.solved || [];
+const notSolved = appData?.decisions?.notSolved || [];
 
 export const decisions = {
   solved: {

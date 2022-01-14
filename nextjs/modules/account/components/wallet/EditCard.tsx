@@ -14,7 +14,7 @@ import { editCardFormValidationSchema } from "../../ts/consts/add-card-form";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import { onCardActionsEnd } from "@modules/account/utils/on-card-actions-end";
-import { useHistory } from "react-router-dom";
+import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface EditCardProps {
@@ -68,7 +68,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
     return card;
   };
 
-  const history = useHistory();
+  const router = useRouter();
   const breakpoint = useBreakpoint();
 
   const cardInformation = getCardAddressInfo(cardInfo);
@@ -100,7 +100,7 @@ export const EditCard: React.FC<EditCardProps> = ({ cardInfo }) => {
 
   function onCardActionsEnd(): void {
     breakpoint({
-      xs: () => history.push("/account/payments/wallet"),
+      xs: () => router.push("/account/payments/wallet"),
       md: context.handleClose,
     });
   }

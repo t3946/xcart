@@ -5,8 +5,8 @@ import { LoadingContainer } from "../shared/LoadingContainer";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { changeDefaultCard } from "@redux/actions/account-actions/PaymentsActions";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
-import { useHistory } from "react-router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { useRouter } from "next/router";
 
 interface CardsListProps {
   cards: CardItemDto[];
@@ -16,12 +16,12 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
   const breakpoint = useBreakpoint();
 
   const submitCardFormLoading = useSelector(
-    (e: StoreInterface) => e.payments.submitCardFormLoading
+    (e: StoreInterface) => e.payments?.submitCardFormLoading
   );
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const router = useRouter();
 
   const changeDefault = (cardInfo: CardItemDto, e) => {
     e.stopPropagation();
@@ -33,7 +33,7 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
   const openCardDialog = (cardInfo: CardItemDto, dialog, path) => {
     breakpoint({
       sm: () =>
-        history.push({
+        router.push({
           pathname: path,
           state: { cardInfo: cardInfo },
         }),

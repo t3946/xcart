@@ -12,13 +12,14 @@ use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Main\Xcart;
 
 class AccountWalletApi  extends Controller
 {
     public function getCards()
     {
-        $user = json_decode(file_get_contents('php://input'));
-        $this->jsonResponse($this->getCardsFromBase($user));
+        $user = Xcart::app()->auth->getUser(true);
+        $this->jsonResponse($this->getCardsFromBase($user->pk));
     }
 
     public function getCardsFromBase(int $id)

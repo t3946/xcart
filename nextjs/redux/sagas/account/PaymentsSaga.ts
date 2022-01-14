@@ -12,7 +12,7 @@ const getUser = () => {
 
 function* getCards(): Generator {
   const cards: any = yield api
-    .post<any>(`/account/api/wallet/get-cards`, getUser().id)
+    .get<any>(`/api/account/wallet/get-cards`)
     .then((response) => response);
 
   yield put({
@@ -24,7 +24,7 @@ function* getCards(): Generator {
 function* changeDefault(action: AnyAction): Generator {
   const cards: any = yield api
     .post<any>(
-      `/account/api/wallet/change-default`,
+      `/api/account/wallet/change-default`,
       JSON.stringify({ cardId: action.id, user: getUser().id })
     )
     .then((response) => response);
@@ -38,7 +38,7 @@ function* changeDefault(action: AnyAction): Generator {
 function* addCard(action: AnyAction): Generator {
   const cards: any = yield api
     .post<any>(
-      `/account/api/wallet/add-card`,
+      `/api/account/wallet/add-card`,
       JSON.stringify({ ...action.cardInfo, user: getUser().id })
     )
     .then((response) => response);
@@ -59,7 +59,7 @@ function* addCard(action: AnyAction): Generator {
 function* editCard(action: AnyAction): Generator {
   const cards: any = yield api
     .post<any>(
-      `/account/api/wallet/edit-card`,
+      `/api/account/wallet/edit-card`,
       JSON.stringify({ ...action.cardInfo, user: getUser().id })
     )
     .then((response) => response);
@@ -80,7 +80,7 @@ function* editCard(action: AnyAction): Generator {
 function* removeCard(action: AnyAction): Generator {
   const cards: any = yield api
     .post<any>(
-      `/account/api/wallet/remove-card`,
+      `/api/account/wallet/remove-card`,
       JSON.stringify({
         user: Store.getState().user.id,
         card: action.id,
@@ -98,7 +98,7 @@ function* removeCard(action: AnyAction): Generator {
 
 function* getTransactions(): Generator {
   const transactions: any = yield api
-    .post<any>(`/account/api/wallet/get-transactions`, getUser().id)
+    .post<any>(`/api/account/wallet/get-transactions`, getUser().id)
     .then((response) => response);
 
   yield put({

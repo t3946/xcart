@@ -38,6 +38,7 @@ import MainMenuReducer from "@redux/reducers/MainMenuReducer";
 
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
 import OrderViewReducer from "@redux/reducers/account/OrderViewReducer";
+import accountWalletReducer from "@redux/reducers/account/PaymentsReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 let clientPreloadedState;
@@ -58,7 +59,7 @@ const reducers = combineReducers({
   routes: RoutesReducer,
   addresses: accountAddressesReducer,
   main: accountMainReducer,
-  // payments: WalletReducer,
+  payments: accountWalletReducer,
   mobileMenu: MenuReducer,
   breadcrumbs: BreadcrumbsReducer,
   shadowPanel: ShadowPanelReducer,

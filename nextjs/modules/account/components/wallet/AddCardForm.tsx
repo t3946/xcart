@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "../../../../redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "../../utils/detect-card-type";
 import Store from "@redux/stores/Store";
-import { useRouter } from "react/router";
+import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 export const AddCardForm: React.FC = () => {
