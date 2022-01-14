@@ -1,0 +1,65 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  padding: pxToRem(23) pxToRem(11) pxToRem(30);
+
+  @include breakpoint(md) {
+    padding: pxToRem(18) pxToRem(20) 0;
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(16) pxToRem(25) 0;
+  }
+}
+
+.header {
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: 1;
+  }
+}
+
+.order {
+  @include breakpoint(md) {
+    width: pxToRem(380);
+  }
+  width: max(pxToRem(360), min(40%, pxToRem(300)));
+}
+
+.orderNumber {
+  font-size: pxToRem(22);
+  line-height: 1;
+  font-weight: bold;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(24);
+  }
+}
+
+.orderTrack {
+  font-size: pxToRem(18);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(20);
+  }
+}
+
+.textBlue {
+  color: #055a93;
+}
+
+.button {
+  font-size: pxToRem(20);
+}

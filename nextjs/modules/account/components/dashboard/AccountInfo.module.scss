@@ -1,0 +1,146 @@
+@import "styles/utils/Utils.module";
+
+.accountInfo {
+  gap: pxToRem(18);
+  flex-direction: column;
+
+  @include breakpoint(md) {
+    gap: pxToRem(14);
+  }
+
+  @include breakpoint(lg) {
+    gap: pxToRem(16);
+    flex-direction: row;
+  }
+}
+
+.userInfoHeader {
+  flex-direction: column;
+  gap: pxToRem(13);
+
+  @include breakpoint(md) {
+    flex-direction: row;
+    gap: 0;
+  }
+
+  @include breakpoint(lg) {
+    line-height: 1;
+  }
+}
+
+.accountInfoCard {
+  padding: pxToRem(21) pxToRem(10) pxToRem(25);
+  height: pxToRem(176);
+  font-size: pxToRem(16);
+  line-height: pxToRem(26);
+
+  @include breakpoint(md) {
+    padding: pxToRem(20) pxToRem(20) pxToRem(23);
+    height: pxToRem(188);
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(21) pxToRem(23) pxToRem(28);
+    height: pxToRem(170);
+    font-size: pxToRem(18);
+  }
+}
+
+.accountInfoCard_Lp {
+  flex-direction: row;
+}
+
+.userInfoName {
+  font-size: pxToRem(22);
+  font-weight: bold;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(24);
+  }
+}
+
+.userInfoLoginAndSecurity {
+  font-size: pxToRem(16);
+  color: #055a93;
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.lpInfoCount {
+  font-size: pxToRem(45);
+  line-height: 1;
+  font-weight: bold;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(50);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(36);
+  }
+}
+
+.lpInfoHeader {
+  height: 100%;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: inherit;
+    line-height: pxToRem(24);
+  }
+}
+
+.lpInfoRecentActivity {
+  height: 100%;
+  width: pxToRem(141);
+  font-size: pxToRem(14);
+  line-height: pxToRem(25);
+
+  @include breakpoint(md) {
+    width: pxToRem(255);
+    font-size: pxToRem(18);
+    line-height: pxToRem(27);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(140);
+    font-size: pxToRem(14);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(xl) {
+    width: pxToRem(207);
+    font-size: pxToRem(14);
+    line-height: pxToRem(22);
+  }
+}
+
+.lpInfoRecentActivityTitle {
+  font-size: pxToRem(16);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.green {
+  color: #2a8c3e;
+}
+
+.red {
+  color: #ad0000;
+}

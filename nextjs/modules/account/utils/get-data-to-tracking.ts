@@ -13,14 +13,13 @@ export const getDataToTracking = (state: string, vertical: boolean) => {
 
   data.items = deliveryStatus.map((e, index) => {
     const roundItemProps = {
-      containerClass: null,
+      containerClass: {},
       roundStyle: null,
       date: null,
       label: e.label,
     };
     if (e.codes.find((e) => e === state)) {
-      roundItemProps.containerClass =
-        "order-tracking-line-round-container__this-state";
+      roundItemProps.containerClass = { current: true };
 
       data.lineWidth =
         index === 4
@@ -30,12 +29,11 @@ export const getDataToTracking = (state: string, vertical: boolean) => {
       isFind = true;
     }
     if (!isFind) {
-      roundItemProps.containerClass =
-        "order-tracking-line-round-container__completed-state";
+      roundItemProps.containerClass = { completed: true };
     }
     if (!isFind || e.codes.find((e) => e === state)) {
       roundItemProps.date = new Date().toLocaleDateString("en-EN", {
-        month: "long",
+        month: "short",
         day: "2-digit",
         year: "numeric",
         hour: "numeric",

@@ -18,9 +18,6 @@ interface IProps {
   radioButton?: IRadioButtons;
   classNames?: {
     container?: any;
-    header?: any;
-    body?: any;
-    footer?: any;
   };
 }
 
@@ -64,7 +61,7 @@ const RectangularButton: React.FC<IProps> = ({
   return (
     <div onClick={onClick} className={cn(classes.container)}>
       {header}
-      {body && <div>{body}</div>}
+      {body}
       {footer}
     </div>
   );

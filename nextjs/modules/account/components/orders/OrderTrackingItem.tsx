@@ -1,8 +1,5 @@
 import React from "react";
-import { getDataToTracking } from "@modules/account/utils/get-data-to-tracking";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { useSelector } from "react-redux";
-import { AccountStore } from "@modules/account/ts/types/store.type";
+import OrderTrackingLine from "@modules/account/components/orders/OrderTrackingLine";
 
 interface OrderTrackingItemProps {
   orderInfo: any;
@@ -15,15 +12,6 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
   trackingInfo,
   orderGroupInfo,
 }) => {
-  const breakpoints = useSelector(
-    (store: AccountStore) => store.main.breakpoint
-  );
-  const breakpoint = useBreakpoint();
-  const trackingViewData = getDataToTracking(
-    orderGroupInfo.dc_status,
-    !breakpoints?.md
-  );
-
   return (
     <div className="order-tracking-container">
       <div className="order-tracking-line-text">
@@ -49,33 +37,7 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
           )}
         </div>
       </div>
-      <div className={"order-tracking-line"}>
-        <div
-          style={trackingViewData.lineWidth}
-          className="order-tracking-line-blue"
-        />
-        <div className="order-tracking-rounds">
-          {trackingViewData.items.map((e, index) => {
-            return (
-              <div
-                className={`order-tracking-line-round-container ${e.containerClass}`}
-                style={e.roundStyle}
-                key={index}
-              >
-                {breakpoint({
-                  md: <div className="order-tracking-line-round" />,
-                })}
-                <div className="order-tracking-line-round-text">{e.label}</div>
-                {breakpoint({
-                  xs: <div className="order-tracking-line-round" />,
-                  md: null,
-                })}
-                <div className="order-tracking-line-round-date">{e?.date}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <OrderTrackingLine dc_status={orderGroupInfo.dc_status} />
     </div>
   );
 };
