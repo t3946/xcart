@@ -8,9 +8,17 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AxiosResponse } from "axios";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
+import generateFp from "@utils/generateFp";
 
-const LoginFormInputOTP = function (props: Record<any, any>): any {
-  const { login, password } = props;
+interface IProps {
+  login: string;
+  password: string;
+  rememberMe: boolean;
+  submit: (opts: Record<any, any>) => any;
+}
+
+const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
+  const { login, password, rememberMe } = props;
   const routes = useSelectorAccount((e) => e.routes);
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
@@ -30,9 +38,15 @@ const LoginFormInputOTP = function (props: Record<any, any>): any {
   });
 
   async function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
+    const data: Record<any, any> = { ...values, password, login, rememberMe };
+
+    if (data.rememberBrowser) {
+      data.fingerprint = await generateFp();
+    }
+
     props.submit({
       actions,
-      form: { ...values, password, login },
+      form: data,
 
       success(res: AxiosResponse) {
         if (res.data.error) {

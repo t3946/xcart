@@ -4,11 +4,9 @@ import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
-//todo: remove this dependencies
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { useDispatch } from "react-redux";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
@@ -22,13 +20,14 @@ interface IProps {
   goToInputLogin: () => void;
   goToOTPInput: () => void;
   setPassword: (password: string) => void;
+  setRememberMe: (rememberMe: boolean) => void;
 }
 
 const LoginFormInputPassword = function (props: IProps): any {
   const dispatch = useDispatch();
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
-  const { goToInputLogin, goToOTPInput, login, setPassword } = props;
+  const { goToInputLogin, goToOTPInput, login, setPassword, setRememberMe } = props;
 
   React.useEffect(() => {
     inputRef.current?.focus();
@@ -47,20 +46,6 @@ const LoginFormInputPassword = function (props: IProps): any {
     rememberMe: yup.bool(),
   });
 
-  async function generateFp() {
-    // Initialize an agent at application startup.
-    const fpPromise = FingerprintJS.load();
-
-    return await (async () => {
-      // Get the visitor identifier when you need it.
-      const fp = await fpPromise;
-      const result = await fp.get();
-
-      // This is the visitor identifier:
-      return result.visitorId;
-    })();
-  }
-
   function submit(values: any, actions: any) {
     //function submit must be synchronous because need wrap async part
     (async function wrapAsyncFunc() {
@@ -69,8 +54,7 @@ const LoginFormInputPassword = function (props: IProps): any {
       const data = {
         login,
         password: values.password,
-        remember_me: values.rememberMe,
-        fingerprint: await generateFp(),
+        rememberMe: values.rememberMe,
       };
 
       dispatch(
@@ -88,6 +72,7 @@ const LoginFormInputPassword = function (props: IProps): any {
 
             if (res.data.error === "Need OTP") {
               setPassword(data.password);
+              setRememberMe(data.rememberMe);
               goToOTPInput();
               return;
             }

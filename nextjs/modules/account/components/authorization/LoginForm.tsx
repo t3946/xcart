@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const LoginForm: React.FC<any> = () => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const LoginForm: React.FC<any> = () => {
   const [lastSentForm, setLastSentForm] = React.useState<any>({});
   const [password, setPassword] = React.useState<any>("");
   const [login, setLogin] = React.useState<any>("");
+  const [rememberMe, setRememberMe] = React.useState<any>(false);
 
   React.useEffect(() => {
     if (user !== null) {
@@ -59,14 +61,16 @@ const LoginForm: React.FC<any> = () => {
             goToInputLogin={goToInputLogin}
             goToOTPInput={goToOTPInput}
             setPassword={setPassword}
+            setRememberMe={setRememberMe}
           />
         );
       case INPUT_OTP_MODE:
         return (
           <LoginFormInputOTP
             submit={submit}
-            password={password}
             login={login}
+            password={password}
+            rememberMe={rememberMe}
           />
         );
     }

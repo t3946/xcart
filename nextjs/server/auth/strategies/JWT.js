@@ -14,6 +14,13 @@ const strategyOptions = {
 module.exports = function (passport) {
   passport.use(
     new JwtStrategy(strategyOptions, function (jwtPayload, done) {
+      const now = new Date().getTime();
+
+      if (now > jwtPayload.timeout) {
+        done({ error: { message: "session time out" } }, null);
+        return;
+      }
+
       done(null, jwtPayload);
     })
   );

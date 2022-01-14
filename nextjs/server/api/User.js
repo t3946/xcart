@@ -20,7 +20,12 @@ app.post("/login", function (req, res) {
         return res.send(err);
       }
 
-      await setSessionCookie(res, result.user.user_id);
+      const params = {
+        userId: result.user.user_id,
+        rememberMe: req.body.rememberMe,
+      };
+
+      await setSessionCookie(res, params);
 
       res.json({ user: result.user });
     });
