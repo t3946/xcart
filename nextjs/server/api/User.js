@@ -302,6 +302,24 @@ app.get("/tsv/get", isAuthMiddleware, async function (req, res) {
     });
 });
 
+app.get("/tsv/require-for-all", isAuthMiddleware, async function (req, res) {
+  await prisma.xcart_fingerprints.deleteMany({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  delete user.password;
+
+  res.json({ user });
+});
+
 app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
   const user = await prisma.xcart_users.findUnique({
     where: {

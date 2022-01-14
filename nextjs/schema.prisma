@@ -5877,6 +5877,7 @@ model xcart_users {
   xcart_fingerprints       xcart_fingerprints[]
   xcart_one_time_passwords xcart_one_time_passwords?
   xcart_sessions_data      xcart_sessions_data[]
+  tsv_suppressed           Int?
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
 }

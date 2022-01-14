@@ -14,7 +14,8 @@ import InnerPage from "@modules/account/components/shared/InnerPage";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import cn from "classnames";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
+import SuppressedDevices from "@modules/account/components/login-and-security/tsv/SuppressedDevices";
 
 const TSVSettings = (): any => {
   const disableTSVModal = useDialog();
@@ -27,6 +28,7 @@ const TSVSettings = (): any => {
 
   if (user === null) {
     router.push("/account/login");
+    return null;
   }
 
   function tsvCountTemplate() {
@@ -266,17 +268,7 @@ const TSVSettings = (): any => {
             </div>
           </div>
 
-          <div className="row mx-0 mb-4">
-            <div className="col-12 col-lg-6 d-lg-flex align-items-center ps-lg-0 mb-14 mb-md-20 mb-lg-0">
-              <b>You have 33 devices where OTP is suppressed</b>
-            </div>
-
-            <div className="col-12 col-lg-6 d-md-flex justify-content-lg-end pe-lg-0">
-              <button className="form-button form-button__theme-dark-grey w-100 w-md-auto px-3">
-                Require OTP on all devices
-              </button>
-            </div>
-          </div>
+          <SuppressedDevices />
 
           <div className="row mx-0">
             <div className="col-12 px-lg-0">
