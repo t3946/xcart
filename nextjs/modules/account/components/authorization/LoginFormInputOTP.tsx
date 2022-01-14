@@ -1,6 +1,9 @@
 import React from "react";
 import { Formik, Form, FormikHelpers } from "formik";
 import { Form as RBForm } from "react-bootstrap";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -69,7 +72,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ isSubmitting, handleChange, values, errors }) => {
+      {({ isSubmitting, handleChange, values, errors, touched }) => {
         return (
           <Form>
             <div className="px-12 px-sm-0">
@@ -79,23 +82,23 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
               </p>
 
               <RBForm.Group controlId="LoginFormPassword">
-                <RBForm.Label className="d-flex justify-content-between align-items-center">
+                <Label className="d-flex justify-content-between align-items-center">
                   <span className={"form-input-label"}>Enter OTP</span>
-                </RBForm.Label>
+                </Label>
 
-                <RBForm.Control
+                <Input
                   ref={inputRef}
                   type="text"
                   name="code"
                   value={values.code}
                   onChange={handleChange}
                   className={"form-input"}
-                  isInvalid={!!errors.code}
+                  isInvalid={touched.code && !!errors.code}
                 />
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.code}
-                </RBForm.Control.Feedback>
+                <Feedback type="invalid">
+                  {!!touched.code && errors.code}
+                </Feedback>
               </RBForm.Group>
 
               <RBForm.Group className={"mb-0 mt-3"}>

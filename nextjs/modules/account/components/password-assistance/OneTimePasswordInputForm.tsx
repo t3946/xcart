@@ -1,6 +1,9 @@
 import React from "react";
 import { Form, Formik } from "formik";
 import { Form as RBForm } from "react-bootstrap";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
 import ChevronDownLight from "@modules/icon/components/font-awesome/chevron-down/Light";
 import classnames from "classnames";
@@ -116,7 +119,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ isSubmitting, handleChange, values, errors }) => {
+      {({ isSubmitting, handleChange, values, errors, touched }) => {
         return (
           <Form>
             <div className="px-12 px-sm-0">
@@ -132,20 +135,20 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
               </p>
 
               <RBForm.Group controlId="LoginFormPassword">
-                <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
+                <Label className="d-flex justify-content-between align-items-center">
                   <span>Enter OTP</span>
                   <span className={classnames(classes.attempts)}>
                     Left {oneTimePassword.left_attempts} attempts
                   </span>
-                </RBForm.Label>
+                </Label>
 
-                <RBForm.Control
+                <Input
                   type="text"
                   name="otp"
                   value={values.otp}
                   onChange={handleChange}
                   className={classnames("form-input", Styles.input)}
-                  isInvalid={!!errors.otp}
+                  isInvalid={touched.otp && !!errors.otp}
                   maxLength={6}
                 />
 
@@ -153,9 +156,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
                   {"A new code has been sent to your email."}
                 </RBForm.Text>
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.otp}
-                </RBForm.Control.Feedback>
+                <Feedback type="invalid">{!!touched.otp && errors.otp}</Feedback>
               </RBForm.Group>
             </div>
 
