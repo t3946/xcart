@@ -98,7 +98,7 @@ app.post("/create", async function (req, res) {
       },
     });
 
-    await setSessionCookie(res, user.user_id);
+    await setSessionCookie(res, { userId: user.user_id });
 
     delete user.password;
     res.json({ user });

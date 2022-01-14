@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import cn from "classnames";
 import Styles from "@modules/account/components/authorization/LoginFormInputPassword.module.scss";
+import generateFp from "@utils/generateFp";
 
 interface IProps {
   login: string;
@@ -27,7 +28,8 @@ const LoginFormInputPassword = function (props: IProps): any {
   const dispatch = useDispatch();
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
-  const { goToInputLogin, goToOTPInput, login, setPassword, setRememberMe } = props;
+  const { goToInputLogin, goToOTPInput, login, setPassword, setRememberMe } =
+    props;
 
   React.useEffect(() => {
     inputRef.current?.focus();
@@ -55,6 +57,7 @@ const LoginFormInputPassword = function (props: IProps): any {
         login,
         password: values.password,
         rememberMe: values.rememberMe,
+        fingerprint: await generateFp(),
       };
 
       dispatch(

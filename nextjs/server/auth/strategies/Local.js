@@ -53,6 +53,25 @@ module.exports = function (passport) {
         return;
       }
 
+      //check tsv code
+      if (req.body.fingerprint) {
+        const fp = await prisma.xcart_fingerprints.findFirst({
+          where: {
+            user_id: user.user_id,
+            fingerprint: req.body.fingerprint,
+          },
+        });
+
+        //remembered device
+        if (fp) {
+          done(null, {
+            user,
+          });
+
+          return;
+        }
+      }
+
       if (req.body.code === undefined) {
         return done({ message: "Need OTP" }, null);
       }
@@ -62,14 +81,27 @@ module.exports = function (passport) {
           code: req.body.code,
           userId: user.user_id,
         })
-        .then((apiRes) => {
-          if (apiRes.data.user) {
-            done(null, {
-              user,
-            });
-          } else {
+        .then(async (apiRes) => {
+          if (!apiRes.data.user) {
             done({ message: { code: "Code is invalid" } }, null);
+            return;
           }
+
+          const { rememberBrowser, fingerprint } = req.body;
+          const userId = user.user_id;
+
+          if (rememberBrowser && fingerprint) {
+            await prisma.xcart_fingerprints.create({
+              data: {
+                user_id: userId,
+                fingerprint: fingerprint,
+              },
+            });
+          }
+
+          done(null, {
+            user,
+          });
         });
     })
   );

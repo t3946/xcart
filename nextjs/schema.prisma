@@ -2446,10 +2446,10 @@ model xcart_filter_presets {
 
 model xcart_fingerprints {
   user_id     Int      @db.UnsignedInt
-  fingerprint String      @unique(map: "xcart_fingerprints_fingerprint_uindex") @db.Char(32)
+  fingerprint String      @db.Char(32)
   xcart_users xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_fingerprints_xcart_users_user_id_fk")
 
-  @@index([user_id], map: "xcart_fingerprints_xcart_users_user_id_fk")
+  @@unique([user_id, fingerprint], map: "xcart_fingerprints_user_id_fingerprint_uindex")
 }
 
 model xcart_fraud_check {
