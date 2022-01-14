@@ -5,6 +5,7 @@ const initialValue = {
   countries: [],
   states: [],
   isList: false,
+  breakpoint: [],
 };
 
 const accountMainReducer = (
