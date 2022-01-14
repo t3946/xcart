@@ -98,7 +98,7 @@ function* removeCard(action: AnyAction): Generator {
 
 function* getTransactions(): Generator {
   const transactions: any = yield api
-    .post<any>(`/api/account/wallet/get-transactions`, getUser().id)
+    .get<any>(`/api/account/wallet/get-transactions`)
     .then((response) => response);
 
   yield put({

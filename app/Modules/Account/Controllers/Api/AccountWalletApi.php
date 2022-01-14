@@ -148,7 +148,11 @@ class AccountWalletApi  extends Controller
 
     public function getTransactions()
     {
-        $user_id = json_decode(file_get_contents('php://input'));
+        $user = Xcart::app()->auth->getUser(true);
+
+        if (!$user_id = $user->pk) {
+            $this->jsonResponse([]);
+        }
 
         $user = UserModel::objects()->get(['user_id' => $user_id]);
         $transactions = [];
