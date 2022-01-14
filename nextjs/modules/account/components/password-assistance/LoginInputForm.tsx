@@ -2,9 +2,15 @@ import React from "react";
 import * as yup from "yup";
 import { Form, Formik, FormikHelpers } from "formik";
 import { Form as RBForm } from "react-bootstrap";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import { useDispatch } from "react-redux";
 import { sendOneTimePasswordAction } from "@redux/actions/account-actions/ResetPasswordActions";
 import { AxiosResponse } from "axios";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/password-assistance/LoginInputForm.module.scss";
 
 const LoginInputForm: React.FC<any> = function (props) {
   const firstInputRef = React.createRef<HTMLInputElement>();
@@ -51,40 +57,41 @@ const LoginInputForm: React.FC<any> = function (props) {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ isSubmitting, handleChange, values, errors }) => {
+      {({ isSubmitting, handleChange, values, errors, touched }) => {
         return (
           <Form>
             <div className="px-12 px-sm-0">
-              <h1 className="account-form-header">Password Assistance</h1>
+              <h1 className="account-form-header mb-lg-3">
+                Password Assistance
+              </h1>
 
-              <p className={"auth-form-info"}>
+              <p className={cn(Styles.text, "auth-form-info")}>
                 Enter the email address or mobile phone number associated with
                 your S3 Stores account.
               </p>
 
               <RBForm.Group controlId="LoginFormPassword">
-                <RBForm.Label className="form-input-label">
+                <Label className={cn("mb-lg-1 d-block")}>
                   Email or mobile phone number
-                </RBForm.Label>
+                </Label>
 
-                <RBForm.Control
+                <Input
                   ref={firstInputRef}
                   type="text"
                   name="login"
                   value={values.login}
                   onChange={handleChange}
-                  className={"form-input"}
-                  isInvalid={!!errors.login}
+                  isInvalid={touched.login && !!errors.login}
                 />
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.login}
-                </RBForm.Control.Feedback>
+                <Feedback type="invalid">
+                  {!!touched.login && errors.login}
+                </Feedback>
               </RBForm.Group>
             </div>
             <button
               type="submit"
-              className="form-button mt-4"
+              className={cn(Styles.text, "form-button", "mt-4")}
               disabled={isSubmitting}
             >
               Continue

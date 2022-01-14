@@ -10,6 +10,7 @@ interface sideBarMenuItemProps {
   badge?: number | string;
   className?: any;
   onClick?: any;
+  active?: boolean;
 }
 
 const Item: React.FC<sideBarMenuItemProps> = ({
@@ -18,6 +19,7 @@ const Item: React.FC<sideBarMenuItemProps> = ({
   badge,
   className,
   onClick,
+  active,
 }) => {
   function badgeTemplate(): any {
     if (!badge) {
@@ -31,7 +33,22 @@ const Item: React.FC<sideBarMenuItemProps> = ({
     );
   }
 
-  //todo: у старого роутера был класс activeClassName="active-route"
+  if (active) {
+    return (
+      <span
+        className={classnames(
+          Styles.item,
+          Styles.item_active,
+          "text-decoration-none",
+          className
+        )}
+      >
+        {label}
+        {badgeTemplate()}
+      </span>
+    );
+  }
+
   return (
     <Link href={to}>
       <a

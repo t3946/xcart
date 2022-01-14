@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import Item from "@modules/account/components/sidebar-menu/Item";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -13,6 +14,7 @@ const classes = {
 };
 
 const SideBarMenu: React.FC = () => {
+  const { asPath: activePath } = useRouter();
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
   const menuItems = [
@@ -70,6 +72,7 @@ const SideBarMenu: React.FC = () => {
               className={classes.dropdownItem}
               onClick={value.onClick}
               key={index}
+              active={value.to === activePath}
             />
           );
         }

@@ -11,6 +11,11 @@ import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton"
 import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import cn from "classnames";
+
+import RotateStyles from "styles/modules/Rotate.module.scss";
+import StylesCommon from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
+import Styles from "@modules/account/components/hat/LoginButton/LoginButtonDesktop.module.scss";
 
 const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
@@ -20,6 +25,29 @@ const LoginButtonDesktop: React.FC = function () {
     (e) => e.mobileMenu.isTabletMenuVisible
   );
 
+  const classes = {
+    button: [
+      StylesCommon.hatLoginButton,
+      Styles.button,
+      "d-flex",
+      "align-items-center",
+      "position-relative",
+      "cursor-pointer",
+      "text-decoration-none",
+      { [Styles.button_logined]: user },
+    ],
+
+    username: ["hat-login-button-username", Styles.username],
+
+    iconArrow: [
+      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
+      "login-button-desktop__arrow",
+      "login-button-desktop-arrow",
+      {
+        "login-button-desktop-arrow__flip": isTabletMenuVisible,
+      },
+    ],
+  };
   function toggleMenu(isVisible: boolean) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
@@ -38,7 +66,8 @@ const LoginButtonDesktop: React.FC = function () {
           ref={ref}
           className={classnames(
             className,
-            "account-hat-dropdown-menu col-12 p-0 rounded-0"
+            "account-hat-dropdown-menu col-12 p-0 rounded-0",
+            Styles.dropdown
           )}
           aria-labelledby={labeledBy}
         >
@@ -54,7 +83,9 @@ const LoginButtonDesktop: React.FC = function () {
     const { onClick } = props;
 
     const arrowClasses = [
-      "login-button-desktop__arrow login-button-desktop-arrow",
+      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
+      Styles.arrowIcon,
+      "flex-shrink-0",
       {
         "login-button-desktop-arrow__flip": isTabletMenuVisible,
       },
@@ -62,7 +93,7 @@ const LoginButtonDesktop: React.FC = function () {
 
     return (
       <span
-        className={className}
+        className={cn(classes.button)}
         title={user.name}
         ref={ref}
         onClick={(e) => {
@@ -70,20 +101,20 @@ const LoginButtonDesktop: React.FC = function () {
         }}
       >
         <UserIcon />
-        {user.name}
+        <span className={classnames(classes.username)}>{user.name}</span>
+
         <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
       </span>
     );
   });
 
   if (!user) {
-    const path = "/login";
-    const className = "hat-login-button";
-    const text = "log in";
-
     return (
-      <Link href={path}>
-        <a className={className}>{text}</a>
+      <Link href={"/login"}>
+        <a className={cn(classes.button)}>
+          <UserIcon />
+          <span className="hat-login-button-username">log in</span>
+        </a>
       </Link>
     );
   }

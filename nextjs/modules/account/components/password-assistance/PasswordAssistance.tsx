@@ -10,6 +10,7 @@ const PasswordAssistance: React.FC<any> = function () {
   const INPUT_LOGIN_MODE = 0;
   const INPUT_OTP_MODE = 1;
   const CHANGE_PASSWORD_MODE = 2;
+  const router = useRouter();
   const [mode, setMode] = React.useState(INPUT_LOGIN_MODE);
   const [login, setLogin] = React.useState("");
   const [oneTimePassword, setOneTimePassword] =
@@ -17,7 +18,9 @@ const PasswordAssistance: React.FC<any> = function () {
   const [resetPasswordToken, setResetPasswordToken] = React.useState("");
   const user = useSelector((e: StoreInterface) => e.user);
 
-  user && useRouter().push("/dashboard");
+  React.useEffect(() => {
+    user && router.push("/dashboard");
+  }, []);
 
   function goToOTPInput(login: string) {
     setLogin(login);

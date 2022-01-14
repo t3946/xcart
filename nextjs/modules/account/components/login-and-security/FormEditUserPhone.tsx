@@ -134,6 +134,8 @@ const FormEditUserPhone = (props: IProps): any => {
                   label={"New Mobile Number"}
                   classes={{
                     label: "mb-10 mb-md-0",
+                    select: "col-4",
+                    phone: "col-8 col-md-7 pe-md-0 col-lg-5",
                   }}
                 />
 

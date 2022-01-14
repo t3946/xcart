@@ -5,13 +5,13 @@
 }
 
 .select {
-  width: pxToRem(115);
+  min-width: pxToRem(115);
 
   @include breakpoint(md) {
-    width: pxToRem(125);
+    min-width: pxToRem(125);
   }
 
   @include breakpoint(lg) {
-    width: pxToRem(105);
+    min-width: pxToRem(105);
   }
 }
