@@ -123,6 +123,11 @@ class UserModel extends Model
             ],
             'tsv_count' => [
                 'class' => IntField::class,
+                'null' => true,
+                'default' => null
+            ],
+            'access_token' => [
+                'class' => CharField::class,
             ],
             'lists' => [
                 'class' => ManyToManyField::class,
