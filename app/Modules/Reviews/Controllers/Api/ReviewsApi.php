@@ -214,7 +214,6 @@ class ReviewsApi extends FrontendController
         $reviews_images_alias = ReviewsImagesModel::objects()->getQuerySet()->getTableAlias();
         $reviews_videos_alias = ReviewsVideosModel::objects()->getQuerySet()->getTableAlias();
 
-        $user_id = $this->getUser()->user_id;
         $select_fields = [
             '*',
             'helpful__user_id',
@@ -241,8 +240,9 @@ class ReviewsApi extends FrontendController
         ];
 
         // select user marked helpful if user authorised
-        if ($user_id) {
-            $select_fields['marked_helpful'] = new Expression("IF($ratings_alias.user_id = $user_id, true, false)");
+        $user = $this->getUser();
+        if (!$user->getIsGuest()) {
+            $select_fields['marked_helpful'] = new Expression("IF($ratings_alias.user_id = $user->user_id, true, false)");
         }
 
         $query_set = ProductReviewsModel::objects()
