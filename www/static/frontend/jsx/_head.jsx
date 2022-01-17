@@ -56,8 +56,8 @@ import LazyLoad from "vanilla-lazyload";
   window["formValidate"] = formValidate;
   window["Waves"] = Waves;
   window["FontFaceObserver"] = FontFaceObserver;
-  window["noUiSlider"] = noUiSlider;
   window["sendAnalytics"] = new sendAnalytics();
+  window["noUiSlider"] = noUiSlider;
   window["LazyLoad"] = new LazyLoad({
     elements_selector: ".lazy-img, .lazy-bg",
     callback_set: function (el) {
