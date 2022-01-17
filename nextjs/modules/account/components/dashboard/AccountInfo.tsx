@@ -4,9 +4,9 @@ import Link from "next/link";
 import RectangularButton from "@modules/account/components/common/RectangularButton";
 import LockIcon from "@modules/icon/components/account/lock/Lock";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-
 import DashboardStyles from "@modules/account/components/dashboard/Dashboard.module.scss";
 import Styles from "@modules/account/components/dashboard/AccountInfo.module.scss";
+import { useRouter } from "next/router";
 
 const AccountInfo = () => {
   const classes = {
@@ -20,6 +20,12 @@ const AccountInfo = () => {
   };
 
   const user = useSelectorAccount((e) => e.user);
+  const router = useRouter();
+
+  if (!user) {
+    router.push("/login");
+    return null;
+  }
 
   return (
     <div className={cn("d-flex", Styles.accountInfo)}>
