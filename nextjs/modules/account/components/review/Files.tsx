@@ -117,9 +117,11 @@ const Files: React.FC<IProps> = function (props: IProps) {
   function filesListTemplate() {
     return files.map(function (file, i) {
       if (file.type.indexOf("image") !== -1) {
-        return fileImageTemplate(file.dataUrl, file.name, () => removeFile(i));
+        return fileImageTemplate(file.dataUrl, file.name, i.toString(), () =>
+          removeFile(i)
+        );
       } else if (file.type.indexOf("video") !== -1) {
-        return fileVideoTemplate(file.name, () => removeFile(i));
+        return fileVideoTemplate(file.name, i.toString(), () => removeFile(i));
       }
     });
   }
@@ -127,10 +129,14 @@ const Files: React.FC<IProps> = function (props: IProps) {
   function fileImageTemplate(
     dataUrl: string,
     name: string,
+    key: string,
     removeHandler: () => void
   ) {
     return (
-      <div className="d-flex mb-4 align-items-center position-relative">
+      <div
+        className="d-flex mb-4 align-items-center position-relative"
+        key={`image-item-${key}`}
+      >
         <div
           className={"form-review-file_image form-review-file me-20"}
           onClick={removeHandler}
@@ -149,9 +155,16 @@ const Files: React.FC<IProps> = function (props: IProps) {
       </div>
     );
   }
-  function fileVideoTemplate(name: string, removeHandler: () => void) {
+  function fileVideoTemplate(
+    name: string,
+    key: string,
+    removeHandler: () => void
+  ) {
     return (
-      <div className="d-flex mb-4 align-items-center position-relative">
+      <div
+        className="d-flex mb-4 align-items-center position-relative"
+        key={`video-item-${key}`}
+      >
         <div
           className={"form-review-file_video form-review-file me-20"}
           onClick={removeHandler}

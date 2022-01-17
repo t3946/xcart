@@ -44,19 +44,6 @@ class AccountController extends FrontendController
 
     public static function provideAccountData()
     {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if (!$user->getIsGuest()) {
-            StorageHelper::push($user->toArray(), null, 'user');
-
-            StorageHelper::push([
-                'notSolved' => DecisionController::getDecisions($user['user_id'], 0, 4, 0, ['-created']),
-                'solved' => DecisionController::getDecisions($user['user_id'], 1, 4, 0, ['-updated']),
-            ], null, 'decisions');
-
-            StorageHelper::push(AccountListsApi::getLists($user), 'lists', 'user');
-        }
-
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
@@ -113,34 +100,6 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-    private function generateQrCode()
-    {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            return;
-        }
-
-        $g = new GoogleAuthenticator();
-        $account_name = $user->getAttribute('email');
-        $secret = $user->getAttribute('tsv_secret');
-
-        if (!$secret) {
-            $secret = $g->generateSecret();
-            $user->setAttribute('tsv_secret', $secret);
-            $user->save();
-        }
-
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $issuer = $site->company_name;
-        $url = GoogleQrUrl::generate($account_name, $secret, $issuer);
-
-        StorageHelper::push([
-            "url" => $url,
-            "secret" => $secret,
-        ], null, 'tsv');
-    }
-
     public function actionIndex()
     {
         $this->generateQrCode();
@@ -151,28 +110,6 @@ class AccountController extends FrontendController
     public function actionTSVAddNew()
     {
         self::actionIndex();
-    }
-
-    public function register()
-    {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if (!$user->getIsGuest()) {
-            $this->getRequest()->redirect("account:index");
-        } else {
-            $this->actionIndex();
-        }
-    }
-
-    public function login()
-    {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if (!$user->getIsGuest()) {
-            $this->getRequest()->redirect("account:index");
-        } else {
-            $this->actionIndex();
-        }
     }
 
     public function logout()

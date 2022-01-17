@@ -43,6 +43,11 @@ return [
         'target' => [ApiImageController::class, 'view'],
         'name' => 'image'
     ],
+    [
+        'route' => 'goods/get/{i:product_id}/',
+        'target' => [ApiProductController::class, 'getById'],
+        'name' => 'getById'
+    ],
 
     /** PRODUCT SLIDERS */
     [

@@ -10,11 +10,9 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   let tsv;
 
   if (user) {
-    await instance
-      .get("/api-client/user/tsv/get")
-      .then((res: AxiosResponse) => {
-        tsv = res.data;
-      });
+    await instance.get("/api-client/product/get").then((res: AxiosResponse) => {
+      tsv = res.data;
+    });
   }
 
   return {

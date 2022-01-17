@@ -176,4 +176,13 @@ class ApiProductController extends AbstractCatalogController
         }
     }
 
+    public function getById($product_id){
+        $product = ProductModel::objects()->get(['productid' => $product_id]);
+        $attributes = $product->getAttributes();
+        $image = $product->getMainImage();
+        $image_url = (string)$image;
+        $attributes['image'] = $image_url;
+
+        $this->jsonResponse($attributes);
+    }
 }

@@ -1,0 +1,56 @@
+import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
+import * as React from "react";
+import ReviewForm from "@modules/account/components/review/ReviewForm";
+import { getInstance } from "@services/axios/Instance";
+import { NextPageContext } from "next";
+import { AxiosResponse } from "axios";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  if (!ctx.req) {
+    return {};
+  }
+
+  if (!process.initialState.user) {
+    return { props: {} };
+  }
+
+  const instance = getInstance(ctx.req);
+  const productId = ctx.query.productId;
+  let product;
+
+  await instance
+    .post("/api-client/product/get", { productId })
+    .then((res: AxiosResponse) => {
+      product = res.data;
+    });
+
+  return {
+    props: {
+      product,
+    },
+  };
+}
+
+const CreateReviewPage = (props: any) => {
+  const { product } = props;
+  const router = useRouter();
+  const user = useSelectorAccount((e: StoreInterface) => e.user);
+
+  // console.log({router})
+  //
+  // if (router && !user) {
+  //   router.push("/login");
+  //   return null;
+  // }
+
+  return (
+    <PageTwoColumns>
+      {product && <ReviewForm product={product} />}
+    </PageTwoColumns>
+  );
+};
+
+export default CreateReviewPage;

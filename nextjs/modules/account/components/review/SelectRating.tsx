@@ -49,6 +49,7 @@ const SelectRating: React.FC<IProps> = function (
         className={"m-0 star-container"}
         onMouseEnter={() => setHoverIndex(i)}
         onMouseLeave={() => setHoverIndex(0)}
+        key={`label-${i}`}
       >
         <RBForm.Check
           type="radio"
@@ -62,6 +63,7 @@ const SelectRating: React.FC<IProps> = function (
               reset();
             }
           }}
+          key={`check-${i}`}
         />
 
         {starTemplate(i)}

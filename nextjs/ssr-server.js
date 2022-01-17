@@ -6,6 +6,7 @@ const mainApp = express();
 const apiApp = express();
 const UserApi = require("./server/api/User");
 const DecisionsApi = require("./server/api/Decisions");
+const ProductApi = require("./server/api/Product");
 //set true if you need debug server only
 const cookieParser = require("cookie-parser");
 
@@ -24,6 +25,8 @@ mainApp.use(cookieParser());
 
 apiApp.use("/user", UserApi);
 apiApp.use("/decisions", DecisionsApi);
+apiApp.use("/product", ProductApi);
+apiApp.use("/review", ReviewApi);
 mainApp.use("/api-client", apiApp);
 
 if (process.env.RUN_BACKEND_ONLY === "true") {

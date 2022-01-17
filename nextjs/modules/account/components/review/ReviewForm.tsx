@@ -17,14 +17,14 @@ import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import AppData from "@utils/AppData";
 
-const ReviewForm = (): any => {
-  const product = appData.review.product;
+interface IProps {
+  product: number;
+}
+
+const ReviewForm: React.FC<IProps> = (props: IProps): any => {
+  const { product } = props;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreInterface) => e.user);
-
-  if (!user) {
-    return;
-  }
 
   const [files, setFiles] = React.useState([]);
   const initialValues = {
@@ -113,16 +113,16 @@ const ReviewForm = (): any => {
   }
 
   function submit(values, actions) {
-    const form = new FormData();
+    const data = new FormData();
 
     for (let i = 0; i < files.length; i++) {
-      form.append(`files[${i}]`, files[i]);
+      data.append(`files[${i}]`, files[i]);
     }
 
-    form.append("header", values.headLine);
-    form.append("body", values.textBody);
-    form.append("productId", product.productid);
-    form.append("videoLink", values.videoLink);
+    data.append("header", values.headLine);
+    data.append("body", values.textBody);
+    data.append("productId", product.productid);
+    data.append("videoLink", values.videoLink);
 
     const fdRatings = {
       overall: values.overall,
@@ -132,13 +132,13 @@ const ReviewForm = (): any => {
       fdRatings[e.slug] = values[e.slug];
     });
 
-    form.append("ratings", JSON.stringify(fdRatings));
+    data.append("ratings", JSON.stringify(fdRatings));
 
     setIsSubmitting(true);
 
     dispatch(
       createReviewAction({
-        form,
+        data,
 
         success(res) {
           if (res.errors) {
@@ -171,7 +171,7 @@ const ReviewForm = (): any => {
               star: "form-review-star form-review-star_feature",
               container: "form-review-rating-container",
             }}
-            key={i}
+            key={`feature-rating-${i}`}
           />
         </div>
       );

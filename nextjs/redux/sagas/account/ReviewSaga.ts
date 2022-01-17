@@ -2,6 +2,7 @@ import { takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import { route } from "@utils/AppData";
+import axios from "axios";
 
 const api = new ApiService();
 
@@ -15,10 +16,10 @@ function* getVideoHeaders(action): Generator {
     });
 }
 
-function* createReview(action): Generator {
-  const { form, success } = action.data;
+function* createReview(action: Record<any, any>): Generator {
+  const { data, success } = action.data;
 
-  yield api.post<any>(route("reviews:api:create"), form).then(function (res) {
+  yield api.post<any>("/api-client/review/create", data).then(function (res) {
     success(res);
   });
 }

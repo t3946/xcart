@@ -22,6 +22,7 @@ use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Storage\Files\RemoteFile;
+use Firebase\JWT\JWT;
 
 class ReviewsApi extends FrontendController
 {
@@ -107,12 +108,14 @@ class ReviewsApi extends FrontendController
 
     public function createReview()
     {
+        $session_data = JWT::decode($_COOKIE["session"], "h93h84fp83", array('HS256'));
+
         $review_data = [
             'header' => $_POST['header'],
             'body' => $_POST['body'],
             'product_id' => $_POST['productId'],
+            'user_id' => $session_data->userId,
         ];
-        $review_data['user_id'] = (int)Xcart::app()->getUser()->user_id;
         $ip = Xcart::app()->request->getUserIP();
         $location = GeoIpHelper::getGeoipLocation($ip)->country;
         $default_location = 'US';
@@ -181,7 +184,7 @@ class ReviewsApi extends FrontendController
             }
         }
 
-        $video_file_url = $_POST['videoLink'];
+        $video_file_url = $this->data['videoLink'];
 
         if ($video_file_url) {
             $errors = $this->checkVideoFile($video_file_url)['errors'];
