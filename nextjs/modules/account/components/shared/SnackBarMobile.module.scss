@@ -1,0 +1,15 @@
+@import "styles/utils/Utils.module";
+
+.mobileAlertClose {
+  padding: pxToRem(8);
+}
+
+.mobileAlertContent {
+  white-space: pre-line;
+  line-height: pxToRem(24);
+}
+
+.mobileAlert_decision {
+  padding: pxToRem(24) pxToRem(19) pxToRem(34);
+}
+

@@ -2,10 +2,12 @@ import { AddressItemDto } from "./address-item.type";
 import { SelectValue } from "./select-value.type";
 import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@modules/account/utils/alert";
+import { VariantsEnum as SnackBarVariants } from "@modules/account/components/shared/SnackBar";
 import { List } from "@modules/account/ts/types/list.type";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { OrdersStore as OrdersMainStore } from "@modules/account/ts/types/order/orders-store.types";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import React from "react";
 
 export interface AccountStore {
   addresses: AccountAddressesStore;
@@ -19,6 +21,7 @@ export interface AccountStore {
     zIndex: number;
     subscribers: Record<string, boolean>;
   };
+  snackbar: AccountSnackBarStore;
   departmentsMenuMobile: {
     isVisible: boolean;
   };
@@ -78,6 +81,14 @@ export interface AccountMobileAlertStore {
   };
 }
 
+export interface AccountSnackBarStore {
+  alert: {
+    duration?: number;
+    variant?: SnackBarVariants;
+    message: string | React.ReactNode;
+  } | null;
+}
+
 export interface OrdersStore {
   ordersLoading: boolean;
   orders: {
@@ -135,6 +146,7 @@ interface StoreInterface {
     isVisible: boolean;
   };
   sidebar: SideBarMenuStore;
+  snackbar: AccountSnackBarStore;
   suggestion: {
     category_suggestions: any[];
     phrase_suggestions: any[];
