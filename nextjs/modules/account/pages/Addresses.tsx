@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 
+import Styles from "@modules/account/pages/Addresses.module.scss";
+
 export const Addresses: React.FC = () => {
   const dispatch = useDispatch();
   const userId = useSelector((e: StoreInterface) => {
@@ -38,14 +40,10 @@ export const Addresses: React.FC = () => {
   return (
     <div>
       <div className="page-label">Addresses</div>
-      <div className="addresses-list-container">
+      <div className={Styles.list}>
         <AddNewAddress
-          onClick={() =>
-            breakpoint({
-              xs: () => history.push("/account/addresses"),
-              md: addAddressDialog.handleClickOpen,
-            })
-          }
+          classes={{ container: Styles.addressBorder }}
+          onClick={addAddressDialog.handleClickOpen}
         />
         {addresses && <AddressList addresses={addresses} />}
         <BootstrapDialogHOC
@@ -53,14 +51,7 @@ export const Addresses: React.FC = () => {
           title={"Add address"}
           onClose={addAddressDialog.handleClose}
         >
-          <AddAddressForm
-            onCancelClick={() =>
-              breakpoint({
-                xs: () => history.push("/account/addresses"),
-                md: addAddressDialog.handleClose,
-              })
-            }
-          />
+          <AddAddressForm onCancelClick={addAddressDialog.handleClose} />
         </BootstrapDialogHOC>
       </div>
     </div>
