@@ -26,7 +26,6 @@ mainApp.use(cookieParser());
 apiApp.use("/user", UserApi);
 apiApp.use("/decisions", DecisionsApi);
 apiApp.use("/product", ProductApi);
-apiApp.use("/review", ReviewApi);
 mainApp.use("/api-client", apiApp);
 
 if (process.env.RUN_BACKEND_ONLY === "true") {

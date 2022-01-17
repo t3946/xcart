@@ -7,10 +7,10 @@ module.exports = [
   passport.authenticate("jwt", { session: false }),
 
   async function (req, res, next) {
-    const nowTimeS = new Date().getTime() / 1000;
+    const nowTimeMS = new Date().getTime();
 
     //session outdated
-    if (req.user.iat + authConfig.jwtLifeTimeS < nowTimeS) {
+    if (req.user.timeout < nowTimeMS) {
       return res.sendStatus(401);
     }
 
