@@ -7,7 +7,7 @@ import appData from "@utils/AppData";
 import SelectRating from "@modules/account/components/review/SelectRating";
 import { Form as RBForm } from "react-bootstrap";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import classnames from "classnames";
+import cn from "classnames";
 import {
   createReviewAction,
   getVideoHeaderAction,
@@ -16,6 +16,7 @@ import Files from "@modules/account/components/review/Files";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import AppData from "@utils/AppData";
+import Styles from "@modules/account/components/review/ReviewForm.module.scss";
 
 interface IProps {
   product: number;
@@ -289,7 +290,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   </div>
                 </div>
 
-                <div className="account-inner-page-divider account-inner-page__divider" />
+                <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
 
                 <div className={"d-none d-md-block"}>
                   <h2 className={"account-inner-page-header-2 mb-1"}>
@@ -298,7 +299,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
 
                   {overallRatingTemplate(values, handleChange, setValues)}
 
-                  <div className="account-inner-page-divider account-inner-page__divider" />
+                  <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
                 </div>
 
                 <div>
@@ -311,7 +312,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   </div>
                 </div>
 
-                <div className="account-inner-page-divider account-inner-page__divider" />
+                <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
 
                 <div>
                   <h2 className={"account-inner-page-header-2 mb-1"}>
@@ -340,7 +341,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
 
                     <RBForm.Control.Feedback
                       type="invalid"
-                      className={classnames({ "d-block": !!errors.files })}
+                      className={cn({ "d-block": !!errors.files })}
                     >
                       {errors.files}
                     </RBForm.Control.Feedback>
@@ -388,7 +389,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   </RBForm.Group>
                 </div>
 
-                <div className="account-inner-page-divider account-inner-page__divider" />
+                <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
 
                 <div>
                   <RBForm.Group

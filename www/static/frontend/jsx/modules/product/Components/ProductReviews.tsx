@@ -11,13 +11,12 @@ import AppData, { route } from "@client/jsx/utils/AppData";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 const WriteAReviewButton: React.FC = function () {
+  const productId = AppData.product_info.product.productid;
+
   return (
     <a
       className="d-flex justify-content-center text-decoration-none"
-      href={route(
-        "account:create_review",
-        AppData.product_info.product.productid
-      )}
+      href={`/account/create-review/${productId}`}
     >
       <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
         <span className={"d-none d-md-block"}>write a customer review</span>

@@ -3,7 +3,6 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { disableAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
@@ -22,16 +21,10 @@ import Styles from "@modules/account/components/login-and-security/TSVSettings.m
 const TSVSettings = (): any => {
   const disableTSVModal = useDialog();
   const user = useSelector((e: StoreInterface) => e.user);
-  const router = useRouter();
   const dispatch = useDispatch();
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
 
   useSelector((e: StoreInterface) => e.main.breakpoint);
-
-  if (user === null) {
-    router.push("/account/login");
-    return null;
-  }
 
   function tsvCountTemplate() {
     if (user.tsv_count) {
@@ -107,6 +100,10 @@ const TSVSettings = (): any => {
         </div>
       </div>
     );
+  }
+
+  if (user === null) {
+    return null;
   }
 
   return (
