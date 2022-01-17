@@ -19,13 +19,6 @@ class Auth implements AuthInterface
     protected $_user = null;
 
     /**
-     * Login expire
-     * Default: 60 days
-     * @var int
-     */
-    public $expire = 60 * 60 * 24 * 2;
-
-    /**
      * @var string
      */
     public $authCookieName = 'USER';
@@ -137,13 +130,13 @@ class Auth implements AuthInterface
         $cookie = $this->getCookie($new_user);
         if ($cookie) {
             if ($new_user) {
-                if ($cookie->iat + $this->expire < time()) {
+                if ($cookie->timeout < time() * 1000) {
                     return null;
                 }
 
                 $user = $this->findUser($cookie->userId, $new_user);
 
-                if ($cookie->accessToken !== $user->access_tocken) {
+                if ($cookie->accessToken !== $user->access_token) {
                     return null;
                 }
 
