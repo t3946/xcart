@@ -17,7 +17,7 @@ const OrderTrackingLine: React.FC<IProps> = ({ dc_status }) => {
   const breakpoints = useSelector(
     (store: AccountStore) => store.main.breakpoint
   );
-
+  
   const [trackingViewData, setTrackingViewData] = React.useState({
     items: null,
     lineWidth: null,

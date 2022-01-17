@@ -15,7 +15,7 @@ const UserIcon: React.FC = () => {
   return (
     <img
       className={classnames(Styles.userAvatar)}
-      src={avatarUrl}
+      src={`/${avatarUrl}`}
       alt="avatar"
     />
   );
