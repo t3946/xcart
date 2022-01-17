@@ -774,6 +774,17 @@ class DistributorModel extends Model
         return $result ?? 'Supplier';
     }
 
+    public function getFrontendAddress(): array
+    {
+        return [
+            'city' => $this->m_city,
+            'zip' => $this->m_zipcode,
+            'address' => $this->m_address,
+            'state' => $this->m_state,
+            'country' => $this->m_country
+        ];
+    }
+
     public function afterSave($owner, $isNew)
     {
         if ($isNew) {

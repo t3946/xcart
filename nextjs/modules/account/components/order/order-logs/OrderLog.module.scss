@@ -1,0 +1,25 @@
+.orderLogItem {
+  padding: 25px;
+  border-bottom: 1px solid #c4c4c4;
+
+  .user {
+    background-color: #e7ffe3;
+  }
+
+  .customer-service {
+    background-color: #fef7e0
+  }
+}
+.orderLogHeader {
+  padding: 12px 24px;
+  background-color: #f4f4f4
+}
+.orderLogItem, .orderLogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cell {
+  width: 20%;
+  font-size: 16px
+}

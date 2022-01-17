@@ -14,6 +14,10 @@ export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
   const router = useRouter();
   const headerItems = [
     {
+      label: "Decisions required",
+      path: "decisions-required",
+    },
+    {
       label: "Order tracking",
       path: "order-tracking",
     },
@@ -29,10 +33,11 @@ export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
       label: "Order actions",
       path: "order-actions",
     },
-    {
-      label: "Order communication",
-      path: "communication",
-    },
+    // TODO: Убрали поскольку не настроен бек под отправку и чтение писем
+    // {
+    //   label: "Order communication",
+    //   path: "communication",
+    // },
     {
       label: "Order log",
       path: "log",
@@ -43,7 +48,7 @@ export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
       <div className={"order-info-header-title"}>Order #{orderNumber}</div>
       <div className="order-info-header">
         {headerItems.map((item) => (
-          <Link href={`/order/${orderId}/${item.path}`}>
+          <Link key={item.path} href={`/order/${orderId}/${item.path}`}>
             <a
               className={`order-info-header-item ${
                 router.query.type === item.path &&

@@ -1,35 +1,36 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FormSelect } from "@modules/account/components/shared/FormSelect";
 import { FormInput } from "@modules/account/components/shared/FormInput";
-import { problemsWithOrderSelectValue } from "@modules/account/ts/consts/order-actions-select.const";
 import { ApiService } from "@modules/shared/services/api.service";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
-import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
 import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
+import { useRouter } from "next/router";
+import { problemsWithOrderSelectValue } from "@modules/account/ts/consts/order-actions-select.const";
 
-interface ProblemWithOrderProps {}
-
-export const ProblemWithOrder: React.FC<ProblemWithOrderProps> = () => {
+export const ProblemWithOrder: React.FC = () => {
   const api = new ApiService();
-
-  const urlParams = useParams<OrderPageURLParams>();
+  const router = useRouter();
+  const [statuses, setStatuses] = useState(problemsWithOrderSelectValue);
 
   const [loading, setLoading] = useState(false);
 
   const { showSnackbar } = useContext(SnackbarContext);
+  useEffect(() => {
+    api
+      .get("/api/account/orders/get-problem-statuses")
+      .then((res) => setStatuses(res));
+  }, []);
 
   const sendMessage = () => {
     setLoading(true);
     api
       .post(
-        "/account/api/orders/send-problem-message",
+        "/api/account/orders/send-problem-message",
         JSON.stringify({
           ...formik.values,
-          problem_status: String(formik.values.problem_status.value),
+          status_id: String(formik.values.status_id.value),
         })
       )
       .then(() => {
@@ -42,11 +43,10 @@ export const ProblemWithOrder: React.FC<ProblemWithOrderProps> = () => {
         formik.resetForm();
       });
   };
-
   const formik = useFormik({
     initialValues: {
-      order_id: urlParams.id,
-      problem_status: problemsWithOrderSelectValue[0],
+      order_id: router.query.id,
+      status_id: statuses[0],
       problem_text: "",
     },
     validationSchema: Yup.object().shape({
@@ -56,7 +56,6 @@ export const ProblemWithOrder: React.FC<ProblemWithOrderProps> = () => {
     }),
     onSubmit: sendMessage,
   });
-
   return (
     <div className="order-product-list-body-inner">
       <div className="page-label order-actions-page-label problem-with-order-label">
@@ -66,33 +65,32 @@ export const ProblemWithOrder: React.FC<ProblemWithOrderProps> = () => {
       <form onSubmit={formik.handleSubmit}>
         <FormSelect
           classes={{ group: "order-product-select-errors" }}
-          value={formik.values.problem_status}
-          items={problemsWithOrderSelectValue}
-          onClick={(value) => formik.setFieldValue("problem_status", value)}
+          value={formik.values.status_id}
+          items={statuses}
+          onClick={(value) => formik.setFieldValue("status_id", value)}
           id={"problem-with-order-select"}
         />
         <div className="order-problems-radios">
-          {problemsWithOrderSelectValue.map((e: any, index) => {
-            return (
-              <RadioBtn
-                name="radio"
-                id={index}
-                viewValue={e.viewValue}
-                groupValue={formik.values.problem_status.value}
-                radioValue={e.value}
-                onChange={(value) =>
-                  formik.setFieldValue("problem_status", {
-                    value: value,
-                    viewValue: e.viewValue,
-                  })
-                }
-                groupClasses={{
-                  group: "order-problem-radio",
-                  checked: "order-problem-radio-checked",
-                }}
-              />
-            );
-          })}
+          {statuses.map((e, i) => (
+            <RadioBtn
+              name="radio"
+              id={i}
+              key={i}
+              viewValue={e.viewValue}
+              groupValue={formik.values.status_id.value}
+              radioValue={e.value}
+              onChange={(value) =>
+                formik.setFieldValue("status_id", {
+                  value: value,
+                  viewValue: e.viewValue,
+                })
+              }
+              groupClasses={{
+                group: "order-problem-radio",
+                checked: "order-problem-radio-checked",
+              }}
+            />
+          ))}
         </div>
 
         <FormInput

@@ -38,27 +38,27 @@ class OrderDetailModel extends Model
     {
         return [
             'itemid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'product_model' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'null' => false,
             ],
             'back' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],
             'retail_trust_price' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0
             ],
             'extra_data' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => '',
             ],
@@ -84,7 +84,6 @@ class OrderDetailModel extends Model
     {
         $result = null;
 
-        /** @var ProductModel $product */
         if ($product = $this->product_model) {
             $result = $product->getAmazonArbitragePrice($this->amount);
         }
@@ -117,5 +116,18 @@ class OrderDetailModel extends Model
         }
 
         return false;
+    }
+
+    public function getFrontendProduct(): array
+    {
+        $product = $this->product_model;
+        return [
+            'productId' => $product->pk,
+            'image' => (string)$product->getMainImage(),
+            'product' => $product->product,
+            'code' => $product->productcode,
+            'price' => (float)$this->price,
+            'amount' => $this->amount,
+        ];
     }
 }

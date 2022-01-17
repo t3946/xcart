@@ -10,6 +10,11 @@ use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class OrderExtraModel
+ * @property array|null purchase_order
+ * @package Modules\Order\Models
+ */
 class OrderExtraModel extends Model
 {
     public static function tableName()
@@ -57,7 +62,7 @@ class OrderExtraModel extends Model
         ];
     }
 
-    public function getIP():? string
+    public function getIP(): ?string
     {
         if (preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $this->ip, $match)) {
             return $match[0];
@@ -78,5 +83,25 @@ class OrderExtraModel extends Model
             );
         }
         return null;
+    }
+
+    public function getFrontendPurchase(): array
+    {
+        if ($data = $this->purchase_order) {
+            return [
+                'poNumber' => $data['po_number'],
+                'company' => $data['company_name'],
+                'managerName' => $data['name_of_purchaser'],
+                'managerPhoneExt' => $data['purchase_manager_phone_ext'],
+                'managerEmail' => $data['managerEmail'],
+                'managerFax' => $data['purchase_manager_fax'] ?? null,
+                'managerPhone' => $data['purchase_manager_phone'],
+                'accountsPayablePhone' => $data['accounts_payable_phone'],
+                'accountsPayableFax' => $data['accounts_payable_fax'] ?? null,
+                'accountsPayableEmail' => $data['accounts_payable_email'],
+                'accountsPayableName' => $data['accounts_payable_full_name']
+            ];
+        }
+        return [];
     }
 }

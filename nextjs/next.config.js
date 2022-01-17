@@ -4,6 +4,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 const colors = require("colors");
+const withImages = require("next-images");
 
 //print essentials info
 console.log();
@@ -15,25 +16,26 @@ console.log(
       ? colors.green("enabled")
       : colors.red("disabled"))
 );
-console.log();
 
-module.exports = withBundleAnalyzer({
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    const extendConfig = {
-      resolve: {
-        alias: {
-          "@modules": path.resolve("modules/"),
-          "@pages": path.resolve("pages/"),
-          "@redux": path.resolve("redux/"),
-          "@utils": path.resolve("utils/"),
-          "@services": path.resolve("services/"),
-          "@styles": path.resolve("styles/"),
-          "@submodules": path.resolve("submodules/"),
+module.exports = withImages(
+  withBundleAnalyzer({
+    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+      const extendConfig = {
+        resolve: {
+          alias: {
+            "@modules": path.resolve("modules/"),
+            "@pages": path.resolve("pages/"),
+            "@redux": path.resolve("redux/"),
+            "@utils": path.resolve("utils/"),
+            "@services": path.resolve("services/"),
+            "@styles": path.resolve("styles/"),
+            "@submodules": path.resolve("submodules/"),
+          },
         },
-      },
-    };
+      };
 
-    return _merge(config, extendConfig);
-  },
-  basePath: "/account",
-});
+      return _merge(config, extendConfig);
+    },
+    basePath: "/account",
+  })
+);

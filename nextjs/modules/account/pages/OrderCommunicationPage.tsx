@@ -1,27 +1,28 @@
 import React, { useCallback, useContext, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { IconButton } from "@material-ui/core";
-import { AttachFile } from "@material-ui/icons";
-import { FileDrop } from "@modules/account/components/shared/FileDrop";
+import { IconButton } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+// import { FileDrop } from "@modules/account/components/shared/FileDrop";
 import { OrdersEmailItem } from "@modules/account/components/orders/OrdersEmailItem";
 import {
   addStyleToViewed,
   emailStyle,
 } from "@modules/account/utils/set-email-item-style";
 import { FileItem } from "@modules/account/components/orders/FileItem";
-import { useHistory, useParams } from "react-router-dom";
 import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 import { useDispatch, useSelector } from "react-redux";
 import { sendEmail } from "@redux/actions/account-actions/OrdersActions";
 import Store from "@redux/stores/Store";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { AccountStore } from "@modules/account/ts/types/store.type";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import { FileDrop } from "@modules/account/components/shared/FileDrop";
 
-interface OrderCommunicationPageProps {
-  orderItem?: any;
+interface OrderCommunicationPage {
+  orderItem: OrderView;
 }
 
-export const OrderCommunicationPage: React.FC<OrderCommunicationPageProps> = ({
+export const OrderCommunicationPage: React.FC<OrderCommunicationPage> = ({
   orderItem,
 }) => {
   const onDrop = ([acceptedFile]) => {
@@ -41,10 +42,6 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPageProps> = ({
 
   const loading = useSelector((e: AccountStore) => e.ordersStore.ordersLoading);
 
-  const urlParams = useParams<OrderPageURLParams>();
-
-  const history = useHistory();
-
   const editorRef = useRef(null);
 
   const [files, setFiles] = useState([]);
@@ -57,7 +54,7 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPageProps> = ({
     dispatch(
       sendEmail(
         {
-          from: Store.getState().user.email,
+          from: Store.getState().user?.email,
           to: ["andrey@s3stores.com"],
           body: emailBody,
           files: files,
@@ -90,21 +87,21 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPageProps> = ({
       </div>
       <div className="page-label">Order communication</div>
       <div className="order-communication-messages">
-        {orderItem.orderInfo.emails?.map((email) => (
-          <OrdersEmailItem
-            theme={
-              emailStyle(email.type === "sent", email?.emailType) +
-              " " +
-              addStyleToViewed(email.viewed)
-            }
-            itemData={email}
-            handleClick={() =>
-              history.push(
-                `/account/orders/${urlParams.id}/${urlParams.orderType}/email-info/${email.id}`
-              )
-            }
-          />
-        ))}
+        {/*{orderItem.emails?.map((email) => (*/}
+        {/*  <OrdersEmailItem*/}
+        {/*    theme={*/}
+        {/*      emailStyle(email.type === "sent", email?.emailType) +*/}
+        {/*      " " +*/}
+        {/*      addStyleToViewed(email.viewed)*/}
+        {/*    }*/}
+        {/*    itemData={email}*/}
+        {/*    handleClick={() =>*/}
+        {/*      history.push(*/}
+        {/*        `/account/orders/${urlParams.id}/${urlParams.orderType}/email-info/${email.id}`*/}
+        {/*      )*/}
+        {/*    }*/}
+        {/*  />*/}
+        {/*))}*/}
       </div>
       <div className="page-label">Compose Message to Customer Service</div>
       <div className="order-communication-editor">
@@ -136,7 +133,7 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPageProps> = ({
         <div>Attachment</div>
         <FileDrop onDrop={onDrop}>
           <IconButton>
-            <AttachFile />
+            <AttachFileIcon />
           </IconButton>
         </FileDrop>
       </div>

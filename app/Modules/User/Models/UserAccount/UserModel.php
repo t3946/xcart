@@ -17,6 +17,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
@@ -34,7 +35,7 @@ use Xcart\App\QueryBuilder\Q\QOr;
  * @property string phone_country_code
  * @property string tsv_secret
  * @property string tsv_count
- * @property OrderModel[] orders
+ * @property OrderModel[]|Manager orders
  */
 class UserModel extends Model
 {

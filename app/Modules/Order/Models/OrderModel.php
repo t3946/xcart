@@ -70,7 +70,8 @@ use Xcart\Order;
  * @property string po_number
  * @property string firstname
  * @property int storefrontid
- * @property mixed transactions
+ * @property OrderTransactionModel[] transactions
+ * @property OrderLogModel[]|Manager logs_model
  * @property mixed b_company
  * @property mixed b_firstname
  * @property mixed phone
@@ -174,6 +175,11 @@ class OrderModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => TransactionLogModel::class,
                 'link' => ['orderid' => 'orderid']
+            ],
+            'logs_model' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderLogModel::class,
+                'link' => ['orderid' => 'orderid'],
             ],
             'shipping_state' => [
                 'field' => 's_state',
@@ -680,5 +686,19 @@ class OrderModel extends Model
             }
         }
         return $res;
+    }
+
+    public function getFrontendAddress(): array
+    {
+        return [
+            'shippingCity' => $this->s_city,
+            'shippingState' => $this->s_state,
+            'shippingAddress' => $this->s_address,
+            'shippingZip' => $this->s_zipcode,
+            'billingCity' => $this->b_city,
+            'billingState' => $this->b_state,
+            'billingZip' => $this->b_zipcode,
+            'billingAddress' => $this->b_address
+        ];
     }
 }

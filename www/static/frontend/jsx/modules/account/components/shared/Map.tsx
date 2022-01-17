@@ -6,8 +6,8 @@ import { Dispatch, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@client/modules/account/ts/types/store.type";
 
-const fromIconFile = require("../../../../../images/icons/account/shipping-from.png");
-const toIconFile = require("../../../../../images/icons/account/shipping-to.png");
+const fromIconFile = require("../../../../../../../../nextjs/public/images/icons/account/shipping-from.png");
+const toIconFile = require("../../../../../../../../nextjs/public/images/icons/account/shipping-to.png");
 
 function createMapIcon(icon: string, height: number, width: number) {
   return new L.Icon({

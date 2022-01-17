@@ -15,19 +15,35 @@ export interface OrderStoreItem {
 }
 
 export interface OrderGroup {
-  manufacturer: OrderManufacturer;
-  products: OrderProduct[];
+  manufacturer?: OrderManufacturer;
+  products?: OrderProduct[];
+  tracks?: OrderGroupTrack[];
+  a2bStatus?: string;
+  a2cStatus?: string;
+  shippingGross: number;
+  totalPst: number;
+  totalTax: number;
+  totalGross: number;
+}
+
+export interface OrderGroupTrack {
+  number: string;
+  link: string;
 }
 
 export interface OrderManufacturer {
-  m_zip: string;
-  m_city: string;
-  m_address: string;
+  city: string;
+  address: string;
+  zip: string;
+  country: string;
+  state: string;
 }
 
 export interface OrderProduct {
+  productId: number;
   image: string;
   product: string;
+  price: number;
   code: string;
   amount: number;
 }
@@ -37,6 +53,9 @@ export interface OrderAddress {
   shippingAddress: string;
   shippingZip: string;
   shippingState?: string;
+  billingCity: string;
+  billingZip: string;
+  billingAddress: string;
 }
 
 export interface SelectDate {

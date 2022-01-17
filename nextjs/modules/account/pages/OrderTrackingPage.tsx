@@ -6,6 +6,7 @@ import Store from "@redux/stores/Store";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import moment from "moment";
 
 export const OrderTrackingPage: React.FC = () => {
   const order: OrderView = useSelectorAccount((store) => store.orderView);
@@ -18,7 +19,6 @@ export const OrderTrackingPage: React.FC = () => {
       .then((e) => setShippingPos([e[0].lat, e[0].lon]))
       .catch((e) => console.log(e));
   }, []);
-  console.log("IS ORDER", order);
 
   const [shippingPos, setShippingPos] = useState(null);
   const api = new ApiService();
@@ -26,21 +26,21 @@ export const OrderTrackingPage: React.FC = () => {
   return (
     <div>
       <div className="page-label">Order tracking</div>
-      {orderItem.orderGroups.map((group) => (
+      {order.groups.map((group) => (
         <OrderTrackingGroup
           shippingPos={shippingPos}
-          orderItem={orderItem}
+          orderItem={order}
           orderGroupInfo={group}
         />
       ))}
       <div className="order-tracking-container order-tracking-footer">
         <p>
           <b>Payment status: </b>
-          <span>{"TEST"}</span>
+          <span>{order.payment.status}</span>
         </p>
         <div>
           <b>Payment date: </b>
-          <span>August 12th, 2021</span>
+          <span>{moment.unix(order.payment.date).format("LL")}</span>
         </div>
       </div>
     </div>

@@ -11,47 +11,57 @@ use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class OrderLogModel
+ * @property OrderModel order
+ * @property string type
+ * @property int date
+ * @property string login
+ * @property string log
+ * @package Modules\Order\Models
+ */
 class OrderLogModel extends Model
 {
     public const LOG_TYPE_CUSTOMER = 'C';
     public const LOG_TYPE_XCART = 'X';
     public const LOG_TYPE_SYSTEM = 'S';
+    public const LOG_TYPE_PAYMENT_PROCESS = 'PP';
 
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'xcart_order_logs';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
-            'id' => AutoField::className(),
+            'id' => AutoField::class,
             'order' => [
                 'field' => 'orderid',
-                'class' => ForeignField::className(),
-                'modelClass' => OrderModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => OrderModel::class,
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
             'type' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 2,
                 'default' => '',
                 'null' => false,
             ],
             'date' => [
-                'class' => UnixTimestampField::className(),
+                'class' => UnixTimestampField::class,
                 'autoNowAdd' => true,
                 'autoNow' => true,
             ],
             'login' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'length' => 40,
                 'default' => '',
                 'null' => false,
             ],
             'log' => [
-                'class' => TextField::className(),
+                'class' => TextField::class,
                 'null' => false,
             ]
         ];

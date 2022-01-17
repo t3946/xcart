@@ -33,4 +33,9 @@ return [
         'target' => [OrdersApi::class, 'editShippingAddress'],
         'name' => 'edit-shipping-address',
     ],
+    [
+        'route' => '/get-problem-statuses',
+        'target' => [OrdersApi::class, 'getProblemStatuses'],
+        'namespace' => 'get-problem-statuses',
+    ],
 ];

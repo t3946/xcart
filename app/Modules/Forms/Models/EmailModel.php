@@ -296,4 +296,12 @@ class EmailModel extends Model
     {
         return $this->message_id !== $this->thread_id;
     }
+    public function getFrontendEmail(): array
+    {
+        return [
+            'body' => (string)$this->getBody(),
+            'attachment' => (string)$this->getAttachment(),
+            'viewed' => $this->isViewed()
+        ];
+    }
 }

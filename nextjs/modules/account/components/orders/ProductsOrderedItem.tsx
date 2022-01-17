@@ -1,13 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@modules/account/ts/types/store.type";
+import {
+  OrderGroup,
+  OrderProduct,
+} from "@modules/account/ts/types/order/orders-store.types";
 
-interface ProductsOrderedItemProps {
-  orderItem: any;
+interface ProductsOrderedItem {
+  group: OrderGroup;
 }
 
-export const ProductsOrderedItem: React.FC<ProductsOrderedItemProps> = ({
-  orderItem,
+export const ProductsOrderedItem: React.FC<ProductsOrderedItem> = ({
+  group,
 }) => {
   const breakpoints = useSelector(
     (store: AccountStore) => store.main.breakpoint
@@ -42,88 +46,87 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItemProps> = ({
             </div>
           </div>
           <div>
-            {orderItem.orderGroupsItems.map((e) => {
-              return (
-                <div className="products-order-item">
-                  <div className="order-item-body-product-left-part products-order-item-header-sku">
-                    {breakpoints.md && (
-                      <img
-                        className="order-item-body-product-img"
-                        src={e.image}
-                      />
-                    )}
-
-                    <div className="table-content-mobile">
-                      <a className="order-item-body-product-name">
-                        {e.product}
-                      </a>
-                      <div className="order-item-body-product-sku">
-                        {e.productcode}
-                      </div>
-                      {!breakpoints.md && (
-                        <div className={"product-ordered-extended-mobile"}>
-                          <div className="products-order-item-header-price">
-                            US$ {e.price}
-                          </div>
-                          <div className="products-order-item-header-price">
-                            х {e.amount}
-                          </div>
-                          <div className="products-order-item-header-price">
-                            US$ {e.price}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            {group.products?.map((product) => (
+              <div className="products-order-item">
+                <div className="order-item-body-product-left-part products-order-item-header-sku">
                   {breakpoints.md && (
-                    <>
-                      <div className="products-order-item-header-price">
-                        US$ {e.price}
-                        {breakpoints.sm && !breakpoints.lg && `x ${e.amount}`}
-                      </div>
-                      {breakpoints.lg && (
-                        <div className="products-order-item-header-qty">
-                          {e.amount}
-                        </div>
-                      )}
-                      <div className="products-order-item-header-extended">
-                        US$ {e.price}
-                      </div>
-                    </>
+                    <img
+                      className="order-item-body-product-img"
+                      src={product.image}
+                    />
                   )}
-                </div>
-              );
-            })}
-          </div>
 
+                  <div className="table-content-mobile">
+                    <a className="order-item-body-product-name">
+                      {product.product}
+                    </a>
+                    <div className="order-item-body-product-sku">
+                      {product.code}
+                    </div>
+                    {!breakpoints.md && (
+                      <div className={"product-ordered-extended-mobile"}>
+                        <div className="products-order-item-header-price">
+                          US$ {product.price}
+                        </div>
+                        <div className="products-order-item-header-price">
+                          х {product.amount}
+                        </div>
+                        <div className="products-order-item-header-price">
+                          US$ {product.price}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {breakpoints.md && (
+                  <>
+                    <div className="products-order-item-header-price">
+                      US$ {product.price}
+                      {breakpoints.sm &&
+                        !breakpoints.lg &&
+                        `x ${product.amount}`}
+                    </div>
+                    {breakpoints.lg && (
+                      <div className="products-order-item-header-qty">
+                        {product.amount}
+                      </div>
+                    )}
+                    <div className="products-order-item-header-extended">
+                      US$ {product.price}
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
           <div className="products-order-item-transaction-total products-ordered-total">
             <div className="transaction-total-container product-ordered-total-container">
               <div className="total-left-side product-ordered-total-left">
                 <div className="info-item-container">
                   <p className="label-info-item right-part">Payment status:</p>
-                  <p className="left-part">{orderItem.a2b_status}</p>
+                  <p className="left-part">{group.a2bStatus}</p>
                 </div>
                 <div className="info-item-container">
                   <p className="label-info-item right-part">Shipping status:</p>
-                  <p className="left-part">{orderItem.a2c_status}</p>
+                  <p className="left-part">{group.a2cStatus}</p>
                 </div>
               </div>
               <div className="total-group-right-side product-ordered-total-right">
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing regular">
                   <p className=""> Regular shipping:</p>
-                  <p className="">US$ {orderItem.shipping_gross}</p>
+                  <p className="">US$ {group.shippingGross}</p>
                 </div>
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing tax">
                   <div className="">Sales Tax:</div>
-                  <div className="">US$ {orderItem.total_pst}</div>
+                  <div className="">US$ {group.totalPst}</div>
                 </div>
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing tax">
                   <p className="">VAT Tax: </p>
-                  <p className="">US$ {orderItem.total_tax}</p>
+                  <p className="">US$ {group.totalTax}</p>
                 </div>
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing subtotal">
                   <p className="">Subtotal:</p>
-                  <p className="">US$ {orderItem.total_gross}</p>
+                  <p className="">US$ {group.totalGross}</p>
                 </div>
               </div>
             </div>
