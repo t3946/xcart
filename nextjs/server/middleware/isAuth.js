@@ -1,5 +1,4 @@
 const passport = require("../auth/Passport");
-const authConfig = require("../config/auth");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 
