@@ -18,11 +18,9 @@ function* getVideoHeaders(action): Generator {
 function* createReview(action): Generator {
   const { form, success } = action.data;
 
-  yield api
-    .post<any>(route("reviews:api:create"), form)
-    .then(function (res) {
-      success(res);
-    });
+  yield api.post<any>(route("reviews:api:create"), form).then(function (res) {
+    success(res);
+  });
 }
 
 export default function* ReviewSaga(): SagaIterator {

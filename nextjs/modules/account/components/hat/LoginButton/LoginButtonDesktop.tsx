@@ -20,7 +20,6 @@ import Styles from "@modules/account/components/hat/LoginButton/LoginButtonDeskt
 const LoginButtonDesktop: React.FC = function () {
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-  const className = "hat-login-button";
   const isTabletMenuVisible = useSelectorAccount(
     (e) => e.mobileMenu.isTabletMenuVisible
   );

@@ -17,29 +17,6 @@ const LoginButtonTablet: React.FC<any> = () => {
   const user = useSelectorAccount((e) => e.user);
   const text = user ? user.name : "log in";
 
-  if (!user) {
-    const path = "/account/login";
-
-    return (
-      <a
-        href={path}
-        className={classNames(
-          "navigation-login-button",
-          "d-none",
-          "d-md-flex",
-          "navigation-login-button__tablet",
-          "align-items-center",
-          "text-decoration-none",
-          "justify-content-evenly",
-          Styles.button
-        )}
-      >
-        <UserIcon />
-        <span className="hat-login-button-username">{text}</span>
-      </a>
-    );
-  }
-
   const CustomToggle = React.forwardRef((props, ref) => {
     const { onClick } = props;
 
