@@ -15,6 +15,7 @@ use Modules\Reviews\Models\TotalProductRatingsModel;
 use Modules\Reviews\Models\HelpfulReviewsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Reviews\ReviewsModule;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\QueryBuilder\Aggregation\Count;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Storage\Files\RemoteFile;
 use Firebase\JWT\JWT;
 
-class ReviewsApi extends FrontendController
+class ReviewsApi extends Controller
 {
     private $data;
     public const SORT_TOP = 'top';
@@ -35,9 +36,12 @@ class ReviewsApi extends FrontendController
     private const SUPPORTED_IMAGE_FORMATS = ['jpg', 'jpeg', 'png'];
     private const SUPPORTED_VIDEO_FORMATS = ['mp4'];
 
-    public function __construct($request)
+    public function beforeAction($action, $params)
     {
-        parent::__construct($request);
+        AccountController::provideAccountData();
+    }
+    public function __construct()
+    {
         $this->data = json_decode(file_get_contents('php://input'), true);
     }
 
@@ -240,7 +244,7 @@ class ReviewsApi extends FrontendController
         ];
 
         // select user marked helpful if user authorised
-        $user = $this->getUser();
+        $user = Xcart::app()->auth->getUser(true);
         if (!$user->getIsGuest()) {
             $select_fields['marked_helpful'] = new Expression("IF($ratings_alias.user_id = $user->user_id, true, false)");
         }
@@ -328,7 +332,7 @@ class ReviewsApi extends FrontendController
 
     public function markHelpfulAction()
     {
-        $user = $this->getUser();
+        $user = Xcart::app()->auth->getUser(true);
 
         $data = [
             'review_id' => $this->data['reviewId'],
@@ -348,7 +352,7 @@ class ReviewsApi extends FrontendController
 
     public function unmarkHelpfulAction()
     {
-        $user = $this->getUser();
+        $user = Xcart::app()->auth->getUser(true);
 
         HelpfulReviewsModel::objects()->delete([
             'review_id' => $this->data['reviewId'],
