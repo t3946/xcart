@@ -1,7 +1,6 @@
 import storeApp from "../stores/StoreApp";
 import {hideAll} from '../redusers/appHeadReduser';
 
-
 (()=>{
     $('.shadow').on('click touchstart', hideAll);
 

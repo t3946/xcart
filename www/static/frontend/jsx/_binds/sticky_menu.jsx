@@ -70,7 +70,6 @@ import cssFileLoaded from "../utils/cssFileLoaded";
             }
         }
 
-
         cssFileLoaded('styles.css', initStickyMenu);
         $(window).resize(initStickyMenuOnResize);
 
