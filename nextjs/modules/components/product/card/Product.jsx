@@ -1,20 +1,19 @@
+import React from "react";
 import classnames from "classnames";
-import Image from "./components/Image";
-import { createRef } from "preact";
-import CatalogContext from "@/components/catalog/CatalogContext";
+import Image from "@modules/components/product/card/components/Image";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
 
 /**
- * abstract component for product cart in sliders and catalog
+ * abstract component for product card in sliders and catalog
  */
-export default class Product extends Component {
+export default class Product extends React.Component {
   constructor(props) {
     super(props);
-
-    this.root = createRef();
-    this.price = createRef();
   }
 
-  render({ product, images, mainInfo, price, classes, inList, onFlagClick }) {
+  render() {
+    const { product, images, mainInfo, price, classes, inList, onFlagClick } =
+      this.props;
     this.product = product;
     this.images = images;
     this.mainInfo = mainInfo;
@@ -60,7 +59,6 @@ export default class Product extends Component {
 
     return (
       <div
-        ref={this.root}
         className={classnames({ out_of_stock: product.inStock }, [
           this.classes.product,
         ])}
@@ -79,7 +77,6 @@ export default class Product extends Component {
         <div className={classnames(cardInfoClasses)}>{this.mainInfo}</div>
 
         <div
-          ref={this.price}
           className={classnames(productsSliderPriceContainer)}
           itemProp="offers"
           itemScope

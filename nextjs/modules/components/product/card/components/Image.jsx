@@ -1,31 +1,30 @@
+import React from "react";
 import ImageComplex from "./ImageComplex";
 import ImageNo from "./ImageNo";
 import ImageSingle from "./ImageSingle";
 import classnames from "classnames";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import { BookmarkBorder } from "@material-ui/icons";
 
-export default class Image extends Component {
+export default class Image extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render({
-    images,
-    mpn,
-    upc,
-    url,
-    name,
-    classes,
-    isNew,
-    isSale,
-    inList,
-    onFlagClick,
-  }) {
+  render() {
+    const {
+      images,
+      mpn,
+      upc,
+      url,
+      name,
+      classes,
+      isNew,
+      isSale,
+      inList,
+      onFlagClick,
+    } = this.props;
     const containerClasses = [classes.container];
     const linkClasses = [classes.link];
     const noImageClasses = [classes.noImage];
-    console.log("image");
 
     return (
       <div className={classnames(containerClasses)}>
@@ -68,18 +67,6 @@ export default class Image extends Component {
             </span>
           )}
         </a>
-        {images.length === 1 && (
-          <div
-            onClick={(e) => onFlagClick(e, inList)}
-            className="in-list-flag-container"
-          >
-            {inList ? (
-              <BookmarkIcon className="in-list-flag" />
-            ) : (
-              <BookmarkBorder className="in-list-flag" />
-            )}
-          </div>
-        )}
       </div>
     );
   }

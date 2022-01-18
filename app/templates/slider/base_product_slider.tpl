@@ -1,8 +1,8 @@
 {add $hide=false}
 {add $hide_link=false}
 
-
 <div class="slider-block {$hide ? 'hide' : ''} {is_array($classes) ?( ' '|implode:$classes) : $classes}">
+
     <div class="title_container">
         <div class="title-section">
             {$title}

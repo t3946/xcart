@@ -14,7 +14,10 @@ export default function Price(props) {
     <Fragment>
       {currency.symbol_prefix}
       {!currency.after && currency.currency}
-      <span className={classNames(["price-number", classes])}> {formatNumber(price)}</span>
+      <span className={classNames(["price-number", classes])}>
+        {" "}
+        {formatNumber(price)}
+      </span>
       {currency.after && currency.currency}
     </Fragment>
   );

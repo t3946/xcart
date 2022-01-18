@@ -1,0 +1,25 @@
+@import "styles/utils/Utils.module";
+
+.swiperScrollbarDrag {
+  height: pxToRem(20);
+  cursor: pointer;
+  margin: pxToRem(28) 0 0 0;
+
+  &:before {
+    transition: background-color .3s;
+    overflow: hidden;
+    border-radius: pxToRem(10);
+    position: absolute;
+    display: block;
+    background-color: #dadada;
+    content: "";
+    top: pxToRem(8);
+    height: pxToRem(4);
+    left: 0;
+    right: 0;
+  }
+
+  &:hover:before {
+    background-color: #aaaaaa;
+  }
+}

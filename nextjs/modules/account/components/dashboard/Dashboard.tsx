@@ -1,11 +1,10 @@
 import React from "react";
 import cn from "classnames";
 import AccountInfo from "@modules/account/components/dashboard/AccountInfo";
-import SliderProducts from "@modules/components/Sliders/SliderProducts/SliderProducts";
 import OrderTracking from "@modules/account/components/dashboard/OrderTracking";
-
 import Styles from "@modules/account/components/dashboard/Dashboard.module.scss";
 import AccountNavigation from "./AccountNavigation";
+import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
 
 const Dashboard = () => {
   console.log();
@@ -17,16 +16,16 @@ const Dashboard = () => {
         <OrderTracking
           orderInfo={{ number: 11 }}
           trackingInfo={{ tracknum: tracknum }}
-          orderGroupInfo={{ 
-            // dc_status: "DP" 
-            // dc_status: "G" 
-            dc_status: "S" 
-            // dc_status: undefined 
-            // dc_status: "Z" 
+          orderGroupInfo={{
+            // dc_status: "DP"
+            // dc_status: "G"
+            dc_status: "S",
+            // dc_status: undefined
+            // dc_status: "Z"
           }}
         />
         <AccountNavigation />
-        {/* <SliderProducts url={"/category/featured"} /> */}
+        <SliderProducts url={"/category/featured"} />
       </div>
     </div>
   );

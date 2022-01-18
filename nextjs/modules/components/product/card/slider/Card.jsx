@@ -1,10 +1,10 @@
-import Product from "@/components/product/card/Product";
-import ImgSlider from "./ImgSlider";
-import Price from "@/components/product/card/components/Price";
+import React from "react";
+import Product from "@modules/components/product/card/Product";
+import Price from "@modules/components/product/card/components/Price";
 import { Fragment } from "preact";
-import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
+import ImgCatalog from "@modules/components/product/card/catalog/ImgCatalog";
 
-export default class Card extends Component {
+export default class Card extends React.Component {
   constructor({ product, onFlagClick, inList }) {
     super();
 
@@ -54,7 +54,7 @@ export default class Card extends Component {
     );
   }
 
-  render(props) {
+  render() {
     const classes = {
       product: [],
       image: {

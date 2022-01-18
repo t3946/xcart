@@ -1,13 +1,13 @@
+import React from "react";
 import classnames from "classnames";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import { BookmarkBorder } from "@material-ui/icons";
 
-export default class ImageSingle extends Component {
+export default class ImageSingle extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render(props) {
+  render() {
+    const props = this.props;
     const containerClasses = ["images-1", props.classes.container];
 
     return (
