@@ -15,7 +15,7 @@ const getInitialState = async function (req: any) {
   }
 
   const instance = axios.create({
-    baseURL: "http://nginx",
+    baseURL: process.env.BASE_URL_NGINX,
     headers: {
       Cookie: cookie,
     },

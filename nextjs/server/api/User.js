@@ -8,6 +8,9 @@ const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 const axios = require("axios");
 const mail = require("../services/mail");
+const AxiosInstance = axios.create({
+  baseURL: process.env.BASE_URL_NGINX,
+});
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (err, result) => {
@@ -124,36 +127,33 @@ app.post("/send-otp", async function (req, res) {
     return;
   }
 
-  await axios
-    .post("http://nginx/api/account/reset-password/send-one-time-password", {
+  await AxiosInstance.post(
+    "/api/account/reset-password/send-one-time-password",
+    {
       login: req.body.login,
-    })
-    .then((phpRes) => {
-      res.json(phpRes.data);
-    });
+    }
+  ).then((phpRes) => {
+    res.json(phpRes.data);
+  });
 });
 
 app.post("/verify-otp", async function (req, res) {
-  axios
-    .post("http://nginx/api/account/reset-password/verify-one-time-password", {
-      login: req.body.login,
-      otp: req.body.otp,
-    })
-    .then((apiRes) => {
-      res.json(apiRes.data);
-    });
+  AxiosInstance.post("/api/account/reset-password/verify-one-time-password", {
+    login: req.body.login,
+    otp: req.body.otp,
+  }).then((apiRes) => {
+    res.json(apiRes.data);
+  });
 });
 
 app.post("/reset-password", async function (req, res) {
-  axios
-    .post("http://nginx/api/account/reset-password/reset-password", {
-      resetPasswordToken: req.body.resetPasswordToken,
-      login: req.body.login,
-      password: await passwordUtils.encryptPassword(req.body.password),
-    })
-    .then(() => {
-      res.sendStatus(200);
-    });
+  AxiosInstance.post("/api/account/reset-password/reset-password", {
+    resetPasswordToken: req.body.resetPasswordToken,
+    login: req.body.login,
+    password: await passwordUtils.encryptPassword(req.body.password),
+  }).then(() => {
+    res.sendStatus(200);
+  });
 });
 
 app.post("/change-name", isAuthMiddleware, async function (req, res) {
@@ -269,37 +269,31 @@ app.post("/change-password", isAuthMiddleware, async function (req, res) {
 });
 
 app.post("/tsv/confirm-code", isAuthMiddleware, async function (req, res) {
-  await axios
-    .post("http://nginx/api/account/tsv/confirm-code", {
-      code: req.body.code,
-      userId: req.user.userId,
-    })
-    .then((apiRes) => {
-      res.json(apiRes.data);
-      res.send();
-    });
+  await AxiosInstance.post("/api/account/tsv/confirm-code", {
+    code: req.body.code,
+    userId: req.user.userId,
+  }).then((apiRes) => {
+    res.json(apiRes.data);
+    res.send();
+  });
 });
 
 app.get("/tsv/disable", isAuthMiddleware, async function (req, res) {
-  await axios
-    .post("http://nginx/api/account/tsv/disable", {
-      userId: req.user.userId,
-    })
-    .then((apiRes) => {
-      res.json(apiRes.data);
-      res.send();
-    });
+  await AxiosInstance.post("/api/account/tsv/disable", {
+    userId: req.user.userId,
+  }).then((apiRes) => {
+    res.json(apiRes.data);
+    res.send();
+  });
 });
 
 app.get("/tsv/get", isAuthMiddleware, async function (req, res) {
-  await axios
-    .post("http://nginx/api/account/tsv/get", {
-      userId: req.user.userId,
-    })
-    .then((apiRes) => {
-      res.json(apiRes.data);
-      res.send();
-    });
+  await AxiosInstance.post("/api/account/tsv/get", {
+    userId: req.user.userId,
+  }).then((apiRes) => {
+    res.json(apiRes.data);
+    res.send();
+  });
 });
 
 app.get("/tsv/require-for-all", isAuthMiddleware, async function (req, res) {

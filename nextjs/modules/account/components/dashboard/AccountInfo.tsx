@@ -23,7 +23,6 @@ const AccountInfo = () => {
   const router = useRouter();
 
   if (!user) {
-    router.push("/login");
     return null;
   }
 
