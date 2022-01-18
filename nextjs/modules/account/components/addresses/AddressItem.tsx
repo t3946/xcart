@@ -77,7 +77,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           defaultItem ? "address-header-default" : "d-none"
         } `}
       >
-        {defaultItem && "Default:"}
+        {defaultItem && "Default"}
       </div>
 
       <div
