@@ -26,8 +26,6 @@ export const EmailPage: React.FC<EmailPageProps> = ({ orderItem }) => {
     );
   }, [orderItem]);
 
-  console.log(orderItem);
-
   return (
     <div>
       {emailInfo && (

@@ -7,7 +7,6 @@ import AccountNavigation from "./AccountNavigation";
 import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
 
 const Dashboard = () => {
-  console.log();
   const tracknum = "4HGOJJ94HGKD";
   return (
     <div className="py-3">

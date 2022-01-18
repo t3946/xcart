@@ -34,7 +34,6 @@ export const MoveProductPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const onChange = (value) => {
-    console.log(value, params.listId);
     if (value === params.listId) {
       return;
     }

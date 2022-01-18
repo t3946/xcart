@@ -36,15 +36,6 @@ export async function getServerSideProps(ctx: NextPageContext) {
 
 const CreateReviewPage = (props: any) => {
   const { product } = props;
-  const router = useRouter();
-  const user = useSelectorAccount((e: StoreInterface) => e.user);
-
-  // console.log({router})
-  //
-  // if (router && !user) {
-  //   router.push("/login");
-  //   return null;
-  // }
 
   return (
     <PageTwoColumns>

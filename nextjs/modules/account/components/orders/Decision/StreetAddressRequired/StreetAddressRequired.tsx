@@ -38,7 +38,6 @@ const StreetAddressRequired: React.FC<any> = () => {
       (address) => address.address_type === AddressTypeEnum.SHIPPING
     );
   });
-  console.log(addresses);
   const addAddressDialog = useDialog();
 
   const breakpoint = useBreakpoint();

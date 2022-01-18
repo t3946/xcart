@@ -33,8 +33,6 @@ const SliderThumbs: React.FC<IProps> = function (
   function prev() {
     const index = (props.index || items.length) - 1;
 
-    console.log("PREV", { index });
-
     slideTo(index);
   }
 

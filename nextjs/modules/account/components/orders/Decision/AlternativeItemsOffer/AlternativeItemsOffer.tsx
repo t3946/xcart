@@ -95,7 +95,6 @@ const AlternativeItemsOffer: React.FC = () => {
         onSubmit={submit}
       >
         {({ values, errors, handleChange, isSubmitting }) => {
-          console.log({ values });
           return (
             <Form>
               {!!productCategories.outOfStock.length && (

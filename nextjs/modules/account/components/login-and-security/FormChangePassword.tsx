@@ -58,7 +58,6 @@ const FormChangePassword = (): any => {
         },
 
         error(err: any) {
-          console.log(err);
           actions.setErrors(err);
         },
 

@@ -62,7 +62,6 @@ const RegisterForm: React.FC<any> = () => {
         },
 
         success(res: any) {
-          console.log("RES", res);
           actions.setSubmitting(false);
 
           if (res.data.error) {

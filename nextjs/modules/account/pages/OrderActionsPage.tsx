@@ -54,8 +54,6 @@ export const OrderActionsPage: React.FC<OrderActionsPageProps> = ({
   }, []);
   const breakpoint = useSelector((e: AccountStore) => e.main.breakpoint);
 
-  console.log(breakpoint);
-
   function showAccordions() {
     const problemAccordion = useAccordion();
     const returnAccordion = useAccordion();

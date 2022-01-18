@@ -19,8 +19,6 @@ const SliderProducts: React.FC<any> = function (props) {
   const [isReachEnd, setIsReachEnd] = React.useState(false);
   const navStep = 3;
 
-  console.log({ isReachBegin, isReachEnd });
-
   function goTo(step: number) {
     if (!swiperObject) {
       return;
@@ -155,9 +153,7 @@ const SliderProducts: React.FC<any> = function (props) {
           "products-slider-left",
           "products-slider-nav",
           "show-for-medium",
-          swiperObject &&
-            swiperObject.isBeginning &&
-            "products-slider-nav__inactive"
+          isReachBegin && "products-slider-nav__inactive"
         )}
         onClick={goPrev}
       />
@@ -167,7 +163,7 @@ const SliderProducts: React.FC<any> = function (props) {
           "products-slider-right",
           "products-slider-nav",
           "show-for-medium",
-          swiperObject && swiperObject.isEnd && "products-slider-nav__inactive"
+          isReachEnd && "products-slider-nav__inactive"
         )}
         onClick={goNext}
       />

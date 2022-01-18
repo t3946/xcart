@@ -13,13 +13,8 @@ interface AddProductToListPageURLParams {
 
 export const AddProductToListPage: React.FC = () => {
   const params = useParams<AddProductToListPageURLParams>();
-
   const lists = useSelector((e: StoreInterface) => e.lists.lists);
-
-  console.log(lists);
-
   const list = lists?.find((e) => e.product_list_id === params.listId);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
