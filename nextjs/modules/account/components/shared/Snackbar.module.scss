@@ -2,21 +2,11 @@
 
 .snack {
   display: none;
-  overflow: hidden;
-
-  transition: height, opacity 0.2s;
-}
-
-.displaying {
-  display: block;
-  opacity: 0;
-  height: 0;
+  transition: all 0.2s;
 }
 
 .snack_open {
   display: block;
-  opacity: 1;
-  height: auto;
 }
 
 .alertIcon {

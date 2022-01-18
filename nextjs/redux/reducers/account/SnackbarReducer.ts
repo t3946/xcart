@@ -1,11 +1,11 @@
 import { AnyAction } from "redux";
-import { AccountSnackBarStore } from "@modules/account/ts/types/store.type";
-import { VariantsEnum } from "@modules/account/components/shared/SnackBar";
+import { AccountSnackbarStore } from "@modules/account/ts/types/store.type";
+import { VariantsEnum } from "@modules/account/components/shared/Snackbar";
 
 const accountSideBarMenuReducer = (
-  state: AccountSnackBarStore = { alert: null },
+  state: AccountSnackbarStore = { alert: null },
   action: AnyAction
-): AccountSnackBarStore => {
+): AccountSnackbarStore => {
   switch (action.type) {
     case "SHOW_SNACKBAR":
       const {

@@ -1,8 +1,8 @@
-import { AccountSnackBarStore } from "@modules/account/ts/types/store.type";
+import { AccountSnackbarStore } from "@modules/account/ts/types/store.type";
 
-export const showSnackBar = (payload: AccountSnackBarStore): any => ({
+export const showSnackbar = (payload: AccountSnackbarStore): any => ({
   type: "SHOW_SNACKBAR",
   payload,
 });
 
-export const hideSnackBar = (): any => ({ type: "HIDE_SNACKBAR" });
+export const hideSnackbar = (): any => ({ type: "HIDE_SNACKBAR" });

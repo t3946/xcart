@@ -2,7 +2,7 @@ import React from "react";
 import SideBarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import cn from "classnames";
 import Page from "@modules/account/components/layout/Page";
-import SnackBar from "@modules/account/components/shared/SnackBar";
+import Snackbar from "@modules/account/components/shared/Snackbar";
 
 const PageTwoColumns: React.FC = (props): any => {
   const classes = {
@@ -17,7 +17,7 @@ const PageTwoColumns: React.FC = (props): any => {
       </div>
 
       <div className={cn(classes.rightColumnClasses)}>
-        <SnackBar />
+        <Snackbar />
         {props.children}
       </div>
     </Page>

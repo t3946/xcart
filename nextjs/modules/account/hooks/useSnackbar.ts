@@ -1,22 +1,22 @@
 import Store from "@redux/stores/Store";
 import {
-  showSnackBar,
-  hideSnackBar,
+  showSnackbar,
+  hideSnackbar,
 } from "@redux/actions/account-actions/SnackbarActions";
-import { VariantsEnum } from "@modules/account/components/shared/SnackBar";
+import { VariantsEnum } from "@modules/account/components/shared/Snackbar";
 import React from "react";
 
-export const useSnackBar = () => {
-  return { show: setSnackBar, close: () => Store.dispatch(hideSnackBar()) };
+export const useSnackbar = () => {
+  return { show: setSnackbar, close: () => Store.dispatch(hideSnackbar()) };
 };
 
-const setSnackBar = (
+const setSnackbar = (
   message: React.ReactNode | string,
   duration = 3000,
   variant: VariantsEnum = VariantsEnum.success
 ) => {
   Store.dispatch(
-    showSnackBar({
+    showSnackbar({
       alert: { duration: duration, message: message, variant: variant },
     })
   );

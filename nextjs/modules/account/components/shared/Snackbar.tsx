@@ -1,15 +1,15 @@
 import React from "react";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useDispatch } from "react-redux";
-import { hideSnackBar } from "@redux/actions/account-actions/SnackbarActions";
+import { hideSnackbar } from "@redux/actions/account-actions/SnackbarActions";
 import AlertCheck from "@modules/icon/components/account/check/AlertCheck";
 import AlertExclamationTriangle from "@modules/icon/components/account/exclamation-triangle/AlertExclamationTriangle";
 import cn from "classnames";
 import { Alert as BAlert } from "react-bootstrap";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import SnackBarMobile from "@modules/account/components/shared/SnackBarMobile";
+import SnackbarMobile from "@modules/account/components/shared/SnackbarMobile";
 
-import Styles from "@modules/account/components/shared/SnackBar.module.scss";
+import Styles from "@modules/account/components/shared/Snackbar.module.scss";
 
 export enum VariantsEnum {
   success = "success",
@@ -39,8 +39,8 @@ export function alertIconTemplate(variant: VariantsEnum): React.ReactElement {
   }
 }
 
-const SnackBar: React.FC = () => {
-  const [displaying, setDisplaing] = React.useState<string | null>(null);
+const Snackbar: React.FC = () => {
+  const [displaying, setDisplaing] = React.useState<boolean>(false);
   const dispatch = useDispatch();
   const snackbar = useSelectorAccount((e) => e.snackbar);
   const timoutRef = React.useRef<NodeJS.Timeout>();
@@ -53,26 +53,21 @@ const SnackBar: React.FC = () => {
     return timoutRef.current && clearTimeout(timoutRef.current);
   }, []);
 
-  const clearSnackBar = () => {
+  const clearSnackbar = () => {
     if (timoutRef.current) {
       clearTimeout(timoutRef.current);
       timoutRef.current = undefined;
-      setDisplaing("displaying");
-      setTimeout(() => setDisplaing(null), 200);
+      setDisplaing(false);
     }
   };
 
   React.useEffect(() => {
+    clearSnackbar();
     if (snackbar.alert) {
-      timoutRef.current && clearTimeout(timoutRef.current);
-      timoutRef.current = undefined;
-      setDisplaing("displaying");
-      setTimeout(() => setDisplaing("displayed"), 100);
+      setDisplaing(true);
       timoutRef.current = setTimeout(() => {
-        dispatch(hideSnackBar());
+        dispatch(hideSnackbar());
       }, snackbar.alert.duration);
-    } else {
-      clearSnackBar();
     }
   }, [snackbar]);
 
@@ -82,9 +77,8 @@ const SnackBar: React.FC = () => {
       alertClass,
       Styles.snack,
       {
-        [Styles.snack_displaying]: displaying,
         "p-0": !displaying,
-        [Styles.snack_open]: displaying === "displayed",
+        [Styles.snack_open]: displaying,
       },
     ],
   };
@@ -132,7 +126,7 @@ const SnackBar: React.FC = () => {
   if (isBrowser) {
     return breakpoint({
       xs: () => {
-        return <SnackBarMobile />;
+        return <SnackbarMobile />;
       },
       sm: undefined,
       md: () => (
@@ -153,4 +147,4 @@ const SnackBar: React.FC = () => {
   );
 };
 
-export default SnackBar;
+export default Snackbar;

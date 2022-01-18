@@ -9,7 +9,7 @@ import { setIsVisibleAction } from "@redux/actions/account-actions/MobileMenuAct
 import { setSearchIsVisibleAction } from "@redux/actions/account-actions/MobileSearchActions";
 import { setSuggestionsAction } from "@redux/actions/account-actions/SuggestionActions";
 import { setMiniCartIsVisibleAction } from "@redux/actions/MiniCartActions";
-import { hideSnackBar } from "@redux/actions/account-actions/SnackbarActions";
+import { hideSnackbar } from "@redux/actions/account-actions/SnackbarActions";
 
 const hideAllMenu = function (dispatch: (payload: any) => void): void {
   dispatch(setMobileMenuIsVisible(false));
@@ -17,7 +17,7 @@ const hideAllMenu = function (dispatch: (payload: any) => void): void {
   dispatch(setDepartmentsMenuMobileIsVisibleAction(false));
   dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
   dispatch(setVisibleShadowPanelAction(false));
-  dispatch(hideSnackBar());
+  dispatch(hideSnackbar());
   dispatch(setIsVisibleAction(false));
   dispatch(setMiniCartIsVisibleAction(false));
   dispatch(setSearchIsVisibleAction(false));

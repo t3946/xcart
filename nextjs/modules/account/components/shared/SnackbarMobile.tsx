@@ -2,16 +2,16 @@ import React from "react";
 import {
   alertIconTemplate,
   VariantsEnum,
-} from "@modules/account/components/shared/SnackBar";
+} from "@modules/account/components/shared/Snackbar";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useDispatch } from "react-redux";
-import { hideSnackBar } from "@redux/actions/account-actions/SnackbarActions";
+import { hideSnackbar } from "@redux/actions/account-actions/SnackbarActions";
 import TimesIcon from "@modules/icon/components/account/ModalTimes";
 import cn from "classnames";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
-import Styles from "@modules/account/components/shared/SnackBarMobile.module.scss";
+import Styles from "@modules/account/components/shared/SnackbarMobile.module.scss";
 
-const SnackBarMobile: React.FC = () => {
+const SnackbarMobile: React.FC = () => {
   const snackbar = useSelectorAccount((e) => e.snackbar);
   const [displaying, setDisplaying] = React.useState<boolean>(false);
   const dispatch = useDispatch();
@@ -82,7 +82,7 @@ const SnackBarMobile: React.FC = () => {
           "shrink-by-active",
           Styles.mobileAlertClose,
         ])}
-        onClick={() => dispatch(hideSnackBar())}
+        onClick={() => dispatch(hideSnackbar())}
       >
         <TimesIcon />
       </span>
@@ -91,4 +91,4 @@ const SnackBarMobile: React.FC = () => {
   );
 };
 
-export default SnackBarMobile;
+export default SnackbarMobile;
