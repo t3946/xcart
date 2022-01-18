@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { route } from "@client/jsx/utils/AppData";
 import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
