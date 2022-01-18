@@ -42,7 +42,7 @@ export default class SliderProducts extends Component {
     });
   }
 
-  onFlagClick = (e, inList, productId) => {
+  onFlagClick (e, inList, productId) {
     e.stopPropagation();
 
     if (!inList) {
