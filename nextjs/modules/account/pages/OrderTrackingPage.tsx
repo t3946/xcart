@@ -4,19 +4,17 @@ import { OrderTrackingGroup } from "@modules/account/components/orders/OrderTrac
 import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import Store from "@redux/stores/Store";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import moment from "moment";
 
-interface OrderTrackingPageProps {
-  orderItem?: any;
-}
-
-export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
-  orderItem,
-}) => {
+export const OrderTrackingPage: React.FC = () => {
+  const order: OrderView = useSelectorAccount((store) => store.orderView);
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
       .get(
-        `https://nominatim.openstreetmap.org/search.php?street=${orderItem.orderInfo.s_address}&city=${orderItem.orderInfo.s_city}&state=${orderItem.orderInfo.s_state}&postalcode=${orderItem.orderInfo.s_zipcode}&polygon_geojson=1&format=jsonv2`
+        `https://nominatim.openstreetmap.org/search.php?street=${order.address.shippingAddress}&city=${order.address.shippingCity}&state=${order.address.shippingState}&postalcode=${order.address.shippingZip}&polygon_geojson=1&format=jsonv2`
       )
       .then((e) => setShippingPos([e[0].lat, e[0].lon]))
       .catch((e) => console.log(e));
@@ -28,21 +26,21 @@ export const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({
   return (
     <div>
       <div className="page-label">Order tracking</div>
-      {orderItem.orderGroups.map((group) => (
+      {order.groups.map((group) => (
         <OrderTrackingGroup
           shippingPos={shippingPos}
-          orderItem={orderItem}
+          orderItem={order}
           orderGroupInfo={group}
         />
       ))}
       <div className="order-tracking-container order-tracking-footer">
         <p>
           <b>Payment status: </b>
-          <span>{orderItem.orderInfo.payment_status}</span>
+          <span>{order.payment.status}</span>
         </p>
         <div>
           <b>Payment date: </b>
-          <span>August 12th, 2021</span>
+          <span>{moment.unix(order.payment.date).format("LL")}</span>
         </div>
       </div>
     </div>

@@ -3,9 +3,10 @@ import { ProductsOrderedItem } from "@modules/account/components/orders/Products
 import Store from "@redux/stores/Store";
 import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 
 interface ProductsOrderedPageProps {
-  orderItem?: any;
+  orderItem: OrderView;
 }
 
 export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
@@ -17,9 +18,9 @@ export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
   return (
     <div>
       <div className="page-label products-ordered-label">Products ordered</div>
-      {orderItem.orderGroups.map((e) => {
-        return <ProductsOrderedItem orderItem={e} />;
-      })}
+      {orderItem.groups.map((group) => (
+        <ProductsOrderedItem group={group} />
+      ))}
     </div>
   );
 };

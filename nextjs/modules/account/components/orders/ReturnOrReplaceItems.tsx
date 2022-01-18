@@ -7,19 +7,15 @@ import { FileDrop } from "@modules/account/components/shared/FileDrop";
 import { FileItem } from "@modules/account/components/orders/FileItem";
 import { ApiService } from "@modules/shared/services/api.service";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
-import { useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 
-interface ReturnOrReplaceItemProps {
-  orderItem: any;
-}
-
-export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
-  orderItem,
-}) => {
-  const urlParams = useParams<OrderPageURLParams>();
+export const ReturnOrReplaceItems: React.FC = () => {
+  const orderItem: OrderView = useSelectorAccount((state) => state.orderView);
+  const router = useRouter();
 
   const onDrop = ([acceptedFile]) => {
     setFiles((prev) =>
@@ -42,7 +38,7 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
         "/account/api/orders/open-rma-request",
         JSON.stringify({
           rma_info: {
-            orderid: urlParams.id,
+            orderid: router.query.id,
             zipcode: orderItem.orderInfo.s_zipcode,
             email: orderItem.orderInfo.email,
             date: orderItem.orderInfo.date,
@@ -90,11 +86,11 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
   const [files, setFiles] = useState([]);
 
   const updateValueOnReturnItems = (value, id) => {
-    if (formik.values.rmaItems.find((e) => e.productid === id)) {
+    if (formik.values.rmaItems.find((e) => e.productId == id)) {
       formik.setFieldValue(
         "rmaItems",
         formik.values.rmaItems.map((e) => {
-          if (e.productid === id) return { ...e, ...value };
+          if (e.productId === id) return { ...e, ...value };
           return e;
         })
       );
@@ -104,7 +100,7 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
   };
 
   const getProductItem = (id) => {
-    return formik.values.rmaItems.find((e) => e.productid === id);
+    return formik.values.rmaItems.find((e) => e.productId == id);
   };
   return (
     <div className="order-product-list-body-inner">
@@ -123,62 +119,60 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
       <form onSubmit={formik.handleSubmit}>
         <div className="order-product-list-body">
           <div className="order-products">
-            {orderItem.orderGroups.map((group) => {
-              return group.orderGroupsItems.map((e) => {
-                return (
-                  <div className="order-product">
-                    <div className="order-product-list-header-sku">
-                      <div className="order-item-body-product-name">
-                        {e.product}
-                      </div>
-                      <div className="order-item-body-product-sku">
-                        {e.productcode}
-                      </div>
+            {orderItem.groups.map((group) => {
+              return group.products?.map((product) => (
+                <div key={product.productId} className="order-product">
+                  <div className="order-product-list-header-sku">
+                    <div className="order-item-body-product-name">
+                      {product.product}
                     </div>
-                    <div className="order-product-list-header-quantity">
-                      <FormSelect
-                        classes={{ group: "order-product-select-count" }}
-                        value={
-                          getProductItem(e.productid)?.amountSelect || {
-                            value: 0,
-                            viewValue: 0,
-                          }
-                        }
-                        items={fillArrayItemsOnOrderActions(e.amount)}
-                        id={`${e.productcode}-amount`}
-                        onClick={(value) =>
-                          updateValueOnReturnItems(
-                            { ...e, amountSelect: value },
-                            e.productid
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="order-product-list-header-quantity-cancel">
-                      <FormSelect
-                        classes={{
-                          group: "order-product-select-action",
-                          selectHeader: "order-product-select-action-header",
-                        }}
-                        value={
-                          getProductItem(e.productid)?.quantitySelect || {
-                            value: undefined,
-                            viewValue: "Select an option",
-                          }
-                        }
-                        onClick={(value) =>
-                          updateValueOnReturnItems(
-                            { ...e, quantitySelect: value },
-                            e.productid
-                          )
-                        }
-                        id={`${e.productcode}-action`}
-                        items={returnSelectValues}
-                      />
+                    <div className="order-item-body-product-sku">
+                      {product.code}
                     </div>
                   </div>
-                );
-              });
+                  <div className="order-product-list-header-quantity">
+                    <FormSelect
+                      classes={{ group: "order-product-select-count" }}
+                      value={
+                        getProductItem(product.productId)?.amountSelect || {
+                          value: 0,
+                          viewValue: 0,
+                        }
+                      }
+                      items={fillArrayItemsOnOrderActions(product.amount)}
+                      id={`${product.code}-amount`}
+                      onClick={(value) =>
+                        updateValueOnReturnItems(
+                          { ...product, amountSelect: value },
+                          product.productId
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="order-product-list-header-quantity-cancel">
+                    <FormSelect
+                      classes={{
+                        group: "order-product-select-action",
+                        selectHeader: "order-product-select-action-header",
+                      }}
+                      value={
+                        getProductItem(product.productId)?.quantitySelect || {
+                          value: undefined,
+                          viewValue: "Select an option",
+                        }
+                      }
+                      onClick={(value) =>
+                        updateValueOnReturnItems(
+                          { ...product, quantitySelect: value },
+                          product.productId
+                        )
+                      }
+                      id={`${product.code}-action`}
+                      items={returnSelectValues}
+                    />
+                  </div>
+                </div>
+              ));
             })}
           </div>
           <FormInput
@@ -202,7 +196,7 @@ export const ReturnOrReplaceItems: React.FC<ReturnOrReplaceItemProps> = ({
             Please attach product images to speed up the RMA process:
           </div>
           <FileDrop onDrop={onDrop}>
-            <button className="choose-file-btn" onClick={open}>
+            <button type="button" className="choose-file-btn" onClick={open}>
               Choose file
             </button>
           </FileDrop>

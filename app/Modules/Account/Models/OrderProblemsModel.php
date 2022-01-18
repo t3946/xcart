@@ -6,27 +6,26 @@ use Modules\Order\Models\OrderModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class OrderProblemsModel extends Model
 {
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'account_order_problems';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
             'problem_id' => [
                 'class' => AutoField::class,
             ],
             'status' => [
-                'field' => 'order_id',
+                'field' => 'status_id',
                 'class' => ForeignField::class,
-                'modelClass' => OrderModel::class,
-                'link' => ['problem_status' => 'status_id'],
+                'modelClass' => OrderProblemStatusesModel::class,
+                'link' => ['status_id' => 'status_id'],
             ],
             'order' => [
                 'field' => 'order_id',

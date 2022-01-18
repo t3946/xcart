@@ -5,15 +5,18 @@ namespace Modules\Account\Controllers\Api;
 use Modules\Account\Models\OrderCancelItemsModel;
 use Modules\Account\Models\OrderCancelRequestModel;
 use Modules\Account\Models\OrderProblemsModel;
+use Modules\Account\Models\OrderProblemStatusesModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTrackingModel;
 use Modules\Order\Models\RMADetailModel;
 use Modules\Order\Models\RMAModel;
+use Modules\User\Models\UserAccount\UserModel;
 use Throwable;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
@@ -24,177 +27,185 @@ use function Clue\StreamFilter\fun;
 
 class OrdersApi extends Controller
 {
+    private const ORDERS_TYPE_CLOSED = 'closed';
+    private const ORDER_TYPE_COMPLETED = 'completed';
+    private const ORDER_TYPE_OPEN = 'open';
+
     public function getOrders($orders_type, $to_date)
     {
         $filter = [];
-
-        if($to_date !== 'undefined'){
+        /** @var UserModel $user */
+        $user = Xcart::app()->auth->getUser(true);
+        if ($to_date !== 'undefined') {
             $filter = ['date__gte' => $to_date];
         }
 
-        switch ($orders_type)
-        {
-            case 'closed': {
-                $filter =   array_merge($filter, ['cb_status' => 'F']);
-            }
-            case 'completed': {
-                $filter =   array_merge($filter, ['cb_status' => 'P', 'dc_status' => 'Z']);
-            }
-            case 'open': {
-                $filter =  array_merge($filter, ['cb_status__in' => ['AP', 'P', 'Q'], 'dc_status__isnt' => 'Z']);
-            }
+        switch ($orders_type) {
+            case self::ORDERS_TYPE_CLOSED:
+                $filter = array_merge(
+                    $filter, [
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_FAILED
+                ]);
+                break;
+            case self::ORDER_TYPE_COMPLETED:
+                $filter = array_merge(
+                    $filter, [
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED
+                ]);
+                break;
+            case self::ORDER_TYPE_OPEN:
+                $filter = array_merge($filter, [
+                    'cb_status__in' => [
+                        OrderStatusModel::ORDER_STATUS_AUTHORIZED,
+                        OrderStatusModel::ORDER_STATUS_COMPLETED,
+                        OrderStatusModel::ORDER_STATUS_QUEUED
+                    ],
+                    'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                ]);
+                break;
         }
-
-
-        $user = Xcart::app()->auth->getUser(true);
-        $mass = [];
-        foreach ($user->orders->filter($filter) as $key => $item)
-        {
-
-            $mass[$key]['orderInfo']['emails'] = [];
-            $mass[$key]['orderInfo'] = $item->getAttributes();
-            $mass[$key]['orderInfo']['payments'] = $item->payment_method_model->getAttributes();
-            $mass[$key]['orderInfo']["payment_status"] = OrderStatusModel::objects()->get(['code' =>  $mass[$key]['orderInfo']['cb_status']])->description;
-
-            $mass[$key]['orderGroups'] = OrderGroupModel::objects()->filter(['orderid' => $item->orderid])->asArray()->all();
-            $mass[$key]['type'] = 'shipping';
-
-            $qs = EmailModel::objects()->getQuerySet()->order(['-date']);
-
-            $email_qs = $qs->filter(["order_models__orderid" => (int)$mass[$key]['orderInfo']['orderid']]);
-
-
-            $pagination = new Pagination($email_qs, [
-                'page' => 0,
-                'pageSize' => 40,
-            ], new QuerySetDataSource());
-
-            try {
-                foreach ($pagination->paginate() as $email_key => $model)
-                {
-                    /** @var EmailModel $model */
-                    $mass[$key]['orderInfo']['emails'][$email_key] = $model->getAttributes();
-                    $mass[$key]['orderInfo']['emails'][$email_key]['attachment'] = $model->getAttachment();
-                    if((string)$model->body){
-                        $mass[$key]['orderInfo']['emails'][$email_key]['body'] = (string)$model->body;
-                    }
-                    $mass[$key]['orderInfo']['emails'][$email_key]['emailType'] = $model->getEmailType($model->id);
+        foreach ($user->orders->filter($filter) as $order_model) {
+            $group_data = [];
+            foreach ($order_model->groups as $group) {
+                $ar_products = [];
+                $manufacturer = $group->manufacturer;
+                foreach ($group->detail_models as $model) {
+                    $ar_products[] = $model->getFrontendProduct();
                 }
-            } catch (Throwable $exception) {
-                $this->jsonResponse(['error' => $exception->getMessage()]);
-                return;
+                $group_data[] = [
+                    'manufacturer' => $manufacturer->getFrontendAddress(),
+                    'products' => $ar_products ?? [],
+                ];
             }
 
-            foreach ( $mass[$key]['orderGroups'] as $group_key => $group_item)
-            {
-                $mass[$key]['orderGroups'][$group_key]['manufacturer'] = DistributorModel::objects()->get(['manufacturerid' => $mass[$key]['orderGroups'][$group_key]['manufacturerid']])->getAttributes();
-                $mass[$key]['orderGroups'][$group_key]['orderGroupsItems'] = OrderDetailModel::objects()->
-                filter(['order_group_id' =>  $mass[$key]['orderGroups'][$group_key]['order_group_id']])->
-                asArray()->all();
-                foreach ($mass[$key]['orderGroups'][$group_key]['orderGroupsItems'] as $product_key => $product_item)
-                {
-                    $product = OrderDetailModel::objects()->get(['productid' => $product_item['productid'], 'order_group_id' =>$mass[$key]['orderGroups'][$group_key]['order_group_id'] ]);
-                    $mass[$key]['orderGroups'][$group_key]['orderGroupsItems'][$product_key]['image'] =  (string) $product->product_model->getMainImage();
-                }
-                $mass[$key]['orderGroups'][$group_key]['trackings'] =  OrderTrackingModel::objects()->filter(['order_group_id' => $mass[$key]['orderGroups'][$group_key]['order_group_id']])->asArray()->all();
-            }
+            $ar_data[] = [
+                'orderNumber' => $order_model->getOrderNumber(),
+                'date' => $order_model->date,
+                'total' => $order_model->total,
+                'type' => 'shipping',
+                'orderId' => $order_model->pk,
+                'groups' => $group_data,
+                'address' => $order_model->getFrontendAddress(),
+            ];
         }
-
-        $this->jsonResponse(['data'=>$mass]);
+        $this->jsonResponse($ar_data ?? []);
     }
 
-    public function getOneOrder($order_id)
+    public function getOrder($order_id)
     {
         $user = Xcart::app()->auth->getUser(true);
+        /** @var OrderModel $order_model */
+        $order_model = $user->orders->get(["pk" => $order_id]);
+        foreach ($order_model->groups as $group_model) {
+            $manufacturer = $group_model->manufacturer;
 
-        $orderModel = $user->orders->get(["orderid" => $order_id]);
-
-        $order = [];
-
-        $order['orderInfo'] = $orderModel->getAttributes();
-        $order['orderInfo']["payment_status"] = OrderStatusModel::objects()->get(['code' =>  $order['orderInfo']['cb_status']])->description;
-        $order['orderInfo']['payments'] = $orderModel->payment_method_model->getAttributes();
-        $order['orderGroups'] = OrderGroupModel::objects()->filter(['orderid' => $orderModel->orderid])->asArray()->all();
-        $order['type'] = 'shipping';
-
-        $qs = EmailModel::objects()->getQuerySet()->order(['-date']);
-
-        $order['orderInfo']['emails'] = [];
-
-        $email_qs = $qs->filter(["order_models__orderid" =>  $order['orderInfo']['orderid']]);
-
-        $pagination = new Pagination($email_qs, [
-            'page' => 0,
-            'pageSize' => 40,
-        ], new QuerySetDataSource());
-
-        if($pagination->getTotal()){
-            try {
-                foreach ($pagination->paginate() as $email_key => $model)
-                {
-
-                    /** @var EmailModel $model */
-                    $order['orderInfo']['emails'][$email_key] = $model->getAttributes();
-                    $order['orderInfo']['emails'][$email_key]['attachment'] = $model->getAttachment();
-                    $order['orderInfo']['emails'][$email_key]['body'] = (string)$model->body;
-                    $order['orderInfo']['emails'][$email_key]['emailType'] = $model->getEmailType($model->id);
-                }
-            } catch (Throwable $exception) {
-                $this->jsonResponse(['error' => $exception->getMessage()]);
-                return;
+            foreach ($group_model->detail_models as $model) {
+                $ar_products[] = $model->getFrontendProduct();
             }
-        }
 
-        foreach ( $order['orderGroups'] as $group_key => $group_item)
-        {
-            $order['orderGroups'][$group_key]['manufacturer'] = DistributorModel::objects()->get(['manufacturerid' => $order['orderGroups'][$group_key]['manufacturerid']])->getAttributes();
-            $order['orderGroups'][$group_key]['orderGroupsItems'] = OrderDetailModel::objects()->
-            filter(['order_group_id' =>  $order['orderGroups'][$group_key]['order_group_id']])->
-            asArray()->all();
-            foreach ($mass[$key]['orderGroups'][$group_key]['orderGroupsItems'] as $product_key => $product_item)
-            {
-                $product = OrderDetailModel::objects()->get(['productid' => $product_item['productid'], 'order_group_id' =>$mass[$key]['orderGroups'][$group_key]['order_group_id'] ]);
-                $mass[$key]['orderGroups'][$group_key]['orderGroupsItems'][$product_key]['image'] =  (string) $product->product_model->getMainImage();
+            foreach ($group_model->trackings as $tracking_model) {
+                $tracks[] = [
+                    'number' => $tracking_model->tracknum,
+                    'link' => $tracking_model->link->shipping,
+                ];
             }
-            $order['orderGroups'][$group_key]['trackings'] =  OrderTrackingModel::objects()->filter(['order_group_id' => $order['orderGroups'][$group_key]['order_group_id']])->asArray()->all();
+            $groups[] = [
+                'tracks' => $tracks ?? [],
+                'products' => $ar_products ?? [],
+                'manufacturer' => $manufacturer->getFrontendAddress(),
+                'a2bStatus' => $group_model->a2b_status,
+                'a2cStatus' => $group_model->a2c_status,
+                'shippingGross' => $group_model->shipping_gross,
+                'totalPst' => $group_model->total_pst,
+                'totalTax' => $group_model->total_tax,
+                'totalGross' => $group_model->total_gross,
+            ];
         }
-        $this->jsonResponse(['data'=>$order]);
+        foreach ($order_model->logs_model->exclude(['type' => OrderLogModel::LOG_TYPE_PAYMENT_PROCESS]) as $log_model) {
+            $logs[] = [
+                'type' => $log_model->type,
+                'date' => $log_model->date,
+                'login' => $log_model->login,
+                'action' => $log_model->log,
+                'id' => $log_model->pk
+            ];
+        }
+        $emails = EmailModel::objects()->filter(["order_models__orderid" => $order_id])->order(['-date']);
+        /** @var EmailModel $email_model */
+        foreach ($emails as $email_model) {
+            $ar_emails[] = $email_model->getFrontendEmail();
+        }
+        $transaction = $order_model->transactions[0];
+        if ($order_model->isPurchaseOrder() && $extra_model = $order_model->extra_model) {
+            $purchase_data = $extra_model->getFrontendPurchase();
+        }
+        $order = [
+            'orderNumber' => $order_model->getOrderNumber(),
+            'client' => [
+                'firstName' => $order_model->firstname,
+                'phone' => $order_model->phone,
+                'phoneExt' => $order_model->phone_ext ?: '',
+                'email' => $order_model->email,
+                'shippingName' => $order_model->s_firstname,
+                'billingName' => $order_model->b_firstname,
+                'company' => $order_model->b_company,
+            ],
+            'groups' => $groups ?? [],
+            'orderId' => $order_model->orderid,
+            'poNumber' => $order_model->po_number,
+            'address' => $order_model->getFrontendAddress(),
+            'payment' => [
+                'status' => $order_model->cb_status_model->name,
+                'date' => $transaction ? $transaction->date : $order_model->date, // TODO: Поменять на метод getFirstTransaction из master branch
+            ],
+            'logs' => $logs ?? [],
+            'emails' => $ar_emails ?? [],
+            'purchase' => $purchase_data ?? null
+        ];
+        $this->jsonResponse($order);
     }
 
     public function sendProblemMessage()
     {
         $user = Xcart::app()->auth->getUser(true);
-
-        if(!$user)
-        {
+        if (!$user) {
             $this->jsonResponse('user not login');
             return;
         }
 
-        $data = json_decode(file_get_contents('php://input'),true);
-
-
+        $data = json_decode(file_get_contents('php://input'), true);
         OrderProblemsModel::objects()->create($data);
 
         $this->jsonResponse(['success']);
+    }
+
+    public function getProblemStatuses()
+    {
+        /** @var OrderProblemStatusesModel $status */
+        foreach (OrderProblemStatusesModel::objects()->all() as $status) {
+            $statuses[] = [
+                'value' => $status->pk,
+                'viewValue' => $status->status_text
+            ];
+        }
+        $this->jsonResponse($statuses ?? []);
     }
 
     public function openCancelItemsRequest()
     {
         $user = Xcart::app()->auth->getUser(true);
 
-        if(!$user)
-        {
+        if (!$user) {
             $this->jsonResponse('user not login');
             return;
         }
 
-        [$order, $items] = array_values(json_decode(file_get_contents('php://input'),true));
+        [$order, $items] = array_values(json_decode(file_get_contents('php://input'), true));
 
         OrderCancelRequestModel::objects()->create($order);
 
-        foreach ($items as $key => $item)
-        {
+        foreach ($items as $key => $item) {
             OrderCancelItemsModel::objects()->create($item);
         }
 
@@ -206,18 +217,16 @@ class OrdersApi extends Controller
     {
         $user = Xcart::app()->auth->getUser(true);
 
-        if(!$user)
-        {
+        if (!$user) {
             $this->jsonResponse('user not login');
             return;
         }
 
-        $request_data = json_decode(file_get_contents('php://input'),true);
+        $request_data = json_decode(file_get_contents('php://input'), true);
 
         RMAModel::objects()->create($request_data['rma_info']);
 
-        foreach ($request_data['rma_items'] as $item)
-        {
+        foreach ($request_data['rma_items'] as $item) {
             RMADetailModel::objects()->create($item);
         }
 
@@ -228,13 +237,12 @@ class OrdersApi extends Controller
     {
         $user = Xcart::app()->auth->getUser(true);
 
-        if(!$user)
-        {
+        if (!$user) {
             $this->jsonResponse('user not login');
             return;
         }
 
-        [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'),true));
+        [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'), true));
 
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
 

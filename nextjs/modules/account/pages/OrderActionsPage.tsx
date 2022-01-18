@@ -1,7 +1,4 @@
 import React, { useEffect } from "react";
-import { Tab, Tabs } from "react-bootstrap";
-import { CancelItems } from "@modules/account/components/orders/CancelItems";
-import { ReturnOrReplaceItems } from "@modules/account/components/orders/ReturnOrReplaceItems";
 import { ProblemWithOrder } from "@modules/account/components/orders/ProblemWithOrder";
 import { useAccordion } from "@modules/account/hooks/useAccordion";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
@@ -9,6 +6,10 @@ import Store from "@redux/stores/Store";
 import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@modules/account/ts/types/store.type";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import { OrderTabs } from "@modules/account/components/order/order-tabs/OrderTabs";
+import { ReturnOrReplaceItems } from "@modules/account/components/orders/ReturnOrReplaceItems";
+import { CancelItems } from "@modules/account/components/orders/CancelItems";
 
 const plus = (
   <svg
@@ -42,13 +43,11 @@ const minus = (
   </svg>
 );
 
-interface OrderActionsPageProps {
-  orderItem?: any;
+interface OrderActionsPage {
+  orderItem: OrderView;
 }
 
-export const OrderActionsPage: React.FC<OrderActionsPageProps> = ({
-  orderItem,
-}) => {
+export const OrderActionsPage: React.FC<OrderActionsPage> = ({ orderItem }) => {
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
   }, []);
@@ -94,7 +93,7 @@ export const OrderActionsPage: React.FC<OrderActionsPageProps> = ({
           }}
           ref={returnAccordion.ref}
         >
-          <ReturnOrReplaceItems orderItem={orderItem} />
+          <ReturnOrReplaceItems />
         </div>
         <div
           onClick={cancelAccordion.onItemClick}
@@ -112,43 +111,9 @@ export const OrderActionsPage: React.FC<OrderActionsPageProps> = ({
           }}
           ref={cancelAccordion.ref}
         >
-          <CancelItems orderItem={orderItem} />
+          <CancelItems />
         </div>
       </div>
-    );
-  }
-
-  function showTabs() {
-    return (
-      <Tabs
-        defaultActiveKey="home"
-        id="uncontrolled-tab-example"
-        className="mb-3 account-tabs"
-      >
-        <Tab
-          tabClassName="account-tab"
-          eventKey="home"
-          title="Problem with order"
-        >
-          <div className="account-tab-content">
-            <ProblemWithOrder />
-          </div>
-        </Tab>
-        <Tab
-          tabClassName="account-tab"
-          eventKey="profile"
-          title="Return or replace items"
-        >
-          <div className="account-tab-content">
-            <ReturnOrReplaceItems orderItem={orderItem} />
-          </div>
-        </Tab>
-        <Tab tabClassName="account-tab" eventKey="contact" title="Cancel items">
-          <div className="account-tab-content">
-            <CancelItems orderItem={orderItem} />
-          </div>
-        </Tab>
-      </Tabs>
     );
   }
 
@@ -157,7 +122,7 @@ export const OrderActionsPage: React.FC<OrderActionsPageProps> = ({
       <div className="page-label">Order actions</div>
       {breakpoint && (
         <>
-          {breakpoint.md && showTabs()}
+          {breakpoint.md && <OrderTabs />}
           {!breakpoint.md && showAccordions()}
         </>
       )}

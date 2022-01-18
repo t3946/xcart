@@ -1,24 +1,20 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { FormSelect } from "@modules/account/components/shared/FormSelect";
 import { FormInput } from "@modules/account/components/shared/FormInput";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
-import { useParams } from "react-router-dom";
-import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 import { ApiService } from "@modules/shared/services/api.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
 
-interface CancelItemsProps {
-  orderItem: any;
-}
-
-export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
+export const CancelItems: React.FC = () => {
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
+  const orderItem: OrderView = useSelectorAccount((state) => state.orderView);
   const { showSnackbar } = useContext(SnackbarContext);
-
-  const urlParams = useParams<OrderPageURLParams>();
 
   const api = new ApiService();
 
@@ -29,7 +25,7 @@ export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
         "/api/account/orders/open-cancel-request",
         JSON.stringify({
           order: {
-            order_id: urlParams.id,
+            order_id: router.query.id,
             cancel_text: formik.values.cancelText,
           },
           items: formik.values.cancelItemsValues.map((e) => {
@@ -113,40 +109,38 @@ export const CancelItems: React.FC<CancelItemsProps> = ({ orderItem }) => {
       </div>
       <div className="order-product-list-body">
         <div className="order-products">
-          {orderItem.orderGroups.map((group) => {
-            return group.orderGroupsItems.map((e) => {
-              return (
-                <div className="order-product">
-                  <div className="order-product-list-header-sku">
-                    <div className="order-item-body-product-name">
-                      {e.product}
-                    </div>
-                    <div className="order-item-body-product-sku">
-                      {e.productcode}
-                    </div>
+          {orderItem.groups.map((group) => {
+            return group.products?.map((product) => (
+              <div key={product.productId} className="order-product">
+                <div className="order-product-list-header-sku">
+                  <div className="order-item-body-product-name">
+                    {product.product}
                   </div>
-                  <div className="order-product-list-header-quantity">
-                    {e.amount}
-                  </div>
-                  <div className="order-product-list-header-quantity-cancel">
-                    <FormSelect
-                      classes={{ group: "order-product-select-count" }}
-                      value={
-                        getProductItem(e.productid)?.amount || {
-                          value: 0,
-                          viewValue: 0,
-                        }
-                      }
-                      items={fillArrayItemsOnOrderActions(e.amount)}
-                      id={e.productcode}
-                      onClick={(value) =>
-                        updateValueOnCancelItems(value, e.productid)
-                      }
-                    />
+                  <div className="order-item-body-product-sku">
+                    {product.code}
                   </div>
                 </div>
-              );
-            });
+                <div className="order-product-list-header-quantity">
+                  {product.amount}
+                </div>
+                <div className="order-product-list-header-quantity-cancel">
+                  <FormSelect
+                    classes={{ group: "order-product-select-count" }}
+                    value={
+                      getProductItem(product.product)?.amount || {
+                        value: 0,
+                        viewValue: 0,
+                      }
+                    }
+                    items={fillArrayItemsOnOrderActions(product.amount)}
+                    id={product.code}
+                    onClick={(value) =>
+                      updateValueOnCancelItems(value, product.productId)
+                    }
+                  />
+                </div>
+              </div>
+            ));
           })}
         </div>
         <FormInput

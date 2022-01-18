@@ -15,7 +15,7 @@ interface Item {
 
 interface IProps {
   items: Item[] | SelectValue<any, any>[];
-  onClick?: (item: Item) => any;
+  onClick?: (item: Item) => void | any;
   value: any;
   name?: any;
   errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[];
@@ -105,17 +105,15 @@ export const FormSelect: React.FC<IProps> = ({
 
           {open && (
             <ul className={classnames("form-select-list", classes?.selectList)}>
-              {items.map((item, i) => {
-                return (
-                  <li
-                    onClick={() => onClick(item)}
-                    className="form-select-item"
-                    key={`${i}_${item.viewValue}`}
-                  >
-                    {item.viewValue}
-                  </li>
-                );
-              })}
+              {items.map((item, i) => (
+                <li
+                  onClick={() => onClick(item)}
+                  className="form-select-item"
+                  key={`${i}_${item.viewValue}`}
+                >
+                  {item.viewValue}
+                </li>
+              ))}
             </ul>
           )}
         </div>

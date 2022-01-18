@@ -1,46 +1,37 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useAccordion } from "@modules/account/hooks/useAccordion";
+import { OrderStoreItem } from "@modules/account/ts/types/order/orders-store.types";
 
 interface OrderItemProps {
-  order: any;
+  order: OrderStoreItem;
   orderType: string;
   orderItem?: any;
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
-  const orderDate = new Date(Number(order.orderInfo.date)).toLocaleDateString(
-    "en-EN",
-    {
-      month: "long",
-      day: "2-digit",
-      year: "numeric",
-    }
-  );
+  const orderDate = new Date(Number(order.date)).toLocaleDateString("en-EN", {
+    month: "long",
+    day: "2-digit",
+    year: "numeric",
+  });
 
   const accordion = useAccordion(200);
 
   const [showAllItems, setShowAllItems] = useState(false);
 
-  const shippingAddress =
-    order.orderInfo.s_zipcode +
-    " " +
-    order.orderInfo.s_city +
-    " " +
-    order.orderInfo.s_address;
-
-  const orderId = order.orderInfo.order_prefix + order.orderInfo.orderid;
+  const shippingAddress = `${order.address.shippingZip} ${order.address.shippingCity} ${order.address.shippingAddress}`;
 
   return (
     <div className="order-item-container">
       <div className="order-item-header-container">
         <div className="order-item-body-left-side header-left">
           <div className="order-item-name">
-            Order # <b>{orderId}</b>
+            Order # <b>{order.orderNumber}</b>
           </div>
-
           <Link
-            href={`/account/orders/${order.orderInfo.orderid}/${orderType}/order-info/order-tracking`}
+            href={`/order/[id]/order-tracking`}
+            as={`/order/${order.orderId}/order-tracking`}
           >
             <a>
               <button className="form-button form-button__outline order-details-btn">
@@ -57,44 +48,33 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div>
             <div className="order-item-header-grand-total">GRAND TOTAL</div>
             <div className="order-item-header-grand-total">
-              <b>US$ {order.orderInfo.total}</b>
+              <b>US$ {order.total}</b>
             </div>
           </div>
         </div>
       </div>
       <div className="order-item-body-container">
         <div className="order-item-body-left-side">
-          <div className="order-item-body-right-side">
-            <div>
-              <div>ORDER DATE</div>
-              <div>{orderDate}</div>
-            </div>
-            <div>
-              <div className="order-item-header-grand-total">GRAND TOTAL</div>
-              <div className="order-item-header-grand-total">
-                <b>US$ {order.orderInfo.total}</b>
-              </div>
-            </div>
-          </div>
+          <div className="order-item-body-right-side"></div>
           <div className="order-item-body-title">items ordered</div>
 
           <div className={"order-item-body-product-container"}>
             <div className="order-item-body-product-left-part">
               <img
                 className="order-item-body-product-img"
-                src={order.orderGroups[0].orderGroupsItems[0].image}
+                src={order.groups[0].products[0].image}
               />
               <div>
                 <a className="order-item-body-product-name">
-                  {order.orderGroups[0].orderGroupsItems[0].product}
+                  {order.groups[0].products[0].product}
                 </a>
                 <div className="order-item-body-product-sku">
-                  {order.orderGroups[0].orderGroupsItems[0].productcode}
+                  {order.groups[0].products[0].code}
                 </div>
               </div>
             </div>
             <div className="order-item-body-product-right-part-text">
-              x {order.orderGroups[0].orderGroupsItems[0].amount}
+              x {order.groups[0].products[0].amount}
             </div>
           </div>
 
@@ -105,8 +85,8 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             ref={accordion.ref}
             className="order-items-list"
           >
-            {order.orderGroups.map((group, groupIndex) => {
-              return group.orderGroupsItems.map((groupItem, itemIndex) => {
+            {order.groups.map((group, groupIndex) => {
+              return group.products.map((product, itemIndex) => {
                 if (groupIndex === 0 && itemIndex === 0) {
                   return null;
                 }
@@ -119,19 +99,19 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                     <div className="order-item-body-product-left-part">
                       <img
                         className="order-item-body-product-img"
-                        src={groupItem.image}
+                        src={product.image}
                       />
                       <div>
                         <a className="order-item-body-product-name">
-                          {groupItem.product}
+                          {product.product}
                         </a>
                         <div className="order-item-body-product-sku">
-                          {groupItem.productcode}
+                          {product.code}
                         </div>
                       </div>
                     </div>
                     <div className="order-item-body-product-right-part-text">
-                      x {groupItem.amount}
+                      x {product.amount}
                     </div>
                   </div>
                 );
@@ -139,18 +119,17 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             })}
           </div>
 
-          {order.orderGroups.length > 1 ||
-            (order.orderGroups[0].orderGroupsItems.length > 1 && (
-              <button
-                onClick={() => {
-                  accordion.onItemClick();
-                  setShowAllItems(!showAllItems);
-                }}
-                className="form-button form-button__outline order-item-show-btn"
-              >
-                {!showAllItems ? "show more" : "hide"}
-              </button>
-            ))}
+          {order.groups.length > 1 && (
+            <button
+              onClick={() => {
+                accordion.onItemClick();
+                setShowAllItems(!showAllItems);
+              }}
+              className="form-button form-button__outline order-item-show-btn"
+            >
+              {!showAllItems ? "show more" : "hide"}
+            </button>
+          )}
         </div>
         <div className="order-item-body-right-side order-item-address-container">
           <div className="order-item-body-title address-title">

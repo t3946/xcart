@@ -7,7 +7,7 @@ import LoginFormInputOTP from "@client/modules/account/components/authorization/
 import { useHistory } from "react-router-dom";
 import { route } from "@client/jsx/utils/AppData";
 import classNames from "classnames";
-import { noSidebarClasses } from "@client/modules/account/ts/consts/no-sidebar-classes";
+import { noSidebarClasses } from "../../../../../../../../nextjs/modules/account/ts/consts/no-sidebar-classes";
 import { loginAction } from "@client/jsx/redux/actions/account-actions/AutorizationActions";
 import { useDispatch } from "react-redux";
 import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";

@@ -61,6 +61,9 @@ use Xcart\Manufacturer;
  * @property bool allow_dispatch_off_working_hours
  * @property DistributorContactsModel[]|Manager contacts_model
  * @property bool avail
+ * @property string m_zipcode
+ * @property string m_city
+ * @property string m_address
  */
 class DistributorModel extends Model
 {
@@ -593,6 +596,10 @@ class DistributorModel extends Model
                 'modelClass' => DistributorTaxModel::class,
                 'link' => ['manufacturerid' => 'distributor_id']
             ],
+            'm_zipcode' => [
+                'class' => CharField::class,
+                'default' => '',
+            ]
         ];
     }
 
@@ -640,10 +647,10 @@ class DistributorModel extends Model
     {
         $result = $r = [];
         foreach ($this->shipping_rates as $rate) {
-            array_push($r,  ...$rate->zone_element_country->all());
+            array_push($r, ...$rate->zone_element_country->all());
         }
         if ($r) {
-            foreach($r as $zone_element) {
+            foreach ($r as $zone_element) {
                 $result[] = $zone_element->field;
             }
         }
@@ -765,6 +772,17 @@ class DistributorModel extends Model
             $result = ucfirst(strtolower($names_arrays[0]));
         }
         return $result ?? 'Supplier';
+    }
+
+    public function getFrontendAddress(): array
+    {
+        return [
+            'city' => $this->m_city,
+            'zip' => $this->m_zipcode,
+            'address' => $this->m_address,
+            'state' => $this->m_state,
+            'country' => $this->m_country
+        ];
     }
 
     public function afterSave($owner, $isNew)

@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Models;
 
 use Modules\Goods\Models\ProductModel;
@@ -16,8 +17,10 @@ use Xcart\OrderDetail;
 
 /**
  * @property int order_group_id
+ * @property ProductModel product_model
+ * @property int amount
  */
-class OrderDetailModel  extends Model
+class OrderDetailModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
@@ -35,27 +38,27 @@ class OrderDetailModel  extends Model
     {
         return [
             'itemid' => [
-                'class' => AutoField::className(),
+                'class' => AutoField::class,
             ],
             'product_model' => [
                 'field' => 'productid',
-                'class' => ForeignField::className(),
-                'modelClass' => ProductModel::className(),
+                'class' => ForeignField::class,
+                'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],
                 'null' => false,
             ],
             'back' => [
-                'class' => IntField::className(),
+                'class' => IntField::class,
                 'null' => false,
                 'default' => 0
             ],
             'retail_trust_price' => [
-                'class' => DecimalField::className(),
+                'class' => DecimalField::class,
                 'null' => false,
                 'default' => 0
             ],
             'extra_data' => [
-                'class' => SerializeField::className(),
+                'class' => SerializeField::class,
                 'null' => false,
                 'default' => '',
             ],
@@ -71,14 +74,16 @@ class OrderDetailModel  extends Model
                 'link' => ['order_group_id' => 'order_group_id'],
                 'null' => false,
             ],
+            'amount' => [
+                'class' => IntField::class,
+            ]
         ];
     }
 
-    public function getAmazonCompetitorMinPrice():? array
+    public function getAmazonCompetitorMinPrice(): ?array
     {
         $result = null;
 
-        /** @var ProductModel $product */
         if ($product = $this->product_model) {
             $result = $product->getAmazonArbitragePrice($this->amount);
         }
@@ -104,12 +109,25 @@ class OrderDetailModel  extends Model
             $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->productid, 'slug' => '']);
 
             if ($full && $site = $this->order_group->order->site) {
-                $url = '//' . $site->domain . rtrim($url, '/') .'/';
+                $url = '//' . $site->domain . rtrim($url, '/') . '/';
             }
 
             return $url;
         }
 
         return false;
+    }
+
+    public function getFrontendProduct(): array
+    {
+        $product = $this->product_model;
+        return [
+            'productId' => $product->pk,
+            'image' => (string)$product->getMainImage(),
+            'product' => $product->product,
+            'code' => $product->productcode,
+            'price' => (float)$this->price,
+            'amount' => $this->amount,
+        ];
     }
 }

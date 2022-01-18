@@ -1,7 +1,7 @@
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
 
 export function fillArrayItemsOnOrderActions(
-  productAmount: string
+  productAmount: number | string
 ): SelectValue<number, number>[] {
   const mass = Array(Number(productAmount))
     .fill(null)

@@ -6,6 +6,7 @@ const mainApp = express();
 const apiApp = express();
 const UserApi = require("./server/api/User");
 const DecisionsApi = require("./server/api/Decisions");
+const OrdersApi = require("./server/api/Orders");
 const ProductApi = require("./server/api/Product");
 const cookieParser = require("cookie-parser");
 
@@ -24,6 +25,7 @@ mainApp.use(cookieParser());
 
 apiApp.use("/user", UserApi);
 apiApp.use("/decisions", DecisionsApi);
+apiApp.use("/orders", OrdersApi);
 apiApp.use("/product", ProductApi);
 mainApp.use("/api-client", apiApp);
 
