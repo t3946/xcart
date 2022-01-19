@@ -3,6 +3,7 @@ import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import Store from "@redux/stores/Store";
+import axios from "axios";
 
 const api = new ApiService();
 
@@ -43,6 +44,7 @@ function* sendEmail(action: AnyAction): Generator {
     });
   } catch (e) {}
 }
+
 function* fetchOrder(action: AnyAction): Generator {
   const order = yield api
     .get(`/api/account/orders/get-one/${action.orderId}`)
@@ -53,8 +55,15 @@ function* fetchOrder(action: AnyAction): Generator {
   });
 }
 
+function* openRMARequest(action: AnyAction): Generator {
+  const { data, success } = action;
+
+  yield axios.post("/api/account/orders/open-rma-request", data).then(success);
+}
+
 export function* ordersActionWatcher(): SagaIterator {
   yield takeLatest("GET_ORDERS", getCards);
   yield takeLatest("SEND_EMAIL", sendEmail);
   yield takeLatest("FETCH_ORDER_VIEW", fetchOrder);
+  yield takeLatest("OPEN_RMA_REQUEST", openRMARequest);
 }

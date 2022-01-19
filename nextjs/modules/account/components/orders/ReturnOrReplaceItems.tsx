@@ -5,12 +5,12 @@ import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-
 import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";
 import { FileDrop } from "@modules/account/components/shared/FileDrop";
 import { FileItem } from "@modules/account/components/orders/FileItem";
-import { ApiService } from "@modules/shared/services/api.service";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRouter } from "next/router";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import { openRMARequest } from "@redux/actions/account-actions/OrdersActions";
+import { useDispatch } from "react-redux";
 
 interface IProps {
   orderItem: OrderView;
@@ -18,10 +18,9 @@ interface IProps {
 
 export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
   const { orderItem } = props;
-  const router = useRouter();
-  const api = new ApiService();
   const [loading, setLoading] = useState(false);
   const { showSnackbar } = useContext(SnackbarContext);
+  const dispatch = useDispatch();
 
   function onDrop([acceptedFile]) {
     setFiles((prev) =>
@@ -34,41 +33,32 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
 
   function openRequest() {
     setLoading(true);
-    api
-      .post(
-        "/account/api/orders/open-rma-request",
-        JSON.stringify({
-          rma_info: {
-            orderid: router.query.id,
-            zipcode: orderItem.orderInfo.s_zipcode,
-            email: orderItem.orderInfo.email,
-            date: orderItem.orderInfo.date,
-            status: 3,
-            rmanumber: 0,
-            orderemail: orderItem.orderInfo.email,
-            explanation: formik.values.rmaText,
-          },
-          rma_items: formik.values.rmaItems.map((e) => {
-            return {
-              itemid: e.itemid,
-              productid: e.productid,
-              productcode: e.productcode,
-              product: e.product,
-              would_like: e.quantitySelect.value,
-              amount: e.amountSelect.value,
-            };
-          }),
-        })
-      )
-      .then(() => {
-        setLoading(false);
-        showSnackbar({
-          header: "Success",
-          message: `Thank you for your rma request!`,
-          theme: "success",
-        });
-        formik.resetForm();
-      });
+
+    const data = {
+      orderId: orderItem.orderId,
+      items: formik.values.rmaItems.map((e) => {
+        return {
+          productId: e.productid,
+          amount: e.amountSelect.value,
+          wouldLike: e.quantitySelect.value,
+        };
+      }),
+    };
+
+    dispatch(
+      openRMARequest({
+        data,
+        success() {
+          setLoading(false);
+          showSnackbar({
+            header: "Success",
+            message: `Thank you for your rma request!`,
+            theme: "success",
+          });
+          formik.resetForm();
+        },
+      })
+    );
   }
 
   const formik = useFormik({

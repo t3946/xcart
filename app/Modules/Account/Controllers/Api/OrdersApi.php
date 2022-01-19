@@ -169,6 +169,7 @@ class OrdersApi extends Controller
     public function sendProblemMessage()
     {
         $user = Xcart::app()->auth->getUser(true);
+
         if (!$user) {
             $this->jsonResponse('user not login');
             return;
@@ -215,6 +216,7 @@ class OrdersApi extends Controller
 
     public function openRmaRequest()
     {
+        //TODO: нужна доработка этого метода
         $user = Xcart::app()->auth->getUser(true);
 
         if (!$user) {
@@ -223,13 +225,13 @@ class OrdersApi extends Controller
         }
 
         $request_data = json_decode(file_get_contents('php://input'), true);
-
-        RMAModel::objects()->create($request_data['rma_info']);
-
-        foreach ($request_data['rma_items'] as $item) {
-            RMADetailModel::objects()->create($item);
-        }
-
+//
+//        RMAModel::objects()->create($request_data['rma_info']);
+//
+//        foreach ($request_data['rma_items'] as $item) {
+//            RMADetailModel::objects()->create($item);
+//        }
+//
         $this->jsonResponse(['success']);
     }
 

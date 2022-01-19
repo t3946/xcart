@@ -23,3 +23,8 @@ export const setOrderView = (orderId: number) => ({
   type: "FETCH_ORDER_VIEW",
   orderId,
 });
+
+export const openRMARequest = (action: Record<any, any>) => ({
+  type: "OPEN_RMA_REQUEST",
+  ...action,
+});
