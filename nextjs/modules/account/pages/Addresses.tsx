@@ -50,6 +50,7 @@ export const Addresses: React.FC = () => {
           show={addAddressDialog.open}
           title={"Add address"}
           onClose={addAddressDialog.handleClose}
+          classes={{ modal: Styles.modalWidth, body: Styles.modalBody }}
         >
           <AddAddressForm onCancelClick={addAddressDialog.handleClose} />
         </BootstrapDialogHOC>

@@ -28,3 +28,17 @@
     min-height: pxToRem(244);
   }
 }
+
+.modalWidth {
+  max-width: pxToRem(650);
+}
+
+.modalBody {
+  @include breakpoint(sm) {
+    padding: pxToRem(16) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(16);
+  }
+}
