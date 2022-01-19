@@ -8,10 +8,12 @@ import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-dow
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { useDispatch, useSelector } from "react-redux";
 import { setMenuItemActiveAction } from "@redux/actions/account-actions/SideBarMenuActions";
+import { useRouter } from "next/router";
 
 import StylesItem from "@modules/account/components/sidebar-menu/Item.module.scss";
 
 interface sideBarMenuItemPropsDto extends SidebarItem {
+  to: string;
   routerItems: SidebarItem[];
   classes?: {
     handlerClass?: any;
@@ -21,11 +23,13 @@ interface sideBarMenuItemPropsDto extends SidebarItem {
 const ItemAccordion: React.FC<sideBarMenuItemPropsDto> = (
   props: Record<any, any>
 ) => {
+  const router = useRouter();
   const { label, routerItems } = props;
-  const initActive = useSelector(
-    (e: StoreInterface) =>
-      e.sidebar.menuItems.find((item) => item.to === props.to)?.active
-  );
+  const initActive =
+    useSelector(
+      (e: StoreInterface) =>
+        e.sidebar.menuItems.find((item) => item.to === props.to)?.active
+    ) || router.asPath.indexOf(props.to) + 1;
   const dispatch = useDispatch();
   const accordion = useAccordion(300, !!initActive);
 
