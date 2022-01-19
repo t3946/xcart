@@ -6,14 +6,12 @@ import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.con
 import { ApiService } from "@modules/shared/services/api.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { OrderView } from "@modules/account/ts/types/order/order-view.types";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 
-export const CancelItems: React.FC = () => {
+export const CancelItems: React.FC = (props) => {
+  const { orderItem } = props;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const orderItem: OrderView = useSelectorAccount((state) => state.orderView);
   const { showSnackbar } = useContext(SnackbarContext);
 
   const api = new ApiService();

@@ -71,26 +71,29 @@ export const ProblemWithOrder: React.FC = () => {
           id={"problem-with-order-select"}
         />
         <div className="order-problems-radios">
-          {statuses.map((e, i) => (
-            <RadioBtn
-              name="radio"
-              id={i}
-              key={i}
-              viewValue={e.viewValue}
-              groupValue={formik.values.status_id.value}
-              radioValue={e.value}
-              onChange={(value) =>
-                formik.setFieldValue("status_id", {
-                  value: value,
-                  viewValue: e.viewValue,
-                })
-              }
-              groupClasses={{
-                group: "order-problem-radio",
-                checked: "order-problem-radio-checked",
-              }}
-            />
-          ))}
+          {statuses.map(
+            (e, i) => "<RadioBtn /> was here"
+            // TODO: делает warning нужно переделать компонент или заменить его на другой
+
+            // <RadioBtn
+            //   name="radio"
+            //   id={i}
+            //   key={i}
+            //   viewValue={e.viewValue}
+            //   groupValue={formik.values.status_id.value}
+            //   radioValue={e.value}
+            //   onChange={(value) =>
+            //     formik.setFieldValue("status_id", {
+            //       value: value,
+            //       viewValue: e.viewValue,
+            //     })
+            //   }
+            //   groupClasses={{
+            //     group: "order-problem-radio",
+            //     checked: "order-problem-radio-checked",
+            //   }}
+            // />
+          )}
         </div>
 
         <FormInput

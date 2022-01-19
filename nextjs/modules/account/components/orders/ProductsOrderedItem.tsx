@@ -46,8 +46,8 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItem> = ({
             </div>
           </div>
           <div>
-            {group.products?.map((product) => (
-              <div className="products-order-item">
+            {group.products?.map((product, i) => (
+              <div className="products-order-item" key={`product-${i}`}>
                 <div className="order-item-body-product-left-part products-order-item-header-sku">
                   {breakpoints.md && (
                     <img

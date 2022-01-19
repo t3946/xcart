@@ -12,8 +12,6 @@ interface ProductsOrderedPageProps {
 export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
   orderItem,
 }) => {
-  console.log(orderItem);
-
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
   }, []);
@@ -21,8 +19,9 @@ export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
   return (
     <div>
       <div className="page-label products-ordered-label">Products ordered</div>
-      {orderItem.groups.map((group) => (
-        <ProductsOrderedItem group={group} />
+
+      {orderItem.groups.map((group, i) => (
+        <ProductsOrderedItem group={group} key={`product-${i}`} />
       ))}
     </div>
   );

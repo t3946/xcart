@@ -9,29 +9,30 @@ import { ApiService } from "@modules/shared/services/api.service";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 
-export const ReturnOrReplaceItems: React.FC = () => {
-  const orderItem: OrderView = useSelectorAccount((state) => state.orderView);
-  const router = useRouter();
+interface IProps {
+  orderItem: OrderView;
+}
 
-  const onDrop = ([acceptedFile]) => {
+export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
+  const { orderItem } = props;
+  const router = useRouter();
+  const api = new ApiService();
+  const [loading, setLoading] = useState(false);
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  function onDrop([acceptedFile]) {
     setFiles((prev) =>
       prev.concat({
         id: files.length === 0 ? 0 : prev[prev.length - 1].id + 1,
         file: acceptedFile,
       })
     );
-  };
-  const api = new ApiService();
+  }
 
-  const [loading, setLoading] = useState(false);
-
-  const { showSnackbar } = useContext(SnackbarContext);
-
-  const openRequest = () => {
+  function openRequest() {
     setLoading(true);
     api
       .post(
@@ -68,7 +69,7 @@ export const ReturnOrReplaceItems: React.FC = () => {
         });
         formik.resetForm();
       });
-  };
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -102,6 +103,7 @@ export const ReturnOrReplaceItems: React.FC = () => {
   const getProductItem = (id) => {
     return formik.values.rmaItems.find((e) => e.productId == id);
   };
+
   return (
     <div className="order-product-list-body-inner">
       <div className="page-label order-actions-page-label">
@@ -116,6 +118,7 @@ export const ReturnOrReplaceItems: React.FC = () => {
           I would like to
         </div>
       </div>
+
       <form onSubmit={formik.handleSubmit}>
         <div className="order-product-list-body">
           <div className="order-products">

@@ -4,7 +4,9 @@ import { ProblemWithOrder } from "@modules/account/components/orders/ProblemWith
 import { ReturnOrReplaceItems } from "@modules/account/components/orders/ReturnOrReplaceItems";
 import { CancelItems } from "@modules/account/components/orders/CancelItems";
 
-export const OrderTabs: React.FC = () => {
+export const OrderTabs: React.FC = (props) => {
+  const { orderItem } = props;
+
   return (
     <Tabs
       defaultActiveKey="home"
@@ -20,18 +22,20 @@ export const OrderTabs: React.FC = () => {
           <ProblemWithOrder />
         </div>
       </Tab>
+
       <Tab
         tabClassName="account-tab"
         eventKey="profile"
         title="Return or replace items"
       >
         <div className="account-tab-content">
-          <ReturnOrReplaceItems />
+          <ReturnOrReplaceItems orderItem={orderItem} />
         </div>
       </Tab>
+
       <Tab tabClassName="account-tab" eventKey="contact" title="Cancel items">
         <div className="account-tab-content">
-          <CancelItems />
+          <CancelItems orderItem={orderItem} />
         </div>
       </Tab>
     </Tabs>

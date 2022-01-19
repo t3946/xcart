@@ -47,7 +47,8 @@ interface OrderActionsPage {
   orderItem: OrderView;
 }
 
-export const OrderActionsPage: React.FC<OrderActionsPage> = ({ orderItem }) => {
+export const OrderActionsPage: React.FC<OrderActionsPage> = (props) => {
+  const { orderItem } = props;
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
   }, []);
@@ -93,7 +94,7 @@ export const OrderActionsPage: React.FC<OrderActionsPage> = ({ orderItem }) => {
           }}
           ref={returnAccordion.ref}
         >
-          <ReturnOrReplaceItems />
+          <ReturnOrReplaceItems orderItem={orderItem} />
         </div>
         <div
           onClick={cancelAccordion.onItemClick}
@@ -111,7 +112,7 @@ export const OrderActionsPage: React.FC<OrderActionsPage> = ({ orderItem }) => {
           }}
           ref={cancelAccordion.ref}
         >
-          <CancelItems />
+          <CancelItems orderItem={orderItem} />
         </div>
       </div>
     );
@@ -122,7 +123,7 @@ export const OrderActionsPage: React.FC<OrderActionsPage> = ({ orderItem }) => {
       <div className="page-label">Order actions</div>
       {breakpoint && (
         <>
-          {breakpoint.md && <OrderTabs />}
+          {breakpoint.md && <OrderTabs orderItem={orderItem} />}
           {!breakpoint.md && showAccordions()}
         </>
       )}
