@@ -1,29 +1,38 @@
 import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
-import { NextPage } from "next";
+import { NextPage, NextPageContext } from "next";
 import { OrderInfoHeader } from "@modules/account/components/orders/OrderInfoHeader";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
-import { setOrderView } from "@redux/actions/account-actions/OrdersActions";
 import { OrderTrackingPage } from "@modules/account/pages/OrderTrackingPage";
-import { OrderView } from "@modules/account/ts/types/order/order-view.types";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { OrderLogPage } from "@modules/account/pages/OrderLogPage";
 import { OrderAddressesPage } from "@modules/account/pages/OrderAddressesPage";
 import { ProductsOrderedPage } from "@modules/account/pages/ProductsOrderedPage";
 import { OrderActionsPage } from "@modules/account/pages/OrderActionsPage";
+import { getInstance } from "@services/axios/Instance";
 
-const OrderPage: NextPage = () => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const orderId = Number(router.query.id);
-  const order: OrderView = useSelectorAccount((store) => store.orderView);
-  useEffect(() => {
-    dispatch(setOrderView(Number(orderId)));
-  }, []);
+export async function getServerSideProps(ctx: NextPageContext) {
+  const instance = getInstance(ctx.req);
+  const { id: orderId, type } = ctx.query;
+  let order;
+
+  await instance.get(`/api/account/orders/get-one/${orderId}`).then((res) => {
+    order = res.data;
+  });
+
+  return {
+    props: { order, type },
+  };
+}
+
+interface IProps {
+  order: Record<any, any>;
+  type: string;
+}
+
+const OrderPage: NextPage<IProps> = (props: IProps) => {
+  const { order, type } = props;
+
   const getSection = () => {
-    switch (router.query.type) {
+    switch (type) {
       case "order-tracking":
         return <OrderTrackingPage />;
       case "log":
@@ -40,9 +49,14 @@ const OrderPage: NextPage = () => {
         return null; // TODO: Сделать decisions page
     }
   };
+
   return (
     <PageTwoColumns>
-      <OrderInfoHeader orderId={orderId} />
+      <OrderInfoHeader
+        orderNumber={order.orderNumber}
+        orderId={order.orderId}
+      />
+
       {order && getSection()}
     </PageTwoColumns>
   );

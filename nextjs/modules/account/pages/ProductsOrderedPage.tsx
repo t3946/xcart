@@ -12,9 +12,12 @@ interface ProductsOrderedPageProps {
 export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
   orderItem,
 }) => {
+  console.log(orderItem);
+
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
   }, []);
+
   return (
     <div>
       <div className="page-label products-ordered-label">Products ordered</div>

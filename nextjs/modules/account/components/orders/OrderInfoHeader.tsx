@@ -2,15 +2,13 @@ import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-interface OrderInfoHeaderProps {
-  orderNumber?: string;
+interface IProps {
+  orderNumber: string;
   orderId: number;
 }
 
-export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
-  orderNumber = "",
-  orderId,
-}) => {
+export const OrderInfoHeader: React.FC<IProps> = (props: IProps) => {
+  const { orderNumber, orderId } = props;
   const router = useRouter();
   const headerItems = [
     {
@@ -43,9 +41,10 @@ export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
       path: "log",
     },
   ];
+
   return (
-    <div>
-      <div className={"order-info-header-title"}>Order #{orderNumber}</div>
+    <>
+      <div className={"order-info-header-title"}>Order # {orderNumber}</div>
       <div className="order-info-header">
         {headerItems.map((item) => (
           <Link key={item.path} href={`/order/${orderId}/${item.path}`}>
@@ -60,6 +59,6 @@ export const OrderInfoHeader: React.FC<OrderInfoHeaderProps> = ({
           </Link>
         ))}
       </div>
-    </div>
+    </>
   );
 };
