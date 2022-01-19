@@ -44,3 +44,4 @@ node_modules
 /docker/mysql/data/
 /docker/redis/data/
 notes.md
+/home/falcon/xcart/nextjs/out/
