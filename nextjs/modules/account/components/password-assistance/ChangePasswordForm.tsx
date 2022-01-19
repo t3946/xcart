@@ -5,6 +5,10 @@ import * as yup from "yup";
 import { resetPasswordAction } from "@redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import cn from "classnames";
+
+import StylesLoginForm from "@modules/account/components/authorization/LoginForm.module.scss";
+import Styles from "@modules/account/components/password-assistance/ChangePasswordForm.module.scss";
 
 interface IProps {
   login: string;
@@ -75,15 +79,25 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
         return (
           <Form>
             <div className="px-12 px-sm-0">
-              <h1 className="account-form-header">Change your password</h1>
+              <h1 className="account-form-header text-center text-sm-start mb-18 mb-sm-4 mb-lg-16">
+                Create New Password
+              </h1>
 
-              <p className="auth-form-info mb-12 mb-md-14 mb-lg-20">
+              <p
+                className={cn(
+                  Styles.caption,
+                  "auth-form-info mb-sm-12 mb-lg-20"
+                )}
+              >
                 We'll ask for this password whenever you Sign-In.
               </p>
 
-              <RBForm.Group controlId="ChangePasswordPassword">
-                <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
-                  Password
+              <RBForm.Group
+                className="mb-10 mb-sm-12 mb-lg-2"
+                controlId="ChangePasswordPassword"
+              >
+                <RBForm.Label className="d-block form-input-label mb-12 mb-lg-1">
+                  <span className="d-none d-sm-inline">New </span>Password
                 </RBForm.Label>
 
                 <RBForm.Control
@@ -99,9 +113,16 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
 
                 {(!errors.password || !touched.password) && (
                   <RBForm.Text
-                    className={"auth-form-info_input-caption form-group-text"}
+                    className={cn(
+                      "auth-form-info_input-caption",
+                      "form-group-text",
+                      StylesLoginForm.inputCaption,
+                      "mt-2",
+                      "mt-lg-10",
+                      "d-block"
+                    )}
                   >
-                    {"Password must be at least 8 characters"}
+                    {"Passwords must be at least 8 characters"}
                   </RBForm.Text>
                 )}
 
@@ -111,7 +132,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
               </RBForm.Group>
 
               <RBForm.Group controlId="ChangePasswordConfirmPassword">
-                <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center">
+                <RBForm.Label className="form-input-label d-flex justify-content-between align-items-center mb-12 mb-lg-2">
                   Re-Enter password
                 </RBForm.Label>
 
@@ -135,10 +156,16 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
 
             <button
               type="submit"
-              className="form-button mt-4"
+              className={cn(
+                "form-button",
+                "d-block",
+                "mt-4",
+                StylesLoginForm.button
+              )}
               disabled={isSubmitting}
             >
-              Submit
+              Save <span className="d-none d-lg-inline">changes</span> and
+              Sign-In
             </button>
           </Form>
         );

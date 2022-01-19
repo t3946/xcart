@@ -14,6 +14,8 @@ import classNames from "classnames";
 import { noSidebarClasses } from "@modules/account/ts/consts/no-sidebar-classes";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
+import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
+
 const RegisterForm: React.FC<any> = () => {
   const router = useRouter();
   const routes = useSelectorAccount((e) => e.routes);
@@ -79,7 +81,12 @@ const RegisterForm: React.FC<any> = () => {
     <div
       className={classNames(noSidebarClasses, "account-auth-form-container")}
     >
-      <div className="account-auth-form account_auth-form">
+      <div
+        className={classNames(
+          "account-auth-form account_auth-form",
+          Styles.authForm
+        )}
+      >
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -88,10 +95,17 @@ const RegisterForm: React.FC<any> = () => {
           {({ isSubmitting, values, errors, touched, handleChange }) => (
             <Form>
               <div className="px-12 px-sm-0">
-                <h1 className="account-form-header">Create account</h1>
+                <h1 className="account-form-header mb-18 mb-sm-4 mb-lg-14 text-center text-sm-start">
+                  Create Account
+                </h1>
 
-                <RBForm.Group controlId="RegisterFormName">
-                  <Label>Your Name</Label>
+                <RBForm.Group
+                  className="mb-14 mb-sm-18 mb-lg-12"
+                  controlId="RegisterFormName"
+                >
+                  <Label className="mb-12 mb-sm-10 mb-lg-2 d-block">
+                    Your Name
+                  </Label>
 
                   <Input
                     name="name"
@@ -106,8 +120,13 @@ const RegisterForm: React.FC<any> = () => {
                   </Feedback>
                 </RBForm.Group>
 
-                <RBForm.Group controlId="RegisterFormEmail">
-                  <Label>Email</Label>
+                <RBForm.Group
+                  className="mb-14 mb-sm-18 mb-lg-12"
+                  controlId="RegisterFormEmail"
+                >
+                  <Label className="mb-12 mb-sm-10 mb-lg-2 d-block">
+                    Email
+                  </Label>
                   <Input
                     name="email"
                     value={values.email}
@@ -120,8 +139,13 @@ const RegisterForm: React.FC<any> = () => {
                   </Feedback>
                 </RBForm.Group>
 
-                <RBForm.Group controlId="RegisterFormPassword">
-                  <Label>Password</Label>
+                <RBForm.Group
+                  className="mb-14 mb-sm-12 mb-lg-10"
+                  controlId="RegisterFormPassword"
+                >
+                  <Label className="mb-12 mb-sm-10 mb-lg-1 d-block">
+                    Password
+                  </Label>
                   <Input
                     type="password"
                     name="password"
@@ -136,14 +160,27 @@ const RegisterForm: React.FC<any> = () => {
                   </Feedback>
 
                   {!(touched.password && errors.password) && (
-                    <RBForm.Text className={"auth-form-info_input-caption"}>
+                    <RBForm.Text
+                      className={classNames(
+                        Styles.inputCaption,
+                        "auth-form-info_input-caption",
+                        "d-block",
+                        "mt-md-10",
+                        "mt-lg-1"
+                      )}
+                    >
                       {"Passwords must be at least 8 characters"}
                     </RBForm.Text>
                   )}
                 </RBForm.Group>
 
-                <RBForm.Group controlId="RegisterForm">
-                  <Label>Re-Enter password</Label>
+                <RBForm.Group
+                  className="mb-14 mb-sm-18 mb-lg-12"
+                  controlId="RegisterForm"
+                >
+                  <Label className="mb-12 mb-sm-10 mb-lg-1 d-block">
+                    Re-Enter password
+                  </Label>
                   <Input
                     type="password"
                     name="password_confirm"
@@ -164,7 +201,11 @@ const RegisterForm: React.FC<any> = () => {
 
               <button
                 type="submit"
-                className="form-button login-form_submit-button"
+                className={classNames(
+                  "form-button",
+                  "login-form_submit-button",
+                  Styles.button
+                )}
                 disabled={isSubmitting}
               >
                 Create your account
@@ -182,26 +223,52 @@ const RegisterForm: React.FC<any> = () => {
                 .
               </p>
 
-              <div className="d-sm-none">
-                <div className="form-divider form-divider__with-content auth-form_divider">
-                  <span className="form-divider-text">
+              <div className="d-sm-none d-lg-block">
+                <div
+                  className={classNames(
+                    "form-divider",
+                    "form-divider__with-content auth-form_divider",
+                    "mt-4",
+                    "mt-lg-10",
+                    "mb-lg-14"
+                  )}
+                >
+                  <span
+                    className={classNames(
+                      "form-divider-text",
+                      Styles.dividerText
+                    )}
+                  >
                     Already have an account?
                   </span>
                 </div>
 
                 <Link href={routes["account:login"]}>
-                  <a className="form-button form-button__outline common-link">
+                  <a
+                    className={classNames(
+                      "form-button",
+                      "form-button__outline",
+                      "common-link",
+                      "fw-bold",
+                      Styles.button
+                    )}
+                  >
                     sign in
                   </a>
                 </Link>
               </div>
 
-              <div className="d-none d-sm-block">
-                <div className="form-divider auth-form_divider mb-0" />
+              <div className="d-none d-sm-block d-lg-none">
+                <div
+                  className={classNames(
+                    "form-divider auth-form_divider mb-0 mt-sm-16",
+                    Styles.authForm__divider
+                  )}
+                />
 
                 <p
                   className={
-                    "auth-form-info register-form_already-have-account"
+                    "auth-form-info register-form_already-have-account mt-sm-18"
                   }
                 >
                   Already have an account?{" "}

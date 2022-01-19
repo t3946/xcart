@@ -1,0 +1,101 @@
+@import "styles/utils/Utils.module";
+
+.authForm {
+  border: none;
+  padding: pxToRem(20) pxToRem(24) pxToRem(12);
+
+  @include breakpoint(sm) {
+    width: pxToRem(382);
+    padding: pxToRem(28) pxToRem(30) pxToRem(36) pxToRem(32);
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(349);
+    padding: pxToRem(19) pxToRem(23) pxToRem(29);
+    box-shadow: 0 0 0 1px #c4c4c4;
+  }
+}
+
+.authForm__divider {
+  @include breakpoint(sm) {
+    margin: 0 pxToRem(-30) 0 pxToRem(-32);
+  }
+}
+
+.authFormInfo {
+  font-size: pxToRem(16);
+  font-weight: normal;
+  line-height: pxToRem(22);
+
+  @include breakpoint(sm) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(17);
+  }
+}
+
+.commonLink {
+  line-height: inherit;
+  color: #055a93;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(12);
+  }
+}
+
+.button {
+  font-weight: bold;
+  font-size: pxToRem(20);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.inputCaption {
+  color: #959595;
+  font-size: pxToRem(12);
+
+  @include breakpoint(sm) {
+    font-size: pxToRem(14);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(12);
+  }
+}
+
+.dividerText {
+  font-size: pxToRem(14);
+
+  @include breakpoint(sm) {
+    font-size: pxToRem(16);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(12);
+  }
+}
+
+.text {
+  line-height: pxToRem(20);
+  @include breakpoint(sm) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(20);
+  }
+}

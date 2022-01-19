@@ -13,7 +13,7 @@ import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import cn from "classnames";
-import Styles from "@modules/account/components/authorization/LoginFormInputPassword.module.scss";
+import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 import generateFp from "@utils/generateFp";
 
 interface IProps {
@@ -100,22 +100,33 @@ const LoginFormInputPassword = function (props: IProps): any {
 
           return (
             <Form>
-              <div className="px-12 px-sm-0">
+              <div className="px-12 px-sm-0 mt-sm-4 mt-lg-0">
                 <p
-                  className={
-                    "auth-form-info d-flex justify-content-between mt-3 mb-3"
-                  }
+                  className={cn(
+                    Styles.authFormInfo,
+                    "auth-form-info",
+                    "d-flex",
+                    "justify-content-between",
+                    "mt-3",
+                    "mb-3",
+                    "mb-sm-14",
+                    "mb-lg-14"
+                  )}
                 >
                   <span>{login}</span>
 
-                  <a href="#" onClick={goToInputLogin} className="common-link">
+                  <a
+                    href="#"
+                    onClick={goToInputLogin}
+                    className={Styles.commonLink}
+                  >
                     Change
                   </a>
                 </p>
 
                 <RBForm.Group controlId="LoginFormPassword">
-                  <Label className="d-flex justify-content-between align-items-center">
-                    <span className={"form-input-label"}>Password</span>
+                  <Label className="d-flex mb-10 mb-sm-2 mb-lg-2 justify-content-between align-items-center">
+                    <span className={"form-input-label mb-0"}>Password</span>
 
                     <Link href={"/password-assistance"}>
                       <a className={cn(Styles.authFormInfo, Styles.commonLink)}>
@@ -140,7 +151,12 @@ const LoginFormInputPassword = function (props: IProps): any {
 
               <button
                 type="submit"
-                className="form-button login-form_submit-button"
+                className={cn(
+                  "form-button login-form_submit-button",
+                  Styles.button,
+                  "mb-16",
+                  "mb-sm-4"
+                )}
                 disabled={isSubmitting}
               >
                 sign-in
@@ -162,7 +178,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                   }
                   htmlFor={"rememberMe"}
                 >
-                  <div className="auth-form-info">
+                  <div className={cn(Styles.authFormInfo, "auth-form-info")}>
                     Keep me signed in.{" "}
                     <OverlayTrigger
                       placement="top"
