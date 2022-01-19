@@ -7,18 +7,16 @@
     position: absolute;
     right: 0.75rem;
     bottom: 50%;
-    -webkit-transform: translateY(50%);
     transform: translateY(50%);
     content: "";
     display: block;
-    -webkit-transition: 0.2s ease-in;
     transition: 0.2s ease-in;
+    cursor: pointer;
   }
 }
 
 .chevron_rotate {
   &:after {
-    -webkit-transform: translateY(50%) rotate(180deg);
     transform: translateY(50%) rotate(180deg);
   }
 }
