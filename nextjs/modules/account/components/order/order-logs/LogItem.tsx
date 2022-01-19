@@ -21,7 +21,7 @@ export const LogItem: React.FC<LogItem> = ({ item }) => {
       <div className={classes.cell}>
         {moment.unix(item.date).format("D-MMM-YYYY h:mm:ss")}
       </div>
-      <div className={classes.cell}>{item.name}</div>
+      <div className={classes.cell}>{item.login}</div>
       <div className={classes.cell}>{item.type}</div>
       <div
         className={classes.cell}
