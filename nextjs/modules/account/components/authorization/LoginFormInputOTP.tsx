@@ -30,33 +30,35 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
     rememberBrowser: yup.bool(),
   });
 
-  async function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     const data: Record<any, any> = { ...values, password, login, rememberMe };
 
     actions.setSubmitting(true);
 
-    if (data.rememberBrowser) {
-      data.fingerprint = await generateFp();
-    }
+    generateFp().then((fp) => {
+      if (data.rememberBrowser) {
+        data.fingerprint = fp;
+      }
 
-    dispatch(
-      loginAction({
-        form: data,
+      dispatch(
+        loginAction({
+          form: data,
 
-        success(res: AxiosResponse) {
-          if (res.data.error) {
-            actions.setErrors(res.data.error);
-            actions.setSubmitting(false);
-            return;
-          }
+          success(res: AxiosResponse) {
+            if (res.data.error) {
+              actions.setErrors(res.data.error);
+              actions.setSubmitting(false);
+              return;
+            }
 
-          if (res.data.user) {
-            dispatch(userSetAction(res.data.user));
-            return;
-          }
-        },
-      })
-    );
+            if (res.data.user) {
+              dispatch(userSetAction(res.data.user));
+              return;
+            }
+          },
+        })
+      );
+    });
   }
 
   return (
@@ -87,6 +89,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   onChange={handleChange}
                   className={"form-input"}
                   isInvalid={touched.code && !!errors.code}
+                  disabled={isSubmitting}
                 />
 
                 <Feedback type="invalid">
@@ -102,6 +105,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   className="form-checkbox"
                   type="checkbox"
                   checked={values.rememberBrowser}
+                  disabled={isSubmitting}
                 />
 
                 <RBForm.Label
