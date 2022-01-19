@@ -16,6 +16,7 @@ import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitC
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import { AxiosResponse } from "axios";
 import getPhoneNumberInnerPart from "@utils/getPhoneNumberInnerPart";
+import Label from "@modules/ui/forms/Label";
 
 interface IProps {
   location: any;
@@ -121,28 +122,32 @@ const FormEditUserPhone = (props: IProps): any => {
                 />
               }
             >
-              <div className="px-10 px-md-0">
-                <FormInputPhone
-                  setFieldValue={setFieldValue}
-                  handleChange={handleChange}
-                  disabled={isSubmitting}
-                  touched={touched}
-                  errors={errors}
-                  name={"phone"}
-                  values={{
-                    phoneCountryCode: values.phoneCountryCode,
-                    phone: values.phone,
-                  }}
-                  mode={"mobile"}
-                  label={"New Mobile Number"}
-                  classes={{
-                    label: "mb-10 mb-md-0",
-                    select: "col-4",
-                    phone: "col-8 col-md-7 pe-md-0 col-lg-5",
-                  }}
-                />
+              <div className="row px-10 px-md-0 align-items-center">
+                <Label
+                  className={
+                    "text-md-end text-lg-start col-md-6 col-lg-4 mb-10 mb-md-0"
+                  }
+                >
+                  New Mobile number
+                </Label>
+                <div className={"col-md-6 col-lg-7"}>
+                  <FormInputPhone
+                    setFieldValue={setFieldValue}
+                    handleChange={handleChange}
+                    disabled={isSubmitting}
+                    touched={touched}
+                    errors={errors}
+                    name={"phone"}
+                    values={{
+                      phoneCountryCode: values.phoneCountryCode,
+                      phone: values.phone,
+                    }}
+                    classes={{ select: "col-1", container: "flex-nowrap" }}
+                    mode={"mobile"}
+                  />
+                </div>
 
-                <p className="form-info mb-0">
+                <p className="form-info mt-4 mb-0">
                   By enrolling a mobile phone number, you consent to receive
                   automated text messages from or on behalf of S3 Stores related
                   to account management and security. Remove your number in{" "}

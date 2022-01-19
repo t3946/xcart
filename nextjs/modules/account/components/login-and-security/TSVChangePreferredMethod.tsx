@@ -103,6 +103,7 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
                   }}
                   mode={"mobile"}
                   label={"New Mobile number"}
+                  classes={{ select: "col-1", container: "flex-nowrap" }}
                 />
 
                 <p className="form-info mt-3 mb-0">

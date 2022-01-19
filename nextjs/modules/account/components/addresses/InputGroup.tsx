@@ -8,8 +8,8 @@ import Styles from "@modules/account/components/addresses/InputGroup.module.scss
 interface IProps {
   label?: string;
   placeholder?: string;
-  name: string;
-  value: any;
+  name?: string;
+  value?: any;
   type?: string;
   error?: string;
   disabled?: boolean;
@@ -17,13 +17,9 @@ interface IProps {
   isInvalid?: boolean;
   autoComplete?: string;
   mask?: string;
-  handleChange: (e: string | React.ChangeEvent<any>) => void;
-  classes?: {
-    group?: any;
-    label?: any;
-    input?: any;
-    feedback?: any;
-  };
+  component?: React.ReactNode;
+  handleChange?: (e: string | React.ChangeEvent<any>) => void;
+  classNames?: { container?: any };
 }
 
 const InputGroup: React.FC<IProps> = (props) => {
@@ -38,16 +34,33 @@ const InputGroup: React.FC<IProps> = (props) => {
     isInvalid,
     disabled,
     handleChange,
-    classes,
     autoComplete,
     mask,
+    component,
+    classNames,
   } = props;
-  let InputComponent;
-  if (mask) {
+
+  const classes = {
+    container: [
+      "row",
+      "justify-content-end",
+      "align-items-center",
+      classNames?.container,
+      Styles.container,
+    ],
+    label: "col-md-3 col-lg-4 mb-10 mb-md-0",
+    input: "col-md-9 col-lg-8",
+  };
+
+  let InputComponent: React.ReactNode;
+
+  if (component) {
+    InputComponent = component;
+  } else if (mask) {
     InputComponent = (
       <MaskedInput
         type={type}
-        name={name}
+        name={name ?? ""}
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
@@ -55,7 +68,6 @@ const InputGroup: React.FC<IProps> = (props) => {
         isValid={isValid}
         autoComplete={autoComplete}
         disabled={disabled}
-        className={Styles.input}
         mask={mask}
       />
     );
@@ -63,7 +75,7 @@ const InputGroup: React.FC<IProps> = (props) => {
     InputComponent = (
       <Input
         type={type}
-        name={name}
+        name={name ?? ""}
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
@@ -71,24 +83,18 @@ const InputGroup: React.FC<IProps> = (props) => {
         isValid={isValid}
         autoComplete={autoComplete}
         disabled={disabled}
-        className={Styles.input}
       />
     );
   }
   return (
-    <div className="d-flex justify-content-end mb-20 flex-wrap">
-      {label && (
-        <Label className={"flex-grow-1 mb-0"}>
-          {label}
-        </Label>
+    <div className={cn(classes?.container)}>
+      {label && <Label className={classes.label}>{label}</Label>}
+      <div className={classes.input}>{InputComponent}</div>
+      {error && (
+        <Feedback className={cn(classes.input, Styles.feedback)} type="invalid">
+          {error}
+        </Feedback>
       )}
-      {InputComponent}
-      <Feedback
-        className={cn(Styles.group__feedback, Styles.feedback)}
-        type="invalid"
-      >
-        {error}
-      </Feedback>
     </div>
   );
 };

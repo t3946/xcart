@@ -24,6 +24,7 @@ import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { getCountryByCode } from "@utils/Countries";
 
 import Styles from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired.module.scss";
+import Label from "@modules/ui/forms/Label";
 
 const initialValues = {
   file: [],
@@ -272,38 +273,34 @@ const POAdditionalInformationRequired: React.FC = () => {
               <div className={cn(classes.title, "mb-10", "mb-lg-20")}>
                 Accounts payable
               </div>
-
-              <FormInputPhone
-                setFieldValue={setFieldValue}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                name={"phone"}
-                disabled={isSubmitting}
-                values={{
-                  phoneCountryCode: values.phoneCountryCode,
-                  phone: values.phone,
-                }}
-                mode={"ext"}
-                label={
-                  <>
-                    Phone <span className="d-md-none">Number</span>
-                  </>
-                }
-                classes={{
-                  labelContainer: [
-                    "d-flex",
-                    "align-items-center",
-                    "w-md-auto",
-                    "mb-1",
-                    "pe-0",
-                  ],
-                  label: Styles.phoneLabel,
-                  select: "col-6 col-md-3 col-lg-3",
-                  phone: "col-7 col-md-4 col-lg-4",
-                  ext: "col-5 col-md-3 col-lg-3",
-                }}
-              />
+              <div className="row align-items-center">
+                <Label
+                  className={cn(
+                    "col-md-2",
+                    "col-lg-1",
+                    "mb-10",
+                    "mb-md-0",
+                    Styles.phoneLabel
+                  )}
+                >
+                  Phone <span className="d-md-none">Number</span>
+                </Label>
+                <div className=" col-md-8 col-lg-8">
+                  <FormInputPhone
+                    setFieldValue={setFieldValue}
+                    handleChange={handleChange}
+                    touched={touched}
+                    errors={errors}
+                    name={"phone"}
+                    disabled={isSubmitting}
+                    values={{
+                      phoneCountryCode: values.phoneCountryCode,
+                      phone: values.phone,
+                    }}
+                    mode={"ext"}
+                  />
+                </div>
+              </div>
             </InnerPage>
           </Form>
         );
