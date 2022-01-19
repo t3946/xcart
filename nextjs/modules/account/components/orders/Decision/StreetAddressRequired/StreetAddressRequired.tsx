@@ -65,6 +65,7 @@ const StreetAddressRequired: React.FC<any> = () => {
             for (const address of addresses) {
               addressList.push(
                 <RectangularButton
+                  key={address.address_id}
                   onClick={() => setAddAddress("")}
                   classNames={{
                     container: [Styles.address, "d-none", "d-md-flex"],
@@ -119,6 +120,7 @@ const StreetAddressRequired: React.FC<any> = () => {
             for (const address of addresses) {
               addressList.push(
                 <Card
+                  key={address.address_id}
                   classes={{
                     card: "d-md-none",
                     cardBody: Styles.addressCard_mobile,
