@@ -15,7 +15,7 @@ export const getInstance = function (req: Record<any, any>) {
   }
 
   return axios.create({
-    baseURL: "http://nginx",
+    baseURL: process.env.BASE_URL_NGINX,
     headers: {
       Cookie: cookie,
     },

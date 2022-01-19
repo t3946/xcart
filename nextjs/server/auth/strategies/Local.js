@@ -77,7 +77,7 @@ module.exports = function (passport) {
       }
 
       await axios
-        .post("http://nginx/api/account/tsv/confirm-code", {
+        .post(process.env.BASE_URL_NGINX + "/api/account/tsv/confirm-code", {
           code: req.body.code,
           userId: user.user_id,
         })

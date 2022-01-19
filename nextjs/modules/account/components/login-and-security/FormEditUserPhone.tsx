@@ -27,20 +27,6 @@ const FormEditUserPhone = (props: IProps): any => {
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
   const countries = useSelectorAccount((e) => e.countries);
-
-  const initialValues = {
-    phone: "",
-    phoneCountryCode: user.phone_country_code,
-  };
-
-  if (user.phone) {
-    initialValues.phone = getPhoneNumberInnerPart(
-      user.phone_country_code,
-      user.phone,
-      countries
-    );
-  }
-
   const validationSchema = yup.object().shape({
     phone: yup
       .string()
@@ -80,6 +66,23 @@ const FormEditUserPhone = (props: IProps): any => {
           actions.setSubmitting(false);
         },
       })
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
+  const initialValues = {
+    phone: "",
+    phoneCountryCode: user.phone_country_code,
+  };
+
+  if (user.phone) {
+    initialValues.phone = getPhoneNumberInnerPart(
+      user.phone_country_code,
+      user.phone,
+      countries
     );
   }
 

@@ -1,23 +1,23 @@
 import React, { useContext } from "react";
-import { FormSelect } from "../shared/FormSelect";
-import { FormCheckBox } from "../shared/FormCheckBox";
+import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
 import { useFormik } from "formik";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
-} from "../../ts/consts/add-address-form";
-import { useDispatch, useSelector } from "react-redux";
+} from "@modules/account/ts/consts/add-address-form";
+import { useDispatch } from "react-redux";
 import {
   addAddress,
   editAddress,
-} from "../../../../redux/actions/account-actions/AddressActions";
-import { getStates } from "../../utils/get-states";
-import Store from "@redux/stores/Store";
+} from "@redux/actions/account-actions/AddressActions";
+import { getStates } from "@modules/account/utils/get-states";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -25,11 +25,12 @@ export const AddAddressForm: React.FC<any> = ({
   children,
 }) => {
   const dispatch = useDispatch();
-  const countries = useSelector((e: any) => e.main.countries);
-  const states = useSelector((e: any) => e.main.states);
+  const countries = useSelectorAccount((e) => e.main.countries);
+  const states = useSelectorAccount((e) => e.main.states);
   const { showSnackbar } = useContext(SnackbarContext);
+  const user = useSelectorAccount((e) => e.user);
 
-  const addressFormLoading = useSelector(
+  const addressFormLoading = useSelectorAccount(
     (e: any) => e.addresses.addressFormLoading
   );
 
@@ -55,7 +56,7 @@ export const AddAddressForm: React.FC<any> = ({
       return;
     }
 
-    dispatch(addAddress(newAddress, onPended, Store.getState().user.id));
+    dispatch(addAddress(newAddress, onPended, user.userId));
   };
 
   const formik = useFormik({

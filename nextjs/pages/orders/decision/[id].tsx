@@ -1,7 +1,6 @@
 import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import Decision from "@modules/account/components/orders/Decision/Decision";
-import { useRouter } from "next/router";
 import { getInstance } from "@services/axios/Instance";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
@@ -36,22 +35,32 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   return {
     props: {
       decisions,
+      decisionId: parseInt(ctx.query.decisionId),
     },
   };
 }
 
-function DecisionPage(props) {
-  const router = useRouter();
-  const decisionId: number = parseInt(router.query.id);
-  const { solved, notSolved } = props.decisions;
-  const decisions: [] = [...solved, ...notSolved];
-  const max = decisions.length;
+interface IProps {
+  decisions: any;
+  decisionId: number;
+}
+
+function DecisionPage(props: IProps) {
+  const { decisionId, decisions } = props;
+
+  if (!decisions) {
+    return null;
+  }
+
+  const { solved, notSolved } = decisions;
+  const decisionItems: Record<any, any>[] = [...solved, ...notSolved];
+  const max = decisionItems.length;
   let decision;
   let i = 0;
 
   while (!decision && i < max) {
-    if (decisions[i].decision_id === decisionId) {
-      decision = decisions[i];
+    if (decisionItems[i].decision_id === decisionId) {
+      decision = decisionItems[i];
     }
 
     i++;

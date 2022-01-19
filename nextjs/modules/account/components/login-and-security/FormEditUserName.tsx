@@ -22,13 +22,6 @@ const FormEditUserName = (): any => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-  const initialValues = {
-    name: user.name,
-  };
-
-  const validationSchema = yup.object().shape({
-    name: yup.string().required("Name is a required field"),
-  });
 
   function submit(values: any, actions: any) {
     dispatch(
@@ -57,6 +50,17 @@ const FormEditUserName = (): any => {
       })
     );
   }
+
+  if (!user) {
+    return null;
+  }
+
+  const initialValues = {
+    name: user.name,
+  };
+  const validationSchema = yup.object().shape({
+    name: yup.string().required("Name is a required field"),
+  });
 
   return (
     <Formik

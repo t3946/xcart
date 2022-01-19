@@ -23,10 +23,6 @@ const FormEditUserEmail = (): any => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-  const initialValues = {
-    email: user.email,
-  };
-
   const validationSchema = yup.object().shape({
     email: yup
       .string()
@@ -61,6 +57,14 @@ const FormEditUserEmail = (): any => {
       })
     );
   }
+
+  if (!user) {
+    return null;
+  }
+
+  const initialValues = {
+    email: user.email,
+  };
 
   return (
     <div>

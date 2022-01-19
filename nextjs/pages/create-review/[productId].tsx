@@ -4,9 +4,6 @@ import ReviewForm from "@modules/account/components/review/ReviewForm";
 import { getInstance } from "@services/axios/Instance";
 import { NextPageContext } from "next";
 import { AxiosResponse } from "axios";
-import StoreInterface from "@modules/account/ts/types/store.type";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { useRouter } from "next/router";
 
 export async function getServerSideProps(ctx: NextPageContext) {
   if (!ctx.req) {

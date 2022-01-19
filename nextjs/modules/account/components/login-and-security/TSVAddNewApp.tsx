@@ -35,8 +35,8 @@ const TSVAddNewApp = (props: IProps): any => {
     code: yup.string().required("Code required"),
   });
 
-  if (user === null) {
-    router.push("/account/login");
+  if (!user) {
+    return null;
   }
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
@@ -159,7 +159,7 @@ const TSVAddNewApp = (props: IProps): any => {
                       <b>Can't scan the barcode?</b>
                     </h2>
 
-                    <p className={"text-align--left auth-form-info mb-0"}>
+                    <div className={"text-align--left auth-form-info mb-0"}>
                       <ol className={"mb-0"}>
                         <li>
                           Open your Authenticator App and select "Manually add
@@ -177,7 +177,7 @@ const TSVAddNewApp = (props: IProps): any => {
                         <li>Set key type to "Time based"</li>
                         <li>Tap Add</li>
                       </ol>
-                    </p>
+                    </div>
                   </Tooltip>
                 }
               >

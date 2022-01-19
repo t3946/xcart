@@ -27,6 +27,10 @@ export async function getServerSideProps(ctx: Record<any, any>) {
 function DecisionsRequired(props: Record<any, any>) {
   const dispatch = useDispatch();
 
+  if (!props.decisions) {
+    return null;
+  }
+
   dispatch(setDecisionsAction(props.decisions));
 
   return (

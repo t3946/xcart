@@ -68,6 +68,10 @@ const FormChangePassword = (): any => {
     );
   }
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <div>
       <Formik

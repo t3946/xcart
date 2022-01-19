@@ -23,6 +23,7 @@ interface IProps {
 const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   const { login, password, rememberMe } = props;
   const routes = useSelectorAccount((e) => e.routes);
+  const user = useSelectorAccount((e) => e.user);
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
   const dispatch = useDispatch();
@@ -59,11 +60,15 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
 
         if (res.data.user) {
           dispatch(userSetAction(res.data.user));
-          router.push("/dashboard");
           return;
         }
       },
     });
+  }
+
+  if (user) {
+    router.push("/dashboard");
+    return null;
   }
 
   return (
