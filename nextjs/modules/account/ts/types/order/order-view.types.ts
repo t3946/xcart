@@ -22,7 +22,7 @@ export interface OrderPayment {
 export interface Log {
   id: number;
   date: number;
-  name: string;
+  login: string;
   type: string;
   action: string;
 }

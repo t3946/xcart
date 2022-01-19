@@ -20,7 +20,6 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
   const Map = dynamic(() => import("@modules/account/components/shared/Map"), {
     ssr: false,
   });
-
   const ref = useRef<HTMLDivElement>();
   const [map, setMap] = useState(null);
   useEffect(() => {
@@ -28,7 +27,11 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
       .get(
         `https://nominatim.openstreetmap.org/search.php?street=${orderGroupInfo.manufacturer?.address}&city=${orderGroupInfo.manufacturer?.city}&state=${orderGroupInfo.manufacturer?.state}&postalcode=${orderGroupInfo.manufacturer?.zip}&polygon_geojson=1&format=jsonv2`
       )
-      .then((e) => setMarkersCoordinates([e[0].lat, e[0].lon]))
+      .then((e) => {
+        if (e.length) {
+          setMarkersCoordinates([e[0].lat, e[0].lon]);
+        }
+      })
       .catch((e) => console.log(e));
   }, []);
 
@@ -39,32 +42,26 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
   const api = new ApiService();
 
   const [markersCoordinates, setMarkersCoordinates] = useState<
-    [number, number] | null
-  >(null);
-
+    [number, number][]
+  >([]);
+  useEffect(() => {
+    setMarkersCoordinates([shippingPos]);
+  }, [shippingPos]);
   const showTracking = () => {
-    return orderGroupInfo.tracks?.map((track) => {
-      return (
-        <OrderTrackingItem
-          orderGroupInfo={orderGroupInfo}
-          trackingInfo={track}
-          orderInfo={orderItem}
-        />
-      );
-    });
-    // return (
-    //   <OrderTrackingItem
-    //     orderGroupInfo={orderGroupInfo}
-    //     orderInfo={orderItem}
-    //   />
-    // );
+    return orderGroupInfo.tracks?.map((track) => (
+      <OrderTrackingItem
+        orderGroupInfo={orderGroupInfo}
+        trackingInfo={track}
+        orderInfo={orderItem}
+      />
+    ));
   };
   return (
     <Fragment>
       {showTracking()}
       <div className="order-tracking-info">
         <div ref={ref} className={"order-tracking-map"}>
-          {shippingPos && <Map markers={[shippingPos, markersCoordinates]} />}
+          {shippingPos && <Map markers={markersCoordinates} />}
         </div>
         <div className="order-tracking-info-addresses-cards">
           <OrderTrackingAddressCard

@@ -20,7 +20,7 @@ export const OrderTrackingPage: React.FC = () => {
       .catch((e) => console.log(e));
   }, []);
 
-  const [shippingPos, setShippingPos] = useState(null);
+  const [shippingPos, setShippingPos] = useState([]);
   const api = new ApiService();
 
   return (
