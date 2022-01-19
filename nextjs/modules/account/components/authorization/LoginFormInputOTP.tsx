@@ -5,33 +5,22 @@ import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AxiosResponse } from "axios";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
 import generateFp from "@utils/generateFp";
+import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 
 interface IProps {
   login: string;
   password: string;
   rememberMe: boolean;
-  submit: (opts: Record<any, any>) => any;
 }
 
 const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   const { login, password, rememberMe } = props;
-  const routes = useSelectorAccount((e) => e.routes);
-  const user = useSelectorAccount((e) => e.user);
-  const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
   const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    inputRef.current.focus();
-  });
-
   const initialState = {
     code: "",
     rememberBrowser: false,
@@ -44,31 +33,30 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   async function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     const data: Record<any, any> = { ...values, password, login, rememberMe };
 
+    actions.setSubmitting(true);
+
     if (data.rememberBrowser) {
       data.fingerprint = await generateFp();
     }
 
-    props.submit({
-      actions,
-      form: data,
+    dispatch(
+      loginAction({
+        form: data,
 
-      success(res: AxiosResponse) {
-        if (res.data.error) {
-          actions.setErrors(res.data.error);
-          return;
-        }
+        success(res: AxiosResponse) {
+          if (res.data.error) {
+            actions.setErrors(res.data.error);
+            actions.setSubmitting(false);
+            return;
+          }
 
-        if (res.data.user) {
-          dispatch(userSetAction(res.data.user));
-          return;
-        }
-      },
-    });
-  }
-
-  if (user) {
-    router.push("/dashboard");
-    return null;
+          if (res.data.user) {
+            dispatch(userSetAction(res.data.user));
+            return;
+          }
+        },
+      })
+    );
   }
 
   return (
@@ -113,7 +101,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   id="rememberBrowser"
                   className="form-checkbox"
                   type="checkbox"
-                  value={values.rememberBrowser}
+                  checked={values.rememberBrowser}
                 />
 
                 <RBForm.Label
@@ -138,11 +126,9 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
             </button>
 
             <div className="px-12 px-sm-0">
-              <Link href={routes["account:two-step-verification-recovery"]}>
-                <a className={"auth-form-info"}>
-                  Two-step Verification account recovery
-                </a>
-              </Link>
+              <a href={"/contactus/"} className={"auth-form-info"}>
+                Two-step Verification account recovery
+              </a>
             </div>
           </Form>
         );

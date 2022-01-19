@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 const LoginForm: React.FC<any> = () => {
   const router = useRouter();
@@ -21,16 +20,6 @@ const LoginForm: React.FC<any> = () => {
   const [password, setPassword] = React.useState<any>("");
   const [login, setLogin] = React.useState<any>("");
   const [rememberMe, setRememberMe] = React.useState<any>(false);
-
-  React.useEffect(() => {
-    if (user !== null) {
-      router.push("/");
-    }
-  });
-
-  if (user !== null) {
-    return null;
-  }
 
   function headerTemplate() {
     switch (mode) {
@@ -67,7 +56,6 @@ const LoginForm: React.FC<any> = () => {
       case INPUT_OTP_MODE:
         return (
           <LoginFormInputOTP
-            submit={submit}
             login={login}
             password={password}
             rememberMe={rememberMe}
@@ -107,6 +95,11 @@ const LoginForm: React.FC<any> = () => {
         },
       })
     );
+  }
+
+  if (user) {
+    router.push("/dashboard");
+    return null;
   }
 
   return (
