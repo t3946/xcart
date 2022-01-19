@@ -11,17 +11,6 @@ use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 
 class TSVApi extends Controller
 {
-    //create new QR-code and send url to it
-    public function emit($account_name): array
-    {
-        $g = new GoogleAuthenticator();
-        $secret = $g->generateSecret();
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $issuer = $site->getCompanyName();
-
-        return $secret;
-    }
-
     public function confirmCodeAction()
     {
         $data = json_decode(file_get_contents('php://input'), true);
@@ -52,6 +41,7 @@ class TSVApi extends Controller
         }
     }
 
+    // создать qr код
     public function getAction()
     {
         $data = json_decode(file_get_contents('php://input'), true);
