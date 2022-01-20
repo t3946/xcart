@@ -1,19 +1,12 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionContext,
-  useAccordionButton,
-} from "react-bootstrap";
+import { Accordion } from "react-bootstrap";
 import Plus from "@modules/icon/components/font-awesome/plus/Regular";
 import Minus from "@modules/icon/components/font-awesome/minus/Regular";
 import ChevronDown from "@modules/icon/components/font-awesome/chevron-down/Regular";
+import cn from "classnames";
+import ShippingTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/ShippingTable";
 
 import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
-import Table, {
-  TableTypes,
-} from "@modules/account/components/orders/Decision/Table";
-import TableFooter from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/TableFooter";
-import cn from "classnames";
 
 interface IProps {
   order: {
@@ -98,33 +91,9 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
       {accordionButtonTemplate()}
       <Accordion.Collapse eventKey="true">
         <div>
-          {order.map((shipping) => {
-            const items = shipping.items.map((item) => {
-              const total = parseFloat((item.price * item.amount).toFixed(2));
-              return { ...item, total };
-            });
-            return (
-              <>
-                <div className={cn([Styles.table__name, Styles.tableName])}>
-                  The items below are shipped from {shipping.city},{" "}
-                  {shipping.state}, {shipping.country}
-                </div>
-
-                <Table
-                  tableType={TableTypes.increaseInShippingCharge}
-                  items={items}
-                />
-                <TableFooter
-                  paymentStatus={shipping.paymentStatus}
-                  shippingStatus={shipping.shippingStatus}
-                  regularShipping={shipping.regularShipping}
-                  salesTax={shipping.salesTax}
-                  vatTax={shipping.vatTax}
-                  subtotal={shipping.subtotal}
-                />
-              </>
-            );
-          })}
+          {order.map((shipping) => (
+            <ShippingTable shipping={shipping} />
+          ))}
         </div>
       </Accordion.Collapse>
       <div
