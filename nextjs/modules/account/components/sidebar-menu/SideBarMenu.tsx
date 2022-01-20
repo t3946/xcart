@@ -88,7 +88,9 @@ const SideBarMenu: React.FC = () => {
         );
       })}
 
-      <LogoutButton classes={[...classes.dropdownItem, "d-lg-none"]} />
+      <LogoutButton
+        classes={[...classes.dropdownItem, "d-none", "d-md-block", "d-lg-none"]}
+      />
     </div>
   );
 };
