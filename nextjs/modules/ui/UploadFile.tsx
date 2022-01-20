@@ -17,6 +17,7 @@ interface IProps {
   classNames?: any;
   formats: string[];
   maxSize: number;
+  ref: any;
 }
 
 const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
