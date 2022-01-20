@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
 import { useFormik } from "formik";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";

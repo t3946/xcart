@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { FormInput } from "@modules/account/components/shared/FormInput";
 import { ApiService } from "@modules/shared/services/api.service";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";

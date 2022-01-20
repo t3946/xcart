@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { FormInput } from "@modules/account/components/shared/FormInput";
 import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/priority-product-select-values.const";
 import { editCommentInProduct } from "@redux/actions/account-actions/ListsActions";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";

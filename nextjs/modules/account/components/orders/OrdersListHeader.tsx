@@ -1,5 +1,5 @@
 import React from "react";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { ordersHeaderSelectValues } from "@modules/account/ts/consts/orders-header-select-values";
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
 import { useDispatch } from "react-redux";

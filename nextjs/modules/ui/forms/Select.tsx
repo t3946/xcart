@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import useCLickListener from "../../hooks/useClickListener";
+import useCLickListener from "@modules/account/hooks/useClickListener";
 import classnames from "classnames";
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
 import { FormikErrors } from "formik";
 import Input from "@modules/ui/forms/Input";
-
-import Styles from "@modules/account/components/shared/FormSelect.module.scss";
+import Styles from "@modules/ui/forms/Select.module.scss";
 
 interface Item {
   viewValue: string;
@@ -31,13 +30,12 @@ interface IProps {
   id?: any;
 }
 
-export const FormSelect: React.FC<IProps> = ({
+export const Select: React.FC<IProps> = ({
   items,
   onClick,
   value,
   errorMessage,
   name = null,
-  label = null,
   classes = undefined,
   id = undefined,
   disabled,

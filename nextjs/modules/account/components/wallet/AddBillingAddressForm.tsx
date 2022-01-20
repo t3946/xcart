@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { FormInput } from "../shared/FormInput";
-import { FormSelect } from "../shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { Form, Formik } from "formik";
 import {
   initialAddAddressFormValue,

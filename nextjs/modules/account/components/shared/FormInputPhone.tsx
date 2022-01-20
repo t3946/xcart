@@ -1,6 +1,6 @@
 import React from "react";
 import { Form as RBForm } from "react-bootstrap";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { getCountryByCode } from "@utils/Countries";

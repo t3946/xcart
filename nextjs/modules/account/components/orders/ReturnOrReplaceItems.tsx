@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { FormInput } from "@modules/account/components/shared/FormInput";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";

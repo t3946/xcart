@@ -1,5 +1,5 @@
 import React from "react";
-import { FormSelect } from "@modules/account/components/shared/FormSelect";
+import { FormSelect } from "@modules/ui/forms/Select";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
