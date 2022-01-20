@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Form, Formik } from "formik";
-import { FormSelect } from "@modules/ui/forms/Select";
+import FormSelect from "@modules/ui/forms/Select";
 import { FormInput } from "../shared/FormInput";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { fillMassToSelect } from "../../utils/fill-mass-to-select";

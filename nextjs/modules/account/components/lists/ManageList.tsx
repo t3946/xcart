@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FormInput } from "@modules/account/components/shared/FormInput";
-import { FormSelect } from "@modules/ui/forms/Select";
+import FormSelect from "@modules/ui/forms/Select";
 import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
 import Store from "@redux/stores/Store";
 import { getValuesForSelect } from "@modules/account/utils/edit-store-funcs/getValuesForSelect";

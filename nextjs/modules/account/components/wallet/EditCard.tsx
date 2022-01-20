@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useFormik } from "formik";
 import { FormInput } from "../shared/FormInput";
-import { FormSelect } from "@modules/ui/forms/Select";
+import FormSelect from "@modules/ui/forms/Select";
 import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { fillMassToSelect } from "../../utils/fill-mass-to-select";

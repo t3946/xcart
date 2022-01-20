@@ -30,7 +30,7 @@ interface IProps {
   id?: any;
 }
 
-export const Select: React.FC<IProps> = ({
+const Select: React.FC<IProps> = ({
   items,
   onClick,
   value,
@@ -106,3 +106,5 @@ export const Select: React.FC<IProps> = ({
     </div>
   );
 };
+
+export default Select;
