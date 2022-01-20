@@ -38,3 +38,13 @@
     }
   }
 }
+
+.dashboard__slider {
+  @include breakpoint(md) {
+    margin: pxToRem(46) 0 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(40) 0 0;
+  }
+}
