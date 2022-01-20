@@ -25,7 +25,6 @@ interface IProps {
   isInvalid?: boolean;
   classes?: {
     input?: any;
-    group?: any;
     selectHeader?: any;
     selectList?: any;
   };
@@ -59,70 +58,51 @@ export const FormSelect: React.FC<IProps> = ({
   });
 
   return (
-    <div
-      className={classnames(
-        `select select-send  alight-center d-flex ${
-          open && "open"
-        } justify-content-between`,
-        classes?.group
-      )}
-    >
-      {label && (
-        <label
-          className={`form-input-label ${
-            errorMessage && "form-input-label-error"
-          }`}
-        >
-          {label}
-        </label>
-      )}
-      <div style={{ width: "100%" }} className={classnames(classes?.input)}>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!disabled) {
-              setOpen(!open);
-            }
-          }}
-          className={classnames("select-wrapper", Styles.chevron, {
-            [Styles.chevron_rotate]: open,
-          })}
-        >
-          <Input
-            id={id}
-            name={name}
-            value={selectedItem?.previewValue || selectedItem?.viewValue}
-            disabled={disabled}
-            isValid={isValid}
-            isInvalid={isInvalid}
-            readOnly
-            className={classnames(
-              classes?.selectHeader,
-              `${errorMessage && "form-input_error"}`,
-              { "cursor-default": disabled, "cursor-pointer": !disabled }
-            )}
-          />
-
-          {open && (
-            <ul className={classnames("form-select-list", classes?.selectList)}>
-              {items.map((item, i) => (
-                <li
-                  onClick={() => onClick(item)}
-                  className="form-select-item"
-                  key={`${i}_${item.viewValue}`}
-                >
-                  {item.viewValue}
-                </li>
-              ))}
-            </ul>
+    <div style={{ width: "100%" }} className={classnames(classes?.input)}>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!disabled) {
+            setOpen(!open);
+          }
+        }}
+        className={classnames("select-wrapper", Styles.chevron, {
+          [Styles.chevron_rotate]: open,
+        })}
+      >
+        <Input
+          id={id}
+          name={name}
+          value={selectedItem?.previewValue || selectedItem?.viewValue}
+          disabled={disabled}
+          isValid={isValid}
+          isInvalid={isInvalid}
+          readOnly
+          className={classnames(
+            classes?.selectHeader,
+            `${errorMessage && "form-input_error"}`,
+            { "cursor-default": disabled, "cursor-pointer": !disabled }
           )}
-        </div>
-        {errorMessage && (
-          <div className="error-message-input-container select-input-error-container">
-            <div>
-              <div className="form-input-caption">{errorMessage}</div>
-            </div>
-          </div>
+        />
+
+        {open && (
+          <ul
+            className={classnames(
+              "form-select-list",
+              "d-block",
+              classes?.selectList
+            )}
+          >
+            {items.map((item, i) => (
+              <li
+                onClick={() => onClick(item)}
+                className="form-select-item"
+                key={`${i}_${item.viewValue}`}
+              >
+                {item.viewValue}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>

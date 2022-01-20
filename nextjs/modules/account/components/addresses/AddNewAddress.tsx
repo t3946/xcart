@@ -1,15 +1,28 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import PlusPanelButton from "@modules/account/components/common/PlusPanelButton";
 
-export const AddNewAddress = ({ onClick }) => {
+import AddressItemStyles from "@modules/account/components/addresses/AddressItem.module.scss";
+
+interface IProps {
+  onClick: any;
+  classes?: {
+    container?: any;
+    text?: any;
+  };
+}
+
+export const AddNewAddress: React.FC<IProps> = ({ onClick, classes }) => {
   return (
     <PlusPanelButton
       onClick={onClick}
       text={"Add new address"}
       classes={{
-        container: "add-address address-container address",
-        text: "add-address-label",
+        container: [
+          "add-address address-container",
+          AddressItemStyles.address,
+          classes?.container,
+        ],
+        text: ["add-address-label", classes?.text],
       }}
     />
   );

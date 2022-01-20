@@ -9,7 +9,7 @@ export const AddressList = ({ addresses }: Record<any, any>): any => {
     <React.Fragment>
       {addresses.map((e) => {
         return (
-          <LoadingContainer key={e.address_id} classContainer={"address"} loading={loading}>
+          <LoadingContainer key={e.address_id} loading={loading}>
             <AddressItem addressInfo={e} defaultItem={e.is_default} />
           </LoadingContainer>
         );

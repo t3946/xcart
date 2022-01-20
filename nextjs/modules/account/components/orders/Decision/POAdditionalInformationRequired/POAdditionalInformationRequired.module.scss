@@ -46,14 +46,14 @@
   }
 }
 
-.phoneLabel {
-  font-weight: normal;
-}
-
 .footer {
   @include breakpoint(lg) {
     padding: pxToRem(34) pxToRem(24) 0;
   }
+}
+
+.phoneLabel{
+  font-weight: normal;
 }
 
 .checkbox {

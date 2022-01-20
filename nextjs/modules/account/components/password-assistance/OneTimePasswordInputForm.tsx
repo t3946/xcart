@@ -13,6 +13,8 @@ import {
 } from "@redux/actions/account-actions/ResetPasswordActions";
 import { useDispatch } from "react-redux";
 import ResendOtpButton from "@modules/account/components/password-assistance/ResendOtpButton";
+
+import StylesLoginInput from "@modules/account/components/authorization/LoginForm.module.scss";
 import Styles from "@modules/account/components/password-assistance/OneTimePasswordInputForm.module.scss";
 
 const OneTimePasswordInputForm: React.FC<any> = function (props) {
@@ -123,9 +125,19 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
         return (
           <Form>
             <div className="px-12 px-sm-0">
-              <h1 className="account-form-header">Authentication required</h1>
+              <h1 className="account-form-header mb-16 mb-sm-4 mb-lg-16 text-center text-sm-start">
+                Authentication required
+              </h1>
 
-              <p className={"auth-form-info"}>
+              <p
+                className={classnames(
+                  Styles.text,
+                  "mb-18",
+                  "mb-sm-12",
+                  "mb-lg-10",
+                  "auth-form-info"
+                )}
+              >
                 For your security, we need to authenticate your request. We've
                 sent a One Time Password (OTP) to the email{" "}
                 <b onClick={goToLoginInput} className={"cursor__default"}>
@@ -135,7 +147,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
               </p>
 
               <RBForm.Group controlId="LoginFormPassword">
-                <Label className="d-flex justify-content-between align-items-center">
+                <Label className="d-flex justify-content-between align-items-center mb-12 mb-sm-2 mb-lg-2">
                   <span>Enter OTP</span>
                   <span className={classnames(classes.attempts)}>
                     Left {oneTimePassword.left_attempts} attempts
@@ -156,20 +168,26 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
                   {"A new code has been sent to your email."}
                 </RBForm.Text>
 
-                <Feedback type="invalid">{!!touched.otp && errors.otp}</Feedback>
+                <Feedback type="invalid">
+                  {!!touched.otp && errors.otp}
+                </Feedback>
               </RBForm.Group>
             </div>
 
             <button
               type="submit"
-              className="form-button mt-4"
+              className={classnames(
+                "form-button",
+                "mt-4",
+                StylesLoginInput.button
+              )}
               disabled={isSubmitting || oneTimePassword.left_attempts === 0}
             >
               Continue
             </button>
 
             <div className="px-12 px-sm-0">
-              <div className={"mt-20 text-center auth-form-info"}>
+              <div className={"mt-18 mt-sm-16 text-center auth-form-info"}>
                 <ResendOtpButton
                   leftResendTime={oneTimePassword.left_is_new_time}
                   decLeftResendTime={decLeftResendTime}
@@ -177,7 +195,7 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
                 />
               </div>
 
-              <div className={"mt-3 auth-form-info"}>
+              <div className={"mt-10 mt-sm-3 auth-form-info"}>
                 <span
                   className="common-link"
                   onClick={() => setShowMoreHelp(!showMoreHelp)}
@@ -193,7 +211,8 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
                 <ul
                   className={classnames(
                     showMoreHelp ? "d-block" : "d-none",
-                    "mb-0"
+                    "mb-0",
+                    "mt-lg-1"
                   )}
                 >
                   <li>

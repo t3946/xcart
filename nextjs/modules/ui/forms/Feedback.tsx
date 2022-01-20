@@ -13,6 +13,7 @@ const Feedback: React.FC<FeedbackProps> = (props: FeedbackProps) => {
       [Styles.feedback_valid]: props.type === "valid",
     },
     props.className,
+    Styles.feedback,
   ]);
 
   return <Form.Control.Feedback {...newProps} />;

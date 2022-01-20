@@ -28,12 +28,9 @@ interface IProps {
   };
   disabled?: boolean;
   mode?: string; // mobile or ext
-  label: string;
   classes?: {
     container?: any;
-    label?: any;
     labelExt?: any;
-    labelContainer?: any;
     select?: any;
     phone?: any;
     ext?: any;
@@ -49,7 +46,6 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
     name,
     values,
     mode,
-    label,
     disabled,
   } = props;
   const countries = useSelector((e: StoreInterface) => e.countries);
@@ -94,130 +90,105 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   }
 
   const classes = {
-    selectCountryCodeColumn: ["pe-0", Styles.select, props.classes?.select],
-    inputPhoneColumn: [props.classes?.phone],
-    inputPhoneExt: [
-      "col phone-ext-column d-flex ps-0 align-items-center",
-      props.classes?.ext,
+    container: [
+      "row",
+      "flex-md-nowrap",
+      Styles.row__container,
+      props.classes?.container,
     ],
-    label: ["mb-10", "mb-md-0", props.classes?.label],
+    selectCountryCodeColumn: ["px-0", Styles.select, props.classes?.select],
+    inputPhoneColumn: ["pe-2", props.classes?.phone, Styles.phone],
+    inputPhoneExt: ["col d-flex px-0 align-items-center", props.classes?.ext],
     labelExt: props.classes?.labelExt,
   };
 
   if (mode === "mobile") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
+    classes.inputPhoneColumn.push("ps-2");
     classes.inputPhoneExt.push("d-none");
   } else if (mode === "ext") {
     classes.selectCountryCodeColumn.push("mb-2 mb-md-0");
-    classes.inputPhoneColumn.push("col");
+    classes.inputPhoneColumn.push("ps-0 ps-md-2");
     classes.inputPhoneExt.push("d-lg-flex");
   }
 
   return (
-    <div
-      className={classNames("form-group row", props.classes?.container, {
-        "mb-4":
-          (!!touched.phoneCountryCode && !!errors.phoneCountryCode) ||
-          (!!touched[name] && !!errors[name]) ||
-          (!!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]),
-      })}
-    >
-      <div
-        className={classnames(
-          "col-12 col-md-6 col-lg-4 label-column",
-          props.classes?.labelContainer
+    <div className={classnames(classes.container)}>
+      <div className={classnames(classes.selectCountryCodeColumn)}>
+        <FormSelect
+          items={getSelectItems()}
+          classes={{
+            selectList: "form-select-list__fit-content",
+            selectHeader: "",
+          }}
+          value={countryCodeValue}
+          disabled={disabled}
+          onClick={(item) => {
+            setFieldValue(countryCodeFieldName, item.value);
+            setCountryCodeValue(item);
+          }}
+          name={countryCodeFieldName}
+          id={countryCodeFieldName}
+          isValid={!!touched.phoneCountryCode && !errors.phoneCountryCode}
+          isInvalid={!!touched.phoneCountryCode && !!errors.phoneCountryCode}
+        />
+        {!!touched.phoneCountryCode && !!errors.phoneCountryCode && (
+          <Feedback className="position-absolute" type="invalid">
+            {errors.phoneCountryCode}
+          </Feedback>
         )}
+      </div>
+
+      <div className={classnames(classes.inputPhoneColumn)}>
+        <RBForm.Group controlId={name}>
+          <MaskedInput
+            type={"text"}
+            name={name}
+            value={values[name]}
+            onChange={handleChange}
+            placeholder="(___) ___-____"
+            isInvalid={!!touched[name] && !!errors[name]}
+            isValid={!!touched[name] && !errors[name]}
+            mask={phoneMask}
+            disabled={disabled}
+          />
+          {!!touched[name] && !!errors[name] && (
+            <Feedback className="position-absolute" type="invalid">
+              {errors[name]}
+            </Feedback>
+          )}
+        </RBForm.Group>
+      </div>
+
+      <RBForm.Group
+        className={classnames(classes.inputPhoneExt)}
+        controlId={phoneExtFieldName}
       >
-        <Label className={classes.label}>{label}</Label>
-      </div>
+        <Label
+          className={classnames(
+            "mb-0 me-2",
+            Styles.label_ext,
+            classes.labelExt
+          )}
+        >
+          <span className="d-md-none">x</span>
+          <span className="d-none d-md-inline">ext</span>
+        </Label>
 
-      <div className="col">
-        <div className="row">
-          <div className={classnames(classes.selectCountryCodeColumn)}>
-            <FormSelect
-              items={getSelectItems()}
-              classes={{
-                selectList: "form-select-list__fit-content",
-                selectHeader: "",
-              }}
-              value={countryCodeValue}
-              disabled={disabled}
-              onClick={(item) => {
-                setFieldValue(countryCodeFieldName, item.value);
-                setCountryCodeValue(item);
-              }}
-              name={countryCodeFieldName}
-              id={countryCodeFieldName}
-              isValid={!!touched.phoneCountryCode && !errors.phoneCountryCode}
-              isInvalid={
-                !!touched.phoneCountryCode && !!errors.phoneCountryCode
-              }
-            />
-            {!!touched.phoneCountryCode && !!errors.phoneCountryCode && (
-              <Feedback className="position-absolute" type="invalid">
-                {errors.phoneCountryCode}
-              </Feedback>
-            )}
-          </div>
-
-          <div className={classnames(classes.inputPhoneColumn)}>
-            <RBForm.Group controlId={name}>
-              <MaskedInput
-                type={"text"}
-                name={name}
-                value={values[name]}
-                onChange={handleChange}
-                placeholder="(___) ___-____"
-                isInvalid={!!touched[name] && !!errors[name]}
-                isValid={!!touched[name] && !errors[name]}
-                mask={phoneMask}
-                disabled={disabled}
-              />
-              {!!touched[name] && !!errors[name] && (
-                <Feedback className="position-absolute" type="invalid">
-                  {errors[name]}
-                </Feedback>
-              )}
-            </RBForm.Group>
-          </div>
-
-          <RBForm.Group
-            className={classnames(classes.inputPhoneExt)}
-            controlId={phoneExtFieldName}
-          >
-            <Label
-              className={classnames(
-                "mb-0 me-2",
-                Styles.label_ext,
-                classes.labelExt
-              )}
-            >
-              <span className="d-md-none">x</span>
-              <span className="d-none d-md-inline">ext</span>
-            </Label>
-
-            <Input
-              type="text"
-              name={phoneExtFieldName}
-              value={values[phoneExtFieldName]}
-              onChange={handleChange}
-              disabled={disabled}
-              isInvalid={
-                !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
-              }
-              isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
-              autoComplete={"off"}
-              placeholder="12345"
-            />
-            
-            {!!touched[phoneExtFieldName] && !!errors[phoneExtFieldName] && (
-              <Feedback className="position-absolute" type="invalid">
-                {errors[phoneExtFieldName]}
-              </Feedback>
-            )}
-          </RBForm.Group>
-        </div>
-      </div>
+        <Input
+          type="text"
+          name={phoneExtFieldName}
+          value={values[phoneExtFieldName]}
+          onChange={handleChange}
+          disabled={disabled}
+          isInvalid={
+            !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
+          }
+          isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
+          autoComplete={"off"}
+          placeholder="12345"
+        />
+      </RBForm.Group>
     </div>
   );
 };

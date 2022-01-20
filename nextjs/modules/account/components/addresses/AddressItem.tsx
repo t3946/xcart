@@ -12,6 +12,9 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/addresses/AddressItem.module.scss";
 
 interface AddressItemPropsDto {
   defaultItem?: boolean;
@@ -57,20 +60,35 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   };
 
   const editAddress = () => {
-    breakpoint({
-      md: editAddressDialog.handleClickOpen,
-    });
+    editAddressDialog.handleClickOpen();
   };
 
   return (
-    <div className="address-container address-border address-item">
+    <div
+      className={cn(
+        Styles.address,
+        "d-flex",
+        "flex-dir-column",
+        "address-container address-border address-item"
+      )}
+    >
       <div
-        className={`address-header ${defaultItem && "address-header-default"} `}
+        className={`address-header ${
+          defaultItem ? "address-header-default" : "d-none"
+        } `}
       >
-        {defaultItem && "Default:"}
+        {defaultItem && "Default"}
       </div>
 
-      <div className="address-content">
+      <div
+        className={cn(
+          Styles.addressContent,
+          "d-flex",
+          "flex-dir-column",
+          "address-content",
+          { [Styles.addressContent_default]: defaultItem }
+        )}
+      >
         <div
           className={`address-name ${defaultItem && "address-name-default"}`}
         >
@@ -98,12 +116,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
       >
         <AddAddressForm
           addressInfo={addressInfo}
-          onCancelClick={() =>
-            breakpoint({
-              xs: () => history.push("/account/addresses"),
-              md: editAddressDialog.handleClose,
-            })
-          }
+          onCancelClick={editAddressDialog.handleClose}
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC

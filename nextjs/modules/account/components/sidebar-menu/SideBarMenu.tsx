@@ -20,7 +20,7 @@ const SideBarMenu: React.FC = () => {
   const menuItems = [
     { to: "/dashboard", label: "Dashboard" },
     {
-      to: "",
+      to: "/orders",
       label: "Orders",
       routerItems: [
         {

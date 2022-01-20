@@ -1,11 +1,10 @@
 @import "styles/utils/Utils.module";
 
-.input {
-  width: 50%;
+.container {
+  margin: 0 0 pxToRem(20);
 }
 
 .feedback {
-  width: 50%;
   font-size: 0.75rem;
 }
 

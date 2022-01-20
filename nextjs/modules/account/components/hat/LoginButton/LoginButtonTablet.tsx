@@ -35,7 +35,7 @@ const LoginButtonTablet: React.FC<any> = () => {
       >
         <UserIcon />
 
-        {text}
+        <span className={classNames(Styles.userName, "ms-1")}>{text}</span>
 
         <i
           className={classNames(

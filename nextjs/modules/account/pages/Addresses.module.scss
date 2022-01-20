@@ -1,0 +1,44 @@
+@import "styles/utils/Utils.module";
+
+.list {
+  display: grid;
+  gap: pxToRem(10);
+  justify-content: center;
+
+  @include breakpoint(md) {
+    grid-template-columns: repeat(2, pxToRem(323));
+    justify-content: start;
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: repeat(2, pxToRem(323));
+  }
+
+  @include breakpoint(xxl) {
+    grid-template-columns: repeat(3, pxToRem(323));
+  }
+}
+
+.addressBorder {
+  border: 1px solid #c4c4c4;
+  box-shadow: none;
+  min-height: auto;
+
+  @include breakpoint(lg) {
+    min-height: pxToRem(244);
+  }
+}
+
+.modalWidth {
+  max-width: pxToRem(650);
+}
+
+.modalBody {
+  @include breakpoint(sm) {
+    padding: pxToRem(16) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(16);
+  }
+}

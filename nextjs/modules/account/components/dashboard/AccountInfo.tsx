@@ -26,6 +26,8 @@ const AccountInfo = () => {
     return null;
   }
 
+  if (!user) return <>no user</>;
+
   return (
     <div className={cn("d-flex", Styles.accountInfo)}>
       <RectangularButton

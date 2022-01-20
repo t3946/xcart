@@ -10,7 +10,7 @@ export const AddEditBtnsBlock: React.FC<any> = ({
   children,
 }) => {
   return (
-    <div className="address-footer">
+    <div className="address-footer mt-auto">
       <div className="address-footer-left-part">
         <div onClick={handleEdit} className="address-footer-btn">
           Edit

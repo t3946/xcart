@@ -2,7 +2,6 @@
 
 .pageColumn {
   gap: pxToRem(18);
-  max-width: pxToRem(988);
 
   @include breakpoint(md) {
     gap: pxToRem(14);

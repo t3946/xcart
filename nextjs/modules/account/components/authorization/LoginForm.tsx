@@ -7,6 +7,9 @@ import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 
 const LoginForm: React.FC<any> = () => {
   const router = useRouter();
@@ -104,8 +107,14 @@ const LoginForm: React.FC<any> = () => {
 
   return (
     <div className={"account-auth-form-container"}>
-      <div className="account-auth-form account_auth-form">
-        <h1 className="account-form-header px-12 px-sm-0">
+      <div
+        className={cn(
+          "account-auth-form",
+          "account_auth-form",
+          Styles.authForm
+        )}
+      >
+        <h1 className="account-form-header px-12 px-sm-0 mb-md-20 mb-lg-14 text-center text-sm-start">
           {headerTemplate()}
         </h1>
         {formTemplate()}

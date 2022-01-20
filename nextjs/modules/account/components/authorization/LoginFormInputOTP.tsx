@@ -10,6 +10,10 @@ import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
 import generateFp from "@utils/generateFp";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
+import cn from "classnames";
+
+import StylesLoginForm from "@modules/account/components/authorization/LoginForm.module.scss";
+import Styles from "@modules/account/components/authorization/LoginFormInputOTP.module.scss";
 
 interface IProps {
   login: string;
@@ -71,13 +75,21 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
         return (
           <Form>
             <div className="px-12 px-sm-0">
-              <p className={"auth-form-info"}>
+              <p
+                className={cn(
+                  Styles.caption,
+                  "auth-form-info",
+                  "mb-18",
+                  "mb-sm-12",
+                  "mb-lg-14"
+                )}
+              >
                 For added security, please enter the One Time Password (OTP)
                 generation by your by Authenticator App
               </p>
 
               <RBForm.Group controlId="LoginFormPassword">
-                <Label className="d-flex justify-content-between align-items-center">
+                <Label className="d-block mb-12 mb-sm-2 mb-lg-1">
                   <span className={"form-input-label"}>Enter OTP</span>
                 </Label>
 
@@ -114,7 +126,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   }
                   htmlFor={"rememberBrowser"}
                 >
-                  <div className="auth-form-info">
+                  <div className={cn(StylesLoginForm.text, "auth-form-info")}>
                     Don’t require OTP on this browser
                   </div>
                 </RBForm.Label>
@@ -123,7 +135,13 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
 
             <button
               type="submit"
-              className="form-button mt-4 mb-3"
+              className={cn(
+                "form-button",
+                "mt-4",
+                "mb-3",
+                "mb-lg-12",
+                StylesLoginForm.button
+              )}
               disabled={isSubmitting}
             >
               sign-in

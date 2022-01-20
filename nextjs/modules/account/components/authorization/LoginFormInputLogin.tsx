@@ -7,8 +7,10 @@ import * as yup from "yup";
 import { checkUserLoginAction } from "@redux/actions/account-actions/AutorizationActions";
 import { Form as RBForm } from "react-bootstrap";
 import Link from "next/link";
-import classnames from "classnames";
+import cn from "classnames";
 import { useDispatch } from "react-redux";
+
+import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 
 const LoginFormInputLogin: React.FC<any> = (props: any) => {
   const { setLogin } = props;
@@ -78,7 +80,9 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                 controlId="LoginFormLogin"
                 className={"px-12 px-sm-0"}
               >
-                <Label>Email or mobile phone number</Label>
+                <Label className={"d-block mb-12 mb-sm-12 mb-lg-2"}>
+                  Email or mobile phone number
+                </Label>
                 <Input
                   ref={inputRef}
                   name="login"
@@ -93,7 +97,12 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
 
               <button
                 type="submit"
-                className="form-button login-form_submit-button"
+                className={cn(
+                  "form-button",
+                  "login-form_submit-button",
+                  Styles.button,
+                  "mb-lg-10"
+                )}
                 disabled={isSubmitting}
               >
                 continue
@@ -112,14 +121,14 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
                   .
                 </p>
 
-                <p className={"auth-form-info"}>
+                <p className={cn("auth-form-info", "mb-0")}>
                   <a
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
                       setShowHelpInfo(!showHelpInfo);
                     }}
-                    className={classnames("link-arrow common-link", {
+                    className={cn("link-arrow common-link", {
                       "link-arrow__to-top": showHelpInfo,
                     })}
                   >
@@ -143,12 +152,33 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         }}
       </Formik>
 
-      <div className="form-divider form-divider__with-content auth-form_divider">
-        <span className="form-divider-text">New to S3 Stores?</span>
+      <div
+        className={cn(
+          "form-divider",
+          "form-divider__with-content",
+          "mt-4",
+          "mb-3",
+          "mt-sm-14",
+          "mb-sm-16",
+          "mt-lg-10",
+          "mb-lg-16"
+        )}
+      >
+        <span className={cn("form-divider-text", Styles.dividerText)}>
+          New to S3 Stores?
+        </span>
       </div>
 
       <Link href={"/register"}>
-        <a className="form-button form-button__outline common-link p-0">
+        <a
+          className={cn(
+            "form-button",
+            "form-button__outline",
+            "common-link",
+            "p-0",
+            Styles.button
+          )}
+        >
           Create your account
         </a>
       </Link>

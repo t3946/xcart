@@ -21,6 +21,7 @@ import { formAnswersLTLFreightShipmentAction } from "@redux/actions/account-acti
 
 import RadioQuestionStyles from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
 import Styles from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment.module.scss";
+import Label from "@modules/ui/forms/Label";
 
 const LTLFreightShipment: React.FC = () => {
   const countries = useSelector((e: StoreInterface) => e.countries);
@@ -232,31 +233,34 @@ const LTLFreightShipment: React.FC = () => {
                 />
               ))}
 
-              <FormInputPhone
-                setFieldValue={setFieldValue}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                name={"phone"}
-                values={{
-                  phoneCountryCode: values.phoneCountryCode,
-                  phone: values.phone,
-                }}
-                mode={"ext"}
-                label={"Phone number for delivery notice"}
-                classes={{
-                  container: Styles.columnPadding,
-                  labelContainer: [
-                    "col-md-12",
-                    "col-lg-12",
-                    "justify-content-md-start",
-                  ],
-                  label: RadioQuestionStyles.questionLabel,
-                  select: "col-6 col-lg-3",
-                  phone: "col-7 col-lg-3",
-                  ext: "col-5 col-lg-3",
-                }}
-              />
+              <div
+                className={cn(
+                  "row",
+                  "align-items-center",
+                  Styles.columnPadding
+                )}
+              >
+                <Label
+                  className={cn("mb-10", RadioQuestionStyles.questionLabel)}
+                >
+                  Phone number for delivery notice
+                </Label>
+                <div className="col-md-8 col-lg-8 col-xl-7 col-xxl-6">
+                  <FormInputPhone
+                    setFieldValue={setFieldValue}
+                    handleChange={handleChange}
+                    touched={touched}
+                    errors={errors}
+                    name={"phone"}
+                    values={{
+                      phoneCountryCode: values.phoneCountryCode,
+                      phone: values.phone,
+                    }}
+                    mode={"ext"}
+                  />
+                </div>
+              </div>
+
               <div className={Styles.pageBodySubmitButtonContainer}>
                 <button
                   type="submit"

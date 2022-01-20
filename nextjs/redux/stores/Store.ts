@@ -12,6 +12,7 @@ import accountMainReducer from "../reducers/account/MainReducer";
 import MenuReducer from "../reducers/account/MenuReducer";
 import RoutesReducer from "../reducers/RoutesReducer";
 import BreadcrumbsReducer from "@redux/reducers/account/BreadcrumbsReducer";
+import SnackbarReducer from "@redux/reducers/account/SnackbarReducer";
 import ShadowPanelReducer from "@redux/reducers/account/ShadowPanelReducer";
 import CountriesReducer from "@redux/reducers/account/CountriesReducer";
 import ListsReducer from "@redux/reducers/account/ListsReducer";
@@ -67,6 +68,7 @@ const reducers = combineReducers({
   departmentsMenuMobile: DepartmentsMenuMobileReducer,
   departmentsMenuDesktop: DepartmentsMenuDesktopReducer,
   searchMobile: MobileSearchReducer,
+  snackbar: SnackbarReducer,
   suggestion: SuggestionReducer,
   loginAndSecurity: LoginAndSecurityReducer,
   mobileAlert: MobileAlertReducer,

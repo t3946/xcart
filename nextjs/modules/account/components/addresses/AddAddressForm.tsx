@@ -18,6 +18,7 @@ import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Checkbox from "@modules/ui/forms/Checkbox";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -72,20 +73,25 @@ export const AddAddressForm: React.FC<any> = ({
         className="your-order-form"
         encType="multipart/form-data"
       >
-        <FormSelect
-          items={countries}
-          value={formik.values.country}
-          label={"Country"}
-          classes={{ input: "add-address-input", group: "mb-20" }}
-          onClick={(value) => {
-            formik.setFieldValue("country", value);
-            formik.setFieldValue("state", initialAddAddressFormValue.state);
-            formik.setFieldValue("country", value);
-          }}
-          name={"state"}
-          id={"add-address-country"}
-          errorMessage={
-            formik.touched.country?.value && formik.errors.country?.value
+        <InputGroup
+          label="Country"
+          error={formik.touched.country?.value && formik.errors.country?.value}
+          component={
+            <FormSelect
+              items={countries}
+              value={formik.values.country}
+              label={"Country"}
+              onClick={(value) => {
+                formik.setFieldValue("country", value);
+                formik.setFieldValue("state", initialAddAddressFormValue.state);
+                formik.setFieldValue("country", value);
+              }}
+              name={"country"}
+              id={"add-address-country"}
+              errorMessage={
+                formik.touched.country?.value && formik.errors.country?.value
+              }
+            />
           }
         />
         <InputGroup
@@ -97,19 +103,23 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.full_name && formik.errors.full_name)}
           handleChange={formik.handleChange}
         />
-        <FormInputPhone
-          setFieldValue={formik.setFieldValue}
-          handleChange={formik.handleChange}
-          touched={formik.touched}
-          errors={formik.errors}
-          name={"phone_number"}
-          values={{
-            // phoneCountryCode: values.phoneCountryCode,
-            phone: formik.values.phone_number,
-            phoneExt: formik.values.phone_numberExt,
-          }}
-          mode={"ext"}
-          label={"Phone Number"}
+        <InputGroup
+          label="Phone Number"
+          component={
+            <FormInputPhone
+              setFieldValue={formik.setFieldValue}
+              handleChange={formik.handleChange}
+              touched={formik.touched}
+              errors={formik.errors}
+              name={"phone_number"}
+              values={{
+                // phoneCountryCode: values.phoneCountryCode,
+                phone: formik.values.phone_number,
+                phoneExt: formik.values.phone_numberExt,
+              }}
+              mode={"ext"}
+            />
+          }
         />
 
         <InputGroup
@@ -120,7 +130,7 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.street && formik.errors.street)}
           handleChange={formik.handleChange}
           touched={formik.touched.street}
-          classes={{ input: "add-address-input", group: "mb-1" }}
+          classes={{ group: "mb-1" }}
           handleBlur={formik.handleBlur}
         />
 
@@ -132,7 +142,7 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.detailed && formik.errors.detailed)}
           handleChange={formik.handleChange}
           touched={formik.touched.detailed}
-          classes={{ input: "add-address-input", grid: "justify-content-end" }}
+          classes={{ grid: "justify-content-end" }}
           handleBlur={formik.handleBlur}
         />
 
@@ -145,19 +155,24 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.city && formik.errors.city)}
           handleChange={formik.handleChange}
         />
-        <FormSelect
-          classes={{ input: "add-address-input", group: "mb-20" }}
-          items={getStates(states, formik.values.country.value)}
-          value={formik.values.state}
+        <InputGroup
           label={"State/Province"}
-          onClick={(value) => {
-            formik.setFieldValue("state", value);
-            delete formik.errors.state;
-          }}
-          name={"state"}
-          id={"add-address-state"}
-          errorMessage={
-            formik.touched.state?.value && formik.errors.state?.value
+          error={formik.touched.state && formik.errors.state?.value}
+          component={
+            <FormSelect
+              items={getStates(states, formik.values.country.value)}
+              value={formik.values.state}
+              label={"State/Province"}
+              onClick={(value) => {
+                formik.setFieldValue("state", value);
+                delete formik.errors.state;
+              }}
+              name={"state"}
+              id={"add-address-state"}
+              errorMessage={
+                formik.touched.state?.value && formik.errors.state?.value
+              }
+            />
           }
         />
 
@@ -170,18 +185,25 @@ export const AddAddressForm: React.FC<any> = ({
           isInvalid={!!(formik.touched.zip && formik.errors.zip)}
           handleChange={formik.handleChange}
         />
-        <div className={Styles.addAddressCheckbox}>
-          <div className="add-address-input">
-            <FormCheckBox
-              label={"Make this my default address"}
-              value={formik.values.is_default}
+        <InputGroup
+          classNames={{ container: "m-0" }}
+          component={
+            <Checkbox
+              label={
+                <span className={Styles.checboxLabel}>
+                  Make this my default address
+                </span>
+              }
+              checked={formik.values.is_default}
               name={"is_default"}
-              handleChange={formik.handleChange}
+              onChange={formik.handleChange}
+              classes={{ container: "mt-20 mb-4" }}
             />
-          </div>
-        </div>
-        <div className={Styles.addAddressInputContainer}>
-          <div className="add-address-input">
+          }
+        />
+        <InputGroup
+          classNames={{ container: "m-0" }}
+          component={
             <button
               disabled={addressFormLoading}
               type={"submit"}
@@ -189,8 +211,10 @@ export const AddAddressForm: React.FC<any> = ({
             >
               {addressInfo ? "Save changes" : "Add Address"}
             </button>
-            {children}
-          </div>
+          }
+        />
+        <div className={Styles.addAddressInputContainer}>
+          <div>{children}</div>
         </div>
       </form>
     </div>

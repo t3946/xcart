@@ -8,8 +8,9 @@
     border-bottom: 1px solid #f4f4f4;
     padding: 0 rem-calc(40) 0 rem-calc(20);
 
-    &:hover, &:focus {
-      background-color: #ffffff;
+    &:hover,
+    &:focus {
+      background-color: #f1f1f1;
     }
   }
 }
