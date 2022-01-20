@@ -4,10 +4,16 @@ import AccountInfo from "@modules/account/components/dashboard/AccountInfo";
 import OrderTracking from "@modules/account/components/dashboard/OrderTracking";
 import Styles from "@modules/account/components/dashboard/Dashboard.module.scss";
 import AccountNavigation from "./AccountNavigation";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
 
 const Dashboard = () => {
   const tracknum = "4HGOJJ94HGKD";
+  const user = useSelectorAccount((e) => e.user);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="py-3">
@@ -25,7 +31,13 @@ const Dashboard = () => {
           }}
         />
         <AccountNavigation />
-        <SliderProducts url={"/category/featured"} />
+        <SliderProducts
+          classes={{
+            container: ["d-none", "d-md-block", Styles.dashboard__slider],
+          }}
+          title="Reccomended products"
+          url={"/category/featured"}
+        />
       </div>
     </div>
   );

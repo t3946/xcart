@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React from "react";
 import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setTabletMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
@@ -35,7 +35,9 @@ const LoginButtonTablet: React.FC<any> = () => {
       >
         <UserIcon />
 
-        <span className={classNames(Styles.userName, "ms-1")}>{text}</span>
+        <span className={classNames(Styles.userName, "ms-1", "text-center")}>
+          {text}
+        </span>
 
         <i
           className={classNames(
@@ -66,37 +68,14 @@ const LoginButtonTablet: React.FC<any> = () => {
     }
   );
 
-  const isTabletMenuVisible = useSelector(
-    (e: any) => e.mobileMenu.isTabletMenuVisible
+  const isTabletMenuVisible = useSelectorAccount(
+    (e) => e.mobileMenu.isTabletMenuVisible
   );
 
   function toggleMenu(isVisible) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
     isVisible && dispatch(setVisibleShadowPanelAction(true));
-  }
-
-  if (!user) {
-    const path = "/account/login";
-
-    return (
-      <a
-        href={path}
-        className={classNames(
-          "navigation-login-button",
-          "d-none",
-          "d-md-flex",
-          "navigation-login-button__tablet",
-          "align-items-center",
-          "text-decoration-none",
-          "justify-content-evenly",
-          Styles.button
-        )}
-      >
-        <UserIcon />
-        <span className="hat-login-button-username">{text}</span>
-      </a>
-    );
   }
 
   return (

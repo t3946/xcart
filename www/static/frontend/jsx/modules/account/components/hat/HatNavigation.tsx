@@ -61,11 +61,7 @@ const HatNavigation = (): any => {
 
   return (
     <div className={Styles.topHeaderContent}>
-      <div
-        className={cn(Styles.topHeaderMenu, {
-          [Styles.topHeaderMenu_boxShadow_none]: isVisibleShadowPanel,
-        })}
-      >
+      <div className={cn(Styles.topHeaderMenu)}>
         <TopLine />
 
         <header
@@ -91,7 +87,11 @@ const HatNavigation = (): any => {
                     className="mobile_menu middle-inline-block h-auto d-flex align-items-center"
                     onClick={toggleMobileDepartmentsMenu}
                   >
-                    {isVisibleMenu ? <TimesIcon /> : <MenuIcon />}
+                    {isVisibleMenu ? (
+                      <TimesIcon className={Styles.menuIcon} />
+                    ) : (
+                      <MenuIcon className={Styles.menuIcon} />
+                    )}
                   </a>
                 </div>
 

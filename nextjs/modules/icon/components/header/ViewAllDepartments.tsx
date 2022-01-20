@@ -8,6 +8,8 @@ const ViewAllDepartments = (props: Record<any, any>): any => {
       xmlns="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
+      height={props.height}
+      width={props.width}
       viewBox="0 0 28.431 23.981"
       className={classnames(props.className)}
     >

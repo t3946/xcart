@@ -6,7 +6,6 @@ import LockIcon from "@modules/icon/components/account/lock/Lock";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import DashboardStyles from "@modules/account/components/dashboard/Dashboard.module.scss";
 import Styles from "@modules/account/components/dashboard/AccountInfo.module.scss";
-import { useRouter } from "next/router";
 
 const AccountInfo = () => {
   const classes = {
@@ -20,13 +19,10 @@ const AccountInfo = () => {
   };
 
   const user = useSelectorAccount((e) => e.user);
-  const router = useRouter();
 
   if (!user) {
     return null;
   }
-
-  if (!user) return <>no user</>;
 
   return (
     <div className={cn("d-flex", Styles.accountInfo)}>
@@ -64,9 +60,9 @@ const AccountInfo = () => {
         }
         body={
           <div className="">
-            Phone: {user.phone}
+            {user.phone && <>Phone: {user.phone}</>}
             <br />
-            Email address: {user.email}
+            {user.email && <>Email address: {user.email}</>}
           </div>
         }
       />

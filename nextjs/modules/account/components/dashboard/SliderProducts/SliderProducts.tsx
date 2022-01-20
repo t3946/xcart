@@ -4,12 +4,14 @@ import cn from "classnames";
 import CardSkeleton from "@modules/account/components/dashboard/SliderProducts/CardSkeleton";
 import CartProduct from "@modules/components/product/card/slider/Card";
 import React from "react";
+import ViewAllDepartmentsIcon from "@modules/icon/components/header/ViewAllDepartments";
+
 import Styles from "@modules/account/components/dashboard/SliderProducts/SliderProducts.module.scss";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
 const SliderProducts: React.FC<any> = function (props) {
-  const { url } = props;
+  const { url, title, classes } = props;
   const [paginationPage, setPaginationPage] = React.useState(1);
   const [items, setItems] = React.useState<Record<any, any>[]>([]);
   const [swiperObject, setSwiperObject] = React.useState<SwiperCore>();
@@ -17,6 +19,7 @@ const SliderProducts: React.FC<any> = function (props) {
   const [isAllLoaded, setIsAllLoaded] = React.useState(false);
   const [isReachBegin, setIsReachBegin] = React.useState(false);
   const [isReachEnd, setIsReachEnd] = React.useState(false);
+  const [hover, setHover] = React.useState(false);
   const navStep = 3;
 
   function goTo(step: number) {
@@ -59,9 +62,9 @@ const SliderProducts: React.FC<any> = function (props) {
           setIsAllLoaded(true);
         }
 
-        setItems([...items, ...res.items]);
+        setItems((prevstate) => [...prevstate, ...res.items]);
         setIsLoading(false);
-        setPaginationPage(paginationPage + 1);
+        setPaginationPage((prevstate) => prevstate + 1);
       });
   }
 
@@ -72,7 +75,10 @@ const SliderProducts: React.FC<any> = function (props) {
       const product = items[i];
 
       slides.push(
-        <SwiperSlide className="products-slider-slide" key={`product-${i}`}>
+        <SwiperSlide
+          className={Styles.productsSliderSlide}
+          key={`product-${i}`}
+        >
           <CartProduct product={product} />
         </SwiperSlide>
       );
@@ -82,7 +88,7 @@ const SliderProducts: React.FC<any> = function (props) {
       for (let i = 1; i <= 10; i++) {
         slides.push(
           <SwiperSlide
-            className="products-slider-slide"
+            className={Styles.productsSliderSlide}
             key={`product-skeleton-${i}`}
           >
             <CardSkeleton key={`product-skeleton-${i}`} />
@@ -95,80 +101,73 @@ const SliderProducts: React.FC<any> = function (props) {
   }
 
   return (
-    <Swiper
-      spaceBetween={0}
-      longSwipesRatio={0.05}
-      width={170}
-      slidesPerView={1}
-      lazy={true}
-      className="products-slider"
-      scrollbar={{
-        el: ".products-slider-scrollbar",
-        draggable: true,
-        hide: false,
-        dragClass: cn(Styles.swiperScrollbarDrag),
-      }}
-      breakpoints={{
-        171: {
-          width: 2 * 172,
-          slidesPerView: 2,
-        },
-        340: {
-          width: 3 * 172,
-          slidesPerView: 3,
-        },
-        500: {
-          width: 4 * 172,
-          slidesPerView: 4,
-        },
-        680: {
-          width: 5 * 172,
-          slidesPerView: 5,
-        },
-        860: {
-          width: 5 * 206,
-        },
-        1024: {
-          width: 6 * 206,
-          slidesPerView: 6,
-        },
-      }}
-      onSwiper={(swiper) => {
-        setSwiperObject(swiper);
-      }}
-      onReachEnd={loadNewItems}
-      onSlideChange={() => {
-        if (!swiperObject) {
-          return;
-        }
+    <div className={cn(classes?.container)}>
+      <div className="d-flex justify-content-center align-items-center mb-14">
+        <span className={Styles.title}>{title}</span>
+        <a className={cn(Styles.link, "ms-4")} href="/category/recommended">
+          <ViewAllDepartmentsIcon width="25" height="15" /> View all
+        </a>
+      </div>
+      <Swiper
+        spaceBetween={0}
+        longSwipesRatio={0.05}
+        slidesPerView={4}
+        lazy={true}
+        className={cn("products-slider", Styles.productsSlider)}
+        scrollbar={{
+          el: ".products-slider-scrollbar",
+          draggable: true,
+          hide: false,
+          dragClass: cn(Styles.swiperScrollbarDrag),
+        }}
+        breakpoints={{
+          992: {
+            slidesPerView: 4,
+          },
+          1200: {
+            slidesPerView: 5,
+          },
+          1400: {
+            slidesPerView: 6,
+          },
+        }}
+        onSwiper={(swiper) => {
+          setSwiperObject(swiper);
+        }}
+        onReachEnd={loadNewItems}
+        onSlideChange={() => {
+          if (!swiperObject) {
+            return;
+          }
 
-        setIsReachBegin(swiperObject.isBeginning);
-        setIsReachEnd(swiperObject.isEnd);
-      }}
-    >
-      {itemsTemplate()}
+          setIsReachBegin(swiperObject.isBeginning);
+          setIsReachEnd(swiperObject.isEnd);
+        }}
+      >
+        {itemsTemplate()}
 
-      <div
-        className={cn(
-          "products-slider-left",
-          "products-slider-nav",
-          "show-for-medium",
-          isReachBegin && "products-slider-nav__inactive"
-        )}
-        onClick={goPrev}
-      />
+        <div
+          className={cn(
+            "products-slider-left",
+            "products-slider-nav",
+            "show-for-medium",
+            isReachBegin && "products-slider-nav__inactive"
+          )}
+          onClick={goPrev}
+        />
 
-      <div
-        className={cn(
-          "products-slider-right",
-          "products-slider-nav",
-          "show-for-medium",
-          isReachEnd && "products-slider-nav__inactive"
-        )}
-        onClick={goNext}
-      />
-      <div className="products-slider-scrollbar" />
-    </Swiper>
+        <div
+          className={cn(
+            "products-slider-right",
+            "products-slider-nav",
+            "show-for-medium",
+            isReachEnd && "products-slider-nav__inactive"
+          )}
+          onClick={goNext}
+        />
+        <div className="products-slider-scrollbar" />
+      </Swiper>
+    </div>
   );
 };
 
