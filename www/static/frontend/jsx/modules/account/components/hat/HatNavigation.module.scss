@@ -1,6 +1,5 @@
 @import "~style-modules/sass-utils";
 
-
 .searchIcon {
   width: rem-calc(28);
   height: auto;
@@ -31,12 +30,6 @@
   position: relative;
   z-index: 3;
   min-width: rem-calc(320);
-  box-shadow: 0 1px #c4c4c4;
-  transition: box-shadow 250ms ease-out 0s;
-}
-
-.topHeaderMenu_boxShadow_none {
-  box-shadow: none;
 }
 
 .topHeader {
@@ -44,7 +37,7 @@
 }
 
 .header_shadowPanelVisible {
-  border-bottom-color: #ffffff;
+  border-color: transparent;
 }
 
 .h100 {
