@@ -1,0 +1,7 @@
+@import "styles/utils/Utils.module";
+
+.rightColumn {
+  @include breakpoint(lg) {
+    width: calc(100% - pxToRem(220));
+  }
+}
