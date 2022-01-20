@@ -18,10 +18,7 @@ const RegisterForm: React.FC<any> = () => {
   const router = useRouter();
   const routes = useSelectorAccount((e) => e.routes);
   const user = useSelectorAccount((e) => e.user);
-
-  if (user) {
-    router.push("/");
-  }
+  const dispatch = useDispatch();
 
   const initialValues = {
     name: "",
@@ -29,7 +26,6 @@ const RegisterForm: React.FC<any> = () => {
     password: "",
     password_confirm: "",
   };
-  const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
     name: yup.string().required("Name is a required field"),
@@ -73,6 +69,10 @@ const RegisterForm: React.FC<any> = () => {
         },
       })
     );
+  }
+
+  if (user) {
+    router.push("/");
   }
 
   return (
