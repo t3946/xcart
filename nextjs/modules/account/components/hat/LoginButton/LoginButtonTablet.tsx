@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import cn from "classnames";
 import React from "react";
 import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import { Dropdown } from "react-bootstrap";
@@ -9,7 +9,6 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
-
 import Styles from "@modules/account/components/hat/LoginButton/LoginButtonTablet.module.scss";
 
 const LoginButtonTablet: React.FC<any> = () => {
@@ -26,7 +25,7 @@ const LoginButtonTablet: React.FC<any> = () => {
           onClick(e);
         }}
         ref={ref}
-        className={classNames(
+        className={cn(
           "navigation-login-button d-none d-md-flex navigation-login-button__tablet align-items-center justify-content-between",
           {
             "navigation-login-button__active": props["aria-expanded"],
@@ -35,17 +34,14 @@ const LoginButtonTablet: React.FC<any> = () => {
       >
         <UserIcon />
 
-        <span className={classNames(Styles.userName, "ms-1", "text-center")}>
+        <span className={cn(Styles.userName, "ms-1", "text-center")}>
           {text}
         </span>
 
         <i
-          className={classNames(
-            "navigation-login-button-arrow arrow-rotatable",
-            {
-              "arrow-rotatable__rotated": props["aria-expanded"],
-            }
-          )}
+          className={cn("navigation-login-button-arrow arrow-rotatable", {
+            "arrow-rotatable__rotated": props["aria-expanded"],
+          })}
         />
       </div>
     );
@@ -56,7 +52,7 @@ const LoginButtonTablet: React.FC<any> = () => {
       return (
         <div
           ref={ref}
-          className={classNames(
+          className={cn(
             className,
             "account-hat-dropdown-menu col-12 p-0 rounded-0"
           )}
@@ -72,7 +68,7 @@ const LoginButtonTablet: React.FC<any> = () => {
     (e) => e.mobileMenu.isTabletMenuVisible
   );
 
-  function toggleMenu(isVisible) {
+  function toggleMenu(isVisible: boolean) {
     HideAllMenu(dispatch);
     isVisible && dispatch(setTabletMenuIsVisible(true));
     isVisible && dispatch(setVisibleShadowPanelAction(true));
