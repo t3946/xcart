@@ -49,7 +49,10 @@ const AccountInfo = () => {
                 className={cn(
                   Styles.userInfoLoginAndSecurity,
                   "mt-lg-2",
-                  "mt-xxl-0"
+                  "mt-xxl-0",
+                  "d-flex",
+                  "align-items-center",
+                  "lh-1"
                 )}
               >
                 <LockIcon className={"me-1"} />
