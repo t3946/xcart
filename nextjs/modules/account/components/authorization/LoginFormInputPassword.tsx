@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form as RBForm } from "react-bootstrap";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
@@ -15,6 +15,7 @@ import Link from "next/link";
 import cn from "classnames";
 import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 import generateFp from "@utils/generateFp";
+import Tooltip from "@components/common/tooltip/Tooltip";
 
 interface IProps {
   login: string;
@@ -180,15 +181,9 @@ const LoginFormInputPassword = function (props: IProps): any {
                 >
                   <div className={cn(Styles.authFormInfo, "auth-form-info")}>
                     Keep me signed in.{" "}
-                    <OverlayTrigger
-                      placement="top"
+                    <Tooltip
                       overlay={
-                        <Tooltip
-                          id="tooltip-details"
-                          className={
-                            "common-tooltip common-tooltip__login-form"
-                          }
-                        >
+                        <div>
                           <h2 className="common-tooltip-header">
                             "Keep Me Signed In" Checkbox
                           </h2>
@@ -202,7 +197,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                             To keep your account secure, use this option only on
                             your personal devices.
                           </p>
-                        </Tooltip>
+                        </div>
                       }
                     >
                       <span className={"common-link"}>
@@ -212,7 +207,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                           icon={faQuestionCircle}
                         />
                       </span>
-                    </OverlayTrigger>
+                    </Tooltip>
                   </div>
                 </RBForm.Label>
               </RBForm.Group>

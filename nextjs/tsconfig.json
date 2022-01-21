@@ -19,6 +19,9 @@
       "@modules/*": [
         "modules/*"
       ],
+      "@components/*": [
+        "components/*"
+      ],
       "@pages/*": [
         "pages/*"
       ],

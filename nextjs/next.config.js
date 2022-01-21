@@ -30,6 +30,7 @@ module.exports = withImages(
             "@services": path.resolve("services/"),
             "@styles": path.resolve("styles/"),
             "@submodules": path.resolve("submodules/"),
+            "@components": path.resolve("components/"),
           },
         },
       };

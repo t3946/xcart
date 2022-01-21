@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { Form as RBForm, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Form as RBForm } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
@@ -14,6 +14,8 @@ import Feedback from "@modules/ui/forms/Feedback";
 import Styles from "@modules/account/components/login-and-security/TSVAddNewApp.module.scss";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AxiosResponse } from "axios";
+import cn from "classnames";
+import Tooltip from "@components/common/tooltip/Tooltip";
 
 interface IProps {
   tsv: {
@@ -91,15 +93,9 @@ const TSVAddNewApp = (props: IProps): any => {
         <ol>
           <li>
             <b>Open</b> your Authenticator App.
-            <OverlayTrigger
-              trigger="click"
-              placement="top"
-              delay={{ show: 250, hide: 1000 }}
+            <Tooltip
               overlay={
-                <Tooltip
-                  id="tooltip-details"
-                  className={"common-tooltip common-tooltip__login-form"}
-                >
+                <div>
                   <h2 className={"common-tooltip-header"}>
                     <b>Your phone number</b>
                   </h2>
@@ -120,7 +116,7 @@ const TSVAddNewApp = (props: IProps): any => {
                       click here
                     </Link>
                   </p>
-                </Tooltip>
+                </div>
               }
             >
               <span className={"common-link ms-lg-2 d-block d-lg-inline-block"}>
@@ -130,7 +126,7 @@ const TSVAddNewApp = (props: IProps): any => {
                   icon={faQuestionCircle}
                 />
               </span>
-            </OverlayTrigger>
+            </Tooltip>
           </li>
 
           <li>
@@ -146,14 +142,15 @@ const TSVAddNewApp = (props: IProps): any => {
                 />
               </div>
 
-              <OverlayTrigger
-                placement="top"
-                trigger="click"
-                delay={{ show: 250, hide: 250 }}
+              <Tooltip
                 overlay={
-                  <Tooltip
+                  <div
                     id="tooltip-details"
-                    className={"common-tooltip common-tooltip__login-form"}
+                    className={cn(
+                      "common-tooltip",
+                      "common-tooltip__login-form",
+                      Styles.tooltip
+                    )}
                   >
                     <h2 className={"common-tooltip-header"}>
                       <b>Can't scan the barcode?</b>
@@ -178,7 +175,7 @@ const TSVAddNewApp = (props: IProps): any => {
                         <li>Tap Add</li>
                       </ol>
                     </div>
-                  </Tooltip>
+                  </div>
                 }
               >
                 <span className={"common-link"}>
@@ -188,7 +185,7 @@ const TSVAddNewApp = (props: IProps): any => {
                     icon={faQuestionCircle}
                   />
                 </span>
-              </OverlayTrigger>
+              </Tooltip>
             </div>
           </li>
 

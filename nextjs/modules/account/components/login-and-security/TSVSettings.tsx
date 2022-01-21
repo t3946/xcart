@@ -1,5 +1,4 @@
 import React from "react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
@@ -15,7 +14,7 @@ import StylesLoginAndSecurity from "@modules/account/components/login-and-securi
 import cn from "classnames";
 import { AxiosResponse } from "axios";
 import SuppressedDevices from "@modules/account/components/login-and-security/tsv/SuppressedDevices";
-
+import Tooltip from "@components/common/tooltip/Tooltip";
 import Styles from "@modules/account/components/login-and-security/TSVSettings.module.scss";
 
 const TSVSettings = (): any => {
@@ -207,15 +206,9 @@ const TSVSettings = (): any => {
           <div className="col-6 col-md-4 col-lg-5 text-md-center">
             <span className="d-block d-md-inline-block">Phone number</span>
 
-            <OverlayTrigger
-              placement="top"
-              trigger="click"
-              delay={{ show: 250, hide: 1000 }}
+            <Tooltip
               overlay={
-                <Tooltip
-                  id="tooltip-details"
-                  className={"common-tooltip common-tooltip__login-form"}
-                >
+                <div>
                   <h2 className={"common-tooltip-header"}>
                     <b>Your phone number</b>
                   </h2>
@@ -230,7 +223,7 @@ const TSVSettings = (): any => {
                     </a>
                     .
                   </p>
-                </Tooltip>
+                </div>
               }
             >
               <span
@@ -247,7 +240,7 @@ const TSVSettings = (): any => {
                   icon={faQuestionCircle}
                 />
               </span>
-            </OverlayTrigger>
+            </Tooltip>
           </div>
 
           <div className="col-6 col-md-2 col-lg-2 d-flex align-items-end align-items-md-start justify-content-end justify-content-lg-start">
