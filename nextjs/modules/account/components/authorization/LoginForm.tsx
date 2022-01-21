@@ -100,8 +100,13 @@ const LoginForm: React.FC<any> = () => {
     );
   }
 
+  React.useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, []);
+
   if (user) {
-    router.push("/dashboard");
     return null;
   }
 
