@@ -142,6 +142,15 @@ class SearchController extends PrototypeAdminController
             elseif (preg_match(self::PATTERNS['order_amazon_id'], $search_string, $matches) === 1) {
                 $order = OrderModel::objects()->get(['amazonorderid' => $matches[2]]);
             }
+
+            if (!isset($order)) {
+                $order = OrderModel::objects()
+                    ->filter(['transactions__transaction_id' => $search_string])
+                    ->limit(1)
+                    ->group(['orderid'])
+                    ->get();
+            }
+
             // redirect if ORDER FOUND
             if (isset($order)) {
                 $this->redirect($order->getAdminUrl());
