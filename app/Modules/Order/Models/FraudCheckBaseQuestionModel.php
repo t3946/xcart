@@ -17,7 +17,7 @@ use Xcart\App\Orm\Model;
  * @property mixed auto
  * @property mixed question_template_body
  * @property mixed question_code
- * @property float|string weight
+ * @property float weight
  * @property string type
  * @property int|string question_id
  * @property int orderby

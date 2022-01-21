@@ -275,8 +275,8 @@ class BaseFraudCheckHelperV2
 
     public static function scoreRF_MF(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
-        $fraud_result = 'positive';
-        $outcome = 0;
+        $fraud_result = 'negative';
+        $outcome = 1;
 
         return [
             $fraud_result,
@@ -358,7 +358,7 @@ class BaseFraudCheckHelperV2
             }
         }
         result:
-        $outcome = (int)($fraud_result === 'positive');
+        $outcome = $fraud_result === 'positive';
 
         return [$fraud_result, $fraud->weight, null, null, $outcome];
     }
@@ -439,12 +439,14 @@ class BaseFraudCheckHelperV2
 
     public static function scoreRF_PO(OrderModel $order, FraudCheckBaseQuestionModel $fraud): array
     {
-        $fraud_result = 'negative';
-        $outcome = 1;
+        $fraud_result = 'positive';
+        $outcome = 0;
 
-        if ($order->paymentid === 2) {
-            $fraud_result = 'positive';
-            $outcome = 0;
+        if ($order->isPurchaseOrder() && $extra_model = $order->extra_model) {
+            if ($extra_model->purchase_order) {
+                $fraud_result = 'negative';
+                $outcome = 1;
+            }
         }
 
         return [$fraud_result, $fraud->weight, null, null, $outcome];
@@ -549,7 +551,7 @@ HTML;
                     break;
             }
         }
-        $outcome = (int)$fraud_result === 'positive';
+        $outcome = $fraud_result === 'positive';
         return [$fraud_result, $fraud->weight, ['card_type' => $type_card], null, $outcome];
     }
 

@@ -14,6 +14,7 @@ use Xcart\App\Orm\Model;
  * @property string latitude
  * @property string longitude
  * @property string ip
+ * @property array purchase_order
  */
 class OrderExtraModel extends Model
 {

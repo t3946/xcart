@@ -63,7 +63,9 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                     <FraudRadioField fraudCode={answer.question_code} />
                   )}
                 </td>
-                <td className="center-header-item">{answer.outcome}</td>
+                <td className="center-header-item">{`${
+                  answer.outcome === 1 ? "Yes" : "No"
+                } = ${answer.outcome}`}</td>
                 <td className="center-header-item">
                   {answer.question_weight > 0
                     ? answer.question_weight

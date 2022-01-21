@@ -25,6 +25,7 @@ use Xcart\App\QueryBuilder\Q\QOr;
 class OrderFraudCheckController extends Controller
 {
     /**
+     * Вызывается при загрузке страницы fraud check заказа
      * @throws Exception
      */
     public function getBaseSettings(int $order_id = null)
@@ -36,6 +37,7 @@ class OrderFraudCheckController extends Controller
             $count_frauds = OrderBaseFraudCheckModelV2::objects()->filter(['order_id' => $order_model->orderid])->count();
             $count_fa_frauds = OrderFraudFACheckModel::objects()->filter(['order_id' => $order_model->orderid])->count();
 
+            // Если к данному заказу не был пройден fraud check(0 ответов на вопросы)
             if (!($count_frauds && $count_fa_frauds)) {
                 $this->jsonResponse([], 404);
                 return;
@@ -114,7 +116,9 @@ class OrderFraudCheckController extends Controller
         }
     }
 
-
+    /** Разблокировка заказа(логика взята из fraud check v.1)
+     * @param int|null $order_id
+     */
     public function unlockOrder(int $order_id = null)
     {
         $ar_result = ['status' => true];
@@ -189,8 +193,8 @@ class OrderFraudCheckController extends Controller
                 'question_id' => $answer_item->question_id,
                 'question_code' => $answer_item->question->question_code,
                 'question_auto' => $answer_item->question->auto,
-                'outcome' => $answer_item->outcome,
-                'question_weight' => (float)$answer_item->question->weight
+                'outcome' => (int)$answer_item->outcome,
+                'question_weight' => $answer_item->question->weight
             ];
         }
         return $ar_payment_frauds;
@@ -365,8 +369,8 @@ HTML;
                 'fraud_score' => $answer->fraud_score,
                 'question_id' => $answer->question_id,
                 'question_auto' => $answer->question->auto,
-                'question_weight' => (float)$answer->question->weight,
-                'outcome' => $answer->outcome,
+                'question_weight' => $answer->question->weight,
+                'outcome' => (int)$answer->outcome,
                 'manual_action' => $answer->manual_action ?? null
             ];
             $ar_res_answer[$answer->question->type][] = $ar_answer;
@@ -438,7 +442,6 @@ HTML;
                             $result = 'positive';
                             $outcome = 1;
                             if ($is_red_flag) {
-                                $outcome = 0;
                                 $result = 'negative';
                             }
                             $order_model->bare_fraud_score_v2 += $weight;
@@ -448,7 +451,6 @@ HTML;
                             $outcome = 0;
                             if ($is_red_flag) {
                                 $result = 'positive';
-                                $outcome = 1;
                             }
                             $order_model->bare_fraud_score_v2 -= $weight;
                             break;
