@@ -5,6 +5,7 @@ namespace Modules\Order\Models;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\SerializeField;
@@ -25,6 +26,7 @@ use Xcart\App\Orm\Model;
 class OrderBaseFraudCheckModelV2 extends Model
 {
     use AutoMetaTrait;
+
     public const FRAUD_RESULT_POSITIVE = 'positive';
     public const FRAUD_RESULT_NEGATIVE = 'negative';
 
@@ -57,6 +59,11 @@ class OrderBaseFraudCheckModelV2 extends Model
                 'modelClass' => OrderModel::class,
                 'link' => ['order_id' => 'orderid'],
                 'null' => false,
+            ],
+            'fraud_score' => [
+                'class' => DecimalField::class,
+                'null' => false,
+                'default' => 0.00
             ],
             'fraud_result' => [
                 'class' => CharField::class,
