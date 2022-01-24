@@ -36,6 +36,12 @@ class OrdersApi extends Controller
         $filter = [];
         /** @var UserModel $user */
         $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
         if ($to_date !== 'undefined') {
             $filter = ['date__gte' => $to_date];
         }
