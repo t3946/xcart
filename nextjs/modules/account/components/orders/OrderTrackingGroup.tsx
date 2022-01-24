@@ -29,7 +29,7 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
       )
       .then((e) => {
         if (e.length) {
-          setMarkersCoordinates([e[0].lat, e[0].lon]);
+          setMarkersCoordinates((prev) => [...prev, [e[0].lat, e[0].lon]]);
         }
       })
       .catch((e) => console.log(e));
