@@ -46,6 +46,7 @@ export interface OrderProduct {
   price: number;
   code: string;
   amount: number;
+  url: string;
 }
 
 export interface OrderAddress {

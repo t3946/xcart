@@ -128,6 +128,7 @@ class OrderDetailModel extends Model
             'code' => $product->productcode,
             'price' => (float)$this->price,
             'amount' => $this->amount,
+            'url' => $product->getAbsoluteUrl()
         ];
     }
 }
