@@ -65,6 +65,7 @@
     "react-input-mask": "^2.0.4",
     "react-leaflet": "~3.1.0",
     "react-redux": "^7.2.6",
+    "react-select": "^5.2.2",
     "react-to-print": "^2.14.3",
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6",
