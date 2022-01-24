@@ -9,7 +9,7 @@ use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Controller\Controller;
-use Modules\Order\Forms\Decision\ETADecisionForm;
+use Modules\Order\Models\Decisions\DecisionFilesModel;
 use Modules\Order\Forms\Decision\LicenseRequiredForm;
 use Xcart\App\Main\Xcart;
 
@@ -26,21 +26,66 @@ class DecisionController extends Controller
         $this->data = json_decode(file_get_contents('php://input'), true);
     }
 
-    public function createEstimatedTimeArrivalDecisionAction()
+    public function solve()
     {
-        $order_id = $this->data['order_id'];
-        $order = OrderModel::objects()->filter(['orderid' => $order_id])->get();
-        $decision = new DecisionModel([
-            'type' => DecisionModel::DECISION_TYPE_ESTIMATED_TIME_ARRIVAL,
-            'solved' => 0,
-            'options' => [],
-            'order_id' => $order_id,
-            'order_number' => $order->getOrderNumber(),
+        $user = Xcart::app()->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
+        $type = $_POST['type'] ?? $this->data['type'];
+        $decision_id = $_POST['decision_id'] ?? $this->data['decision_id'];
+
+        $decision = DecisionModel::objects()->get([
+            'type' => $type,
+            'decision_id' => $decision_id,
+            'solved' => false
         ]);
 
-        $decision->save();
+        if (!$decision) {
+            http_response_code(400);
+            return;
+        }
 
-        echo $decision->getAttribute('pk');
+        $order_id = $decision->order_id;
+        $order = OrderModel::objects()->get(['orderid' => $order_id]);
+
+        // user is not decision owner
+        if ($order->user_id !== $user->user_id) {
+            http_response_code(403);
+            return;
+        }
+
+        //проверить заголовк, чтобы понять каким способом отправлены данные.
+        //если есть файлы -- сохранить всё и закрепить всё за определённым decision
+
+        if (strpos($_SERVER['HTTP_CONTENT_TYPE'], "application/json") !== false) {
+            $decision->solve($this->data['options']);
+        } elseif (strpos($_SERVER['HTTP_CONTENT_TYPE'], "multipart/form-data") !== false) {
+            $files = $_FILES['attachments'];
+
+            //todo: обработать случай нескольких файлов
+            $uploaded_file = new UploadedFile(
+                $files['tmp_name'],
+                $files['name'],
+                $files['type'],
+                (int)$files['size'],
+                (int)$files['error'],
+            );
+
+            $file = new DecisionFilesModel([
+                'path' => $uploaded_file,
+                'decision_id' => $_POST['decision_id'],
+                'title' => $files['name'],
+            ]);
+
+
+            $file->save();
+
+            $decision->solve($this->data['options']);
+        }
     }
 
     public static function getDecisions($user_id, $solved, $limit, $offset, $order)
@@ -91,9 +136,9 @@ class DecisionController extends Controller
         }
 
         //incorrect decision
-        if ($decision->type !== DecisionModel::DECISION_LICENSE_REQUIRED) {
-            return;
-        }
+//        if ($decision->type !== DecisionModel::DECISION_LICENSE_REQUIRED) {
+//            return;
+//        }
 
         $form = new LicenseRequiredForm();
         $form->populate($_POST, $_FILES);
@@ -118,7 +163,7 @@ class DecisionController extends Controller
             (int)$files['error']['license'],
         );
 
-        $decision_license =  new DecisionLicenseModel([
+        $decision_license = new DecisionLicenseModel([
             'path' => $uploaded_file,
             'decision_id' => $_POST['decision_id'],
         ]);
@@ -134,9 +179,14 @@ class DecisionController extends Controller
         ]);
     }
 
-    public function makePaymentRequiredDecisionsAction()
+    //solve payment required
+    public function solveDecisionsPaymentRequired()
     {
-        $decision = DecisionModel::objects()->get(['decision_id' => $_POST['decision_id']]);
+        $decision = DecisionModel::objects()->get([
+            'solved' => false,
+            'decision_id' => $_POST['decision_id'],
+            'type' => $_POST['type'],
+        ]);
 
         //already solved
         if ($decision->solved === true) {
@@ -144,9 +194,9 @@ class DecisionController extends Controller
         }
 
         //incorrect decision
-        if ($decision->type !== DecisionModel::DECISION_PAYMENT_REQUIRED) {
-            return;
-        }
+//        if ($decision->type !== DecisionModel::DECISION_PAYMENT_REQUIRED) {
+//            return;
+//        }
 
         $form = new LicenseRequiredForm();
         $form->populate($_POST, $_FILES);
@@ -171,7 +221,7 @@ class DecisionController extends Controller
             (int)$files['error']['license'],
         );
 
-        $decision_license =  new DecisionLicenseModel([
+        $decision_license = new DecisionLicenseModel([
             'path' => $uploaded_file,
             'decision_id' => $_POST['decision_id'],
         ]);
@@ -187,43 +237,43 @@ class DecisionController extends Controller
         ]);
     }
 
-    public function makeDecisionsAction()
-    {
-        //todo: this method only for eta decision
-        switch ($this->data['type']) {
-            case DecisionModel::DECISION_TYPE_ESTIMATED_TIME_ARRIVAL:
-                $form = new ETADecisionForm();
-                $form->setAttributes($this->data['options']);
-                break;
-        }
-
-        if (!isset($form)) {
-            return;
-        }
-
-        if (!$form->isValid()) {
-            $this->jsonResponse(["errors" => $form->getErrors()]);
-            return;
-        }
-
-        $decision = DecisionModel::objects()->get(['decision_id' => $this->data['decision_id']]);
-
-        $decision->setAttributes(
-            [
-                'solved' => 1,
-                'options' => $form->getAttributes(),
-            ]
-        );
-
-        $decision->save();
-
-        $user = Xcart::app()->auth->getUser(true);
-
-        $this->jsonResponse([
-            'notSolved' => DecisionController::getDecisions($user['user_id'], 0, self::LIMIT_SELECT_DECISIONS, 0, ['-created']),
-            'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
-        ]);
-    }
+//    public function makeDecisionsAction()
+//    {
+//        //todo: this method only for eta decision
+//        switch ($this->data['type']) {
+//            case DecisionModel::DECISION_TYPE_ESTIMATED_TIME_ARRIVAL:
+//                $form = new ETADecisionForm();
+//                $form->setAttributes($this->data['options']);
+//                break;
+//        }
+//
+//        if (!isset($form)) {
+//            return;
+//        }
+//
+//        if (!$form->isValid()) {
+//            $this->jsonResponse(["errors" => $form->getErrors()]);
+//            return;
+//        }
+//
+//        $decision = DecisionModel::objects()->get(['decision_id' => $this->data['decision_id']]);
+//
+//        $decision->setAttributes(
+//            [
+//                'solved' => 1,
+//                'options' => $form->getAttributes(),
+//            ]
+//        );
+//
+//        $decision->save();
+//
+//        $user = Xcart::app()->auth->getUser(true);
+//
+//        $this->jsonResponse([
+//            'notSolved' => DecisionController::getDecisions($user['user_id'], 0, self::LIMIT_SELECT_DECISIONS, 0, ['-created']),
+//            'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
+//        ]);
+//    }
 
     public function getEtaProductsAction($order_id)
     {
@@ -254,5 +304,28 @@ class DecisionController extends Controller
         }
 
         $this->jsonResponse($order_products_with_amount);
+    }
+
+    public function createDecision()
+    {
+        $user = Xcart::app()->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
+        $type = $this->data["type"];
+        $order_id = $this->data["order_id"];
+        $order = OrderModel::objects()->get(["orderid" => $order_id]);
+        $decision = new DecisionModel([
+            'type' => $type,
+            'order_id' => $order_id,
+            'order_number' => $order->getOrderNumber(),
+        ]);
+
+        $decision->save();
+
+        http_response_code(200);
     }
 }

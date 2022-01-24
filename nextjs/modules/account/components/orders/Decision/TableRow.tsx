@@ -2,6 +2,7 @@ import React from "react";
 import cn from "classnames";
 import Styles from "@modules/account/components/orders/Decision/Table.module.scss";
 import { TableTypes } from "@modules/account/components/orders/Decision/Table";
+
 export interface RowInterface {
   name: string;
   sku: string;

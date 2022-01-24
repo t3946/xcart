@@ -7,13 +7,13 @@ use Modules\Order\Controllers\Api\DecisionController;
 return [
     [
         'route' => '/create',
-        'target' => [ DecisionController::class, 'createEstimatedTimeArrivalDecisionAction' ],
+        'target' => [ DecisionController::class, 'createDecision' ],
         'name' => 'decisions_create',
     ],
 
     [
-        'route' => '/make',
-        'target' => [ DecisionController::class, 'makeDecisionsAction' ],
+        'route' => '/solve',
+        'target' => [ DecisionController::class, 'solve' ],
         'name' => 'decisions_make',
     ],
 
