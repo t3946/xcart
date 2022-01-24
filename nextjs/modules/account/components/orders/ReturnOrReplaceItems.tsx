@@ -70,7 +70,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
 
     const items = values.rmaItems.map((e) => {
       return {
-        productId: e.productid,
+        productId: e.productId,
         amount: e.amountSelect.value,
         wouldLike: e.quantitySelect.value,
       };
