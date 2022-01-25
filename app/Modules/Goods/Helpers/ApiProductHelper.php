@@ -3,6 +3,8 @@
 namespace Modules\Goods\Helpers;
 
 use DateTime;
+use DateTimeInterface;
+use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\CurrencyModel;

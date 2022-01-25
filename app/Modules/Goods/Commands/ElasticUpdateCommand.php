@@ -2,43 +2,60 @@
 
 namespace Modules\Goods\Commands;
 
+use Dariuszp\CliProgressBar;
+use DateTime;
+use DateTimeInterface;
+use Elastic\AppSearch\Client\ClientBuilder;
+use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
-use Elasticsearch\ClientBuilder;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
 
 class ElasticUpdateCommand extends Command
 {
 
     public function handle($arguments = [])
     {
-        $hosts = [
-            'es01'
-        ];
-        $client = ClientBuilder::create()->setHosts($hosts)->build();
+        $apiEndpoint   = 'http://68.168.211.58:3002/';
+        $apiKey        = 'private-xfpuz5d7ruisj6rh8s1cmawz';
 
-        $params = [];
-        /** @var ProductModel $model */
-        foreach (ProductModel::forsale()->limit(100)->all() as $model) {
-            $params['body'][] = [
-                'index' => [
-                    '_index' => 'product',
-                    '_id'    => $model->pk
-                ]
-            ];
-            $params['body'][] = [
-                'product'     => $model->getFrontendName(),
-                'productcode' => $model->productcode,
-                'fulldescr' => $model->getFrontendDescription(),
-                'price' => $model->getPrice(),
-                'url' => $model->getAbsoluteUrl(true),
-                'brand' => $model->brand->brand ?? '',
-                'site' => array_map(static fn(SiteModel $site) => $site->code, $model->sites->all()),
-                'categories' => array_map(static fn(CategoryModel $category) => $category->getFrontendName(), $model->categories->all())
-            ];
+        $client = ClientBuilder::create($apiEndpoint, $apiKey)->build();
+
+        $documents = [];
+
+        $i = 0;
+
+        $bar = new CliProgressBar(ProductModel::objects()->count());
+
+        while ($models = ProductModel::objects()->paginate(++$i, 100)->all()) {
+            foreach ($models as $model) {
+                /** @var ProductModel $model */
+
+                $documents[] = [
+                    'id' => $model->pk,
+                    'product'     => $model->getFrontendName(),
+                    'productcode' => $model->productcode,
+                    'fulldescr' => $model->getFrontendDescription(),
+                    'price' => $model->getPrice(),
+                    'url' => $model->getAbsoluteUrl(true),
+                    'brand' => $model->brand->brand ?? '',
+                    'upc' => $model->upc,
+                    'sites' => array_map(static fn(SiteModel $site) => $site->code, $model->sites->all()),
+                    'categories' => array_map(static fn(CategoryModel $category) => $category->getFrontendName(), $model->categories->all()),
+                    'in_stock' => (int)!$model->isOutOfStockFrontend(),
+                    'forsale' => (int)($model->forsale === 'Y'),
+                    'created_at' => (new DateTime())->setTimestamp($model->add_date)->format(DateTimeInterface::RFC3339)
+                ];
+            }
+            $client->indexDocuments('s3stores-products', $documents);
+
+            $bar->progress(100);
+
         }
-        $responses = $client->bulk($params);
 
+        $bar->end();
     }
 }

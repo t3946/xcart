@@ -5,10 +5,10 @@
         "vendor-dir": "app/include/vendors"
     },
     "require": {
+        "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-soap": "*",
-        "ext-curl": "*",
         "aftership/aftership-php-sdk": "^5.1",
         "aveiv/open-exchange-rates-api": "^1.2",
         "aws/aws-sdk-php": "^3.0",
@@ -19,8 +19,9 @@
         "dariuszp/cli-progress-bar": "^1.0",
         "doctrine/cache": "1.4",
         "doctrine/dbal": "^3.0",
+        "elastic/app-search": "^7.13",
         "elasticsearch/elasticsearch": "^7.15",
-        "fabpot/goutte": "^3.2",
+        "fabpot/goutte": "^3.3",
         "facebook/php-business-sdk": "^3.2",
         "fenom/fenom": "^2.12",
         "firebase/php-jwt": "^5.4",
