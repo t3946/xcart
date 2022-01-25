@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { BillingAddressList } from "@modules/account/components/wallet/BillingAddressList";
-import { useSelector } from "react-redux";
-import { AccountStore } from "@modules/account/ts/types/store.type";
 import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-import { useHistory, useParams } from "react-router-dom";
 import { useRouter } from "next/router";
-import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-params.type";
 import { ApiService } from "@modules/shared/services/api.service";
 import Store from "@redux/stores/Store";
 import { setOrders } from "@redux/actions/account-actions/OrdersActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { useDispatch } from "react-redux";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
+import { getTerritory } from "@redux/actions/account-actions/MainActions";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
+import { Formik, Form, FormikHelpers } from "formik";
 
 interface ChangeAddressProps {
   handleClose?: () => void;
@@ -19,12 +21,27 @@ interface ChangeAddressProps {
 export const ChangeAddress: React.FC<ChangeAddressProps> = ({
   handleClose,
 }) => {
-  const addresses = useSelector((e: AccountStore) => e.addresses.addressesList);
+  const dispatch = useDispatch();
+  const userId = useSelectorAccount((e) => {
+    return e.user?.user_id;
+  });
+  React.useEffect(() => {
+    dispatch(getAddresses(userId));
+    dispatch(getTerritory());
+  }, []);
+
+  const addresses = useSelectorAccount((e) =>
+    e.addresses.addressesList?.filter(
+      (address) => address.address_type === AddressTypeEnum.SHIPPING
+    )
+  );
+
+  const initialValues = {
+    address: "",
+  };
+
   const [isAddingAddress, setIsAddingAddress] = useState(false);
 
-  const [selectedValue, setSelectedValue] = useState(null);
-
-  const [loading, setLoading] = useState(false);
   const apiService = new ApiService();
 
   const breakpoint = useBreakpoint();
@@ -32,10 +49,12 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
   const router = useRouter();
   const urlParams = router.query;
 
-  const onChangeAddress = () => {
-    setLoading(true);
+  const onChangeAddress = (
+    values: Record<any, any>,
+    { setSubmitting }: FormikHelpers<any>
+  ) => {
     const address = Store.getState().addresses.addressesList.find(
-      (address) => address.address_id === selectedValue
+      (address) => address.address_id === parseInt(values.address)
     );
 
     apiService
@@ -62,7 +81,7 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
         })
       )
       .then((response) => {
-        setLoading(false);
+        setSubmitting(false);
         breakpoint({
           xs: () =>
             router.push(
@@ -70,7 +89,7 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
             ),
           md: handleClose,
         });
-        handleClose();
+        handleClose && handleClose();
         setOrders(
           Store.getState().ordersStore.orders[urlParams.orderType].map((e) => {
             if (e.orderid === urlParams.id) {
@@ -84,53 +103,53 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
         );
       });
   };
-  return (
-    <>
-      <MobileMenuBackBtn
-        redirectUrl={`/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`}
-        label={"Addresses"}
-      />
 
-      {isAddingAddress ? (
-        <AddAddressForm onCancelClick={() => setIsAddingAddress(false)}>
-          <button
-            style={{ marginTop: 10 }}
-            onClick={() => setIsAddingAddress(false)}
-            className="form-button account-submit-btn account-submit-btn-outline"
-          >
-            Back
-          </button>
-        </AddAddressForm>
-      ) : (
-        <div className="billing-address-container">
-          <div className="dialog-title">Select a shipping address</div>
-          {addresses && (
-            <BillingAddressList
-              value={selectedValue}
-              setValue={setSelectedValue}
-              addresses={addresses}
-            />
-          )}
+  return isAddingAddress ? (
+    <AddAddressForm onCancelClick={() => setIsAddingAddress(false)}>
+      <button
+        style={{ marginTop: 10 }}
+        onClick={() => setIsAddingAddress(false)}
+        className="form-button account-submit-btn account-submit-btn-outline"
+      >
+        Back
+      </button>
+    </AddAddressForm>
+  ) : (
+    <Formik onSubmit={onChangeAddress} initialValues={initialValues}>
+      {({ handleChange, isSubmitting, values }) => {
+        return (
+          <Form>
+            <div className="billing-address-container">
+              <div className="dialog-title">Select a shipping address</div>
+              {addresses && (
+                <BillingAddressList
+                  value={values.address}
+                  onChange={handleChange}
+                  addresses={addresses}
+                  disabled={isSubmitting}
+                />
+              )}
 
-          <div className="billing-address-butns">
-            <button
-              type={"submit"}
-              onClick={() => setIsAddingAddress(true)}
-              className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
-            >
-              ADD new ADDRESS
-            </button>
-            <button
-              disabled={!selectedValue || loading}
-              type={"submit"}
-              className="form-button account-submit-btn auto-width-button"
-              onClick={onChangeAddress}
-            >
-              {loading ? "PEnding..." : "use this address"}
-            </button>
-          </div>
-        </div>
-      )}
-    </>
+              <div className="billing-address-butns">
+                <button
+                  type={"button"}
+                  onClick={() => setIsAddingAddress(true)}
+                  className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+                >
+                  ADD new ADDRESS
+                </button>
+                <button
+                  disabled={!values.address || isSubmitting}
+                  type={"submit"}
+                  className="form-button account-submit-btn auto-width-button"
+                >
+                  {isSubmitting ? "PEnding..." : "use this address"}
+                </button>
+              </div>
+            </div>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 };
