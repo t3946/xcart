@@ -254,7 +254,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                     1. Do not send the product back. Wait for the RMA form.
                   </div>
                   <div className="order-cancel-items-disclosure-subtitle">
-                    2. We can’T guarantee successful resolution of your request.
+                    2. We can't guarantee successful resolution of your request.
                   </div>
                   <div className="order-cancel-items-disclosure-subtitle">
                     Our RMA department will work with the warehouse to resolve

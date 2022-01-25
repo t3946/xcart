@@ -6,24 +6,18 @@ use Modules\Account\Models\OrderCancelItemsModel;
 use Modules\Account\Models\OrderCancelRequestModel;
 use Modules\Account\Models\OrderProblemsModel;
 use Modules\Account\Models\OrderProblemStatusesModel;
-use Modules\Distributor\Models\DistributorModel;
 use Modules\Forms\Models\EmailModel;
-use Modules\Order\Models\OrderDetailModel;
-use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
-use Modules\Order\Models\OrderTrackingModel;
-use Modules\Order\Models\RMADetailModel;
-use Modules\Order\Models\RMAModel;
+use Modules\Order\Models\RMA\ImagesModel;
+use Modules\Order\Models\RMA\RMADetailModel;
+use Modules\Order\Models\RMA\RMAModel;
+use Modules\Order\Models\RMA\RMAStatusModel;
 use Modules\User\Models\UserAccount\UserModel;
-use Throwable;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Controller\FrontendController;
+use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Pagination\DataSource\QuerySetDataSource;
-use Xcart\App\Pagination\Pagination;
-use function Clue\StreamFilter\fun;
 
 class OrdersApi extends Controller
 {
@@ -222,22 +216,75 @@ class OrdersApi extends Controller
 
     public function openRmaRequest()
     {
-        //TODO: нужна доработка этого метода
+        $rma_details = [];
+
         $user = Xcart::app()->auth->getUser(true);
 
-        if (!$user) {
-            $this->jsonResponse('user not login');
+        if ($user->getIsGuest()) {
+            $this->jsonResponse('user not login', 401);
             return;
         }
 
-        $request_data = json_decode(file_get_contents('php://input'), true);
-//
-//        RMAModel::objects()->create($request_data['rma_info']);
-//
-//        foreach ($request_data['rma_items'] as $item) {
-//            RMADetailModel::objects()->create($item);
-//        }
-//
+        $request_data = Xcart::app()->request->post->all();
+
+        $order = $user->orders->get(['orderid' => $request_data['orderId']]);
+
+        $items = json_decode($request_data['items'], true, 512, JSON_THROW_ON_ERROR);
+
+        if (!$order) {
+            $this->jsonResponse('order not found', 400);
+            return;
+        }
+
+        foreach ($items as $item) {
+            if ((int)$item['amount'] === 0) {
+                continue;
+            }
+
+            $detail = $order->detail_models->get(['productid' => $item['productId']]);
+
+            $rma_details[] = [
+                'productid' => $detail->productid,
+                'productcode' => $detail->productcode,
+                'product' => $detail->product,
+                'amount' => $item['amount'],
+                'would_like' => $item['wouldLike'],
+            ];
+        }
+
+        if (!$rma_details) {
+            $this->jsonResponse('RMA items not selected', 400);
+            return;
+        }
+
+        $rma = new RMAModel([
+            'orderid' => $order->pk,
+            'zipcode' => $order->s_zipcode,
+            'email' => $user->email,
+            'order_email' => $order->email,
+            'explanation' => $request_data['rmaText'],
+            'status' => RMAStatusModel::STATUS_SUBMIT_TO_US,
+            'rma_number' => 1,
+
+        ]);
+
+        if ($_FILES) {
+            $files = PrepareData::fixFiles($_FILES);
+            foreach ($files['files'] as $file) {
+                $image = new ImagesModel([
+                    'path' => $file,
+                ]);
+                $image->save();
+                $rma->images[] = $image;
+            }
+        }
+
+        $rma->save();
+
+        array_map(static fn($rma_detail) => RMADetailModel::objects()->create(
+            ['rma_id' => $rma->pk] + $rma_detail
+        ), $rma_details);
+
         $this->jsonResponse(['success']);
     }
 
