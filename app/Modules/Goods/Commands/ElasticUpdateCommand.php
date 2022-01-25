@@ -6,13 +6,10 @@ use Dariuszp\CliProgressBar;
 use DateTime;
 use DateTimeInterface;
 use Elastic\AppSearch\Client\ClientBuilder;
-use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
-use Xcart\App\Pagination\DataSource\QuerySetDataSource;
-use Xcart\App\Pagination\Pagination;
 
 class ElasticUpdateCommand extends Command
 {
@@ -24,13 +21,14 @@ class ElasticUpdateCommand extends Command
 
         $client = ClientBuilder::create($apiEndpoint, $apiKey)->build();
 
-        $documents = [];
-
         $i = 0;
 
         $bar = new CliProgressBar(ProductModel::objects()->count());
 
         while ($models = ProductModel::objects()->paginate(++$i, 100)->all()) {
+
+            $documents = [];
+
             foreach ($models as $model) {
                 /** @var ProductModel $model */
 
