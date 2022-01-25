@@ -1,0 +1,35 @@
+@import "styles/utils/Utils.module";
+
+.message {
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  position: relative;
+  padding: 15px;
+  background-color: #f8f8f8;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.messageArrow {
+  position: absolute;
+  left: 27px;
+  color: #f8f8f8;
+}
+
+.details {
+  color: #8a8a8a;
+  font-size: pxToRem(12);
+  padding: 0 0 0 15px;
+}
+
+.message_robot {
+  background-color: #f8f8f8;
+}
+
+.message_cs {
+  background-color: #fff6da;
+}
+
+.message_me {
+  background-color: #e7ffe3;
+}
