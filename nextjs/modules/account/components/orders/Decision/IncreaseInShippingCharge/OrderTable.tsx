@@ -5,6 +5,7 @@ import Minus from "@modules/icon/components/font-awesome/minus/Regular";
 import ChevronDown from "@modules/icon/components/font-awesome/chevron-down/Regular";
 import cn from "classnames";
 import ShippingTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/ShippingTable";
+import GrandTotalProductOrdered from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered";
 
 import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
 
@@ -32,7 +33,7 @@ interface IProps {
 
 const OrderTable: React.FC<IProps> = (props: IProps) => {
   const { order } = props;
-
+  
   const [opened, setOpened] = React.useState("");
 
   const isOpened = opened === "true";
@@ -91,70 +92,17 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
       {accordionButtonTemplate()}
       <Accordion.Collapse eventKey="true">
         <div>
-          {order.map((shipping) => (
-            <ShippingTable shipping={shipping} />
+          {order.groups.map((group) => (
+            <ShippingTable showCaption group={group} />
           ))}
         </div>
       </Accordion.Collapse>
-      <div
-        className={cn([
-          Styles.accordionFooter,
-          {
-            [Styles.accordionFooter_border]: isOpened,
-            [Styles.accordionFooter_opened]: isOpened,
-          },
-        ])}
-      >
-        <span>Total items cost:</span>
-        <span>US$ 5.70</span>
-        <span
-          className={cn([
-            Styles.totalTableShippingCost,
-            Styles.totalTable__shippingCost,
-            Styles.totalTableShippingCost__label,
-          ])}
-        >
-          Total shipping cost:
-        </span>
-
-        <span
-          className={cn([
-            Styles.totalTableShippingCost,
-            Styles.totalTable__shippingCost,
-            Styles.totalTableShippingCost__value,
-          ])}
-        >
-          US$ 11.90
-        </span>
-
-        <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
-          Total sales tax:
-        </span>
-
-        <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
-          US$ 1.80
-        </span>
-
-        <span className={cn([Styles.totalTableTax])}>Total VAT tax:</span>
-        <span className={cn([Styles.totalTableTax])}>US$ 1.80</span>
-        <span
-          className={cn([
-            Styles.totalTableGrandTotal,
-            Styles.totalTable__grandTotal,
-          ])}
-        >
-          Grand total:
-        </span>
-
-        <span
-          className={cn([
-            Styles.totalTableGrandTotal,
-            Styles.totalTable__grandTotal,
-          ])}
-        >
-          US$ 17.60
-        </span>
-      </div>
+      <GrandTotalProductOrdered
+        className={{
+          "border-0": !isOpened,
+          [Styles.accordionFooter_opened]: isOpened,
+        }}
+      />
     </Accordion>
   );
 };

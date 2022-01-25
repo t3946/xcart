@@ -1,0 +1,133 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-items: end;
+  column-gap: pxToRem(21);
+  padding: pxToRem(22) pxToRem(10) pxToRem(32);
+  line-height: pxToRem(20);
+  border-top: 1px solid #666666;
+
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    line-height: pxToRem(22);
+    column-gap: pxToRem(53);
+    padding: pxToRem(26) pxToRem(20) pxToRem(39);
+    border-top: 1px solid #8a8a8a;
+  }
+  @include breakpoint(lg) {
+    column-gap: pxToRem(17);
+    padding: pxToRem(30) pxToRem(25);
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+    border-top: 1px solid #4a4949;
+  }
+}
+
+.totalTable__shippingCost {
+  margin: pxToRem(16) 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(25) 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(34) 0;
+  }
+}
+
+.totalTableShippingCost {
+  position: relative;
+  color: #2a8c3e;
+
+  &:after {
+    content: "";
+    position: absolute;
+    border: pxToRem(1) solid #9a1524;
+    top: pxToRem(-4);
+    width: calc(100% + pxToRem(21));
+    height: calc(100% + pxToRem(8));
+
+    @include breakpoint(md) {
+      top: pxToRem(-8);
+      width: calc(100% + pxToRem(53));
+      height: calc(100% + pxToRem(16));
+    }
+
+    @include breakpoint(lg) {
+      top: pxToRem(-12);
+      width: calc(100% + pxToRem(28));
+      height: calc(100% + pxToRem(24));
+    }
+  }
+
+  @include breakpoint(lg) {
+    font-weight: bold;
+  }
+}
+
+.totalTableShippingCost__label {
+  &:after {
+    left: pxToRem(-5);
+    border-right: none;
+
+    @include breakpoint(md) {
+      left: pxToRem(-11);
+    }
+
+    @include breakpoint(lg) {
+      left: pxToRem(-13);
+    }
+  }
+}
+.totalTableShippingCost__value {
+  &:after {
+    right: pxToRem(-5);
+    border-left: none;
+
+    @include breakpoint(md) {
+      right: pxToRem(-11);
+    }
+
+    @include breakpoint(lg) {
+      right: pxToRem(-16);
+    }
+  }
+}
+
+.totalTable__tax {
+  margin: 0 0 pxToRem(3);
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(7);
+  }
+}
+
+.totalTableTax {
+  color: #154159;
+}
+
+.totalTable__grandTotal {
+  margin: pxToRem(8) 0 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(12) 0 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(17) 0 0;
+  }
+}
+
+.totalTableGrandTotal {
+  color: #83132b;
+  font-size: pxToRem(16);
+  font-weight: bold;
+  text-transform: uppercase;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+}
