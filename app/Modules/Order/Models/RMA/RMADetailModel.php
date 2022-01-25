@@ -1,8 +1,9 @@
 <?php
 
-namespace Modules\Order\Models;
+namespace Modules\Order\Models\RMA;
 
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderDetailModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
@@ -21,7 +22,7 @@ class RMADetailModel extends Model
         return [
             'rma_id' => AutoField::class,
             'product_item' => [
-                'field' => 'orderid',
+                'field' => 'productid',
                 'class' => ForeignField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['productid' => 'productid'],

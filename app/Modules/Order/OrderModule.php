@@ -13,6 +13,8 @@ class OrderModule extends Module
     const DECISIONS_LICENSE_UPLOAD_TO = 'user_files/license';
     const DECISIONS_LICENSE_UPLOAD_MAX_SIZE_MB = 10;
 
+    public const IMAGES_UPLOAD_TO = 'images/rma';
+
     public static function onApplicationRun()
     {
         $template = Xcart::app()->template->getRenderer();
