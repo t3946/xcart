@@ -28,7 +28,7 @@ const Navigation: React.FC<IProps> = ({ orderId }) => {
     { text: "Order actions", path: "order-actions" },
     // TODO: Убрали поскольку не настроен бек под отправку и чтение писем
     // { text: "Order communication", path: `/order/${orderId}/` },
-    { text: "Order log", path: `/order/${orderId}/` },
+    { text: "Order log", path: `log` },
   ];
 
   // const breakpoint = useBreakpoint();

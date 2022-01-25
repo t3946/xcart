@@ -73,7 +73,7 @@
   width: 0.9375rem;
   height: 0.9375rem;
 
-  @include breakpoint(lg) {
+  @include breakpoint(md) {
     top: auto;
   }
 }
