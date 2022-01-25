@@ -1,12 +1,22 @@
-import StateLine from "@/components/catalog/StateLine";
-import StateLineGroupProduct from "@/components/catalog/StateLineGroupProduct";
-import ProductsList from "@/components/catalog/ProductsList";
-import CatalogContext from "@/components/catalog/CatalogContext";
-import LoadMore from "@/components/catalog/LoadMore";
-import Storage from "@/utils/localStorage/storage";
+import StateLine from "@modules/components/catalog/StateLine";
+import StateLineGroupProduct from "@modules/components/catalog/StateLineGroupProduct";
+import ProductsList from "@modules/components/catalog/ProductsList";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
+import LoadMore from "@modules/components/catalog/LoadMore";
+import Storage from "@utils/localStorage/storage";
 import $ from "jquery";
+import React from "react";
+//
+// interface IProps {
+//   catalogUrl: string;
+//   checkoutUrl: string;
+//   hide_sort: boolean;
+//   searchText: string;
+//   sortingKey: string;
+//   sortingOptions: Record<any, any>;
+// }
 
-export default class Catalog extends Component {
+export default class Catalog extends React.Component {
   constructor(props) {
     super(props);
 
@@ -40,7 +50,9 @@ export default class Catalog extends Component {
       observeProduct: null,
       infinityLoadObserver: null,
     };
+  }
 
+  componentDidMount() {
     if (this.state.infinityLoad) {
       const options = {
         root: null,
@@ -122,6 +134,7 @@ export default class Catalog extends Component {
       isLoading: false,
     });
   }
+
   componentDidUpdate() {
     if (this.state.infinityLoad) {
       const newObserveProduct = $(".product-items .catalog-product").last()[0];

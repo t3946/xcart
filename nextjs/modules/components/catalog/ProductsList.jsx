@@ -1,19 +1,20 @@
-import Card from "@/components/product/card/catalog/Card";
-import CatalogContext from "@/components/catalog/CatalogContext";
+import Card from "@modules/components/product/card/catalog/Card";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
 import classnames from "classnames";
-import { CardSceletonBlock } from "../product/card/catalog/CardSceletonBlock";
-import { CardSceletonLine } from "../product/card/catalog/CardSceletonLine";
+import { CardSceletonBlock } from "@modules/components/product/card/catalog/CardSceletonBlock";
+import { CardSceletonLine } from "@modules/components/product/card/catalog/CardSceletonLine";
 import React from "react";
-import Store from "../../redux/stores/Store";
+import Store from "@redux/stores/Store";
 import {
   addProduct,
   deleteProduct,
-} from "../../redux/actions/account-actions/ListsActions";
+} from "@redux/actions/account-actions/ListsActions";
+import $ from "jquery";
 
 // сколько вывести скелетов, когда нет продуктов
 const skeletonsNumber = 12;
 
-export default class ProductsList extends Component {
+export default class ProductsList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -31,8 +32,6 @@ export default class ProductsList extends Component {
         lists: Store.getState().lists?.lists?.find((e, index) => index === 0),
       });
     });
-
-    this.loadData();
   }
 
   //получение следующей ссылки на каталог
@@ -129,13 +128,17 @@ export default class ProductsList extends Component {
       );
   }
 
-  productItem(product, viewMode, inList, onFlagClick) {
+  componentDidMount() {
+    this.loadData();
+  }
+
+  productItem(product, viewMode, key, inList, onFlagClick) {
     const classes = {
       product: [`catalog-product__${viewMode}`, `catalog-product_${viewMode}`],
     };
 
     return (
-      <React.Fragment>
+      <React.Fragment key={key}>
         <Card
           inList={inList}
           product={product}
@@ -153,7 +156,10 @@ export default class ProductsList extends Component {
       nextState.sort = nextProps.sortKey;
       nextState.nextPage = 1;
       nextState.items = Array(skeletonsNumber).fill(1);
-      this.loadData();
+
+      if (document !== undefined) {
+        this.loadData();
+      }
     }
 
     return true;
@@ -186,25 +192,28 @@ export default class ProductsList extends Component {
 
     return (
       <div className={classnames(classes)}>
-        {this.state.items.map((item) => {
+        {this.state.items.map((item, i) => {
           if (item === 1) {
             if (viewMode === "tile") {
-              return <CardSceletonBlock />;
+              return <CardSceletonBlock key={`skeleton-${i}`} />;
             } else {
-              return <CardSceletonLine />;
+              return <CardSceletonLine key={`skeleton-${i}`} />;
             }
           }
 
           return this.productItem(
             item,
             viewMode,
+            `product-item-${i}`,
             (() => {
               const product = this.state.lists?.products?.find(
                 (e) => e.product_id === item.productid
               );
+
               if (!product) {
                 return false;
               }
+
               if (product?.typeAction) {
                 return false;
               }

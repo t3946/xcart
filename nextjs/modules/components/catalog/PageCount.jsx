@@ -1,6 +1,7 @@
-import CatalogContext from "@/components/catalog/CatalogContext";
+import React from "react";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
 
-export default class PageCount extends Component {
+export default class PageCount extends React.Component {
   constructor() {
     super();
   }

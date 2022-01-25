@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
-import { Sceleton } from "../../../../modules/shared/components/sceleton/Sceleton";
+import { Sceleton } from "@modules/shared/components/sceleton/Sceleton";
 
 interface CardSceletonBlockPropsDto {
   buttons?: boolean;

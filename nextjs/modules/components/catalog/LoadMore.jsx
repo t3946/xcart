@@ -1,6 +1,7 @@
 import classnames from "classnames";
+import React from "react";
 
-export default class LoadMore extends Component {
+export default class LoadMore extends React.Component {
   constructor(props) {
     super(props);
 

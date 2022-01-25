@@ -31,7 +31,7 @@ const SideBarMenu: React.FC = () => {
         { to: "/orders/open-orders", label: "Open orders" },
         { to: "/orders/canceled-orders", label: "Cancelled orders" },
         { to: "/orders/completed-orders", label: "Completed orders" },
-        { to: "/orders", label: "Buy again" },
+        { to: "/orders/buy-again", label: "Buy again" },
       ],
     },
     {

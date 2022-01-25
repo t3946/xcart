@@ -1,20 +1,20 @@
 import classnames from "classnames";
-import { Fragment, createRef } from "preact";
-import Product from "@/components/product/card/Product";
-import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
-import Price from "@/components/product/card/components/Price";
-import QuantityGroup from "@/components/product/card/QuantityGroup";
-import CatalogContext from "@/components/catalog/CatalogContext";
-import t from "@/i18n";
+import { Fragment } from "preact";
+import Product from "@modules/components/product/card/Product";
+import ImgCatalog from "@modules/components/product/card/catalog/ImgCatalog";
+import Price from "@modules/components/product/card/components/Price";
+import QuantityGroup from "@modules/components/product/card/QuantityGroup";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
+import t from "@utils/i18n";
 import Highlighter from "react-highlight-words";
-import AddToCartButton from "@/components/product/AddToCartButton";
+import AddToCartButton from "@modules/components/product/AddToCartButton";
 import { Provider } from "react-redux";
-import Store from "../../../../redux/stores/Store";
-import Snackbar from "../../../../modules/account/components/snackbar/Snackbar";
-import { AddToListSelectOnProductPage } from "../../../../modules/account/components/lists/AddToListSelectOnProductPage";
+import Store from "@redux/stores/Store";
+import Snackbar from "@modules/account/components/snackbar/Snackbar";
+import { AddToListSelectOnProductPage } from "@modules/account/components/lists/AddToListSelectOnProductPage";
 import React from "react";
 
-export default class Card extends Component {
+export default class Card extends React.Component {
   constructor(props) {
     super(props);
 
@@ -131,11 +131,10 @@ export default class Card extends Component {
                 </a>
               </div>
             </div>
-            <noindex>
-              <div className={classnames(shortDescriptionClasses)}>
-                {product.short_description}
-              </div>
-            </noindex>
+
+            <div className={classnames(shortDescriptionClasses)}>
+              {product.short_description}
+            </div>
           </Fragment>
         )}
       </Fragment>
@@ -441,7 +440,7 @@ export default class Card extends Component {
   }
 
   render(props) {
-    const classes = props.classes ?? { product: [] };
+    const classes = this.props.classes ?? { product: [] };
     const self = this;
 
     classes.product.push("catalog-product", "item");
@@ -462,8 +461,8 @@ export default class Card extends Component {
         mainInfo={this.productContentBlock()}
         price={this.productPriceBlock()}
         classes={classes}
-        inList={props.inList}
-        onFlagClick={props.onFlagClick}
+        inList={this.props.inList}
+        onFlagClick={this.props.onFlagClick}
       />
     );
   }

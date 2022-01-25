@@ -1,8 +1,11 @@
 import { createRef } from "preact";
 import classnames from "classnames";
 import merge from "lodash/merge";
+import React from "react";
+import $ from "jquery";
+import Styles from "@modules/components/product/card/QuantityGroup.module.scss";
 
-export default class QuantityGroup extends Component {
+export default class QuantityGroup extends React.Component {
   constructor(props) {
     super(props);
 
@@ -60,26 +63,16 @@ export default class QuantityGroup extends Component {
 
   componentDidMount() {
     this.props.onChange(this.state.value);
-
-    const $input = $(this.inputRef.current);
-
-    $input.change(() => {
-      this.setState({
-        value: $input.val(),
-      });
-
-      this.props.onChange($input.val());
-    });
   }
 
-  render(props) {
+  render() {
     const minBorder = this.state.value === this.state.min;
     const maxBorder = this.state.value === this.state.max;
     const incIconId = minBorder ? "switcher-minus__ash" : "switcher-minus";
     const decIconId = maxBorder ? "switcher-plus__ash" : "switcher-plus";
-
-    const classes = merge(props.classes, {
-      group: ["quantity-group"],
+    const self = this;
+    const classes = merge(this.props.classes, {
+      group: ["quantity-group", Styles.quantityGroup],
       dec: [
         "quantity-group-btn",
         "quantity-group-btn_dec",
@@ -112,11 +105,17 @@ export default class QuantityGroup extends Component {
           data-min={this.state.min}
           step={this.state.step}
           value={this.state.value}
-          id={"quantity-" + props.product.productid}
+          id={"quantity-" + this.props.product.productid}
           autoComplete="off"
           inputMode="numeric"
-          defaultValue={this.state.min}
           ref={this.inputRef}
+          onChange={(e) => {
+            self.setState({
+              value: e.target.value,
+            });
+
+            self.props.onChange(e.target.value);
+          }}
         />
 
         {/*inc button*/}

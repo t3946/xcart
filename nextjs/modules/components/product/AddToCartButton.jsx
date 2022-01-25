@@ -1,11 +1,13 @@
 import classnames from "classnames";
-import CatalogContext from "@/components/catalog/CatalogContext";
-import { cartAdd } from "../../redux/reduсers/appCartReducer";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
+import { cartAdd } from "@redux/reducers/appCartReducer";
 import * as preact from "preact";
-import CreateWaitButton from "@/components/AnimateWaitButton";
-import t from "@/i18n";
+import CreateWaitButton from "@modules/components/AnimateWaitButton";
+import t from "@utils/i18n";
+import React from "react";
+import $ from "jquery";
 
-export default class AddToCartButton extends Component {
+export default class AddToCartButton extends React.Component {
   constructor(props) {
     super(props);
 

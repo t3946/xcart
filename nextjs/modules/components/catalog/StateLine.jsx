@@ -1,10 +1,12 @@
-import PageCount from "@/components/catalog/PageCount";
+import PageCount from "@modules/components/catalog/PageCount";
 import classnames from "classnames";
-import CatalogViewMode from "@/components/catalog/CatalogViewMode";
+import CatalogViewMode from "@modules/components/catalog/CatalogViewMode";
 import { createRef } from "preact";
-import CatalogContext from "@/components/catalog/CatalogContext";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
+import React from "react";
+import $ from "jquery";
 
-export default class StateLine extends Component {
+export default class StateLine extends React.Component {
   constructor(props) {
     super(props);
 
@@ -16,16 +18,16 @@ export default class StateLine extends Component {
       isOpenSortMenu: false,
       sortKey: props.sortKey,
     };
+  }
+
+  componentDidMount() {
+    this._mounted = true;
 
     $(document).click(() => {
       if (this._mounted) {
         this.setState({ isOpenSortMenu: false });
       }
     });
-  }
-
-  componentDidMount() {
-    this._mounted = true;
   }
 
   componentWillUnmount() {
@@ -50,6 +52,7 @@ export default class StateLine extends Component {
   }
 
   sortingOptionsList() {
+    console.log("props", this.props);
     if (this.hideSort) {
       return;
     }
@@ -83,6 +86,7 @@ export default class StateLine extends Component {
 
               options.push(
                 <li
+                  key={`sort-option${key}`}
                   data-value={key}
                   className={classnames({ active: key === this.props.sortKey })}
                   onClick={this.sortCatalog.bind(this)}
@@ -99,9 +103,9 @@ export default class StateLine extends Component {
     );
   }
 
-  render(props) {
+  render() {
     const stateLineClasses = [
-      props.classes.container,
+      this.props.classes.container,
       "products-state-line",
       "pcont",
       {
@@ -110,7 +114,7 @@ export default class StateLine extends Component {
     ];
 
     return (
-      <div className={classnames(stateLineClasses)} style="display:block">
+      <div className={classnames(stateLineClasses, "d-block")}>
         <div className="row">
           <div className="col-lg-3 d-none d-lg-block">
             <div className="page_count_wrap">
