@@ -15,6 +15,7 @@ import {
 } from "@redux/actions/account-actions/MobileMenuActions";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
 
 import Styles from "@modules/account/components/orders/Decision/CustomDuties/CustomDuties.module.scss";
 
@@ -142,25 +143,13 @@ const CustomDuties: React.FC = () => {
                 to Canada.
               </p>
 
-              <label
-                className={cn(
-                  Styles.checkbox__container,
-                  Styles.checkboxContainer,
-                  "d-block",
-                  "cursor-pointer",
-                  {
-                    [Styles.checkboxContainer_active]: values.agreement,
-                  }
-                )}
-              >
-                <Checkbox
-                  name="agreement"
-                  checked={values.agreement}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
-                />
-              </label>
+              <HighlightCheckbox
+                className={Styles.checkbox__container}
+                onChange={handleChange}
+                checked={values.agreement}
+                disabled={isSubmitting}
+                label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+              />
 
               <button
                 type="submit"
