@@ -86,6 +86,11 @@ return [
         'name' => 'categoryPaginatedApi',
     ],
     [
+        'route' => 'category/bought-products',
+        'target' => [ApiCategoriesController::class, 'getBuyAgainProducts'],
+        'name' => 'bought-products',
+    ],
+    [
         'route' => 'brand/{i:id}/{slug:slug}/',
         'target' => ['\Modules\Brand\Controllers\DefaultController', 'actionViewOld'],
         'name' => 'viewApi'

@@ -11,7 +11,9 @@ use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderModel;
 use Modules\User\Models\SurfMetaModel;
+use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Main\Xcart;
 
 class ApiCategoriesController extends AbstractCatalogController
@@ -135,6 +137,36 @@ class ApiCategoriesController extends AbstractCatalogController
                 'pagesCount' => $pager->getPagesCount(),
             ],
         ];
+    }
+
+    public function getBuyAgainProducts() {
+        /**
+         * check authorisation
+         * @var $user UserModel
+         */
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
+        $qs = ProductModel::objects()->filter(['order_details__order_group__order__user_id' => $user->user_id]);
+
+        $pager = $this->getPager($qs);
+        $this->setCanonical($this->model);
+        $products = $pager->paginate();
+
+        $this->jsonResponse([
+            'items' => $this->getProductData($products),
+            'pager' => [
+                'pageSize' => $pager->getPageSize(),
+                'currentPage' => $pager->getPage(),
+                'paginateCount' => count($products),
+                'total' => $pager->getTotal(),
+                'pagesCount' => $pager->getPagesCount(),
+            ],
+        ]);
     }
 
     /**

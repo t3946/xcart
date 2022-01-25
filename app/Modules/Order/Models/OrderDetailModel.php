@@ -9,6 +9,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\Fields\SerializeField;
@@ -76,7 +77,12 @@ class OrderDetailModel extends Model
             ],
             'amount' => [
                 'class' => IntField::class,
-            ]
+            ],
+            'order' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderModel::class,
+                'link' => ['orderid' => 'orderid'],
+            ],
         ];
     }
 
