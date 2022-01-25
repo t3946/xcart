@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
+import cn from "classnames";
 import FormSelect from "@modules/ui/forms/Select";
-import { FormInput } from "@modules/account/components/shared/FormInput";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
@@ -12,7 +12,14 @@ import { useDispatch } from "react-redux";
 import UploadFile from "@modules/ui/UploadFile";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
-import Button from "@modules/ui/forms/Button";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
+import OrderTable from "@modules/account/components/order/order-table/OrderTable";
+import ProductCell from "@modules/account/components/order/order-table/ProductCell";
+import RadioQuestion from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
+
+import StylesOrderActions from "@modules/account/components/orders/OrderActions.module.scss";
+import Styles from "@modules/account/components/orders/ReturnOrReplaceItems.module.scss";
 
 interface IProps {
   orderItem: OrderView;
@@ -118,19 +125,17 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
   };
 
   return (
-    <div className="order-product-list-body-inner">
-      <div className="page-label order-actions-page-label">
+    <div className={cn("order-product-list-body-inner p-lg-0")}>
+      <div
+        className={cn(
+          "page-label",
+          "problem-with-order-label",
+          "text-md-start",
+          StylesOrderActions.title,
+          "mb-lg-20"
+        )}
+      >
         Return or replace items
-      </div>
-
-      <div className="order-product-list-header">
-        <div className="order-product-list-header-sku">Item name / SKU </div>
-        <div className="order-product-list-header-quantity">
-          Return quantity
-        </div>
-        <div className="order-product-list-header-quantity-cancel">
-          I would like to
-        </div>
       </div>
 
       <Formik
@@ -148,88 +153,141 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
         }) => {
           return (
             <Form>
-              <div className="order-product-list-body">
-                <div className="order-products">
-                  {orderItem.groups.map((group) => {
-                    return group.products?.map((product) => (
-                      <div key={product.productId} className="order-product">
-                        <div className="order-product-list-header-sku">
-                          <div className="order-item-body-product-name">
-                            {product.product}
-                          </div>
-                          <div className="order-item-body-product-sku">
-                            {product.code}
-                          </div>
-                        </div>
+              <OrderTable
+                theme="grey"
+                header={[
+                  <span>Item name / SKU</span>,
+                  <>
+                    <span className="d-none d-lg-block">Return quantity</span>
+                    <span className="d-lg-none">Return Qty</span>
+                  </>,
+                  <span className="d-none d-md-block">I would like to</span>,
+                ]}
+                items={orderItem.groups[0].products}
+                classes={{
+                  table: ["px-md-2", "px-lg-0", StylesOrderActions.form__table],
+                  rowHat: StylesOrderActions.tableRow_hat,
+                  row: [
+                    "flex-wrap",
+                    "flex-md-nowrap",
+                    StylesOrderActions.tableRow,
+                  ],
+                  columns: [
+                    "col-8 col-md-auto col-sm me-auto",
+                    "col-4 col-lg-3",
+                    "col-md-4 col-lg-3",
+                    "col-12 col-md-auto",
+                  ],
+                }}
+                rowItemTemplates={(item) => {
+                  return [
+                    <ProductCell name={item.product} sku={item.code} />,
 
-                        <div className="order-product-list-header-quantity">
-                          <FormSelect
-                            value={
-                              getProductItem(product.productId, values)
-                                ?.amountSelect || {
-                                value: 0,
-                                viewValue: 0,
-                              }
-                            }
-                            items={fillArrayItemsOnOrderActions(product.amount)}
-                            id={`${product.code}-amount`}
-                            onClick={(value) =>
-                              updateValueOnReturnItems(
-                                { ...product, amountSelect: value },
-                                product.productId,
-                                values,
-                                setValues
-                              )
-                            }
-                          />
-                        </div>
+                    <div className="col-9 col-md-6 mx-auto">
+                      <FormSelect
+                        value={
+                          getProductItem(item.productId, values)
+                            ?.amountSelect || {
+                            value: 0,
+                            viewValue: 0,
+                          }
+                        }
+                        items={fillArrayItemsOnOrderActions(item.amount)}
+                        id={`${item.code}-amount`}
+                        onClick={(value) =>
+                          updateValueOnReturnItems(
+                            { ...item, amountSelect: value },
+                            item.productId,
+                            values,
+                            setValues
+                          )
+                        }
+                      />
+                    </div>,
 
-                        <div className="order-product-list-header-quantity-cancel">
-                          <FormSelect
-                            classes={{
-                              selectHeader:
-                                "order-product-select-action-header",
-                            }}
-                            value={
-                              getProductItem(product.productId, values)
-                                ?.quantitySelect || {
-                                value: undefined,
-                                viewValue: "Select an option",
-                              }
-                            }
-                            onClick={(value) =>
-                              updateValueOnReturnItems(
-                                { ...product, quantitySelect: value },
-                                product.productId,
-                                values,
-                                setValues
-                              )
-                            }
-                            id={`${product.code}-action`}
-                            items={returnSelectValues}
-                          />
-                        </div>
-                      </div>
-                    ));
-                  })}
-                </div>
-                <FormInput
-                  inputType="textarea"
-                  name={"rmaText"}
-                  id={"132"}
-                  placeholder="Explain why you would like to return products for a refund or replace them with the same or different products"
-                  classes={{
-                    input: "order-cancel-items-textarea-input",
-                    textArea: "order-cancel-items-textarea",
-                    group: "order-cancel-items-textarea-group",
-                  }}
-                  handleChange={handleChange}
-                  errorMessage={errors.rmaText}
-                  touched={touched.rmaText}
-                  value={values.rmaText}
+                    <div className="d-none d-md-block col-md-11 col-lg-10 col-xl-10 col-xxl-8 ms-auto">
+                      <FormSelect
+                        classes={{
+                          selectHeader: "order-product-select-action-header",
+                        }}
+                        value={
+                          getProductItem(item.productId, values)
+                            ?.quantitySelect || {
+                            value: undefined,
+                            viewValue: "Select an option",
+                          }
+                        }
+                        onClick={(value) =>
+                          updateValueOnReturnItems(
+                            { ...item, quantitySelect: value },
+                            item.productId,
+                            values,
+                            setValues
+                          )
+                        }
+                        id={`${item.code}-action`}
+                        items={returnSelectValues}
+                      />
+                    </div>,
+                    <RadioQuestion
+                      classes={{
+                        container: [
+                          "d-md-none col-12 text-start mt-4 border-0",
+                          Styles.question,
+                          Styles.tableRow__question,
+                        ],
+                        card: "box-shadow-0",
+                      }}
+                      question={{
+                        label: "I would like to",
+                        radios: returnSelectValues,
+                      }}
+                      checkedValues={{
+                        "I would like to": getProductItem(
+                          item.productId,
+                          values
+                        )?.quantitySelect || {
+                          value: undefined,
+                          viewValue: "Select an option",
+                        },
+                      }}
+                      disabled={isSubmitting}
+                      onChange={(value) =>
+                        updateValueOnReturnItems(
+                          { ...item, quantitySelect: value },
+                          item.productId,
+                          values,
+                          setValues
+                        )
+                      }
+                    />,
+                  ];
+                }}
+              />
+              <div className="px-10 px-lg-0">
+                <Input
+                  as="textarea"
+                  name={"problem_text"}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  placeholder="Explain why you would like to return products for a refund 
+                  or replace them with the same or different products"
+                  value={values.problem_text}
+                  isValid={touched.problem_text && !errors.problem_text}
+                  isInvalid={!!touched.problem_text && !!errors.problem_text}
+                  className={cn("mt-4", StylesOrderActions.problemTextArea)}
                 />
+                <Feedback type="invalid">
+                  {!!touched.problem_text && errors.problem_text}
+                </Feedback>
 
-                <div className="order-cancel-items-disclosure-title attach-section">
+                <div
+                  className={cn(
+                    "order-cancel-items-disclosure-title",
+                    "attach-section",
+                    Styles.disclosureTitle
+                  )}
+                >
                   Please attach product images to speed up the RMA process:
                 </div>
 
@@ -246,28 +304,59 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                   error={errors.file}
                 />
 
-                <div className="order-cancel-items-disclosure">
-                  <div className="order-cancel-items-disclosure-title">
+                <div
+                  className={cn(
+                    "order-cancel-items-disclosure",
+                    StylesOrderActions.order__diclosure
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "order-cancel-items-disclosure-title",
+                      StylesOrderActions.disclosureTitle,
+                      "mb-md-10",
+                      "mb-lg-1"
+                    )}
+                  >
                     Disclosure
                   </div>
-                  <div className="order-cancel-items-disclosure-subtitle">
-                    1. Do not send the product back. Wait for the RMA form.
-                  </div>
-                  <div className="order-cancel-items-disclosure-subtitle">
-                    2. We can’T guarantee successful resolution of your request.
-                  </div>
-                  <div className="order-cancel-items-disclosure-subtitle">
-                    Our RMA department will work with the warehouse to resolve
-                    your problem.
+                  <div
+                    className={cn(
+                      "order-cancel-items-disclosure-subtitle",
+                      StylesOrderActions.disclosureSubtitle
+                    )}
+                  >
+                    <div>
+                      1. Do not send the product back. Wait for the RMA form.
+                    </div>
+                    <div>
+                      2. We can’T guarantee successful resolution of your
+                      request.
+                    </div>
+                    <div>
+                      Our RMA department will work with the warehouse to resolve
+                      your problem.
+                    </div>
                   </div>
                 </div>
 
-                <Button
+                <button
                   disabled={isSubmitting}
-                  className="form-button submit-to-rma-dep-btn"
+                  className={cn(
+                    "form-button",
+                    "submit-to-rma-dep-btn",
+                    "w-md-auto",
+                    "mx-md-auto",
+                    "mx-lg-0",
+                    StylesOrderActions.button,
+                    "mb-4"
+                  )}
                 >
-                  Submit to RMA department
-                </Button>
+                  <span className={"d-lg-none"}>REQUEST CANCELLATION</span>
+                  <span className={"d-none d-lg-block"}>
+                    Submit to RMA department
+                  </span>
+                </button>
               </div>
             </Form>
           );

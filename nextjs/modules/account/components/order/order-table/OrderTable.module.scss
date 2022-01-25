@@ -1,0 +1,119 @@
+@import "styles/utils/Utils.module";
+
+.table {
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.table__caption {
+  margin: 0 0 pxToRem(13);
+  white-space: pre-line;
+  line-height: 1.4;
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(22);
+  }
+}
+
+.header_theme_grey {
+  background-color: #f4f4f4;
+}
+
+.header_theme_green {
+  background-color: #e1ffdc;
+}
+
+.header_theme_red {
+  background-color: #ffeeeb;
+}
+
+.header_theme_yellow {
+  background-color: #fff5d2;
+}
+
+.row {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  padding: pxToRem(15) pxToRem(9);
+  position: relative;
+  font-size: pxToRem(16);
+  border-bottom: 1px solid #e1e1e1;
+
+  & > *:first-child {
+    text-align: left;
+  }
+
+  & > *:last-child {
+    text-align: right;
+  }
+
+  &:last-child {
+    border: none;
+  }
+
+  @include breakpoint(md) {
+    padding: pxToRem(30) pxToRem(20);
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+
+    &:last-child {
+      border-bottom: 1px solid #e1e1e1;
+    }
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(26) pxToRem(24);
+    font-size: pxToRem(16);
+    border-bottom: 1px solid #c4c4c4;
+
+    &:last-child {
+      border-bottom: 1px solid #c4c4c4;
+    }
+  }
+}
+
+.row_hat {
+  padding: 0 pxToRem(9);
+  color: #494949;
+  height: pxToRem(35);
+  border: none;
+
+  &::after {
+    content: "";
+    display: none;
+  }
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20);
+    height: pxToRem(43);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+    height: pxToRem(46);
+  }
+}
+
+.caption {
+  padding: 0 pxToRem(9);
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+  }
+}

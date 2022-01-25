@@ -1,13 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
+import cn from "classnames";
 import FormSelect from "@modules/ui/forms/Select";
-import { FormInput } from "@modules/account/components/shared/FormInput";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import { ApiService } from "@modules/shared/services/api.service";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 import { useRouter } from "next/router";
 import { problemsWithOrderSelectValue } from "@modules/account/ts/consts/order-actions-select.const";
+import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
+
+import StylesOrderActions from "@modules/account/components/orders/OrderActions.module.scss";
+import Styles from "@modules/account/components/orders/ProblemWithOrder.module.scss";
 
 export const ProblemWithOrder: React.FC = () => {
   const api = new ApiService();
@@ -56,67 +61,78 @@ export const ProblemWithOrder: React.FC = () => {
     }),
     onSubmit: sendMessage,
   });
+
   return (
-    <div className="order-product-list-body-inner">
-      <div className="page-label order-actions-page-label problem-with-order-label">
+    <div className={cn("order-product-list-body-inner p-lg-0")}>
+      <div
+        className={cn(
+          "page-label",
+          "problem-with-order-label",
+          "text-md-start",
+          StylesOrderActions.title
+        )}
+      >
         Problem with order
       </div>
-      <p className="what-went-wrong">What went wrong?</p>
-      <form onSubmit={formik.handleSubmit}>
-        <FormSelect
-          classes={{ group: "order-product-select-errors" }}
-          value={formik.values.status_id}
-          items={statuses}
-          onClick={(value) => formik.setFieldValue("status_id", value)}
-          id={"problem-with-order-select"}
-        />
-        <div className="order-problems-radios">
-          {statuses.map(
-            (e, i) => "<RadioBtn /> was here"
-            // TODO: делает warning нужно переделать компонент или заменить его на другой
 
-            // <RadioBtn
-            //   name="radio"
-            //   id={i}
-            //   key={i}
-            //   viewValue={e.viewValue}
-            //   groupValue={formik.values.status_id.value}
-            //   radioValue={e.value}
-            //   onChange={(value) =>
-            //     formik.setFieldValue("status_id", {
-            //       value: value,
-            //       viewValue: e.viewValue,
-            //     })
-            //   }
-            //   groupClasses={{
-            //     group: "order-problem-radio",
-            //     checked: "order-problem-radio-checked",
-            //   }}
-            // />
-          )}
+      <form onSubmit={formik.handleSubmit}>
+        <div className="d-none d-md-block">
+          <p className="what-went-wrong">What went wrong?</p>
+          <FormSelect
+            classes={{ group: "order-product-select-errors" }}
+            value={formik.values.status_id}
+            items={statuses}
+            onClick={(value) => formik.setFieldValue("status_id", value)}
+            id={"problem-with-order-select"}
+          />
         </div>
 
-        <FormInput
-          inputType="textarea"
+        <div className="order-problems-radios">
+          <RadioQuestion
+            classes={{ container: "border-0", card: Styles.radioCard }}
+            question={{
+              label: "What went wrong?",
+              name: "status_id",
+              radios: statuses,
+            }}
+            checkedValues={formik.values}
+            disabled={formik.isSubmitting}
+            onChange={(e) => {
+              formik.setFieldValue("status_id", e);
+            }}
+          />
+        </div>
+
+        <Input
+          as="textarea"
           name={"problem_text"}
-          id={"132"}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.problem_text}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.problem_text}
+          onChange={formik.handleChange}
+          disabled={formik.isSubmitting}
+          placeholder="Describe your issue"
           value={formik.values.problem_text}
-          placeholder="Explain why you would like to return products for a refund
-        or replace them with the same or different products"
-          classes={{
-            input: "order-cancel-items-textarea-input",
-            textArea: "order-cancel-items-textarea",
-            group: "order-cancel-items-textarea-group",
-          }}
+          isValid={formik.touched.problem_text && !formik.errors.problem_text}
+          isInvalid={
+            !!formik.touched.problem_text && !!formik.errors.problem_text
+          }
+          className={cn(
+            StylesOrderActions.problemTextArea,
+            StylesOrderActions.form__problemTextArea
+          )}
         />
+        <Feedback type="invalid">
+          {!!formik.touched.problem_text && formik.errors.problem_text}
+        </Feedback>
         <button
           disabled={loading}
           type="submit"
-          className="form-button problem-with-order-send-btn"
+          className={cn(
+            "form-button",
+            "fw-bold",
+            StylesOrderActions.button,
+            "mx-md-auto",
+            "mx-lg-0",
+            "mb-4"
+          )}
         >
           send
         </button>

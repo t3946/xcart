@@ -52,8 +52,8 @@ const LTLFreightShipment: React.FC = () => {
     {
       label: "Commercial or residential delivery?",
       radios: [
-        { label: "Commercical", value: "commercial" },
-        { label: "Residential", value: "residential" },
+        { viewValue: "Commercical", value: "commercial" },
+        { viewValue: "Residential", value: "residential" },
       ],
     },
     {
@@ -63,23 +63,23 @@ const LTLFreightShipment: React.FC = () => {
         value: "commercial",
       },
       radios: [
-        { label: "Yes", value: "yes" },
-        { label: "No", value: "no" },
+        { viewValue: "Yes", value: "yes" },
+        { viewValue: "No", value: "no" },
       ],
     },
     {
       label: "Curbside or inside delivery?",
       ext: "Carriers may charge extra for residential, lift gate and inside delivery",
       radios: [
-        { label: "Curbside delivery", value: "curbside" },
-        { label: "Inside delivery", value: "inside" },
+        { viewValue: "Curbside delivery", value: "curbside" },
+        { viewValue: "Inside delivery", value: "inside" },
       ],
     },
   ];
   const getInitialValues = () => {
     const values: Record<string, string> = {};
     for (const q of mockData) {
-      values[q.label] = "";
+      values[q.label] = { value: "" };
     }
 
     values.phoneCountryCode = "";
@@ -101,19 +101,28 @@ const LTLFreightShipment: React.FC = () => {
 
     for (const q of mockData) {
       if (q.dependency) {
-        fields[q.label] = Yup.string().when(q.dependency.question, {
+        fields[q.label] = Yup.object({
+          value: Yup.string().required("Required"),
+          viewValue: Yup.string().required("Required"),
+        }).when(q.dependency.question, {
           is: q.dependency.value,
-          then: Yup.string().required("Required"),
+          then: Yup.object({
+            value: Yup.string().required("Required"),
+            viewValue: Yup.string().required("Required"),
+          }).required("Required"),
         });
       } else {
-        fields[q.label] = Yup.string().required("Required");
+        fields[q.label] = Yup.object({
+          value: Yup.string().required("Required"),
+          viewValue: Yup.string().required("Required"),
+        }).required("Required");
       }
     }
     return Yup.object().shape(fields);
   };
 
   const submit = (values, actions) => {
-    actions.setSubmittimg(true);
+    actions.setSubmitting(true);
 
     const phoneCode = getCountryByCode(
       values.phoneCountryCode,
@@ -225,7 +234,9 @@ const LTLFreightShipment: React.FC = () => {
                   key={index}
                   question={questionData}
                   disabled={isSubmitting}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setFieldValue(questionData.label, e);
+                  }}
                   error={
                     touched[questionData.label] && errors[questionData.label]
                   }
