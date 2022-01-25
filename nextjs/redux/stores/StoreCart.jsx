@@ -3,7 +3,6 @@ import thunkMiddleware from "redux-thunk";
 import ajax from "@utils/ajax";
 import trigger from "@utils/trigger";
 import ls from "@utils/localStorage/storage";
-import storeApp from "./StoreApp";
 
 const _INIT_ACTION_TYPE = "@@redux/INIT";
 // todo: из глобальной переменной app.options.session_key
@@ -52,24 +51,23 @@ let ACTIONS = {
 
   PUSH: (state, action) => {
     let url = null;
-    let app_state = storeApp.getState();
 
     switch (action.action) {
       case "ADD": {
-        url = app_state.options.urls.cart.add;
+        url = "/cart/add/products";
         break;
       }
       case "SET": {
-        url = app_state.options.urls.cart.set;
+        url = "/cart/set/products";
         break;
       }
       case "DEL": {
-        url = app_state.options.urls.cart.del;
+        url = "/cart/del/products";
         break;
       }
       case "GET":
       default:
-        url = app_state.options.urls.cart.get;
+        url = "/cart/get/products";
     }
 
     if (url) {

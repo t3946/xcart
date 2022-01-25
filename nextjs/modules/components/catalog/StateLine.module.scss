@@ -1,0 +1,14 @@
+@import "styles/utils/Utils.module";
+
+.sort {
+  padding: 0 pxToRem(60) 0 0;
+}
+
+.stateLine {
+  height: pxToRem(40);
+  background-color: #ebebeb;
+}
+
+.label {
+  white-space: nowrap;
+}

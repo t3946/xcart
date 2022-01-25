@@ -1,10 +1,11 @@
 import PageCount from "@modules/components/catalog/PageCount";
-import classnames from "classnames";
+import cn from "classnames";
 import CatalogViewMode from "@modules/components/catalog/CatalogViewMode";
 import { createRef } from "preact";
 import CatalogContext from "@modules/components/catalog/CatalogContext";
 import React from "react";
 import $ from "jquery";
+import Styles from "@modules/components/catalog/StateLine.module.scss";
 
 export default class StateLine extends React.Component {
   constructor(props) {
@@ -45,60 +46,73 @@ export default class StateLine extends React.Component {
   }
 
   sortCatalog(e) {
-    const sortKey = e.target.getAttribute("data-value");
+    const sortKey = e.target.value;
 
     this.props.onSort(sortKey);
     this.setState({ sortKey });
   }
 
   sortingOptionsList() {
-    console.log("props", this.props);
     if (this.hideSort) {
       return;
     }
 
-    const classes = classnames("action_block", "sort", {
-      active: this.state.isOpenSortMenu,
-    });
+    const classes = [
+      Styles.sort,
+      {
+        active: this.state.isOpenSortMenu,
+      },
+      "d-flex",
+    ];
 
     return (
-      <div className={classes}>
+      <div className={cn(classes)}>
         <div
           className="action_button sort state-line-sort"
           onClick={this.toggleSortList.bind(this)}
         >
-          <span className="action state-line-sort__caption">Sort by</span>
-          <span
-            className="active_value show-for-large"
-            onClick={this.toggleSortList.bind(this)}
-            ref={this.sortButton}
-          >
-            {this.sortingOptions[this.props.sortKey]}
+          <span className={cn("action state-line-sort__caption", Styles.label)}>
+            Sort by
           </span>
+
+          {/*<span*/}
+          {/*  className="active_value show-for-large"*/}
+          {/*  onClick={this.toggleSortList.bind(this)}*/}
+          {/*  ref={this.sortButton}*/}
+          {/*>*/}
+          {/*  {this.sortingOptions[this.props.sortKey]}*/}
+          {/*</span>*/}
+
+          <select
+            name=""
+            id=""
+            onChange={(e) => {
+              this.sortCatalog(e);
+            }}
+          >
+            {(() => {
+              const options = [];
+
+              for (const key in this.sortingOptions) {
+                const option = this.sortingOptions[key];
+
+                options.push(
+                  <option
+                    key={`sort-option${key}`}
+                    value={key}
+                    className={cn({
+                      active: key === this.props.sortKey,
+                    })}
+                  >
+                    {option}
+                  </option>
+                );
+              }
+
+              return options;
+            })()}
+          </select>
         </div>
-
-        <ul className="options no-bullet">
-          {(() => {
-            const options = [];
-
-            for (const key in this.sortingOptions) {
-              const option = this.sortingOptions[key];
-
-              options.push(
-                <li
-                  key={`sort-option${key}`}
-                  data-value={key}
-                  className={classnames({ active: key === this.props.sortKey })}
-                  onClick={this.sortCatalog.bind(this)}
-                >
-                  {option}
-                </li>
-              );
-            }
-
-            return options;
-          })()}
-        </ul>
       </div>
     );
   }
@@ -106,7 +120,7 @@ export default class StateLine extends React.Component {
   render() {
     const stateLineClasses = [
       this.props.classes.container,
-      "products-state-line",
+      Styles.stateLine,
       "pcont",
       {
         "skeleton-box": this.context.pager === null,
@@ -114,16 +128,16 @@ export default class StateLine extends React.Component {
     ];
 
     return (
-      <div className={classnames(stateLineClasses, "d-block")}>
-        <div className="row">
+      <div className={cn(stateLineClasses, "d-flex align-items-center")}>
+        <div className="row flex-grow-1 m-0">
           <div className="col-lg-3 d-none d-lg-block">
             <div className="page_count_wrap">
               {this.context.pager && <PageCount />}
             </div>
           </div>
-          <div className="col-12 col-lg-9">
-            <div className="actions">
-              <div className="action_group">{this.sortingOptionsList()}</div>
+          <div className="col-12 col-lg-9 justify-content-end d-flex">
+            <div className="actions d-flex">
+              {this.sortingOptionsList()}
 
               <CatalogViewMode />
             </div>

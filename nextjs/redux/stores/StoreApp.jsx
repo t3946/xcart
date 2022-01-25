@@ -101,10 +101,6 @@ const store = createStore(
     action && ACTIONS[action.type]
       ? ACTIONS[action.type](state, action)
       : ACTIONS["default"](state, action)
-  // applyMiddleware(
-  // thunkMiddleware, // позволяет нам отправлять функции
-  // loggerMiddleware // аккуратно логируем действия
-  // )
 );
 
 export default store;

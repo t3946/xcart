@@ -6,6 +6,7 @@ import React from "react";
 import getInitialState from "@services/axios/Account";
 import MainComponent from "@modules/components/MainComponent";
 import { SSRProvider } from "react-bootstrap";
+import TagManager from "react-gtm-module";
 
 function MyApp({ Component, pageProps, state }) {
   let store;
@@ -14,6 +15,12 @@ function MyApp({ Component, pageProps, state }) {
     store = getServerStore(state);
   } else {
     store = clientStore;
+
+    const tagManagerArgs = {
+      gtmId: "GTM-TCNTJMM",
+    };
+
+    TagManager.initialize(tagManagerArgs);
   }
 
   return (

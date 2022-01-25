@@ -6,6 +6,7 @@ import CreateWaitButton from "@modules/components/AnimateWaitButton";
 import t from "@utils/i18n";
 import React from "react";
 import $ from "jquery";
+import {addToCart} from "@utils/Analytics";
 
 export default class AddToCartButton extends React.Component {
   constructor(props) {
@@ -160,8 +161,6 @@ export default class AddToCartButton extends React.Component {
       let opt = [];
       let values = $(form).serializeArray();
 
-      console.log(values);
-
       for (let oneValue of values) {
         let valueParts = oneValue.value.split("_");
         let identifiersParts = valueParts[0].split("-");
@@ -171,7 +170,6 @@ export default class AddToCartButton extends React.Component {
         });
       }
 
-      console.log(this.props);
       let data = [
         {
           id: product.dataset.product,
@@ -189,7 +187,7 @@ export default class AddToCartButton extends React.Component {
         $(".jackpot").show();
       });
 
-      window.sendAnalytics.addToCart(product);
+      addToCart(product);
     }
   }
 
