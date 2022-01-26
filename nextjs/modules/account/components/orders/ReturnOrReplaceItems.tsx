@@ -13,7 +13,6 @@ import UploadFile from "@modules/ui/UploadFile";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import Button from "@modules/ui/forms/Button";
-import Select from "@modules/ui/forms/select/Select";
 
 interface IProps {
   orderItem: OrderView;
@@ -117,15 +116,9 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
   const getProductItem = (id, values) => {
     return values.rmaItems.find((e) => e.productId == id);
   };
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
+
   return (
     <div className="order-product-list-body-inner">
-      <Select options={options} />
-
       <div className="page-label order-actions-page-label">
         Return or replace items
       </div>

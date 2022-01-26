@@ -1,12 +1,14 @@
 import React from "react";
-import Styles from "@modules/ui/forms/select/MenuList.module.scss";
+import cn from "classnames";
 import { components } from "react-select";
+
+import Styles from "@modules/ui/forms/select/MenuList.module.scss";
 
 const MenuList = function (props: any) {
   const RSMenuList = components.MenuList;
 
   return (
-    <RSMenuList {...props} className={Styles.menu}>
+    <RSMenuList {...props} className={cn("p-0", Styles.list)}>
       {props.children}
     </RSMenuList>
   );

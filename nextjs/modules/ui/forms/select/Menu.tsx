@@ -1,0 +1,17 @@
+import React from "react";
+import cn from "classnames";
+import { components } from "react-select";
+
+import Styles from "@modules/ui/forms/select/Menu.module.scss";
+
+const Menu = function (props: any) {
+  const RSMenu = components.Menu;
+
+  return (
+    <RSMenu {...props} className={cn(Styles.menu)}>
+      {props.children}
+    </RSMenu>
+  );
+};
+
+export default Menu;
