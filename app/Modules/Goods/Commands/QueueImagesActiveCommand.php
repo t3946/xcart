@@ -87,12 +87,13 @@ class QueueImagesActiveCommand extends Command
     public static function addProductImage(ProductModel $product, ProductImageModel $image, int $order_by): void
     {
         try {
-            [$model] = ProductImagesModel::objects()->getOrNew([
+            [$model, $is_new] = ProductImagesModel::objects()->getOrNew([
                 'product_id' => $product->pk,
                 'image_id' => $image->pk,
             ]);
-
-            $model->order_by = $order_by;
+            if ($is_new) {
+                $model->order_by = $order_by;
+            }
 
             $model->save();
         } catch (Throwable $exception) {
