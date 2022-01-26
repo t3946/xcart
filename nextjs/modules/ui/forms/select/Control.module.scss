@@ -1,0 +1,56 @@
+@use "sass:color";
+@import "styles/utils/Utils.module";
+
+div.control {
+  border-radius: 0;
+  border: 1px solid #c4c4c4;
+  box-shadow: none;
+
+  &:hover {
+    border-color: #c4c4c4;
+  }
+
+  @include breakpoint(md) {
+    height: pxToRem(42);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(45);
+    padding: 0 0 0 pxToRem(15);
+  }
+}
+
+div.control_focus {
+  border-color: #f2b405;
+  box-shadow: 0 0 0 pxToRem(3) rgba(242, 180, 5, 0.34);
+
+  &:hover {
+    border-color: #f2b405;
+  }
+}
+
+div.control_valid {
+  border-color: $valid;
+
+  &:hover {
+    border-color: $valid;
+  }
+}
+
+div.control_valid_focus {
+  box-shadow: 0 0 0 pxToRem(3) color.adjust($valid, $alpha: -0.6);
+  border-color: $valid;
+}
+
+div.control_invalid {
+  border-color: $invalid;
+
+  &:hover {
+    border-color: $invalid;
+  }
+}
+
+div.control_invalid_focus {
+  border-color: $invalid;
+  box-shadow: 0 0 0 pxToRem(3) color.adjust($invalid, $alpha: -0.6);
+}
