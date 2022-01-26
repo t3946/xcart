@@ -1,13 +1,13 @@
 import React from "react";
 import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
-import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
-import { useDispatch } from "react-redux";
+import {getRatingsAndReviewsAction} from "@client/jsx/redux/actions/ProductActions";
+import {useDispatch} from "react-redux";
 import ArrowIcon from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
-import { Collapse } from "react-bootstrap";
+import {Collapse} from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
 import Reviews from "@client/modules/product/Components/Reviews";
-import AppData, { route } from "@client/jsx/utils/AppData";
+import AppData, {route} from "@client/jsx/utils/AppData";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 const WriteAReviewButton: React.FC = function () {
@@ -65,7 +65,7 @@ const ProductReviews: React.FC = function () {
     }
   } else {
     dispatch(
-      getRatingsAndReviewsAction({ data: { productId, limit: 3, offset: 0 } })
+      getRatingsAndReviewsAction({data: {productId, limit: 3, offset: 0}})
     );
   }
 
@@ -74,7 +74,7 @@ const ProductReviews: React.FC = function () {
 
     if (ratings) {
       for (let i = 0; i < ratings.features.length; i++) {
-        const { rating } = ratings.features[i];
+        const {rating} = ratings.features[i];
         const total = parseInt(ratings.features[i].total);
 
         ratingElements.push(
@@ -124,7 +124,7 @@ const ProductReviews: React.FC = function () {
 
     return (
       <>
-        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
+        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark"/>
 
         <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
           Review this product
@@ -134,7 +134,63 @@ const ProductReviews: React.FC = function () {
           Share your thoughts with other customers
         </p>
 
-        <WriteAReviewButton />
+        <WriteAReviewButton/>
+      </>
+    );
+  }
+
+  function overallRatingTemplate() {
+    if (totalRatingsNumber === 0) {
+      return;
+    }
+
+    return (
+      <>
+        <h4
+          className={
+            "product-reviews-header mb-2 mb-md-14 mb-lg-16 d-flex align-items-center justify-content-between"
+          }
+        >
+          Overall
+          <span className={"overall-header-total d-lg-none"}>
+              {totalRatingsNumber.toLocaleString()} Ratings
+            </span>
+        </h4>
+
+        <div className="product-rating">
+          <OverallRating
+            ratings={ratings?.overall}
+            classes={classes.overallRating}
+          />
+
+          <div className="how-calculated product-reviews_how-calculated">
+            <div
+              className={"common-link common-link_spoiler d-inline-block"}
+              onClick={() =>
+                setIsVisibleHowCalculated(!isVisibleHowCalculated)
+              }
+            >
+              <div className="d-flex align-items-center">
+                <ArrowIcon
+                  className={classnames(classes.howCalculatedClasses)}
+                />{" "}
+                How are ratings calculated ?
+              </div>
+            </div>
+
+            <Collapse in={isVisibleHowCalculated}>
+              <p className={"how-calculated_text"}>
+                To calculate the overall star rating and percentage breakdown
+                by star, we don’t use a simple average. Instead, our system
+                considers things like how recent a review is and if the
+                reviewer bought the item on S3 stores. It also analyzes
+                reviews to verify trustworthiness.
+              </p>
+            </Collapse>
+          </div>
+        </div>
+
+        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark"/>
       </>
     );
   }
@@ -151,51 +207,7 @@ const ProductReviews: React.FC = function () {
             Customer reviews
           </h3>
 
-          <h4
-            className={
-              "product-reviews-header mb-2 mb-md-14 mb-lg-16 d-flex align-items-center justify-content-between"
-            }
-          >
-            Overall
-            <span className={"overall-header-total d-lg-none"}>
-              {totalRatingsNumber.toLocaleString()} Ratings
-            </span>
-          </h4>
-
-          <div className="product-rating">
-            <OverallRating
-              ratings={ratings?.overall}
-              classes={classes.overallRating}
-            />
-
-            <div className="how-calculated product-reviews_how-calculated">
-              <div
-                className={"common-link common-link_spoiler d-inline-block"}
-                onClick={() =>
-                  setIsVisibleHowCalculated(!isVisibleHowCalculated)
-                }
-              >
-                <div className="d-flex align-items-center">
-                  <ArrowIcon
-                    className={classnames(classes.howCalculatedClasses)}
-                  />{" "}
-                  How are ratings calculated ?
-                </div>
-              </div>
-
-              <Collapse in={isVisibleHowCalculated}>
-                <p className={"how-calculated_text"}>
-                  To calculate the overall star rating and percentage breakdown
-                  by star, we don’t use a simple average. Instead, our system
-                  considers things like how recent a review is and if the
-                  reviewer bought the item on S3 stores. It also analyzes
-                  reviews to verify trustworthiness.
-                </p>
-              </Collapse>
-            </div>
-          </div>
-
-          <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
+          {overallRatingTemplate()}
 
           <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
             By feature
@@ -207,7 +219,7 @@ const ProductReviews: React.FC = function () {
         </div>
 
         <div className="col-12 col-lg product-reviews-right-column">
-          <Reviews productId={productId} />
+          <Reviews productId={productId}/>
         </div>
       </div>
     </div>
