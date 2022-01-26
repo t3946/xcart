@@ -1,5 +1,5 @@
 import React from "react";
-import classnames from "classnames";
+import cn from "classnames";
 import CatalogContext from "@modules/components/catalog/CatalogContext";
 import ListIcon from "@components/common/icons/view-mode/List";
 import TileIcon from "@components/common/icons/view-mode/Tile";
@@ -23,6 +23,24 @@ export default class CatalogViewMode extends React.Component {
   render() {
     const mode = this.context.viewMode || this.TILE_MODE;
     const classes = {
+      button: {
+        tile: [
+          Styles.button,
+          "d-flex",
+          "me-2",
+          {
+            [Styles.button_active]: mode === this.TILE_MODE,
+          },
+        ],
+        list: [
+          Styles.button,
+          "d-flex",
+          {
+            [Styles.button_active]: mode === this.LIST_MODE,
+          },
+        ],
+      },
+
       icon: [Styles.icon],
     };
 
@@ -33,23 +51,19 @@ export default class CatalogViewMode extends React.Component {
         <a
           onClick={(e) => this.setMode(e, this.TILE_MODE)}
           href="#"
-          className={classnames("tile-view", "d-flex", "me-2", {
-            active: mode === this.TILE_MODE,
-          })}
+          className={cn(classes.button.tile)}
           data-value="tile-view"
         >
-          <TileIcon className={Styles.icon} />
+          <TileIcon className={classes.icon} />
         </a>
 
         <a
           onClick={(e) => this.setMode(e, this.LIST_MODE)}
           href="#"
-          className={classnames("list-view", "d-flex", {
-            active: mode === this.LIST_MODE,
-          })}
+          className={cn(classes.button.list)}
           data-value="list-view"
         >
-          <ListIcon className={Styles.icon} />
+          <ListIcon className={classes.icon} />
         </a>
       </div>
     );

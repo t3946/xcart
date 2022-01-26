@@ -4,3 +4,19 @@
   width: pxToRem(18);
   height: pxToRem(18);
 }
+
+
+.button {
+  color: #93a0a9;
+
+  &:hover {
+    color: #677d86;
+  }
+}
+
+.button_active {
+  color: #173444;
+  &:hover {
+    color: #173444;
+  }
+}
