@@ -6,7 +6,7 @@ import CreateWaitButton from "@modules/components/AnimateWaitButton";
 import t from "@utils/i18n";
 import React from "react";
 import $ from "jquery";
-import {addToCart} from "@utils/Analytics";
+import { addToCart } from "@utils/Analytics";
 
 export default class AddToCartButton extends React.Component {
   constructor(props) {
@@ -75,13 +75,13 @@ export default class AddToCartButton extends React.Component {
         checkoutLink.push(propsClasses.checkoutLinkComplex);
       }
 
-      for (let key in classes) {
+      for (const key in classes) {
         classes[key].push(propsClasses[key]);
       }
     }
 
     // join classes
-    for (let key in classes) {
+    for (const key in classes) {
       classes[key] = classnames(classes[key]);
     }
 
@@ -149,7 +149,7 @@ export default class AddToCartButton extends React.Component {
           typeof document.formValidators !== "undefined" &&
           document.formValidators[infoFormId] !== "undefined"
         ) {
-          let formValidate = document.formValidators[infoFormId];
+          const formValidate = document.formValidators[infoFormId];
           formValidate.checkAllForm();
 
           if (formValidate.hasErrors) {
@@ -158,19 +158,19 @@ export default class AddToCartButton extends React.Component {
         }
       }
 
-      let opt = [];
-      let values = $(form).serializeArray();
+      const opt = [];
+      const values = $(form).serializeArray();
 
-      for (let oneValue of values) {
-        let valueParts = oneValue.value.split("_");
-        let identifiersParts = valueParts[0].split("-");
+      for (const oneValue of values) {
+        const valueParts = oneValue.value.split("_");
+        const identifiersParts = valueParts[0].split("-");
         opt.push({
           optionId: identifiersParts[0],
           variantId: identifiersParts[1],
         });
       }
 
-      let data = [
+      const data = [
         {
           id: product.dataset.product,
           quantity: this.props.quantity,
