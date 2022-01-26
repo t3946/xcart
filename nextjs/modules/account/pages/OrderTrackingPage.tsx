@@ -7,9 +7,10 @@ import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import moment from "moment";
-
-export const OrderTrackingPage: React.FC = () => {
-  const order: OrderView = useSelectorAccount((store) => store.orderView);
+interface OrderTrackingPage {
+  order: OrderView;
+}
+export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
@@ -22,7 +23,6 @@ export const OrderTrackingPage: React.FC = () => {
 
   const [shippingPos, setShippingPos] = useState([]);
   const api = new ApiService();
-
   return (
     <div>
       <div className="page-label">Order tracking</div>

@@ -1,4 +1,3 @@
-import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import { NextPage, NextPageContext } from "next";
 import { OrderInfoHeader } from "@modules/account/components/orders/OrderInfoHeader";
@@ -7,34 +6,29 @@ import { OrderLogPage } from "@modules/account/pages/OrderLogPage";
 import { OrderAddressesPage } from "@modules/account/pages/OrderAddressesPage";
 import { ProductsOrderedPage } from "@modules/account/pages/ProductsOrderedPage";
 import { OrderActionsPage } from "@modules/account/pages/OrderActionsPage";
-import { getInstance } from "@services/axios/Instance";
+import { setOrderView } from "@redux/actions/account-actions/OrdersActions";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
-export async function getServerSideProps(ctx: NextPageContext) {
-  const instance = getInstance(ctx.req);
-  const { id: orderId, type } = ctx.query;
-  let order;
+const OrderPage: NextPage = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { type, id } = router.query;
+  useEffect(() => {
+    dispatch(setOrderView(Number(id)));
+  }, []);
 
-  await instance.get(`/api/account/orders/get-one/${orderId}`).then((res) => {
-    order = res.data;
-  });
-
-  return {
-    props: { order, type },
-  };
-}
-
-interface IProps {
-  order: Record<any, any>;
-  type: string;
-}
-
-const OrderPage: NextPage<IProps> = (props: IProps) => {
-  const { order, type } = props;
-
+  const order: OrderView = useSelectorAccount((state) => state.orderView);
+  if (!order) {
+    return null;
+  }
   const getSection = () => {
     switch (type) {
       case "order-tracking":
-        return <OrderTrackingPage />;
+        return <OrderTrackingPage order={order} />;
       case "log":
         return <OrderLogPage logs={order.logs} />;
       case "products-ordered":
@@ -57,7 +51,7 @@ const OrderPage: NextPage<IProps> = (props: IProps) => {
         orderId={order.orderId}
       />
 
-      {order && getSection()}
+      {getSection()}
     </PageTwoColumns>
   );
 };
