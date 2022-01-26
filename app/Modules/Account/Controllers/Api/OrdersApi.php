@@ -140,11 +140,11 @@ class OrdersApi extends Controller
                 'id' => $log_model->pk
             ];
         }
-        $emails = EmailModel::objects()->filter(["order_models__orderid" => $order_id])->order(['-date']);
-        /** @var EmailModel $email_model */
-        foreach ($emails as $email_model) {
-            $ar_emails[] = $email_model->getFrontendEmail();
-        }
+//        $emails = EmailModel::objects()->filter(["order_models__orderid" => $order_id])->order(['-date']);
+//        /** @var EmailModel $email_model */
+//        foreach ($emails as $email_model) {
+//            $ar_emails[] = $email_model->getFrontendEmail();
+//        }
         $transaction = $order_model->transactions[0];
         if ($order_model->isPurchaseOrder() && $extra_model = $order_model->extra_model) {
             $purchase_data = $extra_model->getFrontendPurchase();
@@ -169,7 +169,7 @@ class OrdersApi extends Controller
                 'date' => $transaction ? $transaction->date : $order_model->date, // TODO: Поменять на метод getFirstTransaction из master branch
             ],
             'logs' => $logs ?? [],
-            'emails' => $ar_emails ?? [],
+            'emails' => [],
             'purchase' => $purchase_data ?? null
         ];
         $this->jsonResponse($order);
