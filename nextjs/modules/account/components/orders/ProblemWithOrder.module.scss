@@ -1,6 +1,5 @@
 @import "styles/utils/Utils.module";
 
-
 .radioCard {
   font-size: pxToRem(18);
 }
@@ -12,5 +11,19 @@
 
   @include breakpoint(lg) {
     width: pxToRem(119);
+  }
+}
+
+div.select {
+  height: pxToRem(38);
+
+  @include breakpoint(md) {
+    height: pxToRem(42);
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(45);
+    font-size: pxToRem(16);
   }
 }

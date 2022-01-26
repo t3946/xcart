@@ -5,9 +5,9 @@ export function fillArrayItemsOnOrderActions(
 ): SelectValue<number, number>[] {
   const mass = Array(Number(productAmount))
     .fill(null)
-    .map((_, index) => ({ value: index + 1, viewValue: index + 1 }));
+    .map((_, index) => ({ value: index + 1, label: index + 1 }));
 
-  mass.unshift({ value: 0, viewValue: 0 });
+  mass.unshift({ value: 0, label: 0 });
 
   return mass;
 }

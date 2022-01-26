@@ -5,19 +5,18 @@ import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
 import Menu from "@modules/ui/forms/select/Menu";
 import MenuList from "@modules/ui/forms/select/MenuList";
-import IndicatorSeparator from "@modules/ui/forms/select/Separator";
-import DropdownIndicator from "@modules/ui/forms/select/DropdownIndicator";
 
 import Styles from "@modules/ui/forms/select/Select.module.scss";
 
 interface IProps {
   options: any;
-  disabled: boolean;
+  disabled?: boolean;
+  name?: string;
   value: { value: string | number; label: string };
   clearable?: boolean;
   isValid?: boolean;
   isInvalid?: boolean;
-  onChange?: () => void;
+  onChange?: (value: any) => void;
   placeholder?: React.ReactNode | string;
   classes?: {
     select?: any;
@@ -31,10 +30,11 @@ const Select = function (props: IProps) {
   const {
     classes,
     options,
-    placeholder,
+    placeholder = "",
     disabled,
     value,
     onChange,
+    name,
     isValid,
     isInvalid,
     clearable = true,
@@ -44,21 +44,22 @@ const Select = function (props: IProps) {
     <ReactSelect
       className={cn(Styles.select, classes?.select)}
       isClearable={clearable}
-      onChange={onChange}
+      onChange={(value) => {
+        onChange({ target: { name, value } });
+      }}
       value={value}
+      name={name}
       options={options}
       classes={classes}
       isValid={isValid}
       isInvalid={isInvalid}
       isDisabled={disabled}
-      placeholder={placeholder ?? ""}
+      placeholder={placeholder}
       components={{
         Option,
         Menu,
         MenuList,
         Control,
-        // IndicatorSeparator,
-        // DropdownIndicator,
       }}
     />
   );

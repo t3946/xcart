@@ -52,8 +52,8 @@ const LTLFreightShipment: React.FC = () => {
     {
       label: "Commercial or residential delivery?",
       radios: [
-        { viewValue: "Commercical", value: "commercial" },
-        { viewValue: "Residential", value: "residential" },
+        { label: "Commercical", value: "commercial" },
+        { label: "Residential", value: "residential" },
       ],
     },
     {
@@ -63,16 +63,16 @@ const LTLFreightShipment: React.FC = () => {
         value: "commercial",
       },
       radios: [
-        { viewValue: "Yes", value: "yes" },
-        { viewValue: "No", value: "no" },
+        { label: "Yes", value: "yes" },
+        { label: "No", value: "no" },
       ],
     },
     {
       label: "Curbside or inside delivery?",
       ext: "Carriers may charge extra for residential, lift gate and inside delivery",
       radios: [
-        { viewValue: "Curbside delivery", value: "curbside" },
-        { viewValue: "Inside delivery", value: "inside" },
+        { label: "Curbside delivery", value: "curbside" },
+        { label: "Inside delivery", value: "inside" },
       ],
     },
   ];
@@ -103,18 +103,18 @@ const LTLFreightShipment: React.FC = () => {
       if (q.dependency) {
         fields[q.label] = Yup.object({
           value: Yup.string().required("Required"),
-          viewValue: Yup.string().required("Required"),
+          label: Yup.string().required("Required"),
         }).when(q.dependency.question, {
           is: q.dependency.value,
           then: Yup.object({
             value: Yup.string().required("Required"),
-            viewValue: Yup.string().required("Required"),
+            label: Yup.string().required("Required"),
           }).required("Required"),
         });
       } else {
         fields[q.label] = Yup.object({
           value: Yup.string().required("Required"),
-          viewValue: Yup.string().required("Required"),
+          label: Yup.string().required("Required"),
         }).required("Required");
       }
     }
@@ -234,9 +234,7 @@ const LTLFreightShipment: React.FC = () => {
                   key={index}
                   question={questionData}
                   disabled={isSubmitting}
-                  onChange={(e) => {
-                    setFieldValue(questionData.label, e);
-                  }}
+                  onChange={handleChange}
                   error={
                     touched[questionData.label] && errors[questionData.label]
                   }
