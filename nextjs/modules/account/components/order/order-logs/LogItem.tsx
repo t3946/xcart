@@ -19,7 +19,7 @@ export const LogItem: React.FC<LogItem> = ({ item }) => {
   return (
     <div className={`${classes.orderLogItem} ${getClassByTypeLog(item.type)}`}>
       <div className={classes.cell}>
-        {moment.unix(item.date).format("D-MMM-YYYY h:mm:ss")}
+        {moment.unix(item.date).utc().format("D-MMM-YYYY h:mm:ss")}
       </div>
       <div className={classes.cell}>{item.login}</div>
       <div className={classes.cell}>{item.type}</div>

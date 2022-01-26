@@ -2,41 +2,34 @@ import React from "react";
 import Item from "@modules/account/components/orders/Navigation/Item";
 // import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import NavigationMobile from "@modules/account/components/orders/Navigation/NavigationMobile";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import Styles from "@modules/account/components/orders/Navigation/Navigation.module.scss"
+import { useRouter } from "next/router";
 
-const Navigation: React.FC = () => {
-  // useSelector((store: AccountStore) => store.main.breakpoint);
+interface IProps {
+  orderId: number;
+}
+
+const Navigation: React.FC<IProps> = ({ orderId }) => {
+  const router = useRouter();
   const user = useSelectorAccount((e: StoreInterface) => e.user);
 
   const menu = [
     {
       text: "Decisions required",
-      path: "/orders/decisions-required",
+      path: "decisions-required",
       badge: user?.decisions_required_count || 0,
-      classes: {
-        button: [
-          Styles.ordersNavigationButton_active,
-        ],
-      },
     },
     {
       text: "Order tracking",
-      path: "/",
+      path: "order-tracking",
     },
-    { text: "Products ordered", path: "/" },
-    { text: "Addresses and contacts", path: "/" },
-    { text: "Order actions", path: "/" },
-    { text: "Order communication", path: "/" },
-    { text: "Order log", path: "/" },
+    { text: "Products ordered", path: "products-ordered" },
+    { text: "Addresses and contacts", path: "addresses" },
+    { text: "Order actions", path: "order-actions" },
+    // TODO: Убрали поскольку не настроен бек под отправку и чтение писем
+    // { text: "Order communication", path: `/order/${orderId}/` },
+    { text: "Order log", path: `log` },
   ];
-
-  const items = [];
-
-  menu.forEach((value, index) => {
-    items.push(<Item {...value} key={index} />);
-  });
 
   // const breakpoint = useBreakpoint();
 
@@ -50,7 +43,18 @@ const Navigation: React.FC = () => {
       />
     ),
   });*/
-  return <div className={"orders-navigation"}>{items}</div>;
+  return (
+    <div className={" order-info-header"}>
+      {menu.map((value, index) => (
+        <Item
+          {...value}
+          active={router.query.type === value.path}
+          orderId={orderId}
+          key={index}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default Navigation;

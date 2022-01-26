@@ -26,66 +26,6 @@ interface IProps {
 
 const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
   const { onChange, decision } = props;
-  const mockData = [
-    {
-      city: "Ogdensburg",
-      state: "NY",
-      country: "US",
-      regularShipping: 11.9,
-      salesTax: 1.8,
-      vatTax: 1.8,
-      subtotal: 5.7,
-      paymentStatus: "Awaiting payment",
-      shippingStatus: "Not shipped",
-      items: [
-        {
-          name: "Ecstasy Crafts Architextures Treasures - Wooden Corkscrew",
-          sku: "ECS-7G25093",
-          price: 2.85,
-          amount: 2,
-          image:
-            "https://i3.s3stores.com/images/ECS/preview_c447b23f423ed3696e11121442858b7b.jpeg",
-        },
-      ],
-    },
-    {
-      city: "Ogdensburg",
-      state: "NY",
-      country: "US",
-      regularShipping: 11.9,
-      salesTax: 1.8,
-      vatTax: 1.8,
-      subtotal: 5.7,
-      paymentStatus: "Awaiting payment",
-      shippingStatus: "Not shipped",
-      items: [
-        {
-          name: "Ecstasy Crafts Architextures Treasures - Wooden Corkscrew",
-          sku: "ECS-7G25093",
-          price: 2.85,
-          amount: 2,
-          image:
-            "https://i3.s3stores.com/images/ECS/preview_c447b23f423ed3696e11121442858b7b.jpeg",
-        },
-        {
-          name: "Ecstasy Crafts Architextures Treasures - Wooden Corkscrew",
-          sku: "ECS-7G25093",
-          price: 2.85,
-          amount: 2,
-          image:
-            "https://i3.s3stores.com/images/ECS/preview_c447b23f423ed3696e11121442858b7b.jpeg",
-        },
-        {
-          name: "Ecstasy Crafts Architextures Treasures - Wooden Corkscrew",
-          sku: "ECS-7G25093",
-          price: 2.85,
-          amount: 2,
-          image:
-            "https://i3.s3stores.com/images/ECS/preview_c447b23f423ed3696e11121442858b7b.jpeg",
-        },
-      ],
-    },
-  ];
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
   const router = useRouter();
@@ -183,7 +123,7 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
           >
             Total Shipping Cost was adjusted on the PO you've submitted to us:
           </p>
-          <OrderTable order={mockData} />
+          <OrderTable order={decision} />
           <p
             className={cn([
               Styles.decisionText,

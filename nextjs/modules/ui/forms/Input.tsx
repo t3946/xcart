@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement | null, IProps>(
     ];
     const mergeProps = {
       ...props,
-      type: props.type ? props.type : "text",
+      type: props.type ?? "text",
       className: cn(classes),
       ref: ref,
     };

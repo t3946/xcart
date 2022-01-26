@@ -9,14 +9,15 @@ import Styles from "@modules/account/components/orders/Decision/LTLFreightShipme
 
 interface IProps {
   question: {
-    label: string;
+    label?: string;
+    name?: string;
     ext?: string;
     dependency?: {
       question: string;
       value: string;
     };
     radios: {
-      label: string;
+      viewValue: string;
       value: string;
     }[];
   };
@@ -26,13 +27,16 @@ interface IProps {
   onChange: (e) => void;
   classes?: {
     container?: any;
+    card?: any;
   };
 }
 
 const RadioQuestion: React.FC<IProps> = (props) => {
+  const questionKey = props.question.name || props.question.label || "";
+
   if (props.question.dependency) {
     if (
-      props.checkedValues[props.question.dependency.question] !==
+      props.checkedValues[props.question.dependency.question].value !==
       props.question.dependency.value
     ) {
       return <></>;
@@ -41,38 +45,40 @@ const RadioQuestion: React.FC<IProps> = (props) => {
 
   return (
     <div className={cn(Styles.question, props.classes?.container)}>
-      <Label
-        className={cn(
-          Styles.questionLabel,
-          Styles.question__label,
-          "d-block",
-          LTLFreightShipmentStyles.columnPadding,
-          { [Styles.questionLabel_ext]: props.question.ext }
-        )}
-      >
-        {props.question.label}{" "}
-        {props.question.ext && (
-          <>
-            <div className={cn(Styles.questionLabelExt, "d-lg-none")}>
-              {props.question.ext}
-            </div>
-            <span
-              className={cn(
-                Styles.questionLabelExt,
-                "d-none",
-                "d-lg-inline-block"
-              )}
-            >
-              ({props.question.ext})
-            </span>
-          </>
-        )}
-        {props.error && (
-          <Feedback className={Styles.questionLabelFeedback} type="invalid">
-            {props.error}
-          </Feedback>
-        )}
-      </Label>
+      {props.question.label && (
+        <Label
+          className={cn(
+            Styles.questionLabel,
+            Styles.question__label,
+            "d-block",
+            LTLFreightShipmentStyles.columnPadding,
+            { [Styles.questionLabel_ext]: props.question.ext }
+          )}
+        >
+          {props.question.label}{" "}
+          {props.question.ext && (
+            <>
+              <div className={cn(Styles.questionLabelExt, "d-lg-none")}>
+                {props.question.ext}
+              </div>
+              <span
+                className={cn(
+                  Styles.questionLabelExt,
+                  "d-none",
+                  "d-lg-inline-block"
+                )}
+              >
+                ({props.question.ext})
+              </span>
+            </>
+          )}
+          {props.error && (
+            <Feedback className={Styles.questionLabelFeedback} type="invalid">
+              {props.error.value}
+            </Feedback>
+          )}
+        </Label>
+      )}
       <div className={cn(Styles.question__radios, "d-flex", "flex-dir-column")}>
         {props.question.radios.map((answer, i) => {
           return (
@@ -82,17 +88,19 @@ const RadioQuestion: React.FC<IProps> = (props) => {
                 "d-flex",
                 "align-items-center",
                 "g-5",
-                Styles.radioLine
+                "cursor-pointer",
+                Styles.radioLine,
+                props.classes?.card
               )}
             >
               <RadioButton
-                name={props.question.label}
+                name={questionKey}
                 value={answer.value}
-                checkedValue={props.checkedValues[props.question.label]}
+                checkedValue={props.checkedValues[questionKey]?.value}
                 disabled={props.disabled}
-                onChange={props.onChange}
+                onChange={() => props.onChange(answer)}
               />
-              <span>{answer.label}</span>
+              <span>{answer.viewValue}</span>
             </label>
           );
         })}

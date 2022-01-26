@@ -1,0 +1,17 @@
+@import "styles/utils/Utils.module";
+
+.name {
+  color: #075a91;
+  line-height: pxToRem(20);
+  
+  @include breakpoint(md) {
+    line-height: pxToRem(28);
+  }
+  @include breakpoint(lg) {
+    line-height: pxToRem(22);
+  }
+}
+
+.sku {
+  color: #2a8c3e;
+}

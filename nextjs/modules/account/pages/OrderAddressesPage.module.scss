@@ -1,0 +1,68 @@
+@import "styles/utils/Utils.module";
+
+.order__grid {
+  margin: 0 pxToRem(-10);
+}
+
+.order__checkbox {
+  margin: 0 pxToRem(-10);
+
+  @include breakpoint(md) {
+    margin: 0;
+  }
+}
+
+.orgerGrid {
+  border: none;
+
+  @include breakpoint(md) {
+    border: 1px solid #c4c4c4;
+    border-left: none;
+    border-right: none;
+  }
+
+  @include breakpoint(lg) {
+    border: 1px solid #c4c4c4;
+  }
+}
+
+.orderGridItem {
+  border: none;
+
+  @include breakpoint(md) {
+    padding: pxToRem(20) pxToRem(25) pxToRem(27);
+    border: none;
+    border-bottom: 1px solid #c4c4c4;
+
+    &:last-child {
+      border: none;
+    }
+  }
+}
+
+.orderAddress {
+  width: 100%;
+  padding: 0 pxToRem(16);
+  height: auto;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  //
+  @include breakpoint(md) {
+    width: pxToRem(300);
+    height: pxToRem(222);
+    padding: pxToRem(20) pxToRem(24) pxToRem(30);
+    border: pxToRem(1) solid #c4c4c4;
+  }
+}
+
+.orderAddressItem {
+  @include breakpoint(md) {
+    margin-right: pxToRem(10);
+  }
+
+  @include breakpoint(lg) {
+    margin-right: pxToRem(26);
+  }
+}

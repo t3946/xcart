@@ -46,6 +46,17 @@
 }
 
 .ordersNavigationButton_active {
+  background-color: #ffffff;
+  cursor: default;
+
+  &:hover,
+  &:focus,
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.ordersNavigationButton_badge {
   background: #fff5f4;
   border: 1px solid #ffa9a5;
   color: #000000;

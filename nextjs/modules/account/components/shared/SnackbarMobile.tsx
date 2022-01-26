@@ -5,9 +5,9 @@ import {
 } from "@modules/account/components/shared/Snackbar";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useDispatch } from "react-redux";
-import { hideSnackbar } from "@redux/actions/account-actions/SnackbarActions";
 import TimesIcon from "@modules/icon/components/account/ModalTimes";
 import cn from "classnames";
+import hideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import Styles from "@modules/account/components/shared/SnackbarMobile.module.scss";
 
@@ -20,7 +20,6 @@ const SnackbarMobile: React.FC = () => {
       dispatch(setVisibleShadowPanelAction(true));
       setDisplaying(true);
     } else {
-      dispatch(setVisibleShadowPanelAction(false));
       setDisplaying(false);
     }
   }, [snackbar]);
@@ -82,7 +81,9 @@ const SnackbarMobile: React.FC = () => {
           "shrink-by-active",
           Styles.mobileAlertClose,
         ])}
-        onClick={() => dispatch(hideSnackbar())}
+        onClick={function () {
+          hideAllMenu(dispatch);
+        }}
       >
         <TimesIcon />
       </span>

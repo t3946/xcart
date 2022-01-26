@@ -9,6 +9,7 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
+
 import Styles from "@modules/account/components/hat/LoginButton/LoginButtonTablet.module.scss";
 
 const LoginButtonTablet: React.FC<any> = () => {

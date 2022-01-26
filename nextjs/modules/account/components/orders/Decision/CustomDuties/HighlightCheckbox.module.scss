@@ -1,0 +1,22 @@
+@import "styles/utils/Utils.module";
+
+.checkboxContainer {
+  background-color: #fff7dc;
+  padding: pxToRem(16) pxToRem(20) pxToRem(26);
+
+  @include breakpoint(sm) {
+    padding: pxToRem(16) pxToRem(10) pxToRem(26);
+  }
+
+  @include breakpoint(md) {
+    padding: pxToRem(25) pxToRem(29) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(26) pxToRem(25);
+  }
+}
+
+.checkboxContainer_active {
+  background-color: #effedf;
+}

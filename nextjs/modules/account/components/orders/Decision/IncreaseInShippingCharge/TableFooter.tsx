@@ -72,7 +72,7 @@ const TableFooter: React.FC<IProps> = ({
             Styles.tableFooterShippingSubtotal__regularShipping,
           ])}
         >
-          US$ {regularShipping.toFixed(2)}
+          US$ {regularShipping}
         </span>
 
         <span
@@ -85,7 +85,7 @@ const TableFooter: React.FC<IProps> = ({
         </span>
 
         <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-          US$ {salesTax.toFixed(2)}
+          US$ {salesTax}
         </span>
 
         <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
@@ -93,7 +93,7 @@ const TableFooter: React.FC<IProps> = ({
         </span>
 
         <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-          US$ {vatTax.toFixed(2)}
+          US$ {vatTax}
         </span>
 
         <span
@@ -111,7 +111,7 @@ const TableFooter: React.FC<IProps> = ({
             Styles.tableFooterShipping__subtotal,
           ])}
         >
-          US$ {subtotal.toFixed(2)}
+          US$ {subtotal}
         </span>
       </div>
     </div>
