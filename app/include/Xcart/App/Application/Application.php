@@ -6,6 +6,7 @@ use Modules\Cart\Components\XCart;
 use Modules\Mail\Components\MailComponent;
 use Modules\Mail\Components\Mailer;
 use Modules\Order\Components\OrderLogger;
+use Modules\Search\Helpers\ElasticHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Cache\Cache;
 use Xcart\App\Cli\Cli;
@@ -53,6 +54,7 @@ use Xcart\App\Template\TemplateManager;
  *
  * @property UserModel $user
  * @property OrderLogger $order_logger
+ * @property ElasticHelper $elastic
  * 
  * @package Xcart\App\Application
  */

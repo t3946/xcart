@@ -2,6 +2,7 @@
 
 use Aws\S3\S3Client;
 use Modules\Order\Components\OrderLogger;
+use Modules\Search\Helpers\ElasticHelper;
 use Xcart\App\Main\ErrorHandler;
 use Modules\User\Components\Auth;
 use Modules\Mail\Components\Mailer;
@@ -92,6 +93,12 @@ return array_replace_recursive([
            'port' => 5672,
            'user' => 'xcart',
            'password' => 'Uv5WxjbRj7pjqzY',
+       ],
+
+       'elastic' => [
+           'class' => ElasticHelper::class,
+           'apiEndpoint' => 'http://68.168.211.58:3002/',
+           'apiKey' => 'private-xfpuz5d7ruisj6rh8s1cmawz',
        ],
 
        'event' => [

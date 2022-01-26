@@ -7,19 +7,18 @@ use DateTime;
 use DateTimeInterface;
 use Elastic\AppSearch\Client\ClientBuilder;
 use Modules\Goods\Models\CategoryModel;
+use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
+use Xcart\App\Main\Xcart;
 
 class ElasticUpdateCommand extends Command
 {
 
     public function handle($arguments = [])
     {
-        $apiEndpoint   = 'http://68.168.211.58:3002/';
-        $apiKey        = 'private-xfpuz5d7ruisj6rh8s1cmawz';
-
-        $client = ClientBuilder::create($apiEndpoint, $apiKey)->build();
+        $client = Xcart::app()->elastic->getClient();
 
         $i = 0;
 
@@ -32,6 +31,14 @@ class ElasticUpdateCommand extends Command
             foreach ($models as $model) {
                 /** @var ProductModel $model */
 
+                if ($main_image = $model->getMainImage()) {
+                    $main_image_sizes = [
+                        'detail' => $main_image->getCdnURL(ProductImageModel::IMAGE_SIZE_DETAIL),
+                        'preview' => $main_image->getCdnURL(ProductImageModel::IMAGE_SIZE_PREVIEW),
+                        'thumb' => $main_image->getCdnURL(ProductImageModel::IMAGE_SIZE_THUMB),
+                    ];
+                }
+
                 $documents[] = [
                     'id' => $model->pk,
                     'product'     => $model->getFrontendName(),
@@ -39,6 +46,8 @@ class ElasticUpdateCommand extends Command
                     'fulldescr' => $model->getFrontendDescription(),
                     'price' => $model->getPrice(),
                     'url' => $model->getAbsoluteUrl(true),
+                    'main_image' => $main_image_sizes ?? [],
+                    'is_group_root' => (int)$model->is_group_root,
                     'brand' => $model->brand->brand ?? '',
                     'upc' => $model->upc,
                     'sites' => array_map(static fn(SiteModel $site) => $site->code, $model->sites->all()),

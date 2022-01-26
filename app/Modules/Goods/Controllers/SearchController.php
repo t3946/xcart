@@ -3,7 +3,6 @@
 namespace Modules\Goods\Controllers;
 
 use Xcart\App\QueryBuilder\Expression;
-use Modules\Core\Components\GlobalConfig;
 use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\SearchSuggestionHelper;
