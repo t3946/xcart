@@ -75,17 +75,8 @@ export default class StateLine extends React.Component {
             Sort by
           </span>
 
-          {/*<span*/}
-          {/*  className="active_value show-for-large"*/}
-          {/*  onClick={this.toggleSortList.bind(this)}*/}
-          {/*  ref={this.sortButton}*/}
-          {/*>*/}
-          {/*  {this.sortingOptions[this.props.sortKey]}*/}
-          {/*</span>*/}
-
           <select
-            name=""
-            id=""
+            className={cn(Styles.select)}
             onChange={(e) => {
               this.sortCatalog(e);
             }}

@@ -2,11 +2,9 @@ import * as React from "react";
 import InnerPage from "@modules/account/components/shared/InnerPage";
 import Catalog from "@modules/components/catalog/Catalog";
 
-interface IProps {}
-
-const BuyAgain: React.FC<IProps> = function (props: IProps) {
+const BuyAgain: React.FC<any> = function () {
   const catalogProps = {
-    catalogUrl: "/api/category/58225/other-crafts/",
+    catalogUrl: "/api/category/bought-products",
     checkoutUrl: "/checkout/shipping/",
     hideSort: false,
     searchText: "",
@@ -21,7 +19,7 @@ const BuyAgain: React.FC<IProps> = function (props: IProps) {
   };
   return (
     <div>
-      <InnerPage header={"Buy Again"}>
+      <InnerPage header={"Buy Again"} hatClasses={"px-0"} bodyClasses={"px-0"}>
         <Catalog {...catalogProps} />
       </InnerPage>
     </div>

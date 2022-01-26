@@ -10,6 +10,7 @@ import {
   deleteProduct,
 } from "@redux/actions/account-actions/ListsActions";
 import $ from "jquery";
+import Styles from "@modules/components/catalog/ProductList.module.scss";
 
 // сколько вывести скелетов, когда нет продуктов
 const skeletonsNumber = 12;
@@ -182,7 +183,7 @@ export default class ProductsList extends React.Component {
     const viewMode = this.context.viewMode;
 
     const classes = [
-      "product-items",
+      Styles.productItems,
       `${viewMode}-view`,
       `product-items__${viewMode}`,
       {
