@@ -94,7 +94,16 @@ class OrdersApi extends Controller
 
     public function getOrder($order_id)
     {
+        /**
+         * @var $user UserModel
+        */
         $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
         /** @var OrderModel $order_model */
         $order_model = $user->orders->get(["pk" => $order_id]);
         foreach ($order_model->groups as $group_model) {
