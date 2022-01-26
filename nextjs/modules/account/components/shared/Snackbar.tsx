@@ -78,6 +78,7 @@ const Snackbar: React.FC = () => {
       Styles.snack,
       {
         "p-0": !displaying,
+        "m-0": !displaying,
         [Styles.snack_open]: displaying,
       },
     ],
