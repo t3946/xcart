@@ -6,7 +6,7 @@ import { FormikErrors } from "formik";
 import Input from "@modules/ui/forms/Input";
 import Styles from "@modules/ui/forms/Select.module.scss";
 
-interface Item {
+export interface Item {
   viewValue: string;
   previewValue?: string;
   value: any;
