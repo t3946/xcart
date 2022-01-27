@@ -47,6 +47,17 @@ app.get("/get-initial-state", isAuthMiddleware, async function (req, res) {
 });
 
 app.post("/get", isAuthMiddleware, async function (req, res) {
+  const { decisionId } = req.body;
+  const decision = await prisma.account_decisions.findUnique({
+    where: {
+      decision_id: decisionId,
+    },
+  });
+
+  res.json({ decision });
+});
+
+app.post("/get-list", isAuthMiddleware, async function (req, res) {
   const { skip, take, solved } = req.body;
 
   const decisions = await prisma.account_decisions.findMany({

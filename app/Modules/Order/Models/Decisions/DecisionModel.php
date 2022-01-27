@@ -15,7 +15,7 @@ class DecisionModel extends Model
 {
     public const types = [
         'estimated-time-arrival',
-        'payment-required',
+        'ach-payment-required',
         'license-required',
         'unpaid-order',
         'send-us-po',
@@ -26,6 +26,7 @@ class DecisionModel extends Model
         'responsibility-for-custom-duties',
         'alternative-items-offer',
         'additional-shipping-charge',
+        'additional-information-required',
     ];
 
     public static function tableName()

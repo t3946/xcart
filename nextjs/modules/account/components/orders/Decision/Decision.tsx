@@ -8,11 +8,11 @@ import IncreaseInShippingCharge from "@modules/account/components/orders/Decisio
 import AchPaymentIsRequired from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired";
 import AdditionalShippingCharge from "@modules/account/components/orders/Decision/AdditionalShippingCharge/AdditionalShippingCharge";
 import CustomDuties from "@modules/account/components/orders/Decision/CustomDuties/CustomDuties";
-import PaymentRequired from "@modules/account/components/orders/Decision/PaymentRequired/PaymentRequired";
 import AlternativeItemsOffer from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer";
 import EstimatedTimeArrival from "@modules/account/components/orders/Decision/EstimatedTimeArrival/EstimatedTimeArrival";
 import LTLFreightShipment from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment";
-import POAdditionalInformationRequired from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired"
+import POAdditionalInformationRequired from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired";
+import StreetAddressRequired from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { useDispatch } from "react-redux";
 import {
@@ -21,68 +21,45 @@ import {
 } from "@redux/actions/account-actions/DecisionsActions";
 import { useRouter } from "next/router";
 
-const Decision: React.FC = (props) => {
+interface IProps {
+  decision: Record<any, any>;
+}
+
+const Decision: React.FC<IProps> = (props) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const decision = props.decision;
+  const { decision } = props;
 
-  if (!decision) {
-    if (process.browser) {
-      router.push("/orders/decisions-required");
-    }
-    return <span>no decision</span>;
-  }
-
-  function onChangeDecision(decision: DecisionsInterface) {
+  async function onChangeDecision(decision: DecisionsInterface) {
     dispatch(resetAction());
     dispatch(addAction(decision));
-    router.push("/orders/decisions-required");
+    await router.push("/orders/decisions-required");
   }
+
+  const components: Record<string, React.FC<any>> = {
+    "estimated-time-arrival": EstimatedTimeArrival,
+    "ach-payment-required": AchPaymentIsRequired,
+    "license-required": LicenseRequire,
+    "unpaid-order": UnpaidOrder,
+    "send-us-po": OriginalPurchaseOrder,
+    "increase-shipping-charge": IncreaseInShippingCharge,
+    "send-check": SendingCheck,
+    "street-address-required": StreetAddressRequired,
+    "questions-ltl-freight-shipment": LTLFreightShipment,
+    "responsibility-for-custom-duties": CustomDuties,
+    "alternative-items-offer": AlternativeItemsOffer,
+    "additional-shipping-charge": AdditionalShippingCharge,
+    "additional-information-required": POAdditionalInformationRequired,
+  };
+  const DecisionComponents: React.FC<any> = components[decision.type];
 
   return (
     <div>
       <h1 className={"text-center fw-bold decision-header decision__header"}>
         Order # {decision.order_number}
       </h1>
-      <Navigation />
-      {(() => {
-        const props = {
-          onChange: onChangeDecision,
-          decision,
-        };
-
-        switch (decision.type) {
-          case "eta":
-            return <EstimatedTimeArrival {...props} />;
-          case "license":
-            return <LicenseRequire {...props} />;
-          case "payment":
-            return <UnpaidOrder {...props} />;
-        }
-      })()}
-
-      {/*<UnpaidOrder onChangeDecision={onChangeDecision} decision={decision} />*/}
-      {/*<SendingCheck*/}
-      {/*  firstAddress={{*/}
-      {/*    name: "S3 Stores, Inc.",*/}
-      {/*    address: `2885 Sanford Ave SW #12717*/}
-      {/*    Grandville, MI, 49418*/}
-      {/*    USA`,*/}
-      {/*  }}*/}
-      {/*  secondAddress={{*/}
-      {/*    name: "S3 Stores, Inc.",*/}
-      {/*    address: `27 Joseph St.,*/}
-      {/*    Chatham, Ontario, N7L 3G4*/}
-      {/*    Canada`,*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<IncreaseInShippingCharge onChange={onChangeDecision} decision={decision} />*/}
-      {/*<OriginalPurchaseOrder onChange={onChangeDecision} decision={decision} />*/}
-      {/*<AchPaymentIsRequired />*/}
-      {/* <CustomDuties /> */}
-      {/* <AdditionalShippingCharge /> */}
-      {/* <POAdditionalShippingCharge /> */}
-      <POAdditionalInformationRequired />
+      <Navigation orderId={decision.order_id} />
+      <DecisionComponents onChange={onChangeDecision} decision={decision} />
     </div>
   );
 };
