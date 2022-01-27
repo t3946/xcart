@@ -167,12 +167,7 @@ const Checkout: React.FC = function () {
   );
 };
 
-interface IProps {
-  onChange: (decision: DecisionsInterface) => any;
-  decision: DecisionsInterface;
-}
-
-const PaymentRequired: React.FC<IProps> = function (props: IProps) {
+const PaymentRequired: React.FC<any> = function () {
   const publicKey = useSelectorAccount((e) => e.config.stripePublicKey);
   const stripePromise = loadStripe(publicKey, {
     locale: "en",
