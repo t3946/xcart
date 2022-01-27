@@ -19,7 +19,7 @@ function* resolveDecision(action): Generator {
 function* getDecisions(action: any): Generator {
   const { success, data } = action.payload;
 
-  yield axios.post("/api-client/decisions/get", data).then(success);
+  yield axios.post("/api-client/decisions/get-list", data).then(success);
 }
 
 function* getEtaProductsDecision(action): Generator {

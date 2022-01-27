@@ -5,66 +5,31 @@ import { getInstance } from "@services/axios/Instance";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
-  const decisions: { solved: []; notSolved: [] } = {
-    solved: [],
-    notSolved: [],
-  };
+  const decisionId = parseInt(ctx.query.id);
+  let decision = null;
 
   await instance
-    .get("/order/api/decisions/get", {
-      data: {
-        solved: 0,
-        offset: 0,
-      },
+    .post("/api-client/decisions/get", {
+      decisionId,
     })
-    .then((res) => {
-      decisions.notSolved = res.data;
-    });
-
-  await instance
-    .get("/order/api/decisions/get", {
-      data: {
-        solved: 1,
-        offset: 0,
-      },
-    })
-    .then((res) => {
-      decisions.solved = res.data;
+    .then((res: any) => {
+      decision = res.data.decision;
     });
 
   return {
     props: {
-      decisions,
-      decisionId: parseInt(ctx.query.decisionId),
+      decision,
     },
   };
 }
 
 interface IProps {
-  decisions: any;
+  decision: Record<any, any>;
   decisionId: number;
 }
 
 function DecisionPage(props: IProps) {
-  const { decisionId, decisions } = props;
-
-  if (!decisions) {
-    return null;
-  }
-
-  const { solved, notSolved } = decisions;
-  const decisionItems: Record<any, any>[] = [...solved, ...notSolved];
-  const max = decisionItems.length;
-  let decision;
-  let i = 0;
-
-  while (!decision && i < max) {
-    if (decisionItems[i].decision_id === decisionId) {
-      decision = decisionItems[i];
-    }
-
-    i++;
-  }
+  const { decision } = props;
 
   return (
     <PageTwoColumns>
