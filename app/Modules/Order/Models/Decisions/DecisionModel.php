@@ -17,7 +17,7 @@ class DecisionModel extends Model
         'estimated-time-arrival',
         'payment-required',
         'license-required',
-        'unpaid_order',
+        'unpaid-order',
         'send-us-po',
         'increase-shipping-charge',
         'send-check',
