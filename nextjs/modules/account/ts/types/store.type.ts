@@ -41,7 +41,7 @@ export interface AccountStore {
 }
 
 export interface AccountAddressesStore {
-  addressesList: AddressItemDto[];
+  addressesList: AddressItemDto[] | null;
   loading: boolean;
   addressFormLoading?: boolean;
 }
@@ -54,8 +54,9 @@ export interface AccountMainStore {
 }
 
 export interface AccountListsStore {
-  lists: List[] | undefined;
-  listLoading?: boolean;
+  lists: List[] | null;
+  listView: List | null;
+  loading: boolean;
 }
 
 export interface AccountPaymentsStore {

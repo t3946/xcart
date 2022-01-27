@@ -1,47 +1,38 @@
 import React from "react";
 import { EditComment } from "@modules/account/components/lists/EditComment";
-import { useHistory, useParams } from "react-router-dom";
-import Store from "@redux/stores/Store";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-
-interface EditInfoInListProductPageURLParams {
-  productId: string;
-  listHash: string;
-}
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { List } from "@modules/account/ts/types/list.type";
+import { useRouter } from "next/router";
 
 export const EditInfoInListProductPage: React.FC = () => {
-  const params = useParams<EditInfoInListProductPageURLParams>();
+  const router = useRouter();
+  const { productId, productListId } = router.query;
+  const lists: List[] = useSelectorAccount((state) => state.lists.lists);
 
-  const history = useHistory();
-
-  const lists = Store.getState().lists.lists;
-
-  if (!lists) {
-    history.push(`/account/your-lists/${params.listHash}`);
-    return;
-  }
-
-  const list = lists.find((e) => e.cache_url === params.listHash);
+  const list = lists.find(
+    (list) => list.productListId === Number(productListId)
+  );
 
   const product = list.products.find(
-    (product) => product.product_id === params.productId
+    (product) => product.productId === Number(productId)
   );
 
   const onCloseClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    router.push(`/shopping-lists/${list.cacheUrl}`);
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${params.listHash}`}
+        redirectUrl={`/shopping-lists/${list.cacheUrl}`}
         label={"back"}
       />
       <div className="page-label">Edit comment, quantity & priority</div>
       <EditComment
         info={product}
-        productId={params.productId}
-        listId={list.product_list_id}
+        productId={productId}
+        listId={list?.productListId}
         onCloseClick={onCloseClick}
       />
     </div>

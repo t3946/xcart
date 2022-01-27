@@ -16,16 +16,18 @@ import { ManageListFormData } from "@modules/account/ts/types/manage-list-form.t
 import StoreInterface from "@modules/account/ts/types/store.type";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { List } from "@modules/account/ts/types/list.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
 
 interface ManageListProps {
-  info: List;
   onCancelClick: () => void;
 }
 
-export const ManageList: React.FC<ManageListProps> = ({
-  info,
-  onCancelClick,
-}) => {
+export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
+  const listView: List = useSelectorAccount((state) => state.lists.listView);
+  const addresses: AddressItemDto[] = useSelectorAccount(
+    (state) => state.addresses.addressesList
+  );
   const monthItems = fillingMassForMonths();
 
   const dispatch = useDispatch();
@@ -35,36 +37,38 @@ export const ManageList: React.FC<ManageListProps> = ({
   const loading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const handleSubmit = (values: ManageListFormData) => {
+    console.log(values);
     dispatch(
       manageList(
-        info.product_list_id,
+        listView.productListId,
         convertManageListFormDataToRequest(values),
         onCancelClick
       )
     );
   };
-
-  const thisAddress = Store.getState().addresses.addressesList.find(
-    (e) => e.address_id === info.address_id
-  );
-
+  let selectAddress = null;
+  if (addresses) {
+    selectAddress = addresses?.find(
+      (address) => address.address_id === listView.addressId
+    );
+  }
   const formik = useFormik({
     initialValues: {
-      listName: info.name || "",
-      description: info.description || "",
-      recipientName: info.recipient_name || "",
-      email: info.recipient_email || "",
+      listName: listView.name || "",
+      description: listView.description || "",
+      recipientName: listView.recipientName || "",
+      email: listView.recipientEmail || "",
       isPurchase: false,
       isDefault: false,
       shippingAddress: {
-        value: String(thisAddress?.address_id) || null,
-        viewValue: thisAddress?.full_name || "None",
+        value: selectAddress ? selectAddress.address_id : null,
+        viewValue: selectAddress?.full_name || "None",
       },
-      month: info.birthday
-        ? monthItems[new Date(Number(info.birthday)).getMonth() - 1]
+      month: listView.birthday
+        ? monthItems[new Date(Number(listView.birthday)).getMonth() - 1]
         : monthItems[0],
-      day: info.birthday
-        ? dayItems[new Date(Number(info.birthday)).getDate()]
+      day: listView.birthday
+        ? dayItems[new Date(Number(listView.birthday)).getDate()]
         : dayItems[0],
     },
     validationSchema: Yup.object().shape({
@@ -168,11 +172,7 @@ export const ManageList: React.FC<ManageListProps> = ({
           </div>
         </div>
         <FormSelect
-          items={getValuesForSelect(
-            Store.getState().addresses.addressesList,
-            "address_id",
-            "full_name"
-          )}
+          items={getValuesForSelect(addresses || [], "address_id", "full_name")}
           name={"shippingAddress"}
           label={"Shipping Address"}
           onClick={(value) => formik.setFieldValue("shippingAddress", value)}

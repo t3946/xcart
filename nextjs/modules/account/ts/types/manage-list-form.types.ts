@@ -1,4 +1,5 @@
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
+import { Item } from "@modules/account/components/shared/FormSelect";
 
 export interface ManageListFormData {
   listName: string;
@@ -17,6 +18,6 @@ export interface ManageListRequestData {
   description: string;
   recipient_name: string;
   recipient_email: string;
-  birthday: number;
-  address_id: string;
+  birthday: number | string;
+  address_id: number;
 }

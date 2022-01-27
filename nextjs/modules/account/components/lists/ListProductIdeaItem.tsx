@@ -12,28 +12,29 @@ import { useRouter } from "next/router";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { List } from "@modules/account/ts/types/list.type";
 
 export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
-  info,
+  productItem,
   drag,
   reorderProductList,
   index,
-  listInfo,
   deleteItem,
   edit,
-  onMoveClick,
 }) => {
   const editCommentDialog = useDialog();
   const mobileMenuDialog = useDialog();
+  const listInfo: List = useSelectorAccount((state) => state.lists.listView);
   const router = useRouter();
   const breakpoint = useBreakpoint();
   const deleteIdeaDialog = useDialog();
-
+  const listView = useSelectorAccount((state) => state.lists.listView);
   const deleteIdea = () => {
     breakpoint({
       xs: () =>
         router.push(
-          `/shopping-lists/delete-product/idea/${listInfo.product_list_id}/${info.product_id}/`
+          `/shopping-lists/actions/delete-product/idea/${listInfo.productListId}/${productItem.productId}/`
         ),
       md: deleteIdeaDialog.handleClickOpen,
     });
@@ -42,13 +43,13 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       image: "/static/frontend/images/icons/account/idea-logo.svg",
-      label: info.product.name,
+      label: productItem.product.name,
     },
     {
       label: "Add comment, quantity & priority",
       onClick: () => {
         router.push(
-          `/shopping-lists/edit-list-product-info/${listInfo.cache_url}/${info.product_id}`
+          `/shopping-lists/actions/add-comment/idea/${listView.productListId}/${productItem.productId}`
         );
       },
     },
@@ -56,7 +57,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       label: "Move",
       onClick: () => {
         router.push(
-          `/shopping-lists/move-product/${info.product_id}/${listInfo.product_list_id}`
+          `/shopping-lists/actions/move-product/idea/${listView.productListId}/${productItem.productId}`
         );
       },
     },
@@ -88,15 +89,15 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
         <div className="product-list-item-info">
           <EditIdea
             openMenuDialog={mobileMenuDialog.handleClickOpen}
-            listId={listInfo.product_list_id}
-            info={info}
+            listId={listInfo}
+            info={productItem}
             edit={edit}
           />
 
           {edit &&
-            (info.comment ? (
+            (productItem.comment ? (
               <ListProductItemComment
-                info={info}
+                info={productItem}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
                 listInfo={listInfo}
               />
@@ -114,14 +115,13 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
         btnLabel={"search"}
         mainBtnClasses={"account-submit-btn-outline"}
         edit={edit}
-        deleteItem={deleteIdea}
-        onMoveClick={onMoveClick}
-        id={info.product_id}
-        time={info.add_date}
-        listId={listInfo.product_list_id}
+        time={productItem.add_date}
+        listId={listView.productListId}
         onMainBtnClick={() =>
-          window.location.assign(`/search?q=${info.product.name}`)
+          window.location.assign(`/search?q=${productItem.product.name}`)
         }
+        handleDelete={deleteIdea}
+        productId={productItem.productId}
       />
       <MobileMenuForList
         items={mobileDialogItems}
@@ -131,7 +131,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       <BootstrapDialogHOC
         show={editCommentDialog.open}
         title={
-          info.comment
+          productItem.comment
             ? "Edit comment, quantity & priority"
             : "Add comment, quantity & priority"
         }
@@ -139,9 +139,9 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       >
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
-          listId={listInfo.product_list_id}
-          productId={info.product_id}
-          info={info}
+          listId={listView.productListId}
+          productId={productItem.productId}
+          info={productItem}
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC

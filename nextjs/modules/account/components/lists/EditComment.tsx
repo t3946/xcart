@@ -6,15 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import FormSelect from "@modules/ui/forms/Select";
 import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/priority-product-select-values.const";
-import { editCommentInProduct } from "@redux/actions/account-actions/ListsActions";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
+import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
   const dispatch = useDispatch();
-
   const handleSubmit = (values) => {
     dispatch(
-      editCommentInProduct(
+      editCommentProduct(
         listId,
         productId,
         { ...values, priority: values.priority.value },

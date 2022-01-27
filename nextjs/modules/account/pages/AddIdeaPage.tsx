@@ -1,37 +1,24 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
 import { AddIdea } from "@modules/account/components/lists/AddIdea";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-import Store from "@redux/stores/Store";
-
-interface AddIdeaPageURLParams {
-  listHash: string;
-}
+import { useRouter } from "next/router";
 
 export const AddIdeaPage: React.FC = () => {
-  const history = useHistory();
-
-  const params = useParams<AddIdeaPageURLParams>();
-
-  const lists = Store.getState().lists.lists;
-
-  if (!lists) {
-    history.push(`/account/your-lists/${params.listHash}`);
-    return;
-  }
+  const router = useRouter();
+  const { cache } = router.query;
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${params.listHash}`);
+    router.push(`/shopping-lists/${cache}`);
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${params.listHash}`}
+        redirectUrl={`/shopping-lists/${cache}`}
         label={"back"}
       />
       <div className="page-label">Add idea</div>
-      <AddIdea listHash={params.listHash} onCancelBtnClick={onCancelClick} />
+      <AddIdea listHash={cache} onCancelBtnClick={onCancelClick} />
     </div>
   );
 };

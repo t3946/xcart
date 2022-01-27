@@ -1,58 +1,60 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { acceptInvite } from "@redux/actions/account-actions/ListsActions";
-import { useHistory } from "react-router";
-import StoreInterface from "@modules/account/ts/types/store.type";
+import { useDispatch } from "react-redux";
 import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-
-export const InvitationPage: React.FC = () => {
-  const dispatch = useDispatch();
-
-  const history = useHistory();
-
-  const appDataWindow: any = window;
-
-  const onAccepted = () => {
-    history.push("/account/your-lists");
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
+import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
+import { ApiService } from "@modules/shared/services/api.service";
+interface InvitationPage {
+  inviteUser: string;
+  type: UserPrivateVariantsEnum;
+  listData: {
+    productListId: number;
+    name: string;
+    cacheUrl: string;
   };
+}
+const api = new ApiService();
+export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
+  const router = useRouter();
 
   const editProfile = () => {
-    history.push("/account/public-profile");
+    router.push("/public-profile");
   };
 
   const onCancelClick = () => {
-    history.push("/account/");
+    router.push("/");
   };
 
-  const user = useSelector((e: StoreInterface) => e.user);
+  const user = useSelectorAccount((state) => state.user);
 
-  const loading = useSelector((store: AccountStore) => store.lists.listLoading);
-
-  const onAcceptClick = () => {
-    dispatch(
-      acceptInvite(
-        appDataWindow.appData.invite_data.inviteList.product_list_id,
-        appDataWindow.appData.invite_data.type,
-        onAccepted
+  const onAcceptClick = async () => {
+    await api
+      .post(
+        `/api/account/lists/accept-invite`,
+        JSON.stringify({
+          listId: other.listData.productListId,
+          role: other.type,
+        })
       )
-    );
+      .then((res) => res);
+    await router.push("/shopping-lists");
   };
 
   return (
     <div>
-      <MobileMenuBackBtn redirectUrl={`/account`} label={"account"} />
+      <MobileMenuBackBtn redirectUrl={`/`} label={"account"} />
       <div className="page-label">Collaboration invitation</div>
       <div className="page-invitation-subtitle">
         You have been invited to collaborate on "
-        {appDataWindow.appData.invite_data.inviteList.name}" by{" "}
-        {appDataWindow.appData.invite_data.userName}
+        {`${other.listData.name} by ${other.inviteUser}`}
       </div>
       <div className="page-invitation-subtitle">
         You will appear to others in the List as{" "}
-        <b>{viewUserListRight(appDataWindow.appData.invite_data.type)}</b>
+        <b>{viewUserListRight(other.type)}</b>
       </div>
       <div className="page-invitation-user-profile-container">
         <div className="page-invitation-user-profile">
@@ -66,7 +68,6 @@ export const InvitationPage: React.FC = () => {
         </div>
         <Button
           onClick={editProfile}
-          disabled={loading}
           className="account-submit-btn account-submit-btn-outline auto-width-button edit-profile-btn"
         >
           EDIT
@@ -79,7 +80,6 @@ export const InvitationPage: React.FC = () => {
         groupAdvancedClasses={["accept-invite-btn-group"]}
         cancelAdvancedClasses={"accept-invite-btn-group-cancel"}
         onConfirm={onAcceptClick}
-        disabled={loading}
       />
     </div>
   );

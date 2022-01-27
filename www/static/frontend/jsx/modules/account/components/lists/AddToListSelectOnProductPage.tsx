@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
-import { addProduct } from "@client/jsx/redux/actions/account-actions/ListsActions";
+import {
+  addProduct,
+  getLists,
+} from "@client/jsx/redux/actions/account-actions/ListsActions";
 import Store from "@client/jsx/redux/stores/Store";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
@@ -52,25 +55,23 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       sm: addProductDialog.handleClickOpen,
     });
   };
-
   const createList = () => {
     breakpoint({
       xs: () =>
         window.location.assign(
-          `/account/your-lists/add-list/${productInfo.productcode}`
+          `/account/shopping-lists/actions/add-list/${productInfo}`
         ),
       sm: createListDialog.handleClickOpen,
     });
   };
-
-  const addProductToList = (listId: string) => {
+  const addProductToList = (listId: number) => {
     if (
       lists
-        .find((e) => e.product_list_id === listId)
-        ?.products.find((e) => e.product_id === productInfo.productid)
+        .find((e) => e.productListId === listId)
+        ?.products.find((e) => e.productId === productInfo)
     ) {
       setIsAlreadyInList(true);
-      setSelectedList(lists.find((e) => e.product_list_id === listId));
+      setSelectedList(lists.find((e) => e.productListId === listId));
       showAddProductContent(listId);
       return;
     }
@@ -78,28 +79,25 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     setIsAlreadyInList(false);
 
     dispatch(
-      addProduct(listId, productInfo.productid, null, () =>
-        showAddProductContent(listId)
-      )
+      addProduct(listId, productInfo, null, () => showAddProductContent(listId))
     );
 
-    setSelectedList(lists.find((e) => e.product_list_id === listId));
+    setSelectedList(lists.find((e) => e.productListId === listId));
   };
 
-  const onCreateList = (listInfo): void => {
+  const onCreateList = (listInfo: List): void => {
     setSelectedList(listInfo);
     createListDialog.handleClose();
-
     dispatch(
-      addProduct(listInfo.product_list_id, productInfo.productid, null, () =>
-        showAddProductContent(listInfo.product_list_id)
+      addProduct(listInfo.productListId, productInfo, null, () =>
+        showAddProductContent(listInfo.productListId)
       )
     );
   };
 
   useEffect(() => {
     clickListener.startListen();
-
+    dispatch(getLists());
     return () => {
       clickListener.endListen();
     };
@@ -195,24 +193,22 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
             )}
           >
             <div className="add-to-list-select-list-items">
-              {lists?.map((item) => {
-                return (
-                  <li
-                    onClick={() => addProductToList(item.product_list_id)}
-                    className="form-select-item add-to-list-select-item"
-                  >
-                    <img
-                      className="form-select-item-img"
-                      src={
-                        item?.products[0]?.image ||
-                        "/static/frontend/images/icons/account/idea-logo.svg"
-                      }
-                    />
+              {lists?.map((item) => (
+                <li
+                  onClick={() => addProductToList(item.productListId)}
+                  className="form-select-item add-to-list-select-item"
+                >
+                  <img
+                    className="form-select-item-img"
+                    src={
+                      item?.products[0]?.image ||
+                      "/static/frontend/images/icons/account/idea-logo.svg"
+                    }
+                  />
 
-                    <div className="form-select-item-label">{item.name}</div>
-                  </li>
-                );
-              })}
+                  <div className="form-select-item-label">{item.name}</div>
+                </li>
+              ))}
             </div>
 
             <div
@@ -230,7 +226,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       <CreateNewListDialog
         open={createListDialog.open}
         handleClose={createListDialog.handleClose}
-        productId={productInfo.productid}
+        productId={productInfo}
         onProductAdded={onCreateList}
         actionType={"product"}
       />

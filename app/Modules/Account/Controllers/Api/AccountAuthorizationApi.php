@@ -39,7 +39,7 @@ class AccountAuthorizationApi extends Controller
             $user = $form->getInstance();
             $user->register();
             $user = UserModel::objects()->filter(['email' => $user->email])->get();
-            $model = new ProductListsModel(['name' => 'Shipping list', 'user_id' =>  $user->user_id ]);
+            $model = new ProductListsModel(['name' => 'Shopping list', 'user_id' =>  $user->user_id]);
             $model->save();
             $model->cache_url = md5($model->product_list_id + false);
             $model->save();

@@ -108,8 +108,8 @@ export const editUserRights = (
 });
 
 export const addProduct = (
-  listId: string,
-  productId?: string,
+  listId: number,
+  productId?: number,
   name?: string,
   callback?: (idea) => void
 ): any => ({

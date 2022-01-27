@@ -5,29 +5,19 @@ import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
-import Store from "@redux/stores/Store";
-import { List } from "@modules/account/ts/types/list.type";
 
-interface ShareListProps {
+interface ShareList {
   onClose: () => void;
+  cache: string;
 }
 
-export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
+export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
   const { showSnackbar } = useContext(SnackbarContext);
-
-  //todo: can't get id param
-  const { id }: { id: string } = 0;
-
-  let list: List | undefined;
-
-  if (!id) {
-    list = Store.getState().lists.lists[0];
-  }
 
   const dispatch = useDispatch();
 
   const encodeUrl = (type: ShowSharedStatusEnum) => {
-    dispatch(encryptUrl(type, id, onUrlEncoded));
+    dispatch(encryptUrl(type, cache, onUrlEncoded));
   };
 
   const onUrlEncoded = (url: string) => {
@@ -55,7 +45,7 @@ export const ShareList: React.FC<ShareListProps> = ({ onClose }) => {
     <div>
       <ShareListInviteSection onCopyLinkFunc={encodeUrl} />
       <hr className="share-list-center-line" />
-      <ShareListManagePeople closeDialog={onClose} id={id || list.cache_url} />
+      <ShareListManagePeople closeDialog={onClose} id={cache} />
     </div>
   );
 };

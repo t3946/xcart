@@ -9,20 +9,36 @@ use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class ProductListsModel
+ * @property int product_list_id
+ * @property bool public
+ * @property string name
+ * @property string cache_url
+ * @property string description
+ * @property string recipient_name
+ * @property ListItemsModel[]|Manager list_items
+ * @property int address_id
+ * @property UserListModel[]|Manager user_list_roles
+ * @property UserModel[]|Manager users
+ * @property int birthday
+ * @property string recipient_email
+ * @package Modules\Account\Models
+ */
 class ProductListsModel extends Model
 {
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'account_product_lists';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
             'product_list_id' => [
@@ -56,8 +72,8 @@ class ProductListsModel extends Model
             ],
             'user_list_roles' => [
                 'class' => HasManyField::class,
-                 'modelClass' => UserListModel::class,
-                 'link' => ['product_list_id' => 'product_list_id']
+                'modelClass' => UserListModel::class,
+                'link' => ['product_list_id' => 'product_list_id']
             ],
             'list_items' => [
                 'class' => HasManyField::class,
@@ -67,6 +83,37 @@ class ProductListsModel extends Model
             'address_id' => [
                 'class' => IntField::class,
             ],
+        ];
+    }
+
+    public function getFrontendData(): array
+    {
+        foreach ($this->list_items as $item_list_model) {
+            $products[] = $item_list_model->getFrontendData();
+        }
+        foreach ($this->user_list_roles as $user) {
+            $user_model = $user->user_model;
+            $users[] = [
+                'userId' => $user->user_id,
+                'role' => $user->role,
+                'listType' => $user->list_type,
+                'user' => [
+                    'email' => $user_model->email,
+                    'name' => $user_model->name,
+                ]
+            ];
+        }
+        return [
+            'description' => $this->description,
+            'recipientName' => $this->recipient_name,
+            'recipientEmail' => $this->recipient_email,
+            'productListId' => $this->pk,
+            'cacheUrl' => $this->cache_url,
+            'birthday' => $this->birthday,
+            'addressId' => $this->address_id,
+            'name' => $this->name,
+            'products' => $products ?? [],
+            'users' => $users ?? []
         ];
     }
 }

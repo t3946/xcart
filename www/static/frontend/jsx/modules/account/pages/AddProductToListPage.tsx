@@ -16,8 +16,6 @@ export const AddProductToListPage: React.FC = () => {
 
   const lists = useSelector((e: StoreInterface) => e.lists.lists);
 
-  console.log(lists);
-
   const list = lists?.find((e) => e.product_list_id === params.listId);
 
   const dispatch = useDispatch();
@@ -25,7 +23,6 @@ export const AddProductToListPage: React.FC = () => {
   useEffect(() => {
     if (!list) {
       dispatch(getLists());
-      console.log('getLists AddProductToListPage');
     }
   }, []);
 

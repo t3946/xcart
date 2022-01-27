@@ -13,6 +13,7 @@ import Store from "@client/jsx/redux/stores/Store";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
+import { List } from "@client/modules/account/ts/types/list.type";
 
 interface CreateNewListProps {
   onCancelBtnClick: () => void;
@@ -68,9 +69,9 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const breakpoint = useBreakpoint();
 
-  const onAddingEnd = (param: any) => {
+  const onAddingEnd = (list: List) => {
     if (productId) {
-      onCreateList(param);
+      onCreateList(list);
       return;
     }
     showSnackbar({
@@ -79,7 +80,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
       theme: "success",
     });
     onCancelBtnClick();
-    history.push(`/account/your-lists/${param.cache_url}`);
+    history.push(`/account/shopping-lists/${list.cacheUrl}`);
   };
   return (
     <div>

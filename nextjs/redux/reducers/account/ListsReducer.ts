@@ -1,11 +1,17 @@
 import { AnyAction } from "redux";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
-import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
+import { editCommentDataProduct } from "@modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
+import { manageList } from "@modules/account/utils/edit-store-funcs/lists/manage-list";
+import { deleteList } from "@modules/account/utils/edit-store-funcs/lists/delete-list";
+import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/move-product-list";
+import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
+import { addProductToList } from "@modules/account/utils/edit-store-funcs/lists/add-product-to-list";
 
-const initialValue = {
-  lists: [],
-  listLoading: false,
+const initialValue: AccountListsStore = {
+  lists: null,
+  listView: null,
+  loading: false,
 };
 
 const accountListReducer = (
@@ -15,41 +21,38 @@ const accountListReducer = (
   switch (action.type) {
     case "GET_LISTS":
       return { ...state };
-    case "SET_LISTS":
+    case "SUCCESS_ADD_PRODUCT":
       return {
         ...state,
-        lists: action.lists,
-        listLoading: false,
-      };
-    case "CREATE_LIST":
-      return {
-        ...state,
-        listLoading: true,
+        loading: false,
       };
     case "ADD_PRODUCT_ON_LIST":
       return {
         ...state,
-        listLoading: true,
+        loading: true,
       };
-    case "ACCEPT_INVITE":
+    case "ADD_PRODUCT_TO_LIST":
+      const { product } = action;
+      return addProductToList(state, action.productListId, product);
+    case "SET_LISTS":
       return {
         ...state,
-        listLoading: true,
+        lists: action.lists,
+        loading: false,
       };
-    case "EDIT_IDEA_NAME":
+    case "SET_LIST_VIEW":
       return {
         ...state,
-        listLoading: true,
+        listView: action.listView,
       };
-    case "EDIT_COMMENT_IN_PRODUCT":
+    case "EDIT_COMMENT_LIST_VIEW":
       return {
         ...state,
-        listLoading: true,
-      };
-    case "MANAGE_LIST":
-      return {
-        ...state,
-        listLoading: true,
+        listView: editCommentDataProduct(
+          state.listView,
+          action.productId,
+          action.data
+        ),
       };
     case "EDIT_USER_RIGHTS":
       if (action.actionType === UserRightsActionsEnum.DELETE) {
@@ -90,46 +93,12 @@ const accountListReducer = (
     case "REORDER_LIST":
       return {
         ...state,
-        lists: state.lists.map((e) => {
-          if (e.product_list_id === action.product_list_id) {
-            return {
-              ...e,
-              products: action.listIds,
-            };
-          }
-          return e;
-        }),
+        listView: { ...state.listView, products: action.listIds },
       };
-    case "DELETE_PRODUCT":
+    case "DELETE_PRODUCT_LIST_VIEW":
       return {
         ...state,
-        lists: state.lists.map((list) => {
-          if (list.product_list_id === action.product_list_id) {
-            return {
-              ...list,
-              products: list.products.map((product) => {
-                if (product.product_id === action.list_items_id) {
-                  let productName;
-                  if ("product" in product.product) {
-                    productName = product?.product?.product;
-                  } else {
-                    productName = product?.product?.name;
-                  }
-
-                  return {
-                    ...product,
-                    typeAction: {
-                      type: AccountListProductActionEnum.DELETE,
-                      productName,
-                    },
-                  };
-                }
-                return product;
-              }),
-            };
-          }
-          return list;
-        }),
+        listView: deleteProductList(state.listView, action.productId),
       };
     case "UNDO_DELETE_PRODUCT":
       return {
@@ -152,52 +121,16 @@ const accountListReducer = (
           return list;
         }),
       };
-    case "MOVE_PRODUCT":
-      return {
-        ...state,
-        lists: state.lists.map((list) => {
-          if (action.fromListId === action.toListId.value) {
-            return list;
-          }
-          if (list.product_list_id === action.fromListId) {
-            return {
-              ...list,
-              products: list.products.map((product) => {
-                if (product.list_items_id === action.product.list_items_id) {
-                  const list = state.lists.find(
-                    (e) => e.product_list_id === action.toListId.value
-                  );
-                  let productName;
-
-                  if ("product" in product.product) {
-                    productName = product?.product?.product;
-                  } else {
-                    productName = product?.product?.name;
-                  }
-
-                  return {
-                    ...product,
-                    typeAction: {
-                      type: AccountListProductActionEnum.MOVE,
-                      toListId: list.cache_url,
-                      listName: list.name,
-                      productName,
-                    },
-                  };
-                }
-                return product;
-              }),
-            };
-          } else if (list.product_list_id === action.toListId.value) {
-            return {
-              ...list,
-              products: list.products.concat(action.product),
-            };
-          }
-          return list;
-        }),
-      };
-
+    case "SET_TRANSFER_PRODUCT":
+      const { productId, toListId, fromListId } = action;
+      return moveProductList(state, fromListId, toListId, productId);
+    case "MANAGE_LIST_VIEW":
+      const { productListId, data } = action;
+      return manageList(state, productListId, data);
+    case "DELETE_LIST":
+      return deleteList(state, action.productListId);
+    case "ADD_LIST":
+      return { ...state, lists: [...state.lists, action.data] };
     default:
       return state;
   }

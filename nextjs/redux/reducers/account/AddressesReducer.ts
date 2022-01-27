@@ -3,14 +3,11 @@ import { AccountAddressesStore } from "@modules/account/ts/types/store.type";
 
 const initialState = {
   loading: false,
-  addressesList: undefined,
+  addressesList: null,
 };
 
 const accountAddressesReducer = (
-  state: AccountAddressesStore = {
-    loading: false,
-    addressesList: undefined,
-  },
+  state: AccountAddressesStore = initialState,
   action: AnyAction
 ): AccountAddressesStore => {
   switch (action.type) {

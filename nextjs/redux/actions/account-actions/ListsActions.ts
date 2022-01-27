@@ -3,6 +3,7 @@ import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import { EditCommentRequestData } from "@modules/account/ts/types/edit-comment-request-data";
 import { ManageListRequestData } from "@modules/account/ts/types/manage-list-form.types";
+import { List } from "@modules/account/ts/types/list.type";
 
 export const getLists = (): any => ({
   type: "GET_LISTS",
@@ -24,40 +25,40 @@ export const createList = (
   actionType,
 });
 
-export const reorderList = (
-  listIds: string[],
-  product_list_id: number
-): any => ({
-  type: "REORDER_LIST",
+export const reorderList = (listIds: string[], productListId: number): any => ({
+  type: "SEND_REORDER_LIST",
   listIds,
-  product_list_id,
+  productListId,
 });
 
-export const moveProduct = (
-  fromListId: string,
-  toListId: { value: string },
-  product: any
+export const transferProductList = (
+  fromListId: number,
+  toListId: number,
+  productId: number
 ): any => ({
-  type: "MOVE_PRODUCT",
+  type: "TRANSFER_PRODUCT_LIST",
   fromListId,
   toListId,
-  product,
+  productId,
 });
 
-export const deleteList = (listId: string, callback: () => void): any => ({
-  type: "DELETE_LIST",
-  listId,
+export const deleteList = (
+  productListId: number,
+  callback: () => void
+): any => ({
+  type: "SEND_DELETE_LIST",
+  productListId,
   callback,
 });
 
 export const deleteProduct = (
-  product_list_id: string,
-  list_items_id: string,
+  productListId: number,
+  productId: number,
   callback?: () => void
 ): any => ({
-  type: "DELETE_PRODUCT",
-  product_list_id,
-  list_items_id,
+  type: "SEND_DELETE_PRODUCT",
+  productListId,
+  productId,
   callback,
 });
 
@@ -83,19 +84,8 @@ export const encryptUrl = (
   callback,
 });
 
-export const acceptInvite = (
-  listId: ShowSharedStatusEnum,
-  role: UserPrivateVariantsEnum,
-  callback: () => void
-): any => ({
-  type: "ACCEPT_INVITE",
-  listId,
-  role,
-  callback,
-});
-
 export const editUserRights = (
-  listId: string,
+  listId: number,
   userId: string,
   actionType: UserRightsActionsEnum,
   callback?: () => void
@@ -133,26 +123,37 @@ export const editIdeaName = (
   callback,
 });
 
-export const editCommentInProduct = (
-  listId: string,
-  productId: string,
+export const editCommentProduct = (
+  productListId: number,
+  productId: number,
   data: EditCommentRequestData,
   callback: () => void
 ): any => ({
-  type: "EDIT_COMMENT_IN_PRODUCT",
-  listId,
+  type: "EDIT_COMMENT_PRODUCT",
+  productListId,
   productId,
   data,
   callback,
 });
 
 export const manageList = (
-  listId: string,
+  productListId: number,
   data: ManageListRequestData,
   callback: () => void
 ): any => ({
   type: "MANAGE_LIST",
-  listId,
+  productListId,
   data,
   callback,
+});
+export const fetchLists = () => ({
+  type: "FETCH_LISTS",
+});
+export const setListView = (listView: List) => ({
+  type: "SET_LIST_VIEW",
+  listView,
+});
+export const fetchListByCache = (cache: string) => ({
+  type: "FETCH_LIST",
+  cache,
 });

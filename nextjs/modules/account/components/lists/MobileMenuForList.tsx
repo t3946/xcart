@@ -24,9 +24,13 @@ export const MobileMenuForList: React.FC<MobileMenuForListProps> = ({
       title=""
       onClose={dialogOnClose}
     >
-      {items.map((e) => {
+      {items.map((e, i) => {
         return (
-          <div className="mobile-menu-for-list-item" onClick={e.onClick}>
+          <div
+            className="mobile-menu-for-list-item"
+            onClick={e.onClick}
+            key={`item-list-${i}`}
+          >
             {e?.image && (
               <img className="mobile-menu-for-list-item-img" src={e.image} />
             )}

@@ -6,39 +6,38 @@ import { AccountListProductActionEnum } from "@client/modules/account/ts/types/a
 import { ListPrivateEnum } from "@client/modules/account/ts/consts/list-private.enum";
 
 export interface List {
-  address_id: number;
-  birthday: string | null;
-  cache_url: string;
-  description: string | null;
-  list_info: ListInfo;
-  name: string;
-  product_list_id: string;
-  products: ListItem[];
-  users: ListProductUser[];
-  recipient_name: string | null;
-  recipient_email: string | null;
-}
-
-export interface ListInfo {
-  id: string;
-  list_type: ListPrivateEnum;
-  product_list_id: string;
+  listType: ListPrivateEnum;
   role: UserPrivateVariantsEnum;
-  user_id: string;
+  listId: number;
+  addressId: number;
+  birthday: string | number;
+  cacheUrl: string;
+  description: string | null;
+  name: string;
+  productListId: number;
+  products: ListItem[];
+  source: ListSource;
+  users: ListProductUser[];
+  recipientName: string | null;
+  recipientEmail: string | null;
+}
+export enum ListSource {
+  Default = "default",
+  Simple = "simple",
 }
 
 export interface ListItem {
   comment: string;
-  has: string;
+  has: number | string;
   image?: string;
   list_items_id: string;
-  needs: string;
-  order_by: string;
+  needs: string | number;
+  orderBy: string;
   priority: PriorityProductEnum;
   product: ListProductInfo | ListIdeaInfo;
-  product_id: string;
+  productId: number;
   product_list_id: string;
-  product_type: ListItemTypeEnum;
+  productType: ListItemTypeEnum;
   typeAction?: ListItemAction;
   add_date: string;
 }
@@ -57,20 +56,18 @@ export interface ListIdeaInfo {
 
 export interface ListProductInfo {
   product: string;
-  productcode: string;
-  productid: string;
-  cost_to_us: string;
+  code: string;
+  productId: number;
+  costToUs: string;
   price: number;
-  mult_order_quantity: string;
-  min_amount: number;
-  avail: number;
+  multOrderQuantity: string;
+  minAmount: number;
+  avail: boolean;
 }
 
 export interface ListProductUser {
   user: User;
-  user_id: string;
-  list_type: string;
-  product_list_id: string;
+  userId: string;
+  listType: string;
   role: UserPrivateVariantsEnum;
-  id: string;
 }

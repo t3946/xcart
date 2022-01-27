@@ -1,11 +1,11 @@
 import React from "react";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { deleteProduct } from "@redux/actions/account-actions/ListsActions";
-import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
 import Store from "@redux/stores/Store";
 import { List } from "@modules/account/ts/types/list.type";
+import { useRouter } from "next/router";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface DeleteProductPageURLParams {
   listId: string;
@@ -14,30 +14,31 @@ interface DeleteProductPageURLParams {
 }
 
 export const DeleteProductPage: React.FC = () => {
-  const params = useParams<DeleteProductPageURLParams>();
-
+  const router = useRouter();
+  const { lists } = useSelectorAccount((state) => state.lists);
+  const { productListId, productId, entityType } = router.query;
   const dispatch = useDispatch();
 
-  const history = useHistory();
-
   const deleteItem = () => {
-    dispatch(deleteProduct(params.listId, params.productId, onCancelClick));
+    dispatch(
+      deleteProduct(Number(productListId), Number(productId), onCancelClick)
+    );
   };
 
-  const list = Store.getState().lists.lists.find(
-    (e: List) => e.product_list_id === params.listId
+  const list: List = lists.find(
+    (e: List) => e.productListId === Number(productListId)
   );
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    router.push(`/shopping-lists/${list.cacheUrl}`);
   };
   return (
     <div>
-      <div className="page-label">Delete {params.type}</div>
+      <div className="page-label">Delete</div>
       <ConfirmDelete
         onCancelClick={onCancelClick}
         onDeleteClick={deleteItem}
-        deleteType={params.type}
+        deleteType={entityType}
       />
     </div>
   );

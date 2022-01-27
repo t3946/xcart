@@ -3,187 +3,163 @@
 
 namespace Modules\Account\Controllers\Api;
 
+use Exception;
 use Modules\Account\Models\ListIdeaModel;
 use Modules\Account\Models\ListItemsModel;
 use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Controller\FrontendController;
-use Xcart\App\Orm\Base;
 use Xcart\App\Main\Xcart;
 
 class AccountListsApi extends Controller
 {
     public static function getLists(UserModel $user): array
     {
-        $lists =  $user->lists->all();
-        $items = [];
+        $lists = $user->lists->all();
+        /** @var ProductListsModel $list_product_model */
+        foreach ($lists as $list_product_model) {
+            /** @var UserListModel $list_user_model */
+            $list_user_model = $list_product_model->user_list_roles->get(['user_id' => $user->pk]);
 
-        foreach ($lists as $key => $list)
-        {
-            $items[$key] = $list->getAttributes();
-            $items[$key]['products'] = $list->list_items->order(['order_by'])->all();
-
-            foreach ( $items[$key]['products'] as $product_key => $product)
-            {
-                $items[$key]['products'][$product_key] = $product->getAttributes();
-                if($product->product_type === 'product')
-                {
-                    $product_model = ProductModel::objects()->get(['productid' => $product->product_id]);
-                    $items[$key]['products'][$product_key]['product'] = ProductModel::objects()->
-                    filter(['productid' => $product->product_id])->
-                    valuesList(['productid','productcode', "product", "cost_to_us", "min_amount", "mult_order_quantity", "avail"], false)[0];
-                    $items[$key]['products'][$product_key]['product']['price'] = $product_model->getPrice();
-                    $items[$key]['products'][$product_key]['image'] =  (string) $product_model->getMainImage();
-                    $items[$key]['products'][$product_key]['product']['out'] = $product_model->isOutOfStock();
-                }
-                else
-                {
-                    $items[$key]['products'][$product_key]['product'] = ListIdeaModel::objects()->get(['product_id' => $product->product_id])->getAttributes();
-                }
-            }
-            $items[$key]['list_info'] = UserListModel::objects()->get(['product_list_id' =>$list->product_list_id, 'user_id' => $user->user_id])->getAttributes();
-            $items[$key]['users'] = $list->user_list_roles->all();
-
-            foreach ( $items[$key]['users']  as $user_key => $user_model)
-            {
-                $items[$key]['users'][$user_key] = $user_model->getAttributes();
-                $items[$key]['users'][$user_key]['user'] = $user_model->user_model->getAttributes();
-            }
+            $ar_list[] = array_merge($list_product_model->getFrontendData(), [
+                'listType' => $list_user_model->list_type,
+                'role' => $list_user_model->role,
+                'source' => $list_user_model->source,
+            ]);
         }
 
-        return $items;
+        return $ar_list ?? [];
     }
 
+    public function getListByCache(string $cache)
+    {
+        /** @var ProductListsModel $list_product_model */
+        if ($list_product_model = ProductListsModel::objects()->get(['cache_url' => $cache])) {
+            $data = $list_product_model->getFrontendData();
+        }
+        $this->jsonResponse($data ?? null);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function createList()
     {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if(!$user)
-        {
-            $this->jsonResponse('user not login');
+        if (!$user = $this->checkRightsUser()) {
             return;
         }
 
-        $data = json_decode(file_get_contents('php://input'),true);
-        $model = new ProductListsModel($data);
+        $form = json_decode(file_get_contents('php://input'), true);
+        $model = new ProductListsModel($form);
         $model->save();
         $model->cache_url = md5($model->product_list_id + $model->public);
         $model->save();
 
-        UserListModel::objects()->create(['user_id' => $user->user_id, 'product_list_id' => $model->product_list_id, ]);
-        $response = $model->getAttributes();
+        $user_list = new UserListModel(['user_id' => $user->user_id, 'product_list_id' => $model->product_list_id]);
+        $user_list->save();
+        $ar_data = array_merge($model->getFrontendData(), [
+            'listType' => $user_list->list_type,
+            'role' => $user_list->role,
+        ]);
 
-        $response['list_info'] = UserListModel::objects()->get(['product_list_id' =>$model['product_list_id'], 'user_id' => $user->user_id])->getAttributes();
-
-        $response['users'] = $model->user_list_roles->all();
-
-        $response['products'] = [];
-
-        foreach ( $response['users']  as $user_key => $user)
-        {
-            $response['users'][$user_key] = $user->getAttributes();
-            $response['users'][$user_key]['user'] = $user->user_model->getAttributes();
-        }
-
-        $this->jsonResponse($response);
+        $this->jsonResponse($ar_data);
     }
 
     public function reorderProducts()
     {
-        [$order_id, $list_id] = array_values(json_decode(file_get_contents('php://input'),true));
-
-        foreach ($order_id as $key => $value)
-        {
-          $list_item =  ListItemsModel::objects()->get(['product_id' => $value, 'product_list_id' => $list_id]);
-
-          $list_item->order_by = $key;
-
-          $list_item->save();
-        }
-
-        $this->jsonResponse('success');
-    }
-
-    public function deleteList()
-    {
-        $list_id = json_decode(file_get_contents('php://input'));
-
-        $user = Xcart::app()->auth->getUser(true);
-
-       if(!$user)
-       {
-           $this->jsonResponse('user not login');
-           return;
-       }
-       if(UserListModel::objects()->get(['product_list_id' => $list_id, 'user_id' => $user->user_id])){
-           ProductListsModel::objects()->delete(['product_list_id' => $list_id]);
-           $this->jsonResponse('delete successfully');
-           return;
-       }
-
-        $this->jsonResponse('deleting error');
-    }
-
-    public function moveProduct()
-    {
-        [$fromListId ,$toListId, $product] = array_values(json_decode(file_get_contents('php://input'),true));
-
-
-        $user = Xcart::app()->auth->getUser(true);
-
-        if($user->getIsGuest())
-        {
-            $this->jsonResponse('user not login');
+        if (!$this->checkRightsUser()) {
             return;
         }
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        $listItem = ListItemsModel::objects()->get(['product_list_id' => $fromListId, 'product_id' => $product]);
+        foreach ($data['productIds'] as $key => $product_id) {
+            /** @var ListItemsModel $list_item */
+            $list_item = ListItemsModel::objects()->get(['product_id' => $product_id, 'product_list_id' => $data['productListId']]);
+            $list_item->order_by = $key;
+            $list_item->save();
+        }
 
-        $listItem->list = $toListId;
+        $this->jsonResponse([]);
+    }
 
+    public function deleteList(int $list_id)
+    {
+        /** @var UserModel $user */
+        if (!$user = $this->checkRightsUser()) {
+            return;
+        }
+        /** @var UserListModel $list */
+        if ($list = UserListModel::objects()->get(['product_list_id' => $list_id, 'user_id' => $user->user_id])) {
+            ProductListsModel::objects()->delete(['product_list_id' => $list_id]);
+            $this->jsonResponse(['Delete successfully']);
+        }
+        $this->jsonResponse(['Deleting error']);
+    }
+
+    public function transferProduct()
+    {
+        $form = json_decode(file_get_contents('php://input'), true);
+        /** @var UserModel $user */
+        if (!$this->checkRightsUser()) {
+            return;
+        }
+        /** @var ListItemsModel $listItem */
+        $listItem = ListItemsModel::objects()->get(['product_list_id' => $form['fromListId'], 'product_id' => $form['productId']]);
+        $listItem->product_list_id = $form['toListId'];
         $listItem->save();
 
-        $this->jsonResponse('success');
+        $this->jsonResponse(['success']);
     }
 
     public function getUrlEncrypt()
     {
-        [$private_type,$hash] = array_values(json_decode(file_get_contents('php://input'),true));
-        $user = Xcart::app()->auth->getUser(true);
+        $form = json_decode(file_get_contents('php://input'), true);
+        /** @var UserModel $user */
+        if (!$user = $this->checkRightsUser()) {
+            return;
+        }
 
-        $encrypt_params = CoreHelper::cipherText($user->user_id . '/' . $private_type .'/'. $hash);
-
+        $encrypt_params = CoreHelper::cipherText($user->user_id . '/' . $form['privateType'] . '/' . $form['hash']);
+        foreach ($encrypt_params as $key => $param) {
+            $encrypt_params[$key] = urlencode($param);
+        }
         $this->jsonResponse($encrypt_params);
     }
 
     public function acceptInvitation()
     {
-        [$list_id, $role] = array_values(json_decode(file_get_contents('php://input'),true));
+        $form = json_decode(file_get_contents('php://input'), true);
+        /** @var UserModel $user */
+        if(!$user = $this->checkRightsUser()) {
+            return;
+        }
 
-        $user = Xcart::app()->auth->getUser(true);
-
-        $sharedModel =  UserListModel::objects()->get(['product_list_id' => $list_id]);
-
+        /** @var UserListModel $sharedModel */
+        $sharedModel = UserListModel::objects()->get(['product_list_id' => $form['listId']]);
         $sharedModel->list_type = "shared";
-
         $sharedModel->save();
 
-        UserListModel::objects()->create(['user_id' => $user->user_id, 'product_list_id' => $list_id, 'role' => $role]);
+        UserListModel::objects()->create([
+            'user_id' => $user->pk,
+            'product_list_id' => $form['listId'],
+            'role' => $form['role'],
+            'source' => UserListModel::SOURCE_CREATE_SIMPLE
+        ]);
 
-        $this->jsonResponse('success');
+        $this->jsonResponse([]);
     }
 
     public function editUsersInList()
     {
-        [$list_id,$user_id,  $type ] = array_values(json_decode(file_get_contents('php://input'),true));
+        [$list_id, $user_id, $type] = array_values(json_decode(file_get_contents('php://input'), true));
 
         $user = Xcart::app()->auth->getUser(true);
 
-        if($user->getIsGuest()){
+        if ($user->getIsGuest()) {
             $this->jsonResponse('user not login');
             return;
         }
@@ -193,52 +169,53 @@ class AccountListsApi extends Controller
         $request_user_role = UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $list_id]);
 
 
-        if($request_user_role->role === 'edit' || $request_user_role->role === 'owner'){
-          if($type === 'delete'){
-              UserListModel::objects()->delete(['user_id' => $user_id, 'product_list_id' => $list_id]);
-              $this->jsonResponse(['success delete']);
-              return;
-          }
-          $edit_user_list->role = $type;
-          $edit_user_list->save();
-          $this->jsonResponse(['success']);
+        if ($request_user_role->role === 'edit' || $request_user_role->role === 'owner') {
+            if ($type === 'delete') {
+                UserListModel::objects()->delete(['user_id' => $user_id, 'product_list_id' => $list_id]);
+                $this->jsonResponse(['success delete']);
+                return;
+            }
+            $edit_user_list->role = $type;
+            $edit_user_list->save();
+            $this->jsonResponse(['success']);
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function addProductOnList()
     {
-        $response_data = json_decode(file_get_contents('php://input'),true);
-
-        if($response_data['productId']){
-            $list_product_model = new ListItemsModel(['product_id' => $response_data['productId'],
-                'product_list_id' => $response_data['listId'], 'product_type' => 'product']);
-           $list_product_model->save();
-           $product = $list_product_model->getAttributes();
-            $product['product']  = ProductModel::objects()->
-            filter(['productid' => $response_data['productId']])->
-            valuesList(['productid','productcode', "product", "cost_to_us"], false)[0];
-            $product['image'] =  (string) ProductModel::objects()->
-            get(['productid' => $response_data['productId']])->
-            getMainImage();
-
-            $this->jsonResponse($product);
+        if (!$this->checkRightsUser()) {
             return;
         }
-        $idea_model = new ListIdeaModel(['name' => $response_data['name']]);
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if ($data['productId']) {
+            $list_product_model = new ListItemsModel([
+                'product_id' => $data['productId'],
+                'product_list_id' => $data['listId'],
+                'product_type' => 'product'
+            ]);
+            $list_product_model->save();
+            $this->jsonResponse([]);
+            return;
+        }
+        $idea_model = new ListIdeaModel(['name' => $data['name']]);
         $idea_model->save();
-        $list_product_model = new ListItemsModel(['product_id' => $idea_model->product_id,
-            'product_list_id' => $response_data['listId'], 'product_type' => 'idea']);
+        $list_product_model = new ListItemsModel([
+            'product_id' => $idea_model->product_id,
+            'product_list_id' => $data['listId'],
+            'product_type' => 'idea'
+        ]);
         $list_product_model->save();
 
-        $response_data = $list_product_model->getAttributes();
-        $response_data['product'] = ListIdeaModel::objects()->get(['product_id' => $list_product_model->product_id])->getAttributes();
-
-        $this->jsonResponse($response_data);
+        $this->jsonResponse($list_product_model->getFrontendData());
     }
 
     public function editIdeaName()
     {
-        [$idea_id, $new_name ] = array_values(json_decode(file_get_contents('php://input'),true));
+        [$idea_id, $new_name] = array_values(json_decode(file_get_contents('php://input'), true));
 
         $idea_model = ListIdeaModel::objects()->get(['product_id' => $idea_id]);
 
@@ -249,52 +226,70 @@ class AccountListsApi extends Controller
         $this->jsonResponse(['success edit']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function editComment()
     {
-        [$product_id, $list_id, $data] = array_values(json_decode(file_get_contents('php://input'),true));
-
-        $product_model = ListItemsModel::objects()->get(['product_id' => $product_id, 'product_list_id' => $list_id]);
-
-        $product_model->setAttributes($data);
-        $product_model->save();
-
+        $form = json_decode(file_get_contents('php://input'), true);
+        if (!$this->checkRightsUser()) {
+            return;
+        }
+        /** @var ListItemsModel $list_item */
+        if (!$list_item = ListItemsModel::objects()->get(['product_id' => $form['productId'], 'product_list_id' => $form['productListId']])) {
+            $this->jsonResponse(['Not found list item'], 404);
+            return;
+        }
+        $list_item->setAttributes($form['data']);
+        $list_item->save();
         $this->jsonResponse(['success']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function manageList()
     {
-        [$list_id, $data] = array_values(json_decode(file_get_contents('php://input'),true));
+        $form = json_decode(file_get_contents('php://input'), true);
+        /** @var UserModel $user */
+        if (!$this->checkRightsUser()) {
+            return;
+        }
+        /** @var ProductListsModel $product_list_model */
+        if (!$product_list_model = ProductListsModel::objects()->get(['product_list_id' => $form['productListId']])) {
+            $this->jsonResponse(['Not found product list'], 404);
+            return;
+        }
 
-        $product_list_model = ProductListsModel::objects()->get(['product_list_id' => $list_id]);
-
-        $product_list_model->setAttributes($data);
+        $product_list_model->setAttributes($form['data']);
         $product_list_model->save();
-
-        $this->jsonResponse(['success']);
+        $this->jsonResponse([]);
     }
 
     public function deleteProduct()
     {
-        [$list_id, $product_id] = array_values(json_decode(file_get_contents('php://input'),true));
-
-        $product = ListItemsModel::objects()->get(['product_list_id' => $list_id, 'product_id' => $product_id]);
-
-        if($product->product_type === 'idea')
-        {
-            ListIdeaModel::objects()->delete(['product_id' => $product_id]);
+        if (!$this->checkRightsUser()) {
+            return;
         }
-
-        ListItemsModel::objects()->delete(['product_list_id' => $list_id, 'product_id' => $product_id]);
-
-        $this->jsonResponse(['success']);
+        $form = json_decode(file_get_contents('php://input'), true);
+        $attr_form = ['product_list_id' => $form['productListId'], 'product_id' => $form['productId']];
+        /** @var ListItemsModel $list_item */
+        if ($list_item = ListItemsModel::objects()->get($attr_form)) {
+            if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
+                ListIdeaModel::objects()->delete(['product_id' => $form['productId']]);
+            }
+            ListItemsModel::objects()->delete($attr_form);
+            $this->jsonResponse(['Success']);
+            return;
+        }
+        $this->jsonResponse(['Error delete']);
     }
 
     public function undoDeleteProduct()
     {
-        [$product] = array_values(json_decode(file_get_contents('php://input'),true));
+        [$product] = array_values(json_decode(file_get_contents('php://input'), true));
 
-        if($product['product_type'] === 'idea')
-        {
+        if ($product['product_type'] === 'idea') {
             ListIdeaModel::objects()->create($product['product']);
         }
         ListItemsModel::objects()->create($product);
@@ -302,10 +297,49 @@ class AccountListsApi extends Controller
         $this->jsonResponse(['success']);
     }
 
-    public function actionGetLists(): void {
+    public function actionGetLists(): void
+    {
         $user = Xcart::app()->auth->getUser(true);
         $lists = $this->getLists($user);
         $this->jsonResponse($lists);
+    }
+
+    public function listInvite(string $tag, string $code)
+    {
+        if (!$user = $this->checkRightsUser()) {
+            return;
+        }
+        [$user_id, $type, $listHash] = explode('/', CoreHelper::decryptText($code, $tag));
+        /** @var ProductListsModel $invite_list */
+        if(!$invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash])) {
+            $this->jsonResponse(['Not found list invite', 404]);
+            return;
+        }
+        /** @var UserListModel $invite */
+        if ($invite = UserListModel::objects()->get(['user_id' => $user->pk, 'product_list_id' => $invite_list->product_list_id])) {
+            $this->jsonResponse(['cache' => $invite->list_model->cache_url], 208);
+            return;
+        }
+        /** @var UserModel $invited_user */
+        $invited_user = UserModel::objects()->get(['pk' => $user_id]);
+        $this->jsonResponse([
+            'inviteUser' => $invited_user->name,
+            'type' => $type,
+            'listData' => [
+                'productListId' => $invite_list->product_list_id,
+                'name' => $invite_list->name,
+                'cacheUrl' => $invite_list->cache_url,
+            ]
+        ]);
+    }
+    private function checkRightsUser()
+    {
+        /** @var UserModel $user */
+        if(!$user = Xcart::app()->auth->getUser(true)) {
+            $this->jsonResponse(['message' => 'Not found user'], 401);
+            return false;
+        }
+        return $user;
     }
 }
 

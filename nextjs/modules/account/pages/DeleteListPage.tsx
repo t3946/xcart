@@ -1,31 +1,25 @@
-import React from "react";
-import { useHistory, useParams } from "react-router-dom";
-import Store from "@redux/stores/Store";
-import { DeleteList } from "@modules/account/components/lists/DeleteList";
+import React, { useContext } from "react";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-
-interface ManageListPageURLParams {
-  listHash: string;
-}
+import { useDispatch } from "react-redux";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { useRouter } from "next/router";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { List } from "@modules/account/ts/types/list.type";
+import { deleteList } from "@redux/actions/account-actions/ListsActions";
+import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 
 export const DeleteListPage: React.FC = () => {
-  const params = useParams<ManageListPageURLParams>();
-
   const dispatch = useDispatch();
+  const router = useRouter();
+  const { cache } = router.query;
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const history = useHistory();
+  const lists: List[] = useSelectorAccount((state) => state.lists.lists);
 
-  const lists = Store.getState().lists.lists;
-
-  if (!lists) {
-    history.push("/account/your-lists/");
-  }
-
-  const list = lists.find((e) => e.cache_url === params.listHash);
+  const list = lists.find((e) => e.cacheUrl === cache);
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    router.push(`/shopping-lists/${cache}`);
   };
 
   const onRequestEnd = () => {
@@ -34,17 +28,17 @@ export const DeleteListPage: React.FC = () => {
       message: `${list.name} list deleted successfully`,
       theme: "success",
     });
+    router.push("/shopping-lists");
   };
 
   const handleDeleteList = () => {
-    history.push("/account/your-lists");
-    dispatch(deleteList(list.product_list_id, onRequestEnd));
+    dispatch(deleteList(list.productListId, onRequestEnd));
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${params.listHash}`}
+        redirectUrl={`/shopping-lists/${cache}`}
         label={"back"}
       />
       <div className="page-label">Delete list</div>

@@ -8,7 +8,7 @@ import StoreInterface from "@modules/account/ts/types/store.type";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import Store from "@redux/stores/Store";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import { ListItem } from "@modules/account/ts/types/list.type";
+import { List, ListItem } from "@modules/account/ts/types/list.type";
 
 interface AddIdeaProps {
   onCancelBtnClick: () => void;
@@ -27,10 +27,8 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
   const dispatch = useDispatch();
 
   const { showSnackbar } = useContext(SnackbarContext);
-
-  const listId = Store.getState().lists.lists.find(
-    (e) => e.cache_url === listHash
-  ).product_list_id;
+  const { loading, lists } = useSelector((state) => state.lists);
+  const listEdit = lists.find((e) => e.cacheUrl === listHash);
 
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {
@@ -41,10 +39,10 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
       formik.setErrors({ name: "Maximum length 50 characters" });
       return;
     }
-    dispatch(addProduct(listId, null, formik.values.name, onAddingEnd));
+    dispatch(
+      addProduct(listEdit.productListId, null, formik.values.name, onAddingEnd)
+    );
   };
-
-  const listLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const onAddingEnd = (idea: ListItem) => {
     onCancelBtnClick();
@@ -84,7 +82,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
           cancelText="Cancel"
           onCancel={onCancelBtnClick}
           groupAdvancedClasses={"manage-list-btns"}
-          disabled={listLoading}
+          disabled={loading}
         />
       </form>
     </div>

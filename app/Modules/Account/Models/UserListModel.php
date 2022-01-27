@@ -8,14 +8,27 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class UserListModel
+ * @property ProductListsModel list_model
+ * @property string role
+ * @property string list_type
+ * @property int user_id
+ * @property UserModel user_model
+ * @property string source
+ * @package Modules\Account\Models
+ */
 class UserListModel extends Model
 {
-    public static function tableName()
+    public const SOURCE_CREATE_DEFAULT = 'default';
+    public const SOURCE_CREATE_SIMPLE = 'simple';
+
+    public static function tableName(): string
     {
         return 'account_user_list';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
             'id' => [
@@ -41,6 +54,10 @@ class UserListModel extends Model
                 'class' => CharField::class,
                 'default' =>'private'
             ],
+            'source' => [
+                'class' => CharField::class,
+                'default' => 'simple'
+            ]
         ];
     }
 }

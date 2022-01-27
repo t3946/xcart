@@ -19,7 +19,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   userListInfo,
   onClick,
 }) => {
-  const isYourAccount = userListInfo.user.user_id === Store.getState().user.id;
+  const isYourAccount = userListInfo.userId === Store.getState().user.id;
 
   const breakpoint = useBreakpoint();
 
@@ -54,7 +54,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         </div>
       ),
       onClick: () => {
-        onClick(UserRightsActionsEnum.EDIT, userListInfo.user.user_id);
+        onClick(UserRightsActionsEnum.EDIT, userListInfo.userId);
         mobileMenuDialog.handleClose();
       },
     },
@@ -70,7 +70,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         </div>
       ),
       onClick: () => {
-        onClick(UserRightsActionsEnum.VIEW, userListInfo.user.user_id);
+        onClick(UserRightsActionsEnum.VIEW, userListInfo.userId);
         mobileMenuDialog.handleClose();
       },
     },
@@ -81,7 +81,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         </div>
       ),
       onClick: () => {
-        onClick(UserRightsActionsEnum.DELETE, userListInfo.user.user_id);
+        onClick(UserRightsActionsEnum.DELETE, userListInfo.userId);
         mobileMenuDialog.handleClose();
       },
     },
@@ -127,11 +127,11 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
                 value: userListInfo.role,
                 viewValue: viewUserListRight(userListInfo.role),
               }}
-              id={userListInfo.user.user_id}
-              name={"14324"}
+              id={userListInfo.userId}
               onClick={(selectValue) =>
-                onClick(selectValue.value, userListInfo.user.user_id)
+                onClick(selectValue.value, userListInfo.userId)
               }
+              name="right"
             />
           ),
         })

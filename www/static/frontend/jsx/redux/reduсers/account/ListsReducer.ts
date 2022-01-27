@@ -22,10 +22,11 @@ const accountListReducer = (
         ...state,
         listLoading: true,
       };
-    case "ADD_PRODUCT_ON_LIST":
+    case "ADD_NEW_LIST":
       return {
         ...state,
-        listLoading: true,
+        lists: [...state.lists, action.list],
+        listLoading: false,
       };
     case "ACCEPT_INVITE":
       return {

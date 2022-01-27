@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import { AccountRouters } from "../../modules/account/routers/AccountRouters";
 import { Provider } from "react-redux";
 import Store from "@client/jsx/redux/stores/Store";
 import { AddToListSelectOnProductPage } from "../../modules/account/components/lists/AddToListSelectOnProductPage";

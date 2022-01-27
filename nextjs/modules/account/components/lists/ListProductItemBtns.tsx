@@ -1,18 +1,19 @@
-import React from "react";
-import FormSelect from "@modules/ui/forms/Select";
-import { useSelector } from "react-redux";
-import StoreInterface from "@modules/account/ts/types/store.type";
+import React, { useContext } from "react";
+import Select, { Item } from "@modules/ui/forms/Select";
+import { useDispatch } from "react-redux";
+import { AccountListsStore } from "@modules/account/ts/types/store.type";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import classnames from "classnames";
-import { SelectValue } from "@modules/account/ts/types/select-value.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { transferProductList } from "@redux/actions/account-actions/ListsActions";
+import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 
 interface ListProductItemBtnsProps {
-  onMoveClick: (value: SelectValue<string, string>) => void;
-  deleteItem: () => void;
+  handleDelete: () => void;
   edit: boolean;
   btnLabel: string;
   mainBtnClasses?: string | string[];
-  id: string;
+  productId: number;
   onMainBtnClick: () => void;
   time: string;
   listId: string;
@@ -20,18 +21,41 @@ interface ListProductItemBtnsProps {
 }
 
 export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
-  onMoveClick,
-  deleteItem,
+  handleDelete,
   edit,
   btnLabel,
   mainBtnClasses,
-  id,
+  productId,
   onMainBtnClick,
   time,
   listId,
   outOfStock,
 }) => {
-  const lists = useSelector((e: StoreInterface) => e.lists.lists);
+  const dispatch = useDispatch();
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const { lists, listView }: AccountListsStore = useSelectorAccount(
+    (state) => state.lists
+  );
+  const handleMove = (item: Item) => {
+    const toListId = item.value;
+    const toList = lists.find((list) => list.productListId === toListId);
+    if (toList) {
+      const inList = toList.products.find(
+        (product) => product.productId === productId
+      );
+      if (inList) {
+        showSnackbar({
+          header: "Error",
+          message: `This item already added to list`,
+          theme: "error",
+        });
+        return;
+      }
+    }
+    const fromListId = listView.productListId;
+    dispatch(transferProductList(fromListId, toListId, productId));
+  };
 
   return (
     <div className={"product-list-item-btns-container"}>
@@ -48,21 +72,21 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
       </button>
       {edit && (
         <div className="list-product-item-btns-container">
-          <FormSelect
+          <Select
             items={lists
-              .filter((e) => e.list_info.role !== UserPrivateVariantsEnum.VIEW)
-              .filter((e) => e.product_list_id !== listId)
+              .filter((list) => list.role !== UserPrivateVariantsEnum.VIEW)
+              .filter((list) => list.productListId !== listView.productListId)
               .map((e) => {
                 return {
                   viewValue: e.name,
-                  value: e.product_list_id,
+                  value: e.productListId,
                 };
               })}
             name={""}
             label={""}
-            onClick={(value) => onMoveClick(value)}
+            onClick={handleMove}
             value={{ viewValue: "Move", value: undefined }}
-            id={`form-select-list-product-${id}`}
+            id={`form-select-list-product-${productId}`}
             classes={{
               group: "list-product-item-btns-move",
               selectHeader: "product-list-item-move-select",
@@ -70,7 +94,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
           />
           <button
             type={"submit"}
-            onClick={deleteItem}
+            onClick={handleDelete}
             className="form-button account-submit-btn account-submit-btn-outline auto-width-button product-list-item-delete-button"
           >
             delete

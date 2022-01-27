@@ -1,34 +1,27 @@
-import React from "react";
-import { useHistory, useParams } from "react-router-dom";
-import Store from "@redux/stores/Store";
+import React, { Fragment } from "react";
 import { ManageList } from "@modules/account/components/lists/ManageList";
+import { List } from "@modules/account/ts/types/list.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
 
-interface ManageListPageURLParams {
+interface ManageListPage {
   listHash: string;
 }
 
-export const ManageListPage: React.FC = () => {
-  const params = useParams<ManageListPageURLParams>();
+export const ManageListPage: React.FC<ManageListPage> = ({ listHash }) => {
+  const router = useRouter();
+  const lists: List[] = useSelectorAccount((state) => state.lists.lists);
 
-  const history = useHistory();
-
-  const lists = Store.getState().lists.lists;
-
-  if (!lists) {
-    history.push(`/account/your-lists/${params.listHash}`);
-    return;
-  }
-
-  const list = lists.find((e) => e.cache_url === params.listHash);
+  const list = lists.find((list) => list.cacheUrl === listHash);
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    router.push(`/shopping-lists/${list.cacheUrl}`);
   };
 
   return (
-    <div>
+    <Fragment>
       <div className="page-label">Manage list</div>
       <ManageList info={list} onCancelClick={onCancelClick} />
-    </div>
+    </Fragment>
   );
 };

@@ -60,11 +60,6 @@ return [
         'name' => 'transactions'
     ],
     [
-        'route' => '/your-lists/invite/{*:tag}/{*:code}',
-        'target' => [AccountController::class, 'listInvite'],
-        'name' => 'list-invite'
-    ],
-    [
         'route' => '/your-lists/{*:id}',
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'your-lists'

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, Fragment } from "react";
 import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
@@ -12,22 +12,16 @@ import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import ShareIcon from "@modules/icon/components/account/share/ShareIcon";
+import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface ListHeaderProps {
-  label: string;
-  shippingList: boolean;
-  edit: boolean;
-  info: List;
+  isShoppingList: boolean;
 }
 
-export const ListHeader: React.FC<ListHeaderProps> = ({
-  label,
-  shippingList,
-  edit,
-  info,
-}) => {
+export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const shareDialog = useDialog();
-
+  const list: List = useSelectorAccount((state) => state.lists.listView);
   const manageListDialog = useDialog();
 
   const deleteListDialog = useDialog();
@@ -43,43 +37,48 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   const onRequestEnd = () => {
     showSnackbar({
       header: "Success",
-      message: `${info.name} list deleted successfully`,
+      message: `${list.name} list deleted successfully`,
       theme: "success",
     });
   };
+  const edit = list.role !== UserPrivateVariantsEnum.VIEW;
 
   const handleDeleteList = () => {
-    router.push("/your-lists");
-    dispatch(deleteList(info.product_list_id, onRequestEnd));
+    // router.push("/your-lists");
+    dispatch(deleteList(list.productListId, onRequestEnd));
   };
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
-      onClick: () => router.push(`/your-lists/manage-list/${info.cache_url}`),
+      onClick: () =>
+        router.push(`/shopping-lists/action-list/manage-list/${list.cacheUrl}`),
     },
     {
       label: "Add idea",
-      onClick: () => router.push(`/your-lists/add-idea/${info.cache_url}`),
+      onClick: () =>
+        router.push(`/shopping-lists/action-list/add-idea/${list.cacheUrl}`),
     },
     {
       label: "Share list with others",
-      onClick: () => router.push(`/your-lists/${info.cache_url}/share-list`),
-    },
-    {
-      label: "Delete list",
-      onClick: () => router.push(`/your-lists/${info.cache_url}/delete-list`),
+      onClick: () =>
+        router.push(`/shopping-lists/action-list/share-list/${list.cacheUrl}`),
     },
   ];
+  const mobileItemDelete = {
+    label: "Delete list",
+    onClick: () =>
+      router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
+  };
 
   return (
     <div className="list-header-container">
       <div className="list-header-left-side">
         <img
           className="list-header-private-type-img"
-          src={`/static/frontend/images/icons/account/list-${info.list_info.list_type}.svg`}
+          src={`/static/frontend/images/icons/account/list-${list.listType}.svg`}
         />
-        <div className="list-header-name">{label}</div>
+        <div className="list-header-name">{list.name}</div>
         {edit && (
           <img
             onClick={mobileMenuDialog.handleClickOpen}
@@ -90,14 +89,14 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
 
         <div className="list-header-actions">
           {edit && (
-            <React.Fragment>
+            <Fragment>
               <div
                 onClick={manageListDialog.handleClickOpen}
                 className="list-header-action-item blue"
               >
                 Manage List
               </div>
-              {shippingList && (
+              {!isShoppingList && (
                 <div
                   onClick={deleteListDialog.handleClickOpen}
                   className="list-header-action-item red"
@@ -105,7 +104,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
                   Delete List
                 </div>
               )}
-            </React.Fragment>
+            </Fragment>
           )}
         </div>
       </div>
@@ -129,7 +128,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         title={"Manage list"}
         onClose={manageListDialog.handleClose}
       >
-        <ManageList info={info} onCancelClick={manageListDialog.handleClose} />
+        <ManageList info={list} onCancelClick={manageListDialog.handleClose} />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC
         show={deleteListDialog.open}
@@ -143,7 +142,11 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
         />
       </BootstrapDialogHOC>
       <MobileMenuForList
-        items={mobileDialogItems}
+        items={
+          isShoppingList
+            ? mobileDialogItems
+            : [...mobileDialogItems, mobileItemDelete]
+        }
         dialogOpen={mobileMenuDialog.open}
         dialogOnClose={mobileMenuDialog.handleClose}
       />

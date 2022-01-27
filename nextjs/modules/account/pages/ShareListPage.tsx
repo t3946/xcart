@@ -1,39 +1,28 @@
 import React from "react";
-import { useHistory, useParams } from "react-router-dom";
-import Store from "@redux/stores/Store";
 import { ShareList } from "@modules/account/components/lists/ShareList";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-
-interface ShareListPageURLParams {
-  id: string;
-}
+import UseSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useRouter } from "next/router";
 
 export const ShareListPage: React.FC = () => {
-  const params = useParams<ShareListPageURLParams>();
+  const router = useRouter();
+  const { cache } = router.query;
+  const lists = UseSelectorAccount((state) => state.lists.lists);
 
-  const lists = Store.getState().lists.lists;
-
-  const history = useHistory();
-
-  if (!lists) {
-    history.push(`/account/your-lists/${params.id}`);
-    return;
-  }
-
-  const list = lists.find((e) => e.cache_url === params.id);
+  const list = lists.find((e) => e.cacheUrl === cache);
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    router.push(`/shopping-lists/${list.cacheUrl}`);
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${list.cache_url}`}
+        redirectUrl={`/account/your-lists/${list.cacheUrl}`}
         label={"back"}
       />
       <div className="page-label">Share list with others</div>
-      <ShareList onClose={onCancelClick} />
+      <ShareList onClose={onCancelClick} cache={cache} />
     </div>
   );
 };

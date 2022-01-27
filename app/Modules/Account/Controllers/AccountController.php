@@ -128,37 +128,6 @@ class AccountController extends FrontendController
         $this->actionIndex();
     }
 
-    public function listInvite(string $tag, string $code)
-    {
-        $user = Xcart::app()->auth->getUser(true);
-
-
-        if ($user->getIsGuest()) {
-            $this->redirect('account:login', [], 301);
-            $this->actionIndex();
-        }
-
-        [$user_id, $type, $listHash] = explode('/', CoreHelper::decryptText($code, $tag));
-
-
-        $invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash]);
-
-        $invited_user_name = UserModel::objects()->get(['user_id' => $user_id])->name;
-
-        if (UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $invite_list->product_list_id])->user_id) {
-            $this->redirect('/account/your-lists/' . $listHash, [], 301);
-        }
-
-        StorageHelper::push([
-            "userId" => $user_id,
-            'userName' => $invited_user_name,
-            "type" => $type,
-            "inviteList" => $invite_list->getAttributes(),
-        ], null, 'invite_data');
-
-        $this->actionIndex();
-    }
-
     /**
      * get product data with total reviews number
      */

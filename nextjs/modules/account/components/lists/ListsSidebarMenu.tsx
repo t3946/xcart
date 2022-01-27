@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
 import Item from "@modules/account/components/sidebar-menu/Item";
@@ -6,12 +6,18 @@ import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSideba
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@modules/icon/components/account/arrows/ArrowBackIcon";
+import { List } from "@modules/account/ts/types/list.type";
+import { useDispatch } from "react-redux";
+import { fetchLists } from "@redux/actions/account-actions/ListsActions";
 
 export const ListsSidebarMenu: React.FC = () => {
   const router = useRouter();
   const createListDialog = useDialog();
-  const lists = useSelectorAccount((e) => e.lists.lists);
-
+  const lists: List[] = useSelectorAccount((e) => e.lists.lists);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchLists());
+  }, []);
   const backOnAccount = () => {
     router.push("/");
   };
@@ -28,21 +34,14 @@ export const ListsSidebarMenu: React.FC = () => {
         </div>
       </button>
       <div className="lists-sidebar-label">Shopping Lists</div>
-      {lists?.map((e, index) => {
-        return (
-          <Item
-            to={`/account/your-lists${!index ? "" : "/" + e.cache_url}`}
-            label={
-              <ListsSidebarLabel
-                label={e.name}
-                privateType={e.list_info.list_type}
-              />
-            }
-            className={"sidebar-menu-item__lists"}
-            key={index}
-          />
-        );
-      })}
+      {lists?.map((e, index) => (
+        <Item
+          to={`/shopping-lists/${e.cacheUrl}`}
+          label={<ListsSidebarLabel label={e.name} privateType={e.listType} />}
+          className={"sidebar-menu-item__lists"}
+          key={index}
+        />
+      ))}
 
       <div
         onClick={createListDialog.handleClickOpen}

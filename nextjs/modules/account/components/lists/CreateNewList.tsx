@@ -1,42 +1,38 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { FormInput } from "@modules/account/components/shared/FormInput";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createList } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { useRouter } from "next/router";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import Store from "@redux/stores/Store";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface CreateNewListProps {
+interface CreateNewList {
   onCancelBtnClick: () => void;
-  productId?: string;
   onCreateList?: (listId) => void;
   actionType?: "list" | "product";
 }
 
-export const CreateNewList: React.FC<CreateNewListProps> = ({
+export const CreateNewList: React.FC<CreateNewList> = ({
   onCancelBtnClick,
-  productId,
   onCreateList,
   actionType,
 }) => {
-  useEffect(() => {
-    ref.current.focus();
-  }, []);
   const dispatch = useDispatch();
 
   const learnMoreDialog = useDialog();
 
   const ref = useRef<HTMLInputElement>();
+  useEffect(() => {
+    ref.current.focus();
+  }, []);
 
   const { showSnackbar } = useContext(SnackbarContext);
 
@@ -44,7 +40,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const router = useRouter();
 
-  const listLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
+  const { loading, lists } = useSelectorAccount((e) => e.lists);
 
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {
@@ -60,7 +56,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      name: `Shopping List ${Store.getState().lists.lists.length + 2}`,
+      name: `Shopping List ${lists.length + 2}`,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Required field"),
@@ -70,18 +66,14 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const breakpoint = useBreakpoint();
 
-  const onAddingEnd = (param: any) => {
-    if (productId) {
-      onCreateList(param);
-      return;
-    }
+  const onAddingEnd = (cache: string) => {
     showSnackbar({
       header: "Success",
       message: `${formik.values.name} list added successfully`,
       theme: "success",
     });
     onCancelBtnClick();
-    router.push(`/shopping-lists/${param.cache_url}`);
+    router.push(`/shopping-lists/${cache}`);
   };
 
   return (
@@ -138,7 +130,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
             cancelText="Cancel"
             onCancel={onCancelBtnClick}
             groupAdvancedClasses={"manage-list-btns"}
-            disabled={listLoading}
+            disabled={loading}
           />
         </form>
       )}

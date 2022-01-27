@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Account\Controllers\AccountController;
 use Modules\Account\Controllers\Api\AccountListsApi;
 
 return [
@@ -19,14 +20,15 @@ return [
         'name' => 'reorder-list',
     ],
     [
-        'route' => '/delete-list',
+        'route' => '/delete-list/{*:list_id}',
         'target' => [AccountListsApi::class, 'deleteList'],
         'name' => 'delete-list',
+        'methods' => ['DELETE']
     ],
     [
-        'route' => '/move-product',
-        'target' => [AccountListsApi::class, 'moveProduct'],
-        'name' => 'move-product',
+        'route' => '/transfer-product',
+        'target' => [AccountListsApi::class, 'transferProduct'],
+        'name' => 'transfer-product',
     ],
     [
         'route' => '/get-url-encrypt',
@@ -72,5 +74,15 @@ return [
         'route' => '/undo-delete-product',
         'target' => [AccountListsApi::class, 'undoDeleteProduct'],
         'name' => 'undo-delete-products',
+    ],
+    [
+        'route' => '/get/{*:cache}',
+        'target' => [AccountListsApi::class, 'getListByCache'],
+        'name' => 'get-list-by-cache',
+    ],
+    [
+        'route' => '/check-invite/{*:tag}/{*:code}',
+        'target' => [AccountListsApi::class, 'listInvite'],
+        'name' => 'list-invite'
     ],
 ];

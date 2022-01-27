@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { ListHeader } from "@modules/account/components/lists/ListHeader";
 import { Button } from "@material-ui/core";
-import { ListProductItems } from "@modules/account/components/lists/ListProductItems";
-import { useRouter } from "next/router";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { Sceleton } from "@modules/shared/components/sceleton/Sceleton";
 import { ListProductItemSkeleton } from "../components/lists/ListProductItemSkeleton";
@@ -12,61 +9,33 @@ import { AddIdea } from "@modules/account/components/lists/AddIdea";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { ViewLists } from "@modules/account/components/lists/view-lists/ViewLists";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { ListSource } from "@modules/account/ts/types/list.type";
 import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu";
-import { List } from "@modules/account/ts/types/list.type";
-import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
+import { useRouter } from "next/router";
 
 const ListsPage: React.FC = () => {
-  //todo: cant get id param form url
-  const { id }: { id: string } = { id: "0" };
-
-  const lists = useSelector((e: StoreInterface) => e.lists.lists);
-
-  const [list, setList] = useState<List | null>(null);
-
-  const createIdeaDialog = useDialog();
-
-  const breakpoints = useBreakpoint();
-
   const router = useRouter();
-
-  const edit = list?.list_info.role !== UserPrivateVariantsEnum.VIEW;
-
-  //todo: router get
-  const viewLists = () => {
-    return (
-      <React.Fragment>
-        <ListHeader
-          shippingList={!!id}
-          label={list?.name}
-          edit={edit}
-          info={list}
-        />
-        <ListProductItems edit={edit} path={router.pathname} info={list} />
-      </React.Fragment>
-    );
-  };
-
-  useEffect(() => {
-    if (lists && id) {
-      setList(lists.find((e) => e.cache_url === id));
-    } else if (lists && !id) {
-      setList(lists[0]);
-    }
-  }, [lists]);
-
+  const lists = useSelectorAccount((state) => state.lists.lists);
+  const createIdeaDialog = useDialog();
+  const breakpoints = useBreakpoint();
+  const { role, cacheUrl, source } = useSelectorAccount(
+    (state) => state.lists.listView
+  );
+  const { cache } = router.query;
+  const edit = role !== UserPrivateVariantsEnum.VIEW;
+  const isBase = source === ListSource.Default;
   return (
     <div>
-      {id && (
-        <MobileMenuBackBtn
-          redirectUrl={`/account/your-lists/`}
-          label={"account"}
-        />
-      )}
-      {!!list ? (
+      {lists ? (
         breakpoints({
-          xs: id ? viewLists() : <ListMobileMenu lists={lists} />,
-          lg: viewLists(),
+          xs: cache ? (
+            <ViewLists isShoppingList={isBase} />
+          ) : (
+            <ListMobileMenu />
+          ),
+          lg: <ViewLists isShoppingList={isBase} />,
         })
       ) : (
         <React.Fragment>
@@ -74,9 +43,9 @@ const ListsPage: React.FC = () => {
             <Sceleton height={36} maxWidth={"100%"} />
           </div>
 
-          {Array.from({ length: 3 }, (v, k) => k).map((value, index) => {
-            return <ListProductItemSkeleton key={index} />;
-          })}
+          {Array.from({ length: 3 }, (v, k) => k).map((value, index) => (
+            <ListProductItemSkeleton key={index} />
+          ))}
         </React.Fragment>
       )}
       <BootstrapDialogHOC
@@ -85,16 +54,16 @@ const ListsPage: React.FC = () => {
         onClose={createIdeaDialog.handleClose}
       >
         <AddIdea
-          listHash={id || list?.cache_url}
+          listHash={cacheUrl}
           onCancelBtnClick={createIdeaDialog.handleClose}
         />
       </BootstrapDialogHOC>
 
       <Button
         onClick={createIdeaDialog.handleClickOpen}
-        type={"submit"}
-        disabled={!lists || !edit}
-        className="account-submit-btn account-submit-btn-outline add-idea-btn d-md-none"
+        type="submit"
+        disabled={!edit}
+        className="account-submit-btn account-submit-btn-outline add-idea-btn"
       >
         Add idea to list
       </Button>

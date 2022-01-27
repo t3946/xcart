@@ -5,8 +5,7 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
-import { editCommentInProduct } from "@redux/actions/account-actions/ListsActions";
-import { PriorityProductEnum } from "@modules/account/ts/consts/priority-product.enum";
+import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 
 interface ListProductItemCommentProps {
   info: ListItem;
@@ -29,9 +28,9 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
 
   const deleteComment = () => {
     dispatch(
-      editCommentInProduct(
-        listInfo.product_list_id,
-        info.product_id,
+      editCommentProduct(
+        listInfo.productListId,
+        info.productId,
         {
           comment: null,
           priority: null,

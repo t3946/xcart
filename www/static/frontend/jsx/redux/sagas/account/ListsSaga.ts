@@ -15,9 +15,8 @@ const getUser = () => {
 
 function* getLists(): Generator {
   const result: any = yield api
-    .get<any>(route("account:api:get-lists"))
+    .get("/api/account/lists/get-lists")
     .then((response) => response);
-
   yield put({
     type: "SET_LISTS",
     lists: result,
@@ -25,9 +24,9 @@ function* getLists(): Generator {
 }
 
 function* createList(action: AnyAction): Generator {
-  const result: any = yield api
-    .post<any>(
-      route("account:api:create-lists"),
+  const result = yield api
+    .post(
+      "/api/account/lists/create-lists",
       JSON.stringify({
         name: action.name,
         user_id: getUser().id,
@@ -36,15 +35,14 @@ function* createList(action: AnyAction): Generator {
     .then((response) => response);
 
   yield put({
-    type: "SET_LISTS",
-    lists: Store.getState().lists.lists.concat(result),
+    type: "ADD_NEW_LIST",
+    list: result,
   });
 
   yield action.callback(result);
 }
 
 function* reorderList(action: AnyAction): Generator {
-
   yield api
     .post<any>(
       route("account:api:reorder-list"),
@@ -131,8 +129,8 @@ function* editUserRights(action: AnyAction): Generator {
 
 function* addProductOnList(action: AnyAction): Generator {
   const product = yield api
-    .post<any>(
-      `/account/api/lists/add-product-on-list`,
+    .post(
+      `/api/account/lists/add-product-on-list`,
       JSON.stringify({
         listId: action.listId,
         productId: action?.productId,
@@ -140,20 +138,6 @@ function* addProductOnList(action: AnyAction): Generator {
       })
     )
     .then((response) => response);
-
-  yield put({
-    type: "SET_LISTS",
-    lists: Store.getState().lists.lists.map((e) => {
-      if (e.product_list_id === action.listId) {
-        return {
-          ...e,
-          products: e.products.concat(product),
-        };
-      }
-      return e;
-    }),
-  });
-
   yield action?.callback(product);
 }
 

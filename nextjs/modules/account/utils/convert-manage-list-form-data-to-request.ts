@@ -3,11 +3,10 @@ import {
   ManageListRequestData,
 } from "@modules/account/ts/types/manage-list-form.types";
 
-export function convertManageListFormDataToRequest(
+export const convertManageListFormDataToRequest = (
   data: ManageListFormData
-): ManageListRequestData {
-  console.log(data);
-  return {
+): ManageListRequestData =>
+  <ManageListRequestData>{
     description: data.description,
     name: data.listName,
     recipient_name: data.recipientName,
@@ -21,4 +20,3 @@ export function convertManageListFormDataToRequest(
     ),
     address_id: data.shippingAddress.value,
   };
-}

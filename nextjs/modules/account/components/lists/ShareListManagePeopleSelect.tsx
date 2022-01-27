@@ -67,19 +67,17 @@ export const ShareListManagePeopleSelect: React.FC<
               classes?.selectList
             )}
           >
-            {items.map((item) => {
-              return (
-                <li
-                  onClick={() => onClick(item)}
-                  className={`share-list-select-item ${
-                    item.value === value.value &&
-                    "share-list-select-item-selected"
-                  }`}
-                >
-                  {item.viewValue}
-                </li>
-              );
-            })}
+            {items.map((item) => (
+              <li
+                onClick={() => onClick(item)}
+                className={`share-list-select-item ${
+                  item.value === value.value &&
+                  "share-list-select-item-selected"
+                }`}
+              >
+                {item.viewValue}
+              </li>
+            ))}
             <li
               onClick={() =>
                 onClick({
