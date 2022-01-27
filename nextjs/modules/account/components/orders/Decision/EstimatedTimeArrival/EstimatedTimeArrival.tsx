@@ -24,8 +24,8 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
 
   const initialState = {
-    comment: decision.options.comment || "",
-    advice: decision.options.advice || "",
+    comment: decision?.options?.comment || "",
+    advice: decision?.options?.advice || "",
   };
 
   const validationSchema = yup.object().shape({
