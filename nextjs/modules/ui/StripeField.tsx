@@ -8,15 +8,17 @@ import {
 import _merge from "lodash/merge";
 import cn from "classnames";
 import Styles from "@modules/ui/StripeField.module.scss";
+import * as stripeJs from "@stripe/stripe-js";
 
 interface IProps extends CardElementProps {
   afterInit: (e: any) => any;
   error: string;
   setError: (e: string) => void;
   className?: any;
+  onReady?: (element: stripeJs.StripeCardElement) => any;
 }
 
-const StripeField: React.FC<IProps> = function (props: IProps) {
+const StripeField: React.FC<IProps> = function (props) {
   const stripe = useStripe();
   const elements = useElements();
   const defaultProps = {
