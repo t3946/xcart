@@ -25,7 +25,6 @@ services:
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf
-      - ./docker/mysql/slave.cnf:/etc/my.cnf.d/repl.cnf
 #  smtp:
 #    restart: always
 #    container_name: smtp
