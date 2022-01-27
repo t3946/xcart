@@ -51,7 +51,6 @@ services:
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
       - ./docker/nginx/configs/:/etc/nginx/configs/
       - ./docker/nginx/sites_dev/:/etc/nginx/sites-enabled.d/
-      - ./docker/certbot/conf:/etc/letsencrypt
 
   php:
     build:
@@ -71,6 +70,7 @@ services:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
       PHP_IDE_CONFIG: serverName=localhost
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
     working_dir: /var/www
     extra_hosts:
       - "host.docker.internal:host-gateway"

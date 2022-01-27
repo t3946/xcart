@@ -1,7 +1,9 @@
-FROM php:8.1.0-fpm
+FROM php:8.0-fpm
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
+
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
@@ -18,7 +20,7 @@ RUN apt-get update
 RUN apt-get install -y msmtp git
 
 # Install extensions
-RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis
+RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis opcache
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
