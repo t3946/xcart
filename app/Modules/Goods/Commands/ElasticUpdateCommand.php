@@ -5,10 +5,11 @@ namespace Modules\Goods\Commands;
 use Dariuszp\CliProgressBar;
 use DateTime;
 use DateTimeInterface;
-use Elastic\AppSearch\Client\ClientBuilder;
+use Elastic\EnterpriseSearch\AppSearch\Request\IndexDocuments;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Search\SearchModule;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Commands\Command;
 use Xcart\App\Main\Xcart;
@@ -18,14 +19,13 @@ class ElasticUpdateCommand extends Command
 
     public function handle($arguments = [])
     {
-        $client = Xcart::app()->elastic->getClient();
-
         $i = 0;
+
+        $client = Xcart::app()->elastic->getClient()->appSearch();
 
         $bar = new CliProgressBar(ProductModel::objects()->count());
 
         while ($models = ProductModel::objects()->paginate(++$i, 100)->all()) {
-
             $documents = [];
 
             foreach ($models as $model) {
@@ -39,9 +39,9 @@ class ElasticUpdateCommand extends Command
                     ];
                 }
 
-                $documents[] = [
+                $documents[] = (object)[
                     'id' => $model->pk,
-                    'product'     => $model->getFrontendName(),
+                    'product' => $model->getFrontendName(),
                     'productcode' => $model->productcode,
                     'fulldescr' => $model->getFrontendDescription(),
                     'price' => $model->getPrice(),
@@ -51,16 +51,21 @@ class ElasticUpdateCommand extends Command
                     'brand' => $model->brand->brand ?? '',
                     'upc' => $model->upc,
                     'sites' => array_map(static fn(SiteModel $site) => $site->code, $model->sites->all()),
-                    'categories' => array_map(static fn(CategoryModel $category) => $category->getFrontendName(), $model->categories->all()),
+                    'categories' => array_map(
+                        static fn(CategoryModel $category) => $category->getFrontendName(),
+                        $model->categories->all()
+                    ),
                     'in_stock' => (int)!$model->isOutOfStockFrontend(),
                     'forsale' => (int)($model->forsale === 'Y'),
                     'created_at' => (new DateTime())->setTimestamp($model->add_date)->format(DateTimeInterface::RFC3339)
                 ];
             }
-            $client->indexDocuments('s3stores-products', $documents);
+
+            $request = new IndexDocuments(SearchModule::PRODUCTS_ENGINE, $documents);
+
+            $client->indexDocuments($request);
 
             $bar->progress(100);
-
         }
 
         $bar->end();

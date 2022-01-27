@@ -21,6 +21,7 @@ package-lock.json
 /www/files/
 /www/product_files/
 /.idea/
+/.composer/
 /www/verificator/cookies/*
 /www/include/system/
 node_modules

@@ -633,6 +633,10 @@ class DistributorModel extends Model
                 'class' => BooleanField::class,
                 'default' => false
             ],
+            'disable_check_images_link' => [
+                'class' => BooleanField::class,
+                'default' => false
+            ],
             'submit_to_operator' => [
                 'class' => CharField::class,
                 'choices' => [

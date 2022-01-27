@@ -2,8 +2,8 @@
 
 namespace Modules\Search\Helpers;
 
-use Elastic\AppSearch\Client\Client;
-use Elastic\AppSearch\Client\ClientBuilder;
+
+use Elastic\EnterpriseSearch\Client;
 
 class ElasticHelper
 {
@@ -14,7 +14,12 @@ class ElasticHelper
     public function getClient(): Client
     {
         if ($this->client === null) {
-            $this->client = ClientBuilder::create($this->apiEndpoint, $this->apiKey)->build();
+            $this->client = new Client([
+                'host' => $this->apiEndpoint,
+                'app-search' => [
+                    'token' => $this->apiKey
+                ]
+            ]);
         }
         return $this->client;
     }

@@ -3,6 +3,7 @@
 namespace Modules\Order\Helpers;
 
 use DateTime;
+use GuzzleHttp\Client;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Models\VoidedReasonModel;
 use Xcart\App\QueryBuilder\Expression;
@@ -24,7 +25,6 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
-use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
@@ -402,14 +402,17 @@ HTML;
 
     public static function fetchMap($zipcode): ?string
     {
-        $client = new \Goutte\Client(['timeout' => 5]);
+        $client = new Client(['verify' => false, 'timeout' => 5]);
         $url = 'https://www.ups.com/maps/results';
-        $data = ['loc' => 'en_US', 'zip' => $zipcode, 'stype' => 'O'];
-        if (($res = $client->request('POST', $url, $data)) &&
-            ($mapUrl = $res->filter('#imgMap')) &&
-            $mapUrl->count() &&
-            $image = $mapUrl->image()->getUri()) {
-            return $image;
+        $data = ['form_params' => ['loc' => 'en_US', 'zip' => $zipcode, 'stype' => 'O']];
+        if ($res = $client->post($url, $data)) {
+            //$mapUrl = $res->filter('#imgMap');
+            $body = $res->getBody()->getContents();
+            if (preg_match('/id="imgMap" src="(.*)"/mU', $body, $matches)) {
+                if ($matches[1]) {
+                    return "https://www.ups.com{$matches[1]}";
+                }
+            }
         }
         return null;
     }

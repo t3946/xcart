@@ -97,7 +97,7 @@ return array_replace_recursive([
 
        'elastic' => [
            'class' => ElasticHelper::class,
-           'apiEndpoint' => 'http://68.168.211.58:3002/',
+           'apiEndpoint' => 'http://68.168.211.58:3002',
            'apiKey' => 'private-xfpuz5d7ruisj6rh8s1cmawz',
        ],
 

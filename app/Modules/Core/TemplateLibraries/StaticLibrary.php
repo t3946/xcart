@@ -111,16 +111,19 @@ class StaticLibrary extends TemplateLibrary
      * Находит бандл файл со скриптами для клиентской части и возвращает его путь
      * @kind function
      * @name front_script
-     * @return int
+     * @return string
      */
-    public static function getFrontScript()
+    public static function getFrontScript(): string
     {
         $static_path = "/static/frontend/dist/js/";
 
         $files = scandir($_SERVER['DOCUMENT_ROOT'] . $static_path);
-        $result = array_filter($files, function($file_name) {
-            return preg_match('/main\.\w+?\.js/', $file_name);
-        });
+
+        if (!$files) {
+            return '';
+        }
+
+        $result = array_filter($files, static fn($file_name) => preg_match('/main\.\w+?\.js/', $file_name));
 
         return $static_path . array_shift($result);
     }
@@ -129,16 +132,19 @@ class StaticLibrary extends TemplateLibrary
      * Находит бандл файл со скриптами для административной части и возвращает его путь
      * @kind function
      * @name admin_script
-     * @return int
+     * @return string
      */
-    public static function getAdminScript()
+    public static function getAdminScript(): string
     {
         $static_path = "/static/backend/dist/js/";
 
         $files = scandir($_SERVER['DOCUMENT_ROOT'] . $static_path);
-        $result = array_filter($files, function($file_name) {
-            return preg_match('/main\.\w+?\.js/', $file_name);
-        });
+
+        if (!$files) {
+            return '';
+        }
+
+        $result = array_filter($files, static fn($file_name) => preg_match('/main\.\w+?\.js/', $file_name));
 
         return $static_path . array_shift($result);
     }
@@ -148,7 +154,7 @@ class StaticLibrary extends TemplateLibrary
      * @name inline
      * @return string
      */
-    public static function getInline($params)
+    public static function getInline($params): string
     {
         $resource = $params['file'];
 
