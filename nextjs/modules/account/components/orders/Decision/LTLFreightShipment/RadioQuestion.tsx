@@ -17,7 +17,7 @@ interface IProps {
       value: string;
     };
     radios: {
-      viewValue: string;
+      label: string;
       value: string;
     }[];
   };
@@ -98,9 +98,13 @@ const RadioQuestion: React.FC<IProps> = (props) => {
                 value={answer.value}
                 checkedValue={props.checkedValues[questionKey]?.value}
                 disabled={props.disabled}
-                onChange={() => props.onChange(answer)}
+                onChange={() =>
+                  props.onChange({
+                    target: { name: questionKey, value: answer },
+                  })
+                }
               />
-              <span>{answer.viewValue}</span>
+              <span>{answer.label}</span>
             </label>
           );
         })}

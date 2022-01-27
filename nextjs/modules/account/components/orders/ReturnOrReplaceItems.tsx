@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import cn from "classnames";
-import FormSelect from "@modules/ui/forms/Select";
+import Select from "@modules/ui/forms/select/Select";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
@@ -183,19 +183,20 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                     <ProductCell name={item.product} sku={item.code} />,
 
                     <div className="col-9 col-md-6 mx-auto">
-                      <FormSelect
+                      <Select
+                        classes={{ control: "p-0" }}
+                        clearable={false}
                         value={
                           getProductItem(item.productId, values)
                             ?.amountSelect || {
                             value: 0,
-                            viewValue: 0,
+                            label: 0,
                           }
                         }
-                        items={fillArrayItemsOnOrderActions(item.amount)}
-                        id={`${item.code}-amount`}
-                        onClick={(value) =>
+                        options={fillArrayItemsOnOrderActions(item.amount)}
+                        onChange={(e) =>
                           updateValueOnReturnItems(
-                            { ...item, amountSelect: value },
+                            { ...item, amountSelect: e.target.value },
                             item.productId,
                             values,
                             setValues
@@ -205,27 +206,25 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                     </div>,
 
                     <div className="d-none d-md-block col-md-11 col-lg-10 col-xl-10 col-xxl-8 ms-auto">
-                      <FormSelect
-                        classes={{
-                          selectHeader: "order-product-select-action-header",
-                        }}
+                      <Select
+                        classes={{ control: "p-0" }}
+                        clearable={false}
                         value={
                           getProductItem(item.productId, values)
                             ?.quantitySelect || {
                             value: undefined,
-                            viewValue: "Select an option",
+                            label: "Select an option",
                           }
                         }
-                        onClick={(value) =>
+                        onChange={(e) =>
                           updateValueOnReturnItems(
-                            { ...item, quantitySelect: value },
+                            { ...item, quantitySelect: e.target.value },
                             item.productId,
                             values,
                             setValues
                           )
                         }
-                        id={`${item.code}-action`}
-                        items={returnSelectValues}
+                        options={returnSelectValues}
                       />
                     </div>,
                     <RadioQuestion
@@ -247,13 +246,13 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                           values
                         )?.quantitySelect || {
                           value: undefined,
-                          viewValue: "Select an option",
+                          label: "Select an option",
                         },
                       }}
                       disabled={isSubmitting}
-                      onChange={(value) =>
+                      onChange={(e) =>
                         updateValueOnReturnItems(
-                          { ...item, quantitySelect: value },
+                          { ...item, quantitySelect: e.target.value },
                           item.productId,
                           values,
                           setValues

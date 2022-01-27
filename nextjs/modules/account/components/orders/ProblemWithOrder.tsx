@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import cn from "classnames";
-import FormSelect from "@modules/ui/forms/Select";
+import Select from "@modules/ui/forms/select/Select";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import { ApiService } from "@modules/shared/services/api.service";
@@ -25,7 +25,11 @@ export const ProblemWithOrder: React.FC = () => {
   useEffect(() => {
     api
       .get("/api/account/orders/get-problem-statuses")
-      .then((res) => setStatuses(res));
+      .then((res) =>
+        setStatuses(
+          res.map((item) => ({ value: item.value, label: item.viewValue }))
+        )
+      );
   }, []);
 
   const sendMessage = () => {
@@ -78,12 +82,12 @@ export const ProblemWithOrder: React.FC = () => {
       <form onSubmit={formik.handleSubmit}>
         <div className="d-none d-md-block">
           <p className="what-went-wrong">What went wrong?</p>
-          <FormSelect
-            classes={{ group: "order-product-select-errors" }}
+          <Select
+            classes={{ select: ["order-product-select-errors", Styles.select] }}
+            options={statuses}
+            name="status_id"
             value={formik.values.status_id}
-            items={statuses}
-            onClick={(value) => formik.setFieldValue("status_id", value)}
-            id={"problem-with-order-select"}
+            onChange={formik.handleChange}
           />
         </div>
 
@@ -97,9 +101,7 @@ export const ProblemWithOrder: React.FC = () => {
             }}
             checkedValues={formik.values}
             disabled={formik.isSubmitting}
-            onChange={(e) => {
-              formik.setFieldValue("status_id", e);
-            }}
+            onChange={formik.handleChange}
           />
         </div>
 

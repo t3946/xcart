@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import cn from "classnames";
-import FormSelect from "@modules/ui/forms/Select";
+import Select from "@modules/ui/forms/select/Select";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { ApiService } from "@modules/shared/services/api.service";
@@ -76,9 +76,7 @@ export const CancelItems: React.FC<IProps> = (props) => {
         );
         return;
       }
-      if (value.value === 0) {
-        return;
-      }
+
       formik.setFieldValue(
         "cancelItemsValues",
         formik.values.cancelItemsValues.map((e) => {
@@ -91,14 +89,15 @@ export const CancelItems: React.FC<IProps> = (props) => {
         })
       );
       return;
+    } else if (value.value !== 0) {
+      formik.setFieldValue(
+        "cancelItemsValues",
+        formik.values.cancelItemsValues.concat({
+          order_item_id: id,
+          amount: value,
+        })
+      );
     }
-    formik.setFieldValue(
-      "cancelItemsValues",
-      formik.values.cancelItemsValues.concat({
-        order_item_id: id,
-        amount: value,
-      })
-    );
   };
 
   const getProductItem = (id) => {
@@ -151,18 +150,21 @@ export const CancelItems: React.FC<IProps> = (props) => {
               <span className="d-none d-md-block">{item.amount}</span>,
 
               <div className=" ms-auto col-9 col-sm-6">
-                <FormSelect
-                  classes={{ group: "order-product-select-count" }}
+                <Select
+                  clearable={false}
+                  classes={{
+                    select: "order-product-select-count",
+                    control: "p-0",
+                  }}
                   value={
-                    getProductItem(item.product)?.amount || {
+                    getProductItem(item.productId)?.amount || {
                       value: 0,
-                      viewValue: 0,
+                      label: 0,
                     }
                   }
-                  items={fillArrayItemsOnOrderActions(item.amount)}
-                  id={item.code}
-                  onClick={(value) =>
-                    updateValueOnCancelItems(value, item.productId)
+                  options={fillArrayItemsOnOrderActions(item.amount)}
+                  onChange={(e) =>
+                    updateValueOnCancelItems(e.target.value, item.productId)
                   }
                 />
               </div>,

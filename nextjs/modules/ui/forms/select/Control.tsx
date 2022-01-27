@@ -10,7 +10,7 @@ const Control = function (props: any) {
   return (
     <RSControl
       {...props}
-      className={cn(Styles.control, {
+      className={cn(Styles.control, props.selectProps.classes?.control, {
         [Styles.control_valid]: props.selectProps.isValid,
         [Styles.control_focus]: props.isFocused,
         [Styles.control_valid_focus]:
