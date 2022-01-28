@@ -6,6 +6,11 @@ use Xcart\App\Module\Module;
 
 class SearchModule extends Module
 {
-    public const PRODUCTS_ENGINE = 's3stores-products';
+    public const PRODUCTS_ENGINE = '%s-products';
+
+    public static function getEngine(string $code): string
+    {
+        return sprintf(self::PRODUCTS_ENGINE, $code);
+    }
 
 }

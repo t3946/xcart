@@ -42,7 +42,7 @@ class ProductHelper
         return $result;
     }
 
-    public static function getFileNameFromDownloadLink($imgLink, array $allowExtensions = [], $defaultExtension)
+    public static function getFileNameFromDownloadLink($imgLink, $defaultExtension, array $allowExtensions = [])
     {
         $result = null;
         $path = parse_url(strtolower($imgLink));
@@ -92,7 +92,7 @@ class ProductHelper
     {
         $product_files_dir = Paths::get('www') . '/product_files';
 
-        if (!$fileName = self::getFileNameFromDownloadLink($filePath, ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'], 'pdf')) {
+        if (!$fileName = self::getFileNameFromDownloadLink($filePath,  'pdf', ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'tiff', 'png', 'jpeg', 'jfif'])) {
             return null;
         }
 

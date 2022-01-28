@@ -2,6 +2,9 @@
 
 namespace Modules\Goods\Controllers;
 
+use Elastic\EnterpriseSearch\AppSearch\Request\Search;
+use Elastic\EnterpriseSearch\AppSearch\Schema\SearchRequestParams;
+use Modules\Search\SearchModule;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\ProductSortHelper;
@@ -96,19 +99,13 @@ class SearchController extends AbstractCatalogController
             }
         }
 
-        $this->suggestion = (new SearchSuggestionHelper($this->q, $this->getSearchIndex()))->mixed_suggestion(5);
+        $this->suggestion = [
+            'phrase_suggestions' => (new SearchSuggestionHelper($this->q))->suggestion_phrase(5)
+        ];
 
-        if (!$this->searched = $this->getProductFromElastic($this->q))
-        {
-            $show_empty = true;
+        $this->searched = $this->getProductFromElastic($this->q);
 
-            if ($this->suggestion)
-            {
-                $this->q = $this->suggestion[0];
-                $this->suggestion = (new SearchSuggestionHelper($this->q, $this->getSearchIndex()))->mixed_suggestion(5);
-                $show_empty = !$this->getProductFromElastic($this->q);
-            }
-        }
+        $show_empty = $this->searched === 0;
 
         if ($show_empty) {
             echo $this->render('catalog/search_empty.tpl', [
@@ -164,27 +161,30 @@ class SearchController extends AbstractCatalogController
         return $classElastic;
     }
 
-    public function getProductFromElastic($search, $min_score = null, $max_size = 1000, $page = 1)
+    public function getProductFromElastic($search, $min_score = null, $max_size = 20, $page = 1)
     {
-        $elastic = $this->getElastic($search, $min_score);
-        $result = $elastic->query(['from' => ($page-1) * $max_size, 'size' => $max_size]);
+        $client = Xcart::app()->elastic->getClient()->appSearch();
 
-        $items = empty($result["hits"]["hits"]) ? [] : $result["hits"]["hits"];
-        $count = empty($result["hits"]["total"]) ? 0 : $result["hits"]["total"];
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-        if ($items) {
-            usort($items, function($a, $b){
-                if ($a['_score'] == $b['_score']) {
-                    return 0;
-                }
-                return $a['_score'] < $b['_score'] ?  1 : -1;
-            });
+        $searchParam = new SearchRequestParams(trim($search));
+        $searchParam->filters = (object)['all' => [(object)['sites' => $site->code], (object)['in_stock' => 1]]];
+        $searchParam->search_fields = (object)[
+            'product' => (object)[],
+            'upc' => (object)[],
+            'productcode' => (object)[],
+            'fulldescr' => (object)[]
+        ];
+        $searchParam->page = (object)['current' => $page, 'size' => $max_size];
 
-            $this->ids = array_map(function($item) {return $item['_id']; }, $items);
-        }
-        else if (!$items && is_null($min_score)) {
-            $this->getProductFromElastic($search, .01, $max_size);
-        }
+        $request = new Search(SearchModule::PRODUCTS_ENGINE, $searchParam);
+
+        $searchResult = $client->search($request)->asArray();
+
+        $items = $searchResult['results'];
+        $count = $searchResult['meta']['page']['total_results'];
+
+        $this->ids = array_map(static fn($item) => $item['id']['raw'], $items);
 
         return $count;
     }

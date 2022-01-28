@@ -145,8 +145,11 @@ class SaveFilePrice
                 case 'list_price':
                 case 'new_map_price':
                 case 'weight':
-                    if ($item[$num_row] && preg_match("/(?<price>(\d+\.\d+)|(\d+)|(\.\d+))/", $item[$num_row], $matches)) {
-                        $ar_field[$field] = (float)$matches['price'];
+                    if ($item[$num_row]) {
+                        $item[$num_row] = str_replace(',', '', $item[$num_row]);
+                        if (preg_match("/(?<price>(\d+\.\d+)|(\d+)|(\.\d+))/", $item[$num_row], $matches)) {
+                            $ar_field[$field] = (float)$matches['price'];
+                        }
                     }
                     break;
                 case 'for_sale':

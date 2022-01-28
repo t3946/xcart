@@ -18,16 +18,9 @@ class SearchSuggestionHelper
     private $elastic;
     private $search;
 
-    public function __construct($search, $indexes=null, $type = 'product') {
-
-        $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
+    public function __construct($search, $indexes = null, $type = 'product')
+    {
         $this->search = trim($search);
-
-        $this->elastic = new ElasticSearch($config['es_url'], $indexes ?: $this->getSearchIndex());
-        $this->elastic->setSource("*._id");
-        $this->elastic->setMinScore($config['search_results_minimum_score_value']);
-        $this->elastic->setType($type);
-        $this->elastic->setQueryParams($search);
     }
 
     public function getSearchIndex(): string
@@ -100,10 +93,12 @@ class SearchSuggestionHelper
 
     public function suggestion_phrase($count = 5, $self_include = false): array
     {
+        $search = trim($this->search);
+
         $client = Xcart::app()->elastic->getClient()->appSearch();
 
         $request = new QuerySuggestionRequest();
-        $request->query = trim($this->search);
+        $request->query = $search;
         $request->types = (object)['documents' => ['fields' => ['product', 'brand', 'productcode', 'upc']]];
         $request->size = $count;
 
@@ -112,6 +107,9 @@ class SearchSuggestionHelper
         $suggestions = $client->querySuggestion($suggestion)->asArray();
 
         foreach ($suggestions['results']['documents'] as $suggestion) {
+            if (!$self_include &&  $suggestion['suggestion'] === $search) {
+                continue;
+            }
             $result[] = $suggestion['suggestion'];
         }
 

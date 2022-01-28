@@ -16,7 +16,7 @@ class ImageHelper
 
     public static function getImageFileNameFromDownloadLink($imgLink, $defaultExtension = 'jpg')
     {
-        return ProductHelper::getFileNameFromDownloadLink($imgLink, self::$__extensions, $defaultExtension);
+        return ProductHelper::getFileNameFromDownloadLink($imgLink, $defaultExtension, self::$__extensions);
     }
 
     /**
