@@ -5860,6 +5860,7 @@ model xcart_users {
   password                 String?                   @db.VarChar(64)
   phone                    String?                   @db.VarChar(32)
   avatar_image             String?                   @db.VarChar(128)
+  stripe_customer_id       String?                   @db.VarChar(32)
   cart_number              Int?
   location                 String?                   @db.VarChar(64)
   public_name              String?                   @db.VarChar(64)
