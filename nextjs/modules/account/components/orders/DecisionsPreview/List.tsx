@@ -24,7 +24,6 @@ const List: React.FC<IProps> = function (props: IProps) {
     list: [
       className,
       style.decisionsListItems,
-      "pe-lg-3",
       {
         "overflow-hidden": decisions.length <= itemsPerPaginationPage,
       },
