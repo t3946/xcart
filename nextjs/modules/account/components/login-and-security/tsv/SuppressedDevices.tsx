@@ -1,6 +1,6 @@
 import React from "react";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import Button, { EType } from "@modules/ui/forms/Button";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 import { requireForAllAction } from "@redux/actions/account-actions/TSVActions";
 import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
@@ -56,7 +56,7 @@ const SuppressedDevices: React.FC<any> = function () {
           )}
           onClick={requireForAllSubmit}
           disabled={disabled}
-          type={EType.themeDarkGrey}
+          type={ETheme.themeDarkGrey}
         >
           Require OTP on all devices
         </Button>
