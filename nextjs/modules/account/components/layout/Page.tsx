@@ -7,6 +7,8 @@ import Snackbar from "@modules/account/components/snackbar/Snackbar";
 import BreadCrumbs from "@modules/account/components/bread-crumbs/BreadCrumbs";
 import _merge from "lodash/merge";
 import ShadowPanel from "@modules/account/components/shared/ShadowPanel";
+import Styles from "@modules/account/components/layout/Page.module.scss";
+import cn from "classnames";
 
 interface IProps {
   showBreadcrumbs?: boolean;
@@ -30,7 +32,9 @@ const Page: React.FC<IProps> = (props: IProps): any => {
         <div className="container-lg">
           {showBreadcrumbs && <BreadCrumbs />}
 
-          <div className="row mt-lg-20">{props.children}</div>
+          <div className={cn("row mt-lg-20", Styles.pageRow)}>
+            {props.children}
+          </div>
         </div>
       </Snackbar>
     </>
