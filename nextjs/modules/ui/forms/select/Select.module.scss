@@ -3,14 +3,8 @@
 div.select {
   width: 100%;
   font-size: pxToRem(18);
-  height: pxToRem(38);
-
-  @include breakpoint(md) {
-    height: pxToRem(42);
-  }
 
   @include breakpoint(lg) {
-    height: pxToRem(34);
     font-size: pxToRem(14);
   }
 }

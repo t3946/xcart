@@ -7,11 +7,7 @@ import Styles from "@modules/ui/forms/select/MenuList.module.scss";
 const MenuList = function (props: any) {
   const RSMenuList = components.MenuList;
 
-  return (
-    <RSMenuList {...props} className={cn("p-0", Styles.list)}>
-      {props.children}
-    </RSMenuList>
-  );
+  return <RSMenuList {...props} className={cn("p-0", Styles.list)} />;
 };
 
 export default MenuList;

@@ -5,6 +5,8 @@ import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
 import Menu from "@modules/ui/forms/select/Menu";
 import MenuList from "@modules/ui/forms/select/MenuList";
+import IndicatorsContainer from "@modules/ui/forms/select/IndicatorsContainer";
+import DropdownIndicator from "@modules/ui/forms/select/DropdownIndicator";
 
 import Styles from "@modules/ui/forms/select/Select.module.scss";
 
@@ -16,6 +18,8 @@ interface IProps {
   clearable?: boolean;
   isValid?: boolean;
   isInvalid?: boolean;
+  defaultIsOpen?: boolean;
+  isSearchable?: boolean;
   onChange?: (value: any) => void;
   placeholder?: React.ReactNode | string;
   classes?: {
@@ -23,6 +27,9 @@ interface IProps {
     control?: any;
     menu?: any;
     list?: any;
+    indicator?: any;
+    indicatorsContainer?: any;
+    option?: any;
   };
 }
 
@@ -38,11 +45,14 @@ const Select = function (props: IProps) {
     isValid,
     isInvalid,
     clearable = true,
+    defaultIsOpen = false,
+    isSearchable = true,
   } = props;
 
   return (
     <ReactSelect
       className={cn(Styles.select, classes?.select)}
+      defaultMenuIsOpen={defaultIsOpen}
       isClearable={clearable}
       onChange={(value) => {
         onChange({ target: { name, value } });
@@ -51,6 +61,7 @@ const Select = function (props: IProps) {
       name={name}
       options={options}
       classes={classes}
+      isSearchable={isSearchable}
       isValid={isValid}
       isInvalid={isInvalid}
       isDisabled={disabled}
@@ -60,6 +71,8 @@ const Select = function (props: IProps) {
         Menu,
         MenuList,
         Control,
+        IndicatorsContainer,
+        DropdownIndicator,
       }}
     />
   );
