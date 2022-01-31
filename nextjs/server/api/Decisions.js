@@ -57,6 +57,25 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
   res.json({ decision });
 });
 
+app.post("/create", isAuthMiddleware, async function (req, res) {
+  const { type, order_id } = req.body;
+  const order = await prisma.xcart_orders.findFirst({
+    where: {
+      orderid: order_id,
+    },
+  });
+
+  const decision = await prisma.account_decisions.create({
+    data: {
+      type,
+      order_id,
+      order_number: [order.order_prefix, order.orderid].join(""),
+    },
+  });
+
+  res.json({ decision });
+});
+
 app.post("/get-list", isAuthMiddleware, async function (req, res) {
   const { skip, take, solved } = req.body;
 
@@ -72,6 +91,19 @@ app.post("/get-list", isAuthMiddleware, async function (req, res) {
   });
 
   res.send(decisions);
+});
+
+app.post("/set-all-not-solved", isAuthMiddleware, async function (req, res) {
+  await prisma.account_decisions.updateMany({
+    where: {
+      order_id: req.body.order_id,
+    },
+    data: {
+      solved: 0,
+    },
+  });
+
+  res.sendStatus(200);
 });
 
 module.exports = app;
