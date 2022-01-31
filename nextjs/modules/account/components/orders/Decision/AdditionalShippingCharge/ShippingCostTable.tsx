@@ -58,7 +58,7 @@ const ShippingCostTable: React.FC<IProps> = ({
           "m-0",
           classes.columnPadding,
         ],
-        block: [Styles.gridShipping, className],
+        list: [Styles.gridShipping, className],
       }}
     />
   );

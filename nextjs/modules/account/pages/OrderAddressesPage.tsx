@@ -170,7 +170,7 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
       <div className="page-label">Addresses and contacts</div>
       <GreyGrid
         classes={{
-          block: ["mb-20", Styles.order__grid, Styles.orgerGrid],
+          list: ["mb-20", Styles.order__grid, Styles.orgerGrid],
           item: Styles.orderGridItem,
         }}
         items={gridItems}

@@ -195,7 +195,7 @@ const AdditionalShippingCharge: React.FC<IProps> = (props) => {
             "m-0",
             classes.columnPadding,
           ],
-          block: [Styles.gridShipping, Styles.page__gridShipping],
+          list: [Styles.gridShipping, Styles.page__gridShipping],
         }}
       />
 
@@ -229,7 +229,7 @@ const AdditionalShippingCharge: React.FC<IProps> = (props) => {
                     Styles.gridPaymentItem,
                     "m-0",
                   ],
-                  block: [
+                  list: [
                     Styles.gridPayment,
                     Styles.page__gridPayment,
                     classes.columnPadding,
@@ -320,7 +320,7 @@ const AdditionalShippingCharge: React.FC<IProps> = (props) => {
               <GreyGrid
                 classes={{
                   item: [Styles.gridItem_border_none, "p-0", "m-0"],
-                  block: [
+                  list: [
                     Styles.page__gridCancelOrder,
                     Styles.gridPayment,
                     Styles.gridCancel,

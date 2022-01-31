@@ -6,6 +6,7 @@ import { getCards } from "@redux/actions/account-actions/PaymentsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import InnerPage from "@components/common/inner-page/InnerPage";
+import GreyGrid from "@components/common/grey-grid/GreyGrid";
 
 export const Wallet: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,10 @@ export const Wallet: React.FC = () => {
         <CardsList cards={cards} />
         <h2>Add a new payment method</h2>
       </InnerPage>
-      <AddNewPaymentMethod />
+
+      <GreyGrid>
+        <AddNewPaymentMethod />
+      </GreyGrid>
     </>
   );
 };

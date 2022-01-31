@@ -210,7 +210,7 @@ const AchPaymentIsRequired: React.FC = () => {
           <GreyGrid
             classes={{
               item: [Styles.gridLine, "my-0"],
-              block: [Styles.decision__grid, Styles.decisionGrid, "m-lg-0"],
+              list: [Styles.decision__grid, Styles.decisionGrid, "m-lg-0"],
             }}
             items={transferData(mockData)}
           />
