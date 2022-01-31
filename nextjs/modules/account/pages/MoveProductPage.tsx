@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
-import { AccountListsStore } from "@modules/account/ts/types/store.type";
 import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
@@ -11,23 +10,23 @@ import { transferProductList } from "@redux/actions/account-actions/ListsActions
 export const MoveProductPage: React.FC = () => {
   const router = useRouter();
   const { productListId, productId } = router.query;
-  const { lists }: AccountListsStore = useSelectorAccount(
-    (state) => state.lists
-  );
+  let { lists } = useSelectorAccount((state) => state.lists);
+
+  if (lists === null) {
+    lists = [];
+  }
 
   const { showSnackbar } = useContext(SnackbarContext);
-
   const list = lists.find((e) => e.productListId === Number(productListId));
-
   const dispatch = useDispatch();
 
-  const onChange = (value) => {
-    if (value === params.listId) {
-  const onChange = (value: number) => {
+  function onChange(value: number) {
     if (value === Number(productListId)) {
       return;
     }
+
     const toList = lists.find((e) => e.productListId === value);
+
     if (toList) {
       const productOnList = toList.products.find(
         (e) => e.productId === Number(productId)
@@ -45,7 +44,7 @@ export const MoveProductPage: React.FC = () => {
       );
       router.push(`/shopping-lists/${toList.cacheUrl}`);
     }
-  };
+  }
 
   return (
     <div>
