@@ -52,13 +52,11 @@ export const deleteList = (
 });
 
 export const deleteProduct = (
-  productListId: number,
-  productId: number,
+  list_items_id: number,
   callback?: () => void
 ): any => ({
   type: "SEND_DELETE_PRODUCT",
-  productListId,
-  productId,
+  list_items_id,
   callback,
 });
 

@@ -88,7 +88,7 @@ class ProductListsModel extends Model
 
     public function getFrontendData(): array
     {
-        foreach ($this->list_items as $item_list_model) {
+        foreach ($this->list_items->order(['order_by']) as $item_list_model) {
             $products[] = $item_list_model->getFrontendData();
         }
         foreach ($this->user_list_roles as $user) {
@@ -113,7 +113,7 @@ class ProductListsModel extends Model
             'addressId' => $this->address_id,
             'name' => $this->name,
             'products' => $products ?? [],
-            'users' => $users ?? []
+            'users' => $users ?? [],
         ];
     }
 }

@@ -6,5 +6,7 @@ export const deleteList = (
 ): AccountListsStore => ({
   ...state,
   lists: state.lists?.filter((list) => list.productListId != productListId),
-  listView: null,
+  listView:
+    state.lists?.filter((list) => list.productListId != productListId)[0] ??
+    null,
 });

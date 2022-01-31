@@ -97,6 +97,8 @@ class ListItemsModel extends Model
             'orderBy' => $this->order_by,
             'productType' => $this->product_type,
             'productId' => $this->product_id,
+            'add_date'=> $this->add_date,
+            'list_items_id' => $this->pk
         ];
         switch ($this->product_type) {
             case self::TYPE_IDEA:

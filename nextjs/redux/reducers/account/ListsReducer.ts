@@ -90,7 +90,7 @@ const accountListReducer = (
           return e;
         }),
       };
-    case "REORDER_LIST":
+    case "SEND_REORDER_LIST":
       return {
         ...state,
         listView: { ...state.listView, products: action.listIds },
@@ -98,28 +98,23 @@ const accountListReducer = (
     case "DELETE_PRODUCT_LIST_VIEW":
       return {
         ...state,
-        listView: deleteProductList(state.listView, action.productId),
+        listView: deleteProductList(state.listView, action.list_items_id),
       };
     case "UNDO_DELETE_PRODUCT":
       return {
         ...state,
-        lists: state.lists.map((list) => {
-          if (list.product_list_id === action.product_list_id) {
-            return {
-              ...list,
-              products: list.products.map((product) => {
-                if (product.product_id === action.list_items_id) {
-                  delete product.typeAction;
-                  return {
-                    ...product,
-                  };
-                }
-                return product;
-              }),
-            };
-          }
-          return list;
-        }),
+        listView: {
+          ...state.listView,
+          products: state.listView.products.map((product) => {
+            if (product.productId === action.list_items_id) {
+              delete product.typeAction;
+              return {
+                ...product,
+              };
+            }
+            return product;
+          }),
+        },
       };
     case "SET_TRANSFER_PRODUCT":
       const { productId, toListId, fromListId } = action;

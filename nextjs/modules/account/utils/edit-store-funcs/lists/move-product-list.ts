@@ -9,7 +9,6 @@ export const moveProductList = (
   const productMove = state.listView?.products.find(
     (product) => product.productId === productId
   );
-  console.log(fromListId, toListId);
   return {
     ...state,
     lists: state.lists?.map((list) => {
@@ -24,9 +23,22 @@ export const moveProductList = (
     }),
     listView: {
       ...state.listView,
-      products: state.listView?.products.filter(
-        (product) => product.productId !== productId
-      ),
+      products: state.listView?.products.map((product) => {
+        if (product.productId === productId) {
+          product.typeAction = {
+            type: "move",
+            productName: product.product.product || product.product.name,
+            toListId: state.lists?.find(
+              (list) => list.productListId === toListId
+            )?.cacheUrl,
+            listName: state.lists?.find(
+              (list) => list.productListId === toListId
+            )?.name,
+          };
+        }
+
+        return product;
+      }),
     },
   };
 };

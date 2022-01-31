@@ -48,15 +48,11 @@ function* reorderList(action: AnyAction): Generator {
     .post(
       "/api/account/lists/reorder-products",
       JSON.stringify({
-        productIds: action.listIds.map((e) => e.productId),
+        productIds: action.listIds.map((e) => e.list_items_id),
         productListId: action.productListId,
       })
     )
     .then((response) => response);
-  yield put({
-    type: "REORDER_LIST",
-    listIds: action.listIds,
-  });
 }
 
 function* deleteList(action: AnyAction): Generator {
@@ -197,28 +193,27 @@ function* manageList(action: AnyAction): Generator {
 }
 
 function* deleteProduct(action: AnyAction): Generator {
-  const { productListId, productId } = action;
+  const { list_items_id } = action;
   yield api
     .post<any>(
       `/api/account/lists/delete-product`,
       JSON.stringify({
-        productListId,
-        productId,
+        list_items_id,
       })
     )
     .then((response) => response);
   yield put({
     type: "DELETE_PRODUCT_LIST_VIEW",
-    productId,
+    list_items_id,
   });
 
-  action?.callback();
+  action?.callback && action?.callback();
 }
 
 function* undoDeleteProduct(action: AnyAction): Generator {
   yield api
     .post<number>(
-      `/account/api/lists/undo-delete-product`,
+      `/api/account/lists/undo-delete-product`,
       JSON.stringify({
         product: action.product,
       })

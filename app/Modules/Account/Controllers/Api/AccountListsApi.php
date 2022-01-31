@@ -76,9 +76,9 @@ class AccountListsApi extends Controller
         }
         $data = json_decode(file_get_contents('php://input'), true);
 
-        foreach ($data['productIds'] as $key => $product_id) {
+        foreach ($data['productIds'] as $key => $list_items_id) {
             /** @var ListItemsModel $list_item */
-            $list_item = ListItemsModel::objects()->get(['product_id' => $product_id, 'product_list_id' => $data['productListId']]);
+            $list_item = ListItemsModel::objects()->get(['list_items_id' => $list_items_id]);
             $list_item->order_by = $key;
             $list_item->save();
         }
@@ -272,11 +272,11 @@ class AccountListsApi extends Controller
             return;
         }
         $form = json_decode(file_get_contents('php://input'), true);
-        $attr_form = ['product_list_id' => $form['productListId'], 'product_id' => $form['productId']];
+        $attr_form = ['list_items_id' => $form['list_items_id']];
         /** @var ListItemsModel $list_item */
         if ($list_item = ListItemsModel::objects()->get($attr_form)) {
             if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
-                ListIdeaModel::objects()->delete(['product_id' => $form['productId']]);
+                ListIdeaModel::objects()->delete(['product_id' => $list_item->product_id]);
             }
             ListItemsModel::objects()->delete($attr_form);
             $this->jsonResponse(['Success']);
