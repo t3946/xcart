@@ -171,12 +171,13 @@ class OrderReconciliationHelper
                 if ($a) {
                     $_additional_filter[] = new QOr($a);
                 }
-
-                foreach (ReconciliationModel::objects()->filter(array_merge($_filter, $_additional_filter)) as $all){
-                    [$rdm, $is_new] = ReconciliationManufacturerModel::objects()->getOrCreate([
-                        'manufacturer_id' => $distributor->manufacturerid,
-                        'reconciliation_id' => $all->id,
-                    ]);
+                if ($_additional_filter) {
+                    foreach (ReconciliationModel::objects()->filter(array_merge($_filter, $_additional_filter)) as $all){
+                        [$rdm, $is_new] = ReconciliationManufacturerModel::objects()->getOrCreate([
+                            'manufacturer_id' => $distributor->manufacturerid,
+                            'reconciliation_id' => $all->id,
+                        ]);
+                    }
                 }
             }
         }

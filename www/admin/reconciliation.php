@@ -543,13 +543,9 @@ if ($REQUEST_METHOD == "POST") {
         $_filter_m = ['distributors__manufacturerid__isnull' => false];
 
 
-            if (empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
-                $top_message["content"] = "Select distributor(s)";
-                $top_message["type"] = "E";
-                func_header_location("reconciliation.php?tab=" . $tab);
-            }
+        if (!empty($search_data["reconciliation_tab_" . $tab]["manufacturers"])) {
             $_filter_m = ['distributors__manufacturerid__in' => $search_data["reconciliation_tab_" . $tab]["manufacturers"]];
-
+        }
 
         $reconcileModels = ReconciliationModel::objects()->filter(array_merge($_filter, $_filter_m))->order(['id'])->all();
 
