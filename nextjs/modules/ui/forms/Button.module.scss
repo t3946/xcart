@@ -19,6 +19,7 @@
   user-select: none;
   padding: 0 pxToRem(20);
   text-align: center;
+  white-space: nowrap;
 
   &:hover {
     color: #000000;

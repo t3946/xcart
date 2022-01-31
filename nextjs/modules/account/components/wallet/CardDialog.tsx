@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
-import { CardAction } from "./CardAction";
+import React from "react";
+import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
+import { CardAction } from "@modules/account/components/wallet/CardAction";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 

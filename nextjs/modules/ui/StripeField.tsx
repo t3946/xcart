@@ -11,11 +11,11 @@ import Styles from "@modules/ui/StripeField.module.scss";
 import * as stripeJs from "@stripe/stripe-js";
 
 interface IProps extends CardElementProps {
-  afterInit: (e: any) => any;
-  error: string;
-  setError: (e: string) => void;
+  afterInit?: (e: any) => any;
+  error?: string;
+  setError?: (e: string) => void;
   className?: any;
-  onReady?: (element: stripeJs.StripeCardElement) => any;
+  onReady?: (cardElement: stripeJs.StripeCardElement) => any;
 }
 
 const StripeField: React.FC<IProps> = function (props) {
@@ -50,10 +50,11 @@ const StripeField: React.FC<IProps> = function (props) {
   };
 
   React.useEffect(function () {
-    props.afterInit({
-      stripe,
-      elements,
-    });
+    props.afterInit &&
+      props.afterInit({
+        stripe,
+        elements,
+      });
   });
 
   return (
@@ -63,7 +64,7 @@ const StripeField: React.FC<IProps> = function (props) {
         onChange={(e) => {
           const errorMessage = e.error ? e.error.message : "";
 
-          props.setError(errorMessage);
+          props.setError && props.setError(errorMessage);
         }}
         onReady={props.onReady}
         onFocus={() => setIsFocus(true)}

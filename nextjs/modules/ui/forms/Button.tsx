@@ -4,13 +4,14 @@ import Styles from "@modules/ui/forms/Button.module.scss";
 
 interface IProps {
   className?: any;
-  type?: EType;
+  type?: any;
+  theme?: ETheme;
   disabled?: boolean;
   onClick?: any;
   children?: any;
 }
 
-export enum EType {
+export enum ETheme {
   outlined = "outlined",
   micro = "micro",
   themeDarkGrey = "themeDarkGrey",
@@ -19,11 +20,16 @@ export enum EType {
 }
 
 const Button: React.FC<IProps> = function (props: IProps) {
-  const { className, type, disabled, onClick } = props;
-  const classes = [className, Styles.button, Styles[`button_${type}`]];
+  const { className, theme, type = "button", disabled, onClick } = props;
+  const classes = [className, Styles.button, Styles[`button_${theme}`]];
 
   return (
-    <button className={cn(classes)} disabled={disabled} onClick={onClick}>
+    <button
+      className={cn(classes)}
+      disabled={disabled}
+      onClick={onClick}
+      type={type}
+    >
       {props.children}
     </button>
   );

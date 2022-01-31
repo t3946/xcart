@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const dev = process.env.NODE_ENV !== "production";
 const mainApp = express();
 const apiApp = express();
-const UserApi = require("./server/api/User");
+const UserApi = require("./server/api/user/User");
 const DecisionsApi = require("./server/api/Decisions");
 const OrdersApi = require("./server/api/Orders");
 const ProductApi = require("./server/api/Product");

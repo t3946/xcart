@@ -7,6 +7,9 @@ import getInitialState from "@services/axios/Account";
 import MainComponent from "@modules/components/MainComponent";
 import { SSRProvider } from "react-bootstrap";
 import TagManager from "react-gtm-module";
+import loadStripe from "../utils/loadStripe";
+const stripePromise = loadStripe();
+import { Elements } from "@stripe/react-stripe-js";
 
 function MyApp({ Component, pageProps, state }) {
   let store;
@@ -27,7 +30,9 @@ function MyApp({ Component, pageProps, state }) {
     <Provider store={store}>
       <SSRProvider>
         <MainComponent>
-          <Component {...pageProps} />
+          <Elements stripe={stripePromise}>
+            <Component {...pageProps} />
+          </Elements>
         </MainComponent>
       </SSRProvider>
     </Provider>

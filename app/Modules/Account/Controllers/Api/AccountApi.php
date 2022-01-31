@@ -87,7 +87,7 @@ class AccountApi extends Controller
                 'cidev_top_header_code' => $config['cidev_top_header_code'],
                 'cidev_header_code' => $config['cidev_header_code'],
                 'companyName' => $config['company_name'],
-                'stripePublicKey' => $stripeSettings['param01'],
+                'stripePK' => $stripeSettings['param01'],
                 'APP_LOCAL' => APP_LOCAL,
                 'site' => [
                     'code' => strtolower($site->code),

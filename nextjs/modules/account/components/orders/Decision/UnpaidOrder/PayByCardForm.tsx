@@ -1,6 +1,6 @@
 import React from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import { Elements, PaymentElement } from "@stripe/react-stripe-js";
 import StripeButton from "@modules/ui/StripeButton";
 import StripeField from "@modules/ui/StripeField";
 import SliderSwitchButton from "@modules/ui/SliderSwitchButton";
@@ -11,6 +11,7 @@ import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/PayB
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
+import * as stripeJs from "@stripe/stripe-js";
 
 interface IProps {
   isSubmitting: boolean;
@@ -34,31 +35,18 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
     onStripeInit,
   } = props;
 
-  const stripePublicKey = "pk_test_TYooMQauvdEDq54NiTphI7jx";
-  const { APP_LOCAL } = useSelectorAccount((e) => e.config);
-
-  if (!APP_LOCAL) {
-    stripePublicKey = useSelectorAccount((e) => e.config.stripePublicKey);
-  }
-
+  const stripeTestPK = "pk_test_TYooMQauvdEDq54NiTphI7jx";
+  const { APP_LOCAL, stripePK: stripeLivePK } = useSelectorAccount(
+    (e) => e.config
+  );
   const [stripePromise] = React.useState(
-    loadStripe(stripePublicKey, {
+    loadStripe(APP_LOCAL ? stripeTestPK : stripeLivePK, {
       locale: "en",
     })
   );
-
-  const [stripe, setStripe] = React.useState<any>(null);
+  const [stripe, setStripe] = React.useState<stripeJs.Stripe>(null);
   const [elements, setElements] = React.useState<any>(null);
   const [stripeReady, setStripeReady] = React.useState(false);
-  const stripeCardElemProps = {
-    afterInit: stripeInitHandler,
-    onReady: () => setStripeReady(true),
-    options: { disabled: isSubmitting },
-    error: errors.stripe,
-    setError: (e: string) => {
-      setErrors({ stripe: e });
-    },
-  };
 
   function stripeInitHandler({ stripe, elements }) {
     setStripe(stripe);
@@ -112,7 +100,18 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
         </RBForm.Label>
 
         <Elements stripe={stripePromise}>
-          <StripeField className={Styles.formInput} {...stripeCardElemProps} />
+          <StripeField
+            className={Styles.formInput}
+            afterInit={stripeInitHandler}
+            onReady={(card: stripeJs.StripeCardElement) => {
+              setStripeReady(true);
+            }}
+            options={{ disabled: isSubmitting }}
+            error={errors.stripe}
+            setError={(e: string) => {
+              setErrors({ stripe: e });
+            }}
+          />
         </Elements>
 
         <Feedback

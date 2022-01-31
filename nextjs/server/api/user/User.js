@@ -1,16 +1,19 @@
 const app = require("express")();
-const passport = require("../auth/Passport");
-const generateToken = require("../utils/generateToken");
-const isAuthMiddleware = require("../middleware/isAuth");
-const setSessionCookie = require("../utils/session").setCookie;
-const passwordUtils = require("../utils/password");
+const passport = require("../../auth/Passport");
+const generateToken = require("../../utils/generateToken");
+const isAuthMiddleware = require("../../middleware/isAuth");
+const setSessionCookie = require("../../utils/session").setCookie;
+const passwordUtils = require("../../utils/password");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 const axios = require("axios");
-const mail = require("../services/mail");
+const mail = require("../../services/mail");
 const AxiosInstance = axios.create({
   baseURL: process.env.BASE_URL_NGINX,
 });
+const apiStripe = require("./Stripe");
+
+app.use("/stripe", isAuthMiddleware, apiStripe);
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (err, result) => {
@@ -334,9 +337,84 @@ app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
   });
 });
 
+app.get("/stripe", isAuthMiddleware, async function (req, res) {
+  const stripe = require("stripe");
+
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  //get stripe sk
+  const paymentProcessorModel = await prisma.xcart_payment_processor.findFirst({
+    where: {
+      processor_name: "Stripe",
+    },
+  });
+  const stripeSK = paymentProcessorModel.param02;
+  const stripeClient = stripe(stripeSK);
+
+  if (user.stripe_customer_id === null) {
+    const customer = await stripeClient.customers
+      .create({
+        description: "Client id: " + req.user.userId,
+        email: user.email,
+      })
+      .catch((err) => {
+        res.sendStatus(403);
+      });
+
+    if (!customer) {
+      return;
+    }
+
+    await prisma.xcart_users.update({
+      where: {
+        user_id: req.user.userId,
+      },
+      data: {
+        stripe_customer_id: customer.id,
+      },
+    });
+
+    user.stripe_customer_id = customer.id;
+  }
+
+  const card = await stripeClient.customers
+    .createSource(user.stripe_customer_id, {
+      source: req.body.token,
+    })
+    .catch((err) => {
+      res.sendStatus(403);
+    });
+
+  if (!card) {
+    return;
+  }
+
+  res.json(card);
+
+  // res.sendStatus(200);
+});
+
+async function getStripeClient() {
+  const stripe = require("stripe");
+  //get stripe sk
+  const paymentProcessorModel = await prisma.xcart_payment_processor.findFirst({
+    where: {
+      processor_name: "Stripe",
+    },
+  });
+  const stripeSK = paymentProcessorModel.param02;
+  const stripeClient = stripe(stripeSK);
+
+  return stripeClient;
+}
+
 /**
  * /verify-one-time-password
  * /send-one-time-password
  * /reset-password
- * */
+ */
 module.exports = app;

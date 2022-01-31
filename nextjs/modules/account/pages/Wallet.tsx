@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import { CardsList } from "../components/wallet/CardsList";
 import { AddNewPaymentMethod } from "../components/wallet/AddNewPaymentMethod";
-import { useDispatch, useSelector } from "react-redux";
-import { getCards } from "../../../redux/actions/account-actions/PaymentsActions";
+import { useDispatch } from "react-redux";
+import { getCards } from "@redux/actions/account-actions/PaymentsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import {CardItemDto} from "@modules/account/ts/types/wallet.type";
+import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import InnerPage from "@modules/account/components/shared/InnerPage";
 
 export const Wallet: React.FC = () => {
   const dispatch = useDispatch();
-  const cards: CardItemDto[] = useSelectorAccount(store => store.payments.cards);
+  const cards: CardItemDto[] = useSelectorAccount(
+    (store) => store.payments.cards
+  );
 
   useEffect(() => {
     if (!cards) {
@@ -17,14 +20,13 @@ export const Wallet: React.FC = () => {
   }, []);
 
   return (
-    <div className="wallet-container">
-      <div className="page-label">Wallet</div>
-      {cards?.length > 0 && (
-        <div className="wallet-label">Credit and debit cards</div>
-      )}
-      <CardsList cards={cards} />
-      <div className="wallet-label">Add a new payment method</div>
+    <>
+      <InnerPage header={"Wallet"}>
+        {cards?.length > 0 && <h2>Credit and debit cards</h2>}
+        <CardsList cards={cards} />
+        <h2>Add a new payment method</h2>
+      </InnerPage>
       <AddNewPaymentMethod />
-    </div>
+    </>
   );
 };
