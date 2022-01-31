@@ -10,7 +10,7 @@ import * as yup from "yup";
 import { savePublicProfileAction } from "@redux/actions/account-actions/ProfileActions";
 import classnames from "classnames";
 import TimesLightIcon from "@modules/components/icons/font-awesome/times/TimesLightIcon";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import Alert from "@modules/account/components/shared/Alert";
 import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";

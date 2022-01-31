@@ -3,7 +3,7 @@ import PlusPanelButton from "@modules/account/components/common/PlusPanelButton"
 import RectangularButton from "@modules/account/components/common/RectangularButton";
 import { Formik, Form } from "formik";
 import cn from "classnames";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import RectangularButtonStyles from "@modules/account/components/common/RectangularButton.module.scss";
 import Styles from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired.module.scss";
 import { useSelector } from "react-redux";

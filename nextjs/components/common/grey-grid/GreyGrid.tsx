@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "@modules/ui/GreyGrid.module.scss";
+import Styles from "@components/common/grey-grid/GreyGrid.module.scss";
 import cn from "classnames";
 
 interface IProps {

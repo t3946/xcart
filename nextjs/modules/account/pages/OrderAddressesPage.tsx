@@ -6,7 +6,7 @@ import { ChangeAddress } from "@modules/account/components/orders/ChangeAddress"
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import { useRouter } from "next/router";
-import GreyGrid from "@modules/ui/GreyGrid";
+import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
 
 import Styles from "@modules/account/pages/OrderAddressesPage.module.scss";

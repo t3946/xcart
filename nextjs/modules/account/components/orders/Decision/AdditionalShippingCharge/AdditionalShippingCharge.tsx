@@ -1,6 +1,6 @@
 import React from "react";
-import GreyGrid from "@modules/ui/GreyGrid";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import GreyGrid from "@components/common/grey-grid/GreyGrid";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import PaymentSelection from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentSelection";
 import PayByCardForm from "@modules/account/components/orders/Decision/UnpaidOrder/PayByCardForm";
 import { Formik, Form } from "formik";

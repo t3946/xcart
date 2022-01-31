@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import { Form as RBForm } from "react-bootstrap";
 import { disableAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";

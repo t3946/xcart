@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import { Form, Formik } from "formik";
 import { getCountryByCode } from "@utils/Countries";
 import { editPhoneAction } from "@redux/actions/account-actions/LoginAndSecurityActions";

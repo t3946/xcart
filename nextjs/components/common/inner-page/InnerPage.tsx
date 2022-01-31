@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import classnames from "classnames";
-import Styles from "@modules/account/components/shared/InnerPage.module.scss";
+import Styles from "@components/common/inner-page/InnerPage.module.scss";
 
 interface IProps {
   beforePage?: React.ReactElement;

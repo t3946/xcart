@@ -11,7 +11,7 @@ import {
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@utils/Countries";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import { AxiosResponse } from "axios";

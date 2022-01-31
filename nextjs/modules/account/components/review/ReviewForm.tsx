@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import appData from "@utils/AppData";
 import SelectRating from "@modules/account/components/review/SelectRating";
 import { Form as RBForm } from "react-bootstrap";

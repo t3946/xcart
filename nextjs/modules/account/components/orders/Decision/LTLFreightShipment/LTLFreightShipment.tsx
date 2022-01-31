@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
 import { getCountryByCode } from "@utils/Countries";

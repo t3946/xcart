@@ -10,7 +10,7 @@ import {
   setAlertAction,
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";

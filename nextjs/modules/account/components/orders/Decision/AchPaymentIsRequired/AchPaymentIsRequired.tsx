@@ -6,14 +6,14 @@ import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { sentAchTransferAction } from "@redux/actions/account-actions/DecisionsActions";
 import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import GreyGrid from "@modules/ui/GreyGrid";
+import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import Styles from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired.module.scss";
 
 const AchPaymentIsRequired: React.FC = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
 import Table, {
   TableTypes,

@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import UploadFile from "@modules/ui/UploadFile";
 import Checkbox from "@modules/ui/forms/Checkbox";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";

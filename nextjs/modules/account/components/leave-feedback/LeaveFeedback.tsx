@@ -5,7 +5,7 @@ import Feedback from "@modules/ui/forms/Feedback";
 import Textarea from "@modules/ui/forms/Textarea";
 import cn from "classnames";
 import Styles from "@modules/account/components/leave-feedback/LeaveFeedback.module.scss";
-import StylesInnerPage from "@modules/account/components/shared/InnerPage.module.scss";
+import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
 import { sendFeedback } from "@redux/actions/account-actions/FeedbackActions";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";

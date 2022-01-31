@@ -1,7 +1,7 @@
 import React from "react";
 import Checkbox from "@modules/ui/forms/Checkbox";
 import { Formik, Form } from "formik";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";

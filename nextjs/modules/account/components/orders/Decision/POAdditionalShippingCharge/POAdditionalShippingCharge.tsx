@@ -1,5 +1,5 @@
 import React from "react";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import ShippingCostTable from "@modules/account/components/orders/Decision/AdditionalShippingCharge/ShippingCostTable";
 import cn from "classnames";
 import Alert from "@modules/account/components/shared/Alert";

@@ -5,8 +5,8 @@ import classnames from "classnames";
 import { getCountryByCode } from "@utils/Countries";
 import Alert from "@modules/account/components/shared/Alert";
 import { setAlertAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
-import InnerPage from "@modules/account/components/shared/InnerPage";
-import GreyGrid from "@modules/ui/GreyGrid";
+import InnerPage from "@components/common/inner-page/InnerPage";
+import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,

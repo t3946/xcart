@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { getCards } from "@redux/actions/account-actions/PaymentsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 
 export const Wallet: React.FC = () => {
   const dispatch = useDispatch();

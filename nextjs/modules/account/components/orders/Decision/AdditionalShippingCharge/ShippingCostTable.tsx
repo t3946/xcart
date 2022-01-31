@@ -1,5 +1,5 @@
 import React from "react";
-import GreyGrid from "@modules/ui/GreyGrid";
+import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import cn from "classnames";
 
 import Styles from "@modules/account/components/orders/Decision/AdditionalShippingCharge/ShippingCostTable.module.scss";

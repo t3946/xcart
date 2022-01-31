@@ -8,7 +8,7 @@ import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import ModalTSVDisable from "@modules/account/components/login-and-security/ModalTSVDisable";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import cn from "classnames";
