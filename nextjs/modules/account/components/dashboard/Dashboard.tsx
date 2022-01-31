@@ -16,7 +16,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="py-3">
+    <div className="pb-3">
       <div className={cn("d-flex", "flex-dir-column", Styles.pageColumn)}>
         <AccountInfo />
         <OrderTracking
