@@ -36,6 +36,7 @@ export const FraudInfoStatuses: React.FC = ({}) => {
             </select>
           </div>
         </Stack>
+        <br />
         <button
           onClick={() =>
             dispatch(updateFraudCheckStatus(orderId, fraudStatus.code))

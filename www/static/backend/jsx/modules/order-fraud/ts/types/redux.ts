@@ -52,6 +52,29 @@ export interface FraudCheckData {
     };
   };
   addressesLocation: AddressGeolocation[];
+  attributes: AttributeRelated;
+  groups: GroupRelatedItem[];
+}
+export interface AttributeRelated {
+  b_address?: RelatedOrderItem[];
+  b_firstname?: RelatedOrderItem[];
+  b_company?: RelatedOrderItem[];
+  s_address?: RelatedOrderItem[];
+  s_firstname?: RelatedOrderItem[];
+  s_company?: RelatedOrderItem[];
+  email?: RelatedOrderItem[];
+  phone?: RelatedOrderItem[];
+  firstname?: RelatedOrderItem[];
+  ip_location?: RelatedOrderItem[];
+}
+export interface GroupRelatedItem {
+  products: { name: string; orders: RelatedOrderItem[] }[];
+  dx: string;
+}
+export interface RelatedOrderItem {
+  isFraud: boolean;
+  orderId: number;
+  prefix: string;
 }
 export interface AddressGeolocation {
   typeId: number;

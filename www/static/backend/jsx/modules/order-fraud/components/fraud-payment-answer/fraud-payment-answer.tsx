@@ -12,7 +12,6 @@ export const FraudPaymentAnswer: React.FC<FraudPaymentAnswer> = ({
       {answer.general_payment && (
         <div className="table-wrapper__fraud-check-question">
           <FraudTableQuestion
-            nameTable="payment"
             title="Payment Processor checks: General checks"
             listAnswer={answer.general_payment}
           />
@@ -22,7 +21,6 @@ export const FraudPaymentAnswer: React.FC<FraudPaymentAnswer> = ({
         <div className="table-wrapper__fraud-check-question">
           <FraudTableQuestion
             title="Payment Processor checks: Stripe specific checks"
-            nameTable="payment"
             listAnswer={answer.stripe}
           />
         </div>
@@ -31,7 +29,6 @@ export const FraudPaymentAnswer: React.FC<FraudPaymentAnswer> = ({
         <div className="table-wrapper__fraud-check-question">
           <FraudTableQuestion
             title="Payment Processor checks: PayPal specific checks"
-            nameTable="payment"
             listAnswer={answer.pay_pal}
           />
         </div>

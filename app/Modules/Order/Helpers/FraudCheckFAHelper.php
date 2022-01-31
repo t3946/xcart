@@ -344,7 +344,7 @@ class FraudCheckFAHelper
                 if (is_array($full_name)) {
                     [$outcome, $best_compare_name] = self::compareManyName(array_filter($full_name), $name_owner);
                 } else {
-                    $outcome = self::compareClientName($full_name, trim($name_owner));
+                    $outcome = self::compareClientNameWithReverse($full_name, trim($name_owner));
                     $best_compare_name = $full_name;
                 }
                 if ($outcome >= $best_outcome) {
@@ -358,8 +358,11 @@ class FraudCheckFAHelper
     }
 
 
-    private static function compareTelephoneClientName(string $f_full_name, string $t_full_name): bool
+    private static function compareClientNameWithReverse(string $f_full_name, string $t_full_name): bool
     {
+        if (empty(trim($f_full_name)) || empty(trim($t_full_name))) {
+            return false;
+        }
         $ar_f = explode(' ', $f_full_name);
         $ar_t = explode(' ', $t_full_name);
 
@@ -381,11 +384,8 @@ class FraudCheckFAHelper
      * @param string $t_full_name - Полное имя второго
      * @return bool
      */
-    private static function compareClientName(string $f_full_name, string $t_full_name): bool
+    public static function compareClientName(string $f_full_name, string $t_full_name): bool
     {
-        if (empty(trim($f_full_name)) || empty(trim($t_full_name))) {
-            return false;
-        }
         $ar_f = explode(' ', $f_full_name);
         $ar_t = explode(' ', $t_full_name);
 
@@ -414,7 +414,7 @@ class FraudCheckFAHelper
             if (is_array($compare_info['value'])) {
                 [$outcome, $name] = self::compareManyName(array_filter($compare_info['value']), $caller_name, true);
             } else {
-                $outcome = self::compareTelephoneClientName($compare_info['value'], $caller_name);
+                $outcome = self::compareClientNameWithReverse($compare_info['value'], $caller_name);
             }
         }
         $info = $this->getInfoFN($fraud,
@@ -434,7 +434,7 @@ class FraudCheckFAHelper
             ['value' => $this->order_model->b_firstname, 'zipcode' => $this->order_model->b_zipcode]
         );
         if ($this->order_model->b_firstname && !empty($compare_name['value'])) {
-            $outcome = self::compareClientName($compare_name['value'], $this->order_model->b_firstname);
+            $outcome = self::compareClientNameWithReverse($compare_name['value'], $this->order_model->b_firstname);
         }
         return [$fraud->weight, $info, $outcome];
     }
@@ -449,7 +449,7 @@ class FraudCheckFAHelper
                 return [$fraud->weight, $info, 0];
             }
         }
-        $compare = self::compareClientName($names[0]['value'], $names[1]['value']);
+        $compare = self::compareClientNameWithReverse($names[0]['value'], $names[1]['value']);
         if ($compare) {
             $outcome = 1;
         }
@@ -475,7 +475,7 @@ class FraudCheckFAHelper
             if (is_array($compare_name['value'])) { // Если сравнение с владельцами адреса(т.к их много)
                 [$outcome, $name_value] = self::compareManyName(array_filter($compare_name['value']), $tenant_name);
             } else {
-                $outcome = self::compareClientName($compare_name['value'], $tenant_name);
+                $outcome = self::compareClientNameWithReverse($compare_name['value'], $tenant_name);
             }
         }
         $info = $this->getInfoFN(
@@ -496,9 +496,9 @@ class FraudCheckFAHelper
         }
         foreach ($compare_names as $name_item) {
             if ($phone_compare) {
-                $compare_outcome = self::compareTelephoneClientName($name_item, $full_name);
+                $compare_outcome = self::compareClientNameWithReverse($name_item, $full_name);
             } else {
-                $compare_outcome = self::compareClientName($name_item, $full_name);
+                $compare_outcome = self::compareClientNameWithReverse($name_item, $full_name);
             }
             if ($compare_outcome >= $outcome) {
                 $outcome = $compare_outcome;
@@ -552,7 +552,7 @@ class FraudCheckFAHelper
             if (is_array($compare_name['value'])) {
                 [$outcome, $name] = self::compareManyName(array_filter($compare_name['value']), $email_name);
             } else {
-                $outcome = self::compareClientName($compare_name['value'], $email_name);
+                $outcome = self::compareClientNameWithReverse($compare_name['value'], $email_name);
             }
         }
         $info = $this->getInfoFN(
