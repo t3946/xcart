@@ -18,17 +18,19 @@ export const AddNewPaymentMethod: React.FC = () => {
   };
 
   return (
-    <div className="add-new-payment-method-container">
+    <>
       <Button onClick={addCard} className="w-auto">
         Add a credit or debit card
       </Button>
+
       <div>S3 Stores Inc accepts major credit and debit cards</div>
+
       <CardDialog
         contentType={BillingAddressFormEnum.ADD_CARD}
         actionType={BillingAddressFormEnum.ADD_CARD}
         open={addDialog.open}
         handleClose={addDialog.handleClose}
       />
-    </div>
+    </>
   );
 };
