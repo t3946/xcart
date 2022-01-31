@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
-import Select, { Item } from "@modules/ui/forms/Select";
+import Select from "@modules/ui/forms/select/Select";
 import { useDispatch } from "react-redux";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
-import classnames from "classnames";
+import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { transferProductList } from "@redux/actions/account-actions/ListsActions";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+
+import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
 
 interface ListProductItemBtnsProps {
   handleDelete: () => void;
@@ -37,8 +39,8 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   const { lists, listView }: AccountListsStore = useSelectorAccount(
     (state) => state.lists
   );
-  const handleMove = (item: Item) => {
-    const toListId = item.value;
+  const handleMove = (e) => {
+    const toListId = e.target.value.value;
     const toList = lists.find((list) => list.productListId === toListId);
     if (toList) {
       const inList = toList.products.find(
@@ -61,10 +63,11 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
     <div className={"product-list-item-btns-container"}>
       <button
         disabled={outOfStock}
-        className={classnames(
+        className={cn(
           "form-button",
           "account-submit-btn  full-width-button",
-          mainBtnClasses
+          mainBtnClasses,
+          Styles.button
         )}
         onClick={onMainBtnClick}
       >
@@ -73,29 +76,41 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
       {edit && (
         <div className="list-product-item-btns-container">
           <Select
-            items={lists
+            clearable={false}
+            isSearchable={false}
+            options={lists
               .filter((list) => list.role !== UserPrivateVariantsEnum.VIEW)
               .filter((list) => list.productListId !== listView.productListId)
               .map((e) => {
                 return {
-                  viewValue: e.name,
+                  label: e.name,
                   value: e.productListId,
                 };
               })}
             name={""}
-            label={""}
-            onClick={handleMove}
-            value={{ viewValue: "Move", value: undefined }}
-            id={`form-select-list-product-${productId}`}
+            onChange={handleMove}
+            value={{ label: "Move", value: undefined }}
             classes={{
-              group: "list-product-item-btns-move",
-              selectHeader: "product-list-item-move-select",
+              select: [
+                "list-product-item-btns-move",
+                Styles.productListItemSelect,
+              ],
+              menu: Styles.productListItemSelectMenu,
+              control: Styles.productListItemSelectControl,
+              indicator: "px-1 py-0",
+              option: Styles.productListItemSelectOption,
             }}
           />
           <button
             type={"submit"}
             onClick={handleDelete}
-            className="form-button account-submit-btn account-submit-btn-outline auto-width-button product-list-item-delete-button"
+            className={cn(
+              Styles.productListItemDeleteButton,
+              "form-button",
+              "account-submit-btn",
+              "account-submit-btn-outline",
+              "product-list-item-delete-button"
+            )}
           >
             delete
           </button>

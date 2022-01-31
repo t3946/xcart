@@ -44,7 +44,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
   autoFocus,
   inputRef,
 }) => {
-  const error = errorMessage && touched;
+  const error = !!errorMessage && !!touched;
   return (
     <div className={classnames("form-input-container", classes?.group)}>
       <div
@@ -59,11 +59,7 @@ export const FormInput: React.FC<FormInputPropsDto> = ({
         {label && (
           <label
             htmlFor={id}
-            className={classnames(
-              "form-input-label",
-              classes?.label,
-              `${error && "form-input-label-error"}`
-            )}
+            className={classnames("form-input-label", classes?.label)}
           >
             {label}
           </label>

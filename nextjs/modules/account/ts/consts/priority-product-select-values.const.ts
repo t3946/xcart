@@ -7,22 +7,22 @@ export const priorityProductSelectValuesConst: SelectValue<
 >[] = [
   {
     value: PriorityProductEnum.LOWEST,
-    viewValue: "Lowest",
+    label: "Lowest",
   },
   {
     value: PriorityProductEnum.LOW,
-    viewValue: "Low",
+    label: "Low",
   },
   {
     value: PriorityProductEnum.MEDIUM,
-    viewValue: "Medium",
+    label: "Medium",
   },
   {
     value: PriorityProductEnum.HIGH,
-    viewValue: "High",
+    label: "High",
   },
   {
     value: PriorityProductEnum.HIGHEST,
-    viewValue: "Highest",
+    label: "Highest",
   },
 ];

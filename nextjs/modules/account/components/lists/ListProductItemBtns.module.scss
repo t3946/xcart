@@ -1,0 +1,65 @@
+@import "styles/utils/Utils.module";
+
+div.productListItemSelect {
+  margin-right: 0;
+  margin-bottom: pxToRem(10);
+  line-height: 1;
+  flex: 1;
+}
+
+div.productListItemSelectControl {
+  border-radius: pxToRem(5);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0;
+
+  @include breakpoint(md) {
+    padding: 0 0 0 pxToRem(29);
+    font-size: pxToRem(18);
+    height: pxToRem(39);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0;
+    height: pxToRem(25);
+    font-size: pxToRem(12);
+  }
+}
+
+div.productListItemSelectMenu {
+  width: max-content;
+  right: 0;
+}
+
+div.productListItemSelectOption {
+  padding: pxToRem(8) pxToRem(38) pxToRem(8) pxToRem(13);
+}
+
+.productListItemDeleteButton {
+  max-height: none;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    height: pxToRem(39);
+  }
+
+  @include breakpoint(lg) {
+    width: 50%;
+    height: pxToRem(25);
+    font-size: pxToRem(12);
+  }
+}
+
+.button {
+  max-height: none;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(20);
+    height: pxToRem(48);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(34);
+    font-size: pxToRem(14);
+  }
+}

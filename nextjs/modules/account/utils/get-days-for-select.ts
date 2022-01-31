@@ -11,7 +11,7 @@ export const getDaysForSelect = (
   ).map((e) => {
     return {
       value: e,
-      viewValue: e + 1,
+      label: e + 1,
     };
   });
 };

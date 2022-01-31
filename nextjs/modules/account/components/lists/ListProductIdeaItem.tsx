@@ -14,6 +14,10 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { List } from "@modules/account/ts/types/list.type";
+import cn from "classnames";
+
+import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
+import Styles from "@modules/account/components/lists/ListProductIdeaItem.module.scss";
 
 export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   productItem,
@@ -68,7 +72,12 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   ];
 
   return (
-    <div className="product-list-item-container ">
+    <div
+      className={cn(
+        StylesListProductItems.productListItemContainer,
+        "product-list-item-container"
+      )}
+    >
       <div className="movable-area">
         {edit ? (
           <ListItemMovableArea
@@ -104,7 +113,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className="add-comment-text"
+                className={cn(Styles.editComment, "add-comment-text")}
               >
                 Add comment, quantity & priority
               </div>

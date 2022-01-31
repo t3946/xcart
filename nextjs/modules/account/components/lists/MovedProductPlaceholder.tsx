@@ -4,14 +4,19 @@ import { useRouter } from "next/router";
 
 interface MovedProductPlaceholderProps {
   label: string;
-  id: string;
+  cache: string;
   productName: string;
 }
 
 export const MovedProductPlaceholder: React.FC<
   MovedProductPlaceholderProps
-> = ({ label, id, productName }) => {
-  const movedContainerClasses = ["moved-product-container"];
+> = ({ label, cache, productName }) => {
+  const movedContainerClasses = [
+    "moved-product-container",
+    "w-100",
+    "d-none",
+    "d-md-block",
+  ];
   const router = useRouter();
   const redirectFromNewList = () => {
     let path = "/";
@@ -19,7 +24,7 @@ export const MovedProductPlaceholder: React.FC<
     if (label === "Shipping list") {
       path += "shopping-lists";
     } else {
-      path += `shopping-lists/${id}`;
+      path += `shopping-lists/${cache}`;
     }
 
     router.push(path);

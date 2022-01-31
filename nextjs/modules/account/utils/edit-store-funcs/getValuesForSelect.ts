@@ -8,7 +8,7 @@ export function getValuesForSelect<A, T>(
   return mass?.map((e) => {
     return {
       value: e[value],
-      viewValue: e[viewValue],
+      label: e[viewValue],
     };
   });
 }

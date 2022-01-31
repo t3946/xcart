@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FormInput } from "@modules/account/components/shared/FormInput";
-import FormSelect from "@modules/ui/forms/Select";
+import Select from "@modules/ui/forms/select/Select";
+import Label from "@modules/ui/forms/Label";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
-import Store from "@redux/stores/Store";
 import { getValuesForSelect } from "@modules/account/utils/edit-store-funcs/getValuesForSelect";
 import classnames from "classnames";
 import { fillingMassForMonths } from "@modules/account/utils/filling-mass-for-months";
@@ -18,6 +19,9 @@ import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitC
 import { List } from "@modules/account/ts/types/list.type";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/lists/ManageList.module.scss";
 
 interface ManageListProps {
   onCancelClick: () => void;
@@ -36,8 +40,14 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
 
   const loading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
+  const classes = {
+    inputGroup: "d-flex justify-content-between mb-lg-20",
+    label: "col-lg-4",
+    input: "col-lg-8",
+    feedback: "mt-0 position-absolute",
+  };
+
   const handleSubmit = (values: ManageListFormData) => {
-    console.log(values);
     dispatch(
       manageList(
         listView.productListId,
@@ -62,7 +72,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
       isDefault: false,
       shippingAddress: {
         value: selectAddress ? selectAddress.address_id : null,
-        viewValue: selectAddress?.full_name || "None",
+        label: selectAddress?.full_name || "None",
       },
       month: listView.birthday
         ? monthItems[new Date(Number(listView.birthday)).getMonth() - 1]
@@ -92,97 +102,131 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
         onSubmit={formik.handleSubmit}
         encType="multipart/form-data"
       >
-        <FormInput
-          name={"listName"}
-          classes={{
-            input: ["list-input-manage-list"],
-          }}
-          label={"List name"}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.listName}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.listName}
-          value={formik.values.listName}
-        />
-        <FormInput
-          name={"description"}
-          classes={{
-            input: ["list-input-manage-list", "text-area-input-container"],
-            textArea: ["edit-comment-text-area-input"],
-          }}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.description}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.description}
-          label={"List Description"}
-          value={formik.values.description}
-          inputType={"text-area"}
-        />
-        <FormInput
-          name={"recipientName"}
-          classes={{
-            input: ["list-input-manage-list"],
-          }}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.recipientName}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.recipientName}
-          value={formik.values.recipientName}
-          label={"Recipient name"}
-        />
-        <FormInput
-          name={"email"}
-          classes={{
-            input: ["list-input-manage-list"],
-          }}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.email}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.email}
-          value={formik.values.email}
-          label={"Email"}
-        />
+        <div className={cn(classes.inputGroup)}>
+          <Label className={cn(classes.label)}>List name</Label>
+          <div className={cn(classes.input)}>
+            <Input
+              name="listName"
+              value={formik.values.listName}
+              onChange={formik.handleChange}
+              isValid={!!formik.touched.listName && !formik.errors.listName}
+              isInvalid={!!formik.touched.listName && !!formik.errors.listName}
+            />
+            <Feedback type="invalid" className={cn(classes.feedback)}>
+              {!!formik.touched.listName && formik.errors.listName}
+            </Feedback>
+          </div>
+        </div>
+
+        <div className={classes.inputGroup}>
+          <Label className={cn(classes.label)}>List Description</Label>
+          <div className={cn(classes.input)}>
+            <Input
+              className={Styles.textarea}
+              as="textarea"
+              name="description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              isValid={
+                !!formik.touched.description && !formik.errors.description
+              }
+              isInvalid={
+                !!formik.touched.description && !!formik.errors.description
+              }
+            />
+            <Feedback className={cn(classes.feedback)}>
+              {!!formik.touched.description && formik.errors.description}
+            </Feedback>
+          </div>
+        </div>
+
+        <div className={classes.inputGroup}>
+          <Label className={cn(classes.label)}>Recipient name</Label>
+          <div className={cn(classes.input)}>
+            <Input
+              name="recipientName"
+              value={formik.values.recipientName}
+              onChange={formik.handleChange}
+              isValid={
+                !!formik.touched.recipientName && !formik.errors.recipientName
+              }
+              isInvalid={
+                !!formik.touched.recipientName && !!formik.errors.recipientName
+              }
+            />
+            <Feedback className={cn(classes.feedback)}>
+              {!!formik.touched.recipientName && formik.errors.recipientName}
+            </Feedback>
+          </div>
+        </div>
+
+        <div className={classes.inputGroup}>
+          <Label className={cn(classes.label)}>Email</Label>
+          <div className={cn(classes.input)}>
+            <Input
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              isValid={!!formik.touched.email && !formik.errors.email}
+              isInvalid={!!formik.touched.email && !!formik.errors.email}
+            />
+            <Feedback className={cn(classes.feedback)}>
+              {!!formik.touched.email && formik.errors.email}
+            </Feedback>
+          </div>
+        </div>
+
         <div className="d-flex justify-content-between align-center">
           <label className={classnames("form-input-label")}>Birthday</label>
           <div className="d-flex justify-content-between list-input-manage-list">
-            <FormSelect
-              items={monthItems}
+            <Select
+              clearable={false}
+              options={monthItems}
               name={"month"}
-              onClick={(value) => {
-                formik.setFieldValue("month", value);
+              onChange={(e) => {
+                formik.setFieldValue("month", e.target.value);
                 formik.setFieldValue("day", dayItems[0]);
-                setDayItems(getDaysForSelect(value.value));
+                setDayItems(getDaysForSelect(e.target.value.value));
               }}
               value={formik.values.month}
-              id="form-select-list-manage-month"
               classes={{
-                group: ["list-manage-select-month"],
+                select: ["list-manage-select-month"],
               }}
             />
-            <FormSelect
-              items={dayItems}
+            <Select
+              clearable={false}
+              options={dayItems}
               name={"day"}
-              onClick={(value) => formik.setFieldValue("day", value)}
+              onChange={formik.handleChange}
               value={formik.values.day}
-              id="form-select-list-manage-year"
               classes={{
-                group: ["list-manage-select-day"],
+                select: ["list-manage-select-day"],
               }}
             />
           </div>
         </div>
-        <FormSelect
-          items={getValuesForSelect(addresses || [], "address_id", "full_name")}
-          name={"shippingAddress"}
-          label={"Shipping Address"}
-          onClick={(value) => formik.setFieldValue("shippingAddress", value)}
-          value={formik.values.shippingAddress}
-          id="form-select-list-manage-addresses"
-          classes={{
-            input: ["list-input-manage-list"],
-            group: ["select-address-on-manage-list"],
-          }}
-        />
+
+        <div className="d-flex justify-content-between align-items-center">
+          <Label>Shipping Address</Label>
+          <Select
+            clearable={false}
+            options={getValuesForSelect(
+              addresses || [],
+              "address_id",
+              "full_name"
+            )}
+            name={"shippingAddress"}
+            onChange={formik.handleChange}
+            value={formik.values.shippingAddress}
+            classes={{
+              select: [
+                "select-address-on-manage-list",
+                "list-input-manage-list",
+              ],
+            }}
+          />
+        </div>
+
         <div className={"d-flex justify-content-end manage-list-checkbox"}>
           <div className="list-input-manage-list">
             <FormCheckBox
@@ -194,6 +238,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
             />
           </div>
         </div>
+
         <div className={"d-flex justify-content-end manage-list-checkbox"}>
           <div className="list-input-manage-list">
             <FormCheckBox
@@ -205,6 +250,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
             />
           </div>
         </div>
+        
         <SubmitCancelButtonsGroup
           submitText="Confirm"
           cancelText="Cancel"

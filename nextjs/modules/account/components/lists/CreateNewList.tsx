@@ -95,7 +95,7 @@ export const CreateNewList: React.FC<CreateNewList> = ({
       ) : (
         <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
           <div className="d-flex flex-dir-column">
-            <Label>List Name</Label>
+            <Label className={"mb-10"}>List Name</Label>
             <Input
               ref={ref}
               name={"name"}

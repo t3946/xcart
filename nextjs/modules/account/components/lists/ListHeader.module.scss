@@ -1,0 +1,87 @@
+@import "styles/utils/Utils.module";
+
+.listHeader__name {
+  margin: 0;
+}
+
+.listHeaderName {
+  max-width: none;
+}
+
+.list__headerContainer {
+  @include breakpoint(lg) {
+  }
+}
+
+.listHeaderContainer {
+  padding: 0;
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(26) 0 pxToRem(28);
+  }
+}
+
+.listHeaderRightSide {
+  @include breakpoint(md) {
+    background-color: #f4f4f4;
+    padding: pxToRem(17) pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    padding: auto;
+    background-color: $white;
+  }
+}
+
+.accountButton {
+  left: 0;
+  height: pxToRem(38);
+  border-radius: 0;
+
+  @include breakpoint(md) {
+    border-radius: 0.25rem;
+    height: pxToRem(48);
+    position: absolute;
+  }
+}
+
+.accountButtonIcon {
+  width: pxToRem(17);
+  height: pxToRem(15);
+}
+
+.mobileHeader {
+  background-color: #f4f4f4;
+  height: pxToRem(48);
+  padding: pxToRem(5) pxToRem(10);
+}
+
+.shoppingList__mobileHeader {
+  margin: pxToRem(-20) pxToRem(-10) 0;
+  width: 100vw;
+}
+
+.istHeaderActions__listHeaderAction {
+  margin: 0 pxToRem(20) 0 0;
+}
+
+.listHeaderAction {
+  color: #055a93;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.listHeaderAction_red {
+  color: #9a1524;
+}

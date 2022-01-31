@@ -42,13 +42,3 @@
     padding: pxToRem(18);
   }
 }
-
-.modalBody {
-  @include breakpoint(sm) {
-    padding: pxToRem(16) pxToRem(60);
-  }
-
-  @include breakpoint(lg) {
-    padding: pxToRem(16);
-  }
-}

@@ -8,6 +8,8 @@ import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordio
 import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.scss";
 import { useDispatch } from "react-redux";
 import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
+import { setMobileMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 const classes = {
   dropdownItem: [StylesItem.item_topLevel, StylesItem.item],
@@ -17,6 +19,7 @@ const SideBarMenu: React.FC = () => {
   const { asPath: activePath } = useRouter();
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
+  const breakpoint = useBreakpoint();
   const menuItems = [
     { to: "/dashboard", label: "Dashboard" },
     {
@@ -70,7 +73,10 @@ const SideBarMenu: React.FC = () => {
               label={value.label}
               badge={value.badge}
               className={classes.dropdownItem}
-              onClick={value.onClick}
+              onClick={breakpoint({
+                xs: () => () => dispatch(setMobileMenuIsVisible(false)),
+                lg: () => {},
+              })}
               key={index}
               active={value.to === activePath}
             />
