@@ -319,7 +319,7 @@ class ErrorHandler
      * no active error handler.
      * @param Exception $exception the uncaught exception
      */
-    public function displayException($exception)
+    public function displayException(Exception $exception)
     {
         if (http_response_code() == 200) {
             http_response_code(500);
@@ -612,7 +612,7 @@ class ErrorHandler
     protected function renderException()
     {
         $exception = $this->getException();
-        if ($this->getIsAjax() || Console::isCli() || $this->shortOutput) {
+        if ($exception && ($this->getIsAjax() || Console::isCli() || $this->shortOutput)) {
             $this->displayException($exception);
         }
         else {

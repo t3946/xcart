@@ -2,6 +2,7 @@
 namespace Modules\Mail\Components;
 
 use Xcart\App\Helpers\SmartProperties;
+use Xcart\App\Main\Xcart;
 use Xcart\Countries;
 
 class MailComponent
@@ -101,7 +102,7 @@ class MailComponent
     protected function send($subject_template, $body_template)
     {
         global $config, $mail_smarty;
-        $lend = (X_DEF_OS_WINDOWS ? "\r\n" : "\n");
+        $lend = "\n";
         $mail_message = $this->body;
         $mail_subject = $this->subject;
         $message_header = '';
@@ -128,10 +129,6 @@ class MailComponent
                 "content" => array()
             );
 
-            if (X_DEF_OS_WINDOWS) {
-                $mail_message = preg_replace("/(?<!\r)\n/S", "\r\n", $mail_message);
-            }
-
             $msgs['content'][] = array(
                 "header" => array(
                     "Content-Type" => "multipart/alternative"
@@ -153,7 +150,7 @@ class MailComponent
 
                 $mail_message = wordwrap($mail_message, 500, "\r\n", false);
 
-                list($mail_message, $files) = func_attach_images($mail_message);
+                [$mail_message, $files] = func_attach_images($mail_message);
 
                 $files_counter = count($files);
 
@@ -211,36 +208,33 @@ class MailComponent
                 }
             }
 
-            list($message_header, $mail_message) = func_parse_mail($msgs);
+            [$message_header, $mail_message] = func_parse_mail($msgs);
         }
 
-        $headers = "From: {$this->from}{$lend}";
+        $headers['from'] = "{$this->from}";
         if ($this->cc) {
-            $headers .= "Cс: {$this->cc}{$lend}";
+            $headers['cс'] = "{$this->cc}";
         }
         if ($this->bcc) {
-            $headers .= "Bсс: {$this->bcc}{$lend}";
+            $headers['bсс'] = "{$this->bcc}";
         }
-        $headers .= "MIME-Version: 1.0{$lend}{$message_header}";
+        $headers['MIME-Version'] = "1.0{$lend}{$message_header}";
         if (trim($this->from)) {
             $mail_from = $this->from;
             if (!empty($this->reply_to)) {
                 $mail_from = $this->reply_to;
             }
-            $headers .= "Reply-to: {$mail_from}{$lend}";
+            $headers['reply-to'] = "{$mail_from}";
         }
         if (!empty($this->header)){
             foreach ($this->header as $key => $header) {
-                $headers .= "{$key}: {$header}" . $lend;
+                $headers['headers'][$key] = "{$header}";
             }
         }
 
+        Xcart::app()->mail->raw($this->to, $mail_subject, $mail_message, $headers);
 
-        if (preg_match('/([^ @,;<>]+@[^ @,;<>]+)/S', $this->from, $m)) {
-            return @mail($this->to, $mail_subject, $mail_message, $headers, "-f" . $m[1]);
-        }
-
-        return @mail($this->to, $mail_subject, $mail_message, $headers);
+        return true;
     }
 
     public function setFrom($sFrom)

@@ -24,7 +24,7 @@ class ElasticUpdateCommand extends Command
 
             $i = 0;
 
-            $engine_name = strtolower(SearchModule::getEngine($site->code));
+            $engine_name = SearchModule::getEngine($site->code);
 
             Xcart::app()->elastic->checkEngine(
                 $engine_name,
@@ -68,7 +68,11 @@ class ElasticUpdateCommand extends Command
                     ];
                 }
 
-                Xcart::app()->elastic->index($engine_name, $documents);
+                try {
+                    Xcart::app()->elastic->index($engine_name, $documents);
+                } catch(\Throwable $exception){
+                    echo $exception->getMessage()."\n";
+                }
 
                 $bar->progress(100);
             }

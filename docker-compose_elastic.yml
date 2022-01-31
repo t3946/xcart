@@ -1,83 +1,71 @@
-version: '2.2'
+version: '3.7'
+
 services:
-  es01:
+
+  elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-    container_name: es01
+    container_name: elasticsearch
+    restart: unless-stopped
     environment:
-      - node.name=es01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.type=single-node
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.authc.api_key.enabled=true
+      - ELASTIC_PASSWORD=admin
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - data1:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - "9200:9200"
     networks:
       - elastic
 
-  es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-    container_name: es02
+  ent-search:
+    image: docker.elastic.co/enterprise-search/enterprise-search:7.15.1
+    container_name: ent-search
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
     environment:
-      - node.name=es02
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es03
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data02:/usr/share/elasticsearch/data
+      - "JAVA_OPTS=-Xms512m -Xmx512m"
+      - ENT_SEARCH_DEFAULT_PASSWORD=adminpass
+      - elasticsearch.username=elastic
+      - elasticsearch.password=admin
+      - elasticsearch.host=http://elasticsearch:9200
+      - allow_es_settings_modification=true
+      - secret_management.encryption_keys=[4a2cd3f81d39bf28738c10db0ca782095ffac07279561809eecc722e0c20eb09]
+      - elasticsearch.startup_retry.interval=15
+      - ent_search.external_url=http://68.168.211.58:3002
+    ports:
+      - "3002:3002"
     networks:
       - elastic
 
-  es03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-    container_name: es03
-    environment:
-      - node.name=es03
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02
-      - cluster.initial_master_nodes=es01,es02,es03
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - data03:/usr/share/elasticsearch/data
-    networks:
-      - elastic
-
-  kib01:
+  kibana:
     image: docker.elastic.co/kibana/kibana:7.15.1
-    container_name: kib01
+    container_name: kibana
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+      - ent-search
     ports:
-      - 5601:5601
+      - "5601:5601"
     environment:
-      ELASTICSEARCH_URL: http://es01:9200
-      ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200","http://es03:9200"]'
+      ELASTICSEARCH_HOSTs: http://elasticsearch:9200
+      ENTERPRISESEARCH_HOST: http://ent-search:3002
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: admin
     networks:
       - elastic
 
 volumes:
-  data01:
+  data1:
     driver: local
-  data02:
-    driver: local
-  data03:
-    driver: local
+
 
 networks:
   elastic:
-    driver: bridge

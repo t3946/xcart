@@ -10,7 +10,7 @@ class SearchModule extends Module
 
     public static function getEngine(string $code): string
     {
-        return sprintf(self::PRODUCTS_ENGINE, $code);
+        return strtolower(sprintf(self::PRODUCTS_ENGINE, $code));
     }
 
 }

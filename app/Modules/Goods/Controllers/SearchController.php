@@ -163,23 +163,9 @@ class SearchController extends AbstractCatalogController
 
     public function getProductFromElastic($search, $min_score = null, $max_size = 20, $page = 1)
     {
-        $client = Xcart::app()->elastic->getClient()->appSearch();
-
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $searchParam = new SearchRequestParams(trim($search));
-        $searchParam->filters = (object)['all' => [(object)['sites' => $site->code], (object)['in_stock' => 1]]];
-        $searchParam->search_fields = (object)[
-            'product' => (object)[],
-            'upc' => (object)[],
-            'productcode' => (object)[],
-            'fulldescr' => (object)[]
-        ];
-        $searchParam->page = (object)['current' => $page, 'size' => $max_size];
-
-        $request = new Search(SearchModule::PRODUCTS_ENGINE, $searchParam);
-
-        $searchResult = $client->search($request)->asArray();
+        $searchResult = Xcart::app()->elastic->search(SearchModule::getEngine($site->code), trim($search), $page, $max_size);
 
         $items = $searchResult['results'];
         $count = $searchResult['meta']['page']['total_results'];
@@ -206,7 +192,7 @@ class SearchController extends AbstractCatalogController
 
     public function getSortedQS($qs, $model = null)
     {
-        if ($this->sort == 'relevance') {
+        if ($this->sort === 'relevance') {
             $ta = $qs->getTableAlias();
             return $qs->order([
                 new Expression("FIELD({$ta}.productid, " . implode(',', $this->ids) . ") ASC"),

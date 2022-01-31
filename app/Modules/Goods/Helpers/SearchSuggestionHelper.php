@@ -37,18 +37,9 @@ class SearchSuggestionHelper
 
     public function elastic_suggestion($count = 5, array $html = []): array
     {
-        $client = Xcart::app()->elastic->getClient()->appSearch();
-
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $searchParam = new SearchRequestParams(trim($this->search));
-        $searchParam->filters = (object)['all' => [(object)['sites' => $site->code], (object)['in_stock' => 1]]];
-        $searchParam->search_fields = (object)['product' => (object)[], 'upc' => (object)[], 'productcode' => (object)[]];
-        $searchParam->page = (object)['current' => 1, 'size' => $count];
-
-        $request = new Search(SearchModule::PRODUCTS_ENGINE, $searchParam);
-
-        $searchResult = $client->search($request)->asArray();
+        $searchResult = Xcart::app()->elastic->search(SearchModule::getEngine($site->code), $this->search, 1, $count);
 
         $p_suggestions = [];
 
@@ -93,18 +84,11 @@ class SearchSuggestionHelper
 
     public function suggestion_phrase($count = 5, $self_include = false): array
     {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+
         $search = trim($this->search);
 
-        $client = Xcart::app()->elastic->getClient()->appSearch();
-
-        $request = new QuerySuggestionRequest();
-        $request->query = $search;
-        $request->types = (object)['documents' => ['fields' => ['product', 'brand', 'productcode', 'upc']]];
-        $request->size = $count;
-
-        $suggestion = new QuerySuggestion(SearchModule::PRODUCTS_ENGINE, $request);
-
-        $suggestions = $client->querySuggestion($suggestion)->asArray();
+        $suggestions = Xcart::app()->elastic->suggestion(SearchModule::getEngine($site->code), $search, $count);
 
         foreach ($suggestions['results']['documents'] as $suggestion) {
             if (!$self_include &&  $suggestion['suggestion'] === $search) {

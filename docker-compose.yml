@@ -25,25 +25,25 @@ services:
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/my.cnf.d/my.cnf
-#  smtp:
-#    restart: always
-#    container_name: smtp
-#    image: bambucha/exim-relay
-#    user: exim
-#    ports:
-#      - "2525:25"
-#    volumes:
-#      - ./docker/smtp/resolv.conf:/etc/resolv.conf
-#    hostname: mail.s3stores.com
-#    networks:
-#      - frontend
-#      - backend
-#    environment:
-#      - RELAY_FROM_HOSTS=10.0.0.0/8:172.16.0.0/12:192.168.0.0/16
-#      - DKIM_KEY_SIZE=1024
-#      - DKIM_SELECTOR=dkim
-#      - DKIM_SIGN_HEADERS=Date:From:To:Subject:Message-ID
-#      - DKIM_DOMAINS=s3stores.com
+  smtp:
+    restart: always
+    container_name: smtp
+    image: bambucha/exim-relay
+    user: exim
+    ports:
+      - "2525:25"
+    volumes:
+      - ./docker/smtp/resolv.conf:/etc/resolv.conf
+    hostname: mail.s3stores.com
+    networks:
+      - frontend
+      - backend
+    environment:
+      - RELAY_FROM_HOSTS=10.0.0.0/8:172.16.0.0/12:192.168.0.0/16
+      - DKIM_KEY_SIZE=1024
+      - DKIM_SELECTOR=dkim
+      - DKIM_SIGN_HEADERS=Date:From:To:Subject:Message-ID
+      - DKIM_DOMAINS=s3stores.com
 
 #  pmm-server:
 #    container_name: pmm
