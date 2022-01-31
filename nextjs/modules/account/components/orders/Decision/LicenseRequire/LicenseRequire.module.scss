@@ -2,9 +2,10 @@
 
 .buttonUpload {
   border-radius: pxToRem(4);
-  padding: pxToRem(2) pxToRem(20) pxToRem(3) pxToRem(13);
+  padding: 0 pxToRem(13);
   font-size: pxToRem(14);
   line-height: pxToRem(22);
+  cursor: pointer;
 }
 
 .description {
