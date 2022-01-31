@@ -27,7 +27,7 @@
   @include breakpoint(md) {
     border: none;
     border-bottom: 1px solid #c4c4c4;
-    padding: pxToRem(20) pxToRem(24);
+    padding: pxToRem(20) pxToRem(19);
 
     &:last-child {
       border: none;
@@ -35,6 +35,6 @@
   }
 
   @include breakpoint(lg) {
-    padding: pxToRem(22) pxToRem(24);
+    padding: pxToRem(22) pxToRem(23);
   }
 }
