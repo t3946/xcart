@@ -3,6 +3,7 @@ import SideBarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import cn from "classnames";
 import Page from "@modules/account/components/layout/Page";
 import Styles from "@modules/account/components/layout/PageTwoColumns.module.scss";
+import Snackbar from "@modules/account/components/shared/Snackbar";
 
 interface PageTwoColumns {
   bar?: any;
@@ -24,8 +25,10 @@ const PageTwoColumns: React.FC<PageTwoColumns> = ({
   return (
     <Page>
       <div className={cn(classes.leftColumnClasses)}>{bar}</div>
-
-      <div className={cn(classes.rightColumnClasses)}>{children}</div>
+      <div className={cn(classes.rightColumnClasses)}>
+        <Snackbar />
+        {children}
+      </div>
     </Page>
   );
 };

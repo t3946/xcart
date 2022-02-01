@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from "react";
+import React, { Fragment } from "react";
 import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
@@ -10,7 +10,7 @@ import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuF
 import { List } from "@modules/account/ts/types/list.type";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import {useSnackbar} from "@modules/account/hooks/useSnackbar";
 import ShareIcon from "@modules/icon/components/account/share/ShareIcon";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -25,6 +25,7 @@ interface ListHeaderProps {
 }
 
 export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
+  const snackbar = useSnackbar();
   const shareDialog = useDialog();
   const list: List = useSelectorAccount((state) => state.lists.listView);
   const manageListDialog = useDialog();
@@ -33,18 +34,14 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
 
   const mobileMenuDialog = useDialog();
 
-  const { showSnackbar } = useContext(SnackbarContext);
-
   const router = useRouter();
 
   const dispatch = useDispatch();
 
   const onRequestEnd = () => {
-    showSnackbar({
-      header: "Success",
-      message: `${list.name} list deleted successfully`,
-      theme: "success",
-    });
+    deleteListDialog.handleClose();
+    snackbar.show(`${list.name} list deleted successfully`);
+    router.replace(`/shopping-lists/${listView.lists[0].cache}`);
   };
   const edit = list.role !== UserPrivateVariantsEnum.VIEW;
 
