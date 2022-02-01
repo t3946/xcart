@@ -105,6 +105,9 @@ use Xcart\Order;
  * @property string fraud_status
  * @property float|string bare_fraud_score_v2
  * @property CountryModel shipping_country
+ * @property OrderFraudCheckModel[]|Manager order_fraud
+ * @property OrderFraudFACheckModel[]|Manager fa_fraud_answer
+ * @property OrderBaseFraudCheckModelV2[]|Manager base_fraud_answer
  */
 class OrderModel extends Model
 {
@@ -414,6 +417,11 @@ class OrderModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => OrderAddressGeolocation::class,
                 'link' => ['orderid' => 'order_id']
+            ],
+            'order_fraud' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderFraudCheckModel::class,
+                'link' => ['orderid' => 'orderid']
             ],
         ];
     }
@@ -750,30 +758,29 @@ class OrderModel extends Model
         return $this->transactions->limit(1)->order(['-date'])->get();
     }
 
-    /**
-     * @throws \Exception
-     */
     public function orderFraudCheck(): void
     {
         $bare_score = 0;
         /** @var FraudCheckBaseQuestionModel $fraud */
-        foreach (FraudCheckBaseQuestionModel::objects()->filter(['avail' => true])->order(['orderby']) as $fraud) {
-            [$fraud_result, $fraud_score, $additional_info, $manual_action, $outcome] = $fraud->getScore($this);
-            if (!is_null($fraud_result)) {
-                [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
-                    'order_id' => $this->orderid,
-                    'question_id' => $fraud->question_id
-                ], [
-                    'manual_action' => $manual_action,
-                    'fraud_score' => $fraud_score,
-                    'fraud_result' => $fraud_result,
-                    'additional_info' => $additional_info,
-                    'outcome' => $outcome
-                ]);
-                if ($fraud->question_code !== 'DC-GT') {
-                    $bare_score += (float)$orderFraud->fraud_score;
+        if ($this->base_fraud_answer->count() === 0) {
+            foreach (FraudCheckBaseQuestionModel::objects()->filter(['avail' => true])->order(['orderby']) as $fraud) {
+                [$fraud_result, $fraud_score, $additional_info, $manual_action, $outcome] = $fraud->getScore($this);
+                if (!is_null($fraud_result)) {
+                    [$orderFraud] = OrderBaseFraudCheckModelV2::objects()->updateOrCreate([
+                        'order_id' => $this->orderid,
+                        'question_id' => $fraud->question_id
+                    ], [
+                        'manual_action' => $manual_action,
+                        'fraud_score' => $fraud_score,
+                        'fraud_result' => $fraud_result,
+                        'additional_info' => $additional_info,
+                        'outcome' => $outcome
+                    ]);
+                    if ($fraud->question_code !== 'DC-GT') {
+                        $bare_score += (float)$orderFraud->fraud_score;
+                    }
+                    $orderFraud->save();
                 }
-                $orderFraud->save();
             }
         }
 
@@ -798,7 +805,9 @@ class OrderModel extends Model
         $this->bare_fraud_score_v2 = $bare_score;
         $this->save();
     }
-    public function getNotification(string $status = null): ?OrderStatusNotificationModel
+
+    public
+    function getNotification(string $status = null): ?OrderStatusNotificationModel
     {
         $site_model = $this->site;
         return OrderStatusNotificationModel::objects()->get(['lang_id' => $site_model->lang->lang_id, 'code' => $status ?? $this->cb_status]);

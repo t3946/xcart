@@ -23,18 +23,18 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
       </Typography>
       <table className="table-base-question" border={1}>
         <tr className="table-head__fraud-check-question">
-          <th>
+          <th className="header-item-question-code">
             Question
             <br />
             code
           </th>
           <th>Question</th>
-          <th>
+          <th className="row-type-question">
             Auto
             <br />
             Manual
           </th>
-          <th>Outcome</th>
+          <th className="row-outcome">Outcome</th>
           <th>Weight</th>
           <th>Fraud score subtotal</th>
         </tr>
@@ -47,7 +47,7 @@ export const FraudTableQuestion: React.FC<FraudTableQuestion> = ({
                 <td className="question-code-header-item">
                   {answer.question_code}
                 </td>
-                <td>
+                <td className="question-info-header-item">
                   <Grid container justifyContent="center" direction="column">
                     <div
                       dangerouslySetInnerHTML={{

@@ -31,6 +31,7 @@ import { FAAnswer } from "@admin/modules/order-fraud/ts/types/answer";
 import { MatchingAddress } from "@admin/modules/order-fraud/components/matching-address/MatchingAddress";
 import Divider from "@mui/material/Divider";
 import { AddressesMap } from "@admin/modules/order-fraud/components/addresses-map/AddressesMap";
+import { RelatedOrdersSection } from "@admin/modules/order-fraud/components/related-orders-section/RelatedOrdersSection";
 
 interface FraudMainPage {
   orderId: number | string;
@@ -167,6 +168,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
             />
           </div>
           <FraudPaymentAnswer answer={data.answer.payment} />
+          <RelatedOrdersSection />
           <div className="table-wrapper__fraud-check-question">
             <Stack
               direction="column"
@@ -174,6 +176,7 @@ export const FraudMainPage: React.FC<FraudMainPage> = ({ orderId }) => {
               alignItems="flex-start"
             >
               <FraudScoreResult />
+              <br />
               <div className="fraud-check-button-apply">
                 <button onClick={onApplyFrauds}>
                   Apply changes and update fraud score
