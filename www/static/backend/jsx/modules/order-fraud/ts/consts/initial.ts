@@ -11,6 +11,7 @@ export const initialFraudCheckStore: FraudCheckStore = {
     message: null,
     status: "success",
   },
+  relatedData: null,
 };
 export const initialMatchingAddress = [
   { value: "0", description: "different Countries" },

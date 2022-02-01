@@ -9,8 +9,9 @@ export const RelatedGroupItem: React.FC<RelatedGroupItem> = ({ group }) => {
     <tr>
       <td />
       <td className="product-column">{product.name}</td>
-      <RelatedOrderItems orders={product.orders} isFraud />
-      <RelatedOrderItems orders={product.orders} />
+      <RelatedOrderItems orders={product.orders} isFraud type="fraud" />
+      <RelatedOrderItems orders={product.orders} type="cleared" />
+      <RelatedOrderItems orders={product.orders} type="other" />
     </tr>
   ));
 };

@@ -44,3 +44,7 @@ export const updateFraudCheckStatus = (orderId: number, code: string) => ({
   orderId,
   code,
 });
+export const fetchRelatedData = (orderId: number) => ({
+  type: "FETCH_RELATED_ORDER_DATA",
+  orderId,
+});

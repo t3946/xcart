@@ -1,18 +1,18 @@
 import React, { Fragment } from "react";
-import { RelatedOrderItem } from "@admin/modules/order-fraud/ts/types/redux";
+import {
+  RelatedOrderItem,
+  RelatedOrderType,
+} from "@admin/modules/order-fraud/ts/types/redux";
 interface RelatedOrderItems {
   orders: RelatedOrderItem[];
-  isFraud?: boolean;
+  type: RelatedOrderType;
 }
 export const RelatedOrderItems: React.FC<RelatedOrderItems> = ({
   orders,
-  isFraud = false,
+  type,
 }) => {
   const getSeparator = (index: number) => {
-    if (
-      orders.filter((item) => item.isFraud === isFraud).length ===
-      index + 1
-    ) {
+    if (orders.filter((item) => item.type === type).length === index + 1) {
       return " ";
     }
     return ", ";
@@ -20,7 +20,7 @@ export const RelatedOrderItems: React.FC<RelatedOrderItems> = ({
   return (
     <td>
       {orders
-        .filter((item) => item.isFraud === isFraud)
+        .filter((item) => item.type === type)
         .map((order, index) => (
           <Fragment>
             <a

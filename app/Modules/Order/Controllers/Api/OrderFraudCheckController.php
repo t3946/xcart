@@ -109,7 +109,6 @@ class OrderFraudCheckController extends Controller
                 ]
             ];
             $ar_response['addressesLocation'] = $order_model->getAddressesGeoLocation();
-            $ar_response = array_merge($ar_response, $this->getOrderInformation($order_model));
 
             $this->jsonResponse($ar_response);
         } catch (Throwable $exception) {
@@ -548,22 +547,23 @@ HTML;
         return $ar_history;
     }
 
-    public function getOrderInformation(OrderModel $order_model): array
+    public function getOrderInformation(int $order_id)
     {
+        /** @var OrderModel $order_model */
+        $order_model = OrderModel::objects()->get(['pk' => $order_id]);
         $attributes = ['firstname', 'phone', 'email', 's_firstname', 's_company', 's_address', 'b_firstname', 'b_company', 'b_address'];
         foreach ($attributes as $attribute) {
             $orders_related = [];
             if (($value = $order_model->$attribute) && !empty($value)) {
                 $orders = OrderModel::objects()->filter([
                     $attribute => $value,
-                    'fraud_status__in' => ['K', 'P', 'C']
                 ])->exclude(['orderid' => $order_model->pk]);
                 /** @var OrderModel $related_model */
                 foreach ($orders as $related_model) {
                     $orders_related[] = [
                         'prefix' => $related_model->getOrderNumber(),
                         'orderId' => $related_model->pk,
-                        'isFraud' => in_array($related_model->fraud_status, ['K', 'P']),
+                        'type' => $this->getType($related_model->fraud_status),
                     ];
                 }
             }
@@ -577,7 +577,6 @@ HTML;
                 $product = $detail_model->product_model;
                 $orders = OrderDetailModel::objects()->filter([
                     'productid' => $product->pk,
-                    'order__fraud_status__in' => ['K', 'P', 'C']
                 ])->exclude(['orderid' => $order_model->pk]);
                 /** @var OrderDetailModel $detail_product_model */
                 foreach ($orders as $detail_product_model) {
@@ -585,30 +584,43 @@ HTML;
                     $product_orders[] = [
                         'prefix' => $order->getOrderNumber(),
                         'orderId' => $order->orderid,
-                        'isFraud' => in_array($order->fraud_status, ['K', 'P']),
+                        'type' => $this->getType($order->fraud_status),
                     ];
                 }
                 $products[] = ['name' => $product->productcode, 'orders' => $product_orders];
             }
             $groups[] = ['products' => $products, 'dx' => $dx_name];
         }
-        if($extra_model = $order_model->extra_model) {
+        if ($extra_model = $order_model->extra_model) {
             $ip = $extra_model->getIP();
-            $orders_extra = OrderExtraModel::objects()->filter(['ip__contains' => $ip]);
+            $orders_extra = OrderExtraModel::objects()->filter(['ip__contains' => $ip])->exclude(['order_id' => $order_model->pk]);
             /** @var OrderExtraModel $model_ip */
             foreach ($orders_extra as $model_ip) {
                 $order_ip = $model_ip->order;
                 $ip_orders[] = [
                     'prefix' => $order_ip->getOrderNumber(),
                     'orderId' => $order_ip->orderid,
-                    'isFraud' => in_array($order_ip->fraud_status, ['K', 'P']),
+                    'type' => $this->getType($order_ip->fraud_status),
                 ];
             }
         }
         $attributes_order['ip_location'] = $ip_orders ?? [];
-        return [
+        $this->jsonResponse([
             'attributes' => $attributes_order ?? [],
             'groups' => $groups ?? []
-        ];
+        ]);
+    }
+
+    private function getType(string $status): string
+    {
+        switch ($status) {
+            case 'K':
+            case 'P':
+                return 'fraud';
+            case 'C':
+                return 'cleared';
+            default:
+                return 'other';
+        }
     }
 }
