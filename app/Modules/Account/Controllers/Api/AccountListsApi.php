@@ -214,15 +214,20 @@ class AccountListsApi extends Controller
 
     public function editIdeaName()
     {
-        [$idea_id, $new_name] = array_values(json_decode(file_get_contents('php://input'), true));
-
-        $idea_model = ListIdeaModel::objects()->get(['product_id' => $idea_id]);
-
-        $idea_model->name = $new_name;
-
-        $idea_model->save();
-
-        $this->jsonResponse(['success edit']);
+        if (!$this->checkRightsUser()) {
+            return;
+        }
+        $data = json_decode(file_get_contents('php://input'), true);
+        try {
+            /** @var ListIdeaModel $idea_model */
+            $idea_model = ListIdeaModel::objects()->get(['product_id' => $data['productId']]);
+            $idea_model->name = $data['name'];
+            $idea_model->save();
+            $this->jsonResponse([]);
+        } catch (Throwable $exception) {
+            // TODO: Добавить обработку ошибок на фронт
+            $this->jsonResponse([], 400);
+        }
     }
 
     /**

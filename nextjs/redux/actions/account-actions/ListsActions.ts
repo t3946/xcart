@@ -109,12 +109,12 @@ export const addProduct = (
 });
 
 export const editIdeaName = (
-  listId: string,
-  productId: string,
+  listId: number,
+  productId: number,
   name: string,
   callback: () => void
 ): any => ({
-  type: "EDIT_IDEA_NAME",
+  type: "SEND_EDIT_IDEA_NAME",
   listId,
   productId,
   name,

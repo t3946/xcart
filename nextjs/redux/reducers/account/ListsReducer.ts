@@ -7,6 +7,7 @@ import { deleteList } from "@modules/account/utils/edit-store-funcs/lists/delete
 import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/move-product-list";
 import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
 import { addProductToList } from "@modules/account/utils/edit-store-funcs/lists/add-product-to-list";
+import { editIdeaName } from "@modules/account/utils/edit-store-funcs/lists/edit-idea-name";
 
 const initialValue: AccountListsStore = {
   lists: null,
@@ -27,6 +28,7 @@ const accountListReducer = (
         loading: false,
       };
     case "ADD_PRODUCT_ON_LIST":
+    case "SEND_EDIT_IDEA_NAME":
       return {
         ...state,
         loading: true,
@@ -39,6 +41,11 @@ const accountListReducer = (
         ...state,
         lists: action.lists,
         loading: false,
+      };
+    case "EDIT_IDEA_NAME":
+      return {
+        ...state,
+        listView: editIdeaName(state.listView, action.productId, action.name),
       };
     case "SET_LIST_VIEW":
       return {

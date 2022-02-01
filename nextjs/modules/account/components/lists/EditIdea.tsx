@@ -10,10 +10,11 @@ import { ListItem } from "@modules/account/ts/types/list.type";
 import cn from "classnames";
 
 import Styles from "@modules/account/components/lists/EditIdea.module.scss";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface EditIdeaProps {
   info: ListItem;
-  listId: string;
+  listId: number;
   openMenuDialog: () => void;
   edit: boolean;
 }
@@ -26,13 +27,13 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
 }) => {
   const [isEdit, setIsEdit] = useState(false);
 
-  const isLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
+  const isLoading = useSelectorAccount((state) => state.lists.loading);
 
   const dispatch = useDispatch();
 
   const onSaveEdit = () => {
     dispatch(
-      editIdeaName(listId, info.product_id, formik.values.name, () =>
+      editIdeaName(listId, info.productId, formik.values.name, () =>
         onSetEdit(true)
       )
     );
