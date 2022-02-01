@@ -64,7 +64,7 @@ class ElasticHelper
     {
         $searchParam = new SearchRequestParams(trim($query));
 
-        $searchObject = new SimpleObject((object)['all' => [(object)['is_group_root' => 0], (object)['in_stock' => 1]]]);
+        $searchObject = new SimpleObject();
         $searchObject->all = [(object)['is_group_root' => 0], (object)['in_stock' => 1]];
 
         $searchFields = new SearchFields();

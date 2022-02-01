@@ -103,7 +103,7 @@ class SearchController extends AbstractCatalogController
             'phrase_suggestions' => (new SearchSuggestionHelper($this->q))->suggestion_phrase(5)
         ];
 
-        $this->searched = $this->getProductFromElastic($this->q);
+        $this->searched = $this->getProductFromElastic($this->q, 500);
 
         $show_empty = $this->searched === 0;
 
@@ -161,7 +161,7 @@ class SearchController extends AbstractCatalogController
         return $classElastic;
     }
 
-    public function getProductFromElastic($search, $min_score = null, $max_size = 20, $page = 1)
+    public function getProductFromElastic($search, $max_size = 20, $page = 1)
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
