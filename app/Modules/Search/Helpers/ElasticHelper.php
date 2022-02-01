@@ -9,8 +9,11 @@ use Elastic\EnterpriseSearch\AppSearch\Request\IndexDocuments;
 use Elastic\EnterpriseSearch\AppSearch\Request\QuerySuggestion;
 use Elastic\EnterpriseSearch\AppSearch\Request\Search;
 use Elastic\EnterpriseSearch\AppSearch\Schema\Engine;
+use Elastic\EnterpriseSearch\AppSearch\Schema\PaginationResponseObject;
 use Elastic\EnterpriseSearch\AppSearch\Schema\QuerySuggestionRequest;
+use Elastic\EnterpriseSearch\AppSearch\Schema\SearchFields;
 use Elastic\EnterpriseSearch\AppSearch\Schema\SearchRequestParams;
+use Elastic\EnterpriseSearch\AppSearch\Schema\SimpleObject;
 use Elastic\EnterpriseSearch\Client;
 use Elastic\EnterpriseSearch\Exception\ClientErrorResponseException;
 use Modules\Search\SearchModule;
@@ -60,14 +63,23 @@ class ElasticHelper
     public function search(string $engine, string $query, int $page, int $size): array
     {
         $searchParam = new SearchRequestParams(trim($query));
-        $searchParam->filters = (object)['all' => [(object)['is_group_root' => 0], (object)['in_stock' => 1]]];
-        $searchParam->search_fields = (object)[
-            'product' => (object)[],
-            'upc' => (object)[],
-            'productcode' => (object)[],
-            'fulldescr' => (object)[]
-        ];
-        $searchParam->page = (object)['current' => $page, 'size' => $size];
+
+        $searchObject = new SimpleObject((object)['all' => [(object)['is_group_root' => 0], (object)['in_stock' => 1]]]);
+        $searchObject->all = [(object)['is_group_root' => 0], (object)['in_stock' => 1]];
+
+        $searchFields = new SearchFields();
+        $searchFields->product = (object)[];
+        $searchFields->upc = (object)[];
+        $searchFields->productcode = (object)[];
+        $searchFields->fulldescr = (object)[];
+
+        $paginationObject = new PaginationResponseObject();
+        $paginationObject->current = $page;
+        $paginationObject->size = $size;
+
+        $searchParam->filters = $searchObject;
+        $searchParam->search_fields = $searchFields;
+        $searchParam->page = $paginationObject;
 
         $request = new Search($engine, $searchParam);
 
