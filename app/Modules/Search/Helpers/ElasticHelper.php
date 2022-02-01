@@ -60,7 +60,7 @@ class ElasticHelper
     public function search(string $engine, string $query, int $page, int $size): array
     {
         $searchParam = new SearchRequestParams(trim($query));
-        $searchParam->filters = (object)['all' => [(object)['forsale' => 1], (object)['in_stock' => 1]]];
+        $searchParam->filters = (object)['all' => [(object)['is_group_root' => 0], (object)['in_stock' => 1]]];
         $searchParam->search_fields = (object)[
             'product' => (object)[],
             'upc' => (object)[],
