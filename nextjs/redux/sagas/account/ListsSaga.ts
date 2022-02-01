@@ -215,7 +215,8 @@ function* undoDeleteProduct(action: AnyAction): Generator {
     .post<number>(
       `/api/account/lists/undo-delete-product`,
       JSON.stringify({
-        product: action.product,
+        ...action.product,
+        productListId: action.product_list_id,
       })
     )
     .then((response) => response);

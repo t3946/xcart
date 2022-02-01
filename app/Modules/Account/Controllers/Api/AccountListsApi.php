@@ -9,9 +9,8 @@ use Modules\Account\Models\ListItemsModel;
 use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\CoreHelper;
-use Modules\Goods\Models\ProductModel;
-use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
+use Throwable;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
@@ -134,7 +133,7 @@ class AccountListsApi extends Controller
     {
         $form = json_decode(file_get_contents('php://input'), true);
         /** @var UserModel $user */
-        if(!$user = $this->checkRightsUser()) {
+        if (!$user = $this->checkRightsUser()) {
             return;
         }
 
@@ -287,14 +286,44 @@ class AccountListsApi extends Controller
 
     public function undoDeleteProduct()
     {
-        [$product] = array_values(json_decode(file_get_contents('php://input'), true));
-
-        if ($product['product_type'] === 'idea') {
-            ListIdeaModel::objects()->create($product['product']);
+        $data = json_decode(file_get_contents('php://input'), true);
+        try {
+            if (!$this->checkRightsUser()) {
+                return;
+            }
+            $base_item_attr = [
+                'product_list_id' => $data['productListId'],
+                'comment' => $data['comment'],
+                'priority' => $data['priority'],
+                'needs' => $data['needs'],
+                'has' => $data['has'],
+                'order_by' => $data['orderBy']
+            ];
+            switch ($data['productType']) {
+                case ListItemsModel::TYPE_IDEA:
+                    $idea = new ListIdeaModel();
+                    $idea->name = $data['product']['name'];
+                    $idea->save();
+                    $base_item_attr = array_merge($base_item_attr, [
+                        'product_id' => $idea->pk,
+                        'product_type' => ListItemsModel::TYPE_IDEA
+                    ]);
+                    break;
+                case ListItemsModel::TYPE_PRODUCT:
+                    $base_item_attr = array_merge($base_item_attr, [
+                        'product_id' => $data['productId'],
+                        'product_type' => ListItemsModel::TYPE_PRODUCT
+                    ]);
+                    break;
+            }
+            $item_model = new ListItemsModel();
+            $item_model->setAttributes($base_item_attr);
+            $item_model->save();
+            $this->jsonResponse([]);
+        } catch (Throwable $exception) {
+            // TODO: Добавить обработку ошибок http статусов на фронте
+            $this->jsonResponse([], 400);
         }
-        ListItemsModel::objects()->create($product);
-
-        $this->jsonResponse(['success']);
     }
 
     public function actionGetLists(): void
@@ -311,7 +340,7 @@ class AccountListsApi extends Controller
         }
         [$user_id, $type, $listHash] = explode('/', CoreHelper::decryptText($code, $tag));
         /** @var ProductListsModel $invite_list */
-        if(!$invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash])) {
+        if (!$invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash])) {
             $this->jsonResponse(['Not found list invite', 404]);
             return;
         }
@@ -332,10 +361,11 @@ class AccountListsApi extends Controller
             ]
         ]);
     }
+
     private function checkRightsUser()
     {
         /** @var UserModel $user */
-        if(!$user = Xcart::app()->auth->getUser(true)) {
+        if (!$user = Xcart::app()->auth->getUser(true)) {
             $this->jsonResponse(['message' => 'Not found user'], 401);
             return false;
         }

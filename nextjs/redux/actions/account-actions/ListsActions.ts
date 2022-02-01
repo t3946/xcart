@@ -61,8 +61,8 @@ export const deleteProduct = (
 });
 
 export const undoDeleteProduct = (
-  product_list_id: string,
-  list_items_id: string,
+  product_list_id: number,
+  list_items_id: number,
   product: any
 ): any => ({
   type: "UNDO_DELETE_PRODUCT",
