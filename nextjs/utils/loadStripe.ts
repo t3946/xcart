@@ -8,9 +8,8 @@ function loadStripe() {
     return null;
   }
 
-
   const { stripePK } = config;
-  console.log("PK:", stripePK);
+
   return StripeJs.loadStripe(stripePK, {
     locale: "en",
   });
