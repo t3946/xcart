@@ -189,7 +189,7 @@ class BaseFraudCheckHelperV2
         $transaction_model = $order->getFirstTransaction();
         /** @var OrderTransactionModel $transaction_model */
         $data_response = $transaction_model->transaction_response;
-        if (self::checksIsPassByType($data_response, 'cvc_check')) {
+        if ($data_response && self::checksIsPassByType($data_response, 'cvc_check')) {
             $fraud_result = 'positive';
             $outcome = 1;
         }
@@ -203,7 +203,7 @@ class BaseFraudCheckHelperV2
         $transaction_model = $order->getFirstTransaction();
         /** @var OrderTransactionModel $transaction_model */
         $data_response = $transaction_model->transaction_response;
-        if (self::checksIsPassByType($data_response)) {
+        if ($data_response && self::checksIsPassByType($data_response)) {
             $outcome = 1;
             $fraud_result = 'positive';
         }
@@ -217,7 +217,7 @@ class BaseFraudCheckHelperV2
         $transaction_model = $order->getFirstTransaction();
         /** @var OrderTransactionModel $transaction_model */
         $data_response = $transaction_model->transaction_response;
-        if (self::checksIsPassByType($data_response, 'address_postal_code_check')) {
+        if ($data_response && self::checksIsPassByType($data_response, 'address_postal_code_check')) {
             $fraud_result = 'positive';
             $outcome = 1;
         }
