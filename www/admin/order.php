@@ -682,7 +682,7 @@ if ($REQUEST_METHOD === "POST") {
         OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_SYSTEM, $log2);
 
         $body = "{$notes}\n\nposted by {$user} ({$user->login})";
-        $from = $user . '<helpdesk@s3stores.com>';
+        $from = 'helpdesk@s3stores.com';
         $to   = 'orders@s3stores.com';
 
         $oMail = Xcart::app()->oldMail;
