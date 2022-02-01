@@ -19,7 +19,9 @@ import {
   addAction,
   resetAction,
 } from "@redux/actions/account-actions/DecisionsActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useRouter } from "next/router";
+import {AxiosResponse} from "axios";
 
 interface IProps {
   decision: Record<any, any>;
@@ -30,9 +32,12 @@ const Decision: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const { decision } = props;
 
-  async function onChangeDecision(decision: DecisionsInterface) {
+  async function onChangeDecision(res: AxiosResponse) {
+    const { user } = res.data;
+
     dispatch(resetAction());
-    dispatch(addAction(decision));
+    dispatch(userSetAction(user));
+
     await router.push("/orders/decisions-required");
   }
 
@@ -43,7 +48,7 @@ const Decision: React.FC<IProps> = (props) => {
     "unpaid-order": UnpaidOrder,
     "send-us-po": OriginalPurchaseOrder,
     "increase-shipping-charge": IncreaseInShippingCharge,
-    "send-check": SendingCheck,
+    "po-send-check": SendingCheck,
     "street-address-required": StreetAddressRequired,
     "questions-ltl-freight-shipment": LTLFreightShipment,
     "responsibility-for-custom-duties": CustomDuties,

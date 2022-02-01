@@ -8,6 +8,7 @@ import {
   addAction as addDecisionsAction,
 } from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
+import ItemSkeleton from "@modules/account/components/orders/DecisionsPreview/ItemSkeleton";
 
 interface IProps {
   items: Record<any, any>[];
@@ -39,12 +40,7 @@ const List: React.FC<IProps> = function (props: IProps) {
     return decisions.length === totalDecisions;
   }
 
-  if (isIntersected && !isAllLoaded()) {
-    setIsIntersected(false);
-    getMoreDecision();
-  }
-
-  function getMoreDecision() {
+  function loadMoreDecision() {
     if (isLoading) {
       return;
     }
@@ -67,6 +63,11 @@ const List: React.FC<IProps> = function (props: IProps) {
     );
   }
 
+  if (isIntersected && !isAllLoaded()) {
+    setIsIntersected(false);
+    loadMoreDecision();
+  }
+
   for (let i = 0; i < decisions.length; i++) {
     const decision = decisions[i];
     const theLast = i === decisions.length - 1;
@@ -77,10 +78,15 @@ const List: React.FC<IProps> = function (props: IProps) {
         key={`${i}_${decision.decision_id}`}
       >
         <a className={"text-decoration-none p-0"}>
-          <Item
-            decision={decision}
+          <div
+            style={{ height: "70px" }}
             ref={theLast && !isLoading ? theLastItemRef : null}
-          />
+          >
+            <Item
+              decision={decision}
+              ref={theLast && !isLoading ? theLastItemRef : null}
+            />
+          </div>
         </a>
       </Link>
     );
@@ -93,20 +99,13 @@ const List: React.FC<IProps> = function (props: IProps) {
     );
 
     for (let i = 1; i <= skeletonsNumber; i++) {
-      items.push(
-        <div key={i} className={""}>
-          <Item
-            decision={{ solved: props.solved }}
-            classes={{ container: "skeleton-box" }}
-          />
-        </div>
-      );
+      items.push(<ItemSkeleton key={`decision-skeleton-item-${i}`} />);
     }
   }
 
   useEffect(function () {
-    let reviewLoadedObserver = null;
     const target = theLastItemRef.current;
+    let reviewLoadedObserver = null;
 
     if (!target || isLoading) {
       return;

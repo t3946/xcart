@@ -7,9 +7,11 @@ use Modules\Order\Models\Decisions\DecisionModel;
 use Modules\Order\Models\Decisions\DecisionLicenseModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
+use Modules\User\Models\UserAccount\UserModel;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Controller\Controller;
-use Modules\Order\Models\Decisions\DecisionFilesModel;
+use Modules\Order\Models\Decisions\CustomerFilesModel;
+use Modules\Order\Models\Decisions\DecisionsCustomerFiles;
 use Modules\Order\Forms\Decision\LicenseRequiredForm;
 use Xcart\App\Main\Xcart;
 
@@ -26,6 +28,47 @@ class DecisionController extends Controller
         $this->data = json_decode(file_get_contents('php://input'), true);
     }
 
+    private function saveFiles($decision_id): int
+    {
+        $files = $_FILES['attachments'];
+        $number_saved_files = 0;
+
+        if (!$files) {
+            return $number_saved_files;
+        }
+
+        $number_files = count($files['name']);
+
+        for ($i = 0; $i < $number_files; $i++) {
+            $uploaded_file = new UploadedFile(
+                $files['tmp_name'][$i],
+                $files['name'][$i],
+                $files['type'][$i],
+                (int)$files['size'][$i],
+                (int)$files['error'][$i],
+            );
+
+            $file = new CustomerFilesModel([
+                'path' => $uploaded_file,
+                'user_id' => $_POST['decision_id'],
+                'title' => $files['name'],
+            ]);
+            $file->original_name = $files['name'][$i];
+
+            $file->save();
+
+            $link = new DecisionsCustomerFiles([
+                "file_id" => $file->pk,
+                "decision_id" => $decision_id,
+            ]);
+
+            $link->save();
+            $number_saved_files++;
+        }
+
+        return $number_saved_files;
+    }
+
     public function solve()
     {
         $user = Xcart::app()->getUser(true);
@@ -35,57 +78,65 @@ class DecisionController extends Controller
             return;
         }
 
-        $type = $_POST['type'] ?? $this->data['type'];
-        $decision_id = $_POST['decision_id'] ?? $this->data['decision_id'];
+        if (strpos($_SERVER['HTTP_CONTENT_TYPE'], "application/json") !== false) {
+            $data = $this->data;
+        } else {
+            $data = $_POST;
+        }
 
+        /**
+         * @var $decision DecisionModel
+         */
         $decision = DecisionModel::objects()->get([
-            'type' => $type,
-            'decision_id' => $decision_id,
+            'decision_id' => $data['decision_id'],
             'solved' => false
         ]);
 
         if (!$decision) {
-            http_response_code(400);
+            http_response_code(403);
             return;
         }
 
-        $order_id = $decision->order_id;
-        $order = OrderModel::objects()->get(['orderid' => $order_id]);
+        //check user is decision owner
+        $order = OrderModel::objects()->get([
+            "orderid" => $decision->order_id,
+        ]);
 
-        // user is not decision owner
         if ($order->user_id !== $user->user_id) {
             http_response_code(403);
             return;
         }
 
-        //проверить заголовк, чтобы понять каким способом отправлены данные.
-        //если есть файлы -- сохранить всё и закрепить всё за определённым decision
+        //validate decision data
+        switch ($decision->type) {
+            case "po-send-check":
+                $options = $decision['options'];
+                $i = $data['address'];
 
-        if (strpos($_SERVER['HTTP_CONTENT_TYPE'], "application/json") !== false) {
-            $decision->solve($this->data['options']);
-        } elseif (strpos($_SERVER['HTTP_CONTENT_TYPE'], "multipart/form-data") !== false) {
-            $files = $_FILES['attachments'];
-
-            //todo: обработать случай нескольких файлов
-            $uploaded_file = new UploadedFile(
-                $files['tmp_name'],
-                $files['name'],
-                $files['type'],
-                (int)$files['size'],
-                (int)$files['error'],
-            );
-
-            $file = new DecisionFilesModel([
-                'path' => $uploaded_file,
-                'decision_id' => $_POST['decision_id'],
-                'title' => $files['name'],
-            ]);
-
-
-            $file->save();
-
-            $decision->solve($this->data['options']);
+                if ($options['addresses'][$i]) {
+                    $options['selectedAddress'] = $i;
+                    $decision->solve($options);
+                }
+                break;
+            case "license-required":
+                if ($this->saveFiles($decision->decision_id)) {
+                    $decision->solve([]);
+                }
+                break;
         }
+
+        if (!$decision->solved) {
+            http_response_code(400);
+            return;
+        }
+
+        /**
+         * send new decisions required count
+         * @var $user UserModel
+         */
+        $user = UserModel::objects()->get(["user_id" => $user->user_id])->getAttributes();
+        unset($user->password);
+        $this->jsonResponse(["user" => $user]);
     }
 
     public static function getDecisions($user_id, $solved, $limit, $offset, $order)
@@ -134,11 +185,6 @@ class DecisionController extends Controller
         if ($decision->solved === true) {
             return;
         }
-
-        //incorrect decision
-//        if ($decision->type !== DecisionModel::DECISION_LICENSE_REQUIRED) {
-//            return;
-//        }
 
         $form = new LicenseRequiredForm();
         $form->populate($_POST, $_FILES);
@@ -192,11 +238,6 @@ class DecisionController extends Controller
         if ($decision->solved === true) {
             return;
         }
-
-        //incorrect decision
-//        if ($decision->type !== DecisionModel::DECISION_PAYMENT_REQUIRED) {
-//            return;
-//        }
 
         $form = new LicenseRequiredForm();
         $form->populate($_POST, $_FILES);

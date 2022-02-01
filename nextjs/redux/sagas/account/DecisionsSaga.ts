@@ -6,14 +6,10 @@ import axios from "axios";
 
 const api = new ApiService();
 
-function* resolveDecision(action): Generator {
+function* solveDecision(action: any): Generator {
   const { success, data } = action.payload;
 
-  yield api
-    .post<any>(route("order:api:decisions_make"), JSON.stringify(data))
-    .then(function (res) {
-      success(res);
-    });
+  yield axios.post("/order/api/decisions/solve", data).then(success);
 }
 
 function* getDecisions(action: any): Generator {
@@ -170,7 +166,7 @@ function* submitAlternativeItemsOfferDecision(action): Generator {
 }
 
 export default function* ratingsActionWatcher(): SagaIterator {
-  yield takeLatest("SOLVE_DECISION", resolveDecision);
+  yield takeLatest("SOLVE_DECISION", solveDecision);
   yield takeLatest("GET_DECISIONS", getDecisions);
   yield takeLatest("UPLOAD_LICENSE_DECISION", uploadLicense);
   yield takeLatest("GET_ETA_PRODUCTS_DECISION", getEtaProductsDecision);

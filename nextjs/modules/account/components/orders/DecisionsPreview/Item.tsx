@@ -2,7 +2,6 @@ import React from "react";
 import AlertCheck from "@modules/icon/components/account/check/AlertCheck";
 import SandClock from "@modules/icon/components/account/sand-clock/SandClock";
 import cn from "classnames";
-import Styles from "@modules/account/components/orders/DecisionsPreview/Item.module.scss";
 
 interface IProps {
   decision: Record<any, any>;
@@ -13,7 +12,26 @@ interface IProps {
 
 const Item = React.forwardRef(function (props: IProps, ref: any) {
   const { decision } = props;
-  const decisionName = ["ETA"][decision.type];
+  const shortcutsMap = {
+    "estimated-time-arrival": {
+      shortName: "ETA",
+      longName: "Estimated time arrival",
+    },
+    "ach-payment-required": { shortName: "APR", longName: "" },
+    "license-required": { shortName: "LR", longName: "" },
+    "unpaid-order": { shortName: "UO", longName: "Unpaid Order" },
+    "send-us-po": { shortName: "SUP", longName: "" },
+    "increase-shipping-charge": { shortName: "ISC", longName: "" },
+    "po-send-check": { shortName: "SC", longName: "PO: Sending check" },
+    "street-address-required": { shortName: "SAR", longName: "" },
+    "questions-ltl-freight-shipment": { shortName: "QLFS", longName: "" },
+    "responsibility-for-custom-duties": { shortName: "RFCD", longName: "" },
+    "alternative-items-offer": { shortName: "AIO", longName: "" },
+    "additional-shipping-charge": { shortName: "ASC", longName: "" },
+    "additional-information-required": { shortName: "AIR", longName: "" },
+  };
+  const { shortName, longName } = shortcutsMap[decision.type];
+
   const classes = {
     container: [
       "decisions-item",
@@ -60,11 +78,11 @@ const Item = React.forwardRef(function (props: IProps, ref: any) {
   }
 
   return (
-    <div className={cn(classes.container)} ref={ref}>
+    <div className={cn(classes.container)} ref={ref} title={longName}>
       <span className={"decisions-item-text"}>
         <span className="d-block d-md-inline">{decision.order_number}:</span>{" "}
         <span className="d-block d-md-inline">
-          {decisionName} Decision Required
+          {shortName} Decision Required
         </span>
       </span>
 

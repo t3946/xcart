@@ -1,9 +1,9 @@
 import React from "react";
 import CardOr from "@modules/ui/CardOr";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import Styles from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck.module.scss";
 import cn from "classnames";
-import { checkSentAction } from "@redux/actions/account-actions/DecisionsActions";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@modules/account/components/shared/Alert";
 import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
@@ -13,37 +13,37 @@ import {
 } from "@redux/actions/account-actions/MobileMenuActions";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-
-interface IAddress {
-  name: string;
-  address: string;
-}
+import { AxiosResponse } from "axios";
 
 interface IProps {
-  firstAddress: IAddress;
-  secondAddress: IAddress;
+  decision: any;
+  onChange: (res: AxiosResponse) => void;
 }
 
-const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
+const SendingCheck: React.FC<IProps> = (props) => {
+  const { decision, onChange } = props;
+  const firstAddress = decision.options.addresses[0];
+  const secondAddress = decision.options.addresses[1];
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
-  const router = useRouter();
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const initialValues = {
-    address: null,
+    address: decision.solved === 1 ? decision.options.selectedAddress : null,
   };
 
-  const addressTemplate = (address: IAddress) => {
+  const addressTemplate = (address: string) => {
+    //todo: load from server
+    const corporation = "S3 Stores, Inc.";
+
     return (
       <div className={Styles.decisionCardBodyText}>
         <b className={cn(["d-inline-block", Styles.decisionCardBodyTitle])}>
-          {address.name}
+          {corporation}
         </b>
         <br />
-        {address.address}
+        {address}
       </div>
     );
   };
@@ -67,19 +67,18 @@ const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
     };
   }, []);
 
-  const submit = (values) => {
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
+    actions.setSubmitting(true);
+
     dispatch(
-      checkSentAction({
-        data: { address: values.address },
-        success(res) {
-          setShow(true);
-          dispatch(
-            setAlertAction({
-              variant: "decisionSuccess",
-              message: `Thank you for your payment!
-              We are looking forward to doing business with you again.`,
-            })
-          );
+      solveDecisionAction({
+        data: {
+          decision_id: decision.decision_id,
+          address: values.address,
+        },
+        success(res: AxiosResponse) {
+          onChange(res);
+          actions.setSubmitting(false);
         },
       })
     );
@@ -92,8 +91,7 @@ const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
               We are looking forward to doing business with you again.`,
       })
     );
-    //
-  };
+  }
 
   return (
     <Formik initialValues={initialValues} onSubmit={submit}>
@@ -140,8 +138,8 @@ const SendingCheck: React.FC<IProps> = ({ firstAddress, secondAddress }) => {
                     card: [Styles.decisionCardBody],
                   }}
                   radioButtons={{
-                    valueFirst: "USA",
-                    valueSecond: "Canada",
+                    valueFirst: 0,
+                    valueSecond: 1,
                     name: "address",
                     checkedValue: values.address,
                     disabled: isSubmitting,

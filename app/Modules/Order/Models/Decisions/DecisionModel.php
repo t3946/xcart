@@ -13,50 +13,15 @@ use Xcart\App\Orm\Model;
 
 class DecisionModel extends Model
 {
-    public const types = [
-        'estimated-time-arrival',
-        'ach-payment-required',
-        'license-required',
-        'unpaid-order',
-        'send-us-po',
-        'increase-shipping-charge',
-        'send-check',
-        'street-address-required',
-        'questions-ltl-freight-shipment',
-        'responsibility-for-custom-duties',
-        'alternative-items-offer',
-        'additional-shipping-charge',
-        'additional-information-required',
-    ];
-
     public static function tableName()
     {
         return 'account_decisions';
-    }
-
-    public function isValid()
-    {
-        //unknown type
-        if (!in_array($this->type, self::types)) {
-            return false;
-        }
-
-        return parent::isValid();
     }
 
     public function solve($options) {
         $this->options = $options;
         $this->solved = true;
         $this->save();
-    }
-
-    public function save(array $fields = [])
-    {
-        if (!$this->isValid()) {
-            return false;
-        }
-
-        return parent::save($fields);
     }
 
     public static function getFields()

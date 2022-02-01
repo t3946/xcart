@@ -50,6 +50,7 @@ const CardOr: React.FC<IProps> = (props) => {
       </Card>
 
       <div className={cn(classes.or)}>or</div>
+
       <Card
         classes={{ cardBody: props.classes.card }}
         radioButton={

@@ -1,7 +1,7 @@
 const express = require("express");
 const isAuthMiddleware = require("../middleware/isAuth");
 const PrismaClient = require("@prisma/client").PrismaClient;
-
+const addressToString = require("../utils/addressToString");
 const prisma = new PrismaClient();
 const app = express();
 
@@ -64,12 +64,34 @@ app.post("/create", isAuthMiddleware, async function (req, res) {
       orderid: order_id,
     },
   });
+  const options = {};
+
+  switch (type) {
+    case "po-send-check":
+      const { addresses: addressesIDs } = req.body;
+      const addresses = [];
+
+      for (const addressesID of addressesIDs) {
+        const address = await prisma.account_addresses.findUnique({
+          where: {
+            address_id: addressesID,
+          },
+        });
+
+        addresses.push(addressToString(address));
+      }
+
+      options.addresses = addresses;
+
+      break;
+  }
 
   const decision = await prisma.account_decisions.create({
     data: {
       type,
       order_id,
       order_number: [order.order_prefix, order.orderid].join(""),
+      options,
     },
   });
 

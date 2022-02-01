@@ -8,24 +8,20 @@ use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
-class DecisionFilesModel extends Model
+class CustomerFilesModel extends Model
 {
     public const UPLOAD_PATH = "user_files";
     public const UPLOAD_MAX_SIZE = "";
 
     public static function tableName()
     {
-        return 'decision_files';
+        return 'customer_files';
     }
 
     public static function getFields()
     {
         return [
             'file_id' => [
-                'class' => IntField::class,
-            ],
-
-            'decision_id' => [
                 'class' => IntField::class,
             ],
 
@@ -38,7 +34,7 @@ class DecisionFilesModel extends Model
                 'maxSize' => self::UPLOAD_MAX_SIZE . 'M',
             ],
 
-            'title' => [
+            'original_name' => [
                 'class' => CharField::class,
             ],
 

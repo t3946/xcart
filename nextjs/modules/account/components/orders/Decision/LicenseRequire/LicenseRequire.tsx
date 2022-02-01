@@ -2,7 +2,7 @@ import React from "react";
 import Styles from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire.module.scss";
 import cn from "classnames";
 import * as yup from "yup";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
 import EstimatedTimeArrivalTable, {
@@ -12,9 +12,10 @@ import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import {
   getEtaProductsAction,
-  uploadLicense,
+  solveDecisionAction,
 } from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
+import {AxiosResponse} from "axios";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;
@@ -79,29 +80,28 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
     );
   }
 
-  function submit(values, { setSubmitting }) {
-    setSubmitting(false);
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
+    actions.setSubmitting(true);
 
     const formData = new FormData();
+    const files = inputFileRef.current?.files || [];
 
-    formData.append(
-      "LicenseRequiredForm[license]",
-      inputFileRef.current.files[0]
-    );
+    for (let i = 0; i < files.length; i++) {
+      formData.append("attachments[]", files[i]);
+    }
 
     formData.append("type", decision.type.toString());
     formData.append("decision_id", decision.decision_id.toString());
 
     dispatch(
-      uploadLicense({
+      solveDecisionAction({
         data: formData,
-        success(res: DecisionsInterface) {
+        success(res: AxiosResponse) {
           onChange(res);
-          setSubmitting(false);
+          actions.setSubmitting(false);
         },
       })
     );
-    // }
   }
 
   return (
@@ -111,27 +111,12 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
       onSubmit={submit}
     >
       {({ handleChange }) => {
-        function inputFileChangeHandler(e) {
-          /*          handleChange(e);
-
-          const file = inputFileRef.current.files[0];
-          const fr = new FileReader();
-
-          fr.onload = () => {
-            if (typeof fr.result === "string") {
-              imageRef.current = fr.result;
-            }
-          };
-
-          if (file) {
-            fr.readAsDataURL(file);
-          }*/
-        }
         return (
           <Form>
             <h1 className="decision-inner-header decision__inner-header">
               License required
             </h1>
+
             <EstimatedTimeArrivalTable
               tableType={TableTypes.licenseRequired}
               items={tableRows}
@@ -149,13 +134,13 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
             <label
               className={cn(["form-button__theme-grey", Styles.buttonUpload])}
             >
-              Choose file
+              Choose files
               <input
                 type="file"
                 className="d-none"
                 ref={inputFileRef}
                 name="file"
-                onChange={inputFileChangeHandler}
+                multiple={true}
               />
             </label>
 
