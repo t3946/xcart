@@ -1,6 +1,6 @@
 import React from "react";
 import { Form as RBForm } from "react-bootstrap";
-import FormSelect from "@modules/ui/forms/Select";
+import Select from "@modules/ui/forms/select/Select";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { getCountryByCode } from "@utils/Countries";
@@ -49,7 +49,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   } = props;
   const countries = useSelector((e: StoreInterface) => e.countries);
   const countryCodeFieldName = name + "CountryCode";
-  const phoneExtFieldName = name + "Ext";
+  const phoneExtFieldName = "phone_ext";
   const phoneMask = "(999) 999-9999";
 
   let initialCountryCode;
@@ -58,12 +58,11 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
     const country = getCountryByCode(values.phoneCountryCode, countries);
 
     initialCountryCode = {
-      viewValue: country.name + " +" + country.phone_code,
-      previewValue: country.code + " +" + country.phone_code,
+      label: country.code + " +" + country.phone_code,
       value: country.code,
     };
   } else {
-    initialCountryCode = { viewValue: "Code" };
+    initialCountryCode = { label: "Code", value: "" };
   }
 
   const [countryCodeValue, setCountryCodeValue] =
@@ -78,8 +77,8 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
     for (const country of countries) {
       if (country.phone_code) {
         codes.push({
-          viewValue: country.name + " +" + country.phone_code,
-          previewValue: country.code + " +" + country.phone_code,
+          label: country.code + " +" + country.phone_code,
+          prelabel: country.code + " +" + country.phone_code,
           value: country.code,
         });
       }
@@ -114,17 +113,15 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   return (
     <div className={classnames(classes.container)}>
       <div className={classnames(classes.selectCountryCodeColumn)}>
-        <FormSelect
-          items={getSelectItems()}
-          classes={{
-            selectList: "form-select-list__fit-content",
-            selectHeader: "",
-          }}
+        <Select
+          clearable={false}
+          classes={{ indicatorSeparator: "d-none", valueContainer: "ps-0" }}
+          options={getSelectItems()}
           value={countryCodeValue}
           disabled={disabled}
-          onClick={(item) => {
-            setFieldValue(countryCodeFieldName, item.value);
-            setCountryCodeValue(item);
+          onChange={(e) => {
+            setFieldValue(countryCodeFieldName, e.target.value.value);
+            setCountryCodeValue(e.target.value);
           }}
           name={countryCodeFieldName}
           id={countryCodeFieldName}
@@ -143,7 +140,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           <MaskedInput
             type={"text"}
             name={name}
-            value={values[name]}
+            value={values.phone}
             onChange={handleChange}
             placeholder="(___) ___-____"
             isInvalid={!!touched[name] && !!errors[name]}
@@ -174,26 +171,15 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           <span className="d-none d-md-inline">ext</span>
         </Label>
 
-        <div>
-          <Input
-            type="text"
-            name={phoneExtFieldName}
-            value={values[phoneExtFieldName]}
-            onChange={handleChange}
-            disabled={disabled}
-            isInvalid={
-              !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
-            }
-            isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
-            autoComplete={"off"}
-            placeholder="12345"
-          />
-          {!!touched[phoneExtFieldName] && !!errors[phoneExtFieldName] && (
-            <Feedback className="position-absolute" type="invalid">
-              {errors[phoneExtFieldName]}
-            </Feedback>
-          )}
-        </div>
+        <Input
+          type="text"
+          name={phoneExtFieldName}
+          value={values.phoneExt}
+          onChange={handleChange}
+          disabled={disabled}
+          autoComplete={"off"}
+          placeholder="12345"
+        />
       </RBForm.Group>
     </div>
   );

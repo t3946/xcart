@@ -86,15 +86,26 @@ const InputGroup: React.FC<IProps> = (props) => {
       />
     );
   }
+  
   return (
     <div className={cn(classes?.container)}>
       {label && <Label className={classes.label}>{label}</Label>}
-      <div className={classes.input}>{InputComponent}</div>
-      {error && (
-        <Feedback className={cn(classes.input, Styles.feedback)} type="invalid">
-          {error}
-        </Feedback>
-      )}
+      <div className={classes.input}>
+        {InputComponent}
+        {error && (
+          <Feedback
+            className={cn(
+              classes.input,
+              Styles.feedback,
+              "d-block",
+              "position-absolute"
+            )}
+            type="invalid"
+          >
+            {error}
+          </Feedback>
+        )}
+      </div>
     </div>
   );
 };

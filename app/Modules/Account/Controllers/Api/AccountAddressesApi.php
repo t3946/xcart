@@ -32,8 +32,8 @@ class AccountAddressesApi extends Controller
             $state = $address->state_model;
             $resultMass[$key] = $address->getAttributes();
             $resultMass[$key]['delivery_type'] = $address->delivery_type->name;
-            $resultMass[$key]['country'] = ['value' => $country->code, 'viewValue' => $country->name];
-            $resultMass[$key]['state'] = ['value' => $state->stateid, 'viewValue' => $state->state];
+            $resultMass[$key]['country'] = ['value' => $country->code, 'label' => $country->name];
+            $resultMass[$key]['state'] = ['value' => $state->stateid, 'label' => $state->state];
             $resultMass[$key]['is_default'] = (bool) $address->is_default;
         }
 
@@ -98,11 +98,10 @@ class AccountAddressesApi extends Controller
 
     public function editAddress()
     {
+        $user = Xcart::app()->auth->getUser(true);
         $data = json_decode(file_get_contents('php://input'), true);
 
         $address = $data['address'];
-
-        $userId = $data['user'];
 
         if($address['is_default']){
             foreach (AddressesModel::objects()->all() as $key => $addressModel)
@@ -118,7 +117,7 @@ class AccountAddressesApi extends Controller
         $addressModel->setAttributes($address);
         $addressModel->save();
 
-        $this->jsonResponse($this->getAddressesFromBase($userId));
+        $this->jsonResponse($this->getAddressesFromBase($user->user_id));
     }
 
 
