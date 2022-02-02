@@ -689,6 +689,7 @@ if ($REQUEST_METHOD === "POST") {
         $oMail->init();
         $oMail->to = $to;
         $oMail->from = $from;
+        $oMail->from_name = $user;
         $oMail->reply_to = null;
         $oMail->body = $body;
         $oMail->subject = $subj;

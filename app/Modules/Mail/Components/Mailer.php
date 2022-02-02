@@ -96,8 +96,8 @@ class Mailer
         $message->setBody($body, 'text/html');
 
         if (isset($additional['from'])) {
-            $message->setFrom($additional['from']);
-            $message->setSender($additional['from']);
+            $message->setFrom($additional['from'], $additional['from_name'] ?? null);
+            $message->setSender($additional['from'], $additional['from_name'] ?? null);
         }
         elseif ($this->defaultFrom) {
             $default = strtr($this->defaultFrom, ['{domain}' => $this->getDomain()]);

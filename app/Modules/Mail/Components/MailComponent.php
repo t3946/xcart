@@ -13,6 +13,7 @@ class MailComponent
     public $cc = null;
     public $bcc = null;
     public $from = null;
+    public $from_name = null;
     public $reply_to = null;
     public $attachments = [];
 
@@ -211,7 +212,9 @@ class MailComponent
             [$message_header, $mail_message] = func_parse_mail($msgs);
         }
 
-        $headers['from'] = "{$this->from}";
+        $headers['from'] = $this->from;
+        $headers['from_name'] = $this->from_name;
+
         if ($this->cc) {
             $headers['cс'] = "{$this->cc}";
         }
@@ -232,7 +235,9 @@ class MailComponent
             }
         }
 
-        Xcart::app()->mail->raw($this->to, $mail_subject, $mail_message, $headers);
+        $to = array_unique(array_map('trim', explode(',', $this->to)));
+
+        Xcart::app()->mail->raw($to, $mail_subject, $mail_message, $headers);
 
         return true;
     }
