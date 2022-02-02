@@ -2,13 +2,13 @@ import React from "react";
 import classnames from "classnames";
 
 interface CardHeaderProps {
-  cardNumber: string;
+  cardLast4: string;
   cardType: string;
   containerClass?: string | string[];
 }
 
 export const CardHeader: React.FC<CardHeaderProps> = ({
-  cardNumber,
+  cardLast4,
   cardType,
   containerClass,
 }) => {
@@ -24,8 +24,8 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
         src={`/static/frontend/dist/images/icons/account/cards/${cardType}.svg`}
       />
       <div>
-        <b>{cardType[0].toUpperCase() + cardType.slice(1)}</b> ending in
-        {` ${cardNumber.substr(cardNumber.length - 4)}`}
+        <b>{cardType[0].toUpperCase() + cardType.slice(1)}</b> ending in{" "}
+        {cardLast4}
       </div>
     </div>
   );

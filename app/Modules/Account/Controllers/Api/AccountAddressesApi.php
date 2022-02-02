@@ -98,11 +98,10 @@ class AccountAddressesApi extends Controller
 
     public function editAddress()
     {
+        $user = Xcart::app()->auth->getUser(true);
         $data = json_decode(file_get_contents('php://input'), true);
 
         $address = $data['address'];
-
-        $userId = $data['user'];
 
         if($address['is_default']){
             foreach (AddressesModel::objects()->all() as $key => $addressModel)
@@ -118,7 +117,7 @@ class AccountAddressesApi extends Controller
         $addressModel->setAttributes($address);
         $addressModel->save();
 
-        $this->jsonResponse($this->getAddressesFromBase($userId));
+        $this->jsonResponse($this->getAddressesFromBase($user->user_id));
     }
 
 

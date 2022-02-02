@@ -52,7 +52,6 @@ const SideBarMenu: React.FC = () => {
     },
     { to: "/login-and-security", label: "Login & security" },
     { to: "/public-profile", label: "Public profile" },
-    { to: "/rewards", label: "Rewards" },
   ];
 
   React.useEffect(() => {

@@ -4,9 +4,9 @@ export const getCards = (): any => ({
   type: "GET_CARDS",
 });
 
-export const changeDefaultCard = (id: number): any => ({
+export const changeDefaultCard = (payload: any): any => ({
   type: "CHANGE_DEFAULT_CARD",
-  id,
+  payload,
 });
 
 export const addDataFromSubmitCardForm = (data: SubmitFormDataDto): any => ({

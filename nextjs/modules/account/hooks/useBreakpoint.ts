@@ -12,7 +12,7 @@ function resizeHandler() {
 }
 
 export default function useBreakpoint(): (
-  actions: Record<EBreakPoints, any>
+  actions: Record<any, any>
 ) => any {
   if (process.browser) {
     window.removeEventListener("resize", resizeHandler);

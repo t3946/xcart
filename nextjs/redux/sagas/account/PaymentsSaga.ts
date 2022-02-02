@@ -3,6 +3,7 @@ import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
 import Store from "@redux/stores/Store";
+import axios from "axios";
 
 const api = new ApiService();
 
@@ -13,20 +14,6 @@ const getUser = () => {
 function* getCards(): Generator {
   const cards: any = yield api
     .get<any>(`/api/account/wallet/get-cards`)
-    .then((response) => response);
-
-  yield put({
-    type: "SET_CARDS",
-    cards,
-  });
-}
-
-function* changeDefault(action: AnyAction): Generator {
-  const cards: any = yield api
-    .post<any>(
-      `/api/account/wallet/change-default`,
-      JSON.stringify({ cardId: action.id, user: getUser().id })
-    )
     .then((response) => response);
 
   yield put({
@@ -107,11 +94,19 @@ function* getTransactions(): Generator {
   });
 }
 
+function* changeDefaultCard(action: any): Generator {
+  const { data, success } = action.payload;
+
+  yield axios
+    .post("/api-client/user/stripe/customer/change-default-source", data)
+    .then(success);
+}
+
 export function* paymentsActionWatcher(): SagaIterator {
   yield takeLatest("GET_CARDS", getCards);
-  yield takeLatest("CHANGE_DEFAULT_CARD", changeDefault);
   yield takeLatest("ADD_CARD", addCard);
   yield takeLatest("EDIT_CARD", editCard);
   yield takeLatest("REMOVE_CARD", removeCard);
   yield takeLatest("GET_TRANSACTIONS", getTransactions);
+  yield takeLatest("CHANGE_DEFAULT_CARD", changeDefaultCard);
 }

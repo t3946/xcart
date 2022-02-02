@@ -6,48 +6,55 @@ import { RemoveCardDialog } from "@modules/account/components/wallet/RemoveCardD
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import { AddEditBtnsBlock } from "@modules/account/components/shared/AddEditBtnsBlock";
 import { CardHeader } from "@modules/account/components/wallet/CardHeader";
-import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { Card as ICard } from "@stripe/stripe-js";
 
 interface IProps {
-  cardInfo: CardItemDto;
-  changeDefault: (
-    cardInfo: CardItemDto,
-    e: React.MouseEvent<HTMLDivElement>
-  ) => void;
-  openCardDialog: (cardInfo: CardItemDto, dialog: any, path: string) => void;
+  card: ICard;
+  isDefault: boolean;
+  changeDefaultCardId: (cardId: string) => void;
+  openCardDialog: (card, dialog: any, path: string) => void;
 }
 
-export const CardItem: React.FC<IProps> = ({
-  cardInfo,
-  changeDefault,
-  openCardDialog,
-}) => {
+const Card: React.FC<IProps> = (props) => {
+  const { card, isDefault, changeDefaultCardId, openCardDialog } = props;
   const accordion = useAccordion();
   const removeDialog = useDialog();
   const editDialog = useDialog();
-  const expires = new Date(Number(cardInfo.expires));
   const breakpoint = useBreakpoint();
+
+  function expTemplate() {
+    let month = card.exp_month.toString();
+
+    if (card.exp_month < 10) {
+      month = "0" + card.exp_month;
+    }
+
+    return `Exp: ${month}/${card.exp_year}`;
+  }
+
+  function changeDefaultCard(e: MouseEvent) {
+    e.stopPropagation();
+    changeDefaultCardId(card.id);
+  }
 
   return (
     <div className="wallet-card-container">
       <div onClick={accordion.onItemClick} className={`wallet-card-header `}>
-        <CardHeader
-          cardNumber={cardInfo.card_number}
-          cardType={cardInfo.card_type}
-        />
+        <CardHeader cardLast4={card.last4} cardType={"visa"} />
         <div className="wallet-card-billing wallet-card-billing-header">
-          Exp: {expires.getMonth() + "/" + expires.getFullYear()}
+          {expTemplate()}
         </div>
         <div className="wallet-header-arrow-block">
           <div
             className={`wallet-header-default-block ${
-              cardInfo.is_default && "wallet-header-default-block_is-default"
+              isDefault && "wallet-header-default-block_is-default"
             }`}
-            onClick={(e) => changeDefault(cardInfo, e)}
+            onClick={changeDefaultCard}
           >
-            {cardInfo.is_default ? "Default" : "Set default"}
+            {isDefault ? "Default" : "Set default"}
           </div>
+
           <div
             className={`accordion-arrow black-arrow ${
               accordion.open && "accordion-arrow-open"
@@ -65,13 +72,12 @@ export const CardItem: React.FC<IProps> = ({
         <div className={`wallet-card-content `}>
           <div className="wallet-card-name">
             <div className="wallet-card-content-label">Name on card </div>
-            <div>{cardInfo.name}</div>
+            <div>{card.name}</div>
           </div>
           <div className="wallet-card-billing">
             <div className="wallet-card-content-label">Billing address</div>
             <div>
               1370 BRIDGETON HILL RD UPPER BLACK EDDY, PA 18972 United States
-              {cardInfo.address.phone_number}
             </div>
           </div>
           {breakpoint({
@@ -79,20 +85,20 @@ export const CardItem: React.FC<IProps> = ({
               <AddEditBtnsBlock
                 handleRemove={() =>
                   openCardDialog(
-                    cardInfo,
+                    card,
                     removeDialog,
                     "/account/payments/wallet/remove"
                   )
                 }
                 handleEdit={() =>
                   openCardDialog(
-                    cardInfo,
+                    card,
                     editDialog,
                     "/account/payments/wallet/edit"
                   )
                 }
-                defaultItem={cardInfo.is_default}
-                changeDefault={(e) => changeDefault(cardInfo, e)}
+                defaultItem={isDefault}
+                changeDefault={changeDefaultCardId}
               >
                 <div className={"wallet-header-default-block_is-default"}>
                   Default
@@ -105,7 +111,7 @@ export const CardItem: React.FC<IProps> = ({
                   className="form-button account-submit-btn edit-card-btn"
                   onClick={() =>
                     openCardDialog(
-                      cardInfo,
+                      card,
                       editDialog,
                       "/account/payments/wallet/edit"
                     )
@@ -116,7 +122,7 @@ export const CardItem: React.FC<IProps> = ({
                 <button
                   onClick={() =>
                     openCardDialog(
-                      cardInfo,
+                      card,
                       removeDialog,
                       "/account/payments/wallet/remove"
                     )
@@ -130,18 +136,22 @@ export const CardItem: React.FC<IProps> = ({
           })}
         </div>
       </div>
+
       <CardDialog
         contentType={BillingAddressFormEnum.EDIT}
         actionType={BillingAddressFormEnum.EDIT}
         open={editDialog.open}
-        cardInfo={cardInfo}
+        card={card}
         handleClose={editDialog.handleClose}
       />
+
       <RemoveCardDialog
         open={removeDialog.open}
         handleClose={removeDialog.handleClose}
-        cardInfo={cardInfo}
+        card={card}
       />
     </div>
   );
 };
+
+export default Card;

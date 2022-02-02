@@ -14,22 +14,17 @@ interface CardsListProps {
 
 export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
   const breakpoint = useBreakpoint();
-
   const submitCardFormLoading = useSelector(
     (e: StoreInterface) => e.payments?.submitCardFormLoading
   );
-
   const dispatch = useDispatch();
-
   const router = useRouter();
-
   const changeDefault = (cardInfo: CardItemDto, e) => {
     e.stopPropagation();
     if (!cardInfo.is_default) {
       dispatch(changeDefaultCard(cardInfo.credit_card_id));
     }
   };
-
   const openCardDialog = (cardInfo: CardItemDto, dialog, path) => {
     breakpoint({
       sm: () =>
@@ -40,6 +35,7 @@ export const CardsList: React.FC<CardsListProps> = ({ cards }) => {
       md: dialog.handleClickOpen,
     });
   };
+
   return (
     <div className="wallet-cards-list-container">
       {cards?.map((e) => {
