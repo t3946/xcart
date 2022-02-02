@@ -13,7 +13,7 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { ListSource } from "@modules/account/ts/types/list.type";
 import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu";
 import { useRouter } from "next/router";
-import StylesInnerPage from "@modules/account/components/shared/InnerPage.module.scss";
+import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
 
 const ListsPage: React.FC = () => {
   const router = useRouter();
@@ -72,5 +72,5 @@ const ListsPage: React.FC = () => {
     </div>
   );
 };
-
+66
 export default ListsPage;

@@ -7,6 +7,7 @@ import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { transferProductList } from "@redux/actions/account-actions/ListsActions";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
 
@@ -14,7 +15,7 @@ interface ListProductItemBtnsProps {
   handleDelete: () => void;
   edit: boolean;
   btnLabel: string;
-  mainBtnClasses?: string | string[];
+  mainBtnType?: ETheme;
   productId: number;
   onMainBtnClick: () => void;
   time: string;
@@ -26,7 +27,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   handleDelete,
   edit,
   btnLabel,
-  mainBtnClasses,
+  mainBtnType,
   productId,
   onMainBtnClick,
   time,
@@ -61,18 +62,14 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
 
   return (
     <div className={Styles.container}>
-      <button
+      <Button
+        theme={mainBtnType}
         disabled={outOfStock}
-        className={cn(
-          "form-button",
-          "account-submit-btn  full-width-button",
-          mainBtnClasses,
-          Styles.button
-        )}
+        className={cn("full-width-button", "fw-bold", Styles.button)}
         onClick={onMainBtnClick}
       >
         {btnLabel}
-      </button>
+      </Button>
       {edit && (
         <div
           className={cn(

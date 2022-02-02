@@ -1,7 +1,7 @@
 import React from "react";
 import { ListHeader } from "@modules/account/components/lists/ListHeader";
 import { ListProductItems } from "@modules/account/components/lists/ListProductItems";
-import InnerPage from "@modules/account/components/shared/InnerPage";
+import InnerPage from "@components/common/inner-page/InnerPage";
 
 interface ViewLists {
   isShoppingList: boolean;

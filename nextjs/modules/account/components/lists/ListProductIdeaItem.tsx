@@ -1,6 +1,7 @@
 import React from "react";
 import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
 import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
+import { ETheme } from "@modules/ui/forms/Button";
 import { EditIdea } from "@modules/account/components/lists/EditIdea";
 import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
@@ -124,7 +125,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       </div>
       <ListProductItemBtns
         btnLabel={"search"}
-        mainBtnClasses={"account-submit-btn-outline"}
+        mainBtnType={ETheme.outlined}
         edit={edit}
         time={productItem.add_date}
         listId={listView.productListId}
