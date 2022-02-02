@@ -78,7 +78,7 @@ class DecisionController extends Controller
             return;
         }
 
-        if (strpos($_SERVER['HTTP_CONTENT_TYPE'], "application/json") !== false) {
+        if (strpos($_SERVER['HTTP_CONTENT_TYPE'], 'application/json') !== false) {
             $data = $this->data;
         } else {
             $data = $_POST;
@@ -99,7 +99,7 @@ class DecisionController extends Controller
 
         //check user is decision owner
         $order = OrderModel::objects()->get([
-            "orderid" => $decision->order_id,
+            'orderid' => $decision->order_id,
         ]);
 
         if ($order->user_id !== $user->user_id) {
@@ -109,7 +109,7 @@ class DecisionController extends Controller
 
         //validate decision data
         switch ($decision->type) {
-            case "po-send-check":
+            case 'po-send-check':
                 $options = $decision['options'];
                 $i = $data['address'];
 
@@ -118,10 +118,26 @@ class DecisionController extends Controller
                     $decision->solve($options);
                 }
                 break;
-            case "license-required":
+            case 'license-required':
                 if ($this->saveFiles($decision->decision_id)) {
                     $decision->solve([]);
                 }
+                break;
+            case 'estimated-time-arrival':
+                if (!$data['advice'] || !$data['comment']) {
+                    break;
+                }
+
+                $advices = ['wait', 'ship', 'cancel', 'replace'];
+
+                if (in_array($data['advice'], $advices) === -1) {
+                    break;
+                }
+
+                $decision->solve([
+                    'advice' => $data['advice'],
+                    'comment' => $data['comment'],
+                ]);
                 break;
         }
 

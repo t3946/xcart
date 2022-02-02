@@ -3,7 +3,7 @@ import EstimatedTimeArrivalTable, {
   TableTypes,
 } from "@modules/account/components/orders/Decision/Table";
 import * as yup from "yup";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import { Form as RBForm } from "react-bootstrap";
 import AdviceList from "@modules/account/components/orders/Decision/EstimatedTimeArrival/AdviceList";
 import {
@@ -13,9 +13,10 @@ import {
 import { useDispatch } from "react-redux";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
+import { AxiosResponse } from "axios";
 
 interface IProps {
-  onChange: (decision: DecisionsInterface) => any;
+  onChange: (res: AxiosResponse) => any;
   decision: DecisionsInterface;
 }
 
@@ -33,18 +34,17 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
     advice: yup.string().required(),
   });
 
-  function submit(values, { setSubmitting }) {
-    setSubmitting(false);
+  function submit(data: Record<any, any>, actions: FormikHelpers<any>) {
+    actions.setSubmitting(true);
+
+    data.decision_id = decision.decision_id;
+
     dispatch(
       solveDecisionAction({
-        data: {
-          type: decision.type,
-          decision_id: decision.decision_id,
-          options: values,
-        },
-        success(res: DecisionsInterface) {
+        data,
+        success(res: AxiosResponse) {
           onChange(res);
-          setSubmitting(false);
+          actions.setSubmitting(false);
         },
       })
     );
@@ -78,13 +78,13 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
       getEtaProductsAction({
         orderId: decision.order_id,
 
-        success(res) {
+        success(res: AxiosResponse) {
           setProducts(res);
         },
       })
     );
   } else {
-    products.forEach((value) => {
+    products.forEach((value: any) => {
       const { orderAmount, product } = value;
       const outOfStockItemsNumber = Math.max(0, orderAmount - product.avail);
       const tableRow = {
