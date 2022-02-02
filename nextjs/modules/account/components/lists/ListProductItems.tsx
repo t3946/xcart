@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { NoItemsBlock } from "@modules/account/components/lists/NoItemsBlock";
 import { ListProductItem } from "@modules/account/components/lists/ListProductItem";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -10,7 +10,6 @@ import {
 import { reorderMass } from "@modules/account/utils/reorder-mass";
 import { ListItemTypeEnum } from "@modules/account/ts/consts/list-item-type.enum";
 import { List, ListItem } from "@modules/account/ts/types/list.type";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { ListProductIdeaItem } from "@modules/account/components/lists/ListProductIdeaItem";
@@ -29,7 +28,6 @@ export const ListProductItems: React.FC = () => {
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
 
-  const { showSnackbar } = useContext(SnackbarContext);
 
   const deleteItem = (id) => {
     dispatch(deleteProduct(id));

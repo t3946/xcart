@@ -1,12 +1,13 @@
 import React from "react";
 import cn from "classnames";
-import ReactSelect from "react-select";
+import ReactSelect, { components } from "react-select";
 import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
 import Menu from "@modules/ui/forms/select/Menu";
 import MenuList from "@modules/ui/forms/select/MenuList";
 import IndicatorsContainer from "@modules/ui/forms/select/IndicatorsContainer";
 import DropdownIndicator from "@modules/ui/forms/select/DropdownIndicator";
+import IndicatorSeparator from "@modules/ui/forms/select/IndicatorSeparator";
 
 import Styles from "@modules/ui/forms/select/Select.module.scss";
 
@@ -29,7 +30,9 @@ interface IProps {
     list?: any;
     indicator?: any;
     indicatorsContainer?: any;
+    indicatorSeparator?: any;
     option?: any;
+    valueContainer?: any;
   };
 }
 
@@ -55,7 +58,7 @@ const Select = function (props: IProps) {
       defaultMenuIsOpen={defaultIsOpen}
       isClearable={clearable}
       onChange={(value) => {
-        onChange({ target: { name, value } });
+        onChange && onChange({ target: { name, value } });
       }}
       value={value}
       name={name}
@@ -73,9 +76,20 @@ const Select = function (props: IProps) {
         Control,
         IndicatorsContainer,
         DropdownIndicator,
+        IndicatorSeparator,
+        ValueContainer: Component(
+          components.ValueContainer,
+          classes?.valueContainer
+        ),
       }}
     />
   );
+};
+
+const Component = (RSComponent: any, className?: any) => {
+  return (props: any) => {
+    return <RSComponent {...props} className={cn(className)} />;
+  };
 };
 
 export default Select;

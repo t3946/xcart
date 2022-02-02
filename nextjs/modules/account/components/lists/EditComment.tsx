@@ -12,6 +12,8 @@ import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/pri
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 
+import Styles from "@modules/account/components/lists/EditComment.module.scss";
+
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
   const dispatch = useDispatch();
   const handleSubmit = (values) => {
@@ -53,7 +55,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
     <div>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
         <div className="top-content">
-          <div className="comment-input-container">
+          <div className="comment-input-container flex-grow-md-1 flex-grow-lg-0 me-md-5 me-lg-0">
             <div
               className={cn({
                 "mb-20": !!formik.touched.comment && !!formik.errors.comment,
@@ -63,7 +65,8 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
               <Input
                 as="textarea"
                 name="comment"
-                className={"edit-comment-text-area-input"}
+                maxLength={250}
+                className={cn("edit-comment-text-area-input", Styles.textarea)}
                 value={formik.values.comment}
                 onChange={formik.handleChange}
                 isInvalid={!!formik.touched.comment && !!formik.errors.comment}
@@ -73,7 +76,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
                 {!!formik.touched.comment && formik.errors.comment}
               </Feedback>
             </div>
-            {!formik.errors.comment && (
+            {(!formik.touched.comment || !formik.errors.comment) && (
               <div className="remaining-text mt-0">
                 Remaining:{" "}
                 {formik.values.comment.length < 250
@@ -84,17 +87,23 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
             )}
           </div>
 
-          <div className="edit-comment-img-block">
+          <div className={cn(Styles.imageContainer, "edit-comment-img-block")}>
             <img
               src={info.image || ideaImg}
-              className="product-image edit-comment-img"
+              className={cn(
+                Styles.image,
+                "product-image",
+                "w-auto",
+                "w-md-100",
+                "edit-comment-img"
+              )}
             />
-            <div className="edit-comment-name">
+            <div className={cn("text-start", "edit-comment-name", Styles.name)}>
               {info.product?.name || info.product?.product}
             </div>
           </div>
         </div>
-        <div className="edit-comment-inputs-container mb-16">
+        <div className="edit-comment-inputs-container mb-20">
           <div>
             <Label>Priority</Label>
             <Select
@@ -110,15 +119,24 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
             />
           </div>
 
-          <div className="edit-idea-text-inputs">
+          <div
+            className={cn(
+              "justify-content-md-end",
+              "justify-content-lg-between",
+              "edit-idea-text-inputs"
+            )}
+          >
             <div
               className={cn(
                 "edit-comment-input-text-field-container",
-                "edit-comment-input-text-field-needs-container"
+                "edit-comment-input-text-field-needs-container",
+                "me-md-20",
+                "me-lg-0"
               )}
             >
               <Label>Needs</Label>
               <Input
+                type="number"
                 name="needs"
                 className={cn("list-input-edit-idea", "full-width")}
                 value={formik.values.needs}
@@ -126,7 +144,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
                 isInvalid={!!formik.touched.needs && !!formik.errors.needs}
                 isValid={!!formik.touched.needs && !formik.errors.needs}
               />
-              <Feedback className="position-absolute" type="invalid">
+              <Feedback className="position-absolute mt-0" type="invalid">
                 {!!formik.touched.needs && formik.errors.needs}
               </Feedback>
             </div>
@@ -139,6 +157,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
             >
               <Label>Has</Label>
               <Input
+                type="number"
                 name="has"
                 className={cn("list-input-edit-idea", "full-width")}
                 value={formik.values.has}
@@ -146,7 +165,7 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
                 isInvalid={!!formik.touched.has && !!formik.errors.has}
                 isValid={!!formik.touched.has && !formik.errors.has}
               />
-              <Feedback className="position-absolute" type="invalid">
+              <Feedback className="position-absolute mt-0" type="invalid">
                 {!!formik.touched.has && formik.errors.has}
               </Feedback>
             </div>

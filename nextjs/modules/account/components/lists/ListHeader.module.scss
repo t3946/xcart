@@ -6,29 +6,24 @@
 
 .listHeaderName {
   max-width: none;
-}
-
-.list__headerContainer {
-  @include breakpoint(lg) {
-  }
+  height: auto;
+  overflow: visible;
 }
 
 .listHeaderContainer {
   padding: 0;
-
-  @include breakpoint(lg) {
-    padding: 0 pxToRem(26) 0 pxToRem(28);
-  }
 }
 
 .listHeaderRightSide {
+  font-weight: normal;
+
   @include breakpoint(md) {
     background-color: #f4f4f4;
     padding: pxToRem(17) pxToRem(20);
   }
 
   @include breakpoint(lg) {
-    padding: auto;
+    padding: 0;
     background-color: $white;
   }
 }

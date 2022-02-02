@@ -84,6 +84,8 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
             drag={drag}
+            index={index}
+            length={listInfo.products.length}
           />
         ) : (
           <div className="product-list-item-movable-area-placeholder" />

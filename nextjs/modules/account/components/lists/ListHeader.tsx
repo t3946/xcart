@@ -7,10 +7,9 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
-import { List } from "@modules/account/ts/types/list.type";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
-import {useSnackbar} from "@modules/account/hooks/useSnackbar";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import ShareIcon from "@modules/icon/components/account/share/ShareIcon";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -27,7 +26,7 @@ interface ListHeaderProps {
 export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const list: List = useSelectorAccount((state) => state.lists.listView);
+  const list = useSelectorAccount((state) => state.lists.listView);
   const manageListDialog = useDialog();
 
   const deleteListDialog = useDialog();
@@ -41,12 +40,11 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const onRequestEnd = () => {
     deleteListDialog.handleClose();
     snackbar.show(`${list.name} list deleted successfully`);
-    router.replace(`/shopping-lists/${listView.lists[0].cache}`);
+    router.replace(`/shopping-lists/`);
   };
   const edit = list.role !== UserPrivateVariantsEnum.VIEW;
 
   const handleDeleteList = () => {
-    // router.push("/your-lists");
     dispatch(deleteList(list.productListId, onRequestEnd));
   };
 
@@ -78,6 +76,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       className={cn(
         "list-header-container",
         Styles.listHeaderContainer,
+        "m-0",
         "flex-wrap",
         "flex-lg-nowrap"
       )}

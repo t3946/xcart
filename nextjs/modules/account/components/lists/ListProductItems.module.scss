@@ -2,6 +2,15 @@
 
 .productListItemContainer {
   max-width: none;
+  padding: pxToRem(10);
+
+  @include breakpoint(md) {
+    min-height: pxToRem(171);
+    padding: pxToRem(20);
+  }
+
+  @include breakpoint(xl) {
+    min-height: pxToRem(171);
+    padding: pxToRem(21) pxToRem(26) pxToRem(21) pxToRem(5);
+  }
 }
-
-

@@ -60,7 +60,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   };
 
   return (
-    <div className={"product-list-item-btns-container"}>
+    <div className={Styles.container}>
       <button
         disabled={outOfStock}
         className={cn(
@@ -74,7 +74,12 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
         {btnLabel}
       </button>
       {edit && (
-        <div className="list-product-item-btns-container">
+        <div
+          className={cn(
+            Styles.btnsContainer,
+            "list-product-item-btns-container"
+          )}
+        >
           <Select
             clearable={false}
             isSearchable={false}
@@ -91,14 +96,13 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
             onChange={handleMove}
             value={{ label: "Move", value: undefined }}
             classes={{
-              select: [
-                "list-product-item-btns-move",
-                Styles.productListItemSelect,
-              ],
+              select: Styles.productListItemSelect,
               menu: Styles.productListItemSelectMenu,
               control: Styles.productListItemSelectControl,
-              indicator: "px-1 py-0",
+              indicator: "py-0 ps-0 pe-1",
+              indicatorSeparator: "d-none",
               option: Styles.productListItemSelectOption,
+              valueContainer: "pe-lg-0",
             }}
           />
           <button

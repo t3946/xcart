@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Button } from "@material-ui/core";
-import StoreInterface from "@modules/account/ts/types/store.type";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 import { Sceleton } from "@modules/shared/components/sceleton/Sceleton";
 import { ListProductItemSkeleton } from "../components/lists/ListProductItemSkeleton";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
@@ -14,6 +13,7 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { ListSource } from "@modules/account/ts/types/list.type";
 import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu";
 import { useRouter } from "next/router";
+import StylesInnerPage from "@modules/account/components/shared/InnerPage.module.scss";
 
 const ListsPage: React.FC = () => {
   const router = useRouter();
@@ -59,14 +59,16 @@ const ListsPage: React.FC = () => {
         />
       </BootstrapDialogHOC>
 
-      <Button
-        onClick={createIdeaDialog.handleClickOpen}
-        type="submit"
-        disabled={!edit}
-        className="account-submit-btn account-submit-btn-outline add-idea-btn"
-      >
-        Add idea to list
-      </Button>
+      <div className={StylesInnerPage.accountPageFooter}>
+        <Button
+          onClick={createIdeaDialog.handleClickOpen}
+          theme={ETheme.outlined}
+          disabled={!edit}
+          className={"w-md-auto mx-md-auto mx-lg-0"}
+        >
+          Add idea to list
+        </Button>
+      </div>
     </div>
   );
 };

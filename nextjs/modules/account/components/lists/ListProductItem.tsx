@@ -51,7 +51,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   );
   const changeCount = (value: number, isInputEnter?: boolean) => {
     if (isInputEnter) {
-      if (value <= product.minAmount) {
+      if (value < product.minAmount) {
         return;
       }
       if (value > product.avail) {
@@ -61,7 +61,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       setCountProductsOnCart(value);
       return;
     }
-    if (value <= product.minAmount) {
+    if (value < product.minAmount) {
       return;
     }
     if (value > product.avail) {
@@ -133,6 +133,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           <ListItemMovableArea
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
+            index={index}
+            length={listInfo.products.length}
             drag={drag}
           />
         ) : (
@@ -214,7 +216,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             "text-md-end",
             Styles.productInfoDate,
             "mb-lg-10",
-            "mb-md-12"
+            "mb-12"
           )}
         >
           Item added {moment(productItem.add_date).utc().format("MMM DD, Y")}

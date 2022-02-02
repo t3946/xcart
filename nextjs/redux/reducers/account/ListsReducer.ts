@@ -45,6 +45,7 @@ const accountListReducer = (
     case "EDIT_IDEA_NAME":
       return {
         ...state,
+        loading: false,
         listView: editIdeaName(state.listView, action.productId, action.name),
       };
     case "SET_LIST_VIEW":

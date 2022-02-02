@@ -3,9 +3,8 @@ import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { editIdeaName } from "@redux/actions/account-actions/ListsActions";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { ListItem } from "@modules/account/ts/types/list.type";
 import cn from "classnames";
 
@@ -25,6 +24,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
   openMenuDialog,
   edit,
 }) => {
+  const inputRef = React.useRef<HTMLInputElement>();
   const [isEdit, setIsEdit] = useState(false);
 
   const isLoading = useSelectorAccount((state) => state.lists.loading);
@@ -33,9 +33,10 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
 
   const onSaveEdit = () => {
     dispatch(
-      editIdeaName(listId, info.productId, formik.values.name, () =>
-        onSetEdit(true)
-      )
+      editIdeaName(listId, info.productId, formik.values.name, () => {
+        formik.setTouched({});
+        onSetEdit(true);
+      })
     );
   };
 
@@ -46,6 +47,10 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
     }),
     onSubmit: onSaveEdit,
   });
+
+  React.useEffect(() => {
+    isEdit && inputRef.current?.focus();
+  }, [isEdit]);
 
   const onSetEdit = (save?: boolean) => {
     setIsEdit(!isEdit);
@@ -62,9 +67,10 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
           onSubmit={formik.handleSubmit}
           encType="multipart/form-data"
         >
-          <div className="mb-lg-20">
+          <div className="mb-10 mb-lg-20 me-lg-10">
             <Input
               name="name"
+              ref={inputRef}
               value={formik.values.name}
               onChange={formik.handleChange}
               isValid={!!formik.touched.name && !formik.errors.name}

@@ -6,14 +6,17 @@ import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSideba
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@modules/icon/components/account/arrows/ArrowBackIcon";
-import { List } from "@modules/account/ts/types/list.type";
 import { useDispatch } from "react-redux";
 import { fetchLists } from "@redux/actions/account-actions/ListsActions";
+
+import Styles from "@modules/account/components/lists/ListsSidebarMenu.module.scss";
 
 export const ListsSidebarMenu: React.FC = () => {
   const router = useRouter();
   const createListDialog = useDialog();
-  const lists: List[] = useSelectorAccount((e) => e.lists.lists);
+  const storeLists = useSelectorAccount((e) => e.lists);
+  const lists = storeLists.lists;
+  const listView = storeLists.listView;
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchLists());
@@ -38,7 +41,13 @@ export const ListsSidebarMenu: React.FC = () => {
         <Item
           to={`/shopping-lists/${e.cacheUrl}`}
           label={<ListsSidebarLabel label={e.name} privateType={e.listType} />}
-          className={"sidebar-menu-item__lists"}
+          className={[
+            "sidebar-menu-item__lists",
+            {
+              [Styles.listItem_active]:
+                e.productListId === listView?.productListId,
+            },
+          ]}
           key={index}
         />
       ))}

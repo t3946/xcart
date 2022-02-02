@@ -1,5 +1,17 @@
 @import "styles/utils/Utils.module";
 
+.container {
+  min-width: auto;
+
+  @include breakpoint(md) {
+    width: pxToRem(193);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(184);
+  }
+}
+
 div.productListItemSelect {
   margin-right: 0;
   margin-bottom: pxToRem(10);
@@ -12,6 +24,12 @@ div.productListItemSelectControl {
   text-transform: uppercase;
   text-align: center;
   padding: 0;
+  box-shadow: none;
+  border-color: #c4c4c4;
+
+  &:hover {
+    border-color: #c4c4c4;
+  }
 
   @include breakpoint(md) {
     padding: 0 0 0 pxToRem(29);
@@ -50,12 +68,18 @@ div.productListItemSelectOption {
   }
 }
 
+.btnsContainer {
+  @include breakpoint(lg) {
+    gap: pxToRem(5);
+  }
+}
+
 .button {
   max-height: none;
+  height: pxToRem(48);
 
   @include breakpoint(md) {
     font-size: pxToRem(20);
-    height: pxToRem(48);
   }
 
   @include breakpoint(lg) {
