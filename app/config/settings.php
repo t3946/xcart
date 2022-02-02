@@ -225,7 +225,6 @@ return array_replace_recursive([
            ]
        ],
 
-       'oldMail' => MailComponent::class,
        'mail' => [
            'class' => Mailer::class,
            'defaultFrom' => 'robot@s3stores.com',
