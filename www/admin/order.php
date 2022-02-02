@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\TemplateCategoryModel;
 use Modules\Forms\Models\TemplateModel;
@@ -8,6 +9,7 @@ use Modules\Goods\Models\ProductOptionModel;
 use Modules\Goods\Models\ProductOptionVariantModel;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
 use Modules\Order\Models\GroundMapModel;
 use Modules\Order\Models\OrderDetailModel;
@@ -682,19 +684,12 @@ if ($REQUEST_METHOD === "POST") {
         OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_SYSTEM, $log2);
 
         $body = "{$notes}\n\nposted by {$user} ({$user->login})";
-        $from = 'helpdesk@s3stores.com';
-        $to   = 'orders@s3stores.com';
 
-        $oMail = Xcart::app()->oldMail;
-        $oMail->init();
-        $oMail->to = $to;
-        $oMail->from = $from;
-        $oMail->from_name = $user;
-        $oMail->reply_to = null;
-        $oMail->body = $body;
-        $oMail->subject = $subj;
-        $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
-        $oMail->sendEmail();
+        Xcart::app()->mail->raw('orders@s3stores.com', $subject, $body, [
+            'X-Xcart-Label' => 'order-logs',
+            'from' => 'helpdesk@s3stores.com',
+            'from_name' => $user
+        ]);
 
         /** @var SiteModel $site_model */
         $site_model = Xcart::app()->getModule('Sites')->getSite();
@@ -1513,72 +1508,21 @@ if ($mode === 'ref_notify')
 
         $order["shipping_groups"][$notify_mid]["cb_status"] = $tmp_cb_status;
 
-        $aorder_notification = func_get_order_notification($tmp_cb_status, $order_data);
-        if (!empty($aorder_notification)) {
-            foreach ($aorder_notification as $oOrderNotification) {
-                if ($oOrderNotification->isEnabled()) {
-                    $order_notification = $oOrderNotification->getFields();
-                    if ($order_notification) {
+        $send_copy = in_array($ref_notify_button_clicked, ['Update_C2B_status_and_Send_refund_notification', 'Send_refund_notification'], true);
 
-                        $mail_smarty->assign('order_notification', $order_notification);
+        OrderInvoiceHelper::sendOrderStatusNotification($orderModel, $send_copy, $tmp_cb_status);
 
-                        $manufacturer_code = func_query_first_cell('SELECT code FROM ' . $sql_tbl['manufacturers']
-                                                                   . ' WHERE manufacturerid = "' . $notify_mid . '"');
-                        if (!$manufacturer_code) {
-                            $manufacturer_code = '';
-                        }
+        if ($send_copy) {
+            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="' . addslashes($ref_groups[$notify_mid]["refund_reason"]) . '"'
+                . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
 
-                        foreach ($order['refund_groups'][$notify_mid]['products'] as $pk => $product)
-                        {
-                            $clean_url_link = func_query_first_cell("SELECT clean_url FROM $sql_tbl[clean_urls] WHERE resource_type='P' AND resource_id='$product[productid]'");
-                            $order['refund_groups'][$notify_mid]['products'][$pk]['clean_url'] = $clean_url_link;
-                        }
-
-                        $mail_smarty->assign('order', $order);
-                        $mail_smarty->assign('userinfo', $userinfo);
-                        $mail_smarty->assign('manufacturerid', $notify_mid);
-                        $mail_smarty->assign('manufacturer_code', $manufacturer_code);
-                        $mail_smarty->assign('statuses', $statuses);
-
-                        if ($ref_notify_button_clicked === "Update_C2B_status") {
-
-                            $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                            $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-                            func_send_mail($config['Company']['orders_department'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $userinfo['email'], true, false, false, false, "", "N", $orderid);
-                        }
-                        elseif ($ref_notify_button_clicked === "Update_C2B_status_and_Send_refund_notification" || $ref_notify_button_clicked === "Send_refund_notification") {
-                            $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-                            $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-
-                            func_send_mail($userinfo['email'], 'mail/refund_notification_subj.tpl', 'mail/refund_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid, false);
-                            // Copy to Orders Department
-                            $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                            $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-                            $oMail = Xcart::app()->oldMail;
-                            $oMail->init();
-                            $oMail->to = $config['Company']['orders_department'];
-                            $oMail->from = $config['Company']['orders_department'];
-                            $oMail->reply_to = $userinfo['email'];
-                            $oMail->subject_template = 'mail/refund_notification_subj.tpl';
-                            $oMail->body_template = 'mail/refund_notification.tpl';
-                            $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-                            $oMail->sendEmail();
-
-                            db_query('UPDATE ' . $sql_tbl['refund_groups'] . ' SET notify_status = "S", refund_reason="' . addslashes($ref_groups[$notify_mid]["refund_reason"]) . '"'
-                                . ' WHERE orderid = "' . $orderid . '" AND manufacturerid = "' . $notify_mid . '"');
-
-                            $top_message = [
-                                'content' => func_get_langvar_by_name('txt_ref_notification_sent'),
-                            ];
-                        }
-                        else {
-                            $top_message = [
-                                'content' => 'Done.',
-                            ];
-                        }
-                    }
-                }
-            }
+            $top_message = [
+                'content' => func_get_langvar_by_name('txt_ref_notification_sent'),
+            ];
+        } else {
+            $top_message = [
+                'content' => 'Done.',
+            ];
         }
     }
     else {
@@ -1766,21 +1710,16 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
     {
         $mail_smarty->assign("message_body", $mnf_body);
 
-        if ($submit_to_operator === 'through_distributor_website') {
-            $mail_smarty->assign('order', $order);
-            $mail_smarty->assign('mnf_operator_notify', 'Y');
-            $oMail = Xcart::app()->oldMail;
-            $oMail->init();
-            $oMail->to = $mnf_to;
-            $oMail->from = $config['Company']['orders_department'];
-            $oMail->reply_to = null;
-            $oMail->subject_template = 'mail/order_notification_subj.tpl';
-            $oMail->body_template = 'mail/order_notification.tpl';
-            $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-            $oMail->sendEmail();
-            //func_send_mail($mnf_to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], true, false, false, false, "", "N", $orderid);
+        $mnf_to_array = array_unique(array_filter(array_map('trim', explode(',', $mnf_to))));
 
-            $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
+        if ($submit_to_operator === 'through_distributor_website') {
+
+            Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
+                'from' => $config['Company']['orders_department'],
+                'X-Xcart-Label' => 'order-communication'
+            ]);
+
+            $log = "<b>From: </b>" . $config['Company']['orders_department'] . "<br /><b>To: </b>" . $mnf_to . "<br /><b>Subject: </b>" . $d_email_subject_14;
             OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
             $mail_smarty->assign('mnf_operator_notify', 'N');
@@ -1801,16 +1740,11 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
                 $mail_smarty->assign('order', $order_after_refund);
 
-                $oMail = Xcart::app()->oldMail;
-                $oMail->init();
-                $oMail->to = $mnf_to;
-                $oMail->from = $config['Company']['orders_department'];
-                $oMail->reply_to = null;
-                $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                $oMail->body_template = 'mail/order_notification_mnf.tpl';
-                $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-                $oMail->sendEmail();
-                //func_send_mail($mnf_to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+                Xcart::app()->mail->raw($mnf_to, $d_email_subject_14, $mnf_body, [
+                    'from' => $config['Company']['orders_department'],
+                    'X-Xcart-Label' => 'order-communication'
+                ]);
+
                 $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
                 OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
             }
@@ -1842,8 +1776,6 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
                 ->setAttribute('dc_status', 'K')
                 ->save();
 
-//            db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='K'"
-//                     . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
         }
         else {
             $order_group = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id]);
@@ -1857,20 +1789,16 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
                 if (empty($current_dc_dispatched_time)) {
                     $order_group->dc_dispatched_time = time();
-//                    db_query("UPDATE $sql_tbl[order_groups] SET dc_dispatched_time='" . time() . "' WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
                 }
             }
 
             $order_group->notify_sent = 'Y';
             $order_group->dc_status = 'C';
             $order_group->save();
-//            db_query("UPDATE $sql_tbl[order_groups] SET notify_sent = 'Y', dc_status='C'"
-//                     . " WHERE orderid = '$orderid' AND manufacturerid='$mnf_id'");
         }
 
         if ($all_sent) {
             if ($set_status_K === "Y") {
-//				func_change_order_status($orderid, 'K');
             }
             else {
                 if ($submit_to_operator === 'through_distributor_website') {
@@ -1885,130 +1813,115 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
         $top_message = ["content" => func_get_langvar_by_name("txt_mnf_notification_sent")];
     }
 
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid=" . $orderid);
 }
 elseif ($mode === 'request_additional_shipping_charge') {
 
-    $code              = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
-    $manufacturer_name = func_query_first_cell("SELECT manufacturer FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
+    $distributor = DistributorModel::objects()->get(['manufacturerid' => $mnf_id]);
 
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
-    $log = "'Send (Request additional shipping charge)' at '" . $manufacturer_name . ": Request additional shipping charge'";
+    $log = "'Send (Request additional shipping charge)' at '" . $distributor->manufacturer . ": Request additional shipping charge'";
     OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
-    $mnf_body = func_eol2br(stripslashes($mnf_body));
-    $mail_smarty->assign('message_body', $mnf_body);
-    $mail_smarty->assign('order', $order);
-    $mail_smarty->assign('mnf_operator_notify', 'Y');
-    $mail_smarty->assign('cidev_hide_invoice', 'Y');
-    $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
+    $mnf_to_array = array_unique(array_filter(array_map('trim', explode(',', $mnf_to))));
 
-    $oMail = Xcart::app()->oldMail;
-    $oMail->init();
-    $oMail->to = $mnf_to;
-    $oMail->from = $config['Company']['orders_department'];
-    $oMail->reply_to = null;
-    $oMail->subject_template = 'mail/order_notification_subj.tpl';
-    $oMail->body_template = 'mail/order_notification_mnf.tpl';
-    $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-    $oMail->sendEmail();
+    Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
+        'from' => $config['Company']['orders_department'],
+        'X-Xcart-Label' => 'order-communication'
+    ]);
 
-    //func_send_mail($mnf_to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
     $top_message = ["content" => "Sent."];
 
-    $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
+    $log = "<b>From: </b>" . $config['Company']['orders_department'] . "<br /><b>To: </b>" . $mnf_to . "<br /><b>Subject: </b>" . $d_email_subject_14;
     OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid={$orderid}");
 }
 elseif ($mode === 'request_missing_information')
 {
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
-    $log = "'Send (Request missing information)' at 'Request missing information'";
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
-    $mnf_body = func_eol2br(stripslashes($mnf_body));
-    $mail_smarty->assign('message_body', $mnf_body);
-    $mail_smarty->assign('order', $order);
-    $mail_smarty->assign('mnf_operator_notify', 'Y');
-    $mail_smarty->assign('cidev_hide_invoice', 'Y');
-    $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
+    OrderLogModel::createLog(
+        $orderid,
+        OrderLogModel::LOG_TYPE_XCART,
+        "'Send (Request missing information)' at 'Request missing information'"
+    );
 
-    $oMail = Xcart::app()->oldMail;
-    $oMail->init();
-    $oMail->to = $mnf_to;
-    $oMail->from = $config['Company']['orders_department'];
-    $oMail->reply_to = null;
-    $oMail->subject_template = 'mail/order_notification_subj.tpl';
-    $oMail->body_template = 'mail/order_notification_mnf.tpl';
-    $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-    $oMail->sendEmail();
+    $mnf_to_array = array_unique(array_filter(array_map('trim', explode(',', $mnf_to))));
 
-    //func_send_mail($mnf_to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+    Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
+        'from' => $config['Company']['orders_department'],
+        'X-Xcart-Label' => 'order-communication'
+    ]);
+
     $top_message = ["content" => "Sent."];
 
-    $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+    OrderLogModel::createLog(
+        $orderid,
+        OrderLogModel::LOG_TYPE_XCART,
+        "<b>From: </b>{$config['Company']['orders_department']}<br /><b>To: </b>{$mnf_to}<br /><b>Subject: </b>{$d_email_subject_14}"
+    );
 
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid={$orderid}");
 }
 elseif ($mode === 'backorder_decision_request') {
 
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
-    $log = "'Send (Backorder decision request)' at 'Backorder decision request'";
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 
-    $mnf_body = func_eol2br(stripslashes($mnf_body));
-    $mail_smarty->assign('message_body', $mnf_body);
-    $mail_smarty->assign('order', $order);
-    $mail_smarty->assign('mnf_operator_notify', 'Y');
-    $mail_smarty->assign('cidev_hide_invoice', 'Y');
-    $mail_smarty->assign('d_email_subject_14', $d_email_subject_14);
+    OrderLogModel::createLog(
+        $orderid,
+        OrderLogModel::LOG_TYPE_XCART,
+        "'Send (Backorder decision request)' at 'Backorder decision request'"
+    );
 
-    $oMail = Xcart::app()->oldMail;
-    $oMail->init();
-    $oMail->to = $mnf_to;
-    $oMail->from = $config['Company']['orders_department'];
-    $oMail->reply_to = null;
-    $oMail->subject_template = 'mail/order_notification_subj.tpl';
-    $oMail->body_template = 'mail/order_notification_mnf.tpl';
-    $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-    $oMail->sendEmail();
+    $mnf_to_array = array_unique(array_filter(array_map('trim', explode(',', $mnf_to))));
 
-    //func_send_mail($mnf_to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
+    Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
+        'from' => $config['Company']['orders_department'],
+        'X-Xcart-Label' => 'order-communication'
+    ]);
+
     $top_message = ["content" => "Sent."];
 
-    $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+    OrderLogModel::createLog(
+        $orderid,
+        OrderLogModel::LOG_TYPE_XCART,
+        "<b>From: </b>{$config['Company']['orders_department']}<br /><b>To: </b>{$mnf_to}<br /><b>Subject: </b>{$d_email_subject_14}"
+    );
 
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid={$orderid}");
 }
 elseif ($mode === 'waive') {
 
-    $code              = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
-    $manufacturer_name = func_query_first_cell("SELECT manufacturer FROM $sql_tbl[manufacturers] WHERE manufacturerid='$mnf_id'");
+    $distributor = DistributorModel::objects()->get(['manufacturerid' => $mnf_id]);
 
     $section_name = "main_order_tabs-email_communications";
     x_session_save("section_name");
-    $log = "'Waive' at '" . $manufacturer_name . ": Request additional shipping charge'";
-    OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+
+    OrderLogModel::createLog(
+        $orderid,
+        OrderLogModel::LOG_TYPE_XCART,
+        "'Waive' at '{$distributor->manufacturer}: Request additional shipping charge'"
+    );
 
     $current_additional_shipping_status = $order["shipping_groups"][$mnf_id]["additional_shipping_status"];
 
     if ($current_additional_shipping_status !== "W") {
-        $log = "<B>" . $code . ":</B> additional_shipping_status: " . $additional_shipping_statuses[$current_additional_shipping_status] . " -> Waive";
-        OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
+        OrderLogModel::createLog(
+            $orderid,
+            OrderLogModel::LOG_TYPE_XCART,
+            "<b>{$code}:</b> additional_shipping_status: {$additional_shipping_statuses[$current_additional_shipping_status]} -> Waive"
+        );
         OrderGroupModel::objects()
             ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
             ->setAttribute('additional_shipping_status', 'W')
             ->save();
-//        db_query("UPDATE $sql_tbl[order_groups] SET additional_shipping_status='W' WHERE orderid='$orderid' AND manufacturerid='$mnf_id'");
     }
 
-    func_header_location("order.php?orderid=" . $orderid);
+    Xcart::app()->request->redirect("order.php?orderid={$orderid}");
 }
 elseif ($mode === 'mode_info_request_survey') {
 

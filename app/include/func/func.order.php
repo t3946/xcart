@@ -1722,15 +1722,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $mail_smarty->assign("products", func_translate_products($order_data["products"], $to_customer));
                             $mail_smarty->assign('type', 'C');
                             $attach_pdf_invoice = $oOrderNotification->getField('customer_attach_pdf_invoice');
-                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-                            $oMail->to = $userinfo['email'];
-                            $oMail->from = $config['Company']['orders_department'];
-                            $oMail->reply_to = null;
-                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                            $oMail->body_template = 'mail/order_notification.tpl';
-                            $oMail->sendEmail();
-
-                            //func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false);
                         }
 
                         $mes .= "STEP M " . date("H:i:s") . "\n";
@@ -1756,26 +1747,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
                             $reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
 
                             $attach_pdf_invoice = $oOrderNotification->getField('admin_attach_pdf_invoice');
-
-                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-                            $oMail->to = $to;
-                            $oMail->reply_to = $reply_to;
-                            $oMail->from = $from;
-                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                            $oMail->body_template = 'mail/order_notification.tpl';
-                            $oMail->addHeader(['X-Xcart-Label' => 'order-status-init']);
-                            $oMail->sendEmail();
-
-                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-                            $oMail->to = "igor@s3stores.com";
-                            $oMail->from = "orders@s3stores.com";
-                            $oMail->reply_to = $reply_to;
-                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                            $oMail->body_template = 'mail/order_notification.tpl';
-                            $oMail->sendEmail();
-
-                            //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
-                            //func_send_mail("igor@s3stores.com", 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', "orders@s3stores.com", false);
 
                             $mes .= "STEP O " . date("H:i:s") . "\n";
                             $mail_smarty->assign("show_order_details", "N");
@@ -1894,110 +1865,6 @@ function func_place_order($payment_method, $order_status, $order_details, $custo
 
 
     return $orderids;
-}
-
-function func_check_and_send_request_availability_email($orderid, $sent_by = '')
-{
-    global $mail_smarty, $config, $sql_tbl;
-
-    $mnfs = func_get_order_manufacturers($orderid);
-
-    $mail_smarty->assign('cidev_hide_invoice', "Y");
-
-    $allowed_cb_statuses = ["P", "Q", "O", "AP"];
-    $allowed_dc_statuses = ["T"];
-
-    if (!empty($mnfs) && is_array($mnfs)) {
-        foreach ($mnfs as $m_id => $mv) {
-
-            if (
-                !empty($mv["cb_status"])
-                && in_array($mv["cb_status"], $allowed_cb_statuses)
-                && in_array($mv["dc_status"], $allowed_dc_statuses)
-                && $mv["d_availability_must_be_checked"] == "Y"
-                && $mv["good_time_to_send_email_to_distributor"] == "Y"
-            ) {
-                $to = $mv["d_send_to_email_14"];
-                $from = $config['Company']['orders_department'];
-                $mnf_body = func_eol2br(stripslashes($mv["d_message_body_14"]));
-                $mail_smarty->assign("message_body", html_entity_decode($mnf_body));
-                $mail_smarty->assign('d_email_subject_14', $mv["d_email_subject_14"]);
-
-                $order_notes = "";
-                $current_dc_status = func_query_first_cell_param(/** @lang MySQL */
-                    "SELECT dc_status FROM xcart_order_groups WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
-                $current_dc_status_value = func_query_first_cell_param(/** @lang MySQL */
-                    "SELECT name FROM xcart_order_statuses WHERE code = :current_dc_status", ['current_dc_status' => $current_dc_status]);
-
-                if ($current_dc_status != "K") {
-                    $code = $mv["code"];
-                    $new_value = func_query_first_cell_param(/** @lang MySQL */
-                        "SELECT name FROM xcart_order_statuses WHERE code=:code", ['code' => 'K']);
-                    $order_notes = "<B>" . $code . ":</B> dc_status: " . $current_dc_status_value . " -> " . $new_value . "<br />";
-
-                    $current_notify_sent = func_query_first_cell_param(/** @lang MySQL */
-                        "SELECT notify_sent FROM xcart_order_groups WHERE orderid = :orderid AND manufacturerid=:m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
-                    if ($current_notify_sent != "Y") {
-                        $order_notes .= "<B>" . $code . ":</B> notify_sent: " . $current_notify_sent . " -> Y <br />";
-                    }
-                }
-
-                if (!empty($mv["add_ca_status_id"])) {
-                    $is_such_additional_tag_status = func_query_first_cell_param(/** @lang MySQL */
-                        "SELECT status_id FROM xcart_orders_additional_tags WHERE orderid=:orderid AND status_id=:status_id", ['orderid' => $orderid, 'status_id' => $mv['add_ca_status_id']]);
-
-                    if (empty($is_such_additional_tag_status)) {
-                        Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($mv['add_ca_status_id'], $orderid);
-                    }
-                }
-
-                db_query_param(/** @lang MySQL */
-                    "UPDATE xcart_order_groups SET notify_sent = 'Y', dc_status='K' WHERE orderid = :orderid AND manufacturerid = :m_id", ['orderid' => $orderid, 'm_id' => $m_id]);
-                $order_notes .= date('l jS \of F Y h:i:s A') . ": Request availability email was sent automatically to '" . $mv["manufacturer"] . "' distributor";
-                if ($sent_by === 'CRON') {
-                    $order_notes .= ", by CRON";
-                } else {
-                    $order_notes .= ", when order was placed by customer. ";
-                }
-                OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_SYSTEM, $order_notes);
-                func_backprocess_log('cron_request_availability', "Order #{$orderid}: " . $order_notes);
-
-                $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-                $oMail->to = $to;
-                $oMail->from = $from;
-                $oMail->reply_to = null;
-                $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                $oMail->body_template = 'mail/order_notification_mnf.tpl';
-                $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-                $oMail->sendEmail();
-                //func_send_mail($to, "mail/order_notification_subj.tpl", "mail/order_notification_mnf.tpl", $from, false);
-            } else {
-                $log = "Order #{$orderid} did not pass following conditions:";
-
-                $cnd = [];
-
-                if (empty($mv["cb_status"])) {
-                    $cnd[] = 'Empty CB status';
-                }
-                if (!in_array($mv["cb_status"], $allowed_cb_statuses)){
-                    $cnd[] = "CB status {$mv["cb_status"]} not allowed";
-                }
-                if (!in_array($mv["dc_status"], $allowed_dc_statuses)){
-                    $cnd[] = "DC status {$mv["dc_status"]} not allowed";
-                }
-                if ($mv["d_availability_must_be_checked"] != "Y"){
-                    $cnd[] = "d_availability_must_be_checked != Y";
-                }
-                if ($mv["good_time_to_send_email_to_distributor"] != "Y"){
-                    $cnd[] = "good_time_to_send_email_to_distributor != Y";
-                }
-                if ($cnd) {
-                    $log .= implode(', ', $cnd);
-                    func_backprocess_log('cron_request_availability', $log);
-                }
-            }
-        }
-    }
 }
 
 function func_get_order_manufacturers($orderid)
@@ -2731,85 +2598,6 @@ function func_process_order($orderids)
             }
         }
 
-        #
-        # Send mail notifications
-        #
-        $aorder_notification = func_get_order_notification('P', $order_data);
-        if (!empty($aorder_notification)) {
-            foreach ($aorder_notification as $oOrderNotification) {
-                if ($oOrderNotification->isEnabled()) {
-                    $order_notification = $oOrderNotification->getFields();
-                    if ($order_notification['enabled'] == 'Y' && (!SKIP_NOTIFICATION || !defined('SKIP_NOTIFICATION'))) {
-
-                        $mail_smarty->assign('order_notification', $order_notification);
-
-                        if ($config['Email_Note']['eml_order_p_notif_provider'] == 'Y') {
-                            $providers = func_query("select provider from $sql_tbl[order_details] where $sql_tbl[order_details].orderid='$orderid' group by provider");
-
-                            if (is_array($providers)) {
-                                foreach ($providers as $provider) {
-                                    $email_pro = func_query_first_cell("SELECT email FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
-                                    if (!empty($email_pro) && $email_pro != $config["Company"]["orders_department"]) {
-                                        $to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$provider[provider]'");
-                                        if (empty($to_customer)) {
-                                            $to_customer = $config['default_admin_language'];
-                                        }
-
-                                        $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                                        $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-
-                                        func_send_mail($email_pro, "mail/order_notification_subj.tpl", "mail/order_notification.tpl", $config["Company"]["orders_department"], false);
-                                    }
-                                }
-                            }
-                        }
-
-                        $to_customer = func_query_first_cell("SELECT language FROM $sql_tbl[customers] WHERE login='$userinfo[login]'");
-                        if (empty($to_customer)) {
-                            $to_customer = $config['default_customer_language'];
-                        }
-
-                        if ($order_notification['enabled'] == 'Y') {
-
-                            $mail_smarty->assign('type', 'C');
-
-                            $mail_smarty->assign("products", func_translate_products($products, $to_customer));
-                            $_userinfo           = $userinfo;
-                            $userinfo['title']   = func_get_title($userinfo['titleid'], $to_customer);
-                            $userinfo['b_title'] = func_get_title($userinfo['b_titleid'], $to_customer);
-                            $userinfo['s_title'] = func_get_title($userinfo['s_titleid'], $to_customer);
-                            $mail_smarty->assign("customer", $userinfo);
-
-                            $attach_pdf_invoice = $order_notification["customer_attach_pdf_invoice"];
-                            $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-                            func_send_mail($userinfo['email'], 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $config['Company']['orders_department'], false, false, false, false, "", "N", $orderid);
-
-                            $attach_pdf_invoice = $order_notification["admin_attach_pdf_invoice"];
-                            $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
-                            $mail_smarty->assign('type', 'A');
-                            $to_customer = $config['default_admin_language'];
-
-                            $to       = $config['Company']['orders_department'];
-                            $from     = $userinfo["firstname"] . "<" . $config['Company']['orders_department'] . ">";
-                            $reply_to = $userinfo["firstname"] . "<" . $userinfo['email'] . ">";
-
-                            $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-                            $oMail->to = $to;
-                            $oMail->reply_to = $reply_to;
-                            $oMail->from = $from;
-                            $oMail->subject_template = 'mail/order_notification_subj.tpl';
-                            $oMail->body_template = 'mail/order_notification.tpl';
-                            $oMail->addHeader(['X-Xcart-Label' => 'order-status-changed']);
-                            $oMail->sendEmail();
-                            //func_send_mail($to, 'mail/order_notification_subj.tpl', 'mail/order_notification.tpl', $from, true, true, false, false, $reply_to);
-
-                            $userinfo = $_userinfo;
-                            unset($_userinfo);
-                        }
-                    }
-                }
-            }
-        }
 
         $mail_smarty->assign("show_order_details", "");
 

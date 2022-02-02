@@ -89,13 +89,11 @@ if (!empty($aOrderGroups)) {
     $countOrders = count($aOrderGroups);
     $message = "Found CB: AP; DC: C,S,G,L {$countOrders} orders.";
     func_backprocess_log(LOG_CATEGORY, $message);
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->init();
-    $oMail->to = 'team@s3stores.com';
-    $oMail->from = 'team@s3stores.com';
-    $oMail->body = $message;
-    $oMail->subject = LOG_CATEGORY . " invalid orders found";
-    $oMail->sendEmail();
+
+    \Xcart\App\Main\Xcart::app()->mail->raw('team@s3stores.com', LOG_CATEGORY . " invalid orders found", $message, [
+        'from' => 'team@s3stores.com'
+    ]);
+
     $oAttentionTag = new AttentionTag(['status_id' => 44]);
     foreach ($aOrderGroups as $oOrderGroup) {
         if (!($oOrderGroup->getOrderInstance()->isAttentionTagSet($oAttentionTag->getStatusId()))) {

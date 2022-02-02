@@ -61,41 +61,26 @@ if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
         $subject = "[[{$order_number}]] {$subject}";
     }
 
-    $mail_smarty->assign('body', $body);
-    $mail_smarty->assign('subject', $subject);
-    $mail_smarty->assign('attach_pdf_invoice', $attach_pdf_invoice);
+    $to = array_unique(array_map('trim', explode(',', $to)));
 
-    $mail_smarty->assign('products', $products);
-    $mail_smarty->assign('giftcerts', $giftcerts);
-    $mail_smarty->assign('userinfo', $userinfo);
-    $mail_smarty->assign('order', $order);
-
-    $mail_smarty->assign('tracking_links', $tracking_links);
-    $mail_smarty->assign('tracking_links_carrier', $tracking_links_carrier);
-
-    $oMail = \Xcart\App\Main\Xcart::app()->oldMail;
-    $oMail->init();
-    $oMail->to = $to;
-    $oMail->from = $from;
-    $oMail->body = $body;
-    $oMail->subject = $subject;
-    $oMail->subject_template = 'mail/compose_message_subj.tpl';
-    $oMail->body_template = 'mail/compose_message.tpl';
     if (!empty($_FILES) && is_array($_FILES)) {
         foreach ($_FILES as $file) {
-            $oMail->addAttachment(['file' => $file['tmp_name'], 'name' => $file['name']]);
+            if (!$file['error']) {
+                $attachments[] = ['file' => $file['tmp_name'], 'name' => $file['name']];
+            }
         }
     }
-    if ($department === 'our_customer_service') {
-        $oMail->addHeader(['X-Xcart-Label' => 'order-logs']);
-    } else {
-        $oMail->addHeader(['X-Xcart-Label' => 'order-communication']);
-    }
-    $oMail->sendEmail();
+
+    $headers = [];
+
+    $headers['X-Xcart-Label'] = ($department === 'our_customer_service') ? 'order-logs' : 'order-communication';
+
+    $headers['from'] = 'orders@s3stores.com';
+
+    \Xcart\App\Main\Xcart::app()->mail->raw($to, $subject, $body, $headers, $attachments);
+
     if ($department === 'third_party') {
-        $oMail->attachments = [];
-        $oMail->to = 'helpdesk@s3stores.com';
-        $oMail->sendEmail();
+        \Xcart\App\Main\Xcart::app()->mail->raw('helpdesk@s3stores.com', $subject, $body, $headers);
     }
 
     $additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[templates_for_communication] WHERE id='$template_id'");

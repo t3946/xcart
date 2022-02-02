@@ -3,6 +3,7 @@
 namespace Modules\Mail\Components;
 
 use Modules\Sites\SitesModule;
+use Swift_Attachment;
 use Swift_Mailer;
 use Swift_MailTransport;
 use Swift_Message;
@@ -117,6 +118,14 @@ class Mailer
             foreach($additional['headers'] as $header => $value) {
                 $message->getHeaders()->addTextHeader($header, $value);
             }
+        }
+
+        foreach ($attachments as $attachment) {
+            $file = Swift_Attachment::fromPath($attachment['file']);
+            if ($attachment['name']) {
+                $file->setFilename($attachment['name']);
+            }
+            $message = $message->attach($file);
         }
 
         return $this->getMailer()->send($message);

@@ -1041,7 +1041,7 @@ function func_add_refund_group($group)
         $query_data = [
             'orderid'        => $group['orderid'],
             'manufacturerid' => $group['manufacturerid'],
-            'ref_ship'       => $group['refund']['amount'],
+            'ref_ship'       => $group['refund']['amount'] ?? 0,
         ];
 
         $ref_ship = func_query_first_cell('SELECT ref_ship FROM ' . $sql_tbl['refund_groups']
@@ -1074,6 +1074,9 @@ function func_add_refund_group($group)
 
         $query_data['shippingid'] = $group['shippingid'];
         $query_data['shipping']   = $group['shipping'];
+        $query_data['accounting'] = '';
+        $query_data['OLD_accounting'] = '';
+        $query_data['refund_reason'] = '';
 
         if ($ref_ship === false) {
             func_array2insert('refund_groups', $query_data);
