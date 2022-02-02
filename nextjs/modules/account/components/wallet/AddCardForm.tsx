@@ -2,18 +2,13 @@ import React, { useContext } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
-import {
-  addCardFormValidationSchema,
-  initialAddCardFormValue,
-} from "@modules/account/ts/consts/add-card-form";
+import { initialAddCardFormValue } from "@modules/account/ts/consts/add-card-form";
 import { useDispatch } from "react-redux";
 import { addDataFromSubmitCardForm } from "@redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "@modules/account/utils/detect-card-type";
 import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StripeField from "@modules/ui/StripeField";
-import loadStripe from "@utils/loadStripe";
-import { Elements } from "@stripe/react-stripe-js";
 import * as stripeJs from "@stripe/stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import Button from "@modules/ui/forms/Button";
@@ -37,36 +32,21 @@ export const AddCardForm: React.FC = () => {
   }
 
   async function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
-    actions.setSubmitting(true);
-
-    if (!stripe || !elements) {
-      actions.setSubmitting(false);
+    if (!elements || !stripe) {
       return;
     }
 
-    const card: stripeJs.Card = elements.getElement("card");
+    const card: stripeJs.StripeCardElement | null = elements.getElement("card");
 
     if (!card) {
-      actions.setSubmitting(false);
       return;
     }
 
-    card.name = "VAVAVA QQQ";
+    actions.setSubmitting(true);
 
-    console.log({ card }, card.name);
+    let cardToken: stripeJs.Token | undefined;
 
-    let cardToken;
-
-    await stripe.createToken(card).then((result) => {
-      console.log({
-        result,
-        data: {
-          last4: result.token.card.last4,
-          exp_month: result.token.card.exp_month,
-          exp_year: result.token.card.exp_year,
-          brand: result.token.card.brand,
-        },
-      });
+    await stripe.createToken(card).then((result: stripeJs.TokenResult) => {
       cardToken = result.token;
     });
 
@@ -75,7 +55,6 @@ export const AddCardForm: React.FC = () => {
       return;
     }
 
-    console.log(cardToken.id);
     actions.setSubmitting(false);
     return;
 
@@ -120,7 +99,10 @@ export const AddCardForm: React.FC = () => {
           return (
             <Form className="your-order-form" encType="multipart/form-data">
               <StripeField onReady={onCardReady} />
-              <Button type={"submit"} disabled={isSubmitting}>
+              <Button
+                type={"submit"}
+                disabled={isSubmitting || !stripe || !elements}
+              >
                 submit
               </Button>
             </Form>
