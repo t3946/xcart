@@ -67,18 +67,11 @@ class ElasticHelper
         $searchObject = new SimpleObject();
         $searchObject->all = [(object)['is_group_root' => 0], (object)['in_stock' => 1]];
 
-        $searchFields = new SearchFields();
-        $searchFields->product = (object)[];
-        $searchFields->upc = (object)[];
-        $searchFields->productcode = (object)[];
-        $searchFields->fulldescr = (object)[];
-
         $paginationObject = new PaginationResponseObject();
         $paginationObject->current = $page;
         $paginationObject->size = $size;
 
         $searchParam->filters = $searchObject;
-        $searchParam->search_fields = $searchFields;
         $searchParam->page = $paginationObject;
 
         $request = new Search($engine, $searchParam);
@@ -92,7 +85,7 @@ class ElasticHelper
 
         $request = new QuerySuggestionRequest();
         $request->query = $query;
-        $request->types = (object)['documents' => ['fields' => ['product', 'brand', 'categories', 'productcode', 'upc', 'fulldescr']]];
+        $request->types = (object)['documents' => ['fields' => ['product', 'brand', 'categories', 'productcode', 'upc']]];
         $request->size = $size;
 
         $suggestion = new QuerySuggestion($engine, $request);
