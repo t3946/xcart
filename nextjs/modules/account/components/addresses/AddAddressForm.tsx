@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import FormSelect from "@modules/ui/forms/Select";
-import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
+import Select from "@modules/ui/forms/select/Select";
 import { useFormik } from "formik";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import {
@@ -77,20 +77,20 @@ export const AddAddressForm: React.FC<any> = ({
           label="Country"
           error={formik.touched.country?.value && formik.errors.country?.value}
           component={
-            <FormSelect
-              items={countries}
+            <Select
+              clearable={false}
+              // classes={{in}}
+              options={countries}
               value={formik.values.country}
-              label={"Country"}
-              onClick={(value) => {
-                formik.setFieldValue("country", value);
+              onChange={(e) => {
+                formik.setFieldValue("country", e.target.value);
                 formik.setFieldValue("state", initialAddAddressFormValue.state);
-                formik.setFieldValue("country", value);
+                formik.setFieldValue("country", e.target.value);
               }}
               name={"country"}
-              id={"add-address-country"}
-              errorMessage={
-                formik.touched.country?.value && formik.errors.country?.value
-              }
+              // errorMessage={
+              //   formik.touched.country?.value && formik.errors.country?.value
+              // }
             />
           }
         />

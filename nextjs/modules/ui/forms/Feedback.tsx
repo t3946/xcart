@@ -7,14 +7,15 @@ import cn from "classnames";
 const Feedback: React.FC<FeedbackProps> = (props: FeedbackProps) => {
   const newProps: FeedbackProps = { ...props };
 
-  newProps.className = cn([
+  newProps.className = cn(
     {
       [Styles.feedback_invalid]: props.type === "invalid",
       [Styles.feedback_valid]: props.type === "valid",
     },
     props.className,
     Styles.feedback,
-  ]);
+    "mt-0"
+  );
 
   return <Form.Control.Feedback {...newProps} />;
 };

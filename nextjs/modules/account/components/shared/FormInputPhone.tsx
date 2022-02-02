@@ -9,7 +9,6 @@ import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import MaskedInput from "@modules/ui/forms/MaskedInput";
 import Feedback from "@modules/ui/forms/Feedback";
-import classNames from "classnames";
 
 import Styles from "@modules/account/components/shared/FormInputPhone.module.scss";
 
@@ -175,19 +174,26 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           <span className="d-none d-md-inline">ext</span>
         </Label>
 
-        <Input
-          type="text"
-          name={phoneExtFieldName}
-          value={values[phoneExtFieldName]}
-          onChange={handleChange}
-          disabled={disabled}
-          isInvalid={
-            !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
-          }
-          isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
-          autoComplete={"off"}
-          placeholder="12345"
-        />
+        <div>
+          <Input
+            type="text"
+            name={phoneExtFieldName}
+            value={values[phoneExtFieldName]}
+            onChange={handleChange}
+            disabled={disabled}
+            isInvalid={
+              !!touched[phoneExtFieldName] && !!errors[phoneExtFieldName]
+            }
+            isValid={touched[phoneExtFieldName] && !errors[phoneExtFieldName]}
+            autoComplete={"off"}
+            placeholder="12345"
+          />
+          {!!touched[phoneExtFieldName] && !!errors[phoneExtFieldName] && (
+            <Feedback className="position-absolute" type="invalid">
+              {errors[phoneExtFieldName]}
+            </Feedback>
+          )}
+        </div>
       </RBForm.Group>
     </div>
   );

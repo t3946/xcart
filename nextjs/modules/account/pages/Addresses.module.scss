@@ -30,7 +30,9 @@
 }
 
 .modalWidth {
-  max-width: pxToRem(650);
+  @include breakpoint(lg) {
+    max-width: pxToRem(650);
+  }
 }
 
 .modalBody {
