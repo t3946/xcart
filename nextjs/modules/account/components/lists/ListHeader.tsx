@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from "react";
+import React, { Fragment } from "react";
 import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
@@ -7,44 +7,44 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
-import { List } from "@modules/account/ts/types/list.type";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import ShareIcon from "@modules/icon/components/account/share/ShareIcon";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import cn from "classnames";
+import Link from "next/link";
+import Arrow from "@modules/icon/components/font-awesome/arrow-left/Solid";
+
+import Styles from "@modules/account/components/lists/ListHeader.module.scss";
 
 interface ListHeaderProps {
   isShoppingList: boolean;
 }
 
 export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
+  const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const list: List = useSelectorAccount((state) => state.lists.listView);
+  const list = useSelectorAccount((state) => state.lists.listView);
   const manageListDialog = useDialog();
 
   const deleteListDialog = useDialog();
 
   const mobileMenuDialog = useDialog();
 
-  const { showSnackbar } = useContext(SnackbarContext);
-
   const router = useRouter();
 
   const dispatch = useDispatch();
 
   const onRequestEnd = () => {
-    showSnackbar({
-      header: "Success",
-      message: `${list.name} list deleted successfully`,
-      theme: "success",
-    });
+    deleteListDialog.handleClose();
+    snackbar.show(`${list.name} list deleted successfully`);
+    router.replace(`/shopping-lists/`);
   };
   const edit = list.role !== UserPrivateVariantsEnum.VIEW;
 
   const handleDeleteList = () => {
-    // router.push("/your-lists");
     dispatch(deleteList(list.productListId, onRequestEnd));
   };
 
@@ -72,13 +72,84 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   };
 
   return (
-    <div className="list-header-container">
-      <div className="list-header-left-side">
+    <div
+      className={cn(
+        "list-header-container",
+        Styles.listHeaderContainer,
+        "m-0",
+        "flex-wrap",
+        "flex-lg-nowrap"
+      )}
+    >
+      <div
+        className={cn(
+          "d-md-none",
+          "position-relative",
+          "d-flex",
+          Styles.mobileHeader,
+          Styles.shoppingList__mobileHeader
+        )}
+      >
+        <Link href="/">
+          <a
+            className={cn(
+              Styles.accountButton,
+              "form-button",
+              "form-button__outline",
+              "w-auto",
+              "fw-bold",
+              "px-3"
+            )}
+          >
+            <Arrow className={cn(Styles.accountButtonIcon, "me-2")} />
+            Back to Account
+          </a>
+        </Link>
+      </div>
+      <div
+        className={cn(
+          "list-header-left-side",
+          "justify-content-md-center",
+          "justify-content-lg-start",
+          "position-relative",
+          "w-md-100",
+          "w-lg-auto",
+          "mb-md-20",
+          "mb-lg-0"
+        )}
+      >
+        <Link href="/">
+          <a
+            className={cn(
+              "d-none",
+              "d-md-flex",
+              "d-lg-none",
+              Styles.accountButton,
+              "form-button",
+              "position-absolute",
+              "form-button__outline",
+              "w-auto",
+              "fw-bold",
+              "px-3"
+            )}
+          >
+            <Arrow className={cn(Styles.accountButtonIcon, "me-2")} />
+            Account
+          </a>
+        </Link>
         <img
           className="list-header-private-type-img"
           src={`/static/frontend/images/icons/account/list-${list.listType}.svg`}
         />
-        <div className="list-header-name">{list.name}</div>
+        <div
+          className={cn(
+            "list-header-name",
+            Styles.listHeaderName,
+            Styles.listHeader__name
+          )}
+        >
+          {list.name}
+        </div>
         {edit && (
           <img
             onClick={mobileMenuDialog.handleClickOpen}
@@ -86,39 +157,55 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
             src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
           />
         )}
+      </div>
 
-        <div className="list-header-actions">
+      <div
+        className={cn(
+          Styles.listHeaderRightSide,
+          "d-flex",
+          "flex-grow-1",
+          "align-items-center"
+        )}
+      >
+        <div className="list-header-actions flex-grow-1 ms-lg-5">
           {edit && (
             <Fragment>
               <div
                 onClick={manageListDialog.handleClickOpen}
-                className="list-header-action-item blue"
+                className={cn(
+                  Styles.istHeaderActions__listHeaderAction,
+                  Styles.listHeaderAction
+                )}
               >
-                Manage List
+                Manage list
               </div>
               {!isShoppingList && (
                 <div
                   onClick={deleteListDialog.handleClickOpen}
-                  className="list-header-action-item red"
+                  className={cn(
+                    Styles.istHeaderActions__listHeaderAction,
+                    Styles.listHeaderAction,
+                    Styles.listHeaderAction_red
+                  )}
                 >
-                  Delete List
+                  Delete list
                 </div>
               )}
             </Fragment>
           )}
         </div>
-      </div>
-      {edit && (
-        <div className="list-header-shared-block">
-          <ShareIcon className="list-header-share-btn blue" />
-          <div
-            className="list-header-share-text blue"
-            onClick={shareDialog.handleClickOpen}
-          >
-            Share list with others
+        {edit && (
+          <div className="list-header-shared-block">
+            <ShareIcon className="list-header-share-btn blue" />
+            <div
+              className={cn(Styles.listHeaderAction)}
+              onClick={shareDialog.handleClickOpen}
+            >
+              Share list with others
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       <ShareListDialog
         open={shareDialog.open}
         handleClose={shareDialog.handleClose}

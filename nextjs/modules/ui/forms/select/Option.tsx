@@ -11,13 +11,11 @@ const Option = function (props: any) {
   return (
     <RSOption
       {...props}
-      className={cn(Styles.option, {
+      className={cn(Styles.option, props.selectProps.classes?.option, {
         [Styles.option_selected]: isSelected,
         [Styles.option_focus]: isFocused,
       })}
-    >
-      {props.children}
-    </RSOption>
+    />
   );
 };
 

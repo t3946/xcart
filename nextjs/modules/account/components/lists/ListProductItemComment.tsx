@@ -6,6 +6,9 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/lists/ListProductItemComment.module.scss";
 
 interface ListProductItemCommentProps {
   info: ListItem;
@@ -20,7 +23,7 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
 }) => {
   const priority = priorityProductSelectValuesConst.find(
     (e) => e.value === info.priority
-  ).viewValue;
+  ).label;
 
   const deleteCommentDialog = useDialog();
 
@@ -43,7 +46,12 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
   };
 
   return (
-    <div className={"list-product-item-comment-container"}>
+    <div
+      className={cn(
+        Styles.listProductItemCommentContainer,
+        "list-product-item-comment-container"
+      )}
+    >
       <div className="list-product-item-comment-container-text">
         {info.comment}
       </div>
@@ -67,7 +75,10 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
           </div>
         </div>
       </div>
-      <div onClick={onEditCommentClick} className="add-comment-text">
+      <div
+        onClick={onEditCommentClick}
+        className={cn(Styles.editComment, "add-comment-text")}
+      >
         Edit comment, quantity & priority
       </div>
       <div

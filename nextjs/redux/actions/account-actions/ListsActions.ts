@@ -52,19 +52,17 @@ export const deleteList = (
 });
 
 export const deleteProduct = (
-  productListId: number,
-  productId: number,
+  list_items_id: number,
   callback?: () => void
 ): any => ({
   type: "SEND_DELETE_PRODUCT",
-  productListId,
-  productId,
+  list_items_id,
   callback,
 });
 
 export const undoDeleteProduct = (
-  product_list_id: string,
-  list_items_id: string,
+  product_list_id: number,
+  list_items_id: number,
   product: any
 ): any => ({
   type: "UNDO_DELETE_PRODUCT",
@@ -111,12 +109,12 @@ export const addProduct = (
 });
 
 export const editIdeaName = (
-  listId: string,
-  productId: string,
+  listId: number,
+  productId: number,
   name: string,
   callback: () => void
 ): any => ({
-  type: "EDIT_IDEA_NAME",
+  type: "SEND_EDIT_IDEA_NAME",
   listId,
   productId,
   name,

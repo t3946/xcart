@@ -18,6 +18,12 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import cn from "classnames";
+import moment from "moment";
+import OverallRating from "@modules/shared/components/ratings/OverallRating";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
+import Styles from "@modules/account/components/lists/ListProductItem.module.scss";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   productItem,
@@ -36,20 +42,16 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     product = productItem.product;
   }
   const router = useRouter();
-
   const breakpoint = useBreakpoint();
-
   const deleteProductDialog = useDialog();
-
   const mobileMenuDialog = useDialog();
 
   const [countProductsOnCart, setCountProductsOnCart] = useState(
-    product.min_amount
+    product.minAmount
   );
-
   const changeCount = (value: number, isInputEnter?: boolean) => {
     if (isInputEnter) {
-      if (value <= product.minAmount) {
+      if (value < product.minAmount) {
         return;
       }
       if (value > product.avail) {
@@ -59,7 +61,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       setCountProductsOnCart(value);
       return;
     }
-    if (value <= product.minAmount) {
+    if (value < product.minAmount) {
       return;
     }
     if (value > product.avail) {
@@ -76,6 +78,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       options: [],
     },
   ];
+
+  const allRatings = useSelectorAccount((e) => e.productsRatings);
+
+  const ratings = allRatings ? allRatings[productItem.productId] : undefined;
 
   const { showSnackbar } = useContext(SnackbarContext);
 
@@ -116,12 +122,19 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     },
   ];
   return (
-    <div className="product-list-item-container">
+    <div
+      className={cn(
+        StylesListProductItems.productListItemContainer,
+        "product-list-item-container"
+      )}
+    >
       <div className="movable-area">
         {edit ? (
           <ListItemMovableArea
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
+            index={index}
+            length={listInfo.products.length}
             drag={drag}
           />
         ) : (
@@ -138,7 +151,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           <div className="product-list-item-info-container">
             <a
               href={`/product/${productItem.productId}/`}
-              className="product-list-item-name"
+              className={cn("product-list-item-name", Styles.productInfoName)}
             >
               {product.product}
             </a>
@@ -151,20 +164,23 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             )}
           </div>
 
-          <Tooltip
-            target={
-              <div className="tooltip-rating-stars-target">
-                <RatingStars rating={3} />
-              </div>
-            }
-            content={
-              <div className="rating-stars-tooltip">
-                {/*<OverallRating ratings={[]} />*/}
-              </div>
-            }
-          />
+          {ratings && (
+            <Tooltip
+              target={
+                <div className="tooltip-rating-stars-target">
+                  <RatingStars rating={3} />
+                </div>
+              }
+              content={
+                <div className="rating-stars-tooltip">
+                  <OverallRating ratings={ratings} />
+                </div>
+              }
+            />
+          )}
+
           <div className="d-flex align-items-center">
-            <div className="product-list-item-price">${product?.price}</div>
+            <div className={Styles.productInfoPrice}>${product?.price}</div>
             <div className="multiplication-symbol">X</div>
             <CountInput
               avail={product.avail}
@@ -192,27 +208,40 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             ))}
         </div>
       </div>
-      <ListProductItemBtns
-        btnLabel={"Add to cart"}
-        edit={edit}
-        // outOfStock={info.product}
-        deleteItem={deleteProductDialog.handleClickOpen}
-        onMainBtnClick={() =>
-          cartAdd(
-            data,
-            showSnackbar({
-              header: "Success",
-              message: `${productItem.product.product} added to cart`,
-              theme: "success",
-            })
-          )
-        }
-        time={productItem.add_date}
-        listId={productItem.product_list_id}
-        productId={productItem.productId}
-        handleDelete={deleteProductDialog.handleClickOpen}
-      />
 
+      <div>
+        <div
+          className={cn(
+            "text-center",
+            "text-md-end",
+            Styles.productInfoDate,
+            "mb-lg-10",
+            "mb-12"
+          )}
+        >
+          Item added {moment(productItem.add_date).utc().format("MMM DD, Y")}
+        </div>
+        <ListProductItemBtns
+          btnLabel={"Add to cart"}
+          edit={edit}
+          // outOfStock={info.product}
+          deleteItem={deleteProductDialog.handleClickOpen}
+          onMainBtnClick={() =>
+            cartAdd(
+              data,
+              showSnackbar({
+                header: "Success",
+                message: `${productItem.product.product} added to cart`,
+                theme: "success",
+              })
+            )
+          }
+          time={productItem.add_date}
+          listId={productItem.product_list_id}
+          productId={productItem.productId}
+          handleDelete={deleteProductDialog.handleClickOpen}
+        />
+      </div>
       <BootstrapDialogHOC
         show={editCommentDialog.open}
         title={

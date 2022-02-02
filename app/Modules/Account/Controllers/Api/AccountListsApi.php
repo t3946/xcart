@@ -9,9 +9,8 @@ use Modules\Account\Models\ListItemsModel;
 use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\UserListModel;
 use Modules\Core\Helpers\CoreHelper;
-use Modules\Goods\Models\ProductModel;
-use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
+use Throwable;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
@@ -76,9 +75,9 @@ class AccountListsApi extends Controller
         }
         $data = json_decode(file_get_contents('php://input'), true);
 
-        foreach ($data['productIds'] as $key => $product_id) {
+        foreach ($data['productIds'] as $key => $list_items_id) {
             /** @var ListItemsModel $list_item */
-            $list_item = ListItemsModel::objects()->get(['product_id' => $product_id, 'product_list_id' => $data['productListId']]);
+            $list_item = ListItemsModel::objects()->get(['list_items_id' => $list_items_id]);
             $list_item->order_by = $key;
             $list_item->save();
         }
@@ -134,7 +133,7 @@ class AccountListsApi extends Controller
     {
         $form = json_decode(file_get_contents('php://input'), true);
         /** @var UserModel $user */
-        if(!$user = $this->checkRightsUser()) {
+        if (!$user = $this->checkRightsUser()) {
             return;
         }
 
@@ -215,15 +214,20 @@ class AccountListsApi extends Controller
 
     public function editIdeaName()
     {
-        [$idea_id, $new_name] = array_values(json_decode(file_get_contents('php://input'), true));
-
-        $idea_model = ListIdeaModel::objects()->get(['product_id' => $idea_id]);
-
-        $idea_model->name = $new_name;
-
-        $idea_model->save();
-
-        $this->jsonResponse(['success edit']);
+        if (!$this->checkRightsUser()) {
+            return;
+        }
+        $data = json_decode(file_get_contents('php://input'), true);
+        try {
+            /** @var ListIdeaModel $idea_model */
+            $idea_model = ListIdeaModel::objects()->get(['product_id' => $data['productId']]);
+            $idea_model->name = $data['name'];
+            $idea_model->save();
+            $this->jsonResponse([]);
+        } catch (Throwable $exception) {
+            // TODO: Добавить обработку ошибок на фронт
+            $this->jsonResponse([], 400);
+        }
     }
 
     /**
@@ -272,11 +276,11 @@ class AccountListsApi extends Controller
             return;
         }
         $form = json_decode(file_get_contents('php://input'), true);
-        $attr_form = ['product_list_id' => $form['productListId'], 'product_id' => $form['productId']];
+        $attr_form = ['list_items_id' => $form['list_items_id']];
         /** @var ListItemsModel $list_item */
         if ($list_item = ListItemsModel::objects()->get($attr_form)) {
             if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
-                ListIdeaModel::objects()->delete(['product_id' => $form['productId']]);
+                ListIdeaModel::objects()->delete(['product_id' => $list_item->product_id]);
             }
             ListItemsModel::objects()->delete($attr_form);
             $this->jsonResponse(['Success']);
@@ -287,14 +291,44 @@ class AccountListsApi extends Controller
 
     public function undoDeleteProduct()
     {
-        [$product] = array_values(json_decode(file_get_contents('php://input'), true));
-
-        if ($product['product_type'] === 'idea') {
-            ListIdeaModel::objects()->create($product['product']);
+        $data = json_decode(file_get_contents('php://input'), true);
+        try {
+            if (!$this->checkRightsUser()) {
+                return;
+            }
+            $base_item_attr = [
+                'product_list_id' => $data['productListId'],
+                'comment' => $data['comment'],
+                'priority' => $data['priority'],
+                'needs' => $data['needs'],
+                'has' => $data['has'],
+                'order_by' => $data['orderBy']
+            ];
+            switch ($data['productType']) {
+                case ListItemsModel::TYPE_IDEA:
+                    $idea = new ListIdeaModel();
+                    $idea->name = $data['product']['name'];
+                    $idea->save();
+                    $base_item_attr = array_merge($base_item_attr, [
+                        'product_id' => $idea->pk,
+                        'product_type' => ListItemsModel::TYPE_IDEA
+                    ]);
+                    break;
+                case ListItemsModel::TYPE_PRODUCT:
+                    $base_item_attr = array_merge($base_item_attr, [
+                        'product_id' => $data['productId'],
+                        'product_type' => ListItemsModel::TYPE_PRODUCT
+                    ]);
+                    break;
+            }
+            $item_model = new ListItemsModel();
+            $item_model->setAttributes($base_item_attr);
+            $item_model->save();
+            $this->jsonResponse([]);
+        } catch (Throwable $exception) {
+            // TODO: Добавить обработку ошибок http статусов на фронте
+            $this->jsonResponse([], 400);
         }
-        ListItemsModel::objects()->create($product);
-
-        $this->jsonResponse(['success']);
     }
 
     public function actionGetLists(): void
@@ -311,7 +345,7 @@ class AccountListsApi extends Controller
         }
         [$user_id, $type, $listHash] = explode('/', CoreHelper::decryptText($code, $tag));
         /** @var ProductListsModel $invite_list */
-        if(!$invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash])) {
+        if (!$invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash])) {
             $this->jsonResponse(['Not found list invite', 404]);
             return;
         }
@@ -332,10 +366,11 @@ class AccountListsApi extends Controller
             ]
         ]);
     }
+
     private function checkRightsUser()
     {
         /** @var UserModel $user */
-        if(!$user = Xcart::app()->auth->getUser(true)) {
+        if (!$user = Xcart::app()->auth->getUser(true)) {
             $this->jsonResponse(['message' => 'Not found user'], 401);
             return false;
         }

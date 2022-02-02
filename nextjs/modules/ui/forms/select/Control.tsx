@@ -10,18 +10,21 @@ const Control = function (props: any) {
   return (
     <RSControl
       {...props}
-      className={cn(Styles.control, props.selectProps.classes?.control, {
-        [Styles.control_valid]: props.selectProps.isValid,
-        [Styles.control_focus]: props.isFocused,
-        [Styles.control_valid_focus]:
-          props.isFocused && props.selectProps.isValid,
-        [Styles.control_invalid]: props.selectProps.isInvalid,
-        [Styles.control_invalid_focus]:
-          props.isFocused && props.selectProps.isInvalid,
-      })}
-    >
-      {props.children}
-    </RSControl>
+      className={cn(
+        "flex-nowrap",
+        Styles.control,
+        props.selectProps.classes?.control,
+        {
+          [Styles.control_valid]: props.selectProps.isValid,
+          [Styles.control_focus]: props.isFocused,
+          [Styles.control_valid_focus]:
+            props.isFocused && props.selectProps.isValid,
+          [Styles.control_invalid]: props.selectProps.isInvalid,
+          [Styles.control_invalid_focus]:
+            props.isFocused && props.selectProps.isInvalid,
+        }
+      )}
+    />
   );
 };
 

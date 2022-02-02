@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export enum ETheme {
-  outlined = "outlined",
+  outlined = "outline",
   micro = "micro",
   themeDarkGrey = "themeDarkGrey",
   themeGrey = "themeGrey",

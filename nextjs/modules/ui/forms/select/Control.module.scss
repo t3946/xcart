@@ -5,15 +5,20 @@ div.control {
   border-radius: 0;
   border: 1px solid #c4c4c4;
   box-shadow: none;
-  height: 100%;
-  min-height: 100%;
-  max-height: 100%;
+  min-height: auto;
+  max-height: none;
+  height: pxToRem(38);
 
   &:hover {
     border-color: #c4c4c4;
   }
 
+  @include breakpoint(md) {
+    height: pxToRem(42);
+  }
+
   @include breakpoint(lg) {
+    height: pxToRem(34);
     padding: 0 0 0 pxToRem(15);
   }
 }

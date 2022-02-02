@@ -1,8 +1,9 @@
 @import "styles/utils/Utils.module";
 
-div.select {
-  width: 100%;
-  font-size: pxToRem(18);
+.editComment {
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
 
   @include breakpoint(lg) {
     font-size: pxToRem(14);

@@ -3,8 +3,6 @@ import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import Store from "@redux/stores/Store";
 import { AnyAction } from "redux";
-import { editNameOnList } from "@modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
-import { route } from "@utils/AppData";
 import axios from "axios";
 import { List } from "@modules/account/ts/types/list.type";
 
@@ -48,15 +46,11 @@ function* reorderList(action: AnyAction): Generator {
     .post(
       "/api/account/lists/reorder-products",
       JSON.stringify({
-        productIds: action.listIds.map((e) => e.productId),
+        productIds: action.listIds.map((e) => e.list_items_id),
         productListId: action.productListId,
       })
     )
     .then((response) => response);
-  yield put({
-    type: "REORDER_LIST",
-    listIds: action.listIds,
-  });
 }
 
 function* deleteList(action: AnyAction): Generator {
@@ -137,24 +131,21 @@ function* addProductOnList(action: AnyAction): Generator {
 }
 
 function* editIdeaName(action: AnyAction): Generator {
+  const { productId, name } = action;
   yield api
-    .post<any>(
-      `/account/api/lists/edit-name-in-idea`,
+    .post(
+      `/api/account/lists/edit-name-in-idea`,
       JSON.stringify({
-        productId: action.productId,
-        name: action.name,
+        productId,
+        name,
       })
     )
     .then((response) => response);
 
   yield put({
-    type: "SET_LISTS",
-    lists: editNameOnList(
-      Store.getState().lists.lists,
-      action.listId,
-      action.productId,
-      action.name
-    ),
+    type: "EDIT_IDEA_NAME",
+    name,
+    productId,
   });
 
   yield action.callback();
@@ -197,30 +188,30 @@ function* manageList(action: AnyAction): Generator {
 }
 
 function* deleteProduct(action: AnyAction): Generator {
-  const { productListId, productId } = action;
+  const { list_items_id } = action;
   yield api
     .post<any>(
       `/api/account/lists/delete-product`,
       JSON.stringify({
-        productListId,
-        productId,
+        list_items_id,
       })
     )
     .then((response) => response);
   yield put({
     type: "DELETE_PRODUCT_LIST_VIEW",
-    productId,
+    list_items_id,
   });
 
-  action?.callback();
+  action?.callback && action?.callback();
 }
 
 function* undoDeleteProduct(action: AnyAction): Generator {
   yield api
     .post<number>(
-      `/account/api/lists/undo-delete-product`,
+      `/api/account/lists/undo-delete-product`,
       JSON.stringify({
-        product: action.product,
+        ...action.product,
+        productListId: action.product_list_id,
       })
     )
     .then((response) => response);
@@ -244,7 +235,7 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("ENCRYPT_URL", encryptUrl);
   yield takeLatest("EDIT_USER_RIGHTS", editUserRights);
   yield takeLatest("ADD_PRODUCT_ON_LIST", addProductOnList);
-  yield takeLatest("EDIT_IDEA_NAME", editIdeaName);
+  yield takeLatest("SEND_EDIT_IDEA_NAME", editIdeaName);
   yield takeLatest("EDIT_COMMENT_PRODUCT", editCommentProduct);
   yield takeLatest("MANAGE_LIST", manageList);
   yield takeLatest("SEND_DELETE_PRODUCT", deleteProduct);

@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { FormInput } from "@modules/account/components/shared/FormInput";
+import Input from "@modules/ui/forms/Input";
+import Label from "@modules/ui/forms/Label";
+import Feedback from "@modules/ui/forms/Feedback";
 import { addProduct } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
-import Store from "@redux/stores/Store";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import { List, ListItem } from "@modules/account/ts/types/list.type";
+import { ListItem } from "@modules/account/ts/types/list.type";
 
 interface AddIdeaProps {
   onCancelBtnClick: () => void;
@@ -63,19 +63,23 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
   return (
     <div>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
-        <FormInput
-          name={"name"}
-          classes={{
-            input: "list-input",
-          }}
-          label={"Idea name"}
-          handleChange={formik.handleChange}
-          errorMessage={formik.errors.name}
-          handleBlur={formik.handleBlur}
-          touched={formik.touched.name}
-          value={formik.values.name}
-          inputRef={ref}
-        />
+        <div className={"mb-lg-20"}>
+          <Label>Idea name</Label>
+          <div>
+            <Input
+              ref={ref}
+              name="name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              isValid={!!formik.touched.name && !formik.errors.name}
+              isInvalid={!!formik.touched.name && !!formik.errors.name}
+            />
+            <Feedback type="invalid" className={"mt-0 position-absolute"}>
+              {!!formik.touched.name && formik.errors.name}
+            </Feedback>
+          </div>
+        </div>
+
         <p>Save an idea. Shop for it later.</p>
         <SubmitCancelButtonsGroup
           submitText="Confirm"

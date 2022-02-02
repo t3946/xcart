@@ -79,11 +79,7 @@ const BootstrapModalHOC: React.FC<BootstrapModalProps> = (
       </div>
 
       <Modal.Body
-        className={classnames(
-          props?.classes?.body,
-          "account-modal-body",
-          Styles.modalBody
-        )}
+        className={classnames(props.classes?.body, "account-modal-body")}
       >
         {headerTemplate("d-sm-none")}
         {props.children}

@@ -1,13 +1,18 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FormInput } from "@modules/account/components/shared/FormInput";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import FormSelect from "@modules/ui/forms/Select";
+import cn from "classnames";
+import Select from "@modules/ui/forms/select/Select";
+import Label from "@modules/ui/forms/Label";
 import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/priority-product-select-values.const";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
+
+import Styles from "@modules/account/components/lists/EditComment.module.scss";
 
 export const EditComment = ({ onCloseClick, listId, productId, info }) => {
   const dispatch = useDispatch();
@@ -50,24 +55,29 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
     <div>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
         <div className="top-content">
-          <div className="comment-input-container">
-            <FormInput
-              name={"comment"}
-              classes={{
-                input: ["list-input-edit-idea", "text-area-input-container"],
-                textArea: ["edit-comment-text-area-input"],
-                group: ["text-area-group"],
-              }}
-              handleChange={formik.handleChange}
-              errorMessage={formik.errors.comment}
-              handleBlur={formik.handleBlur}
-              touched={formik.touched.comment}
-              label={"Comment"}
-              value={formik.values.comment}
-              inputType={"text-area"}
-            />
-            {!formik.errors.comment && (
-              <div className="remaining-text">
+          <div className="comment-input-container flex-grow-md-1 flex-grow-lg-0 me-md-5 me-lg-0">
+            <div
+              className={cn({
+                "mb-20": !!formik.touched.comment && !!formik.errors.comment,
+              })}
+            >
+              <Label>Comment</Label>
+              <Input
+                as="textarea"
+                name="comment"
+                maxLength={250}
+                className={cn("edit-comment-text-area-input", Styles.textarea)}
+                value={formik.values.comment}
+                onChange={formik.handleChange}
+                isInvalid={!!formik.touched.comment && !!formik.errors.comment}
+                isValid={!!formik.touched.comment && !formik.errors.comment}
+              />
+              <Feedback className="position-absolute" type="invalid">
+                {!!formik.touched.comment && formik.errors.comment}
+              </Feedback>
+            </div>
+            {(!formik.touched.comment || !formik.errors.comment) && (
+              <div className="remaining-text mt-0">
                 Remaining:{" "}
                 {formik.values.comment.length < 250
                   ? 250 - formik.values.comment.length
@@ -77,60 +87,88 @@ export const EditComment = ({ onCloseClick, listId, productId, info }) => {
             )}
           </div>
 
-          <div className="edit-comment-img-block">
+          <div className={cn(Styles.imageContainer, "edit-comment-img-block")}>
             <img
               src={info.image || ideaImg}
-              className="product-image edit-comment-img"
+              className={cn(
+                Styles.image,
+                "product-image",
+                "w-auto",
+                "w-md-100",
+                "edit-comment-img"
+              )}
             />
-            <div className="edit-comment-name">
+            <div className={cn("text-start", "edit-comment-name", Styles.name)}>
               {info.product?.name || info.product?.product}
             </div>
           </div>
         </div>
-        <div className="edit-comment-inputs-container">
-          <FormSelect
-            items={priorityProductSelectValuesConst}
-            name={""}
-            label={"Priority"}
-            onClick={(value) => formik.setFieldValue("priority", value)}
-            value={formik.values.priority}
-            id="form-select-list-product"
-            classes={{
-              group: ["edit-comment-select-field-container"],
-            }}
-          />
-          <div className="edit-idea-text-inputs">
-            <FormInput
-              name={"needs"}
+        <div className="edit-comment-inputs-container mb-20">
+          <div>
+            <Label>Priority</Label>
+            <Select
+              clearable={false}
+              options={priorityProductSelectValuesConst}
+              name={"priority"}
+              label={"Priority"}
+              onChange={formik.handleChange}
+              value={formik.values.priority}
               classes={{
-                input: ["list-input-edit-idea", "full-width"],
-                group: [
-                  "edit-comment-input-text-field-container",
-                  "edit-comment-input-text-field-needs-container",
-                ],
+                select: ["edit-comment-select-field-container"],
               }}
-              handleChange={formik.handleChange}
-              errorMessage={formik.errors.needs}
-              handleBlur={formik.handleBlur}
-              touched={formik.touched.needs}
-              label={"Needs"}
-              value={formik.values.needs}
-              type={"number"}
             />
-            <FormInput
-              name={"has"}
-              classes={{
-                input: ["list-input-edit-idea", "full-width"],
-                group: ["edit-comment-input-text-field-container"],
-              }}
-              handleChange={formik.handleChange}
-              errorMessage={formik.errors.has}
-              handleBlur={formik.handleBlur}
-              touched={formik.touched.has}
-              label={"Has"}
-              value={formik.values.has}
-              type={"number"}
-            />
+          </div>
+
+          <div
+            className={cn(
+              "justify-content-md-end",
+              "justify-content-lg-between",
+              "edit-idea-text-inputs"
+            )}
+          >
+            <div
+              className={cn(
+                "edit-comment-input-text-field-container",
+                "edit-comment-input-text-field-needs-container",
+                "me-md-20",
+                "me-lg-0"
+              )}
+            >
+              <Label>Needs</Label>
+              <Input
+                type="number"
+                name="needs"
+                className={cn("list-input-edit-idea", "full-width")}
+                value={formik.values.needs}
+                onChange={formik.handleChange}
+                isInvalid={!!formik.touched.needs && !!formik.errors.needs}
+                isValid={!!formik.touched.needs && !formik.errors.needs}
+              />
+              <Feedback className="position-absolute mt-0" type="invalid">
+                {!!formik.touched.needs && formik.errors.needs}
+              </Feedback>
+            </div>
+
+            <div
+              className={cn(
+                "edit-comment-input-text-field-container",
+                "edit-comment-input-text-field-needs-container"
+              )}
+            >
+              <Label>Has</Label>
+              <Input
+                type="number"
+                name="has"
+                className={cn("list-input-edit-idea", "full-width")}
+                value={formik.values.has}
+                onChange={formik.handleChange}
+                isInvalid={!!formik.touched.has && !!formik.errors.has}
+                isValid={!!formik.touched.has && !formik.errors.has}
+              />
+              <Feedback className="position-absolute mt-0" type="invalid">
+                {!!formik.touched.has && formik.errors.has}
+              </Feedback>
+            </div>
           </div>
         </div>
         <SubmitCancelButtonsGroup

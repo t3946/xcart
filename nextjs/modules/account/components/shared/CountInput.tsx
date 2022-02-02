@@ -1,4 +1,7 @@
 import React from "react";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/shared/CountInput.module.scss";
 
 interface CountInputProps {
   value: number;
@@ -21,21 +24,33 @@ export const CountInput: React.FC<CountInputProps> = ({
     <div className="d-flex">
       <div
         onClick={() => onChange(value - (multOrderQuantity ? minAmount : 1))}
-        className="count-input-btn count-input-btn__left"
+        className={cn(
+          Styles.button,
+          "count-input-btn",
+          "count-input-btn__left",
+          { [Styles.button_disable]: value === minAmount }
+        )}
       >
         -
       </div>
+
       <input
         onChange={(e) => onChange(Number(e.target.value), true)}
         value={value}
         type={"number"}
-        className="count-input"
+        className={cn(Styles.input, "count-input")}
         onBlur={onBlur}
         max={avail}
       />
+      
       <div
         onClick={() => onChange(value + (multOrderQuantity ? minAmount : 1))}
-        className="count-input-btn count-input-btn__right"
+        className={cn(
+          Styles.button,
+          "count-input-btn",
+          "count-input-btn__right",
+          { [Styles.button_disable]: value === avail }
+        )}
       >
         +
       </div>

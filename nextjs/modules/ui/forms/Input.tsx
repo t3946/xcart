@@ -15,7 +15,9 @@ interface IProps extends FormControlProps {
   isInvalid?: boolean;
   autoComplete?: string;
   placeholder?: string;
+  maxLength?: number;
 }
+
 const Input = React.forwardRef<HTMLInputElement | null, IProps>(
   (props, ref) => {
     const classes = [
@@ -26,9 +28,13 @@ const Input = React.forwardRef<HTMLInputElement | null, IProps>(
         [Styles.input_invalid]: props.isInvalid,
       },
     ];
+    const { maxLength = Number.MAX_VALUE, onChange, type = "text" } = props;
     const mergeProps = {
       ...props,
-      type: props.type ?? "text",
+      type,
+      onChange: (e) => {
+        e.target.value.length <= maxLength && onChange && onChange(e);
+      },
       className: cn(classes),
       ref: ref,
     };

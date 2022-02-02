@@ -96,7 +96,9 @@ class ListItemsModel extends Model
             'needs' => $this->needs,
             'orderBy' => $this->order_by,
             'productType' => $this->product_type,
-            'productId' => $this->product_id,
+            'productId' => (int)$this->product_id,
+            'add_date'=> $this->add_date,
+            'list_items_id' => (int)$this->pk
         ];
         switch ($this->product_type) {
             case self::TYPE_IDEA:
@@ -114,7 +116,7 @@ class ListItemsModel extends Model
                     'product' => [
                         'product' => $product_model->product,
                         'code' => $product_model->productcode,
-                        'productId' => $product_model->pk,
+                        'productId' => (int)$product_model->pk,
                         'costToUs' => $product_model->cost_to_us,
                         'price' => $product_model->getPrice(),
                         'image' => (string)$product_model->getMainImage(),

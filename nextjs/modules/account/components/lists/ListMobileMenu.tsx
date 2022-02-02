@@ -21,7 +21,7 @@ export const ListMobileMenu: React.FC = () => {
           <img src="/static/frontend/images/icons/account/cross-bold.svg" />
         </div>
         <div
-          onClick={() => redirectToList("add-list/")}
+          onClick={() => redirectToList("actions/add-list/")}
           className="create-list-label create-list-label-mobile"
         >
           create a list

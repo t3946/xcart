@@ -7,6 +7,7 @@ import { deleteList } from "@modules/account/utils/edit-store-funcs/lists/delete
 import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/move-product-list";
 import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
 import { addProductToList } from "@modules/account/utils/edit-store-funcs/lists/add-product-to-list";
+import { editIdeaName } from "@modules/account/utils/edit-store-funcs/lists/edit-idea-name";
 
 const initialValue: AccountListsStore = {
   lists: null,
@@ -27,6 +28,7 @@ const accountListReducer = (
         loading: false,
       };
     case "ADD_PRODUCT_ON_LIST":
+    case "SEND_EDIT_IDEA_NAME":
       return {
         ...state,
         loading: true,
@@ -39,6 +41,12 @@ const accountListReducer = (
         ...state,
         lists: action.lists,
         loading: false,
+      };
+    case "EDIT_IDEA_NAME":
+      return {
+        ...state,
+        loading: false,
+        listView: editIdeaName(state.listView, action.productId, action.name),
       };
     case "SET_LIST_VIEW":
       return {
@@ -90,7 +98,7 @@ const accountListReducer = (
           return e;
         }),
       };
-    case "REORDER_LIST":
+    case "SEND_REORDER_LIST":
       return {
         ...state,
         listView: { ...state.listView, products: action.listIds },
@@ -98,28 +106,23 @@ const accountListReducer = (
     case "DELETE_PRODUCT_LIST_VIEW":
       return {
         ...state,
-        listView: deleteProductList(state.listView, action.productId),
+        listView: deleteProductList(state.listView, action.list_items_id),
       };
     case "UNDO_DELETE_PRODUCT":
       return {
         ...state,
-        lists: state.lists.map((list) => {
-          if (list.product_list_id === action.product_list_id) {
-            return {
-              ...list,
-              products: list.products.map((product) => {
-                if (product.product_id === action.list_items_id) {
-                  delete product.typeAction;
-                  return {
-                    ...product,
-                  };
-                }
-                return product;
-              }),
-            };
-          }
-          return list;
-        }),
+        listView: {
+          ...state.listView,
+          products: state.listView.products.map((product) => {
+            if (product.productId === action.list_items_id) {
+              delete product.typeAction;
+              return {
+                ...product,
+              };
+            }
+            return product;
+          }),
+        },
       };
     case "SET_TRANSFER_PRODUCT":
       const { productId, toListId, fromListId } = action;

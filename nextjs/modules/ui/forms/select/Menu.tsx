@@ -8,9 +8,10 @@ const Menu = function (props: any) {
   const RSMenu = components.Menu;
 
   return (
-    <RSMenu {...props} className={cn(Styles.menu)}>
-      {props.children}
-    </RSMenu>
+    <RSMenu
+      {...props}
+      className={cn(Styles.menu, props.selectProps.classes?.menu)}
+    />
   );
 };
 

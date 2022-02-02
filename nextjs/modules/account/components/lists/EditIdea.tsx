@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { FormInput } from "@modules/account/components/shared/FormInput";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { editIdeaName } from "@redux/actions/account-actions/ListsActions";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import { ListItem } from "@modules/account/ts/types/list.type";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/lists/EditIdea.module.scss";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface EditIdeaProps {
   info: ListItem;
-  listId: string;
+  listId: number;
   openMenuDialog: () => void;
   edit: boolean;
 }
@@ -20,17 +24,19 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
   openMenuDialog,
   edit,
 }) => {
+  const inputRef = React.useRef<HTMLInputElement>();
   const [isEdit, setIsEdit] = useState(false);
 
-  const isLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
+  const isLoading = useSelectorAccount((state) => state.lists.loading);
 
   const dispatch = useDispatch();
 
   const onSaveEdit = () => {
     dispatch(
-      editIdeaName(listId, info.product_id, formik.values.name, () =>
-        onSetEdit(true)
-      )
+      editIdeaName(listId, info.productId, formik.values.name, () => {
+        formik.setTouched({});
+        onSetEdit(true);
+      })
     );
   };
 
@@ -41,6 +47,10 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
     }),
     onSubmit: onSaveEdit,
   });
+
+  React.useEffect(() => {
+    isEdit && inputRef.current?.focus();
+  }, [isEdit]);
 
   const onSetEdit = (save?: boolean) => {
     setIsEdit(!isEdit);
@@ -57,30 +67,43 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
           onSubmit={formik.handleSubmit}
           encType="multipart/form-data"
         >
-          <FormInput
-            name={"name"}
-            classes={{
-              input: ["list-input-edit-idea"],
-              group: ["edit-idea-form-input"],
-            }}
-            handleChange={formik.handleChange}
-            errorMessage={formik.errors.name}
-            handleBlur={formik.handleBlur}
-            touched={formik.touched.name}
-            value={formik.values.name}
-          />
+          <div className="mb-10 mb-lg-20 me-lg-10">
+            <Input
+              name="name"
+              ref={inputRef}
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              isValid={!!formik.touched.name && !formik.errors.name}
+              isInvalid={!!formik.touched.name && !!formik.errors.name}
+            />
+            <Feedback type="invalid" className={"mt-0 position-absolute"}>
+              {!!formik.touched.name && formik.errors.name}
+            </Feedback>
+          </div>
           <div className="edit-idea-btns">
             <button
               type={"submit"}
               disabled={isLoading}
-              className="form-button account-submit-btn auto-width-button confirm-edit-idea-btn"
+              className={cn(
+                "form-button",
+                "account-submit-btn",
+                "auto-width-button",
+                "confirm-edit-idea-btn",
+                Styles.button
+              )}
             >
-              Confirm
+              Save
             </button>
             <button
               onClick={() => onSetEdit()}
               disabled={isLoading}
-              className="form-button account-submit-btn account-submit-btn-outline auto-width-button "
+              className={cn(
+                "form-button",
+                "account-submit-btn",
+                "account-submit-btn-outline",
+                "auto-width-button",
+                Styles.button
+              )}
             >
               Cancel
             </button>
@@ -88,10 +111,15 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
         </form>
       ) : (
         <div className="edit-idea-text-container">
-          <div className="product-list-idea-name">{info.product.name}</div>
+          <div className={cn(Styles.IdeaName, "product-list-idea-name")}>
+            {info.product.name}
+          </div>
           {edit && (
             <React.Fragment>
-              <span onClick={() => onSetEdit()} className="add-comment-text">
+              <span
+                onClick={() => onSetEdit()}
+                className={cn("add-comment-text", Styles.editIdea)}
+              >
                 Edit idea
               </span>
               <img

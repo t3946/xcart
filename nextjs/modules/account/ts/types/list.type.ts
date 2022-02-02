@@ -30,7 +30,7 @@ export interface ListItem {
   comment: string;
   has: number | string;
   image?: string;
-  list_items_id: string;
+  list_items_id: number;
   needs: string | number;
   orderBy: string;
   priority: PriorityProductEnum;

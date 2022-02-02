@@ -1,6 +1,7 @@
 import React from "react";
 import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
 import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
+import { ETheme } from "@modules/ui/forms/Button";
 import { EditIdea } from "@modules/account/components/lists/EditIdea";
 import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
@@ -14,6 +15,10 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { List } from "@modules/account/ts/types/list.type";
+import cn from "classnames";
+
+import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
+import Styles from "@modules/account/components/lists/ListProductIdeaItem.module.scss";
 
 export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   productItem,
@@ -68,13 +73,20 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
   ];
 
   return (
-    <div className="product-list-item-container ">
+    <div
+      className={cn(
+        StylesListProductItems.productListItemContainer,
+        "product-list-item-container"
+      )}
+    >
       <div className="movable-area">
         {edit ? (
           <ListItemMovableArea
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
             drag={drag}
+            index={index}
+            length={listInfo.products.length}
           />
         ) : (
           <div className="product-list-item-movable-area-placeholder" />
@@ -104,7 +116,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className="add-comment-text"
+                className={cn(Styles.editComment, "add-comment-text")}
               >
                 Add comment, quantity & priority
               </div>
@@ -113,7 +125,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       </div>
       <ListProductItemBtns
         btnLabel={"search"}
-        mainBtnClasses={"account-submit-btn-outline"}
+        mainBtnType={ETheme.outlined}
         edit={edit}
         time={productItem.add_date}
         listId={listView.productListId}
