@@ -24,6 +24,8 @@ class ElasticUpdateCommand extends Command
 
             $i = 0;
 
+            Xcart::app()->getModule('Sites')->setSite($site);
+
             $engine_name = SearchModule::getEngine($site->code);
 
             Xcart::app()->elastic->checkEngine(
