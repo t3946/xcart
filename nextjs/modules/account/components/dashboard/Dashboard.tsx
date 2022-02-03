@@ -7,7 +7,8 @@ import AccountNavigation from "./AccountNavigation";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+  console.log({props});
   const tracknum = "4HGOJJ94HGKD";
   const user = useSelectorAccount((e) => e.user);
 

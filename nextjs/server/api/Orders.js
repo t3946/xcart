@@ -40,8 +40,9 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
       });
 
       orderGroups.push({
+        orderNumber: order.order_prefix + order.orderid,
         order_group_id: group.order_group_id,
-        tracking: group.order_group_id,
+        tracking: group.tracking,
         statuses,
       });
     }
