@@ -54,7 +54,11 @@ class ProductDocumentCreator implements DocumentCreatorInterface
 
             switch ((int)$update_model->type) {
                 case 6:
-                    $this->to_index[] = $document;
+                    if ($document->forasle) {
+                        $this->to_index[] = $document;
+                    } else {
+                        $this->to_delete[] = $document;
+                    }
                     break;
                 case 61:
                     $this->to_delete[] = $document;
