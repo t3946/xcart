@@ -1716,7 +1716,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
             Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
                 'from' => $config['Company']['orders_department'],
-                ['headers' => ['X-Xcart-Label' => 'order-communication']
+                'headers' => ['X-Xcart-Label' => 'order-communication']
             ]);
 
             $log = "<b>From: </b>" . $config['Company']['orders_department'] . "<br /><b>To: </b>" . $mnf_to . "<br /><b>Subject: </b>" . $d_email_subject_14;
@@ -1742,7 +1742,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
                 Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
                     'from' => $config['Company']['orders_department'],
-                    ['headers' => ['X-Xcart-Label' => 'order-communication']
+                    'headers' => ['X-Xcart-Label' => 'order-communication']
                 ]);
 
                 $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
