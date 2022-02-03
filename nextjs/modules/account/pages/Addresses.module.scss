@@ -22,7 +22,7 @@
 .addressBorder {
   border: 1px solid #c4c4c4;
   box-shadow: none;
-  min-height: auto;
+  min-height: pxToRem(242);
 
   @include breakpoint(lg) {
     min-height: pxToRem(244);
@@ -30,7 +30,10 @@
 }
 
 .modalWidth {
-  max-width: pxToRem(650);
+  max-width: none;
+  @include breakpoint(lg) {
+    max-width: pxToRem(650);
+  }
 }
 
 .modalBody {

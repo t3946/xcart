@@ -14,6 +14,7 @@ import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.con
 import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
 import cn from "classnames";
 
+import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 import Styles from "@modules/account/components/addresses/AddressItem.module.scss";
 
 interface AddressItemPropsDto {
@@ -98,9 +99,9 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           {addressInfo.street}, {addressInfo.detailed}
         </div>
         <div className="address-text">{addressInfo.country.viewValue}</div>
-        <div className="address-phone-wrapper">
-          <div className="address-text">Phone number:</div>
-          <div className="address-text">{addressInfo.phone_number}</div>
+        <div >
+          <span className="address-text">Phone number:</span>
+          <span className="address-text"> {addressInfo.phone_number}</span>
         </div>
         <AddEditBtnsBlock
           handleEdit={editAddress}
@@ -110,6 +111,10 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
         />
       </div>
       <BootstrapDialogHOC
+        classes={{
+          modal: StylesAddresses.modalWidth,
+          body: StylesAddresses.modalBody,
+        }}
         show={editAddressDialog.open}
         title={"Edit address"}
         onClose={editAddressDialog.handleClose}

@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import FormSelect from "@modules/ui/forms/Select";
-import { FormCheckBox } from "@modules/account/components/shared/FormCheckBox";
+import React from "react";
+import Select from "@modules/ui/forms/select/Select";
+import Feedback from "@modules/ui/forms/Feedback";
 import { useFormik } from "formik";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import {
@@ -13,12 +13,12 @@ import {
   editAddress,
 } from "@redux/actions/account-actions/AddressActions";
 import { getStates } from "@modules/account/utils/get-states";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Checkbox from "@modules/ui/forms/Checkbox";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -28,7 +28,7 @@ export const AddAddressForm: React.FC<any> = ({
   const dispatch = useDispatch();
   const countries = useSelectorAccount((e) => e.main.countries);
   const states = useSelectorAccount((e) => e.main.states);
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
   const user = useSelectorAccount((e) => e.user);
 
   const addressFormLoading = useSelectorAccount(
@@ -37,11 +37,7 @@ export const AddAddressForm: React.FC<any> = ({
 
   const onPended = () => {
     onCancelClick();
-    showSnackbar({
-      header: "Success",
-      message: `${!addressInfo ? "Address added!" : "Address edit!"}`,
-      theme: "success",
-    });
+    snackbar.show(`${!addressInfo ? "Address added!" : "Address edit!"}`);
   };
 
   const submitForm = () => {
@@ -60,8 +56,16 @@ export const AddAddressForm: React.FC<any> = ({
     dispatch(addAddress(newAddress, onPended, user.userId));
   };
 
+  const getMaskedPhone = (number: string) =>
+    `(${number.slice(0, 3)}) ${number.slice(3, 6)}-${number.slice(6, 10)}`;
+
   const formik = useFormik({
-    initialValues: addressInfo || initialAddAddressFormValue,
+    initialValues:
+      (addressInfo && {
+        ...addressInfo,
+        phone_number: getMaskedPhone(addressInfo.phone_number),
+      }) ||
+      initialAddAddressFormValue,
     validationSchema: addAddressFormValidationSchema,
     onSubmit: submitForm,
   });
@@ -77,21 +81,40 @@ export const AddAddressForm: React.FC<any> = ({
           label="Country"
           error={formik.touched.country?.value && formik.errors.country?.value}
           component={
-            <FormSelect
-              items={countries}
-              value={formik.values.country}
-              label={"Country"}
-              onClick={(value) => {
-                formik.setFieldValue("country", value);
-                formik.setFieldValue("state", initialAddAddressFormValue.state);
-                formik.setFieldValue("country", value);
-              }}
-              name={"country"}
-              id={"add-address-country"}
-              errorMessage={
-                formik.touched.country?.value && formik.errors.country?.value
-              }
-            />
+            <div>
+              <Select
+                clearable={false}
+                classes={{
+                  indicatorSeparator: "d-none",
+                  valueContainer: "ps-0",
+                }}
+                options={countries}
+                value={formik.values.country}
+                isValid={!!formik.touched.country && !formik.errors.country}
+                isInvalid={!!formik.touched.country && !!formik.errors.country}
+                onChange={(e) => {
+                  formik.setFieldValue("country", e.target.value);
+                  formik.setFieldValue(
+                    "state",
+                    initialAddAddressFormValue.state
+                  );
+                  formik.setFieldValue("country", e.target.value);
+                }}
+                name={"country"}
+                // errorMessage={
+                //   formik.touched.country?.value && formik.errors.country?.value
+                // }
+              />
+              {!!formik.touched.country?.value &&
+                !!formik.errors.country?.value && (
+                  <Feedback
+                    className="position-absolute d-block"
+                    type="invalid"
+                  >
+                    {formik.errors.country?.value}
+                  </Feedback>
+                )}
+            </div>
           }
         />
         <InputGroup
@@ -115,7 +138,7 @@ export const AddAddressForm: React.FC<any> = ({
               values={{
                 // phoneCountryCode: values.phoneCountryCode,
                 phone: formik.values.phone_number,
-                phoneExt: formik.values.phone_numberExt,
+                phoneExt: formik.values.phone_ext,
               }}
               mode={"ext"}
             />
@@ -159,20 +182,33 @@ export const AddAddressForm: React.FC<any> = ({
           label={"State/Province"}
           error={formik.touched.state && formik.errors.state?.value}
           component={
-            <FormSelect
-              items={getStates(states, formik.values.country.value)}
-              value={formik.values.state}
-              label={"State/Province"}
-              onClick={(value) => {
-                formik.setFieldValue("state", value);
-                delete formik.errors.state;
-              }}
-              name={"state"}
-              id={"add-address-state"}
-              errorMessage={
-                formik.touched.state?.value && formik.errors.state?.value
-              }
-            />
+            <div>
+              <Select
+                clearable={false}
+                classes={{
+                  indicatorSeparator: "d-none",
+                  valueContainer: "ps-0",
+                }}
+                options={getStates(states, formik.values.country.value)}
+                value={formik.values.state}
+                isValid={
+                  !!formik.touched.state?.value && !formik.errors.state?.value
+                }
+                isInvalid={
+                  !!formik.touched.state?.value && !!formik.errors.state?.value
+                }
+                onChange={(e) => {
+                  formik.setFieldValue("state", e.target.value);
+                  delete formik.errors.state;
+                }}
+                name={"state"}
+              />
+              {!!formik.touched.state?.value && !!formik.errors.state?.value && (
+                <Feedback className="position-absolute d-block" type="invalid">
+                  {formik.errors.state?.value}
+                </Feedback>
+              )}
+            </div>
           }
         />
 

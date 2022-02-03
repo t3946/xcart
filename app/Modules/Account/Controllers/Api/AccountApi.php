@@ -33,7 +33,7 @@ class AccountApi extends Controller
         foreach (CountryModel::objects()->all() as $key => $country)
         {
             $countries[$key]['value'] = $country->code;
-            $countries[$key]['viewValue'] = $country->name;
+            $countries[$key]['label'] = $country->name;
         }
         return $countries;
     }
@@ -44,7 +44,7 @@ class AccountApi extends Controller
         foreach (StateModel::objects()->all() as $key => $state)
         {
             $states[$key]['value'] = $state->stateid;
-            $states[$key]['viewValue'] = $state->state_name;
+            $states[$key]['label'] = $state->state_name;
             $states[$key]['countryCode'] = $state->model_country_code;
         }
         return$states;

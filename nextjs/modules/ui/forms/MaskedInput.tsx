@@ -32,6 +32,7 @@ const MaskedInput: React.FC<IProps> = React.forwardRef<
     autoComplete,
     placeholder,
   } = props;
+
   return (
     <InputMask
       mask={mask}

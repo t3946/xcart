@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { BillingAddressList } from "@modules/account/components/wallet/BillingAddressList";
 import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { useRouter } from "next/router";

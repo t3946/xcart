@@ -32,8 +32,8 @@ class AccountAddressesApi extends Controller
             $state = $address->state_model;
             $resultMass[$key] = $address->getAttributes();
             $resultMass[$key]['delivery_type'] = $address->delivery_type->name;
-            $resultMass[$key]['country'] = ['value' => $country->code, 'viewValue' => $country->name];
-            $resultMass[$key]['state'] = ['value' => $state->stateid, 'viewValue' => $state->state];
+            $resultMass[$key]['country'] = ['value' => $country->code, 'label' => $country->name];
+            $resultMass[$key]['state'] = ['value' => $state->stateid, 'label' => $state->state];
             $resultMass[$key]['is_default'] = (bool) $address->is_default;
         }
 
