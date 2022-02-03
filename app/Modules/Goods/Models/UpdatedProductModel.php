@@ -38,11 +38,13 @@ class UpdatedProductModel extends Model
                 'autoNowAdd' => true,
             ],
             'product' => [
+                'field' => 'resourceid',
                 'class' => ForeignField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['resourceid' => 'productid'],
             ],
             'category' => [
+                'field' => 'resourceid',
                 'class' => ForeignField::class,
                 'modelClass' => CategoryModel::class,
                 'link' => ['resourceid' => 'categoryid'],

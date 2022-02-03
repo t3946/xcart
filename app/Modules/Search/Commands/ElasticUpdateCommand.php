@@ -39,10 +39,10 @@ class ElasticUpdateCommand extends Command
 
         $manager = UpdatedProductModel::objects()->filter([
             'type__in' => [6, 61],
-            'category__sites__storefrontid' => $site->pk
+            'product__sites__storefrontid' => $site->pk
         ]);
 
-        $this->updateResources($engine_name, new CategoryDocumentCreator(), $manager);
+        $this->updateResources($engine_name, new ProductDocumentCreator(), $manager);
 
     }
 
@@ -54,16 +54,16 @@ class ElasticUpdateCommand extends Command
 
         $manager = UpdatedProductModel::objects()->filter([
             'type__in' => [8],
-            'product__sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite()->pk
+            'category__sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite()->pk
         ]);
 
-        $this->updateResources($engine_name, new ProductDocumentCreator(), $manager);
+        $this->updateResources($engine_name, new CategoryDocumentCreator(), $manager);
     }
 
     private function updateResources($engine_name, DocumentCreatorInterface $creator, QuerySetInterface $manager): void
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        
+
         Xcart::app()->elastic->checkEngine(
             $engine_name,
             strtolower($site->lang->lang_code ?? 'en')

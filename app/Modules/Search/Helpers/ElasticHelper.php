@@ -86,7 +86,7 @@ class ElasticHelper
         return $this->getClient()->appSearch()->search($request)->asArray();
     }
 
-    public function suggestion(string $engine, string $query, $size = 5)
+    public function suggestion(string $engine, string $query, $size = 5): array
     {
         $query = trim($query);
 
