@@ -82,12 +82,21 @@ function* updateFraudCheckStatus(action: AnyAction): Generator {
     });
   }
 }
+function* fetchOrderInformation(action: AnyAction): Generator {
+  try {
+    const data = yield axios
+      .get(`/api/order/related-info/${action.orderId}`)
+      .then((res) => res.data);
+    yield put({ type: "SET_RELATED_DATA", data });
+  } catch (e) {}
+}
 function* actionWatcher(): SagaIterator {
   yield takeLatest("FETCH_START_CHECK_DATA", fetchBaseCheckData);
   yield takeLatest("FETCH_FORCE_FRAUD_CHECK", forceFraudCheck);
   yield takeLatest("UNLOCK_ORDER", unlockOrder);
   yield takeLatest("UPDATE_SCORE_RESULT", changeScoreResult);
   yield takeLatest("UPDATE_FRAUD_CHECK_STATUS", updateFraudCheckStatus);
+  yield takeLatest("FETCH_RELATED_ORDER_DATA", fetchOrderInformation);
 }
 export default function* fraudCheckSaga(): Generator {
   yield all([actionWatcher()]);

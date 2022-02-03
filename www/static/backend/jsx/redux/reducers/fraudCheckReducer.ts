@@ -92,6 +92,11 @@ const fraudCheckReducer = (
           state: true,
         },
       };
+    case "SET_RELATED_DATA":
+      return {
+        ...state,
+        relatedData: action.data,
+      };
     default:
       return state;
   }

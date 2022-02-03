@@ -38,5 +38,10 @@ return [
         'route' => '/api/order/fraud-check/unlock-all',
         'target' => [OrderFraudCheckController::class, 'unlockOrders'],
         'name' => 'orders_fraud_unlock',
+    ],
+    [
+        'route' => '/api/order/related-info/{:order_id}',
+        'target' => [OrderFraudCheckController::class, 'getOrderInformation'],
+        'name' => 'related_order_info',
     ]
 ];

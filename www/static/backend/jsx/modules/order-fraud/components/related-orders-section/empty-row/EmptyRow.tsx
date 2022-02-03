@@ -15,6 +15,7 @@ export const EmptyRow: React.FC<EmptyRow> = ({ label }) => {
       <td />
       <td />
       <td />
+      <td />
     </tr>
   );
 };

@@ -17,6 +17,10 @@ export interface FraudCheckStore {
     message: string;
     status: AlertColor;
   };
+  relatedData?: {
+    attributes: AttributeRelated;
+    groups: GroupRelatedItem[];
+  };
 }
 export interface FraudCheckData {
   settings: {
@@ -52,8 +56,6 @@ export interface FraudCheckData {
     };
   };
   addressesLocation: AddressGeolocation[];
-  attributes: AttributeRelated;
-  groups: GroupRelatedItem[];
 }
 export interface AttributeRelated {
   b_address?: RelatedOrderItem[];
@@ -72,10 +74,11 @@ export interface GroupRelatedItem {
   dx: string;
 }
 export interface RelatedOrderItem {
-  isFraud: boolean;
+  type: RelatedOrderType;
   orderId: number;
   prefix: string;
 }
+export type RelatedOrderType = "fraud" | "other" | "cleared";
 export interface AddressGeolocation {
   typeId: number;
   longitude: number;
