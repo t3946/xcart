@@ -4,6 +4,7 @@ namespace Modules\Search\Helpers;
 
 
 use Elastic\EnterpriseSearch\AppSearch\Request\CreateEngine;
+use Elastic\EnterpriseSearch\AppSearch\Request\DeleteDocuments;
 use Elastic\EnterpriseSearch\AppSearch\Request\GetEngine;
 use Elastic\EnterpriseSearch\AppSearch\Request\IndexDocuments;
 use Elastic\EnterpriseSearch\AppSearch\Request\QuerySuggestion;
@@ -57,6 +58,14 @@ class ElasticHelper
         $request = new IndexDocuments($engine, $documents);
 
         $this->getClient()->appSearch()->indexDocuments($request);
+
+    }
+
+    public function delete(string $engine, array $documents): void
+    {
+        $request = new DeleteDocuments($engine, $documents);
+
+        $this->getClient()->appSearch()->deleteDocuments($request);
 
     }
 

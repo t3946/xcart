@@ -7,9 +7,10 @@ use DateTime;
 use DateTimeInterface;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
-use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\UpdatedProductModel;
 use Modules\Search\SearchModule;
 use Modules\Sites\Models\SiteModel;
+use Throwable;
 use Xcart\App\Commands\Command;
 use Xcart\App\Main\Xcart;
 
@@ -22,6 +23,13 @@ class ElasticUpdateCommand extends Command
         foreach (SiteModel::getAllEnabled() as $site) {
             echo "update $site->code products\n";
 
+            $updated_products = UpdatedProductModel::objects()->filter([
+                'type__in' => [6, 61],
+                'product__sites__storefrontid' => $site->pk
+            ]);
+
+            $bar = new CliProgressBar($updated_products->count());
+
             $i = 0;
 
             Xcart::app()->getModule('Sites')->setSite($site);
@@ -33,13 +41,13 @@ class ElasticUpdateCommand extends Command
                 strtolower($site->lang->lang_code ?? 'en')
             );
 
-            $bar = new CliProgressBar($site->products->count());
+            while ($models = $updated_products->paginate(++$i, 100)->all()) {
+                $to_index = $to_delete = [];
 
-            while ($models = $site->products->paginate(++$i, 100)->all()) {
-                $documents = [];
+                /** @var UpdatedProductModel $update_model */
 
-                foreach ($models as $model) {
-                    /** @var ProductModel $model */
+                foreach ($models as $update_model) {
+                    $model = $update_model->product;
 
                     if ($main_image = $model->getMainImage()) {
                         $main_image_sizes = [
@@ -49,7 +57,7 @@ class ElasticUpdateCommand extends Command
                         ];
                     }
 
-                    $documents[] = (object)[
+                    $document = (object)[
                         'id' => $model->pk,
                         'product' => $model->getFrontendName(),
                         'productcode' => $model->productcode,
@@ -68,11 +76,27 @@ class ElasticUpdateCommand extends Command
                         'forsale' => (int)($model->forsale === 'Y'),
                         'created_at' => (new DateTime())->setTimestamp($model->add_date)->format(DateTimeInterface::RFC3339)
                     ];
+                    switch ((int)$update_model->type) {
+                        case 6:
+                            $to_index[] = $document;
+                            break;
+                        case 61:
+                            $to_delete[] = $document;
+                            break;
+                    }
                 }
 
                 try {
-                    Xcart::app()->elastic->index($engine_name, $documents);
-                } catch(\Throwable $exception){
+
+                    if ($to_index) {
+                        Xcart::app()->elastic->index($engine_name, $to_index);
+                    }
+
+                    if ($to_delete) {
+                        Xcart::app()->elastic->delete($engine_name, array_map(static fn($doc) => $doc->id, $to_delete));
+                    }
+
+                } catch(Throwable $exception){
                     echo $exception->getMessage()."\n";
                 }
 
