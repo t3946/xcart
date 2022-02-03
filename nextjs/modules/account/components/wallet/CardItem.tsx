@@ -130,6 +130,8 @@ export const CardItem: React.FC<IProps> = ({
           })}
         </div>
       </div>
+
+
       <CardDialog
         contentType={BillingAddressFormEnum.EDIT}
         actionType={BillingAddressFormEnum.EDIT}
@@ -137,6 +139,7 @@ export const CardItem: React.FC<IProps> = ({
         cardInfo={cardInfo}
         handleClose={editDialog.handleClose}
       />
+
       <RemoveCardDialog
         open={removeDialog.open}
         handleClose={removeDialog.handleClose}

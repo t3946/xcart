@@ -10,6 +10,19 @@ import { Card as ICard } from "@stripe/stripe-js";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import { deleteCard } from "@redux/actions/account-actions/PaymentsActions";
 import { useDispatch } from "react-redux";
+import EditPaymentMethod from "@components/pages/wallet/dialog/EditPaymentMethod";
+import AddCard from "@components/pages/wallet/dialog/AddCard";
+
+function addressToString(address) {
+  const parts = [];
+  const fields = ["street", "city", "state", "zip", "country"];
+
+  for (const field of fields) {
+    parts.push(address[field]);
+  }
+
+  return parts.join(", ");
+}
 
 interface IProps {
   card: ICard;
@@ -19,12 +32,14 @@ interface IProps {
 }
 
 const Card: React.FC<IProps> = (props) => {
+  const [showAddModal, setShowAddModal] = React.useState(false);
   const dispatch = useDispatch();
   const { card, isDefault, changeDefaultCardId, openCardDialog } = props;
   const accordion = useAccordion();
   const removeDialog = useDialog();
   const editDialog = useDialog();
   const breakpoint = useBreakpoint();
+  const [show, setShow] = React.useState(false);
 
   function expTemplate() {
     let month = card.exp_month.toString();
@@ -49,6 +64,19 @@ const Card: React.FC<IProps> = (props) => {
           window.location.reload();
         },
       })
+    );
+  }
+
+  function billingAddressTemplate() {
+    if (!card.metadata.address) {
+      return;
+    }
+
+    return (
+      <div className="wallet-card-billing">
+        <div className="wallet-card-content-label">Billing address</div>
+        <div>{addressToString(card.metadata.address)}</div>
+      </div>
     );
   }
 
@@ -88,65 +116,21 @@ const Card: React.FC<IProps> = (props) => {
             {/*<div className="wallet-card-content-label">Name on card </div>*/}
             <div>{card.name}</div>
           </div>
-          <div className="wallet-card-billing">
-            <div className="wallet-card-content-label">Billing address</div>
-            <div>
-              1370 BRIDGETON HILL RD UPPER BLACK EDDY, PA 18972 United States
-            </div>
-          </div>
-          {/*{breakpoint({*/}
-          {/*  xs: (*/}
-          {/*    <AddEditBtnsBlock*/}
-          {/*      handleRemove={() =>*/}
-          {/*        openCardDialog(*/}
-          {/*          card,*/}
-          {/*          removeDialog,*/}
-          {/*          "/account/payments/wallet/remove"*/}
-          {/*        )*/}
-          {/*      }*/}
-          {/*      handleEdit={() =>*/}
-          {/*        openCardDialog(*/}
-          {/*          card,*/}
-          {/*          editDialog,*/}
-          {/*          "/account/payments/wallet/edit"*/}
-          {/*        )*/}
-          {/*      }*/}
-          {/*      defaultItem={isDefault}*/}
-          {/*      changeDefault={changeDefaultCardId}*/}
-          {/*    >*/}
-          {/*      <div className={"wallet-header-default-block_is-default"}>*/}
-          {/*        Default*/}
-          {/*      </div>*/}
-          {/*    </AddEditBtnsBlock>*/}
-          {/*  ),*/}
-          {/*  md: (*/}
+          {billingAddressTemplate()}
 
-          {/*  ),*/}
-          {/*})}*/}
           <div className="wallet-card-buttons">
             {/*<button*/}
             {/*  className="form-button account-submit-btn edit-card-btn"*/}
-            {/*  onClick={() =>*/}
-            {/*    openCardDialog(*/}
-            {/*      card,*/}
-            {/*      editDialog,*/}
-            {/*      "/account/payments/wallet/edit"*/}
-            {/*    )*/}
+            {/*  onClick={*/}
+            {/*    () => setShow(true)*/}
+            {/*    // openCardDialog(*/}
+            {/*    //   card,*/}
+            {/*    //   editDialog,*/}
+            {/*    //   "/account/payments/wallet/edit"*/}
+            {/*    // )*/}
             {/*  }*/}
             {/*>*/}
             {/*  Edit*/}
-            {/*</button>*/}
-            {/*<button*/}
-            {/*  onClick={() =>*/}
-            {/*    openCardDialog(*/}
-            {/*      card,*/}
-            {/*      removeDialog,*/}
-            {/*      "/account/payments/wallet/remove"*/}
-            {/*    )*/}
-            {/*  }*/}
-            {/*  className="form-button account-submit-btn account-submit-btn-outline"*/}
-            {/*>*/}
-            {/*  Remove*/}
             {/*</button>*/}
             <Button theme={ETheme.outlined} onClick={removeCard}>
               remove
@@ -154,6 +138,20 @@ const Card: React.FC<IProps> = (props) => {
           </div>
         </div>
       </div>
+
+      <EditPaymentMethod
+        open={show}
+        handleClose={() => {
+          setShow(false);
+        }}
+      />
+
+      <AddCard
+        open={showAddModal}
+        handleClose={() => {
+          setShowAddModal(false);
+        }}
+      />
 
       <CardDialog
         contentType={BillingAddressFormEnum.EDIT}

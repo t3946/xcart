@@ -70,12 +70,13 @@ async function getSources(userId) {
   });
 }
 
-async function createSources(userId, sourceToken) {
+async function createSources(userId, sourceToken, metadata) {
   const stripe = await getClient();
   const customer = await getCustomer(userId, stripe);
 
   return stripe.customers.createSource(customer.id, {
     source: sourceToken,
+    metadata,
   });
 }
 

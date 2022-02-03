@@ -53,3 +53,15 @@
     padding: pxToRem(24) pxToRem(24) 0;
   }
 }
+
+.accountPageContainer {
+  padding: 0;
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(20) 0;
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24) 0;
+  }
+}

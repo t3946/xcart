@@ -70,12 +70,14 @@ export const AddCardForm: React.FC = () => {
       console.log(1);
       return;
     }
+    const data = {
+      token: cardToken.id,
+      addressId: values.address,
+    };
 
     dispatch(
       addCardSaga({
-        data: {
-          token: cardToken.id,
-        },
+        data,
         success: function () {
           console.log("success");
           window.location.reload();
@@ -131,3 +133,5 @@ export const AddCardForm: React.FC = () => {
     </div>
   );
 };
+
+export default AddCardForm;
