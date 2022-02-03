@@ -54,7 +54,7 @@ class ElasticUpdateCommand extends Command
 
         $manager = UpdatedProductModel::objects()->filter([
             'type__in' => [8],
-            'category__sites__storefrontid' => Xcart::app()->getModule('Sites')->getSite()->pk
+            'category__storefrontid' => Xcart::app()->getModule('Sites')->getSite()->pk
         ]);
 
         $this->updateResources($engine_name, new CategoryDocumentCreator(), $manager);
