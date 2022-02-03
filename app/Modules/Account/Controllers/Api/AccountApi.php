@@ -13,6 +13,7 @@ use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\User\Models\UserAccount\UserModel;
@@ -103,5 +104,14 @@ class AccountApi extends Controller
         ];
 
         $this->jsonResponse($initial_data);
+    }
+
+    public function getInvoicePdf () {
+        $orderid = 19;
+        $order = OrderModel::objects()->get(["orderid" => $orderid]);
+        $hash = OrderHelper::getOrderHash([$order->orderid, $order->s_zipcode, $order->email]);
+        $url = "http://localhost/convert/pdf?orderid={$orderid}&p={$hash}&mode=print";
+
+        $this->jsonResponse($url);
     }
 }

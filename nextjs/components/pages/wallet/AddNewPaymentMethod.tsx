@@ -21,7 +21,9 @@ export const AddNewPaymentMethod: React.FC = () => {
   }
 
   return (
-    <div className={"d-block d-md-flex justify-content-between align-items-center"}>
+    <div
+      className={"d-block d-md-flex justify-content-between align-items-center"}
+    >
       <Button onClick={openModal} className="w-auto">
         Add a credit or debit card
       </Button>
@@ -39,10 +41,7 @@ export const AddNewPaymentMethod: React.FC = () => {
         </ul>
       </div>
 
-      <AddCard
-        open={show}
-        handleClose={closeModal}
-      />
+      <AddCard open={show} handleClose={closeModal} />
     </div>
   );
 };

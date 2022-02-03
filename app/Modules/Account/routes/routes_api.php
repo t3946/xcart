@@ -16,6 +16,12 @@ return [
     ],
 
     [
+        'route' => '/get-invoice-pdf',
+        'target' => [AccountApi::class, 'getInvoicePdf'],
+        'name' => 'get-invoice-pdf'
+    ],
+
+    [
         'route' => '/lists',
         'path' => 'Modules.Account.routes.routes_lists_api',
         'namespace' => 'lists',
