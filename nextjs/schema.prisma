@@ -4658,6 +4658,7 @@ model xcart_products {
 }
 
 model xcart_order_statuses_history {
+  id                 Int                 @id
   group_id           Int?
   status             String?             @db.VarChar(32)
   old_status         String?             @db.VarChar(32)
@@ -4665,7 +4666,6 @@ model xcart_order_statuses_history {
   xcart_order_groups xcart_order_groups? @relation(fields: [group_id], references: [order_group_id], onDelete: NoAction, onUpdate: NoAction, map: "adshf9h9h2934f")
 
   @@index([group_id], map: "adshf9h9h2934f")
-  @@ignore
 }
 
 model xcart_products_amazon_rates {
