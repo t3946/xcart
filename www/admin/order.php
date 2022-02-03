@@ -1740,7 +1740,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
                 $mail_smarty->assign('order', $order_after_refund);
 
-                Xcart::app()->mail->raw($mnf_to, $d_email_subject_14, $mnf_body, [
+                Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
                     'from' => $config['Company']['orders_department'],
                     'X-Xcart-Label' => 'order-communication'
                 ]);
