@@ -3673,6 +3673,7 @@ model xcart_order_groups {
   @@index([cb_status, dc_status], map: "cb_status_dc_status")
   @@index([orderid, cb_status], map: "idx_orderid_cb")
   @@index([manufacturerid], map: "manufacturerid")
+  xcart_order_statuses_history xcart_order_statuses_history[] @ignore
 }
 
 model xcart_order_logs {
@@ -4654,6 +4655,17 @@ model xcart_products {
   @@index([pc_classify_status, forsale], map: "pc_classify_status")
   @@index([r_avail], map: "r_avail")
   @@index([supplier_internal_product_id], map: "supplier_internal_product_id")
+}
+
+model xcart_order_statuses_history {
+  group_id           Int?
+  status             String?             @db.VarChar(32)
+  old_status         String?             @db.VarChar(32)
+  updated            DateTime?           @db.DateTime(0)
+  xcart_order_groups xcart_order_groups? @relation(fields: [group_id], references: [order_group_id], onDelete: NoAction, onUpdate: NoAction, map: "adshf9h9h2934f")
+
+  @@index([group_id], map: "adshf9h9h2934f")
+  @@ignore
 }
 
 model xcart_products_amazon_rates {
