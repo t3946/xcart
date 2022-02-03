@@ -10,10 +10,11 @@ use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
 /**
- * @property integer mask
+ * @property int mask
  * @property string type
- * @property integer resourceid
+ * @property int resourceid
  * @property ProductModel product
+ * @property CategoryModel $category
  */
 class UpdatedProductModel extends Model
 {
@@ -37,10 +38,14 @@ class UpdatedProductModel extends Model
                 'autoNowAdd' => true,
             ],
             'product' => [
-                'field' => 'resourceid',
                 'class' => ForeignField::class,
                 'modelClass' => ProductModel::class,
                 'link' => ['resourceid' => 'productid'],
+            ],
+            'category' => [
+                'class' => ForeignField::class,
+                'modelClass' => CategoryModel::class,
+                'link' => ['resourceid' => 'categoryid'],
             ],
             'resourceid' => [
                 'class' => IntField::class,

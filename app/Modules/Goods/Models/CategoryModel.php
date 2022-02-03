@@ -35,6 +35,8 @@ use Xcart\Category;
  * @property Manager|ProductModel[] products
  * @property int global_product_count
  * @property int product_count
+ * @property int $active_product_count
+ * @property string $avail
  */
 class CategoryModel extends TreeModel
 {

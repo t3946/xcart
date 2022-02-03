@@ -5,6 +5,7 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
+use Modules\Distributor\Models\DistributorModel;
 use Modules\Editor\Fields\EditorField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
@@ -35,6 +36,7 @@ class DistributorGeneralForm extends DistributorForm
 
     public function getFields()
     {
+        /** @var DistributorModel $dx */
         $dx = $this->getInstance();
         $user = Xcart::app()->user;
         $provider = $dx->pk ? "{$dx->provider_model} ({$dx->provider})" : "{$user} ({$user->login})";
