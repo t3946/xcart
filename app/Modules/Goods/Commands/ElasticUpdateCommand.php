@@ -84,6 +84,8 @@ class ElasticUpdateCommand extends Command
                             $to_delete[] = $document;
                             break;
                     }
+
+                    $update_model->delete();
                 }
 
                 try {
