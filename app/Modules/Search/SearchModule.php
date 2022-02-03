@@ -8,9 +8,9 @@ class SearchModule extends Module
 {
     public const PRODUCTS_ENGINE = '%s-products';
 
-    public static function getEngine(string $code): string
+    public static function getEngine(string $code, string $engine = self::PRODUCTS_ENGINE): string
     {
-        return strtolower(sprintf(self::PRODUCTS_ENGINE, $code));
+        return strtolower(sprintf($engine, $code));
     }
 
 }
