@@ -1,17 +1,15 @@
 import React, { useContext } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsDialogContext";
-import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import { initialAddCardFormValue } from "@modules/account/ts/consts/add-card-form";
 import { useDispatch } from "react-redux";
-import { addDataFromSubmitCardForm } from "@redux/actions/account-actions/PaymentsActions";
-import { detectCardType } from "@modules/account/utils/detect-card-type";
 import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StripeField from "@modules/ui/StripeField";
 import * as stripeJs from "@stripe/stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import Button from "@modules/ui/forms/Button";
+import { addCardSaga } from "@redux/actions/account-actions/PaymentsActions";
 
 export const AddCardForm: React.FC = () => {
   const stripe = useStripe();
@@ -48,31 +46,23 @@ export const AddCardForm: React.FC = () => {
 
     await stripe.createToken(card).then((result: stripeJs.TokenResult) => {
       cardToken = result.token;
+      result.error && alert(result.error?.message);
     });
 
     if (!cardToken) {
       actions.setSubmitting(false);
+      console.log(1);
       return;
     }
 
-    actions.setSubmitting(false);
-    return;
-
-    context.setContent(BillingAddressFormEnum.LIST_ADDRESS);
-
     dispatch(
-      addDataFromSubmitCardForm({
-        card: {
-          name: values.name,
-          card_number: values.cardNumber,
-          expires: Date.parse(
-            new Date(
-              values.expiration_year.value,
-              values.expiration_month.value
-            ).toString()
-          ),
-          is_default: values.is_default,
-          card_type: detectCardType(values.cardNumber),
+      addCardSaga({
+        data: {
+          token: cardToken.id,
+        },
+        success: function () {
+          console.log("success");
+          window.location.reload();
         },
       })
     );

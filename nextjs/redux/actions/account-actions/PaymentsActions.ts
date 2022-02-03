@@ -35,3 +35,13 @@ export const removeCard = (id: number, onRequestEnd) => ({
 export const getTransaction = () => ({
   type: "GET_TRANSACTIONS",
 });
+
+export const addCardSaga = (payload: any): any => ({
+  type: "ADD_CARD_SAGA",
+  payload,
+});
+
+export const deleteCard = (payload: any): any => ({
+  type: "DELETE_CARD",
+  payload,
+});

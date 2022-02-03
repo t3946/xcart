@@ -1,6 +1,4 @@
 import React from "react";
-import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
-import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
 
 export const AddEditBtnsBlock: React.FC<any> = ({
   handleEdit,

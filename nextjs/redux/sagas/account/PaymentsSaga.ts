@@ -22,27 +22,6 @@ function* getCards(): Generator {
   });
 }
 
-function* addCard(action: AnyAction): Generator {
-  const cards: any = yield api
-    .post<any>(
-      `/api/account/wallet/add-card`,
-      JSON.stringify({ ...action.cardInfo, user: getUser().id })
-    )
-    .then((response) => response);
-
-  yield put({
-    type: "SET_CARDS",
-    cards,
-  });
-
-  yield put({
-    type: "GET_ADDRESSES",
-    userId: Store.getState().user.id,
-  });
-
-  yield action.onRequestEnd();
-}
-
 function* editCard(action: AnyAction): Generator {
   const cards: any = yield api
     .post<any>(
@@ -102,11 +81,28 @@ function* changeDefaultCard(action: any): Generator {
     .then(success);
 }
 
+function* addCard(action: any): Generator {
+  const { data, success } = action.payload;
+
+  yield axios
+    .post("/api-client/user/stripe/sources/create", data)
+    .then(success);
+}
+
+function* deleteCard(action: any): Generator {
+  const { data, success } = action.payload;
+
+  yield axios
+    .post("/api-client/user/stripe/sources/delete", data)
+    .then(success);
+}
+
 export function* paymentsActionWatcher(): SagaIterator {
   yield takeLatest("GET_CARDS", getCards);
-  yield takeLatest("ADD_CARD", addCard);
   yield takeLatest("EDIT_CARD", editCard);
   yield takeLatest("REMOVE_CARD", removeCard);
   yield takeLatest("GET_TRANSACTIONS", getTransactions);
   yield takeLatest("CHANGE_DEFAULT_CARD", changeDefaultCard);
+  yield takeLatest("ADD_CARD_SAGA", addCard);
+  yield takeLatest("DELETE_CARD", deleteCard);
 }

@@ -32,4 +32,11 @@ apiStripe.post("/sources/create", async function (req, res) {
   res.json(source);
 });
 
+apiStripe.post("/sources/delete", async function (req, res) {
+  console.log("body", req.body)
+  const source = await stripeService.source.delete(req.user.userId,req.body.cardId);
+
+  res.json(source);
+});
+
 module.exports = apiStripe;

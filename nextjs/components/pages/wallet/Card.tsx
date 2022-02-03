@@ -4,10 +4,12 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import { CardDialog } from "@modules/account/components/wallet/CardDialog";
 import { RemoveCardDialog } from "@modules/account/components/wallet/RemoveCardDialog";
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
-import { AddEditBtnsBlock } from "@modules/account/components/shared/AddEditBtnsBlock";
 import { CardHeader } from "@modules/account/components/wallet/CardHeader";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { Card as ICard } from "@stripe/stripe-js";
+import Button, { ETheme } from "@modules/ui/forms/Button";
+import { deleteCard } from "@redux/actions/account-actions/PaymentsActions";
+import { useDispatch } from "react-redux";
 
 interface IProps {
   card: ICard;
@@ -17,6 +19,7 @@ interface IProps {
 }
 
 const Card: React.FC<IProps> = (props) => {
+  const dispatch = useDispatch();
   const { card, isDefault, changeDefaultCardId, openCardDialog } = props;
   const accordion = useAccordion();
   const removeDialog = useDialog();
@@ -38,10 +41,21 @@ const Card: React.FC<IProps> = (props) => {
     changeDefaultCardId(card.id);
   }
 
+  function removeCard() {
+    dispatch(
+      deleteCard({
+        data: { cardId: card.id },
+        success() {
+          window.location.reload();
+        },
+      })
+    );
+  }
+
   return (
     <div className="wallet-card-container">
       <div onClick={accordion.onItemClick} className={`wallet-card-header `}>
-        <CardHeader cardLast4={card.last4} cardType={"visa"} />
+        <CardHeader cardLast4={card.last4} cardType={card.brand} />
         <div className="wallet-card-billing wallet-card-billing-header">
           {expTemplate()}
         </div>
@@ -71,7 +85,7 @@ const Card: React.FC<IProps> = (props) => {
       >
         <div className={`wallet-card-content `}>
           <div className="wallet-card-name">
-            <div className="wallet-card-content-label">Name on card </div>
+            {/*<div className="wallet-card-content-label">Name on card </div>*/}
             <div>{card.name}</div>
           </div>
           <div className="wallet-card-billing">
@@ -80,60 +94,64 @@ const Card: React.FC<IProps> = (props) => {
               1370 BRIDGETON HILL RD UPPER BLACK EDDY, PA 18972 United States
             </div>
           </div>
-          {breakpoint({
-            xs: (
-              <AddEditBtnsBlock
-                handleRemove={() =>
-                  openCardDialog(
-                    card,
-                    removeDialog,
-                    "/account/payments/wallet/remove"
-                  )
-                }
-                handleEdit={() =>
-                  openCardDialog(
-                    card,
-                    editDialog,
-                    "/account/payments/wallet/edit"
-                  )
-                }
-                defaultItem={isDefault}
-                changeDefault={changeDefaultCardId}
-              >
-                <div className={"wallet-header-default-block_is-default"}>
-                  Default
-                </div>
-              </AddEditBtnsBlock>
-            ),
-            md: (
-              <div className="wallet-card-buttons">
-                <button
-                  className="form-button account-submit-btn edit-card-btn"
-                  onClick={() =>
-                    openCardDialog(
-                      card,
-                      editDialog,
-                      "/account/payments/wallet/edit"
-                    )
-                  }
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() =>
-                    openCardDialog(
-                      card,
-                      removeDialog,
-                      "/account/payments/wallet/remove"
-                    )
-                  }
-                  className="form-button account-submit-btn account-submit-btn-outline"
-                >
-                  Remove
-                </button>
-              </div>
-            ),
-          })}
+          {/*{breakpoint({*/}
+          {/*  xs: (*/}
+          {/*    <AddEditBtnsBlock*/}
+          {/*      handleRemove={() =>*/}
+          {/*        openCardDialog(*/}
+          {/*          card,*/}
+          {/*          removeDialog,*/}
+          {/*          "/account/payments/wallet/remove"*/}
+          {/*        )*/}
+          {/*      }*/}
+          {/*      handleEdit={() =>*/}
+          {/*        openCardDialog(*/}
+          {/*          card,*/}
+          {/*          editDialog,*/}
+          {/*          "/account/payments/wallet/edit"*/}
+          {/*        )*/}
+          {/*      }*/}
+          {/*      defaultItem={isDefault}*/}
+          {/*      changeDefault={changeDefaultCardId}*/}
+          {/*    >*/}
+          {/*      <div className={"wallet-header-default-block_is-default"}>*/}
+          {/*        Default*/}
+          {/*      </div>*/}
+          {/*    </AddEditBtnsBlock>*/}
+          {/*  ),*/}
+          {/*  md: (*/}
+
+          {/*  ),*/}
+          {/*})}*/}
+          <div className="wallet-card-buttons">
+            {/*<button*/}
+            {/*  className="form-button account-submit-btn edit-card-btn"*/}
+            {/*  onClick={() =>*/}
+            {/*    openCardDialog(*/}
+            {/*      card,*/}
+            {/*      editDialog,*/}
+            {/*      "/account/payments/wallet/edit"*/}
+            {/*    )*/}
+            {/*  }*/}
+            {/*>*/}
+            {/*  Edit*/}
+            {/*</button>*/}
+            {/*<button*/}
+            {/*  onClick={() =>*/}
+            {/*    openCardDialog(*/}
+            {/*      card,*/}
+            {/*      removeDialog,*/}
+            {/*      "/account/payments/wallet/remove"*/}
+            {/*    )*/}
+            {/*  }*/}
+            {/*  className="form-button account-submit-btn account-submit-btn-outline"*/}
+            {/*>*/}
+            {/*  Remove*/}
+            {/*</button>*/}
+            <Button theme={ETheme.outlined} onClick={removeCard}>
+              remove
+            </Button>
+          </div>
         </div>
       </div>
 
