@@ -26,8 +26,8 @@ async function getCustomer(userId, stripe) {
 
   //user no registered in stripe
   if (user.stripe_customer_id === null) {
-    const customer = await stripeClient.customers.create({
-      description: "Client id: " + req.user.userId,
+    const customer = await stripe.customers.create({
+      description: "Client id: " + userId,
       email: user.email,
     });
 
@@ -37,7 +37,7 @@ async function getCustomer(userId, stripe) {
 
     await prisma.xcart_users.update({
       where: {
-        user_id: req.user.userId,
+        user_id: userId,
       },
       data: {
         stripe_customer_id: customer.id,
