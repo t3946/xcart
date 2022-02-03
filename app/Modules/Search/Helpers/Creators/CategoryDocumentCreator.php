@@ -22,12 +22,14 @@ class CategoryDocumentCreator implements DocumentCreatorInterface
 
             $document = (object)[
                 'id' => $model->pk,
+                'category' => $model->getFrontendName(),
+                'root_category_id' => $model->root
             ];
 
             if ($model->avail === 'Y' && $model->active_product_count > 0) {
-                $this->to_delete[] = $document;
-            } else {
                 $this->to_index[] = $document;
+            } else {
+                $this->to_delete[] = $document;
             }
         }
     }
