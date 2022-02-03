@@ -7,9 +7,12 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
   let groups: { solved: []; notSolved: [] };
 
-  await instance.get("/api-client/orders/get-order-groups").then((res) => {
-    groups = res.data;
-  });
+  await instance
+    .get("/api-client/orders/get-order-groups")
+    .then((res) => {
+      groups = res.data;
+    })
+    .catch();
   return {
     props: { groups },
   };

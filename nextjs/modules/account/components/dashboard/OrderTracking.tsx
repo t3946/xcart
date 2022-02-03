@@ -2,34 +2,65 @@ import React from "react";
 import cn from "classnames";
 import OrderTrackingLine from "@modules/account/components/orders/OrderTrackingLine";
 import RectangularButton from "@modules/account/components/common/RectangularButton";
+import Link from "next/link";
+import { getInvoicePdf } from "@redux/actions/account-actions/OrdersActions";
+import { useDispatch } from "react-redux";
 
 import DashboardStyles from "@modules/account/components/dashboard/Dashboard.module.scss";
 import Styles from "@modules/account/components/dashboard/OrderTracking.module.scss";
 
 interface IProps {
-  orderInfo: any;
-  trackingInfo?: any;
-  orderGroupInfo: any;
+  orderInfo: {
+    orderNumber: string;
+    order_group_id: number;
+    tracking: string;
+    statuses: {
+      id: number;
+      group_id: number;
+      status: string;
+      old_status: string;
+      updated: string;
+    }[];
+  };
 }
 
-const OrderTracking: React.FC<IProps> = ({
-  orderInfo,
-  trackingInfo,
-  orderGroupInfo,
-}) => {
+const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
+  const dispatch = useDispatch();
+  const [invoiceUrl, setInvoicePdf] = React.useState<string>("");
+  React.useEffect(() => {
+    dispatch(
+      getInvoicePdf({
+        success(res) {
+          setInvoicePdf(res.data);
+        },
+      })
+    );
+  }, []);
+
   return (
     <RectangularButton
       classNames={{ container: [Styles.container, DashboardStyles.card] }}
       header={
         <div className={cn(Styles.header, "d-flex w-100 align-items-end")}>
           <div className={Styles.order}>
-            <div className={Styles.orderNumber}>Order # {orderInfo.number}</div>
+            <div className={Styles.orderNumber}>
+              Order # {orderInfo.orderNumber}
+            </div>
           </div>
           <div className="d-none d-md-block text-center text-lg-start flex-grow-1">
-            <span className={Styles.textBlue}>View details</span>
+            <Link
+              href={`/order/[id]/order-tracking`}
+              as={`/order/${orderInfo.orderNumber}/order-tracking`}
+            >
+              <a>
+                <span className={Styles.textBlue}>View details</span>
+              </a>
+            </Link>
           </div>
           <div className="d-none d-md-inline">
-            <span className={Styles.textBlue}>Invoice.pdf</span>
+            <Link href={invoiceUrl}>
+              <a className={Styles.textBlue}>Invoice.pdf</a>
+            </Link>
           </div>
         </div>
       }
@@ -45,31 +76,42 @@ const OrderTracking: React.FC<IProps> = ({
             )}
           >
             <b>
-              Tracking number <br className="d-md-none" />
-              <span className={Styles.textBlue}>{trackingInfo.tracknum}</span>
+              {orderInfo.tracking && (
+                <>
+                  Tracking number <br className="d-md-none" />
+                  <span className={Styles.textBlue}>{orderInfo.tracking}</span>
+                </>
+              )}
             </b>
-            <span
-              className={cn(Styles.textBlue, "d-block float-right d-md-none")}
-            >
-              Invoice
-            </span>
+            <Link href={invoiceUrl}>
+              <a
+                className={cn(Styles.textBlue, "d-block float-right d-md-none")}
+              >
+                Invoice
+              </a>
+            </Link>
           </div>
-          <OrderTrackingLine dc_status={orderGroupInfo.dc_status} />
+          <OrderTrackingLine statuses={orderInfo.statuses} />
         </div>
       }
       footer={
-        <button
-          className={cn(
-            Styles.button,
-            "mt-4",
-            "d-md-none",
-            "form-button",
-            "form-button__outline",
-            "fw-bold"
-          )}
+        <Link
+          href={`/order/[id]/order-tracking`}
+          as={`/order/${orderInfo.orderNumber}/order-tracking`}
         >
-          view details
-        </button>
+          <button
+            className={cn(
+              Styles.button,
+              "mt-4",
+              "d-md-none",
+              "form-button",
+              "form-button__outline",
+              "fw-bold"
+            )}
+          >
+            view details
+          </button>
+        </Link>
       }
     />
   );

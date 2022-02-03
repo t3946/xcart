@@ -9,15 +9,21 @@ import cn from "classnames";
 import Styles from "@modules/account/components/orders/OrderTrackingLine.module.scss";
 
 interface IProps {
-  dc_status: string;
+  statuses: {
+    id: number;
+    group_id: number;
+    status: string;
+    old_status: string;
+    updated: string;
+  }[];
 }
 
-const OrderTrackingLine: React.FC<IProps> = ({ dc_status }) => {
+const OrderTrackingLine: React.FC<IProps> = ({ statuses }) => {
   const dispatch = useDispatch();
   const breakpoints = useSelector(
     (store: AccountStore) => store.main.breakpoint
   );
-  
+
   const [trackingViewData, setTrackingViewData] = React.useState({
     items: null,
     lineWidth: null,
@@ -28,9 +34,9 @@ const OrderTrackingLine: React.FC<IProps> = ({ dc_status }) => {
   }, []);
 
   React.useEffect(() => {
-    setTrackingViewData(getDataToTracking(dc_status, !breakpoints?.md));
-  }, [breakpoints, dc_status]);
-
+    setTrackingViewData(getDataToTracking(statuses, !breakpoints?.md));
+  }, [breakpoints, statuses]);
+  
   return (
     <div className={Styles.orderTrackingLine}>
       <div
@@ -45,8 +51,6 @@ const OrderTrackingLine: React.FC<IProps> = ({ dc_status }) => {
                 className={cn(Styles.orderTrackingLineRoundContainer, {
                   [Styles.orderTrackingLineRoundContainer_current]:
                     e.containerClass.current,
-                  [Styles.kek]: index === 0,
-                  [Styles.kek]: index === trackingViewData.items.length - 1,
                 })}
                 style={e.roundStyle}
                 key={index}

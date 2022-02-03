@@ -28,3 +28,8 @@ export const openRMARequest = (action: Record<any, any>) => ({
   type: "OPEN_RMA_REQUEST",
   ...action,
 });
+
+export const getInvoicePdf = (action: Record<any, any>) => ({
+  type: "GET_INVOICE_PDF",
+  ...action,
+});
