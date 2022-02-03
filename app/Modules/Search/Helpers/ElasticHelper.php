@@ -16,6 +16,7 @@ use Elastic\EnterpriseSearch\AppSearch\Schema\SearchRequestParams;
 use Elastic\EnterpriseSearch\AppSearch\Schema\SimpleObject;
 use Elastic\EnterpriseSearch\Client;
 use Elastic\EnterpriseSearch\Exception\ClientErrorResponseException;
+use Modules\Search\Helpers\Searchers\DocumentSearcherInterface;
 
 class ElasticHelper
 {
@@ -67,19 +68,16 @@ class ElasticHelper
 
     }
 
-    public function search(string $engine, string $query, int $page, int $size): array
+    public function search(string $engine, string $query, DocumentSearcherInterface $searcher, int $page, int $size): array
     {
         $searchParam = new SearchRequestParams(trim($query));
-
-        $searchObject = new SimpleObject();
-        $searchObject->all = [(object)['is_group_root' => 0], (object)['in_stock' => 1]];
 
         $paginationObject = new PaginationResponseObject();
         $paginationObject->current = $page;
         $paginationObject->size = $size;
 
-        $searchParam->filters = $searchObject;
         $searchParam->page = $paginationObject;
+        $searchParam->filters = $searcher->getSearchObject();
 
         $request = new Search($engine, $searchParam);
 

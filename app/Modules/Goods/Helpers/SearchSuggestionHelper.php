@@ -8,6 +8,8 @@ use Elastic\EnterpriseSearch\AppSearch\Schema\SearchRequestParams;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Search\Helpers\Searchers\CategoryDocumentSearcher;
+use Modules\Search\Helpers\Searchers\ProductDocumentSearcher;
 use Modules\Search\SearchModule;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -39,7 +41,13 @@ class SearchSuggestionHelper
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $searchResult = Xcart::app()->elastic->search(SearchModule::getEngine($site->code), $this->search, 1, $count);
+        $searchResult = Xcart::app()->elastic->search(
+            SearchModule::getEngine($site->code),
+            $this->search,
+            new ProductDocumentSearcher(),
+            1,
+            $count
+        );
 
         $p_suggestions = [];
 
@@ -55,14 +63,13 @@ class SearchSuggestionHelper
     }
     public function elastic_category_suggestion($count = 5, array $html = []): array
     {
-        //TODO rewrite on new elastic engine
-        return [];
 
         $site = Xcart::app()->getModule('Sites')->getSite();
 
         $searchResult = Xcart::app()->elastic->search(
             SearchModule::getEngine($site->code, SearchModule::CATEGORIES_ENGINE),
             $this->search,
+            new CategoryDocumentSearcher(),
             1,
             $count
         );
@@ -73,7 +80,7 @@ class SearchSuggestionHelper
             $p_suggestions[] = [
                 'id' => $result['id']['raw'],
                 'link' => $result['url']['raw'],
-                'name' => $result['product']['raw'],
+                'name' => $result['category']['raw'],
             ];
         }
         return $p_suggestions;

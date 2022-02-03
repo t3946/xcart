@@ -4,6 +4,7 @@ namespace Modules\Goods\Controllers;
 
 use Elastic\EnterpriseSearch\AppSearch\Request\Search;
 use Elastic\EnterpriseSearch\AppSearch\Schema\SearchRequestParams;
+use Modules\Search\Helpers\Searchers\ProductDocumentSearcher;
 use Modules\Search\SearchModule;
 use Xcart\App\QueryBuilder\Expression;
 use Modules\Goods\GoodsModule;
@@ -165,7 +166,13 @@ class SearchController extends AbstractCatalogController
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $searchResult = Xcart::app()->elastic->search(SearchModule::getEngine($site->code), trim($search), $page, $max_size);
+        $searchResult = Xcart::app()->elastic->search(
+            SearchModule::getEngine($site->code),
+            trim($search),
+            new ProductDocumentSearcher(),
+            $page,
+            $max_size
+        );
 
         $items = $searchResult['results'];
         $count = $searchResult['meta']['page']['total_results'];
