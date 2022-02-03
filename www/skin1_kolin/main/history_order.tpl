@@ -769,7 +769,7 @@ function func_set_value_to_field(form, fefix_field, field, mnf_id){
     {$smarty.capture.compose_email}
     <hr />
 
-    {if true || $request_missing_information_message ne ""}
+    {if $request_missing_information_message ne ""}
   <a name="request_missing_information"></a>
   <br />
   <form action="order.php" method="post" name="request_missing_information_form">
