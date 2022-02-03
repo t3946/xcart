@@ -32,11 +32,10 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
   const submitCardFormLoading = useSelector(
     (e: StoreInterface) => e.payments.submitCardFormLoading
   );
-
   const [value, setValue] = useState(
     cardSubmitData?.address?.address_id ||
       cardInfo?.address_id ||
-      billingAddresses[0]?.address_id
+      billingAddresses?.[0]?.address_id
   );
 
   const onSubmit = () => {
@@ -67,11 +66,13 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
   return (
     <div className="billing-address-container">
       <div className="dialog-title">Select a billing address</div>
-      <BillingAddressList
-        value={value}
-        setValue={setValue}
-        addresses={billingAddresses}
-      />
+      {billingAddresses && (
+        <BillingAddressList
+          value={value}
+          setValue={setValue}
+          addresses={billingAddresses}
+        />
+      )}
       <div className="billing-address-butns">
         <button
           type={"submit"}

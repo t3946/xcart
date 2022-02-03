@@ -4,6 +4,7 @@ import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsD
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import { initialAddCardFormValue } from "@modules/account/ts/consts/add-card-form";
 import { useDispatch } from "react-redux";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import { addDataFromSubmitCardForm } from "@redux/actions/account-actions/PaymentsActions";
 import { detectCardType } from "@modules/account/utils/detect-card-type";
 import { useRouter } from "next/router";
@@ -12,15 +13,30 @@ import StripeField from "@modules/ui/StripeField";
 import * as stripeJs from "@stripe/stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import Button from "@modules/ui/forms/Button";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
+import { BillingAddressList } from "./BillingAddressList";
 
 export const AddCardForm: React.FC = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const addresses = useSelectorAccount((e) =>
+    e.addresses.addressesList?.filter(
+      (address) => address.address_type === AddressTypeEnum.BILLING
+    )
+  );
+  const userId = useSelectorAccount((e) => {
+    return e.user?.user_id;
+  });
 
   const context = useContext(WalletCardsDialogContext);
   const router = useRouter();
   const dispatch = useDispatch();
   const breakPoint = useBreakpoint();
+
+  React.useEffect(() => {
+    dispatch(getAddresses(userId));
+  }, []);
 
   function cardsHandleCancel() {
     breakPoint({
@@ -79,7 +95,7 @@ export const AddCardForm: React.FC = () => {
   }
 
   function onCardReady(cardElement: stripeJs.StripeCardElement) {}
-
+  
   return (
     <div className="billing-address-container add-card-form-container">
       <Formik
@@ -99,6 +115,17 @@ export const AddCardForm: React.FC = () => {
           return (
             <Form className="your-order-form" encType="multipart/form-data">
               <StripeField onReady={onCardReady} />
+              {addresses && (
+                <>
+                  <div className="dialog-title mt-4">Select a billing address</div>
+                  <BillingAddressList
+                    value={values.address}
+                    onChange={handleChange}
+                    addresses={addresses}
+                    disabled={isSubmitting}
+                  />
+                </>
+              )}
               <Button
                 type={"submit"}
                 disabled={isSubmitting || !stripe || !elements}
@@ -112,25 +139,3 @@ export const AddCardForm: React.FC = () => {
     </div>
   );
 };
-
-/**
- * Когда пользователь отправляет карту, на сервер идёт токен карты.
- * По работе с API Stripe
- * Сервер проверяет, есть ли пользователь в stripe системе.
- *    если есть, тогда создаёт проверяет есть ли карта в списке карт клиента страйпа
- *      если карта есть -- ничего не делать
- *      если нет -- создать карту
- *    если нет -- создать пользователя, создать карту
- * По работе с серверной бд
- * Сохранить данные карты в бд
- */
-
-/**
- * xcart_users
- *  stripe_customer_token
- *
- * account_credit_cards
- *  stripe_customer_token
- *  stripe_card_token
- *  address_id
- */
