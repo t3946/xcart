@@ -73,7 +73,7 @@ if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
     $headers = [];
 
-    $headers['X-Xcart-Label'] = ($department === 'our_customer_service') ? 'order-logs' : 'order-communication';
+    $headers['headers']['X-Xcart-Label'] = ($department === 'our_customer_service') ? 'order-logs' : 'order-communication';
 
     $headers['from'] = 'orders@s3stores.com';
 

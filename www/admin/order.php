@@ -686,7 +686,7 @@ if ($REQUEST_METHOD === "POST") {
         $body = "{$notes}\n\nposted by {$user} ({$user->login})";
 
         Xcart::app()->mail->raw('orders@s3stores.com', $subject, $body, [
-            'X-Xcart-Label' => 'order-logs',
+            'headers' => ['X-Xcart-Label' => 'order-logs'],
             'from' => 'helpdesk@s3stores.com',
             'from_name' => $user
         ]);
@@ -1716,7 +1716,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
             Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
                 'from' => $config['Company']['orders_department'],
-                'X-Xcart-Label' => 'order-communication'
+                ['headers' => ['X-Xcart-Label' => 'order-communication']
             ]);
 
             $log = "<b>From: </b>" . $config['Company']['orders_department'] . "<br /><b>To: </b>" . $mnf_to . "<br /><b>Subject: </b>" . $d_email_subject_14;
@@ -1742,7 +1742,7 @@ if ($mode === 'mnf_notify' || $mode === 'cidev_send_email_to_operator')
 
                 Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
                     'from' => $config['Company']['orders_department'],
-                    'X-Xcart-Label' => 'order-communication'
+                    ['headers' => ['X-Xcart-Label' => 'order-communication']
                 ]);
 
                 $log = "<B>From: </B>" . $config['Company']['orders_department'] . "<br /><B>To: </B>" . $mnf_to . "<br /><B>Subject: </B>" . $d_email_subject_14;
@@ -1828,7 +1828,7 @@ elseif ($mode === 'request_additional_shipping_charge') {
 
     Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
         'from' => $config['Company']['orders_department'],
-        'X-Xcart-Label' => 'order-communication'
+        'headers' => ['X-Xcart-Label' => 'order-communication']
     ]);
 
     $top_message = ["content" => "Sent."];
@@ -1853,7 +1853,7 @@ elseif ($mode === 'request_missing_information')
 
     Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
         'from' => $config['Company']['orders_department'],
-        'X-Xcart-Label' => 'order-communication'
+        'headers' => ['X-Xcart-Label' => 'order-communication']
     ]);
 
     $top_message = ["content" => "Sent."];
@@ -1881,7 +1881,7 @@ elseif ($mode === 'backorder_decision_request') {
 
     Xcart::app()->mail->raw($mnf_to_array, $d_email_subject_14, $mnf_body, [
         'from' => $config['Company']['orders_department'],
-        'X-Xcart-Label' => 'order-communication'
+        'headers' => ['X-Xcart-Label' => 'order-communication']
     ]);
 
     $top_message = ["content" => "Sent."];
