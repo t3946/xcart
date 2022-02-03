@@ -22,6 +22,7 @@ class CategoryDocumentCreator implements DocumentCreatorInterface
 
             $document = (object)[
                 'id' => $model->pk,
+                'url' => $model->getAbsoluteUrl(true),
                 'category' => $model->getFrontendName(),
                 'root_category_id' => $model->root
             ];

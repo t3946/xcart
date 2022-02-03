@@ -58,28 +58,26 @@ class SearchSuggestionHelper
         //TODO rewrite on new elastic engine
         return [];
 
-        $this->elastic->setType('category');
-        $result = $this->elastic->query(['size' => $count, 'from' => 0, 'q' => $this->search]);
+        $site = Xcart::app()->getModule('Sites')->getSite();
 
-        $suggests = [];
+        $searchResult = Xcart::app()->elastic->search(
+            SearchModule::getEngine($site->code, SearchModule::CATEGORIES_ENGINE),
+            $this->search,
+            1,
+            $count
+        );
 
-        if (isset($result['hits']['hits']) && $result['hits']['hits'] && is_array($result['hits']['hits'])) {
-            foreach($result['hits']['hits'] as $hit) {
-                $ids[] = $hit['_id'];
-            }
-            /** @var ProductModel[] $products */
-            if ($ids && $categories = CategoryModel::objects()->filter(['categoryid__in' => $ids])->all()) {
-                foreach($categories as $category) {
-                    $suggests[] = [
-                        'id' => $category->categoryid,
-                        'link' => $category->getAbsoluteUrl(),
-                        'name' => $category->getFrontendName(),
-                    ];
-                }
-            }
+        $p_suggestions = [];
+
+        foreach($searchResult['results'] as $result) {
+            $p_suggestions[] = [
+                'id' => $result['id']['raw'],
+                'link' => $result['url']['raw'],
+                'name' => $result['product']['raw'],
+            ];
         }
+        return $p_suggestions;
 
-        return $suggests ?? [];
     }
 
     public function suggestion_phrase($count = 5, $self_include = false): array
