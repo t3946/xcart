@@ -75,6 +75,13 @@
   &:hover, &:active, &:focus {
     color: #000000;
   }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+    background-color: #ffffff;
+    color: #4a4949;
+  }
 }
 
 .button_micro {
