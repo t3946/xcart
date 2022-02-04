@@ -8,7 +8,6 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
 
 const Dashboard = (props) => {
-  console.log({props});
   const tracknum = "4HGOJJ94HGKD";
   const user = useSelectorAccount((e) => e.user);
 
@@ -20,17 +19,10 @@ const Dashboard = (props) => {
     <div className="pb-3">
       <div className={cn("d-flex", "flex-dir-column", Styles.pageColumn)}>
         <AccountInfo />
-        <OrderTracking
-          orderInfo={{ number: 11 }}
-          trackingInfo={{ tracknum: tracknum }}
-          orderGroupInfo={{
-            // dc_status: "DP"
-            // dc_status: "G"
-            dc_status: "S",
-            // dc_status: undefined
-            // dc_status: "Z"
-          }}
-        />
+        {props.groups.map((order) => (
+          <OrderTracking orderInfo={order} />
+        ))}
+
         <AccountNavigation />
         <SliderProducts
           classes={{

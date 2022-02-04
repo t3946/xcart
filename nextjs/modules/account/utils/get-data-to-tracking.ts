@@ -1,15 +1,22 @@
-export const getDataToTracking = (state: string, vertical: boolean) => {
+export const getDataToTracking = (
+  statuses: {
+    id: number;
+    group_id: number;
+    status: string;
+    old_status: string;
+    updated: string;
+  }[],
+  vertical: boolean
+) => {
   const deliveryStatus = [
     { codes: ["T", "K", "M", "E", "DP"], label: "Ordered" },
-    { codes: ["C", "L", "DA", "B", "G"], label: "Dispatched" },
     { codes: ["S"], label: "Shipped" },
+    { codes: ["C", "L", "DA", "B", "G"], label: "Dispatched" },
     { codes: [], label: "Out for delivery" },
     { codes: ["Z"], label: "Delivered" },
   ];
 
   const data = { items: null, lineWidth: null };
-
-  let isFind = false;
 
   data.items = deliveryStatus.map((e, index) => {
     const roundItemProps = {
@@ -18,27 +25,27 @@ export const getDataToTracking = (state: string, vertical: boolean) => {
       date: null,
       label: e.label,
     };
-    if (e.codes.find((e) => e === state)) {
-      roundItemProps.containerClass = { current: true };
-
+    const status = statuses.find((s) => e.codes.includes(s.status));
+    if (status) {
+      if (statuses.lastIndexOf(status) === statuses.length - 1) {
+        roundItemProps.containerClass.current = true;
+      }
       data.lineWidth =
         index === 4
           ? { [vertical ? "height" : "width"]: "100%" }
           : { [vertical ? "height" : "width"]: `${index * 25 + 12.5}%` };
 
-      isFind = true;
-    }
-    if (!isFind) {
-      roundItemProps.containerClass = { completed: true };
-    }
-    if (!isFind || e.codes.find((e) => e === state)) {
-      roundItemProps.date = new Date().toLocaleDateString("en-EN", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-      });
+      roundItemProps.containerClass.completed = true;
+      roundItemProps.date = new Date(status.updated).toLocaleDateString(
+        "en-EN",
+        {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        }
+      );
     }
     if (index !== 0 && index !== 4) {
       roundItemProps.roundStyle = {
