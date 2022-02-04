@@ -114,6 +114,7 @@ services:
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
       - ./docker/nginx/configs/:/etc/nginx/configs/
       - ./docker/nginx/sites/:/etc/nginx/sites-enabled.d/
+      - ./docker/nginx/logs/:/var/log/nginx/
       - ./docker/certbot/conf:/etc/letsencrypt
 
   php:
@@ -152,18 +153,18 @@ services:
       - "6379:6379"
     restart: always
 
-#  node:
-#    container_name: node
-#    image: "node:14"
-#    user: "node"
-#    working_dir: /home/node/app/www/static
-#    tty: true
-#    networks:
-#      - frontend
-#    #environment:
-#    #  - NODE_ENV=production
-#    volumes:
-#      - ./:/home/node/app
+  node:
+    container_name: node
+    image: "node:14"
+    user: "node"
+    working_dir: /home/node/app/www/static
+    tty: true
+    networks:
+      - frontend
+    #environment:
+    #  - NODE_ENV=production
+    volumes:
+      - ./:/home/node/app
 
   certbot:
     container_name: certbot
