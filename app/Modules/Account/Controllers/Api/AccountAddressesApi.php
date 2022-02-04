@@ -90,7 +90,6 @@ class AccountAddressesApi extends Controller
             AddressesModel::objects()->filter(['address_id__in' => $add_arr])->update(['is_default' => false]);
         }
         $address['user_id'] = $user->user_id;
-        $address['address_type'] = 'shipping';
         $model = new AddressesModel($address);
         $model->save();
         $this->jsonResponse($this->getAddressesFromBase($user->user_id));

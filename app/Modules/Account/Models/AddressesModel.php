@@ -80,6 +80,7 @@ class AddressesModel extends Model
             ],
             'address_type' => [
                 'class' => CharField::class,
+                'default' => 'shipping',
             ],
         ];
     }
