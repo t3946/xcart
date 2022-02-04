@@ -70,7 +70,7 @@ const LoginFormInputPassword = function (props: IProps): any {
 
             if (res.data.user) {
               dispatch(userSetAction(res.data.user));
-              router.push("/");
+              router.push("/dashboard");
               return;
             }
 

@@ -74,7 +74,7 @@ const RegisterForm: React.FC<any> = () => {
   }
 
   if (user) {
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (

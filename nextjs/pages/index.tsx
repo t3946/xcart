@@ -1,20 +1,15 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import PageTwoColumns from "../modules/account/components/layout/PageTwoColumns";
-import DashboardPage from "@modules/account/components/dashboard/Dashboard";
 
 function Home() {
   const router = useRouter();
 
   React.useEffect(() => {
-    router.replace("/dashboard", undefined, { shallow: true });
+    router.push("/dashboard");
   });
 
-  return (
-    <PageTwoColumns>
-      <DashboardPage />
-    </PageTwoColumns>
-  );
+  return <PageTwoColumns>Welcome to your account!</PageTwoColumns>;
 }
 
 export default Home;
