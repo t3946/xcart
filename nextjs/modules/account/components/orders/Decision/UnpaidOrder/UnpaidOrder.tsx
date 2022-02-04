@@ -52,8 +52,11 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
   const [elements, setElements] = React.useState(null);
 
   async function submit(values: Record<any, any>, actions: Record<any, any>) {
+    console.log("submit");
     actions.setSubmitting(true);
     if (values.paymentMethod === "debit") {
+      console.log("card");
+
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement),

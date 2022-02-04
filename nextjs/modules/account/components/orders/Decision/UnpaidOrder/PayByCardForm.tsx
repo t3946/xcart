@@ -35,12 +35,9 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
     onStripeInit,
   } = props;
 
-  const stripeTestPK = "pk_test_TYooMQauvdEDq54NiTphI7jx";
-  const { APP_LOCAL, stripePK: stripeLivePK } = useSelectorAccount(
-    (e) => e.config
-  );
+  const { stripePK } = useSelectorAccount((e) => e.config);
   const [stripePromise] = React.useState(
-    loadStripe(APP_LOCAL ? stripeTestPK : stripeLivePK, {
+    loadStripe(stripePK, {
       locale: "en",
     })
   );
@@ -55,51 +52,49 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
   }
 
   return (
-    <div className={Styles.form}>
-      <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise}>
+      <div className={Styles.form}>
         <StripeButton classNames={Styles.formInput} />
-      </Elements>
 
-      <RBForm.Group className="mb-3 mb-md-4 mb-lg-12">
-        <RBForm.Label
-          className={cn([
-            Styles.form__inputLabel,
-            Styles.formInputLabel,
-            "form-input-label",
-            "form-input-label__required",
-          ])}
-        >
-          Cardholder name
-        </RBForm.Label>
+        <RBForm.Group className="mb-3 mb-md-4 mb-lg-12">
+          <RBForm.Label
+            className={cn([
+              Styles.form__inputLabel,
+              Styles.formInputLabel,
+              "form-input-label",
+              "form-input-label__required",
+            ])}
+          >
+            Cardholder name
+          </RBForm.Label>
 
-        <Input
-          name="cardholderName"
-          value={values.cardholderName}
-          onChange={onChange}
-          disabled={isSubmitting}
-          isInvalid={!!(errors.cardholderName && touched.cardholderName)}
-          isValid={!!(!errors.cardholderName && touched.cardholderName)}
-        />
+          <Input
+            name="cardholderName"
+            value={values.cardholderName}
+            onChange={onChange}
+            disabled={isSubmitting}
+            isInvalid={!!(errors.cardholderName && touched.cardholderName)}
+            isValid={!!(!errors.cardholderName && touched.cardholderName)}
+          />
 
-        {errors.cardholderName && touched.cardholderName && (
-          <Feedback className="d-block" type="invalid">
-            {errors.cardholderName}
-          </Feedback>
-        )}
-      </RBForm.Group>
+          {errors.cardholderName && touched.cardholderName && (
+            <Feedback className="d-block" type="invalid">
+              {errors.cardholderName}
+            </Feedback>
+          )}
+        </RBForm.Group>
 
-      <RBForm.Group className="mb-2 mb-md-12">
-        <RBForm.Label
-          className={cn([
-            Styles.form__inputLabel,
-            Styles.formInputLabel,
-            "form-input-label form-input-label__required",
-          ])}
-        >
-          Credit / Debit card details
-        </RBForm.Label>
+        <RBForm.Group className="mb-2 mb-md-12">
+          <RBForm.Label
+            className={cn([
+              Styles.form__inputLabel,
+              Styles.formInputLabel,
+              "form-input-label form-input-label__required",
+            ])}
+          >
+            Credit / Debit card details
+          </RBForm.Label>
 
-        <Elements stripe={stripePromise}>
           <StripeField
             className={Styles.formInput}
             afterInit={stripeInitHandler}
@@ -112,63 +107,63 @@ const PayByCardForm: React.FC<IProps> = (props: IProps) => {
               setErrors({ stripe: e });
             }}
           />
-        </Elements>
 
-        <Feedback
-          type={errors.stripe ? "invalid" : "valid"}
-          className={cn({
-            "d-none": errors.stripe === "",
-            "d-block": errors.stripe !== "",
-          })}
-        >
-          {errors.stripe}
-        </Feedback>
-      </RBForm.Group>
+          <Feedback
+            type={errors.stripe ? "invalid" : "valid"}
+            className={cn({
+              "d-none": errors.stripe === "",
+              "d-block": errors.stripe !== "",
+            })}
+          >
+            {errors.stripe}
+          </Feedback>
+        </RBForm.Group>
 
-      <div className={cn([Styles.formCaption, Styles.form__caption])}>
-        Your card will be charged in the amount of USA of{" "}
-        <b className="text-dark">US$ 427.06</b> by S3 Stores, Inc.
-      </div>
+        <div className={cn([Styles.formCaption, Styles.form__caption])}>
+          Your card will be charged in the amount of USA of{" "}
+          <b className="text-dark">US$ 427.06</b> by S3 Stores, Inc.
+        </div>
 
-      <div
-        className={cn([
-          "form-input-label",
-          "mb-3",
-          Styles.form__inputLabel,
-          Styles.formInputLabel,
-        ])}
-      >
-        Is Billing Address the same as Shipping Address?
-      </div>
-
-      <SliderSwitchButton
-        disabled={isSubmitting}
-        checked={values.billingSameShipping}
-        name="billingSameShipping"
-        onChange={onChange}
-      />
-
-      <div
-        className={cn([
-          "mt-4",
-          "d-flex",
-          "d-lg-block",
-          "justify-content-center",
-        ])}
-      >
-        <button
-          disabled={!stripeReady || isSubmitting}
+        <div
           className={cn([
-            "form-button",
-            "w-lg-auto",
-            "fw-bold",
-            unpaidOrderStyles.button,
+            "form-input-label",
+            "mb-3",
+            Styles.form__inputLabel,
+            Styles.formInputLabel,
           ])}
         >
-          Submit payment
-        </button>
+          Is Billing Address the same as Shipping Address?
+        </div>
+
+        <SliderSwitchButton
+          disabled={isSubmitting}
+          checked={values.billingSameShipping}
+          name="billingSameShipping"
+          onChange={onChange}
+        />
+
+        <div
+          className={cn([
+            "mt-4",
+            "d-flex",
+            "d-lg-block",
+            "justify-content-center",
+          ])}
+        >
+          <button
+            disabled={!stripeReady || isSubmitting}
+            className={cn([
+              "form-button",
+              "w-lg-auto",
+              "fw-bold",
+              unpaidOrderStyles.button,
+            ])}
+          >
+            Submit payment
+          </button>
+        </div>
       </div>
-    </div>
+    </Elements>
   );
 };
 
