@@ -69,11 +69,13 @@ const AccountInfo = () => {
           </div>
         }
       />
+
       <RectangularButton
         classNames={{
           container: [
             classes.rectangularButtonContainer,
             Styles.accountInfoCard_Lp,
+            "d-none",
           ],
         }}
         header={
