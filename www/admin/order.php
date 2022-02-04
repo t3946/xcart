@@ -685,7 +685,7 @@ if ($REQUEST_METHOD === "POST") {
 
         $body = "{$notes}\n\nposted by {$user} ({$user->login})";
 
-        Xcart::app()->mail->raw('orders@s3stores.com', $subject, $body, [
+        Xcart::app()->mail->raw('orders@s3stores.com', $subj, $body, [
             'headers' => ['X-Xcart-Label' => 'order-logs'],
             'from' => 'helpdesk@s3stores.com',
             'from_name' => $user
