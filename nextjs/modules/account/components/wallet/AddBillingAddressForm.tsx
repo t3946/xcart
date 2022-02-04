@@ -1,76 +1,55 @@
 import React, { useContext } from "react";
-import { FormInput } from "@modules/account/components/shared/FormInput";
 import Select from "@modules/ui/forms/select/Select";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import { Form, Formik } from "formik";
 import {
-  initialAddAddressFormValue,
   addAddressFormValidationSchema,
+  initialAddAddressFormValue,
 } from "@modules/account/ts/consts/add-address-form";
 import { getStates } from "@modules/account/utils/get-states";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsDialogContext";
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
-import {
-  addCard,
-  addDataFromSubmitCardForm,
-} from "@redux/actions/account-actions/PaymentsActions";
-import Store from "@redux/stores/Store";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import FormGroup from "@modules/ui/forms/FormGroup";
 import Input from "@modules/ui/forms/Input";
+import Button, { ETheme } from "@modules/ui/forms/Button";
+import {
+  addAddress,
+  editAddress,
+} from "@redux/actions/account-actions/AddressActions";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface AddBillingAddressFormProps {
+interface IProps {
   edit: boolean;
+  onCancel: () => void;
+  onSubmitted: () => void;
 }
 
-export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
-  edit,
-}) => {
+export const AddBillingAddressForm: React.FC<IProps> = (props) => {
+  const { edit, onCancel, onSubmitted } = props;
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
-  const countries = useSelector((e: StoreInterface) => e.main.countries);
-  const submitCardFormLoading = useSelector(
-    (e: StoreInterface) => e.payments.submitCardFormLoading
+  const countries = useSelectorAccount((e) => e.main.countries);
+  const submitCardFormLoading = useSelectorAccount(
+    (e) => e.payments.submitCardFormLoading
   );
-  const cardSubmitData = useSelector(
-    (e: StoreInterface) => e.payments.submitFormData
-  );
-  const states = useSelector((e: any) => e.main.states);
+  const states = useSelectorAccount((e) => e.main.states);
+  const user = useSelectorAccount((e) => e.user);
+
   React.useEffect(() => {
     dispatch(getTerritory());
   }, []);
+
   const onSubmit = (values) => {
     const newAddress = {
       ...values,
       country: values.country.value,
       state: values.state.value,
+      address_type: "billing",
     };
 
-    if (edit) {
-      dispatch(
-        addDataFromSubmitCardForm({
-          address: newAddress,
-        })
-      );
-      context.setContent(BillingAddressFormEnum.EDIT);
-      return;
-    }
-
-    dispatch(
-      addCard(
-        {
-          ...cardSubmitData,
-          address: newAddress,
-          userId: Store.getState().user.id,
-        },
-        () => {
-          context.handleClose();
-          window.location.reload();
-        }
-      )
-    );
+    dispatch(addAddress(newAddress, () => {}, user.userId));
   };
 
   return (
@@ -219,24 +198,20 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
               />
 
               <div className="billing-address-add-btns">
-                <div className="billing-address-add-btns-container">
-                  <button
-                    onClick={() =>
-                      context.setContent(BillingAddressFormEnum.LIST_ADDRESS)
-                    }
-                    type={"submit"}
+                <div className="d-flex">
+                  <Button
+                    onClick={onCancel}
+                    theme={ETheme.outlined}
+                    type={"button"}
                     disabled={submitCardFormLoading}
-                    className="form-button account-submit-btn account-submit-btn-outline auto-width-button billing-address-back-btn"
+                    className={"me-2"}
                   >
-                    Back
-                  </button>
-                  <button
-                    disabled={submitCardFormLoading}
-                    type={"submit"}
-                    className="form-button account-submit-btn auto-width-button"
-                  >
-                    USE tHIS aDDRESS
-                  </button>
+                    back
+                  </Button>
+
+                  <Button disabled={submitCardFormLoading} type={"submit"}>
+                    use this address
+                  </Button>
                 </div>
               </div>
             </Form>

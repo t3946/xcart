@@ -71,6 +71,7 @@ function* removeAddress(action: AnyAction): Generator {
 }
 
 function* addAddress(action: AnyAction): Generator {
+  const { success } = action;
   const result: any = yield api
     .post<any>(
       `/api/account/addresses/add-address`,
@@ -79,8 +80,7 @@ function* addAddress(action: AnyAction): Generator {
         address: action.address,
       })
     )
-    .then((response) => response)
-    .catch((error) => console.log(error));
+    .then(success);
 
   try {
     yield put({
