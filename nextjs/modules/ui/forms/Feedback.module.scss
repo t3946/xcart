@@ -1,9 +1,7 @@
 @import "styles/utils/Utils.module";
 
 .feedback {
-  @include breakpoint(lg) {
-    font-size: pxToRem(12);
-  }
+  font-size: pxToRem(12);
 }
 
 .feedback_valid {

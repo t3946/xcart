@@ -4,6 +4,8 @@ import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import AddBillingAddressForm from "@modules/account/components/wallet/AddBillingAddressForm";
 
+import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
+
 interface IProps {
   handleClose: () => void;
   open: boolean;
@@ -21,7 +23,10 @@ const AddBillingAddress: React.FC<IProps> = (props) => {
       onClose={handleClose}
       show={open}
       title={`Edit payment method`}
-      classes={{ modal: "payment-method__modal" }}
+      classes={{
+        modal: StylesAddresses.modalWidth,
+        body: StylesAddresses.modalBody,
+      }}
     >
       <AddBillingAddressForm />
     </BootstrapDialogHOC>
