@@ -11,7 +11,7 @@ const mail = require("../../services/mail");
 const AxiosInstance = axios.create({
   baseURL: process.env.BASE_URL_NGINX,
 });
-const apiStripe = require("./Stripe");
+const apiStripe = require("./stripe/Stripe");
 
 app.use("/stripe", isAuthMiddleware, apiStripe);
 
