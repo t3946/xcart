@@ -106,4 +106,13 @@ module.exports = {
       });
     },
   },
+
+  customer: {
+    updateSource: async function (userId, cardId, params) {
+      const stripe = await getClient();
+      const customer = await getCustomer(userId, stripe);
+
+      return await stripe.customers.updateSource(customer.id, cardId, params);
+    },
+  },
 };

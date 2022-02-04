@@ -17,4 +17,14 @@ api.post("/change-default-source", async function (req, res) {
   res.json({ customer });
 });
 
+api.post("/update-source", async function (req, res) {
+  await stripeService.customer.updateSource(
+    req.user.userId,
+    req.body.cardId,
+    req.body.params
+  );
+
+  res.sendStatus(200);
+});
+
 module.exports = api;
