@@ -85,7 +85,7 @@ function* addCard(action: any): Generator {
   const { data, success } = action.payload;
 
   yield axios
-    .post("/api-client/user/stripe/sources/create", data)
+    .post("/api-client/user/stripe/card/create", data)
     .then(success);
 }
 
@@ -93,7 +93,7 @@ function* deleteCard(action: any): Generator {
   const { data, success } = action.payload;
 
   yield axios
-    .post("/api-client/user/stripe/sources/delete", data)
+    .post("/api-client/user/stripe/card/delete", data)
     .then(success);
 }
 
