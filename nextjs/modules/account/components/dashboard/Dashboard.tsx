@@ -8,7 +8,6 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
 
 const Dashboard = (props) => {
-  const tracknum = "4HGOJJ94HGKD";
   const user = useSelectorAccount((e) => e.user);
 
   if (!user) {
