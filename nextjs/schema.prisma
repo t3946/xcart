@@ -3932,6 +3932,7 @@ model xcart_orders {
   xcart_amazon_list_inbound_shipments      xcart_amazon_list_inbound_shipments?
   xcart_order_details                      xcart_order_details[]
   xcart_po_pipeline                        xcart_po_pipeline[]
+  xcart_users                              xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_orders_xcart_users_user_id_fk")
 
   @@id([orderid, date])
   @@index([amazon_fulfillment_channel, orderid, date], map: "amazon_fulfillment_channel")
@@ -3946,6 +3947,7 @@ model xcart_orders {
   @@index([date], map: "order_date")
   @@index([order_type], map: "order_type")
   @@index([storefrontid], map: "storefrontid")
+  @@index([user_id], map: "xcart_orders_xcart_users_user_id_fk")
 }
 
 model xcart_orders_additional_tags {
@@ -5891,6 +5893,7 @@ model xcart_users {
   xcart_one_time_passwords xcart_one_time_passwords?
   xcart_sessions_data      xcart_sessions_data[]
   tsv_suppressed           Int?
+  xcart_orders             xcart_orders[]
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
 }
