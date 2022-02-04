@@ -1,19 +1,19 @@
 import React, { useContext } from "react";
-import { FormInput } from "../shared/FormInput";
+import { FormInput } from "@modules/account/components/shared/FormInput";
 import FormSelect from "@modules/ui/forms/Select";
 import { Form, Formik } from "formik";
 import {
   initialAddAddressFormValue,
   addAddressFormValidationSchema,
-} from "../../ts/consts/add-address-form";
+} from "@modules/account/ts/consts/add-address-form";
 import { useDispatch, useSelector } from "react-redux";
-import { getStates } from "../../utils/get-states";
-import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
-import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
+import { getStates } from "@modules/account/utils/get-states";
+import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsDialogContext";
+import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import {
   addCard,
   addDataFromSubmitCardForm,
-} from "../../../../redux/actions/account-actions/PaymentsActions";
+} from "@redux/actions/account-actions/PaymentsActions";
 import Store from "@redux/stores/Store";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
@@ -27,21 +27,15 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
 }) => {
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
-
   const countries = useSelector((e: StoreInterface) => e.main.countries);
-
   const submitCardFormLoading = useSelector(
     (e: StoreInterface) => e.payments.submitCardFormLoading
   );
-
   const cardSubmitData = useSelector(
     (e: StoreInterface) => e.payments.submitFormData
   );
-
   const states = useSelector((e: any) => e.main.states);
-
   const { showSnackbar } = useContext(SnackbarContext);
-
   const onSubmit = (values) => {
     const newAddress = {
       ...values,
@@ -68,11 +62,7 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
         },
         () => {
           context.handleClose();
-          showSnackbar({
-            header: "Success",
-            message: "New card added in your wallet!",
-            theme: "success",
-          });
+          window.location.reload();
         }
       )
     );
@@ -215,3 +205,5 @@ export const AddBillingAddressForm: React.FC<AddBillingAddressFormProps> = ({
     </div>
   );
 };
+
+export default AddBillingAddressForm;

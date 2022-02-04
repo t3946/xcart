@@ -5,12 +5,15 @@ import { useRouter } from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import Button from "@modules/ui/forms/Button";
 import AddCard from "@components/pages/wallet/dialog/AddCard";
+import ModalAddBillingAddress from "@components/pages/wallet/dialog/AddBillingAddress";
 
 export const AddNewPaymentMethod: React.FC = () => {
   const router = useRouter();
   const addDialog = useDialog();
   const breakpoint = useBreakpoint();
   const [show, setShow] = React.useState(false);
+  const [showModalAddBillingAddress, setShowModalAddBillingAddress] =
+    React.useState(false);
 
   function closeModal() {
     setShow(false);
@@ -28,6 +31,13 @@ export const AddNewPaymentMethod: React.FC = () => {
         Add a credit or debit card
       </Button>
 
+      <Button
+        onClick={() => setShowModalAddBillingAddress(true)}
+        className="w-auto"
+      >
+        Add billing address
+      </Button>
+
       <div className={"d-flex flex-column"}>
         <p>S3 Stores Inc accepts major credit and debit cards</p>
 
@@ -42,6 +52,11 @@ export const AddNewPaymentMethod: React.FC = () => {
       </div>
 
       <AddCard open={show} handleClose={closeModal} />
+
+      <ModalAddBillingAddress
+        open={showModalAddBillingAddress}
+        handleClose={() => setShowModalAddBillingAddress(false)}
+      />
     </div>
   );
 };

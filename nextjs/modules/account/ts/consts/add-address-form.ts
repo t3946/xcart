@@ -14,16 +14,15 @@ export const initialAddAddressFormValue = {
 };
 
 export const addAddressFormValidationSchema = Yup.object().shape({
-  country: Yup.object().shape({
-    value: Yup.string().required("Required field"),
-  }),
+  // country: Yup.object().shape({
+  //   value: Yup.string().required("Required field"),
+  // }),
   full_name: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),
   phone_number: Yup.string()
     .required("Required field")
-    .max(50, "The maximum number of characters is 50")
-    .matches(/[(]\d{3}[)] \d{3}-\d{4}/, "Is not in correct format"),
+    .max(50, "The maximum number of characters is 50"),
   street: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),
@@ -31,9 +30,9 @@ export const addAddressFormValidationSchema = Yup.object().shape({
   city: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),
-  state: Yup.object().shape({
-    value: Yup.string().required("Required field"),
-  }),
+  // state: Yup.object().shape({
+  //   value: Yup.string().required("Required field"),
+  // }),
   zip: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),
