@@ -93,25 +93,28 @@ class SaveFilePrice
                     $search_value = $code;
                 }
                 /** @var ProductModel $product */
-                $product = ProductModel::objects()->get([$this->search_by[$table_index] => $search_value, 'manufacturerid' => $this->dx_model->pk]);
-                if ($product) {
-                    $fields_send = $this->collectProductData($product, $table_index, $key);
-                } else if ($cost_to_us = $this->ar_update_field[$table_index]['cost_to_us'][$key]) {
-                    $cost_to_us = str_replace(['$', ','], '', $cost_to_us);
-                    if (!empty($search_value)
-                        && is_numeric($cost_to_us)
-                        && (float)$cost_to_us > 0
-                        && filter_var($this->need_send, FILTER_VALIDATE_BOOLEAN)
-                        && $this->need_create
-                    ) {
-                        $fields_send = $this->collectProductData(null, $table_index, $key);
+                foreach(ProductModel::objects()->all([$this->search_by[$table_index] => $search_value, 'manufacturerid' => $this->dx_model->pk]) as $product) {
+                    if ($product) {
+                        $fields_send = $this->collectProductData($product, $table_index, $key);
+                    } else {
+                        if ($cost_to_us = $this->ar_update_field[$table_index]['cost_to_us'][$key]) {
+                            $cost_to_us = str_replace(['$', ','], '', $cost_to_us);
+                            if (!empty($search_value)
+                                && is_numeric($cost_to_us)
+                                && (float)$cost_to_us > 0
+                                && filter_var($this->need_send, FILTER_VALIDATE_BOOLEAN)
+                                && $this->need_create
+                            ) {
+                                $fields_send = $this->collectProductData(null, $table_index, $key);
+                            }
+                        }
                     }
-                }
-                if ($fields_send) {
-                    $fields_send['manufacturerid'] = $this->dx_model->pk;
-                    $this->sendProduct($fields_send);
-                    $this->count_send++;
-                    $this->success_productcode[] = $search_value;
+                    if ($fields_send) {
+                        $fields_send['manufacturerid'] = $this->dx_model->pk;
+                        $this->sendProduct($fields_send);
+                        $this->count_send++;
+                        $this->success_productcode[] = $search_value;
+                    }
                 }
             }
         }
