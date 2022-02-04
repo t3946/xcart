@@ -96,4 +96,14 @@ module.exports = {
       return await stripe.customers.deleteSource(customer.id, cardId);
     },
   },
+
+  paymentIntent: {
+    confirm: async function (pi, pm) {
+      const stripe = await getClient();
+
+      return await stripe.paymentIntents.confirm(pi, {
+        payment_method: pm,
+      });
+    },
+  },
 };
