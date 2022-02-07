@@ -352,9 +352,11 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       },
     },
   });
-
   const orders = data === null ? [] : data.xcart_orders;
   const cards = (await stripeService.getSources(req.user.userId)).data;
+  const ORDER_STATUS_UNPAID_PO = "O";
+  const ORDER_STATUS_INCOMPLETE_PO = "IO";
+  const poStatuses = [ORDER_STATUS_UNPAID_PO, ORDER_STATUS_INCOMPLETE_PO];
 
   for (const order of orders) {
     order.groups = await prisma.xcart_order_groups.findMany({
@@ -365,6 +367,8 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
         xcart_order_details: true,
       },
     });
+
+    order.isPurchaseOrder = poStatuses.indexOf(order.cb_status) !== -1;
   }
 
   res.json({
