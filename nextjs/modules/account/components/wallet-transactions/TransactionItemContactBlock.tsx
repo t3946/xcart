@@ -2,7 +2,7 @@ import React from "react";
 
 export const TransactionItemContactBlock = ({
   refund = undefined,
-  orderInfo,
+  order,
 }) => {
   return (
     <div
@@ -17,20 +17,20 @@ export const TransactionItemContactBlock = ({
         <div className="info-item-container info-item-container-spacing">
           <p className="label-info-item right-part">Full Name:</p>
           <p className="left-part">
-            {orderInfo.firstname + " "}
-            {orderInfo.lastname && orderInfo.lastname}
+            {order.firstname + " "}
+            {order.lastname && order.lastname}
           </p>
         </div>
         <div className="info-item-container info-item-container-spacing">
           <p className="label-info-item right-part">Phone:</p>
           <p className="left-part">
-            {orderInfo.phone}
-            {orderInfo.phone_ext && " ext " + orderInfo.phone_ext}
+            {order.phone}
+            {order.phone_ext && " ext " + order.phone_ext}
           </p>
         </div>
         <div className="info-item-container info-item-container-spacing">
           <p className="label-info-item right-part">Email:</p>
-          <p className="left-part"> {orderInfo.email}</p>
+          <p className="left-part"> {order.email}</p>
         </div>
       </div>
     </div>

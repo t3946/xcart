@@ -4,11 +4,10 @@ export const TransactionHeader = ({
   open,
   onClick,
   refund = undefined,
-  transactionInfo,
+  order,
+  card,
 }) => {
-  const date = new Date(
-    Number(transactionInfo.orderInfo.date)
-  ).toLocaleDateString("en-EN", {
+  const date = new Date(Number(order.date)).toLocaleDateString("en-EN", {
     month: "long",
     day: "2-digit",
     year: "numeric",
@@ -23,18 +22,17 @@ export const TransactionHeader = ({
         <div className="transactions-header-main-block">
           <div className={"transactions-header-left-block"}>
             <div className="transactions-header-date">{date}</div>
-            <div className="transactions-header-card">
-              {transactionInfo.cardInfo.card_type[0].toUpperCase() +
-                transactionInfo.cardInfo.card_type.slice(1)}
-              {` ****${transactionInfo.cardInfo.card_number.substr(
-                transactionInfo.cardInfo.card_number.length - 4
-              )} `}
-            </div>
+            {card && (
+              <div className="transactions-header-card">
+                {card.brand.toUpperCase()}
+                {` **** ${card.last4} `}
+              </div>
+            )}
           </div>
 
           <div className="transactions-header-name">
             {refund ? "Refund" : "Receipt"}
-            {` # ${transactionInfo.orderInfo.order_prefix}${transactionInfo.orderInfo.orderid}-${transactionInfo.orderInfo.order_type}`}
+            {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
           </div>
         </div>
 
@@ -43,7 +41,7 @@ export const TransactionHeader = ({
             refund && "transactions-header-price-refund"
           }`}
         >
-          (US$ {transactionInfo.orderInfo.total})
+          (US$ {order.total})
         </div>
         <div className="transactions-header-arrow">
           <div

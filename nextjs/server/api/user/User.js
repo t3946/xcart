@@ -353,11 +353,22 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  const transactions = data === null ? [] : data.xcart_orders;
+  const orders = data === null ? [] : data.xcart_orders;
   const cards = (await stripeService.getSources(req.user.userId)).data;
 
+  for (const order of orders) {
+    order.groups = await prisma.xcart_order_groups.findMany({
+      where: {
+        orderid: order.orderid,
+      },
+      include: {
+        xcart_order_details: true,
+      },
+    });
+  }
+
   res.json({
-    transactions,
+    orders,
     cards,
   });
 });

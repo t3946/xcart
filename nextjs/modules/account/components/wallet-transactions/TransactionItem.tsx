@@ -10,9 +10,16 @@ import { FormCheckBox } from "../shared/FormCheckBox";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 
-export const TransactionItem = ({ transactionInfo, first }) => {
-  const accordion = useAccordion(500);
+interface IProps {
+  order: any;
+  transaction: any;
+  card: any;
+  first: any;
+}
 
+export const TransactionItem: React.FC<IProps> = (props) => {
+  const { order, transaction, card, first } = props;
+  const accordion = useAccordion(500);
   const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   return (
@@ -24,8 +31,10 @@ export const TransactionItem = ({ transactionInfo, first }) => {
       <TransactionHeader
         onClick={accordion.onItemClick}
         open={accordion.open}
-        transactionInfo={transactionInfo}
+        card={card}
+        order={order}
       />
+
       <div
         className={`transaction-body ${
           accordion.open && "transaction-body-open"
@@ -35,12 +44,9 @@ export const TransactionItem = ({ transactionInfo, first }) => {
         }}
         ref={accordion.ref}
       >
-        <TransactionItemTopBlock
-          transactionInfo={transactionInfo}
-          componentRef={accordion.ref}
-        />
-        <TransactionItemContactBlock orderInfo={transactionInfo.orderInfo} />
-        <TransactionAddresses orderInfo={transactionInfo.orderInfo} />
+        <TransactionItemTopBlock order={order} componentRef={accordion.ref} />
+        <TransactionItemContactBlock order={order} />
+        <TransactionAddresses order={order} />
         <PurchaseOrderInformation />
         <div className="transaction-checkbox">
           <FormCheckBox
@@ -49,51 +55,47 @@ export const TransactionItem = ({ transactionInfo, first }) => {
             }
             value={true}
             name={"is_default"}
-            handleChange={null}
+            handleChange={() => {}}
           />
         </div>
 
         <div className="transaction-items-label">
           Refund issued for the following items
         </div>
-        {transactionInfo.orderInfo.orderGroups.map((e) => {
-          return <TransactionItems info={e} />;
+        {order.groups.map((group, i) => {
+          return (
+            <TransactionItems
+              group={group}
+              order={order}
+              key={`transactionitems-${i}`}
+            />
+          );
         })}
         <div className="transaction-total-container total-shipping">
           <div className="total-left-side" />
           <div className="total-right-side total-group-right-side total-right-side">
             <div className="info-item-container info-item-container-spacing">
               <p className="total-text total-text-left"> Total Items Cost:</p>
-              <p className="total-text">
-                US$ {transactionInfo.orderInfo.shipping_gross}
-              </p>
+              <p className="total-text">US$ {order.shipping_gross}</p>
             </div>
             <div className="info-item-container info-item-container-spacing regular">
               <p className="total-text total-text-left">
                 {" "}
                 Total Shipping Cost:
               </p>
-              <p className="total-text">
-                US$ {transactionInfo.orderInfo.shipping_gross}
-              </p>
+              <p className="total-text">US$ {order.shipping_gross}</p>
             </div>
             <div className="info-item-container info-item-container-spacing tax">
               <div className="total-text total-text-left">Total Sales Tax:</div>
-              <div className="total-text">
-                US$ {transactionInfo.orderInfo.total_pst}
-              </div>
+              <div className="total-text">US$ {order.total_pst}</div>
             </div>
             <div className="info-item-container info-item-container-spacing tax">
               <p className="total-text total-text-left">Total VAT Tax: </p>
-              <p className="total-text">
-                US$ {transactionInfo.orderInfo.total_tax}
-              </p>
+              <p className="total-text">US$ {order.total_tax}</p>
             </div>
             <div className="info-item-container info-item-container-spacing subtotal">
               <p className="total-text total-text-left">GRAND TOTAL:</p>
-              <p className="total-text">
-                US$ {transactionInfo.orderInfo.total_gross}
-              </p>
+              <p className="total-text">US$ {order.total_gross}</p>
             </div>
           </div>
         </div>

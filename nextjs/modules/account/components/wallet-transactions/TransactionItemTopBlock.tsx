@@ -6,11 +6,11 @@ import PictureAsPdfIcon from "@modules/icon/components/account/pdf/PictureAsPdfI
 interface IProps {
   componentRef: any;
   refund: any;
-  transactionInfo: Record<any, any>;
+  order: Record<any, any>;
 }
 
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
-  const { componentRef, refund, transactionInfo } = props;
+  const { componentRef, refund, order } = props;
 
   return (
     <div className="transaction-top-block-container">
@@ -25,7 +25,7 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
           <div className="transaction-top-name-btns">
             <div className="transaction-name">
               {refund ? "REFUND" : "RECEIPT"}
-              {` # ${transactionInfo.orderInfo.order_prefix}${transactionInfo.orderInfo.orderid}-${transactionInfo.orderInfo.order_type}`}
+              {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
             </div>
 
             <div className="transaction-btns">

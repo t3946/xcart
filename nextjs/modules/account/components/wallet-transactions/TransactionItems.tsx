@@ -4,13 +4,13 @@ import { TransactionItemsListTotal } from "@modules/account/components/wallet-tr
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 
-export const TransactionItems = ({ refund = undefined, info }) => {
+export const TransactionItems = ({ refund = undefined, group, order }) => {
   const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   return (
     <div>
       <div className="transaction-items-label transaction-items-sublabel">
-        The items below are shipped from {info.shipping}
+        The items below are shipped from {group.shipping}
       </div>
       <div
         className={`transaction-items-list-header ${
@@ -25,15 +25,16 @@ export const TransactionItems = ({ refund = undefined, info }) => {
         <div className="transaction-items-qty-block">Qty ordered</div>
         <div className="transaction-items-extended-block">Extended</div>
       </div>
-      {info.orderGroupsItems.map((e) => {
+      {group.xcart_order_details.map((detail, i) => {
         return (
           <TransactionItemsElem
             breakpoint={breakpoint}
-            orderGroupsItemInfo={e}
+            orderGroupsItemInfo={detail}
+            key={`transaction-item-${i}-${detail.itemid}`}
           />
         );
       })}
-      {!refund && <TransactionItemsListTotal orderInfo={info} />}
+      {!refund && <TransactionItemsListTotal orderInfo={order} />}
     </div>
   );
 };
