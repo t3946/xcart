@@ -120,7 +120,7 @@ services:
   php:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-prod
     container_name: php
     restart: unless-stopped
     networks:
