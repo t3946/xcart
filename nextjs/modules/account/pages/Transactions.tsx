@@ -10,12 +10,6 @@ interface IProps {
 
 export const Transactions: React.FC<IProps> = (props) => {
   const { orders, cards } = props;
-  //todo: old transactions
-  const oldTransactions = useSelector(
-    (e: StoreInterface) => e.payments.transactions
-  );
-
-  console.log({ oldTransactions });
 
   return (
     <div>

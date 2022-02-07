@@ -4,7 +4,7 @@ import { TransactionItemsListTotal } from "@modules/account/components/wallet-tr
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 
-export const TransactionItems = ({ refund = undefined, group, order }) => {
+export const TransactionItems = ({ refund = false, group, order }) => {
   const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   return (

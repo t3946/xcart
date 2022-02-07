@@ -18,7 +18,7 @@ export const TransactionsList: React.FC<IProps> = (props) => {
         //todo: TransactionItemRefund
         const Item =
           transaction.type === "refund"
-            ? TransactionItem //TransactionItemRefund
+            ? TransactionItemRefund
             : TransactionItem;
         const card = null;
 
