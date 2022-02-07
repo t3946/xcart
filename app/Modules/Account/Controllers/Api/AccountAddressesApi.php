@@ -14,10 +14,8 @@ class AccountAddressesApi extends Controller
 {
     public function getAddresses()
     {
-        $user_id = json_decode(file_get_contents('php://input'));
-
-        $this->jsonResponse($this->getAddressesFromBase($user_id));
-
+        $user = Xcart::app()->auth->getUser(true);
+        $this->jsonResponse($this->getAddressesFromBase($user->user_id));
     }
 
     public function getAddressesFromBase(int $user_id)
