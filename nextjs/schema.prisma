@@ -3770,6 +3770,7 @@ model xcart_order_transactions {
   manual_transaction     String                         @default("") @db.Char(1)
   parent_id              Int?
   parent_transaction_id  String?                        @db.VarChar(64)
+  xcart_orders           xcart_orders                   @relation(fields: [orderid], references: [orderid], onDelete: NoAction, onUpdate: NoAction, map: "xcart_order_transactions_xcart_orders_orderid_fk")
   xcart_transaction_logs xcart_transaction_logs[]
 
   @@unique([transaction_id, orderid], map: "transaction_id")
@@ -3933,6 +3934,7 @@ model xcart_orders {
   xcart_order_details                      xcart_order_details[]
   xcart_po_pipeline                        xcart_po_pipeline[]
   xcart_users                              xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_orders_xcart_users_user_id_fk")
+  xcart_order_transactions                 xcart_order_transactions[]
 
   @@id([orderid, date])
   @@index([amazon_fulfillment_channel, orderid, date], map: "amazon_fulfillment_channel")

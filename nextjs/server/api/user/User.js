@@ -12,6 +12,7 @@ const AxiosInstance = axios.create({
   baseURL: process.env.BASE_URL_NGINX,
 });
 const apiStripe = require("./stripe/Stripe");
+const stripeService = require("../../services/stripe");
 
 app.use("/stripe", isAuthMiddleware, apiStripe);
 
@@ -335,6 +336,29 @@ app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
 
   mail.sendMail(data, function () {
     res.sendStatus(200);
+  });
+});
+
+app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
+  const data = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+    select: {
+      xcart_orders: {
+        include: {
+          xcart_order_transactions: true,
+        },
+      },
+    },
+  });
+
+  const transactions = data === null ? [] : data.xcart_orders;
+  const cards = (await stripeService.getSources(req.user.userId)).data;
+
+  res.json({
+    transactions,
+    cards,
   });
 });
 

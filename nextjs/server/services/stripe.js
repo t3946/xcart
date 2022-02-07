@@ -92,7 +92,6 @@ module.exports = {
       const stripe = await getClient();
       const customer = await getCustomer(userId, stripe);
 
-      console.log("deltee", [customer.id, cardId]);
       return await stripe.customers.deleteSource(customer.id, cardId);
     },
   },

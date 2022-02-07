@@ -9,6 +9,8 @@ export const Transactions: React.FC = () => {
     (e: StoreInterface) => e.payments.transactions
   );
 
+  console.log({ transactions });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
