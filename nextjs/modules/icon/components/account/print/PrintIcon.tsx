@@ -1,5 +1,5 @@
 import React from "react";
-import classnames from "classnames";
+import cn from "classnames";
 
 const PrintIcon = (props: Record<any, any>): any => {
   return (
@@ -9,6 +9,7 @@ const PrintIcon = (props: Record<any, any>): any => {
       viewBox="0 0 19 19"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={cn(props?.className)}
     >
       <path
         fillRule="evenodd"

@@ -10,8 +10,8 @@
   font-size: pxToRem(18);
   font-weight: 900;
   border: none;
-  transition: all .15s ease-in-out;
-  font-family: 'Lato', sans-serif;
+  transition: all 0.15s ease-in-out;
+  font-family: "Lato", sans-serif;
   text-transform: uppercase;
   width: 100%;
   border-radius: pxToRem(4);
@@ -62,9 +62,9 @@
   border: pxToRem(2) solid #ffb500;
   color: #4a4949;
   background-color: #ffffff;
-  font-weight: normal;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: #fffaef;
   }
 
@@ -72,7 +72,9 @@
     background-color: #fff3d7;
   }
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     color: #000000;
   }
 
@@ -109,7 +111,8 @@
     border-width: pxToRem(1);
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: #e6e6e6;
   }
 
@@ -117,11 +120,14 @@
     background-color: #d2d2d2;
   }
 
-  &:active, &:focus {
+  &:active,
+  &:focus {
     box-shadow: 0 0 0 pxToRem(4) rgba(197, 197, 197, 0.34);
   }
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     border-color: #c4c4c4;
   }
 }
@@ -136,7 +142,8 @@
     border-width: pxToRem(1);
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: #f4f4f4;
   }
 
@@ -144,11 +151,14 @@
     background-color: #e6e6e6;
   }
 
-  &:active, &:focus {
+  &:active,
+  &:focus {
     box-shadow: 0 0 0 pxToRem(4) rgba(197, 197, 197, 0.34);
   }
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     border-color: #c4c4c4;
   }
 }

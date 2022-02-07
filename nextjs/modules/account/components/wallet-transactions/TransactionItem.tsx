@@ -36,7 +36,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
       />
 
       <div
-        className={`transaction-body ${
+        className={`transaction-body position-relative ${
           accordion.open && "transaction-body-open"
         }`}
         style={{

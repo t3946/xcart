@@ -1,7 +1,7 @@
 import React from "react";
 import { TransactionsList } from "../components/wallet-transactions/TransactionsList";
-import StoreInterface from "@modules/account/ts/types/store.type";
-import { useSelector } from "react-redux";
+import Button from "@modules/ui/forms/Button";
+import Link from "next/link";
 
 interface IProps {
   orders: Record<any, any>[];
@@ -10,16 +10,40 @@ interface IProps {
 
 export const Transactions: React.FC<IProps> = (props) => {
   const { orders, cards } = props;
+  console.log(orders);
 
+  function isEmpty() {
+    for (const order of orders) {
+      if (order.xcart_order_transactions.length === 0) {
+        continue;
+      } else {
+        return false;
+      }
+    }
+
+    return true;
+  }
   return (
     <div>
       <div className="page-label">Transactions</div>
+      {isEmpty() ? (
+        <div className="d-flex">
+          <div className="mx-auto">
+            <p>You don’t have any transactions yet </p>
+            <a className="text-decoration-none" href={"/"}>
+              <Button className={"w-auto"}>Continue shopping</Button>
+            </a>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="wallet-label">
+            Refer below for your most recent transactions.
+          </div>
 
-      <div className="wallet-label">
-        Refer below for your most recent transactions.
-      </div>
-
-      <TransactionsList orders={orders} cards={cards} />
+          <TransactionsList orders={orders} cards={cards} />
+        </>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import ReactToPrint from "react-to-print";
 import PrintIcon from "@modules/icon/components/account/print/PrintIcon";
 import PictureAsPdfIcon from "@modules/icon/components/account/pdf/PictureAsPdfIcon";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 interface IProps {
   componentRef: any;
@@ -11,7 +12,7 @@ interface IProps {
 
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   const { componentRef, refund, order } = props;
-
+  
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
@@ -28,26 +29,30 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
               {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
             </div>
 
-            <div className="transaction-btns">
+            <div className="row">
               <ReactToPrint
                 trigger={() => (
-                  <button className="form-button account-submit-btn-outline print-button transaction-button">
-                    <div className="btn-entry">
-                      <PrintIcon className="btn-icon" />
-                      <div>PRINT</div>
-                    </div>
-                  </button>
+                  <div className={"col-6"}>
+                    <Button theme={ETheme.outlined}>
+                      <div className="btn-entry">
+                        <PrintIcon className="me-2" />
+                        <div>PRINT</div>
+                      </div>
+                    </Button>
+                  </div>
                 )}
                 content={() => componentRef.current}
               />
               <ReactToPrint
                 trigger={() => (
-                  <button className="form-button account-submit-btn-outline transaction-button">
-                    <div className="btn-entry">
-                      <PictureAsPdfIcon className="btn-icon" />
-                      <div>OPEN PDF</div>
-                    </div>
-                  </button>
+                  <div className={"col-6"}>
+                    <Button className={"p-0"} theme={ETheme.outlined}>
+                      <div className="d-flex align-items-center">
+                        <PictureAsPdfIcon className="me-2" />
+                        <div>OPEN PDF</div>
+                      </div>
+                    </Button>
+                  </div>
                 )}
                 content={() => componentRef.current}
               />
@@ -63,17 +68,21 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
               <p> 27 Joseph St.</p>
               <p>Chatham , Ontario N7L 3G5</p>
               <p>Canada</p>
-              <div className="info-item-container">
-                <p className="label-info-item">Tel:</p>
-                <p>(616) 259-5711</p>
+              <div>
+                <p>
+                  <b>Tel:</b> (616) 259-5711
+                </p>
               </div>
-              <div className="info-item-container">
-                <p className="label-info-item">Fax:</p>
-                <p> 1-800-929-2835</p>
+              <div>
+                <p>
+                  <b>Fax:</b> 1-800-929-2835
+                </p>
               </div>
-              <div className="info-item-container">
-                <p className="label-info-item">Email:</p>
-                <p>orders@s3stores.com</p>
+              <div>
+                <p>
+                  <b>Email:</b>{" "}
+                  <a href="mailto:orders@s3stores.com"> orders@s3stores.com</a>
+                </p>
               </div>
             </div>
             <div className="transaction-top-info-right-part">
