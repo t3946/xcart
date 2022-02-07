@@ -45,3 +45,21 @@ export const deleteCard = (payload: any): any => ({
   type: "DELETE_CARD",
   payload,
 });
+
+export const changeAddressCard = (payload: {
+  addressId: number;
+  cardId: string;
+  success: (res) => void;
+}): any => ({
+  type: "CHANGE_ADDRESS_CARD",
+  payload,
+});
+
+export const changeCardHolderName = (payload: {
+  cardHolderName: string;
+  cardId: string;
+  success: (res) => void;
+}): any => ({
+  type: "CHANGE_CARDHOLDER_NAME",
+  payload,
+});

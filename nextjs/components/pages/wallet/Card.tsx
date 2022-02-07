@@ -10,10 +10,9 @@ import { Card as ICard } from "@stripe/stripe-js";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import { deleteCard } from "@redux/actions/account-actions/PaymentsActions";
 import { useDispatch } from "react-redux";
-import EditPaymentMethod from "@components/pages/wallet/dialog/EditPaymentMethod";
 import AddCard from "@components/pages/wallet/dialog/AddCard";
 
-function addressToString(address) {
+export function addressToString(address) {
   const parts = [];
   const fields = ["street", "city", "state", "zip", "country"];
 
@@ -28,19 +27,17 @@ interface IProps {
   card: ICard;
   isDefault: boolean;
   changeDefaultCardId: (cardId: string) => void;
-  openCardDialog: (card, dialog: any, path: string) => void;
+  editCard: (card: ICard) => void;
 }
 
 const Card: React.FC<IProps> = (props) => {
   const [showAddModal, setShowAddModal] = React.useState(false);
   const dispatch = useDispatch();
-  const { card, isDefault, changeDefaultCardId, openCardDialog } = props;
+  const { card, isDefault, changeDefaultCardId, editCard } = props;
   const accordion = useAccordion();
   const removeDialog = useDialog();
   const editDialog = useDialog();
   const breakpoint = useBreakpoint();
-  const [show, setShow] = React.useState(false);
-
   function expTemplate() {
     let month = card.exp_month.toString();
 
@@ -82,12 +79,13 @@ const Card: React.FC<IProps> = (props) => {
 
   return (
     <div className="wallet-card-container">
-      <div onClick={accordion.onItemClick} className={`wallet-card-header `}>
+      <div onClick={accordion.onItemClick} className={`wallet-card-header row m-0`}>
         <CardHeader cardLast4={card.last4} cardType={card.brand} />
-        <div className="wallet-card-billing wallet-card-billing-header">
+        <div className="col-4">
           {expTemplate()}
         </div>
-        <div className="wallet-header-arrow-block">
+
+        <div className="col-4 d-flex align-items-center justify-content-between pe-0">
           <div
             className={`wallet-header-default-block ${
               isDefault && "wallet-header-default-block_is-default"
@@ -111,40 +109,38 @@ const Card: React.FC<IProps> = (props) => {
         ref={accordion.ref}
         className="wallet-card-content-container"
       >
-        <div className={`wallet-card-content `}>
-          <div className="wallet-card-name">
-            {/*<div className="wallet-card-content-label">Name on card </div>*/}
-            <div>{card.name}</div>
+        <div className={`wallet-card-content row m-0`}>
+          <div className="col-4 ps-0">
+            {card.metadata?.cardHolderName && (
+              <div className="wallet-card-content-label">Name on card </div>
+            )}
+            <div>{card.metadata.cardHolderName}</div>
           </div>
-          {billingAddressTemplate()}
 
-          <div className="wallet-card-buttons">
-            {/*<button*/}
-            {/*  className="form-button account-submit-btn edit-card-btn"*/}
-            {/*  onClick={*/}
-            {/*    () => setShow(true)*/}
-            {/*    // openCardDialog(*/}
-            {/*    //   card,*/}
-            {/*    //   editDialog,*/}
-            {/*    //   "/account/payments/wallet/edit"*/}
-            {/*    // )*/}
-            {/*  }*/}
-            {/*>*/}
-            {/*  Edit*/}
-            {/*</button>*/}
-            <Button theme={ETheme.outlined} onClick={removeCard}>
-              remove
-            </Button>
+          <div className="col-4">{billingAddressTemplate()}</div>
+
+          <div className="col-4 row">
+            <div className="col-6">
+              <button
+                className="form-button account-submit-btn edit-card-btn"
+                onClick={() => editCard(card)}
+              >
+                Edit
+              </button>
+            </div>
+            
+            <div className="col-6">
+              <Button
+                className={"col-6"}
+                theme={ETheme.outlined}
+                onClick={removeCard}
+              >
+                remove
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-
-      <EditPaymentMethod
-        open={show}
-        handleClose={() => {
-          setShow(false);
-        }}
-      />
 
       <AddCard
         open={showAddModal}

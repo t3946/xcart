@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { AxiosResponse } from "axios";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import cn from "classnames";
+import EditPaymentMethod from "@components/pages/wallet/dialog/EditPaymentMethod";
 
 interface IProps {
   cards: ICard[];
@@ -21,6 +22,7 @@ export const Wallet: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const { cards } = props;
   const [defaultCardId, setDefaultCardId] = React.useState(props.defaultCardId);
+  const [editCard, setEditCard] = React.useState<ICard | null>(null);
 
   function cardItemsTemplate() {
     const items = [];
@@ -36,7 +38,7 @@ export const Wallet: React.FC<IProps> = (props) => {
           card={card}
           isDefault={card.id === defaultCardId}
           changeDefaultCardId={changeDefaultCardId}
-          openCardDialog={openCardDialog}
+          editCard={setEditCard}
         />
       );
     }
@@ -89,6 +91,14 @@ export const Wallet: React.FC<IProps> = (props) => {
       <GreyGrid>
         <AddNewPaymentMethod />
       </GreyGrid>
+
+      <EditPaymentMethod
+        open={!!editCard}
+        card={editCard}
+        handleClose={() => {
+          setEditCard(null);
+        }}
+      />
     </>
   );
 };

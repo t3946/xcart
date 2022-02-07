@@ -1,23 +1,8 @@
-import { CardItemDto } from "@modules/account/ts/types/wallet.type";
+import { Card as ICard } from "@stripe/stripe-js";
+import { date } from "yup/lib/locale";
 
-export const convertDataToEditCardForm = (data: CardItemDto) => {
-  const expires = new Date(Number(data.expires));
-
-  let viewMonth = expires.getMonth().toString();
-
-  if (viewMonth.length === 1) {
-    viewMonth = "0" + viewMonth;
-  }
-
+export const convertDataToEditCardForm = (data: ICard) => {
   return {
-    ...data,
-    expiresMonth: {
-      value: expires.getMonth(),
-      viewValue: viewMonth,
-    },
-    expiresYear: {
-      value: expires.getFullYear(),
-      viewValue: expires.getFullYear(),
-    },
+    cardHolderName: data.metadata.cardHolderName ?? "",
   };
 };
