@@ -13,15 +13,9 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   containerClass,
 }) => {
   return (
-    <div
-      className={classnames(
-        `wallet-card-name wallet-card-name-header`,
-        containerClass
-      )}
-    >
+    <div className={classnames(`col-4 ps-0`, containerClass)}>
       <div>
-        <b>{cardType.toUpperCase()}</b> ending in{" "}
-        {cardLast4}
+        <b>{cardType.toUpperCase()}</b> ending in {cardLast4}
       </div>
     </div>
   );

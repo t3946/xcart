@@ -50,6 +50,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
     };
 
     dispatch(addAddress(newAddress, () => {}, user.userId));
+    window.location.reload();
   };
 
   return (
@@ -73,6 +74,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
               <FormGroup
                 input={
                   <Select
+                    clearable={false}
                     options={countries}
                     value={values.country}
                     onChange={(e) => {
@@ -170,6 +172,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
               <FormGroup
                 input={
                   <Select
+                    clearable={false}
                     options={getStates(states, values.country.value)}
                     value={values.state}
                     onChange={handleChange}

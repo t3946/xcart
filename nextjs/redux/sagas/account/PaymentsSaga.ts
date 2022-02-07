@@ -84,17 +84,45 @@ function* changeDefaultCard(action: any): Generator {
 function* addCard(action: any): Generator {
   const { data, success } = action.payload;
 
-  yield axios
-    .post("/api-client/user/stripe/card/create", data)
-    .then(success);
+  yield axios.post("/api-client/user/stripe/card/create", data).then(success);
 }
 
 function* deleteCard(action: any): Generator {
   const { data, success } = action.payload;
 
+  yield axios.post("/api-client/user/stripe/card/delete", data).then(success);
+}
+
+function* changeAddressCard(action: any): Generator {
+  const { addressId, cardId, success } = action.payload;
+
   yield axios
-    .post("/api-client/user/stripe/card/delete", data)
-    .then(success);
+    .post("/api-client/user/stripe/customer/update-source", {
+      params: {
+        metadata: {
+          addressId,
+        },
+      },
+      cardId: cardId,
+    })
+    .then(success)
+    .catch();
+}
+
+function* changeCardHolderName(action: any): Generator {
+  const { cardHolderName, cardId, success } = action.payload;
+
+  yield axios
+    .post("/api-client/user/stripe/customer/update-source", {
+      params: {
+        metadata: {
+          cardHolderName,
+        },
+      },
+      cardId: cardId,
+    })
+    .then(success)
+    .catch();
 }
 
 export function* paymentsActionWatcher(): SagaIterator {
@@ -105,4 +133,6 @@ export function* paymentsActionWatcher(): SagaIterator {
   yield takeLatest("CHANGE_DEFAULT_CARD", changeDefaultCard);
   yield takeLatest("ADD_CARD_SAGA", addCard);
   yield takeLatest("DELETE_CARD", deleteCard);
+  yield takeLatest("CHANGE_ADDRESS_CARD", changeAddressCard);
+  yield takeLatest("CHANGE_CARDHOLDER_NAME", changeCardHolderName);
 }

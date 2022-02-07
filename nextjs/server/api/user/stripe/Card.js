@@ -25,9 +25,8 @@ api.get("/get", async function (req, res) {
 api.post("/create", async function (req, res) {
   const metadata = {};
 
-  if (req.body.addressId) {
-    metadata.addressId = req.body.addressId;
-  }
+  metadata.addressId = req.body.addressId;
+  metadata.cardHolderName = req.body.cardHolderName;
 
   const source = await stripeService.createSources(
     req.user.userId,

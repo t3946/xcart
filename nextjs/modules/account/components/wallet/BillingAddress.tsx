@@ -1,24 +1,34 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { BillingAddressList } from "./BillingAddressList";
-import { WalletCardsDialogContext } from "../../contexts/WalletCardsDialogContext";
-import { BillingAddressFormEnum } from "../../ts/consts/billing-address-form-types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCard,
-  addDataFromSubmitCardForm,
+  changeAddressCard,
 } from "@redux/actions/account-actions/PaymentsActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { CardItemDto } from "../../ts/types/wallet.type";
+import { Card as ICard } from "@stripe/stripe-js";
 import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface BillingAddressProps {
-  cardInfo: CardItemDto;
+  cardInfo: ICard;
+  onSuccess?: () => void;
 }
 
-export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
-  const context = useContext(WalletCardsDialogContext);
-
+export const BillingAddress: React.FC<BillingAddressProps> = ({
+  cardInfo,
+  onSuccess,
+  addAddress,
+}) => {
   const dispatch = useDispatch();
+  const userId = useSelectorAccount((e) => {
+    return e.user?.user_id;
+  });
+
+  React.useEffect(() => {
+    dispatch(getAddresses(userId));
+  }, []);
 
   const billingAddresses = useSelector((e: StoreInterface) => {
     return e.addresses.addressesList?.filter(
@@ -34,33 +44,33 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
   );
   const [value, setValue] = useState(
     cardSubmitData?.address?.address_id ||
-      cardInfo?.address_id ||
+      cardInfo?.metadata.address?.address_id ||
       billingAddresses?.[0]?.address_id
   );
 
   const onSubmit = () => {
     if (cardInfo) {
       dispatch(
-        addDataFromSubmitCardForm({
-          address: {
-            address_id: value,
-          },
+        changeAddressCard({
+          addressId: parseInt(value),
+          cardId: cardInfo.id,
+          success: onSuccess ? onSuccess : () => {},
         })
       );
-      context.setContent(BillingAddressFormEnum.EDIT);
       return;
-    }
-    dispatch(
-      addCard(
-        {
-          ...cardSubmitData,
-          address: {
-            address_id: value,
+    } else {
+      dispatch(
+        addCard(
+          {
+            ...cardSubmitData,
+            address: {
+              address_id: parseInt(value),
+            },
           },
-        },
-        context.handleClose
-      )
-    );
+          onSuccess
+        )
+      );
+    }
   };
 
   return (
@@ -69,19 +79,20 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({ cardInfo }) => {
       {billingAddresses && (
         <BillingAddressList
           value={value}
-          setValue={setValue}
+          onChange={(e) => setValue(e.target.value)}
           addresses={billingAddresses}
         />
       )}
       <div className="billing-address-butns">
         <button
           type={"submit"}
-          onClick={() => context.setContent(BillingAddressFormEnum.ADD_ADDRESS)}
+          onClick={addAddress}
           className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
           disabled={submitCardFormLoading}
         >
           ADD new ADDRESS
         </button>
+        
         <button
           type={"submit"}
           className="form-button account-submit-btn auto-width-button"

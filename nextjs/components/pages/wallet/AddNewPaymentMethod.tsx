@@ -27,16 +27,17 @@ export const AddNewPaymentMethod: React.FC = () => {
     <div
       className={"d-block d-md-flex justify-content-between align-items-center"}
     >
-      <Button onClick={openModal} className="w-auto">
-        Add a credit or debit card
-      </Button>
+      <div>
+        <div className="mb-4">
+          <Button onClick={openModal}>Add a credit or debit card</Button>
+        </div>
 
-      <Button
-        onClick={() => setShowModalAddBillingAddress(true)}
-        className="w-auto"
-      >
-        Add billing address
-      </Button>
+        <div>
+          <Button onClick={() => setShowModalAddBillingAddress(true)}>
+            Add billing address
+          </Button>
+        </div>
+      </div>
 
       <div className={"d-flex flex-column"}>
         <p>S3 Stores Inc accepts major credit and debit cards</p>
