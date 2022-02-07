@@ -338,6 +338,32 @@ app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
   });
 });
 
+app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
+  // const data = await prisma.xcart_users.findMany({
+  //   where: {
+  //     user_id: req.user.userId,
+  //   },
+  //   include: {
+  //     xcart_orders: true,
+  //   },
+  // });
+  const data = await prisma.xcart_order_transactions.findMany({
+    where: {
+      xcart_orders: {
+        where: {
+          xcart_users: {
+            where: {
+              user_id: req.user.userId,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  res.json(data);
+});
+
 /**
  * /verify-one-time-password
  * /send-one-time-password
