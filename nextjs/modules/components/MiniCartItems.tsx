@@ -34,7 +34,7 @@ class MiniCartItems extends Component {
    * save new product quantity
    */
   handleInput(e, key, item) {
-    let val = e.target.value;
+    const val = e.target.value;
 
     clearTimeout(this.timers.change);
 
@@ -79,11 +79,12 @@ class MiniCartItems extends Component {
       return;
     }
 
-    return map(options, (oneOption) => {
+    return map(options, (oneOption, i) => {
       if (oneOption.type === "color") {
-        let colorStyle = "background-color:" + oneOption.value + ";";
+        const colorStyle = "background-color:" + oneOption.value + ";";
+
         return (
-          <span className="product-option">
+          <span className="product-option" key={`option-${i}`}>
             <span className="product-option__title">{oneOption.title}:</span>
             <span className="product-option__color" style={colorStyle} />
             <span className="product-option__name">{oneOption.name}</span>
@@ -92,7 +93,7 @@ class MiniCartItems extends Component {
       }
 
       return (
-        <span className="product-option">
+        <span className="product-option" key={`option-${i}`}>
           <span className="product-option__title">{oneOption.title}:</span>
           <span className="product-option__name">{oneOption.name}</span>
         </span>
@@ -103,7 +104,7 @@ class MiniCartItems extends Component {
   renderProducts(props, state) {
     if (this.state.cart.items) {
       return map(this.state.cart.items, (item, key) => (
-        <div className="item" key={key} data-product={item.id}>
+        <div className="item" key={`key-${key}`} data-product={item.id}>
           <div className="image">{this.renderImage(item, props)}</div>
 
           <div className="name-quantity">
