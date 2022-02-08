@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import { useDispatch } from "react-redux";
 import {
   changeDefaultAddress,
@@ -10,7 +11,6 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
 import cn from "classnames";
 
@@ -28,15 +28,11 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
 }) => {
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
   const editAddressDialog = useDialog();
   const deleteAddressDialog = useDialog();
   const onPended = (message: string) => {
-    showSnackbar({
-      header: "Success",
-      message: message,
-      theme: "success",
-    });
+    snackbar.show(message);
   };
 
   const changeDefault = () => {
@@ -99,7 +95,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           {addressInfo.street}, {addressInfo.detailed}
         </div>
         <div className="address-text">{addressInfo.country.viewValue}</div>
-        <div >
+        <div>
           <span className="address-text">Phone number:</span>
           <span className="address-text"> {addressInfo.phone_number}</span>
         </div>

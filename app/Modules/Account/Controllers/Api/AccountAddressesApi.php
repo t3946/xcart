@@ -63,15 +63,20 @@ class AccountAddressesApi extends Controller
 
     public function removeAddress()
     {
+        /**
+         * @var UserModel $user
+        */
+        $user = Xcart::app()->auth->getUser(true);
+        
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+        
         $data = json_decode(file_get_contents('php://input'), true);
-
         $addressId = $data['addressId'];
-
-        $userId = $data['user'];
-
         AddressesModel::objects()->delete(['address_id' => $addressId]);
-
-        $this->jsonResponse($this->getAddressesFromBase($userId));
+        $this->jsonResponse($this->getAddressesFromBase($user->user_id));
     }
 
     public function addAddress()

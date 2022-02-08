@@ -3,6 +3,7 @@ import * as Yup from "yup";
 export const initialAddAddressFormValue = {
   country: { value: "", label: "Select country" },
   full_name: "",
+  phone_numberCode: "",
   phone_number: "",
   phone_ext: "",
   street: "",
@@ -20,9 +21,10 @@ export const addAddressFormValidationSchema = Yup.object().shape({
   full_name: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),
+  phone_numberCode: Yup.string().required("Required field"),
   phone_number: Yup.string()
     .required("Required field")
-    .max(50, "The maximum number of characters is 50"),
+    .matches(/\d{3} \d{3}[-]\d{4}/, "Is not in correct format"),
   street: Yup.string()
     .required("Required field")
     .max(50, "The maximum number of characters is 50"),

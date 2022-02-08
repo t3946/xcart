@@ -9,8 +9,13 @@ import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import MaskedInput from "@modules/ui/forms/MaskedInput";
 import Feedback from "@modules/ui/forms/Feedback";
+import * as Yup from "yup";
 
 import Styles from "@modules/account/components/shared/FormInputPhone.module.scss";
+
+export const phoneYupValidation = Yup.string()
+  .required("Required field")
+  .matches(/\d{3} \d{3}[-]\d{4}/, "Is not in correct format");
 
 interface IProps {
   handleChange: () => any;
@@ -20,11 +25,7 @@ interface IProps {
   name: string;
   countryCodeValue?: any;
   initialPhoneValue?: string;
-  values: {
-    phoneCountryCode?: string; // RU, AU etc
-    phone: string; // phone without counter code
-    phoneExt?: string; // external phone code
-  };
+  values: Record<string, any>;
   disabled?: boolean;
   mode?: string; // mobile or ext
   classes?: {
@@ -48,14 +49,13 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
     disabled,
   } = props;
   const countries = useSelector((e: StoreInterface) => e.countries);
-  const countryCodeFieldName = name + "CountryCode";
-  const phoneExtFieldName = "phone_ext";
-  const phoneMask = "(999) 999-9999";
-
+  const CodeFieldName = name + "Code";
+  const ExtFieldName = "phone_ext";
+  const phoneMask = "999 999-9999";
   let initialCountryCode;
 
-  if (values.phoneCountryCode) {
-    const country = getCountryByCode(values.phoneCountryCode, countries);
+  if (values[CodeFieldName]) {
+    const country = getCountryByCode(values[CodeFieldName], countries);
 
     initialCountryCode = {
       label: country.code + " +" + country.phone_code,
@@ -64,10 +64,6 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   } else {
     initialCountryCode = { label: "Code", value: "" };
   }
-
-  const [countryCodeValue, setCountryCodeValue] =
-    React.useState(initialCountryCode);
-
   /**
    * Get countries list for select input
    */
@@ -117,22 +113,15 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           clearable={false}
           classes={{ indicatorSeparator: "d-none", valueContainer: "ps-0" }}
           options={getSelectItems()}
-          value={countryCodeValue}
+          value={initialCountryCode}
           disabled={disabled}
           onChange={(e) => {
-            setFieldValue(countryCodeFieldName, e.target.value.value);
-            setCountryCodeValue(e.target.value);
+            setFieldValue(CodeFieldName, e.target.value.value);
           }}
-          name={countryCodeFieldName}
-          id={countryCodeFieldName}
-          isValid={!!touched.phoneCountryCode && !errors.phoneCountryCode}
-          isInvalid={!!touched.phoneCountryCode && !!errors.phoneCountryCode}
+          name={CodeFieldName}
+          isValid={!!touched[CodeFieldName] && !errors[CodeFieldName]}
+          isInvalid={!!(touched[CodeFieldName] && errors[CodeFieldName])}
         />
-        {!!touched.phoneCountryCode && !!errors.phoneCountryCode && (
-          <Feedback className="position-absolute" type="invalid">
-            {errors.phoneCountryCode}
-          </Feedback>
-        )}
       </div>
 
       <div className={classnames(classes.inputPhoneColumn)}>
@@ -140,9 +129,9 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           <MaskedInput
             type={"text"}
             name={name}
-            value={values.phone}
+            value={values[name]}
             onChange={handleChange}
-            placeholder="(___) ___-____"
+            placeholder="___ ___-____"
             isInvalid={!!touched[name] && !!errors[name]}
             isValid={!!touched[name] && !errors[name]}
             mask={phoneMask}
@@ -158,7 +147,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
 
       <RBForm.Group
         className={classnames(classes.inputPhoneExt)}
-        controlId={phoneExtFieldName}
+        controlId={ExtFieldName}
       >
         <Label
           className={classnames(
@@ -173,8 +162,8 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
 
         <Input
           type="text"
-          name={phoneExtFieldName}
-          value={values.phoneExt}
+          name={ExtFieldName}
+          value={values[ExtFieldName]}
           onChange={handleChange}
           disabled={disabled}
           autoComplete={"off"}

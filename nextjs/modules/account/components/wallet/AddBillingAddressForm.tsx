@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Select from "@modules/ui/forms/select/Select";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import { getCountryByCode } from "@utils/Countries";
 import { Form, Formik } from "formik";
 import {
   addAddressFormValidationSchema,
@@ -30,7 +31,8 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
   const { edit, onCancel, onSubmitted } = props;
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
-  const countries = useSelectorAccount((e) => e.main.countries);
+  const countryPhoneCodes = useSelectorAccount((e) => e.main.countries);
+  const countries = useSelectorAccount((e) => e.countries);
   const submitCardFormLoading = useSelectorAccount(
     (e) => e.payments.submitCardFormLoading
   );
@@ -42,8 +44,16 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
   }, []);
 
   const onSubmit = (values) => {
+    const phoneCode = getCountryByCode(
+      values.phone_numberCode,
+      countries
+    ).phone_code;
     const newAddress = {
       ...values,
+      phone_number: `+${phoneCode}${values.phone_number.replace(
+        /[+()\-\s]/gim,
+        ""
+      )}`,
       country: values.country.value,
       state: values.state.value,
       address_type: "billing",
@@ -75,7 +85,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                 input={
                   <Select
                     clearable={false}
-                    options={countries}
+                    options={countryPhoneCodes}
                     value={values.country}
                     onChange={(e) => {
                       setFieldValue("country", e.target.value);
@@ -113,11 +123,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                     touched={touched}
                     errors={errors}
                     name={"phone_number"}
-                    values={{
-                      // phoneCountryCode: values.phoneCountryCode,
-                      phone: values.phone_number,
-                      phoneExt: values.phone_ext,
-                    }}
+                    values={values}
                     mode={"ext"}
                   />
                 }
