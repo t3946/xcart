@@ -88,7 +88,7 @@ const AccountNavigation: React.FC = () => {
       background: "rgba(255, 172, 10, 0.63)",
       title: "Orders",
       caption: "Track, return, or buy things again",
-      url: "/dashboard",
+      url: "/orders/open-orders",
     },
     {
       img: "payments",
