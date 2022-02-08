@@ -1,9 +1,6 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
-import Table, {
-  TableTypes,
-} from "@modules/account/components/orders/Decision/Table";
 import Advice, {
   AdviceTypes,
 } from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
@@ -15,6 +12,7 @@ import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import { useDispatch } from "react-redux";
 import { submitAlternativeItemsOffer } from "@redux/actions/account-actions/DecisionsActions";
+import AlternativeItemsTable from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsTable";
 
 import Styles from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer.module.scss";
 
@@ -98,17 +96,15 @@ const AlternativeItemsOffer: React.FC = () => {
           return (
             <Form>
               {!!productCategories.outOfStock.length && (
-                <Table
-                  tableType={TableTypes.alternativeItemsOfferOutOfStock}
+                <AlternativeItemsTable
+                  type="outOfStock"
                   items={productCategories.outOfStock}
-                  key={"outOfStock"}
                 />
               )}
               {!!productCategories.inStock.length && (
-                <Table
-                  tableType={TableTypes.alternativeItemsOfferInStock}
+                <AlternativeItemsTable
+                  type="inStock"
                   items={productCategories.inStock}
-                  key={"inStock"}
                 />
               )}
               <div className={"estimated-time-arrival-form-controls"}>

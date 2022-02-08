@@ -12,6 +12,7 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import Decision from "@modules/account/components/orders/Decision/Decision";
 
 const OrderPage: NextPage = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,8 @@ const OrderPage: NextPage = () => {
       case "order-actions":
         return <OrderActionsPage orderItem={order} />;
       case "decisions-required":
-        return null; // TODO: Сделать decisions page
+        // return null; // TODO: Сделать decisions page
+        return <Decision decision={order} />;
     }
   };
 

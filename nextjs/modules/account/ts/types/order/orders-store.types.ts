@@ -61,5 +61,5 @@ export interface OrderAddress {
 
 export interface SelectDate {
   value: number | null;
-  viewValue: string;
+  label: string;
 }

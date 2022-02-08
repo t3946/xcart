@@ -2,12 +2,15 @@ import React from "react";
 import classnames from "classnames";
 
 const Light = (props: Record<any, any>): any => {
+  const { width = "14", height = "14" } = props;
   return (
     <svg
       aria-hidden="true"
       focusable="false"
       data-prefix="fal"
       data-icon="chevron-down"
+      width={width}
+      height={height}
       role="img"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 448 512"

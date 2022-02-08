@@ -1,4 +1,8 @@
 import React from "react";
+import cn from "classnames";
+import ChevronIcon from "@modules/icon/components/font-awesome/chevron-down/Regular";
+
+import Styles from "@modules/account/components/wallet-transactions/TransactionHeader.module.scss";
 
 export const TransactionHeader = ({
   open,
@@ -44,13 +48,15 @@ export const TransactionHeader = ({
           (US$ {order.total})
         </div>
         <div className="transactions-header-arrow">
-          <div
-            className={`accordion-arrow ${open && "accordion-arrow-open"}`}
+          <ChevronIcon
+            className={cn(Styles.chevron, { [Styles.rotate]: open })}
           />
         </div>
       </div>
       <div className="transactions-mobile-header-arrow">
-        <div className={`accordion-arrow ${open && "accordion-arrow-open"}`} />
+        <ChevronIcon
+          className={cn(Styles.chevron, { [Styles.rotate]: open })}
+        />
       </div>
     </div>
   );
