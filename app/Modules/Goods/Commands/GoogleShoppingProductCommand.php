@@ -304,7 +304,7 @@ class GoogleShoppingProductCommand extends Command
                         UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type' => 1]);
 
                     } catch (Exception $e) {
-                        $log_text .= "{$e->getMessage()}\n";
+                        //$log_text .= "{$e->getMessage()}\n";
                     }
 
                     if ($log_text) {
