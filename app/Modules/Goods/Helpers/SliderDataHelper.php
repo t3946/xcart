@@ -1,6 +1,8 @@
 <?php
 namespace Modules\Goods\Helpers;
 
+use Modules\Search\Helpers\Searchers\ProductDocumentSearcher;
+use Modules\Search\SearchModule;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Core\Components\GlobalConfig;
@@ -108,43 +110,21 @@ SQL;
 
             $saveOrder = true;
 
-            $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
+            /** @var ProductModel $product */
+            $product = ProductModel::objects()->get(['pk' => $productid]);
 
-            $classElastic = new ElasticSearch($config['es_url'], $site->domain);
-            $classElastic->setSource('*._id');
-            $classElastic->setType('product');
-            $classElastic->setMinScore(0.5);
-            $classElastic->setSize(100);
-            $classElastic->setProductId($productid);
+            $searchResult = Xcart::app()->elastic->search(
+                SearchModule::getEngine($site->code),
+                $product->getFrontendName(),
+                new ProductDocumentSearcher(),
+                1,
+                50,
+                2
+            );
 
-            if ($section_name === 'similar_products')
-            {
-                $sGoogleAnaliticsParam = 'similar_products_all_carousel';
-                $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands());
-            }
-            elseif ($section_name === 'similar_products_ob')
-            {
-                $sGoogleAnaliticsParam = 'similar_products_other_brands_carousel';
-                $classBrands = new Brands();
-                $aBrand = $classBrands->getBrandByProductId($productid);
-                $extendFilter[] = new QAndNot(['brandid' => $aBrand['brandid']]);
+            $items = $searchResult['results'] ?? [];
 
-                $classElastic->setSearchQuery($classElastic->getQuerySimilarProductsBrands($aBrand['brand']));
-                $classElastic->setSize(200);
-            }
-
-            $res = $classElastic->query();
-
-            if (!empty($res['hits']['hits'])) {
-                $hits = $res['hits']['hits'];
-                usort($hits, function($a, $b){
-                    if ($a['_score'] == $b['_score']) {
-                        return 0;
-                    }
-                    return $a['_score'] < $b['_score'] ?  1 : -1;
-                });
-                $pids = array_map(function($item){ return ['needed_resource_id' => $item['_id']]; }, $hits);
-            }
+            $pids = array_map(static fn($item) => ['needed_resource_id' =>  $item['id']['raw']], $items);
         }
 
         $isInStock = \in_array($section_name, ['similar_products', 'similar_products_ob']);

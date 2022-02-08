@@ -287,24 +287,15 @@ class GoogleShoppingProductCommand extends Command
                     $batchReq->setEntries($entries);
                     $log_text = '';
                     try {
-                        func_backprocess_log('incremental product feed', $l = "GB: tried to submit {$batchReq->count()} items as product feed ($merchantId)");
+                        func_backprocess_log('incremental product feed', $l = "GB: tried to submit {$batchReq->count()} items as product feed ($site->code)");
                         echo "$l\n";
 
-                        $result = $oService->products->customBatch($batchReq);
+                        $oService->products->customBatch($batchReq);
 
-                        foreach ($result->getEntries() as $entinty) {
-                            if ($errors = $entinty->getErrors()) {
-                                $log_text .= "Error process product $entinty->batchId :\n";
-                                /** @var Error $error */
-                                foreach ($errors as $error) {
-                                    $log_text .= "{$error->getMessage()}\n";
-                                }
-                            }
-                        }
                         UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type' => 1]);
 
                     } catch (Exception $e) {
-                        //$log_text .= "{$e->getMessage()}\n";
+                        $log_text .= "{$e->getMessage()}\n";
                     }
 
                     if ($log_text) {

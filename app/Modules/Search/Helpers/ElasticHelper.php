@@ -68,7 +68,7 @@ class ElasticHelper
 
     }
 
-    public function search(string $engine, string $query, DocumentSearcherInterface $searcher, int $page, int $size): array
+    public function search(string $engine, string $query, DocumentSearcherInterface $searcher, int $page, int $size, int $precision = null): array
     {
         $searchParam = new SearchRequestParams(trim($query));
 
@@ -78,6 +78,10 @@ class ElasticHelper
 
         $searchParam->page = $paginationObject;
         $searchParam->filters = $searcher->getSearchObject();
+
+        if ($precision !== null) {
+            $searchParam->precision = $precision;
+        }
 
         $request = new Search($engine, $searchParam);
 

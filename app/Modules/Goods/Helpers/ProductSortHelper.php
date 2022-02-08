@@ -3,7 +3,6 @@ namespace Modules\Goods\Helpers;
 
 use Modules\Goods\GoodsModule;
 use Modules\Goods\Models\CategoryModel;
-use Xcart\Helpers\ViewedRelatedProducts;
 
 class ProductSortHelper
 {
@@ -67,52 +66,9 @@ class ProductSortHelper
     public function getOrderByRelevance($max_product = 50)
     {
         $qs = clone $this->qs;
-        $ta = $qs->getTableAlias();
-        list($oldOrder, $orderOptions) = $qs->getQueryBuilder()->getOrder();
+
+        [$oldOrder] = $qs->getQueryBuilder()->getOrder();
         
-
-        if ($p_ids = (new ViewedRelatedProducts())->getRelated()) {
-            $t_ids = [];
-
-            if ($this->category) {
-                $categories = CategoryModel::objects($this->category)->descendants(true)->valuesList(['pk'], true);
-            }
-
-            foreach ($p_ids as $n => $product)
-            {
-                $push = false;
-                $push_el = $product['productid'];
-
-                if (in_array($push_el, $t_ids)) { continue; }
-
-                if ($this->category && !empty($categories) && !empty($product['categoryid']))
-                {
-                    $cids = array_intersect($categories, $product['categoryid']);
-
-                    if (!empty($cids)) {
-                        $push = true;
-                    }
-                }
-                else if (!$this->category) {
-                    $push = true;
-                }
-
-                if ($push) {
-                    $t_ids[] = $push_el;
-                }
-
-                if (count($t_ids) == $max_product) { break; }
-            }
-
-            if (!empty($t_ids))
-            {
-                array_unshift($oldOrder,
-                              "IF(FIELD( {$ta}.productid, " . implode(',', $t_ids) . ") = 0,1,0)",
-                              "FIELD( {$ta}.productid, " . implode(',', $t_ids) . ")"
-                );
-            }
-        }
-
         if ($this->category) {
             $oldOrder[] = 'categories__order_by';
             $oldOrder[] = 'categories__through__orderby';
