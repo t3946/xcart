@@ -8,11 +8,33 @@ interface IProps {
   totals?: {};
 }
 
-const GrandTotalProductOrdered: React.FC<IProps> = ({ totals, className }) => {
+const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
+  const { totals, className, order } = props;
+
+  function printTaxes() {
+    const taxes = [];
+
+    for (const taxesKey in order.taxes) {
+      taxes.push(
+        <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
+          Total {taxesKey}:
+        </span>
+      );
+
+      taxes.push(
+        <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
+          US$ {order.taxes[taxesKey].toFixed(2)}
+        </span>
+      );
+    }
+
+    return taxes;
+  }
+
   return (
     <div className={cn([Styles.container, className])}>
       <span>Total items cost:</span>
-      <span>US$ 5.70</span>
+      <span>US$ {order.subtotal}</span>
       <span
         className={cn([
           Styles.totalTableShippingCost,
@@ -33,16 +55,8 @@ const GrandTotalProductOrdered: React.FC<IProps> = ({ totals, className }) => {
         US$ 11.90
       </span>
 
-      <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
-        Total sales tax:
-      </span>
+      {printTaxes()}
 
-      <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
-        US$ 1.80
-      </span>
-
-      <span className={cn([Styles.totalTableTax])}>Total VAT tax:</span>
-      <span className={cn([Styles.totalTableTax])}>US$ 1.80</span>
       <span
         className={cn([
           Styles.totalTableGrandTotal,
@@ -58,7 +72,7 @@ const GrandTotalProductOrdered: React.FC<IProps> = ({ totals, className }) => {
           Styles.totalTable__grandTotal,
         ])}
       >
-        US$ 17.60
+        US$ {order.total}
       </span>
     </div>
   );

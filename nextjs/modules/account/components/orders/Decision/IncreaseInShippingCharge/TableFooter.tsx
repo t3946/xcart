@@ -11,14 +11,12 @@ interface IProps {
   subtotal: number;
 }
 
-const TableFooter: React.FC<IProps> = ({
-  paymentStatus,
-  shippingStatus,
-  regularShipping,
-  salesTax,
-  vatTax,
-  subtotal,
-}) => {
+const TableFooter: React.FC<IProps> = (props) => {
+  const { paymentStatus, shippingStatus, regularShipping, subtotal } = props;
+
+  const salesTax = parseFloat(props.salesTax);
+  const vatTax = parseFloat(props.vatTax);
+
   return (
     <div
       className={cn([
@@ -75,26 +73,34 @@ const TableFooter: React.FC<IProps> = ({
           US$ {regularShipping}
         </span>
 
-        <span
-          className={cn([
-            Styles.tableFooterShippingSubtotalTax,
-            Styles.tableFooterShippingSubtotal__tax,
-          ])}
-        >
-          Sales Tax:
-        </span>
+        {!!salesTax && (
+          <span
+            className={cn([
+              Styles.tableFooterShippingSubtotalTax,
+              Styles.tableFooterShippingSubtotal__tax,
+            ])}
+          >
+            Sales Tax:
+          </span>
+        )}
 
-        <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-          US$ {salesTax}
-        </span>
+        {!!salesTax && (
+          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
+            US$ {salesTax.toFixed(2)}
+          </span>
+        )}
 
-        <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-          VAT Tax:
-        </span>
+        {!!vatTax && (
+          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
+            VAT Tax:
+          </span>
+        )}
 
-        <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-          US$ {vatTax}
-        </span>
+        {!!vatTax && (
+          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
+            US$ {vatTax.toFixed(2)}
+          </span>
+        )}
 
         <span
           className={cn([

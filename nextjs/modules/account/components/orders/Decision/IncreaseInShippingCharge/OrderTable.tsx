@@ -102,6 +102,7 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
           "border-0": !isOpened,
           [Styles.accordionFooter_opened]: isOpened,
         }}
+        order={order}
       />
     </Accordion>
   );

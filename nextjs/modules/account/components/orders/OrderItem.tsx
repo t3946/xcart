@@ -15,12 +15,11 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
     day: "2-digit",
     year: "numeric",
   });
-
   const accordion = useAccordion(200);
-
   const [showAllItems, setShowAllItems] = useState(false);
-
   const shippingAddress = `${order.address.shippingZip} ${order.address.shippingCity} ${order.address.shippingAddress}`;
+
+  console.log(order);
 
   return (
     <div className="order-item-container">
@@ -58,25 +57,27 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div className="order-item-body-right-side"></div>
           <div className="order-item-body-title">items ordered</div>
 
-          <div className={"order-item-body-product-container"}>
-            <div className="order-item-body-product-left-part">
-              <img
-                className="order-item-body-product-img"
-                src={order.groups[0].products[0].image}
-              />
-              <div>
-                <a className="order-item-body-product-name">
-                  {order.groups[0].products[0].product}
-                </a>
-                <div className="order-item-body-product-sku">
-                  {order.groups[0].products[0].code}
+          {order.groups[0] && (
+            <div className={"order-item-body-product-container"}>
+              <div className="order-item-body-product-left-part">
+                <img
+                  className="order-item-body-product-img"
+                  src={order.groups[0].products[0].image}
+                />
+                <div>
+                  <a className="order-item-body-product-name">
+                    {order.groups[0].products[0].product}
+                  </a>
+                  <div className="order-item-body-product-sku">
+                    {order.groups[0].products[0].code}
+                  </div>
                 </div>
               </div>
+              <div className="order-item-body-product-right-part-text">
+                x {order.groups[0].products[0].amount}
+              </div>
             </div>
-            <div className="order-item-body-product-right-part-text">
-              x {order.groups[0].products[0].amount}
-            </div>
-          </div>
+          )}
 
           <div
             style={{

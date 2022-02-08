@@ -70,9 +70,15 @@ class OrdersApi extends Controller
             foreach ($order_model->groups as $group) {
                 $ar_products = [];
                 $manufacturer = $group->manufacturer;
+
+                if (!$manufacturer) {
+                    continue;
+                }
+
                 foreach ($group->detail_models as $model) {
                     $ar_products[] = $model->getFrontendProduct();
                 }
+
                 $group_data[] = [
                     'manufacturer' => $manufacturer->getFrontendAddress(),
                     'products' => $ar_products ?? [],
@@ -150,7 +156,10 @@ class OrdersApi extends Controller
             $purchase_data = $extra_model->getFrontendPurchase();
         }
         $order = [
+            'subtotal' => $order_model->subtotal,
+            'total' => $order_model->total,
             'orderNumber' => $order_model->getOrderNumber(),
+            'taxes' => $order_model->getTaxes(),
             'client' => [
                 'firstName' => $order_model->firstname,
                 'phone' => $order_model->phone,

@@ -25,7 +25,8 @@ export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
       {orderItem.groups.map((group, i) => (
         <ShippingTable group={group} key={`product-${i}`} />
       ))}
-      <GrandTotalProductOrdered />
+
+      <GrandTotalProductOrdered order={orderItem} />
     </div>
   );
 };
