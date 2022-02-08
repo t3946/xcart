@@ -174,8 +174,8 @@ class SearchController extends AbstractCatalogController
             $max_size
         );
 
-        $items = $searchResult['results'];
-        $count = $searchResult['meta']['page']['total_results'];
+        $items = $searchResult['results'] ?? [];
+        $count = $searchResult['meta']['page']['total_results'] ?? 0;
 
         $this->ids = array_map(static fn($item) => $item['id']['raw'], $items);
 

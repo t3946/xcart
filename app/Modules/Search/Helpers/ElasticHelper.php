@@ -13,10 +13,10 @@ use Elastic\EnterpriseSearch\AppSearch\Schema\Engine;
 use Elastic\EnterpriseSearch\AppSearch\Schema\PaginationResponseObject;
 use Elastic\EnterpriseSearch\AppSearch\Schema\QuerySuggestionRequest;
 use Elastic\EnterpriseSearch\AppSearch\Schema\SearchRequestParams;
-use Elastic\EnterpriseSearch\AppSearch\Schema\SimpleObject;
 use Elastic\EnterpriseSearch\Client;
 use Elastic\EnterpriseSearch\Exception\ClientErrorResponseException;
 use Modules\Search\Helpers\Searchers\DocumentSearcherInterface;
+use Throwable;
 
 class ElasticHelper
 {
@@ -81,7 +81,11 @@ class ElasticHelper
 
         $request = new Search($engine, $searchParam);
 
-        return $this->getClient()->appSearch()->search($request)->asArray();
+        try {
+            return $this->getClient()->appSearch()->search($request)->asArray();
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
     public function suggestion(string $engine, string $query, $size = 5): array
@@ -95,7 +99,11 @@ class ElasticHelper
 
         $suggestion = new QuerySuggestion($engine, $request);
 
-        return $this->getClient()->appSearch()->querySuggestion($suggestion)->asArray();
+        try {
+            return $this->getClient()->appSearch()->querySuggestion($suggestion)->asArray();
+        } catch (Throwable $e) {
+            return [];
+        }
     }
 
 }
