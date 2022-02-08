@@ -62,6 +62,10 @@ const LoginForm: React.FC<any> = () => {
             login={login}
             password={password}
             rememberMe={rememberMe}
+            onLogin={() => {
+              setLogin("");
+              setMode(INPUT_LOGIN_MODE);
+            }}
           />
         );
     }

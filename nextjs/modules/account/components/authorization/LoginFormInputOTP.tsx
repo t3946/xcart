@@ -11,20 +11,22 @@ import { useDispatch } from "react-redux";
 import generateFp from "@utils/generateFp";
 import { loginAction } from "@redux/actions/account-actions/AutorizationActions";
 import cn from "classnames";
-
 import StylesLoginForm from "@modules/account/components/authorization/LoginForm.module.scss";
 import Styles from "@modules/account/components/authorization/LoginFormInputOTP.module.scss";
+import { useRouter } from "next/router";
 
 interface IProps {
   login: string;
   password: string;
   rememberMe: boolean;
+  onLogin: () => void;
 }
 
 const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
-  const { login, password, rememberMe } = props;
+  const { login, password, rememberMe, onLogin } = props;
   const inputRef = React.createRef<HTMLInputElement>();
   const dispatch = useDispatch();
+  const router = useRouter();
   const initialState = {
     code: "",
     rememberBrowser: false,
@@ -56,7 +58,9 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
             }
 
             if (res.data.user) {
+              onLogin();
               dispatch(userSetAction(res.data.user));
+              router.push("/dashboard");
               return;
             }
           },
