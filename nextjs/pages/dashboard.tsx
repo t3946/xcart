@@ -28,7 +28,9 @@ function Dashboard(props: any) {
   const user = useSelectorAccount((e) => e.user);
 
   React.useEffect(() => {
-    router.push(user ? "/dashboard" : "/login");
+    if (!user) {
+      router.push("/login");
+    }
   });
 
   return (
