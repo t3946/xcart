@@ -270,4 +270,18 @@ class OrderProcessController extends FrontendController
 
         $this->jsonResponse( $response ?? [] );
     }
+
+    public function getExtra(): void{
+        $data = json_decode(file_get_contents('php://input'), true);
+        $extra_model = OrderExtraModel::objects()->get(["order_id" => $data['order_id']]);
+
+        if (!$extra_model) {
+            $this->jsonResponse(null);
+            return;
+        }
+
+        $attributes = $extra_model->getAttributes();
+        $attributes["purchase_order"] = unserialize($attributes["purchase_order"]);
+        $this->jsonResponse($attributes);
+    }
 }

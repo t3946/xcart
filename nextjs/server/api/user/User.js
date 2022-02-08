@@ -346,17 +346,40 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
     },
     select: {
       xcart_orders: {
-        include: {
+        select: {
+          orderid: true,
+          date: true,
+          total: true,
+          order_prefix: true,
+          order_type: true,
+          s_firstname: true,
+          s_company: true,
+          s_address: true,
+          s_city: true,
+          s_state: true,
+          s_zipcode: true,
+          s_country: true,
+          b_firstname: true,
+          b_company: true,
+          b_address: true,
+          b_city: true,
+          b_state: true,
+          b_zipcode: true,
+          b_country: true,
+          payment_method: true,
+          paymentid: true,
+          cb_status: true,
           xcart_order_transactions: true,
+          phone: true,
+          email: true,
+          firstname: true,
+          lastname: true,
         },
       },
     },
   });
   const orders = data === null ? [] : data.xcart_orders;
   const cards = (await stripeService.getSources(req.user.userId)).data;
-  const ORDER_STATUS_UNPAID_PO = "O";
-  const ORDER_STATUS_INCOMPLETE_PO = "IO";
-  const poStatuses = [ORDER_STATUS_UNPAID_PO, ORDER_STATUS_INCOMPLETE_PO];
 
   for (const order of orders) {
     order.groups = await prisma.xcart_order_groups.findMany({
@@ -368,7 +391,66 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       },
     });
 
-    order.isPurchaseOrder = poStatuses.indexOf(order.cb_status) !== -1;
+    const deliveryMethods = [];
+
+    for (const group of order.groups) {
+      const shippingName = (
+        await prisma.xcart_shipping.findUnique({
+          where: { shippingid: group.shippingid },
+        })
+      ).shipping;
+
+      if (deliveryMethods.indexOf(shippingName) === -1) {
+        deliveryMethods.push(shippingName);
+      }
+    }
+
+    order.deliveryMethods = deliveryMethods.join(", ");
+
+    order.status = await prisma.xcart_order_statuses.findFirst({
+      where: {
+        code: order.cb_status,
+      },
+      select: {
+        name: true,
+      },
+    });
+
+    order.s_state = (
+      await prisma.xcart_states.findFirst({
+        where: { code: order.s_state, country_code: order.s_country },
+      })
+    ).state;
+
+    order.b_state = (
+      await prisma.xcart_states.findFirst({
+        where: { code: order.b_state, country_code: order.b_country },
+      })
+    ).state;
+
+    order.s_country = (
+      await prisma.xcart_countries.findFirst({
+        where: { code: order.s_country },
+      })
+    ).name;
+
+    order.b_country = (
+      await prisma.xcart_countries.findFirst({
+        where: { code: order.b_country },
+      })
+    ).name;
+
+    const ORDER_STATUS_UNPAID_PO = "O";
+    const ORDER_STATUS_INCOMPLETE_PO = "IO";
+    const poStatuses = [ORDER_STATUS_UNPAID_PO, ORDER_STATUS_INCOMPLETE_PO];
+
+    if (poStatuses.indexOf(order.cb_status) !== -1) {
+      await AxiosInstance.post("/api/get-extra", {
+        order_id: order.orderid,
+      }).then((res) => {
+        order.extra = res.data;
+      });
+    }
   }
 
   res.json({

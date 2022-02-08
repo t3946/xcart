@@ -1,7 +1,6 @@
 import React from "react";
 import { TransactionsList } from "../components/wallet-transactions/TransactionsList";
 import Button from "@modules/ui/forms/Button";
-import Link from "next/link";
 
 interface IProps {
   orders: Record<any, any>[];
@@ -10,7 +9,6 @@ interface IProps {
 
 export const Transactions: React.FC<IProps> = (props) => {
   const { orders, cards } = props;
-  console.log(orders);
 
   function isEmpty() {
     for (const order of orders) {

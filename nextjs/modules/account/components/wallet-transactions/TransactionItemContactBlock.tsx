@@ -1,9 +1,10 @@
 import React from "react";
 
-export const TransactionItemContactBlock = ({
-  refund = undefined,
-  order,
-}) => {
+export const TransactionItemContactBlock = ({ refund = undefined, order }) => {
+  if (!order.firstname && !order.lastname && !order.phone && !order.email) {
+    return null;
+  }
+
   return (
     <div
       className={`transaction-contact-info-container ${
@@ -14,13 +15,16 @@ export const TransactionItemContactBlock = ({
         <div className="transaction-top-info-left-part-label">
           Contact information
         </div>
-        <div className="info-item-container info-item-container-spacing">
-          <p className="label-info-item right-part">Full Name:</p>
-          <p className="left-part">
-            {order.firstname + " "}
-            {order.lastname && order.lastname}
-          </p>
-        </div>
+
+        {(order.firstname || order.lastname) && (
+          <div className="info-item-container info-item-container-spacing">
+            <p className="label-info-item right-part">Full Name:</p>
+            <p className="left-part">
+              {[order.firstname, order.lastname].join(" ")}
+            </p>
+          </div>
+        )}
+
         <div className="info-item-container info-item-container-spacing">
           <p className="label-info-item right-part">Phone:</p>
           <p className="left-part">

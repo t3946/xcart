@@ -47,7 +47,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
         <TransactionItemTopBlock order={order} componentRef={accordion.ref} />
         <TransactionItemContactBlock order={order} />
         <TransactionAddresses order={order} />
-        <PurchaseOrderInformation />
+        {order.extra && <PurchaseOrderInformation order={order} />}
         <div className="transaction-checkbox">
           <FormCheckBox
             label={

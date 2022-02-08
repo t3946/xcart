@@ -12,7 +12,13 @@ interface IProps {
 
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   const { componentRef, refund, order } = props;
-  
+
+  const date = new Date(Number(order.date)).toLocaleDateString("en-EN", {
+    month: "long",
+    day: "2-digit",
+    year: "numeric",
+  });
+
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
@@ -88,20 +94,24 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
             <div className="transaction-top-info-right-part">
               <div className="info-item-container info-item-container-spacing">
                 <p className="label-info-item right-part">Order date:</p>
-                <p className="left-part">orders@s3stores.com</p>
+                <p className="left-part">{date}</p>
               </div>
               <div className="info-item-container info-item-container-spacing">
                 <p className="label-info-item right-part">Order status:</p>
-                <p className="left-part">orders@s3stores.com</p>
+                <p className="left-part">{order.status.name}</p>
               </div>
               <div className="info-item-container info-item-container-spacing">
                 <p className="label-info-item right-part">Payment method:</p>
-                <p className="left-part">orders@s3stores.com</p>
+                <p className="left-part">{order.payment_method}</p>
               </div>
-              <div className="info-item-container info-item-container-spacing">
-                <p className="label-info-item right-part">Delivery methods:</p>
-                <p className="left-part">orders@s3stores.com</p>
-              </div>
+              {order.deliveryMethods && (
+                <div className="info-item-container info-item-container-spacing">
+                  <p className="label-info-item right-part">
+                    Delivery methods:
+                  </p>
+                  <p className="left-part">{order.deliveryMethods}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

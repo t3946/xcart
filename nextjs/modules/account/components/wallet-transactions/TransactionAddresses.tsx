@@ -18,10 +18,14 @@ export const TransactionAddresses = ({ refund = undefined, order }) => {
             {order.s_lastname && order.s_lastname}
           </p>
         </div>
-        <div className="info-item-container info-item-container-spacing">
-          <p className="label-info-item right-part">Company:</p>
-          <p className="left-part"> {order.s_company}</p>
-        </div>
+
+        {order.s_company && (
+          <div className="info-item-container info-item-container-spacing">
+            <p className="label-info-item right-part">Company:</p>
+            <p className="left-part"> {order.s_company}</p>
+          </div>
+        )}
+
         <div className="info-item-container info-item-container-spacing">
           <p className="label-info-item right-part">Address:</p>
           <p className="left-part"> {order.s_address}</p>
@@ -54,10 +58,14 @@ export const TransactionAddresses = ({ refund = undefined, order }) => {
             {order.b_lastname && order.b_lastname}
           </p>
         </div>
-        <div className="info-item-container info-item-container-spacing">
-          <p className="label-info-item right-part">Company:</p>
-          <p className="left-part"> {order.b_company}</p>
-        </div>
+
+        {order.b_company && (
+          <div className="info-item-container info-item-container-spacing">
+            <p className="label-info-item right-part">Company:</p>
+            <p className="left-part"> {order.b_company}</p>
+          </div>
+        )}
+
         <div className="info-item-container info-item-container-spacing">
           <p className="label-info-item right-part">Address:</p>
           <p className="left-part"> {order.b_address}</p>
