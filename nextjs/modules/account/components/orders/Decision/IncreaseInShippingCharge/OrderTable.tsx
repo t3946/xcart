@@ -33,7 +33,7 @@ interface IProps {
 
 const OrderTable: React.FC<IProps> = (props: IProps) => {
   const { order } = props;
-  
+
   const [opened, setOpened] = React.useState("");
 
   const isOpened = opened === "true";
@@ -93,7 +93,7 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
       <Accordion.Collapse eventKey="true">
         <div>
           {order.groups.map((group) => (
-            <ShippingTable showCaption group={group} />
+            <ShippingTable group={group} />
           ))}
         </div>
       </Accordion.Collapse>

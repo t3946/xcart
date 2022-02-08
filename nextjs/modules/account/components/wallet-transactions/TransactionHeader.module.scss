@@ -1,0 +1,19 @@
+@import "styles/utils/Utils.module";
+
+.chevron {
+  transition: transform 0.2s;
+  width: 0;
+
+  @include breakpoint(md) {
+    width: pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(15);
+  }
+}
+
+.rotate {
+  transition: transform 0.2s;
+  transform: rotate(180deg);
+}

@@ -21,7 +21,7 @@ import {
 } from "@redux/actions/account-actions/DecisionsActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useRouter } from "next/router";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
 
 interface IProps {
   decision: Record<any, any>;
@@ -56,8 +56,9 @@ const Decision: React.FC<IProps> = (props) => {
     "additional-shipping-charge": AdditionalShippingCharge,
     "additional-information-required": POAdditionalInformationRequired,
   };
-  const DecisionComponents: React.FC<any> = components[decision.type];
-
+  const DecisionComponents: React.FC<any> =
+    components["alternative-items-offer"];
+  // const DecisionComponents: React.FC<any> = components[decision.type];
   return (
     <div>
       <h1 className={"text-center fw-bold decision-header decision__header"}>

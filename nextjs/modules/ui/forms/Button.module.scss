@@ -44,7 +44,6 @@
   &:disabled {
     opacity: 0.6;
     cursor: default;
-    background-color: #ffb426;
   }
 
   @include breakpoint(md) {

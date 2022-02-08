@@ -1,6 +1,13 @@
 import React from "react";
 import cn from "classnames";
-import ReactSelect, { components } from "react-select";
+import dynamic from "next/dynamic";
+const ReactSelect = dynamic(
+  import("react-select").then((mod) => mod.default),
+  { ssr: false }
+);
+import { components } from "react-select";
+
+// import ReactSelect, { components } from "react-select";
 import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
 import Menu from "@modules/ui/forms/select/Menu";

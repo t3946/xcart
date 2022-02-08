@@ -103,7 +103,7 @@ const PublicProfile = (): any => {
           setShow(true);
           user.public_name = values.publicName;
           user.location = values.location;
-
+          console.log("img: ", res.avatarUrl);
           dispatch(userSetAction({ ...user, avatar_image: res.avatarUrl }));
 
           dispatch(
