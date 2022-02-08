@@ -7,19 +7,16 @@ use DateTimeInterface;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\UpdatedProductModel;
+use Modules\Search\Helpers\Processors\QueueDeleteProcessor;
+use Modules\Search\Helpers\Processors\QueueIndexProcessor;
+use Modules\Search\Helpers\Processors\QueueProcessorInterface;
 
 class ProductDocumentCreator implements DocumentCreatorInterface
 {
-    public array $to_index = [];
-    public array $to_delete = [];
 
-    /**
-     * @param UpdatedProductModel[] $update_models
-     */
-    public function createDocuments(array $update_models): void
+    public function createDocuments(array $update_models): array
     {
-        $this->to_delete = [];
-        $this->to_index = [];
+        $queue = [];
 
         foreach ($update_models as $update_model) {
             $model = $update_model->product;
@@ -55,15 +52,17 @@ class ProductDocumentCreator implements DocumentCreatorInterface
             switch ((int)$update_model->type) {
                 case 6:
                     if ($document->forasle) {
-                        $this->to_index[] = $document;
+                        $queue[] = new QueueIndexProcessor($document);
                     } else {
-                        $this->to_delete[] = $document;
+                        $queue[] = new QueueDeleteProcessor($document);
                     }
                     break;
                 case 61:
-                    $this->to_delete[] = $document;
+                    $queue[] = new QueueDeleteProcessor($document);
                     break;
             }
         }
+
+        return $queue;
     }
 }

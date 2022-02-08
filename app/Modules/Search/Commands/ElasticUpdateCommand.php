@@ -40,7 +40,7 @@ class ElasticUpdateCommand extends Command
         $manager = UpdatedProductModel::objects()->filter([
             'type__in' => [6, 61],
             'product__sites__storefrontid' => $site->pk
-        ]);
+        ])->order(['time_stamp']);
 
         $this->updateResources($engine_name, new ProductDocumentCreator(), $manager);
 
@@ -75,7 +75,7 @@ class ElasticUpdateCommand extends Command
 
         while ($models = $manager->paginate(++$i, 100)->all()) {
 
-            $creator->createDocuments($models);
+            $queue = $creator->createDocuments($models);
 
             foreach ($models as $update_model) {
                 $update_model->delete();
@@ -83,12 +83,8 @@ class ElasticUpdateCommand extends Command
 
             try {
 
-                if ($creator->to_index) {
-                    Xcart::app()->elastic->index($engine_name, $creator->to_index);
-                }
-
-                if ($creator->to_delete) {
-                    Xcart::app()->elastic->delete($engine_name, array_map(static fn($doc) => $doc->id, $creator->to_delete));
+                foreach ($queue as $queue_item) {
+                    $queue_item->process($engine_name);
                 }
 
             } catch(Throwable $exception){

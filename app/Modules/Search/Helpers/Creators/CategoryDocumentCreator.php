@@ -2,20 +2,15 @@
 
 namespace Modules\Search\Helpers\Creators;
 
-use Modules\Goods\Models\UpdatedProductModel;
+use Modules\Search\Helpers\Processors\QueueDeleteProcessor;
+use Modules\Search\Helpers\Processors\QueueIndexProcessor;
 
 class CategoryDocumentCreator implements DocumentCreatorInterface
 {
-    public array $to_index = [];
-    public array $to_delete = [];
 
-    /**
-     * @param UpdatedProductModel[] $update_models
-     */
-    public function createDocuments(array $update_models): void
+    public function createDocuments(array $update_models): array
     {
-        $this->to_delete = [];
-        $this->to_index = [];
+        $queue = [];
 
         foreach ($update_models as $update_model) {
             $model = $update_model->category;
@@ -28,10 +23,11 @@ class CategoryDocumentCreator implements DocumentCreatorInterface
             ];
 
             if ($model->avail === 'Y' && $model->active_product_count > 0) {
-                $this->to_index[] = $document;
+                $queue[] = new QueueIndexProcessor($document);
             } else {
-                $this->to_delete[] = $document;
+                $queue[] = new QueueDeleteProcessor($document);
             }
         }
+        return $queue;
     }
 }
