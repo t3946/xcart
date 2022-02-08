@@ -2,22 +2,11 @@ import axios from "axios";
 
 const getInitialState = async function (req: any) {
   let initialState: any;
-  let sessionCookieMatches;
-
-  if (req.headers.cookie) {
-    sessionCookieMatches = req.headers.cookie.match(/session=[^;]+/);
-  }
-
-  let cookie = "";
-
-  if (sessionCookieMatches) {
-    cookie = sessionCookieMatches[0];
-  }
 
   const instance = axios.create({
     baseURL: process.env.BASE_URL_NGINX,
     headers: {
-      Cookie: cookie,
+      Cookie: req.headers.cookie,
     },
   });
 
