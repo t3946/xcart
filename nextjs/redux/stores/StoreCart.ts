@@ -3,20 +3,21 @@ import thunkMiddleware from "redux-thunk";
 import ajax from "@utils/ajax";
 import trigger from "@utils/trigger";
 import ls from "@utils/localStorage/storage";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const _INIT_ACTION_TYPE = "@@redux/INIT";
 // todo: из глобальной переменной app.options.session_key
 // const ls_key = storeApp.getState().options.session_key + "__store_cart_state";
 const ls_key = "xid0" + "__store_cart_state";
 
-let ACTIONS = {
+const ACTIONS = {
   SET: (state, action) => {
-    let new_state = {
+    const new_state = {
       ...state,
       cart: { ...action.data },
     };
 
-    let data = { state: new_state, prevState: { ...state } };
+    const data = { state: new_state, prevState: { ...state } };
 
     if (action.triggers === "ignore") {
       trigger("fetch.cart.store", data);
@@ -30,13 +31,14 @@ let ACTIONS = {
   },
 
   INIT: (state = INITIAL, action) => {
-    let t_state = ls.get(ls_key);
+    console.log("init store cart");
+    const t_state = ls.get(ls_key);
     if (t_state) {
       state = JSON.parse(t_state);
     }
 
     ls.on(ls_key, (value) => {
-      let data = JSON.parse(value);
+      const data = JSON.parse(value);
       store.dispatch({ type: "SET", data: data.cart });
 
       state = data;
@@ -105,13 +107,26 @@ const INITIAL = {
 };
 
 const store = createStore(
-  (state, action) =>
+  function (state, action) {
     action && ACTIONS[action.type]
       ? ACTIONS[action.type](state, action)
-      : ACTIONS["default"](state, action),
-  applyMiddleware(
-    thunkMiddleware // позволяет нам отправлять функции
-    // loggerMiddleware // аккуратно логируем действия
+      : ACTIONS["default"](state, action);
+  },
+  {
+    cart: {
+      items: [],
+      groups: [],
+      total: 0,
+      discount: 0,
+      quantity: 0,
+      currency: "US$",
+    },
+  },
+  composeWithDevTools(
+    applyMiddleware(
+      thunkMiddleware // позволяет нам отправлять функции
+      // loggerMiddleware // аккуратно логируем действия
+    )
   )
 );
 

@@ -25,6 +25,11 @@ return [
         'name' => 'products:set'
     ],
     [
+        'route' => '/set-quantity',
+        'target' => [CartController::class, 'setQuantity'],
+        'name' => 'products:set-quantity'
+    ],
+    [
         'route' => '/del/products',
         'target' => [CartController::class, 'actionProductsDel'],
         'name' => 'products:del'

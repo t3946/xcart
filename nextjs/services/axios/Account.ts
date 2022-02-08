@@ -23,6 +23,16 @@ const getInitialState = async function (req: any) {
       initialState.user = null;
     });
 
+  await instance
+    .get("/cart/get/products", {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    })
+    .then((res) => {
+      initialState.cart = res.data;
+    });
+
   return initialState;
 };
 

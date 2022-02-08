@@ -157,8 +157,13 @@ interface StoreInterface {
   loginAndSecurity: AccountLoginAndSecurityStore;
   mobileAlert: AccountMobileAlertStore;
   cart: {
-    quantity: number;
     checkoutUrl: string;
+    items: any;
+    groups: any;
+    total: number;
+    discount: number;
+    quantity: number;
+    currency: string;
   };
   publicProfile: AccountPublicProfileStore;
   productsRatings: any;

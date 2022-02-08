@@ -1,11 +1,9 @@
 import React from "react";
-import { Provider, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MiniCartItems from "@modules/old-components/MiniCartItems";
 import MiniCartInfo from "@modules/mini-cart/components/MiniCartInfo";
-import storeCart from "@redux/stores/StoreCart";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import HoverIntent from "react-hoverintent"; // из-за этого модуля пришлось установить ещё один -- babel-runtime
-import { setCartQuantityAction } from "@redux/actions/CartActions";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import hideAllMenu from "@modules/account/utils/hide-all-menu";
@@ -17,18 +15,6 @@ const MiniCart: React.FC = () => {
   const user = useSelector((e: StoreInterface) => e.user);
   const [isEnter, setIsEnter] = React.useState(false);
   const dispatch = useDispatch();
-
-  function cartCountChanged(e) {
-    dispatch(setCartQuantityAction(e.detail.quantity));
-  }
-
-  React.useEffect(function () {
-    document.addEventListener("cartCountChanged", cartCountChanged);
-
-    return () => {
-      document.removeEventListener("cartCountChanged", cartCountChanged);
-    };
-  });
 
   function showMiniCart() {
     hideAllMenu(dispatch);
@@ -54,11 +40,9 @@ const MiniCart: React.FC = () => {
           [Styles.container_user_logined]: user,
         })}
       >
-        <Provider store={storeCart}>
-          <TransitionFade show={isEnter && cart.quantity > 0}>
-            <MiniCartItems store={storeCart} checkoutUrl={cart.checkoutUrl} />
-          </TransitionFade>
-        </Provider>
+        <TransitionFade show={isEnter && cart.quantity > 0}>
+          <MiniCartItems checkoutUrl={cart.checkoutUrl} />
+        </TransitionFade>
 
         <MiniCartInfo />
       </div>
