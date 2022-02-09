@@ -69,11 +69,9 @@ class ElasticUpdateCommand extends Command
             strtolower($site->lang->lang_code ?? 'en')
         );
 
-        $i = 0;
-
         $bar = new CliProgressBar($manager->count());
 
-        while ($models = $manager->paginate(++$i, 100)->all()) {
+        while ($models = $manager->paginate(1, 100)->all()) {
 
             $queue = $creator->createDocuments($models);
 
