@@ -14,6 +14,12 @@ import Snackbar from "../../modules/account/components/snackbar/Snackbar";
     return;
   }
 
+  const outOfStock = elem.getAttribute("data-out-of-stock") === "1";
+
+  if (outOfStock) {
+    return;
+  }
+
   ReactDOM.render(
     (() => (
       <Provider store={Store}>

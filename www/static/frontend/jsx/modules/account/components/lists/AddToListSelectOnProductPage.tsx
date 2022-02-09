@@ -35,7 +35,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const { name, label = "", product } = props;
   const lists = Store.getState().lists.lists;
   const productInfo = product || Object.keys(AppData?.products)[0];
-  // const id = "1";
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);

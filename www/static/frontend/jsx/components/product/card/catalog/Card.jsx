@@ -416,7 +416,7 @@ export default class Card extends Component {
               }
             })()}
           </div>
-          {this.context.viewMode !== "tile" && (
+          {this.context.viewMode !== "tile" && product.avail > 0 && (
             <Provider store={Store}>
               <Snackbar>
                 <div className="add-to-list-on-product-list">

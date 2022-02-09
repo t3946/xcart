@@ -141,7 +141,7 @@
                     {t 'Congratulations! You got a great price!'}
                 </div>
                 <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
-                    {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true }
+                    {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true moder=$model }
                 </div>
             </div>
         {/if}
@@ -164,7 +164,7 @@
             <a class="notify-me grey-border">
                 <span>{t 'Notify me when product is in stock'}</span>
             </a>
-            <div class="product-page-add-to-list-btn out-of-stock"></div>
+            <div class="product-page-add-to-list-btn out-of-stock" data-out-of-stock="{$model->r_avail === 0 ? '1' : '0'}"></div>
 
 
         </div>

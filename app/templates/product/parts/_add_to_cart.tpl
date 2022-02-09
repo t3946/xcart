@@ -29,4 +29,4 @@
     </div>
 
 </div>
-<div class="product-page-add-to-list-btn"></div>
+<div class="product-page-add-to-list-btn" data-out-of-stock="{$model->r_avail === 0 ? '1' : '0'}"></div>
