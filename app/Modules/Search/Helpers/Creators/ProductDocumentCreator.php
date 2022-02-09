@@ -18,6 +18,8 @@ class ProductDocumentCreator implements DocumentCreatorInterface
     {
         $queue = [];
 
+        $current_chunk = null;
+
         foreach ($update_models as $update_model) {
             $model = $update_model->product;
 
@@ -49,17 +51,33 @@ class ProductDocumentCreator implements DocumentCreatorInterface
                 'created_at' => (new DateTime())->setTimestamp($model->add_date)->format(DateTimeInterface::RFC3339)
             ];
 
+            $processor = null;
+
             switch ((int)$update_model->type) {
                 case 6:
                     if ($document->forasle) {
-                        $queue[] = new QueueIndexProcessor($document);
+                        $processor = new QueueIndexProcessor();
                     } else {
-                        $queue[] = new QueueDeleteProcessor($document);
+                        $processor = new QueueDeleteProcessor();
                     }
                     break;
                 case 61:
-                    $queue[] = new QueueDeleteProcessor($document);
+                    $processor = new QueueDeleteProcessor();
                     break;
+            }
+
+            if ($processor) {
+
+                $class = get_class($processor);
+
+                if ($current_chunk !== $class) {
+                    $processor->addDocument($document);
+                    $queue[] = $processor;
+                } else {
+                    $processor = $queue[count($queue) - 1];
+                    $processor->addDocument($document);
+                }
+                $current_chunk = $class;
             }
         }
 

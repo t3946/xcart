@@ -80,7 +80,6 @@ class ElasticUpdateCommand extends Command
             }
 
             try {
-
                 foreach ($queue as $queue_item) {
                     $queue_item->process($engine_name);
                 }

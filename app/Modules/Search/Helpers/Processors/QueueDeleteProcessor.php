@@ -6,15 +6,15 @@ use Xcart\App\Main\Xcart;
 
 class QueueDeleteProcessor implements QueueProcessorInterface
 {
-    private object $document;
+    private array $documents = [];
 
-    public function __construct(object $document)
+    public function addDocument($document): void
     {
-        $this->document = $document;
+        $this->documents[] = $document;
     }
 
     public function process(string $engine_name): void
     {
-        Xcart::app()->elastic->delete($engine_name, array_map(static fn($doc) => $doc->id, [$this->document]));
+        Xcart::app()->elastic->delete($engine_name, array_map(static fn($doc) => $doc->id, $this->documents));
     }
 }
