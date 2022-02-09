@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import Select from "@modules/ui/forms/select/Select";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import { ApiService } from "@modules/shared/services/api.service";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
@@ -21,7 +21,8 @@ export const ProblemWithOrder: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
+
   useEffect(() => {
     api
       .get("/api/account/orders/get-problem-statuses")
@@ -44,11 +45,9 @@ export const ProblemWithOrder: React.FC = () => {
       )
       .then(() => {
         setLoading(false);
-        showSnackbar({
-          header: "Success",
-          message: `Thank you for reporting the problem! We’ll address it ASAP.`,
-          theme: "success",
-        });
+        snackbar.show(
+          `Thank you for reporting the problem! We’ll address it ASAP.`
+        );
         formik.resetForm();
       });
   };

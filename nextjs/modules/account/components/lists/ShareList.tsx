@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
 import { useDispatch } from "react-redux";
 import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
+import { VariantsEnum } from "@modules/account/components/shared/Snackbar";
 
 interface ShareList {
   onClose: () => void;
@@ -12,7 +13,7 @@ interface ShareList {
 }
 
 export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
 
   const dispatch = useDispatch();
 
@@ -25,19 +26,11 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
       .writeText(url)
       .then(() => {
         onClose();
-        showSnackbar({
-          header: "Success",
-          message: `Url copied`,
-          theme: "success",
-        });
+        snackbar.show(`Url copied`);
       })
       .catch(() => {
         onClose();
-        showSnackbar({
-          header: "Error",
-          message: `Something went wrong`,
-          theme: "error",
-        });
+        snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
       });
   };
 

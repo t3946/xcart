@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { useDispatch } from "react-redux";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import { useRouter } from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { List } from "@modules/account/ts/types/list.type";
@@ -12,7 +12,7 @@ export const DeleteListPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { cache } = router.query;
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
 
   const lists: List[] = useSelectorAccount((state) => state.lists.lists);
 
@@ -23,11 +23,7 @@ export const DeleteListPage: React.FC = () => {
   };
 
   const onRequestEnd = () => {
-    showSnackbar({
-      header: "Success",
-      message: `${list.name} list deleted successfully`,
-      theme: "success",
-    });
+    snackbar.show(`${list.name} list deleted successfully`);
     router.push("/shopping-lists");
   };
 

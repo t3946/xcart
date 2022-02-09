@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import cn from "classnames";
 import Select from "@modules/ui/forms/select/Select";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { ApiService } from "@modules/shared/services/api.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -24,7 +24,7 @@ export const CancelItems: React.FC<IProps> = (props) => {
   const { orderItem } = props;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
 
   const api = new ApiService();
 
@@ -45,11 +45,9 @@ export const CancelItems: React.FC<IProps> = (props) => {
       )
       .then(() => {
         setLoading(false);
-        showSnackbar({
-          header: "Success",
-          message: `Thank you for your cancellation request! We’ll try our best to cancel the items.`,
-          theme: "success",
-        });
+        snackbar.show(
+          `Thank you for your cancellation request! We’ll try our best to cancel the items.`
+        );
         formik.resetForm();
       });
   };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Input from "@modules/ui/forms/Input";
 import Label from "@modules/ui/forms/Label";
 import Feedback from "@modules/ui/forms/Feedback";
@@ -6,7 +6,7 @@ import { addProduct } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { ListItem } from "@modules/account/ts/types/list.type";
 
@@ -26,7 +26,8 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
   const ref = useRef<HTMLInputElement>();
   const dispatch = useDispatch();
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
+
   const { loading, lists } = useSelector((state) => state.lists);
   const listEdit = lists.find((e) => e.cacheUrl === listHash);
 
@@ -46,11 +47,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
 
   const onAddingEnd = (idea: ListItem) => {
     onCancelBtnClick();
-    showSnackbar({
-      header: "Success",
-      message: `${formik.values.name} idea added successfully`,
-      theme: "success",
-    });
+    snackbar.show(`${formik.values.name} idea added successfully`);
   };
 
   const formik = useFormik({

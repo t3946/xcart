@@ -77,6 +77,9 @@ export const AddAddressForm: React.FC<any> = ({
     initialValues:
       (addressInfo && {
         ...addressInfo,
+        state: addressInfo.state.value
+          ? addressInfo.state
+          : { value: undefined, label: "" },
         phone_numberCode: getPhoneCountryCode(
           addressInfo.phone_number,
           countries
@@ -203,12 +206,8 @@ export const AddAddressForm: React.FC<any> = ({
                 }}
                 options={getStates(states, formik.values.country.value)}
                 value={formik.values.state}
-                isValid={
-                  !!formik.touched.state && !formik.errors.state
-                }
-                isInvalid={
-                  !!formik.touched.state && !!formik.errors.state
-                }
+                isValid={!!formik.touched.state && !formik.errors.state}
+                isInvalid={!!formik.touched.state && !!formik.errors.state}
                 onChange={(e) => {
                   formik.setFieldValue("state", e.target.value);
                   delete formik.errors.state;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Select from "@modules/ui/forms/select/Select";
 import { useDispatch } from "react-redux";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
@@ -6,7 +6,7 @@ import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { transferProductList } from "@redux/actions/account-actions/ListsActions";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
@@ -35,7 +35,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   outOfStock,
 }) => {
   const dispatch = useDispatch();
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
 
   const { lists, listView }: AccountListsStore = useSelectorAccount(
     (state) => state.lists
@@ -48,11 +48,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
         (product) => product.productId === productId
       );
       if (inList) {
-        showSnackbar({
-          header: "Error",
-          message: `This item already added to list`,
-          theme: "error",
-        });
+        snackbar.show(`This item already added to list`);
         return;
       }
     }
