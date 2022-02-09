@@ -10,12 +10,14 @@ import {
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@utils/Countries";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  phoneYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import { AxiosResponse } from "axios";
-import getPhoneNumberInnerPart from "@utils/getPhoneNumberInnerPart";
+import { getMaskedPhone, getPhoneCountryCode } from "@utils/phoneNumber";
 import Label from "@modules/ui/forms/Label";
 
 interface IProps {
@@ -29,26 +31,23 @@ const FormEditUserPhone = (props: IProps): any => {
   const user = useSelectorAccount((e) => e.user);
   const countries = useSelectorAccount((e) => e.countries);
   const validationSchema = yup.object().shape({
-    phone: yup
-      .string()
-      .required("Phone is a required field")
-      .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format"),
-    phoneCountryCode: yup.string().required("Country code is a required field"),
+    phone: phoneYupValidation,
+    phoneCode: yup.string().required("Country code is a required field"),
   });
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>): void {
-    const country = getCountryByCode(values.phoneCountryCode, countries);
+    const country = getCountryByCode(values.phoneCode, countries);
 
     if (!country) {
       return;
     }
 
-    const phoneCode = country.phone_code;
+    const phoneCode = `+${country.phone_code}`;
 
     dispatch(
       editPhoneAction({
         data: {
-          phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
+          phone: `${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
         },
 
         success(res: AxiosResponse) {
@@ -76,15 +75,12 @@ const FormEditUserPhone = (props: IProps): any => {
 
   const initialValues = {
     phone: "",
-    phoneCountryCode: user.phone_country_code,
+    phoneCode: "",
   };
 
   if (user.phone) {
-    initialValues.phone = getPhoneNumberInnerPart(
-      user.phone_country_code,
-      user.phone,
-      countries
-    );
+    initialValues.phone = getMaskedPhone(user.phone);
+    initialValues.phoneCode = getPhoneCountryCode(user.phone, countries);
   }
 
   return (
@@ -138,10 +134,7 @@ const FormEditUserPhone = (props: IProps): any => {
                     touched={touched}
                     errors={errors}
                     name={"phone"}
-                    values={{
-                      phoneCountryCode: values.phoneCountryCode,
-                      phone: values.phone,
-                    }}
+                    values={values}
                     classes={{ select: "col-1", container: "flex-nowrap" }}
                     mode={"mobile"}
                   />

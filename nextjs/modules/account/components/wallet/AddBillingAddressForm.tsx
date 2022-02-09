@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import Select from "@modules/ui/forms/select/Select";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import { getCountryByCode } from "@utils/Countries";
 import { Form, Formik } from "formik";
 import {
-  addAddressFormValidationSchema,
+  getAddAddressFormValidationSchema,
   initialAddAddressFormValue,
 } from "@modules/account/ts/consts/add-address-form";
 import { getStates } from "@modules/account/utils/get-states";
@@ -30,7 +31,8 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
   const { edit, onCancel, onSubmitted } = props;
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
-  const countries = useSelectorAccount((e) => e.main.countries);
+  const countryPhoneCodes = useSelectorAccount((e) => e.main.countries);
+  const countries = useSelectorAccount((e) => e.countries);
   const submitCardFormLoading = useSelectorAccount(
     (e) => e.payments.submitCardFormLoading
   );
@@ -42,8 +44,16 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
   }, []);
 
   const onSubmit = (values) => {
+    const phoneCode = getCountryByCode(
+      values.phone_numberCode,
+      countries
+    ).phone_code;
     const newAddress = {
       ...values,
+      phone_number: `+${phoneCode}${values.phone_number.replace(
+        /[+()\-\s]/gim,
+        ""
+      )}`,
       country: values.country.value,
       state: values.state.value,
       address_type: "billing",
@@ -59,7 +69,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
       <Formik
         initialValues={initialAddAddressFormValue}
         onSubmit={onSubmit}
-        validationSchema={addAddressFormValidationSchema}
+        validationSchema={getAddAddressFormValidationSchema(states)}
       >
         {({
           errors,
@@ -75,19 +85,19 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                 input={
                   <Select
                     clearable={false}
-                    options={countries}
+                    options={countryPhoneCodes}
                     value={values.country}
                     onChange={(e) => {
                       setFieldValue("country", e.target.value);
                       setFieldValue("state", initialAddAddressFormValue.state);
                     }}
                     name={"state"}
-                    isValid={!!touched.country && !errors.country?.value}
-                    isInvalid={!!touched.country && !!errors.country?.value}
+                    isValid={!!touched.country && !errors.country}
+                    isInvalid={!!touched.country && !!errors.country}
                   />
                 }
                 label="Country"
-                error={!!touched.country && errors.country?.value}
+                error={!!touched.country && errors.country}
               />
 
               <FormGroup
@@ -113,11 +123,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                     touched={touched}
                     errors={errors}
                     name={"phone_number"}
-                    values={{
-                      // phoneCountryCode: values.phoneCountryCode,
-                      phone: values.phone_number,
-                      phoneExt: values.phone_ext,
-                    }}
+                    values={values}
                     mode={"ext"}
                   />
                 }
@@ -177,12 +183,12 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                     value={values.state}
                     onChange={handleChange}
                     name={"state"}
-                    isValid={!!touched.state && !errors.state?.value}
-                    isInvalid={!!touched.state && !!errors.state?.value}
+                    isValid={!!touched.state && !errors.state}
+                    isInvalid={!!touched.state && !!errors.state}
                   />
                 }
                 label="State/Province"
-                error={!!touched.state && errors.state?.value}
+                error={!!touched.state && errors.state}
               />
 
               <FormGroup

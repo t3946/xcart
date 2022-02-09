@@ -7,7 +7,6 @@ const ReactSelect = dynamic(
 );
 import { components } from "react-select";
 
-// import ReactSelect, { components } from "react-select";
 import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
 import Menu from "@modules/ui/forms/select/Menu";

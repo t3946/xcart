@@ -1,6 +1,8 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  phoneYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
 import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
 import { getCountryByCode } from "@utils/Countries";
 import { Formik, Form } from "formik";
@@ -82,21 +84,18 @@ const LTLFreightShipment: React.FC = () => {
       values[q.label] = { value: "" };
     }
 
-    values.phoneCountryCode = "";
+    values.phoneCode = "";
     values.phone = "";
-    values.phoneExtFieldName = "";
+    values.phone_ext = "";
 
     return values;
   };
 
   const getValidationScheme = () => {
     const fields: Record<string, any> = {
-      phone: Yup.string()
-        .required("Required field")
-        .max(50, "The maximum number of characters is 50")
-        .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format"),
-      phoneExt: Yup.string(),
-      phoneCountryCode: Yup.string().required("Required field"),
+      phone: phoneYupValidation,
+      phone_ext: Yup.string(),
+      phoneCode: Yup.string().required("Required field"),
     };
 
     for (const q of mockData) {
@@ -124,14 +123,12 @@ const LTLFreightShipment: React.FC = () => {
   const submit = (values, actions) => {
     actions.setSubmitting(true);
 
-    const phoneCode = getCountryByCode(
-      values.phoneCountryCode,
-      countries
-    ).phone_code;
+    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
     const form = {
       ...values,
       phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
     };
+    
     dispatch(
       formAnswersLTLFreightShipmentAction({
         data: form,
@@ -261,10 +258,7 @@ const LTLFreightShipment: React.FC = () => {
                     touched={touched}
                     errors={errors}
                     name={"phone"}
-                    values={{
-                      phoneCountryCode: values.phoneCountryCode,
-                      phone: values.phone,
-                    }}
+                    values={values}
                     mode={"ext"}
                   />
                 </div>

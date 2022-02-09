@@ -6,7 +6,9 @@ import { editPhoneAction } from "@redux/actions/account-actions/LoginAndSecurity
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  phoneYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
@@ -15,24 +17,20 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
   const dispatch = useDispatch();
 
   const initialValues = {
-    phoneCountryCode: "",
+    phoneCode: "",
     phone: "",
-    phoneExt: "",
+    phone_ext: "",
   };
 
   const validationSchema = yup.object().shape({
-    phone: yup.string().required("Phone is a required field"),
-    phoneExt: yup.string(),
+    phone: phoneYupValidation,
+    phone_ext: yup.string(),
   });
 
   function submit(values, actions) {
-    const phoneCode = getCountryByCode(
-      values.phone_country_code,
-      countries
-    ).phone_code;
+    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
     const form = {
-      phone_country_code: values.phone_country_code,
-      phone: `+${phoneCode}${values.phone}`,
+      phone: `+${phoneCode}${values.phone.replace(/[+()\-\s]/gim, "")}`,
     };
 
     dispatch(
@@ -96,11 +94,7 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
                   touched={touched}
                   errors={errors}
                   name={"phone"}
-                  values={{
-                    phoneCountryCode: "RU",
-                    phone: values.phone,
-                    phoneExt: values.phoneExt,
-                  }}
+                  values={values}
                   mode={"mobile"}
                   label={"New Mobile number"}
                   classes={{ select: "col-1", container: "flex-nowrap" }}

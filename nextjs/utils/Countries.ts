@@ -10,3 +10,16 @@ export const getCountryByCode = (
 
   return {};
 };
+
+export const getCountryByPhoneCode = (
+  phoneCode: number,
+  countries: Record<any, any>[]
+): Record<any, any> => {
+  for (const country of countries) {
+    if (country.phone_code === phoneCode) {
+      return country;
+    }
+  }
+
+  return {};
+};

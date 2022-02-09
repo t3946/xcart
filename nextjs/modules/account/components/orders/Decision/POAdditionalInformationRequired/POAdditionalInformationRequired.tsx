@@ -2,7 +2,9 @@ import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import UploadFile from "@modules/ui/UploadFile";
 import Checkbox from "@modules/ui/forms/Checkbox";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  phoneYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
@@ -28,9 +30,9 @@ import Label from "@modules/ui/forms/Label";
 
 const initialValues = {
   file: [],
-  phoneCountryCode: "",
+  phoneCode: "",
   phone: "",
-  phoneExt: "",
+  phone_ext: "",
   isApprove: false,
 };
 
@@ -62,13 +64,9 @@ const getValidationScheme = (
         validatorFileFormat(inputFileRef, accessFormats)
       ),
     isApprove: yup.bool().oneOf([true], "Need to approve"),
-    phone: yup
-      .string()
-      .required("Required field")
-      .max(50, "The maximum number of characters is 50")
-      .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format"),
-    phoneExt: yup.string(),
-    phoneCountryCode: yup.string().required("Required field"),
+    phone: phoneYupValidation,
+    phone_ext: yup.string(),
+    phoneCode: yup.string().required("Required field"),
   });
 };
 
@@ -111,10 +109,7 @@ const POAdditionalInformationRequired: React.FC = () => {
       return;
     }
 
-    const phoneCode = getCountryByCode(
-      values.phoneCountryCode,
-      countries
-    ).phone_code;
+    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
 
     const formData = new FormData();
 
@@ -123,7 +118,7 @@ const POAdditionalInformationRequired: React.FC = () => {
       "phone",
       `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, "")
     );
-    formData.append("phoneExt", values.phoneExt);
+    formData.append("phone_ext", values.phone_ext);
 
     dispatch(
       poAdditionalInformationRequiredAction({
@@ -293,10 +288,7 @@ const POAdditionalInformationRequired: React.FC = () => {
                     errors={errors}
                     name={"phone"}
                     disabled={isSubmitting}
-                    values={{
-                      phoneCountryCode: values.phoneCountryCode,
-                      phone: values.phone,
-                    }}
+                    values={values}
                     mode={"ext"}
                   />
                 </div>

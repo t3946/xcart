@@ -21,6 +21,7 @@ import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import { useRouter } from "next/router";
 import Card from "@modules/ui/Card";
+import { getMaskedPhone } from "@utils/phoneNumber";
 
 const StreetAddressRequired: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -82,7 +83,10 @@ const StreetAddressRequired: React.FC<any> = () => {
                         {address.street}, {address.detailed}
                       </div>
                       <div>{address.country.viewValue}</div>
-                      <div> Phone number: {address.phone_number}</div>
+                      <div>
+                        {" "}
+                        Phone number: {getMaskedPhone(address.phone_number)}
+                      </div>
                     </div>
                   }
                   footer={
@@ -142,7 +146,10 @@ const StreetAddressRequired: React.FC<any> = () => {
                         {address.street}, {address.detailed}
                       </div>
                       <div>{address.country.viewValue}</div>
-                      <div> Phone number: {address.phone_number}</div>
+                      <div>
+                        {" "}
+                        Phone number: {getMaskedPhone(address.phone_number)}
+                      </div>
                     </div>
                   </div>
                 </Card>

@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
 
+import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 import Styles from "@modules/account/pages/OrderAddressesPage.module.scss";
 
 interface OrderAddressesPage {
@@ -184,6 +185,9 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
       />
 
       <BootstrapDialogHOC
+        classes={{
+          modal: [StylesAddresses.modalBody, StylesAddresses.modalWidth],
+        }}
         show={changeShippingAddressDialog.open}
         title={"Change address"}
         onClose={changeShippingAddressDialog.handleClose}

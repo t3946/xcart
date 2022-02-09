@@ -38,9 +38,9 @@ export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = ({
         className={cn("list-item-movable-area-text", {
           [Styles.moveButton_hidden]: index === length - 1,
         })}
-        onClick={index === length - 1 ? onDownClick : undefined}
+        onClick={index !== length - 1 ? onDownClick : undefined}
       >
-        <span>{index !== length - 1 && "DOWN"}</span>
+        DOWN
       </div>
     </div>
   );

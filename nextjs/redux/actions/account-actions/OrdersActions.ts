@@ -33,3 +33,8 @@ export const getInvoicePdf = (action: Record<any, any>) => ({
   type: "GET_INVOICE_PDF",
   ...action,
 });
+
+export const editShippingAddress = (action: Record<any, any>) => ({
+  type: "EDIT_SHIPPING_ADDRESS",
+  ...action,
+});

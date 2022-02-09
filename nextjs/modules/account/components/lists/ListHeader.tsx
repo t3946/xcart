@@ -90,7 +90,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
           Styles.shoppingList__mobileHeader
         )}
       >
-        <Link href="/">
+        <Link href="/dashboard">
           <a
             className={cn(
               Styles.accountButton,
@@ -118,7 +118,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
           "mb-lg-0"
         )}
       >
-        <Link href="/">
+        <Link href="/dashboard">
           <a
             className={cn(
               "d-none",
