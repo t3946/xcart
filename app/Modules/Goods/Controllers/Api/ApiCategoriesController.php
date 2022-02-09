@@ -152,7 +152,8 @@ class ApiCategoriesController extends AbstractCatalogController
         }
 
         $qs = ProductModel::objects()->filter(['order_details__order_group__order__user_id' => $user->user_id]);
-
+        $this->sort = $this->getRequest()->get->get('sort', $this->sort);
+        $qs = $this->getSortedQS($qs);
         $pager = $this->getPager($qs);
         $this->setCanonical($this->model);
         $products = $pager->paginate();
