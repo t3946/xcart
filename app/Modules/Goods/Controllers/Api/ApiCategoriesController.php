@@ -125,6 +125,7 @@ class ApiCategoriesController extends AbstractCatalogController
                 $qs = $fh->getFiltrateQS();
                 $this->sort = $this->getRequest()->get->get('sort', $this->sort);
                 $qs = $this->getSortedQS($qs);
+                $qs->cache(60);
             }
         }
 
