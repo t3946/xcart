@@ -55,7 +55,7 @@ class ProductDocumentCreator implements DocumentCreatorInterface
 
             switch ((int)$update_model->type) {
                 case 6:
-                    if ($document->forasle) {
+                    if ($model->forsale === 'Y') {
                         $processor = new QueueIndexProcessor();
                     } else {
                         $processor = new QueueDeleteProcessor();
