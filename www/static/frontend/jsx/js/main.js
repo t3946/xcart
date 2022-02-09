@@ -26,4 +26,11 @@ import "./Components/checkout/File";
       document.dispatchEvent(customEvent);
     }, 300);
   });
+
+  $("#shipping-review-container").slideUp();
+
+  $("#checkout-review-accordion").on("click", function () {
+    $("#shipping-review-container").slideToggle();
+    $(this).toggleClass("minus");
+  });
 })();

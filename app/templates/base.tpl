@@ -13,7 +13,7 @@
                     </div>
                 {/block}
 
-                <div id="content">
+                <div id="content" class="container">
                     {block "search-menu"}{/block}
                     <div id="hat-search-line-target"></div>
 

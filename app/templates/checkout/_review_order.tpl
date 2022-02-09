@@ -10,7 +10,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="columns small-12">
+    <div class="col-12">
         <div class="order-review">
             {foreach $order->groups as $order_group}
                 {set $warehouse = $.get_warehouse($order_group->manufacturerid)}
@@ -119,12 +119,12 @@
     </div>
 </div>
 <div class="row">
-    <div class="small-12 columns">
+    <div class="col-12">
         <div class="hr-bold"></div>
     </div>
 </div>
 <div class="row">
-    <div class="small-12 columns">
+    <div class="col-12">
         <div class="order-total">
             <div class="info-row total">
                 <span class="label">{t 'Total' }:</span>
