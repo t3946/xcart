@@ -19,6 +19,13 @@ class Auth implements AuthInterface
     protected $_user = null;
 
     /**
+     * Login expire
+     * Default: 60 days
+     * @var int
+     */
+    public $expire = 60 * 60 * 24 * 2;
+
+    /**
      * @var string
      */
     public $authCookieName = 'USER';
