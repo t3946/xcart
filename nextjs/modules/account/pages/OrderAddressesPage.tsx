@@ -20,8 +20,43 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
   orderItem,
 }) => {
   const changeShippingAddressDialog = useDialog();
-  const router = useRouter();
-  const breakpoint = useBreakpoint();
+
+  function shippingAddress() {
+    const parts = [
+      orderItem.address.shippingZip || "",
+      orderItem.address.shippingCity || "",
+      orderItem.address.shippingAddress || "",
+    ];
+
+    const address = parts.join(" ").trim();
+
+    return address || "No shipping address";
+  }
+
+  function billingAddress() {
+    const parts = [
+      orderItem.address.billingZip || "",
+      orderItem.address.billingCity || "",
+      orderItem.address.billingAddress || "",
+    ];
+
+    const address = parts.join(" ").trim();
+
+    return address || "No billing address";
+  }
+
+  function phone() {
+    const parts = [orderItem.client.phone || ""];
+
+    if (orderItem.client.phoneExt) {
+      parts.push("ext " + orderItem.client.phoneExt);
+    }
+
+    const phone = parts.join(" ").trim();
+
+    return phone || "No phone";
+  }
+
   const gridItems = [
     <div>
       <div className="order-address-block-title">Contact information</div>
@@ -29,19 +64,17 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
         <div className="order-address-text-block">
           <div className="order-address-text-block-label">Full Name:</div>
           <div className="order-address-text-block-info">
-            {orderItem.client.firstName}
+            {orderItem.client.firstName || "No name"}
           </div>
         </div>
         <div className="order-address-text-block">
           <div className="order-address-text-block-label">Phone:</div>
-          <div className="order-address-text-block-info">
-            {`${orderItem.client.phone} ${orderItem.client.phoneExt}`}
-          </div>
+          <div className="order-address-text-block-info">{phone()}</div>
         </div>
         <div className="order-address-text-block">
           <div className="order-address-text-block-label">Email:</div>
           <div className="order-address-text-block-info">
-            {orderItem.client.email}
+            {orderItem.client.email || "No email"}
           </div>
         </div>
       </div>
@@ -55,9 +88,7 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
             <div className="order-address-text-block-label">
               {orderItem.client.shippingFirstName}
             </div>
-            <div className="order-address-text">
-              {`${orderItem.address.shippingZip} ${orderItem.address.shippingCity} ${orderItem.address.shippingAddress}`}
-            </div>
+            <div className="order-address-text">{shippingAddress()}</div>
           </div>
           <button
             onClick={changeShippingAddressDialog.handleClickOpen}
@@ -74,9 +105,7 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
             <div className="order-address-text-block-label">
               {orderItem.client.billingName}
             </div>
-            <div className="order-address-text">
-              {`${orderItem.address.billingZip} ${orderItem.address.billingCity} ${orderItem.address.billingAddress}`}
-            </div>
+            <div className="order-address-text">{billingAddress()}</div>
           </div>
         </div>
       </div>
