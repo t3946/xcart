@@ -6,6 +6,7 @@ use Modules\Order\Models\OrderModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 class OrderProblemsModel extends Model
@@ -20,6 +21,9 @@ class OrderProblemsModel extends Model
         return [
             'problem_id' => [
                 'class' => AutoField::class,
+            ],
+            'status_id' => [
+                'class' => IntField::class,
             ],
             'status' => [
                 'field' => 'status_id',
