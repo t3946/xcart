@@ -62,6 +62,7 @@ app.get("/logout", isAuthMiddleware, async function (req, res) {
   });
 
   res.clearCookie("session");
+  res.clearCookie("xid0");
   res.sendStatus(200);
 });
 

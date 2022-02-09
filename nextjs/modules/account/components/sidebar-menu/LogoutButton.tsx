@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
-
+import { emptyAction } from "@redux/actions/CartActions";
 import Styles from "@modules/account/components/sidebar-menu/LogoutButton.module.scss";
 
 interface IProps {
@@ -30,6 +30,7 @@ const LogoutButton: React.FC<IProps> = function (props: IProps) {
         success() {
           dispatch(userClearAction());
           router.push("/login");
+          dispatch(emptyAction());
         },
         error() {
           dispatch(userClearAction());

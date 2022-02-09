@@ -17,3 +17,7 @@ export const setAction = (payload: Record<any, any>): any => ({
   type: "CART_SET",
   payload,
 });
+
+export const emptyAction = (): any => ({
+  type: "CART_EMPTY",
+});

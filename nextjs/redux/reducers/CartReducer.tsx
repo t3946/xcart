@@ -20,6 +20,12 @@ const CartReducer = (
     case "CART_SET":
       return { ...action.payload.cart };
 
+    case "CART_EMPTY":
+      store.items = [];
+      store.total = 0;
+      store.quantity = 0;
+      return { ...store };
+
     default:
       return store;
   }
