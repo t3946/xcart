@@ -6,7 +6,7 @@ import LockIcon from "@modules/icon/components/account/lock/Lock";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import DashboardStyles from "@modules/account/components/dashboard/Dashboard.module.scss";
 import Styles from "@modules/account/components/dashboard/AccountInfo.module.scss";
-import { getMaskedPhone } from "@utils/phoneNumber";
+import { formatPhone } from "@utils/phoneNumber";
 
 const AccountInfo = () => {
   const classes = {
@@ -63,7 +63,7 @@ const AccountInfo = () => {
       }
       body={
         <div className="">
-          {user.phone && <>Phone: {getMaskedPhone(user.phone)}</>}
+          {user.phone && <>Phone: {formatPhone(user.phone)}</>}
           <br />
           {user.email && <>Email address: {user.email}</>}
         </div>

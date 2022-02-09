@@ -14,7 +14,7 @@ import {
 } from "@redux/actions/account-actions/AddressActions";
 import { getStates } from "@modules/account/utils/get-states";
 import { getCountryByCode } from "@utils/Countries";
-import { getMaskedPhone, getPhoneCountryCode } from "@utils/phoneNumber";
+import { formatPhone, getPhoneCountryCode } from "@utils/phoneNumber";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
@@ -84,7 +84,7 @@ export const AddAddressForm: React.FC<any> = ({
           addressInfo.phone_number,
           countries
         ),
-        phone_number: getMaskedPhone(addressInfo.phone_number),
+        phone_number: formatPhone(addressInfo.phone_number),
       }) ||
       initialAddAddressFormValue,
     validationSchema: getAddAddressFormValidationSchema(states),

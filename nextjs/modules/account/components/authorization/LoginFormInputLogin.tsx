@@ -12,6 +12,18 @@ import { useDispatch } from "react-redux";
 
 import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 
+function cleanPhoneFormat(phone: string): string | undefined {
+  const onlyDigitsPhone = phone.replace(/\D/g, "");
+
+  const code = onlyDigitsPhone.slice(0, onlyDigitsPhone.length - 10);
+  const number = onlyDigitsPhone.slice(
+    onlyDigitsPhone.length - 10,
+    onlyDigitsPhone.length
+  );
+  const match = number.match(/^(\d{10})$/);
+  if (match && code) return `+${code}${match[1]}`;
+}
+
 const LoginFormInputLogin: React.FC<any> = (props: any) => {
   const { setLogin } = props;
   const dispatch = useDispatch();
@@ -25,8 +37,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         async function (value) {
           return (
             !!value &&
-            (value.search(/[^@]+?@[^@]+/) !== -1 ||
-              value.search(/\+\d{11}/) !== -1)
+            (value.search(/[^@]+?@[^@]+/) !== -1 || cleanPhoneFormat(value))
           );
         }
       ),
@@ -43,7 +54,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
   });
 
   function submit(values: any, actions: any) {
-    const form = { login: values.login };
+    const form = { login: cleanPhoneFormat(values.login) ?? values.login };
 
     dispatch(
       checkUserLoginAction({

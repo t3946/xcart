@@ -16,6 +16,7 @@ import cn from "classnames";
 import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 import generateFp from "@utils/generateFp";
 import Tooltip from "@components/common/tooltip/Tooltip";
+import { formatPhone } from "@utils/phoneNumber";
 
 interface IProps {
   login: string;
@@ -114,7 +115,11 @@ const LoginFormInputPassword = function (props: IProps): any {
                     "mb-lg-14"
                   )}
                 >
-                  <span>{login}</span>
+                  {login && (
+                    <span>
+                      {login[0] === "+" ? formatPhone(login, true) : login}
+                    </span>
+                  )}
 
                   <a
                     href="#"
