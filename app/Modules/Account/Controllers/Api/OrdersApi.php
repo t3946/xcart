@@ -24,6 +24,7 @@ class OrdersApi extends Controller
     private const ORDERS_TYPE_CLOSED = 'closed';
     private const ORDER_TYPE_COMPLETED = 'completed';
     private const ORDER_TYPE_OPEN = 'open';
+    private const ORDER_TYPE_CANCELLED = 'cancelled';
 
     public function getOrders($orders_type, $to_date)
     {
@@ -62,6 +63,25 @@ class OrdersApi extends Controller
                         OrderStatusModel::ORDER_STATUS_QUEUED
                     ],
                     'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                ]);
+                break;
+            case self::ORDER_TYPE_OPEN:
+                $filter = array_merge($filter, [
+                    'cb_status__in' => [
+                        OrderStatusModel::ORDER_STATUS_AUTHORIZED,
+                        OrderStatusModel::ORDER_STATUS_COMPLETED,
+                        OrderStatusModel::ORDER_STATUS_QUEUED
+                    ],
+                    'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                ]);
+                break;
+            case self::ORDER_TYPE_CANCELLED:
+                $filter = array_merge($filter, [
+                    'cb_status__in' => [
+                        OrderStatusModel::ORDER_STATUS_FAILED,
+                        OrderStatusModel::ORDER_STATUS_CANCELED,
+                        OrderStatusModel::ORDER_STATUS_DECLINED
+                    ],
                 ]);
                 break;
         }
