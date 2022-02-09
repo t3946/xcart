@@ -4,7 +4,7 @@ import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import { getCountryByCode } from "@utils/Countries";
 import { Form, Formik } from "formik";
 import {
-  addAddressFormValidationSchema,
+  getAddAddressFormValidationSchema,
   initialAddAddressFormValue,
 } from "@modules/account/ts/consts/add-address-form";
 import { getStates } from "@modules/account/utils/get-states";
@@ -69,7 +69,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
       <Formik
         initialValues={initialAddAddressFormValue}
         onSubmit={onSubmit}
-        validationSchema={addAddressFormValidationSchema}
+        validationSchema={getAddAddressFormValidationSchema(states)}
       >
         {({
           errors,
@@ -92,12 +92,12 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                       setFieldValue("state", initialAddAddressFormValue.state);
                     }}
                     name={"state"}
-                    isValid={!!touched.country && !errors.country?.value}
-                    isInvalid={!!touched.country && !!errors.country?.value}
+                    isValid={!!touched.country && !errors.country}
+                    isInvalid={!!touched.country && !!errors.country}
                   />
                 }
                 label="Country"
-                error={!!touched.country && errors.country?.value}
+                error={!!touched.country && errors.country}
               />
 
               <FormGroup
@@ -183,12 +183,12 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                     value={values.state}
                     onChange={handleChange}
                     name={"state"}
-                    isValid={!!touched.state && !errors.state?.value}
-                    isInvalid={!!touched.state && !!errors.state?.value}
+                    isValid={!!touched.state && !errors.state}
+                    isInvalid={!!touched.state && !!errors.state}
                   />
                 }
                 label="State/Province"
-                error={!!touched.state && errors.state?.value}
+                error={!!touched.state && errors.state}
               />
 
               <FormGroup

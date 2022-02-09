@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import {
   initialAddAddressFormValue,
-  addAddressFormValidationSchema,
+  getAddAddressFormValidationSchema,
 } from "@modules/account/ts/consts/add-address-form";
 import { useDispatch } from "react-redux";
 import {
@@ -44,6 +44,12 @@ export const AddAddressForm: React.FC<any> = ({
   };
 
   const submitForm = () => {
+    if (
+      !formik.values.state.value &&
+      getStates(states, formik.values.country.value).length
+    ) {
+      formik.setFieldError("state", "Required field");
+    }
     const phoneCode = getCountryByCode(
       formik.values.phone_numberCode,
       countries
@@ -66,7 +72,7 @@ export const AddAddressForm: React.FC<any> = ({
 
     dispatch(addAddress(newAddress, onPended, user.userId));
   };
-  
+
   const formik = useFormik({
     initialValues:
       (addressInfo && {
@@ -78,7 +84,7 @@ export const AddAddressForm: React.FC<any> = ({
         phone_number: getMaskedPhone(addressInfo.phone_number),
       }) ||
       initialAddAddressFormValue,
-    validationSchema: addAddressFormValidationSchema,
+    validationSchema: getAddAddressFormValidationSchema(states),
     onSubmit: submitForm,
   });
 
@@ -91,7 +97,7 @@ export const AddAddressForm: React.FC<any> = ({
       >
         <InputGroup
           label="Country"
-          error={formik.touched.country?.value && formik.errors.country?.value}
+          error={formik.touched.country && formik.errors.country}
           component={
             <div>
               <Select
@@ -115,15 +121,11 @@ export const AddAddressForm: React.FC<any> = ({
                 name={"country"}
               />
 
-              {!!formik.touched.country?.value &&
-                !!formik.errors.country?.value && (
-                  <Feedback
-                    className="position-absolute d-block"
-                    type="invalid"
-                  >
-                    {formik.errors.country?.value}
-                  </Feedback>
-                )}
+              {!!formik.touched.country && !!formik.errors.country && (
+                <Feedback className="position-absolute d-block" type="invalid">
+                  {formik.errors.country}
+                </Feedback>
+              )}
             </div>
           }
         />
@@ -190,7 +192,7 @@ export const AddAddressForm: React.FC<any> = ({
         />
         <InputGroup
           label={"State/Province"}
-          error={formik.touched.state && formik.errors.state?.value}
+          error={formik.touched.state && formik.errors.state}
           component={
             <div>
               <Select
@@ -202,10 +204,10 @@ export const AddAddressForm: React.FC<any> = ({
                 options={getStates(states, formik.values.country.value)}
                 value={formik.values.state}
                 isValid={
-                  !!formik.touched.state?.value && !formik.errors.state?.value
+                  !!formik.touched.state && !formik.errors.state
                 }
                 isInvalid={
-                  !!formik.touched.state?.value && !!formik.errors.state?.value
+                  !!formik.touched.state && !!formik.errors.state
                 }
                 onChange={(e) => {
                   formik.setFieldValue("state", e.target.value);
@@ -213,9 +215,9 @@ export const AddAddressForm: React.FC<any> = ({
                 }}
                 name={"state"}
               />
-              {!!formik.touched.state?.value && !!formik.errors.state?.value && (
+              {!!formik.touched.state && !!formik.errors.state && (
                 <Feedback className="position-absolute d-block" type="invalid">
-                  {formik.errors.state?.value}
+                  {formik.errors.state}
                 </Feedback>
               )}
             </div>
