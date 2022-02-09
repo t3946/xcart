@@ -49,7 +49,6 @@ class GoogleShoppingProductCommand extends Command
             $marketplace = $site->marketplaces->filter(['marketplace_id' => 1])->limit(1)->get();
             $merchantId = $marketplace->P1;
             $lang = $site->lang->lang_code ?? 'en';
-            $i = 0;
 
             /** @var UpdatedProductModel[] $up */
             while ($up = UpdatedProductModel::objects()
@@ -57,7 +56,7 @@ class GoogleShoppingProductCommand extends Command
                 ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type' => 1, new QOr(['mask__isnull' => true, new QOrNot(['mask' => 0])])])
                 ->group(['resourceid'])
                 ->order(['-utype', '-product__forsale'])
-                ->paginate(++$i, 100)->all()) {
+                ->paginate(1, 100)->all()) {
                 $toDelete = [];
                 $entries = [];
 
