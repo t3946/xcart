@@ -37,7 +37,8 @@ export default class ProductsList extends React.Component {
 
   //получение следующей ссылки на каталог
   getNextPageUrl() {
-    const { nextPage, sort } = this.state;
+    const { nextPage } = this.state;
+    const sort = this.props.sortKey;
     let url = this.props.catalogUrl.split("?")[0];
 
     // if search page -- make url without api/
@@ -152,18 +153,14 @@ export default class ProductsList extends React.Component {
     );
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.sortKey !== this.props.sortKey) {
-      nextState.sort = nextProps.sortKey;
-      nextState.nextPage = 1;
-      nextState.items = Array(skeletonsNumber).fill(1);
-
+  componentDidUpdate(prevProps) {
+    if (prevProps.sortKey !== this.props.sortKey) {
+      this.state.nextPage = 1;
+      this.state.items = Array(skeletonsNumber).fill(1);
       if (document !== undefined) {
         this.loadData();
       }
     }
-
-    return true;
   }
 
   onFlagClick(e, inList, productId) {
