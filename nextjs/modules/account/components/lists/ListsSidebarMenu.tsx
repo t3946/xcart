@@ -22,7 +22,7 @@ export const ListsSidebarMenu: React.FC = () => {
     dispatch(fetchLists());
   }, []);
   const backOnAccount = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (
