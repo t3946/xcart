@@ -4,7 +4,7 @@
     {raw $checkoutReviewForm->renderBegin([
         'action' => $.app->router->url('checkout:review'),
         'method' => 'POST',
-        'class' => 'checkout-review-form',
+        'class' => 'checkout-review-form container',
         'enctype' => 'multipart/form-data'
     ])}
     {set $fieldsets =  $checkoutReviewForm->createFieldsets()}

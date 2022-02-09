@@ -49,7 +49,7 @@
         {raw $billingForm->renderBegin([
             'action' => $.app->router->url('checkout:options'),
             'method' => 'POST',
-            'class' => 'checkout-options-form',
+            'class' => 'checkout-options-form container',
             'validate' => 'false'
         ])}
         <section class="checkout-options">
