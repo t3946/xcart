@@ -15,7 +15,7 @@ const Dashboard = (props) => {
   }
 
   return (
-    <div className="pb-3">
+    <div className="mt-20 mt-md-0 pb-3">
       <div className={cn("d-flex", "flex-dir-column", Styles.pageColumn)}>
         <AccountInfo />
         {props.groups?.map((order, key) => (

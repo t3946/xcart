@@ -15,7 +15,7 @@ import Styles from "@modules/account/components/shared/FormInputPhone.module.scs
 
 export const phoneYupValidation = Yup.string()
   .required("Required field")
-  .matches(/\d{3} \d{3}[-]\d{4}/, "Is not in correct format");
+  .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format");
 
 interface IProps {
   handleChange: () => any;
@@ -51,7 +51,8 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   const countries = useSelector((e: StoreInterface) => e.countries);
   const CodeFieldName = name + "Code";
   const ExtFieldName = "phone_ext";
-  const phoneMask = "999 999-9999";
+  const phoneMask = "(999) 999-9999";
+  const placeholder = "(___) ___-____";
   let initialCountryCode;
 
   if (values[CodeFieldName]) {
@@ -131,7 +132,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
             name={name}
             value={values[name]}
             onChange={handleChange}
-            placeholder="___ ___-____"
+            placeholder={placeholder}
             isInvalid={!!touched[name] && !!errors[name]}
             isValid={!!touched[name] && !errors[name]}
             mask={phoneMask}

@@ -10,7 +10,9 @@ import {
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { getCountryByCode } from "@utils/Countries";
-import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
+import FormInputPhone, {
+  phoneYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
@@ -29,10 +31,7 @@ const FormEditUserPhone = (props: IProps): any => {
   const user = useSelectorAccount((e) => e.user);
   const countries = useSelectorAccount((e) => e.countries);
   const validationSchema = yup.object().shape({
-    phone: yup
-      .string()
-      .required("Phone is a required field")
-      .matches(/\d{3} \d{3}[-]\d{4}/, "Is not in correct format"),
+    phone: phoneYupValidation,
     phoneCode: yup.string().required("Country code is a required field"),
   });
 

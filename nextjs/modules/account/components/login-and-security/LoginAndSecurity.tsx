@@ -16,6 +16,7 @@ import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
 import Styles from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import { getMaskedPhone } from "@utils/phoneNumber";
 
 const LoginAndSecurity = (): any => {
   const dispatch = useDispatch();
@@ -98,10 +99,7 @@ const LoginAndSecurity = (): any => {
       return "N/A";
     }
 
-    const phoneCountry = getCountryByCode(user.phone_country_code, countries);
-
-    const countryPrefix = "+" + phoneCountry.phone_code;
-    return user.phone.replace(countryPrefix, `${countryPrefix} `);
+    return getMaskedPhone(user.phone);
   }
 
   function settingsItemsTemplate() {
