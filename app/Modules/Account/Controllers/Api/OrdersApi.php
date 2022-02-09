@@ -308,12 +308,38 @@ class OrdersApi extends Controller
 
         [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'), true));
 
+        /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
 
         $order_model->setAttributes($address_data);
 
         $order_model->save();
+        
+        $transaction = $order_model->transactions[0];
 
-        $this->jsonResponse($order_model->getAttributes());
+        $order = [
+            'orderNumber' =>  $order_model->orderid,
+            'client' => [
+                'firstName' => $order_model->firstname,
+                'phone' => $order_model->phone,
+                'phoneExt' => $order_model->phone_ext ?: '',
+                'email' => $order_model->email,
+                'shippingName' => $order_model->s_firstname,
+                'billingName' => $order_model->b_firstname,
+                'company' => $order_model->b_company,
+            ],
+            'groups' => $groups ?? [],
+            'orderId' => $order_model->orderid,
+            'poNumber' => $order_model->po_number,
+            'address' => $order_model->getFrontendAddress(),
+            'payment' => [
+                'status' => $order_model->cb_status_model->name,
+                'date' => $transaction ? $transaction->date : $order_model->date,
+            ],
+            'logs' => $logs ?? [],
+            'emails' => [],
+            'purchase' => $purchase_data ?? null
+        ];
+        $this->jsonResponse($order);
     }
 }

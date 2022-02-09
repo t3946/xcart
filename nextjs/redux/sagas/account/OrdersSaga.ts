@@ -67,10 +67,24 @@ function* getInvoicePdf(action: AnyAction): Generator {
   yield axios.get("/api/account/get-invoice-pdf").then(success).catch();
 }
 
+function* editShippingAddress(action: AnyAction): Generator {
+  const { data, success } = action;
+
+  const order = yield axios
+    .post("/api/account/orders/edit-shipping-address", data)
+    .then((r) => r.data)
+    .catch(() => null);
+  if (order) {
+    yield put({ type: "SET_ORDER_VIEW", order });
+    success(order);
+  }
+}
+
 export function* ordersActionWatcher(): SagaIterator {
   yield takeLatest("GET_ORDERS", getCards);
   yield takeLatest("SEND_EMAIL", sendEmail);
   yield takeLatest("FETCH_ORDER_VIEW", fetchOrder);
   yield takeLatest("OPEN_RMA_REQUEST", openRMARequest);
   yield takeLatest("GET_INVOICE_PDF", getInvoicePdf);
+  yield takeLatest("EDIT_SHIPPING_ADDRESS", editShippingAddress);
 }

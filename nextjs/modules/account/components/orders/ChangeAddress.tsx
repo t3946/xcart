@@ -4,14 +4,15 @@ import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { useRouter } from "next/router";
 import { ApiService } from "@modules/shared/services/api.service";
 import Store from "@redux/stores/Store";
-import { setOrders } from "@redux/actions/account-actions/OrdersActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
+import { BillingAddressList } from "@modules/account/components/wallet/BillingAddressList";
 import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 import { Formik, Form, FormikHelpers } from "formik";
+import { editShippingAddress } from "@redux/actions/account-actions/OrdersActions";
 
 interface ChangeAddressProps {
   handleClose?: () => void;
@@ -56,10 +57,9 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
       (address) => address.address_id === parseInt(values.address)
     );
 
-    apiService
-      .post(
-        "/account/api/orders/edit-shipping-address",
-        JSON.stringify({
+    dispatch(
+      editShippingAddress({
+        data: {
           order_id: urlParams.id,
           addressData: {
             s_address: address.street,
@@ -77,30 +77,20 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
             s_state: address.state.value,
             s_country: address.country.value,
           },
-        })
-      )
-      .then((response) => {
-        setSubmitting(false);
-        breakpoint({
-          xs: () =>
-            router.push(
-              `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`
-            ),
-          md: handleClose,
-        });
-        handleClose && handleClose();
-        setOrders(
-          Store.getState().ordersStore.orders[urlParams.orderType].map((e) => {
-            if (e.orderid === urlParams.id) {
-              return {
-                ...e,
-                response,
-              };
-            }
-          }),
-          urlParams.orderType
-        );
-      });
+        },
+        success(response) {
+          setSubmitting(false);
+          breakpoint({
+            xs: () =>
+              router.push(
+                `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`
+              ),
+            md: handleClose,
+          });
+          handleClose && handleClose();
+        },
+      })
+    );
   };
 
   return isAddingAddress ? (
