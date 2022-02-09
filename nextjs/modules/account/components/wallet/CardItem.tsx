@@ -8,7 +8,7 @@ import { AddEditBtnsBlock } from "@modules/account/components/shared/AddEditBtns
 import { CardHeader } from "@modules/account/components/wallet/CardHeader";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { getMaskedPhone } from "@utils/phoneNumber";
+import { formatPhone } from "@utils/phoneNumber";
 
 interface IProps {
   cardInfo: CardItemDto;
@@ -72,7 +72,7 @@ export const CardItem: React.FC<IProps> = ({
             <div className="wallet-card-content-label">Billing address</div>
             <div>
               1370 BRIDGETON HILL RD UPPER BLACK EDDY, PA 18972 United States
-              {getMaskedPhone(cardInfo.address.phone_number)}
+              {formatPhone(cardInfo.address.phone_number)}
             </div>
           </div>
           {breakpoint({

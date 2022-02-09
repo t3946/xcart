@@ -16,7 +16,7 @@ import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
 import Styles from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
-import { getMaskedPhone } from "@utils/phoneNumber";
+import { formatPhone } from "@utils/phoneNumber";
 
 const LoginAndSecurity = (): any => {
   const dispatch = useDispatch();
@@ -99,7 +99,7 @@ const LoginAndSecurity = (): any => {
       return "N/A";
     }
 
-    return getMaskedPhone(user.phone);
+    return formatPhone(user.phone);
   }
 
   function settingsItemsTemplate() {

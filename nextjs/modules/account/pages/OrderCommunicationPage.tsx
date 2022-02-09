@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { IconButton } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -13,7 +13,7 @@ import { OrderPageURLParams } from "@modules/account/ts/types/order-page-url-par
 import { useDispatch, useSelector } from "react-redux";
 import { sendEmail } from "@redux/actions/account-actions/OrdersActions";
 import Store from "@redux/stores/Store";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import { AccountStore } from "@modules/account/ts/types/store.type";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import { FileDrop } from "@modules/account/components/shared/FileDrop";
@@ -38,7 +38,7 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPage> = ({
     setFiles([]);
     setEmailBody("");
   };
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
 
   const loading = useSelector((e: AccountStore) => e.ordersStore.ordersLoading);
 
@@ -62,12 +62,9 @@ export const OrderCommunicationPage: React.FC<OrderCommunicationPage> = ({
         },
         () => {
           onEmailSend();
-          showSnackbar({
-            header: "Success",
-            message:
-              "The email has been sent, it will appear in the list of emails later",
-            theme: "success",
-          });
+          snackbar.show(
+            "The email has been sent, it will appear in the list of emails later"
+          );
         }
       )
     );

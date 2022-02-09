@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import cn from "classnames";
 import Select from "@modules/ui/forms/select/Select";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
@@ -26,7 +26,7 @@ interface IProps {
 
 export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
   const { orderItem } = props;
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
   const dispatch = useDispatch();
   const [files, setFiles] = React.useState<File[]>([]);
 
@@ -89,12 +89,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
         data: fd,
         success() {
           actions.setSubmitting(false);
-
-          showSnackbar({
-            header: "Success",
-            message: `Thank you for your rma request!`,
-            theme: "success",
-          });
+          snackbar.show(`Thank you for your rma request!`);
           actions.resetForm();
           setFiles([]);
         },

@@ -13,7 +13,7 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
 import cn from "classnames";
-import { getMaskedPhone } from "@utils/phoneNumber";
+import { formatPhone } from "@utils/phoneNumber";
 
 import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 import Styles from "@modules/account/components/addresses/AddressItem.module.scss";
@@ -100,7 +100,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           <span className="address-text">Phone number:</span>
           <span className="address-text">
             {" "}
-            {getMaskedPhone(addressInfo.phone_number)}
+            {formatPhone(addressInfo.phone_number)}
           </span>
         </div>
         <AddEditBtnsBlock

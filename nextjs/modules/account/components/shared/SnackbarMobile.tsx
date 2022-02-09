@@ -9,6 +9,7 @@ import TimesIcon from "@modules/icon/components/account/ModalTimes";
 import cn from "classnames";
 import hideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+
 import Styles from "@modules/account/components/shared/SnackbarMobile.module.scss";
 
 const SnackbarMobile: React.FC = () => {

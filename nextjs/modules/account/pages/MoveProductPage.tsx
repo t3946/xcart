@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import { transferProductList } from "@redux/actions/account-actions/ListsActions";
+import { VariantsEnum } from "@modules/account/components/shared/Snackbar";
 
 export const MoveProductPage: React.FC = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ export const MoveProductPage: React.FC = () => {
     lists = [];
   }
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
   const list = lists.find((e) => e.productListId === Number(productListId));
   const dispatch = useDispatch();
 
@@ -32,11 +33,11 @@ export const MoveProductPage: React.FC = () => {
         (e) => e.productId === Number(productId)
       );
       if (productOnList) {
-        showSnackbar({
-          header: "Error",
-          message: `This item already added to list`,
-          theme: "error",
-        });
+        snackbar.show(
+          `This item already added to list`,
+          3000,
+          VariantsEnum.error
+        );
         return;
       }
       dispatch(

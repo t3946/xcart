@@ -6,7 +6,7 @@
         {if $checkoutType === 'new'}
             <div class="row cart-steps-container show-for-large">
                 {if !$breadcrumbs->isFirstStage()}
-                    <a class="columns shrink cart-steps-back hide-for-large"
+                    <a class=" shrink cart-steps-back hide-for-large"
                        href="{$breadcrumbs->getPrevStage().url}">
                             <span class="img">
                                 <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
@@ -14,7 +14,7 @@
                         <span class="text">{t 'BACK'}</span>
                     </a>
                 {/if}
-                <section class="padding-0 overflow-hidden columns">
+                <section class="padding-0 overflow-hidden ">
                     <ul class="checkout-steps-list no-bullet">
                         <li class="checkout-step checkout-step_one-page checkout-step_inactive show-for-medium">
                             <span class="checkout-step-link checkout-step-link_active">
@@ -33,7 +33,7 @@
             </div>
         {else}
             <div class="row cart-steps-container show-for-large order-confirmation-breadcrumbs">
-                <section class="cart-steps-section columns">
+                <section class="cart-steps-section ">
                     <ul class="cart-steps-items no-bullet">
                         {foreach $breadcrumbs as $key => $item}
                             <li class="cart-step inactive">
@@ -50,7 +50,7 @@
         {/if}
     {/if}
     <div class="row cart-steps-container hide-for-large">
-        <section class="cart-steps-section columns">
+        <section class="cart-steps-section ">
             <ul class="cart-steps-items no-bullet">
                 <li class="cart-step active">
                         <span class="step-link">
@@ -97,11 +97,11 @@
             </div>
 
             <div class="row">
-                <div class="column small-12 line-wrapper">
+                <div class="column col-12 line-wrapper">
                     <div class="row shop-info align-spaced line">
-                        <div class="columns small-12 ml-6 large-4">
+                        <div class=" col-12 ml-6 col-lg-4">
                             <div class="row">
-                                <div class="column small-5 medium-4 ml-5 large-6">
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6">
                                     <img src="/static/frontend/dist/images/logos/s3stores_logo.svg"
                                          alt="{t 'S3 Stores, Inc.' }" class="logo-big">
                                     <div class="place-for-witter"></div>
@@ -123,21 +123,21 @@
                             </div>
                         </div>
 
-                        <div class="columns small-12 ml-6 large-4 contact-info">
+                        <div class=" col-12 ml-6 col-lg-4 contact-info">
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Toll Free' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Toll Free' }:</div>
                                 <div class="column">{$config.cidev_top_header_code}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Local Phone' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Local Phone' }:</div>
                                 <div class="column">{$config.local_phone}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Fax' }:</div>
                                 <div class="column">{$config.fax_number}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Email' }:</div>
                                 <div class="column">{t 'orders@s3stores.com' }</div>
                             </div>
                         </div>
@@ -146,23 +146,23 @@
             </div>
 
             <div class="row ordering-info-content">
-                <div class="column small-12 line-wrapper">
+                <div class="column col-12 line-wrapper">
                     <div class="row ordering-info align-spaced line line-1">
-                        <div class="columns small-12 ml-6 large-4">
+                        <div class=" col-12 ml-6 col-lg-4">
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Date' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Date' }:</div>
                                 <div class="column">{$order->date|date_format:'%d-%b-%Y'}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Order status' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Order status' }:</div>
                                 <div class="column">{t 'please see below' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Payment method' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Payment method' }:</div>
                                 <div class="column">{$order->payment_method}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Delivery methods' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Delivery methods' }:</div>
                                 <div class="column">
                                     {foreach $order->groups as $group}
                                         {set $s_model = $group->shippingModel}
@@ -175,92 +175,92 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="columns small-12 ml-6 large-4">
+                        <div class=" col-12 ml-6 col-lg-4">
                             <div class="row text-item">
-                                <div class="column small-12 label group-items-title">{t 'Contact information' }</div>
+                                <div class="column col-12 label group-items-title">{t 'Contact information' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Full name' }:</div>
                                 <div class="column">{$order->firstname}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Phone' }:</div>
                                 <div class="column">{$order->phone}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Email' }:</div>
                                 <div class="column">{$order->email}</div>
                             </div>
                         </div>
                     </div>
                     <div class="row ordering-info align-spaced line line-2">
-                        <div class="columns small-12 ml-6 large-4 contact-info">
+                        <div class=" col-12 ml-6 col-lg-4 contact-info">
                             <div class="row text-item">
-                                <div class="column small-12 label group-items-title">{t 'Shipping address' }</div>
+                                <div class="column col-12 label group-items-title">{t 'Shipping address' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Full name' }:</div>
                                 <div class="column">{$shipping_info['firstname']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Company' }:</div>
                                 <div class="column">{$shipping_info['company']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Address' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Address' }:</div>
                                 <div class="column">{$shipping_info['address'][0]} {if $shipping_info['address'][1]}
                                         <br/>
                                         {$shipping_info['address'][1]}{/if}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'City' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'City' }:</div>
                                 <div class="column">{$shipping_info['city']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'State/Province' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'State/Province' }:</div>
                                 <div class="column">{$shipping_info['state']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Country' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Country' }:</div>
                                 <div class="column">{$shipping_info['country']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Zip/Postal code' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Zip/Postal code' }:</div>
                                 <div class="column">{$shipping_info['zipcode']}</div>
                             </div>
                         </div>
-                        <div class="columns small-12 ml-6 large-4 contact-info">
+                        <div class=" col-12 ml-6 col-lg-4 contact-info">
                             <div class="row text-item">
-                                <div class="column small-12 label group-items-title">{t 'Billing address' }</div>
+                                <div class="column col-12 label group-items-title">{t 'Billing address' }</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Full name' }:</div>
                                 <div class="column">{$billing_info['firstname']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Company' }:</div>
                                 <div class="column">{$billing_info['company']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Address' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Address' }:</div>
                                 <div class="column">{$billing_info['address'][0]} {if $billing_info['address'][1]}
                                         <br/>
                                         {$billing_info['address'][1]}{/if}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'City' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'City' }:</div>
                                 <div class="column">{$billing_info['city']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'State/Province' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'State/Province' }:</div>
                                 <div class="column">{$billing_info['state']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Country' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Country' }:</div>
                                 <div class="column">{$billing_info['country']}</div>
                             </div>
                             <div class="row text-item">
-                                <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Zip/Postal code' }:</div>
+                                <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Zip/Postal code' }:</div>
                                 <div class="column">{$billing_info['zipcode']}</div>
                             </div>
                         </div>
@@ -270,66 +270,66 @@
 
             {if $order->payment_method == 'Purchase Order'}
                 <div class="row">
-                    <div class="column small-12 line-wrapper">
+                    <div class="column col-12 line-wrapper">
 
 
                         <div class="row ordering-info align-spaced line-3 line">
-                            <div class="columns small-12 ml-6 large-4 contact-info">
+                            <div class=" col-12 ml-6 col-lg-4 contact-info">
                                 <div class="row text-item">
-                                    <div class="column small-12 label group-items-title">{t 'Purchase order information' }</div>
+                                    <div class="column col-12 label group-items-title">{t 'Purchase order information' }</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'PO number' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'PO number' }:</div>
                                     <div class="column">{$extra->purchase_order['po_number']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Company name' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Company name' }:</div>
                                     <div class="column">{$extra->purchase_order['company_name']}</div>
                                 </div>
                             </div>
-                            <div class="columns small-12 ml-6 large-4"></div>
+                            <div class=" col-12 ml-6 col-lg-4"></div>
                         </div>
 
                         <div class="row ordering-info align-spaced line-3 line">
-                            <div class="columns small-12 ml-6 large-4 contact-info">
+                            <div class=" col-12 ml-6 col-lg-4 contact-info">
                                 <div class="row text-item">
-                                    <div class="column small-12 label group-items-title">{t 'Purchase manager' }</div>
+                                    <div class="column col-12 label group-items-title">{t 'Purchase manager' }</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Full name' }:</div>
                                     <div class="column">{$extra->purchase_order['name_of_purchaser']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Phone' }:</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_phone']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Fax' }:</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_fax']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Email' }:</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_email']}</div>
                                 </div>
                             </div>
-                            <div class="columns small-12 ml-6 large-4 contact-info">
+                            <div class=" col-12 ml-6 col-lg-4 contact-info">
                                 <div class="row text-item">
-                                    <div class="column small-12 label group-items-title">{t 'Accounts payable' }</div>
+                                    <div class="column col-12 label group-items-title">{t 'Accounts payable' }</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Full name' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Full name' }:</div>
                                     <div class="column">{$extra->purchase_order['accounts_payable_full_name']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Phone' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Phone' }:</div>
                                     <div class="column">{$extra->purchase_order['accounts_payable_phone']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Fax' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Fax' }:</div>
                                     <div class="column">{$extra->purchase_order['purchase_manager_fax']}</div>
                                 </div>
                                 <div class="row text-item">
-                                    <div class="column small-5 medium-4 ml-5 large-6 label">{t 'Email' }:</div>
+                                    <div class="column col-5 col-md-4 ml-5 col-lg-6 label">{t 'Email' }:</div>
                                     <div class="column">{$extra->purchase_order['accounts_payable_email']}</div>
                                 </div>
                             </div>
@@ -340,7 +340,7 @@
             {/if}
             {if $order->non_us_confirmation}
                 <div class="row">
-                    <div class="column small-12">
+                    <div class="column col-12">
                         <div class="non-us-disclaimer">
                             <label>
                                 {*<input type="checkbox" checked value="Y" name="non_us_confirmation" required />*}

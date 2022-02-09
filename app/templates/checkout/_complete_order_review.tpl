@@ -7,7 +7,7 @@
     </div>
 
     <div class="row">
-        <div class="columns small-12">
+        <div class=" col-12">
             <div class="order-review">
                 {foreach $order_groups as $group}
                     {set $warehouse = $.get_warehouse($group->manufacturerid)}
@@ -96,12 +96,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
+        <div class="col-12 ">
             <div class="hr-bold"></div>
         </div>
     </div>
     <div class="row">
-        <div class="small-12 columns">
+        <div class="col-12 ">
             <div class="order-total">
                 <div class="info-row total">
                     <span class="sum-info-label">{t 'Total' }:</span>
@@ -129,10 +129,10 @@
     </div>
     {if $order->customer_notes}
     <div class="row">
-        <div class="columns small-12 customer-notes-title-row large-3">
+        <div class=" col-12 customer-notes-title-row col-lg-3">
                 <h2 class="customer-notes-title">{t 'Customer notes' }</h2>
         </div>
-        <div class="columns small-12 large-6">
+        <div class=" col-12 col-lg-6">
             <div class="customer-notes-text">
                 <span class="sum">{$order->customer_notes}</span>
             </div>

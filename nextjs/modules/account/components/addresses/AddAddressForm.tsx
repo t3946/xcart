@@ -14,7 +14,7 @@ import {
 } from "@redux/actions/account-actions/AddressActions";
 import { getStates } from "@modules/account/utils/get-states";
 import { getCountryByCode } from "@utils/Countries";
-import { getMaskedPhone, getPhoneCountryCode } from "@utils/phoneNumber";
+import { formatPhone, getPhoneCountryCode } from "@utils/phoneNumber";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
@@ -77,11 +77,14 @@ export const AddAddressForm: React.FC<any> = ({
     initialValues:
       (addressInfo && {
         ...addressInfo,
+        state: addressInfo.state.value
+          ? addressInfo.state
+          : { value: undefined, label: "" },
         phone_numberCode: getPhoneCountryCode(
           addressInfo.phone_number,
           countries
         ),
-        phone_number: getMaskedPhone(addressInfo.phone_number),
+        phone_number: formatPhone(addressInfo.phone_number),
       }) ||
       initialAddAddressFormValue,
     validationSchema: getAddAddressFormValidationSchema(states),
@@ -203,12 +206,8 @@ export const AddAddressForm: React.FC<any> = ({
                 }}
                 options={getStates(states, formik.values.country.value)}
                 value={formik.values.state}
-                isValid={
-                  !!formik.touched.state && !formik.errors.state
-                }
-                isInvalid={
-                  !!formik.touched.state && !!formik.errors.state
-                }
+                isValid={!!formik.touched.state && !formik.errors.state}
+                isInvalid={!!formik.touched.state && !!formik.errors.state}
                 onChange={(e) => {
                   formik.setFieldValue("state", e.target.value);
                   delete formik.errors.state;

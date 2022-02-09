@@ -17,7 +17,7 @@ import InnerPage from "@components/common/inner-page/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import { AxiosResponse } from "axios";
-import { getMaskedPhone, getPhoneCountryCode } from "@utils/phoneNumber";
+import { formatPhone, getPhoneCountryCode } from "@utils/phoneNumber";
 import Label from "@modules/ui/forms/Label";
 
 interface IProps {
@@ -79,7 +79,7 @@ const FormEditUserPhone = (props: IProps): any => {
   };
 
   if (user.phone) {
-    initialValues.phone = getMaskedPhone(user.phone);
+    initialValues.phone = formatPhone(user.phone);
     initialValues.phoneCode = getPhoneCountryCode(user.phone, countries);
   }
 

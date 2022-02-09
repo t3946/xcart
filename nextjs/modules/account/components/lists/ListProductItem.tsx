@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
 import RatingStars from "@modules/shared/components/ratings/RatingStars";
 import { Tooltip } from "@modules/account/components/shared/Tooltip";
@@ -12,7 +12,7 @@ import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForLi
 import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "@redux/reducers/appCartReducer";
-import { SnackbarContext } from "@modules/account/contexts/snackbar/Snackbar.context";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { CountInput } from "@modules/account/components/shared/CountInput";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
@@ -83,7 +83,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
 
   const ratings = allRatings ? allRatings[productItem.productId] : undefined;
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const snackbar = useSnackbar();
 
   const onCountInputBlur = () => {
     if (countProductsOnCart > product.avail) {
@@ -229,11 +229,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           onMainBtnClick={() =>
             cartAdd(
               data,
-              showSnackbar({
-                header: "Success",
-                message: `${productItem.product.product} added to cart`,
-                theme: "success",
-              })
+              snackbar.show(`${productItem.product.product} added to cart`)
             )
           }
           time={productItem.add_date}
