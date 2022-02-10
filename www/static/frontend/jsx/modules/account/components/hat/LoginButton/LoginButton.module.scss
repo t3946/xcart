@@ -10,8 +10,8 @@
 }
 
 .userAvatar {
-  width: rem-calc(55);
-  height: auto;
+  width: auto;
+  height: 67%;
   border-radius: 100px;
 
   @include breakpoint(lg up) {
@@ -41,7 +41,8 @@
     background-color: darken($bgColor, 4%);
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: #ffffff;
   }
 }
