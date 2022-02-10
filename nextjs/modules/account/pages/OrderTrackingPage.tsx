@@ -4,7 +4,6 @@ import { OrderTrackingGroup } from "@modules/account/components/orders/OrderTrac
 import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
 import Store from "@redux/stores/Store";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import moment from "moment";
 interface OrderTrackingPage {
@@ -17,7 +16,13 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
       .get(
         `https://nominatim.openstreetmap.org/search.php?street=${order.address.shippingAddress}&city=${order.address.shippingCity}&state=${order.address.shippingState}&postalcode=${order.address.shippingZip}&polygon_geojson=1&format=jsonv2`
       )
-      .then((e) => setShippingPos([e[0].lat, e[0].lon]))
+      .then((e) => {
+        if (!e[0]) {
+          return;
+        }
+
+        setShippingPos([e[0].lat, e[0].lon]);
+      })
       .catch((e) => console.log(e));
   }, []);
 
@@ -26,11 +31,12 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
   return (
     <div>
       <div className="page-label">Order tracking</div>
-      {order.groups.map((group) => (
+      {order.groups.map((group, i) => (
         <OrderTrackingGroup
           shippingPos={shippingPos}
           orderItem={order}
           orderGroupInfo={group}
+          key={`map-${i}`}
         />
       ))}
       <div className="order-tracking-container order-tracking-footer">
