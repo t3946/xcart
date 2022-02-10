@@ -106,6 +106,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   className={"form-input"}
                   isInvalid={touched.code && !!errors.code}
                   disabled={isSubmitting}
+                  autoComplete="off"
                 />
 
                 <Feedback type="invalid">
