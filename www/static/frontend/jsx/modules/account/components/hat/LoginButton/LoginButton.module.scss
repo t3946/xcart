@@ -20,8 +20,28 @@
 }
 
 .hatLoginButton {
+  $bgColor: #145f8b;
+  position: relative;
+  background-color: $bgColor;
+  color: #ffffff;
+  height: rem-calc(50);
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.15s ease-out;
+  text-decoration: none;
+  padding: 0 rem-calc(26);
+  width: rem-calc(180);
+
+  &:hover {
+    background-color: darken($bgColor, 2%);
+  }
+
+  &:active,
+  &:focus {
+    background-color: darken($bgColor, 4%);
+  }
+
   &:hover, &:focus {
     color: #ffffff;
-    background-color: #135982;
   }
 }

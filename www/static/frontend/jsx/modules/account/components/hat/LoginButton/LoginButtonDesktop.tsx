@@ -7,11 +7,12 @@ import TransitionFade from "@client/modules/account/components/shared/Transition
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
-import classnames from "classnames";
+import cn from "classnames";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
 
+import StylesCommon from "@client/modules/account/components/hat/LoginButton/LoginButton.module.scss";
 import RotateStyles from "@client/style-modules/common/Rotate.module.scss";
 import Styles from "@client/modules/account/components/hat/LoginButton/LoginButtonDesktop.module.scss";
 
@@ -30,7 +31,7 @@ const AccountLink: React.FC = function () {
 
   if (isStatic) {
     return (
-      <a className={classnames(classes)} href={"/account"}>
+      <a className={cn(classes)} href={"/account"}>
         Account
       </a>
     );
@@ -42,8 +43,34 @@ const AccountLink: React.FC = function () {
 const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
   const dispatch = useDispatch();
   const user = useSelector((e: StoreDto) => e.user);
+  const isTabletMenuVisible = useSelector(
+    (e: any) => e.mobileMenu.isTabletMenuVisible
+  );
   const isStatic = props.isStatic || false;
-  const className = "hat-login-button";
+
+  const classes = {
+    button: [
+      StylesCommon.hatLoginButton,
+      Styles.button,
+      "d-flex",
+      "align-items-center",
+      "position-relative",
+      "cursor-pointer",
+      "text-decoration-none",
+      { [Styles.button_logined]: user },
+    ],
+
+    username: [Styles.username],
+
+    iconArrow: [
+      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
+      Styles.arrowIcon,
+      "flex-shrink-0",
+      {
+        "login-button-desktop-arrow__flip": isTabletMenuVisible,
+      },
+    ],
+  };
 
   function toggleMenu(isVisible) {
     HideAllMenu(dispatch);
@@ -57,24 +84,20 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
 
     if (isStatic) {
       return (
-        <a href={path} className={className}>
+        <a href={path} className={cn(classes.button)}>
           <UserIcon />
           <span className="hat-login-button-username">{text}</span>
         </a>
       );
     } else {
       return (
-        <Link to={path} className={className}>
+        <Link to={path} className={cn(classes.button)}>
           <UserIcon />
           <span className="hat-login-button-username">{text}</span>
         </Link>
       );
     }
   }
-
-  const isTabletMenuVisible = useSelector(
-    (e: any) => e.mobileMenu.isTabletMenuVisible
-  );
 
   function logoutButtonClickHandler() {
     HideAllMenu(dispatch);
@@ -87,7 +110,7 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
     return (
       <div
         ref={ref}
-        className={classnames(
+        className={cn(
           className,
           "account-hat-dropdown-menu col-12 p-0 rounded-0"
         )}
@@ -104,21 +127,9 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
   const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
 
-    const classes = {
-      username: ["hat-login-button-username"],
-      iconArrow: [
-        isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-        "login-button-desktop__arrow",
-        "login-button-desktop-arrow",
-        {
-          "login-button-desktop-arrow__flip": isTabletMenuVisible,
-        },
-      ],
-    };
-
     return (
       <span
-        className={className}
+        className={cn(classes.button)}
         title={user.name}
         ref={ref}
         onClick={(e) => {
@@ -126,9 +137,9 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
         }}
       >
         <UserIcon />
-        <span className={classnames(classes.username)}>{user.name}</span>
+        <span className={cn(classes.username)}>{user.name}</span>
 
-        <ArrowIconMobileDesktop className={classnames(classes.iconArrow)} />
+        <ArrowIconMobileDesktop className={cn(classes.iconArrow)} />
       </span>
     );
   });
