@@ -121,7 +121,8 @@ class ListItemsModel extends Model
                         'price' => $product_model->getPrice(),
                         'image' => (string)$product_model->getMainImage(),
                         'minAmount' => $product_model->min_amount,
-                        'multOrderQuantity' => $product_model->mult_order_quantity
+                        'multOrderQuantity' => $product_model->mult_order_quantity,
+                        'outOfStock' => $product_model->r_avail === 0,
                     ]
                 ]);
                 break;

@@ -5,6 +5,7 @@ namespace Modules\Account\Models;
 
 
 use Modules\Amazon\Models\AmazonListInboundShipmentItemModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;

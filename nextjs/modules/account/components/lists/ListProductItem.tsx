@@ -221,22 +221,25 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         >
           Item added {moment(productItem.add_date).utc().format("MMM DD, Y")}
         </div>
-        <ListProductItemBtns
-          btnLabel={"Add to cart"}
-          edit={edit}
-          // outOfStock={info.product}
-          deleteItem={deleteProductDialog.handleClickOpen}
-          onMainBtnClick={() =>
-            cartAdd(
-              data,
-              snackbar.show(`${productItem.product.product} added to cart`)
-            )
-          }
-          time={productItem.add_date}
-          listId={productItem.product_list_id}
-          productId={productItem.productId}
-          handleDelete={deleteProductDialog.handleClickOpen}
-        />
+        {!product.outOfStock && (
+          <ListProductItemBtns
+            btnLabel={"Add to cart"}
+            edit={edit}
+            // outOfStock={info.product}
+            deleteItem={deleteProductDialog.handleClickOpen}
+            onMainBtnClick={() =>
+              cartAdd(
+                data,
+                snackbar.show(`${productItem.product.product} added to cart`)
+              )
+            }
+            time={productItem.add_date}
+            listId={productItem.product_list_id}
+            productId={productItem.productId}
+            handleDelete={deleteProductDialog.handleClickOpen}
+          />
+        )}
+        {product.outOfStock && "out of stock"}
       </div>
       <BootstrapDialogHOC
         show={editCommentDialog.open}
