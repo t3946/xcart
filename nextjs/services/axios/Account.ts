@@ -1,14 +1,18 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 const getInitialState = async function (req: any) {
-  let initialState: any;
-
-  const instance = axios.create({
+  const params: AxiosRequestConfig = {
     baseURL: process.env.BASE_URL_NGINX,
-    headers: {
+  };
+
+  if (req.headers.cookie) {
+    params.headers = {
       Cookie: req.headers.cookie,
-    },
-  });
+    };
+  }
+
+  const instance = axios.create(params);
+  let initialState: any;
 
   await instance.get("/api/account/get-initial-data").then((res) => {
     initialState = res.data;

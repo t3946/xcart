@@ -62,7 +62,16 @@ app.get("/logout", isAuthMiddleware, async function (req, res) {
   });
 
   res.clearCookie("session");
-  res.clearCookie("xid0");
+
+  //drop xcart session id
+  for (const cookieName in req.cookies) {
+    console.log("cookieName", cookieName);
+    if (cookieName.search(/^xid\d+/) !== -1) {
+      console.log("drop", cookieName);
+      res.clearCookie(cookieName);
+    }
+  }
+
   res.sendStatus(200);
 });
 
