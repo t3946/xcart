@@ -48,6 +48,12 @@ const RegisterForm: React.FC<any> = () => {
       .oneOf([yup.ref("password"), null], "Passwords must match"),
   });
 
+  React.useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  });
+
   function submit(values: Record<any, any>, actions: Record<any, any>) {
     const { email, name, password } = values;
 
@@ -71,10 +77,6 @@ const RegisterForm: React.FC<any> = () => {
         },
       })
     );
-  }
-
-  if (user) {
-    router.push("/dashboard");
   }
 
   return (
