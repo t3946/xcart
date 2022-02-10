@@ -77,6 +77,7 @@ export const AddAddressForm: React.FC<any> = ({
     initialValues:
       (addressInfo && {
         ...addressInfo,
+        detailed: addressInfo.detaild ?? "",
         state: addressInfo.state.value
           ? addressInfo.state
           : { value: undefined, label: "" },
