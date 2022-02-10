@@ -12,7 +12,7 @@ export const ordersHeaderSelectValues = [
     viewValue: "Last 90 days",
   },
   {
-    value: undefined,
+    value: new Date(0),
     viewValue: "All time",
   },
 ];

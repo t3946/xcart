@@ -14,7 +14,7 @@ export const ordersHeaderSelectValues: SelectDate[] = [
     label: "Last 90 days",
   },
   {
-    value: null,
+    value: 0,
     label: "All time",
   },
 ];

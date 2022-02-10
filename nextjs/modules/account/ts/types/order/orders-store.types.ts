@@ -60,6 +60,6 @@ export interface OrderAddress {
 }
 
 export interface SelectDate {
-  value: number | null;
+  value: number;
   label: string;
 }
