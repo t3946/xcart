@@ -14,3 +14,31 @@
     }
   }
 }
+
+.button {
+  padding: 0 0 0 rem-calc(31);
+  width: rem-calc(147);
+}
+
+.button_logined {
+  padding: 0 rem-calc(15);
+  width: rem-calc(180);
+}
+
+.username {
+  flex: auto;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(10);
+  }
+}
+
+.arrowIcon {
+  width: rem-calc(13);
+  height: rem-calc(13);
+  transition: transform 0.2s ease-out;
+}

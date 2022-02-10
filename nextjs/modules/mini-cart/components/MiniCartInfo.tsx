@@ -22,9 +22,7 @@ const MiniCartInfo: React.FC = () => {
     ],
     text: [
       "mini-cart-button-text",
-      {
-        "mini-cart-button-text__not-empty": cart.quantity,
-      },
+      { "cart_info cart-info-button__not-empty": cart.quantity },
     ],
     counter: ["position-relative", Styles.counter],
     quantity: ["position-absolute", Styles.counter__quantity],

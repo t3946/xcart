@@ -13,13 +13,10 @@ const MiniCartInfo: React.FC = () => {
   const classes = {
     button: [
       "cart_info cart-info-button",
-      { "cart_info cart-info-button__not-empty": cart.quantity > 0 },
+      { "cart_info cart-info-button__not-empty": cart.quantity },
     ],
     text: [
       "mini-cart-button-text",
-      {
-        "mini-cart-button-text__not-empty": cart.quantity,
-      },
     ],
   };
 

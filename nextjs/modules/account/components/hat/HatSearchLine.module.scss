@@ -44,14 +44,13 @@
   font-size: pxToRem(14);
   font-weight: bold;
   text-transform: uppercase;
+}
 
-  .category-menu-title {
-    color: #ffffff;
-    font-size: pxToRem(14);
-    font-weight: 800;
-    margin-left: pxToRem(5);
-    text-transform: uppercase;
-  }
+.categoryMenuTitle {
+  font-size: pxToRem(14);
+  font-weight: 800;
+  margin-left: pxToRem(5);
+  text-transform: uppercase;
 }
 
 .categoryMenu_active {
