@@ -3,18 +3,16 @@
 namespace Modules\Goods\Controllers\Api;
 
 use Modules\Goods\Controllers\AbstractCatalogController;
-use Modules\Goods\GoodsModule;
 use Modules\Goods\Helpers\ProductFilterHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
-use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
-use Modules\Order\Models\OrderModel;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Main\Xcart;
+use Modules\Order\Models\OrderStatusModel;
 
 class ApiCategoriesController extends AbstractCatalogController
 {
@@ -62,10 +60,10 @@ class ApiCategoriesController extends AbstractCatalogController
         $qs->select(['p2.*'])
             ->distinct()
             ->filter([
-                'order_details__order_group__cb_status' => 'P',
-                'productid' => $id
-            ]
-        );
+                    'order_details__order_group__cb_status' => 'P',
+                    'productid' => $id
+                ]
+            );
         $qs->join('inner join', 'xcart_order_details', ['xcart_products_1.productid' => 'xcart_order_details_1.productid'], 'xcart_order_details_1');
         $qs->join('inner join', 'xcart_order_group', ['xcart_order_details_1.order_group_id' => 'xcart_order_groups_1.order_group_id'], 'xcart_order_groups_1');
         $qs->join('inner join', 'xcart_order_details', ['xcart_order_details_1.order_group_id' => 'xcart_order_details_2.order_group_id'], 'xcart_order_details_2');
@@ -109,7 +107,8 @@ class ApiCategoriesController extends AbstractCatalogController
             );
     }
 
-    private function getPaginatedProducts($qs) {
+    private function getPaginatedProducts($qs)
+    {
         //sorting products
         $isCatalogPage = (int)$this->getRequest()->get->get('isCatalogPage', 0);
 
@@ -139,7 +138,8 @@ class ApiCategoriesController extends AbstractCatalogController
         ];
     }
 
-    public function getBuyAgainProducts() {
+    public function getBuyAgainProducts()
+    {
         /**
          * check authorisation
          * @var $user UserModel
@@ -151,7 +151,12 @@ class ApiCategoriesController extends AbstractCatalogController
             return;
         }
 
-        $qs = ProductModel::objects()->filter(['order_details__order_group__order__user_id' => $user->user_id]);
+
+        $qs = ProductModel::objects()->filter([
+            'order_details__order_group__order__user_id' => $user->user_id,
+            'order_details__order_group__order__cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+            'order_details__order_group__order__dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED
+        ])->group(["productid"]);
         $this->sort = $this->getRequest()->get->get('sort', $this->sort);
         $qs = $this->getSortedQS($qs);
         $pager = $this->getPager($qs);
@@ -260,8 +265,8 @@ class ApiCategoriesController extends AbstractCatalogController
                 'mpn' => $product->getMpn(),
                 'upc' => $product->upc,
                 'images' => $images,
-                'description' => utf8_encode( $product->getCatalogDescription(140) ),
-                'short_description' => utf8_encode( $product->getCatalogDescription(70) ),
+                'description' => utf8_encode($product->getCatalogDescription(140)),
+                'short_description' => utf8_encode($product->getCatalogDescription(70)),
                 'inStock' => !$product->isOutOfStock(),
                 'productcode' => $product->productcode,
                 'brand' => $product->brand->brand ?? null,
