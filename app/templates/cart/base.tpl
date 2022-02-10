@@ -99,7 +99,7 @@
 {/block}
 
 {block "content-wrapper"}
-    <div class="cart_shipping-page default-content-page default-form">
+    <div class="cart_shipping-page default-content-page default-form container">
         {block "content"}{/block}
     </div>
 {/block}
