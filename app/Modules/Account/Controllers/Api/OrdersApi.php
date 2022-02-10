@@ -133,6 +133,7 @@ class OrdersApi extends Controller
         /** @var OrderModel $order_model */
         $order_model = $user->orders->get(["pk" => $order_id]);
         foreach ($order_model->groups as $group_model) {
+            $ar_products = [];
             $manufacturer = $group_model->manufacturer;
 
             foreach ($group_model->detail_models as $model) {
