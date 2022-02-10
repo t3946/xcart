@@ -5872,11 +5872,10 @@ model xcart_users {
   name                     String                    @db.VarChar(64)
   rate_us                  Int?                      @db.UnsignedTinyInt
   experience_comment       String?                   @db.MediumText
-  email                    String?                   @db.VarChar(128) @unique(map: "xcart_users_email_uindex")
+  email                    String?                   @unique(map: "xcart_users_email_uindex") @db.VarChar(128)
   password                 String?                   @db.VarChar(64)
-  phone                    String?                   @db.VarChar(32)
+  phone                    String?                   @unique(map: "xcart_users_phone_uindex") @db.VarChar(32)
   avatar_image             String?                   @db.VarChar(128)
-  stripe_customer_id       String?                   @db.VarChar(32)
   cart_number              Int?
   location                 String?                   @db.VarChar(64)
   public_name              String?                   @db.VarChar(64)
@@ -5885,6 +5884,8 @@ model xcart_users {
   tsv_count                Int?                      @default(0) @db.UnsignedSmallInt
   decisions_required_count Int                       @default(0) @db.UnsignedTinyInt
   access_token             String?                   @db.VarChar(16)
+  tsv_suppressed           Int?                      @default(0)
+  stripe_customer_id       String?                   @db.VarChar(32)
   account_addresses        account_addresses[]
   account_credit_cards     account_credit_cards[]
   account_transactions     account_transactions[]
@@ -5893,9 +5894,8 @@ model xcart_users {
   product_reviews          product_reviews[]
   xcart_fingerprints       xcart_fingerprints[]
   xcart_one_time_passwords xcart_one_time_passwords?
-  xcart_sessions_data      xcart_sessions_data[]
-  tsv_suppressed           Int?
   xcart_orders             xcart_orders[]
+  xcart_sessions_data      xcart_sessions_data[]
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
 }

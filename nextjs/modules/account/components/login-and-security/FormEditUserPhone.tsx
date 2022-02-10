@@ -51,6 +51,11 @@ const FormEditUserPhone = (props: IProps): any => {
         },
 
         success(res: AxiosResponse) {
+          if (res.data.errors) {
+            actions.setErrors(res.data.errors);
+            return;
+          }
+
           dispatch(userSetAction(res.data.user));
           router.push(location?.state?.from || "/login-and-security");
 

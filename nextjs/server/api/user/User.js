@@ -212,8 +212,19 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
 app.post("/change-phone", isAuthMiddleware, async function (req, res) {
   //check phone
   const phone = req.body.phone;
-  const countryCode = parseInt(phone.slice(1, -10));
 
+  const userWithEqualPhone = await prisma.xcart_users.findUnique({
+    where: {
+      phone,
+    },
+  });
+
+  if (userWithEqualPhone) {
+    res.json({ errors: { phone: "This phone already exits" } });
+    return;
+  }
+
+  const countryCode = parseInt(phone.slice(1, -10));
   const country = await prisma.xcart_countries.findUnique({
     where: {
       phone_code: countryCode,
