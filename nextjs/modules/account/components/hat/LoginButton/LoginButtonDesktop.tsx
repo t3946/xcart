@@ -12,6 +12,7 @@ import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-dow
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
+import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 
 import RotateStyles from "styles/modules/Rotate.module.scss";
 import StylesCommon from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
@@ -70,8 +71,9 @@ const LoginButtonDesktop: React.FC = function () {
           )}
           aria-labelledby={labeledBy}
         >
-          <div className="sidebar-menu-wrapper">
-            <LogoutButton onClick={logoutButtonClickHandler} />
+          <div className={cn("sidebar-menu-wrapper", Styles.sidebarContainer)}>
+            <SidebarMenu classes={{ item: "pe-2" }} showLogout />
+            {/* <LogoutButton onClick={logoutButtonClickHandler} /> */}
           </div>
         </div>
       );
@@ -80,7 +82,6 @@ const LoginButtonDesktop: React.FC = function () {
 
   const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
-
 
     return (
       <span

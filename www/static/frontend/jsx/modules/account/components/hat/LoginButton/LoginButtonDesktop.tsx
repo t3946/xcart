@@ -8,9 +8,9 @@ import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setTabletMenuIsVisible } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import cn from "classnames";
-import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import ArrowIconMobileDesktop from "@client/modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
+import SidebarMenu from "@client/modules/account/components/sidebar-menu/SideBarMenu";
 
 import StylesCommon from "@client/modules/account/components/hat/LoginButton/LoginButton.module.scss";
 import RotateStyles from "@client/style-modules/common/Rotate.module.scss";
@@ -116,9 +116,8 @@ const LoginButtonDesktop: React.FC<IProps> = function (props: IProps) {
         )}
         aria-labelledby={labeledBy}
       >
-        <div className="sidebar-menu-wrapper">
-          <AccountLink />
-          <LogoutButton onClick={logoutButtonClickHandler} />
+        <div className={cn(Styles.sidebarContainer, "sidebar-menu-wrapper")}>
+          <SidebarMenu classes={{ item: "pe-2" }} showLogout />
         </div>
       </div>
     );

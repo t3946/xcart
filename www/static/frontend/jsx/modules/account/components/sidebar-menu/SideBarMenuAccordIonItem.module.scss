@@ -1,0 +1,36 @@
+@import "~style-modules/sass-utils";
+
+.accordionItem {
+  height: auto;
+  min-height: rem-calc(35);
+
+  @include breakpoint(md up) {
+    min-height: rem-calc(50);
+  }
+
+  @include breakpoint(lg up) {
+    min-height: rem-calc(35);
+  }
+}
+
+.badge {
+  border-radius: 100px;
+  color: #ffffff;
+  background-color: #df1b10;
+  height: rem-calc(20);
+  min-width: rem-calc(20);
+  padding: 0 rem-calc(5);
+  font-size: rem-calc(12);
+
+  @include breakpoint(md up) {
+    height: rem-calc(24);
+    min-width: rem-calc(24);
+    font-size: rem-calc(16);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(20);
+    min-width: rem-calc(20);
+    font-size: rem-calc(12);
+  }
+}

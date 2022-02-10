@@ -15,7 +15,15 @@ const classes = {
   dropdownItem: [StylesItem.item_topLevel, StylesItem.item],
 };
 
-const SideBarMenu: React.FC = () => {
+interface IProps {
+  classes?: {
+    item?: any;
+  };
+  showLogout?: boolean;
+}
+
+const SideBarMenu: React.FC<IProps> = (props) => {
+  const { showLogout = false } = props;
   const { asPath: activePath } = useRouter();
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
@@ -71,7 +79,7 @@ const SideBarMenu: React.FC = () => {
               to={value.to}
               label={value.label}
               badge={value.badge}
-              className={classes.dropdownItem}
+              className={[classes.dropdownItem, props.classes?.item]}
               onClick={breakpoint({
                 xs: () => () => dispatch(setMobileMenuIsVisible(false)),
                 lg: () => {},
@@ -97,8 +105,7 @@ const SideBarMenu: React.FC = () => {
         classes={[
           ...classes.dropdownItem,
           "d-md-block",
-          "d-lg-none",
-          { "d-none": !user },
+          { "d-none": !user, "d-lg-none": !showLogout },
         ]}
       />
     </div>
