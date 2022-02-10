@@ -9,12 +9,7 @@
 
   @include breakpoint(lg up) {
     height: rem-calc(49);
-    background-color: #ffffff;
     font-weight: bold;
     border-bottom: 1px solid #f4f4f4;
-
-    &:hover {
-      background-color: #f1f1f1;
-    }
   }
 }

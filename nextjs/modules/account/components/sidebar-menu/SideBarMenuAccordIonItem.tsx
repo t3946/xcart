@@ -21,6 +21,7 @@ export const SideBarMenuAccordIonItem: React.FC<SidebarItem> = ({
         const classes = [
           "sidebar-menu-item",
           "sidebar-menu-item__accordion",
+          Style.accordionItem,
           "text-decoration-none",
           {
             [Style.item_active]: isActive,

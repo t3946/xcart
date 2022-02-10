@@ -7,7 +7,15 @@ import LogoutButton from "@client/modules/account/components/sidebar-menu/Logout
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 
-const SideBarMenu: React.FC = () => {
+interface IProps {
+  classes?: {
+    item?: any;
+  };
+  showLogout?: boolean;
+}
+
+const SideBarMenu: React.FC<IProps> = (props) => {
+  const { showLogout = false } = props;
   const breakpoint = useBreakpoint();
   const user = useSelector((e: StoreInterface) => e.user);
   const menuItems = [
@@ -50,10 +58,7 @@ const SideBarMenu: React.FC = () => {
       return;
     }
 
-    return breakpoint({
-      xs: <LogoutButton />,
-      lg: null,
-    });
+    return <LogoutButton />;
   }
 
   return (
@@ -65,7 +70,7 @@ const SideBarMenu: React.FC = () => {
               to={value.to}
               label={value.label}
               badge={value.badge}
-              className={"sidebar-menu_top-level-item"}
+              className={["sidebar-menu_top-level-item", props.classes?.item]}
               onClick={value.onClick}
             />
           );
