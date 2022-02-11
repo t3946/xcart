@@ -5896,8 +5896,19 @@ model xcart_users {
   xcart_one_time_passwords xcart_one_time_passwords?
   xcart_orders             xcart_orders[]
   xcart_sessions_data      xcart_sessions_data[]
+  xcart_authenticators     xcart_authenticators[]
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
+}
+
+model xcart_authenticators {
+  authenticator_id Int         @id @default(autoincrement()) @db.Int
+  user_id                Int                     @db.UnsignedInt
+  secret           String      @db.VarChar(16)
+  created_at       DateTime    @default(now()) @db.Timestamp(0)
+  xcart_users      xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_authenticators_xcart_users_user_id_fk")
+
+  @@index([user_id], map: "xcart_authenticators_xcart_users_user_id_fk")
 }
 
 model xcart_users_online {
