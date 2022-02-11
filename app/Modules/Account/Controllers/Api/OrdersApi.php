@@ -265,15 +265,18 @@ class OrdersApi extends Controller
         }
 
         $request_data = Xcart::app()->request->post->all();
+        if (!$request_data) {
+            $request_data = json_decode(file_get_contents("php://input"), true);
+        }
 
         $order = $user->orders->get(['orderid' => $request_data['orderId']]);
-
-        $items = json_decode($request_data['items'], true, 512, JSON_THROW_ON_ERROR);
 
         if (!$order) {
             $this->jsonResponse('order not found', 400);
             return;
         }
+
+        $items = json_decode($request_data['items'], true, 512, JSON_THROW_ON_ERROR);
 
         foreach ($items as $item) {
             if ((int)$item['amount'] === 0) {
