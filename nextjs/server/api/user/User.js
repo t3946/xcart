@@ -65,9 +65,7 @@ app.get("/logout", isAuthMiddleware, async function (req, res) {
 
   //drop xcart session id
   for (const cookieName in req.cookies) {
-    console.log("cookieName", cookieName);
     if (cookieName.search(/^xid\d+/) !== -1) {
-      console.log("drop", cookieName);
       res.clearCookie(cookieName);
     }
   }
