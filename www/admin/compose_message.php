@@ -5,6 +5,7 @@ use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
@@ -54,6 +55,17 @@ $template_model = TemplateModel::objects()->get(['id' => $template_id]);
 if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
     $body = func_eol2br(stripslashes(html_entity_decode($body)));
+
+    if ($attach_pdf_invoice) {
+        /** @var OrderModel $order */
+
+        $order = OrderModel::objects()->get(['pk' => $order['orderid']]);
+
+        $invoice = SnippetHelper::render('<br><br>{{invoice}}', ['order' => $order]);
+
+        $body .= $invoice;
+
+    }
 
     $order_number = $order['order_prefix'] . $order['orderid'];
 
