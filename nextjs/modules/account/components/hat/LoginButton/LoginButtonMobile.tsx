@@ -4,16 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMobileMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 
 const MobileTemplate: React.FC<any> = () => {
   const user = useSelector((e) => e.user);
-  const classes = [
-    "navigation-login-button d-flex align-items-center",
-    {
-      "navigation-login-button__logged": user,
-      "navigation-login-button__not-logged": !user,
-    },
-  ];
+  const className = "navigation-login-button d-flex align-items-center";
   const dispatch = useDispatch();
 
   function openMenu(e) {
@@ -28,7 +23,16 @@ const MobileTemplate: React.FC<any> = () => {
       onClick={openMenu}
       className="d-md-none hat-navigation-item d-flex align-items-center"
     >
-      <i className={classNames(classes)} />
+      {user ? (
+        <UserIcon className={className} />
+      ) : (
+        <i
+          className={classNames(
+            className,
+            "navigation-login-button__not-logged"
+          )}
+        />
+      )}
     </div>
   );
 };

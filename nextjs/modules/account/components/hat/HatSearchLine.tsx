@@ -44,9 +44,9 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
     menuArrowIcon: [
       "ms-2",
       Styles.triangleIcon,
-      {
-        [StylesRotate.rotate__180]: isVisibleDepartmentsMenu,
-      },
+      // {
+      //   [StylesRotate.rotate__180]: isVisibleDepartmentsMenu,
+      // },
     ],
   };
 

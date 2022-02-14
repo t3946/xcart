@@ -12,6 +12,7 @@ import ArrowIconMobileDesktop from "@modules/icon/components/account/chevron-dow
 import UserIcon from "@modules/account/components/hat/LoginButton/UserIcon";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
+import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 
 import RotateStyles from "styles/modules/Rotate.module.scss";
 import StylesCommon from "@modules/account/components/hat/LoginButton/LoginButton.module.scss";
@@ -36,12 +37,12 @@ const LoginButtonDesktop: React.FC = function () {
       { [Styles.button_logined]: user },
     ],
 
-    username: ["hat-login-button-username", Styles.username],
+    username: [Styles.username],
 
     iconArrow: [
       isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-      "login-button-desktop__arrow",
-      "login-button-desktop-arrow",
+      Styles.arrowIcon,
+      "flex-shrink-0",
       {
         "login-button-desktop-arrow__flip": isTabletMenuVisible,
       },
@@ -70,8 +71,9 @@ const LoginButtonDesktop: React.FC = function () {
           )}
           aria-labelledby={labeledBy}
         >
-          <div className="sidebar-menu-wrapper">
-            <LogoutButton onClick={logoutButtonClickHandler} />
+          <div className={cn("sidebar-menu-wrapper", Styles.sidebarContainer)}>
+            <SidebarMenu classes={{ item: "pe-2" }} showLogout />
+            {/* <LogoutButton onClick={logoutButtonClickHandler} /> */}
           </div>
         </div>
       );
@@ -80,15 +82,6 @@ const LoginButtonDesktop: React.FC = function () {
 
   const CustomToggle = React.forwardRef((props: any, ref: any) => {
     const { onClick } = props;
-
-    const arrowClasses = [
-      isTabletMenuVisible ? RotateStyles.rotate__180 : RotateStyles.rotate__0,
-      Styles.arrowIcon,
-      "flex-shrink-0",
-      {
-        "login-button-desktop-arrow__flip": isTabletMenuVisible,
-      },
-    ];
 
     return (
       <span
@@ -102,7 +95,7 @@ const LoginButtonDesktop: React.FC = function () {
         <UserIcon />
         <span className={classnames(classes.username)}>{user.name}</span>
 
-        <ArrowIconMobileDesktop className={classnames(arrowClasses)} />
+        <ArrowIconMobileDesktop className={classnames(classes.iconArrow)} />
       </span>
     );
   });

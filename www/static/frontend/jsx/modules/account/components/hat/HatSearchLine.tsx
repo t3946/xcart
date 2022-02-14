@@ -12,6 +12,7 @@ import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonDesktop";
 import AppData, { route } from "@client/jsx/utils/AppData";
 import Search from "@client/jsx/modules/account/components/hat/Search";
+import Triangle from "@client/jsx/modules/icon/components/common/triangle/Triangle";
 
 import Styles from "@client/jsx/modules/account/components/hat/HatSearchLine.module.scss";
 
@@ -71,17 +72,24 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
                 timeout={250}
               >
                 <div className="account-page-left-column col pe-0 d-none d-lg-block">
-                  <div className="category-menu-container">
+                  <div className={classnames([Styles.categoryMenuContainer])}>
                     <div
                       className={classnames(
-                        "category-menu category-menu__new",
+                        Styles.categoryMenu,
+                        "category-menu__new d-flex align-items-center justify-content-center",
                         {
-                          "is-active": isVisibleDepartmentsMenu,
+                          [Styles.categoryMenu_active]:
+                            isVisibleDepartmentsMenu,
                         }
                       )}
                     >
-                      <span className="menu-icon" />
-                      <span className="category-menu-title">Departments</span>
+                      <span className={Styles.categoryMenuTitle}>
+                        Departments
+                      </span>
+
+                      <span className={classnames("ms-2", Styles.triangleIcon)}>
+                        <Triangle />
+                      </span>
                     </div>
                   </div>
                 </div>
