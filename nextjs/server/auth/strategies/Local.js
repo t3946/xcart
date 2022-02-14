@@ -45,7 +45,13 @@ module.exports = function (passport) {
 
       delete user.password;
 
-      if (user.tsv_count === 0) {
+      const authenticators = await prisma.xcart_authenticators.findMany({
+        where: {
+          user_id: user.user_id,
+        },
+      });
+
+      if (authenticators.length === 0) {
         done(null, {
           user,
         });
@@ -77,12 +83,12 @@ module.exports = function (passport) {
       }
 
       await axios
-        .post(process.env.BASE_URL_NGINX + "/api/account/tsv/confirm-code", {
+        .post(process.env.BASE_URL_NGINX + "/api/account/tsv/check-code", {
           code: req.body.code,
           userId: user.user_id,
         })
         .then(async (apiRes) => {
-          if (!apiRes.data.user) {
+          if (apiRes.data.checkResult === false) {
             done({ message: { code: "Code is invalid" } }, null);
             return;
           }

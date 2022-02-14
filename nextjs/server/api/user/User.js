@@ -11,10 +11,12 @@ const mail = require("../../services/mail");
 const AxiosInstance = axios.create({
   baseURL: process.env.BASE_URL_NGINX,
 });
+const apiTwoStepVerification =  require("./TwoStepVerification");
 const apiStripe = require("./stripe/Stripe");
 const stripeService = require("../../services/stripe");
 
 app.use("/stripe", isAuthMiddleware, apiStripe);
+app.use("/tsv", apiTwoStepVerification);
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (err, result) => {
@@ -105,12 +107,14 @@ app.post("/create", async function (req, res) {
   if (users.length) {
     res.json({ error: { email: "This email already registered" } });
   } else {
+
     const user = await prisma.xcart_users.create({
       data: {
         email,
         name,
         password: await passwordUtils.encryptPassword(password),
         access_token: generateToken(),
+        tsv_secret,
       },
     });
 
@@ -290,52 +294,6 @@ app.post("/change-password", isAuthMiddleware, async function (req, res) {
   });
 
   res.sendStatus(200);
-});
-
-app.post("/tsv/confirm-code", isAuthMiddleware, async function (req, res) {
-  await AxiosInstance.post("/api/account/tsv/confirm-code", {
-    code: req.body.code,
-    userId: req.user.userId,
-  }).then((apiRes) => {
-    res.json(apiRes.data);
-    res.send();
-  });
-});
-
-app.get("/tsv/disable", isAuthMiddleware, async function (req, res) {
-  await AxiosInstance.post("/api/account/tsv/disable", {
-    userId: req.user.userId,
-  }).then((apiRes) => {
-    res.json(apiRes.data);
-    res.send();
-  });
-});
-
-app.get("/tsv/get", isAuthMiddleware, async function (req, res) {
-  await AxiosInstance.post("/api/account/tsv/get", {
-    userId: req.user.userId,
-  }).then((apiRes) => {
-    res.json(apiRes.data);
-    res.send();
-  });
-});
-
-app.get("/tsv/require-for-all", isAuthMiddleware, async function (req, res) {
-  await prisma.xcart_fingerprints.deleteMany({
-    where: {
-      user_id: req.user.userId,
-    },
-  });
-
-  const user = await prisma.xcart_users.findUnique({
-    where: {
-      user_id: req.user.userId,
-    },
-  });
-
-  delete user.password;
-
-  res.json({ user });
 });
 
 app.post("/send-feedback", isAuthMiddleware, async function (req, res) {

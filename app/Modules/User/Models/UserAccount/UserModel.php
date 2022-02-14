@@ -33,7 +33,6 @@ use Xcart\App\QueryBuilder\Q\QOr;
  * @property string location
  * @property string public_name
  * @property string phone_country_code
- * @property string tsv_secret
  * @property string tsv_count
  * @property ProductListsModel[]|Manager lists
  */
@@ -119,9 +118,6 @@ class UserModel extends Model
                 'class' => CharField::class,
                 'null' => true,
                 'unique' => false,
-            ],
-            'tsv_secret' => [
-                'class' => CharField::class,
             ],
             'tsv_count' => [
                 'class' => IntField::class,
@@ -211,18 +207,8 @@ class UserModel extends Model
     public function toArray(): array
     {
         $avatar_image = $this->avatar_image->getValue();
-        $site = Xcart::app()->getModule('Sites')->getSite();
-        $issuer = $site->getCompanyName();
         $attributes = $this->getAttributes();
-
-        //TODO: delete $attributes['id'] = $this->user_id;
-        $attributes['id'] = $this->user_id;
         $attributes['avatar_image'] = $avatar_image ? '/' . $avatar_image : '';
-        $attributes['tsv'] = $this->tsv_secret ? [
-            'url' => GoogleQrUrl::generate($this->email, $this->tsv_secret, $issuer),
-            'secret' => $this->tsv_secret,
-            'count' => (int)$this->tsv_count,
-        ] : [];
 
         return $attributes;
     }

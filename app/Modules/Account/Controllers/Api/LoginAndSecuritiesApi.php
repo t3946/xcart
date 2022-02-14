@@ -13,35 +13,6 @@ use Xcart\App\Main\Xcart;
 
 class LoginAndSecuritiesApi extends Controller
 {
-    /**
-     * edit current user
-     */
-    private function editUser($form): array
-    {
-        /**
-         * @var $user UserModel
-         */
-        $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            return [];
-        }
-
-        $data = json_decode(file_get_contents('php://input'), true);
-        $form->setInstance($user);
-        $form->populate($data);
-
-        if ($form->isValid()) {
-            $form->setInstance($user);
-            $form->populate($data);
-            $form->save();
-
-            return ['user' => $user->toArray()];
-        } else {
-            return ['errors' => $form->getErrors()];
-        }
-    }
-
     public function editName()
     {
         $this->jsonResponse($this->editUser(new EditNameForm()));

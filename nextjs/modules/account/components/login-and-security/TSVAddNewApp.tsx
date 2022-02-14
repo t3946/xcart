@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import * as yup from "yup";
 import { Form, Formik, FormikHelpers } from "formik";
-import { confirmCodeAction } from "@redux/actions/account-actions/TSVActions";
+import { confirmDeviceAction } from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import Link from "next/link";
 import Input from "@modules/ui/forms/Input";
@@ -43,16 +43,19 @@ const TSVAddNewApp = (props: IProps): any => {
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     dispatch(
-      confirmCodeAction({
-        data: values,
-
-        success(res: AxiosResponse) {
-          dispatch(userSetAction(res.data.user));
-          router.push("/login-and-security/two-step-verification-settings");
+      confirmDeviceAction({
+        data: {
+          secret: tsv.secret,
+          code: values.code,
         },
 
-        error(err: any) {
-          actions.setErrors(err);
+        success(res: AxiosResponse) {
+          if (res.data.checkResult === true) {
+            dispatch(userSetAction(res.data.user));
+            router.push("/login-and-security/two-step-verification-settings");
+          } else {
+            actions.setErrors({ code: "Code is wrong" });
+          }
         },
 
         complete() {

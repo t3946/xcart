@@ -3,11 +3,11 @@ import { AnyAction } from "redux";
 import { SagaIterator } from "redux-saga";
 import axios from "axios";
 
-function* confirmCode(action: AnyAction) {
+function* confirmDevice(action: AnyAction) {
   const { data, success, error, complete } = action.payload;
 
   yield axios
-    .post<any>("/api-client/user/tsv/confirm-code", data)
+    .post<any>("/api-client/user/tsv/confirm-device", data)
     .then((res) => {
       res.data.errors ? error(res.data.errors) : success(res);
 
@@ -31,7 +31,7 @@ function* requireForAll(action: AnyAction) {
 }
 
 function* TSVSaga(): SagaIterator {
-  yield takeLatest("ACCOUNT_TSV_CONFIRM_CODE", confirmCode);
+  yield takeLatest("ACCOUNT_TSV_CONFIRM_DEVICE", confirmDevice);
   yield takeLatest("ACCOUNT_TSV_DISABLE", disable);
   yield takeLatest("ACCOUNT_TSV_REQUIRE_FOR_ALL", requireForAll);
 }

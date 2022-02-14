@@ -50,7 +50,7 @@ class ResetPasswordApi extends Controller
     {
         [$otp, $is_new] = self::getOneTimePassword($user->user_id);
 
-        if ($is_new) {
+        if ($is_new || true) {
             $message = "Your reset password OTP: {$otp->one_time_password}. Don't pass this code third party.";
 
             $params = [
@@ -74,9 +74,13 @@ class ResetPasswordApi extends Controller
             ];
 
             $sns->publish($args);
+            Xcart::app()->logger->debug([
+                "message" => $message,
+                "PhoneNumber" => $user->phone,
+            ]);
         }
 
-        $this->jsonResponse(['one_time_password' => $otp->toArray()]);
+        $this->jsonResponse(["otp" => $otp->toArray(), "result" => $result]);
     }
 
     public function sendOneTimePassword(): void

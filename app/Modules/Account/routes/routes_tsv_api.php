@@ -4,20 +4,13 @@ use Modules\Account\Controllers\Api\TSVApi;
 
 return [
     [
-        'route' => '/confirm-code',
-        'target' => [TSVApi::class, 'confirmCodeAction'],
-        'name' => 'confirm-code'
+        'route' => '/generate',
+        'target' => [TSVApi::class, 'generate'],
+        'name' => 'generate'
     ],
-
     [
-        'route' => '/disable',
-        'target' => [TSVApi::class, 'disableAction'],
-        'name' => 'disable'
-    ],
-
-    [
-        'route' => '/get',
-        'target' => [TSVApi::class, 'getAction'],
-        'name' => 'get'
+        'route' => '/check-code',
+        'target' => [TSVApi::class, 'checkCode'],
+        'name' => 'check-code'
     ],
 ];

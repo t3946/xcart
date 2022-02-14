@@ -2,78 +2,49 @@
 
 namespace Modules\Account\Controllers\Api;
 
-use Modules\User\Models\UserAccount\UserModel;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
+use Modules\Account\Models\AuthenticatorsModel;
 
 class TSVApi extends Controller
 {
-    public function confirmCodeAction()
+    /**
+     * generate new tsv secret and qr cod
+    */
+    public function generate()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $user = UserModel::objects()->get(["user_id" => $data["userId"]]);
-        $g = new GoogleAuthenticator();
-        $code = $data["code"];
-        $secret = $user->getAttribute('tsv_secret');
-        $count = $user->getAttribute('tsv_count');
-
-        if (!$secret) {
-            $secret = $g->generateSecret();
-            $user->setAttribute('tsv_secret', $secret);
-            $count = 0;
-            $user->setAttribute('tsv_count', $count);
-            $user->save();
-        }
-
-        if ($g->checkCode($secret, $code)) {
-            $user->setAttribute('tsv_count', $count + 1);
-            $user->save();
-            $attributes = $user->getAttributes();
-            unset($attributes["password"]);
-            $this->jsonResponse(["user" => $attributes]);
-        } else {
-            $this->jsonResponse(["errors" => [
-                "code" => "Code is invalid",
-            ]]);
-        }
-    }
-
-    // создать qr код
-    public function getAction()
-    {
-        $data = json_decode(file_get_contents('php://input'), true);
-        $user = UserModel::objects()->get(["user_id" => $data["userId"]]);
-        $secret = $user->tsv_secret;
-
-        if (!$secret) {
-            $g = new GoogleAuthenticator();
-            $secret = $g->generateSecret();
-            $user->setAttribute('tsv_secret', $secret);
-            $user->save();
-        }
-
+        $secret = (new GoogleAuthenticator())->generateSecret();
         $site = Xcart::app()->getModule('Sites')->getSite();
         $issuer = $site->getCompanyName();
-        $url = GoogleQrUrl::generate($user->email, $secret, $issuer);
-        $this->jsonResponse(["url" => $url, "secret" => $secret]);
+        $url = GoogleQrUrl::generate($data['accountName'], $secret, $issuer);
+        $this->jsonResponse([
+            "secret" => $secret,
+            "url" => $url,
+        ]);
     }
 
-    public function disableAction()
+    public function checkCode()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $user = UserModel::objects()->get(["user_id" => $data["userId"]]);
         $g = new GoogleAuthenticator();
-        $secret = $g->generateSecret();
-        $user->setAttribute('tsv_count', 0);
-        $user->setAttribute('tsv_secret', $secret);
-        $user->save();
+        $check_result = false;
 
-        $attributes = $user->getAttributes();
-        unset($attributes["password"]);
+        if ($data['userId']) {
+            $authenticators = AuthenticatorsModel::objects()->all(["user_id" => $data['userId']]);
 
-        $this->jsonResponse(["user" => $attributes]);
+            foreach ($authenticators as $i => $authenticator) {
+                if ($g->checkCode($authenticator->secret, $data['code'])) {
+                    $check_result = true;
+                    break;
+                }
+            }
+        } else if ($data['secret']) {
+            $check_result = $g->checkCode($data['secret'], $data['code']);
+        }
+
+        $this->jsonResponse(["checkResult" => $check_result]);
     }
 }

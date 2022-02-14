@@ -1,5 +1,5 @@
-export const confirmCodeAction = (payload: Record<any, any>): any => ({
-  type: "ACCOUNT_TSV_CONFIRM_CODE",
+export const confirmDeviceAction = (payload: Record<any, any>): any => ({
+  type: "ACCOUNT_TSV_CONFIRM_DEVICE",
   payload,
 });
 

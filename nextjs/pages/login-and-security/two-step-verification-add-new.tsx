@@ -11,7 +11,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
 
   if (user) {
     await instance
-      .get("/api-client/user/tsv/get")
+      .get("/api-client/user/tsv/generate")
       .then((res: AxiosResponse) => {
         tsv = res.data;
       });
