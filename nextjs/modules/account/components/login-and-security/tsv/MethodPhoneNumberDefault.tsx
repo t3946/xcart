@@ -6,9 +6,27 @@ import Tooltip from "@components/common/tooltip/Tooltip";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useDispatch } from "react-redux";
+import { setPreferredMethodAction } from "@redux/actions/account-actions/TSVActions";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 
 const PhoneNumberAppend: React.FC<any> = function () {
   const user = useSelectorAccount((e) => e.user);
+  const dispatch = useDispatch();
+
+  function setPreferredMethod() {
+    dispatch(
+      setPreferredMethodAction({
+        data: {
+          method: "phone_number",
+        },
+        success(res: AxiosResponse) {
+          dispatch(userSetAction(res.data.user));
+        },
+      })
+    );
+  }
 
   if (!user.phone) {
     return null;
@@ -68,9 +86,9 @@ const PhoneNumberAppend: React.FC<any> = function () {
       </div>
 
       <div className="col-6 col-md-2 col-lg-2 d-flex align-items-end align-items-md-start justify-content-end justify-content-lg-start">
-        <a className={Styles.commonLink} href="#">
+        <span className={Styles.commonLink} onClick={setPreferredMethod}>
           Change
-        </a>
+        </span>
       </div>
 
       <div className="d-none d-lg-block col-2 pe-0" />

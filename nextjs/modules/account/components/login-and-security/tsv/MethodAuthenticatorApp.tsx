@@ -3,13 +3,33 @@ import cn from "classnames";
 import Styles from "@modules/account/components/login-and-security/TSVSettings.module.scss";
 import Link from "next/link";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { setPreferredMethodAction } from "@redux/actions/account-actions/TSVActions";
+import { useDispatch } from "react-redux";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 
 const MethodPhoneNumberAppend: React.FC<any> = function () {
   const user = useSelectorAccount((e) => e.user);
+  const dispatch = useDispatch();
+
+  function setPreferredMethod() {
+    dispatch(
+      setPreferredMethodAction({
+        data: {
+          method: "authenticator_app",
+        },
+        success(res: AxiosResponse) {
+          dispatch(userSetAction(res.data.user));
+        },
+      })
+    );
+  }
 
   function actionsTemplate() {
-    return (
-      <div className="col-6 col-md-2 col-lg-2 d-flex justify-content-end justify-content-lg-start">
+    const actions = [];
+
+    if (!user.phone) {
+      actions.push(
         <Link
           href={
             "/login-and-security/two-step-verification-settings-preferred-method"
@@ -17,6 +37,17 @@ const MethodPhoneNumberAppend: React.FC<any> = function () {
         >
           <a className={Styles.commonLink}>Change</a>
         </Link>
+      );
+    } else {
+      actions.push(
+        <span className={Styles.commonLink} onClick={setPreferredMethod}>
+          Change
+        </span>
+      );
+    }
+    return (
+      <div className="col-6 col-md-2 col-lg-2 d-flex justify-content-end justify-content-lg-start">
+        {actions}
       </div>
     );
   }

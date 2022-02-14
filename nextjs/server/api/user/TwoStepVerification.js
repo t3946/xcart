@@ -126,4 +126,25 @@ api.post(
   }
 );
 
+api.post("/set-preferred-method", isAuthMiddleware, async function (req, res) {
+  await prisma.xcart_users.update({
+    where: {
+      user_id: req.user.userId,
+    },
+    data: {
+      tsv_preferred_method: req.body.method,
+    },
+  });
+
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  delete user.password;
+
+  res.json({ user });
+});
+
 module.exports = api;

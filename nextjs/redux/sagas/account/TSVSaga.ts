@@ -39,10 +39,19 @@ function* changePreferredMethod(action: AnyAction) {
     .then(success);
 }
 
+function* setPreferredMethod(action: AnyAction) {
+  const { data, success } = action.payload;
+
+  yield axios
+    .post<any>("/api-client/user/tsv/set-preferred-method", data)
+    .then(success);
+}
+
 function* TSVSaga(): SagaIterator {
   yield takeLatest("ACCOUNT_TSV_CONFIRM_DEVICE", confirmDevice);
   yield takeLatest("ACCOUNT_TSV_DISABLE", disable);
   yield takeLatest("ACCOUNT_TSV_REQUIRE_FOR_ALL", requireForAll);
+  yield takeLatest("ACCOUNT_TSV_SET_PREFERRED_METHOD", setPreferredMethod);
   yield takeLatest(
     "ACCOUNT_TSV_CHANGE_PREFERRED_METHOD",
     changePreferredMethod
