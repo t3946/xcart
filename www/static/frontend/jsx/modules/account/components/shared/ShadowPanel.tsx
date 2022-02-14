@@ -13,7 +13,7 @@ const ShadowPanel = (): any => {
     HideAllMenu(dispatch);
   }
 
-  const topHeader = document.getElementById("top-header");
+  const topHeader = document.getElementById("header-target");
 
   if (isVisible) {
     document.body.style.overflowY = "hidden";
@@ -24,12 +24,12 @@ const ShadowPanel = (): any => {
   }
 
   const transitionFadeStyles = {
-    position: "absolute",
+    position: "fixed",
     left: 0,
     top: 0,
     width: "100%",
     height: "100%",
-    zIndex: 2,
+    zIndex: -1,
   };
 
   return (

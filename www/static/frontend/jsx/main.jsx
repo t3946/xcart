@@ -15,6 +15,7 @@ import "./_binds/header-target";
 import "./_binds/productSlider";
 import "./_binds/pages/ProductReviewsBind";
 import "bootstrap/dist/js/bootstrap.bundle.js";
+import "./_binds/sticky_menu";
 
 import foundationRegisterCustomEvents from "./_binds/foundation_events";
 

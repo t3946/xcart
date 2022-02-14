@@ -43,68 +43,61 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
   }
 
   return (
-    <div className="sticky-menu-container">
-      <div className="sticky def-zi2">
-        <div
-          id="search_container"
-          className="desktop_menu_search_cart position-relative"
-          data-toggler="show-for-large"
-        >
-          <DepartmentsMenu
-            className={"search-line_departments-menu"}
-            isVisible={isVisibleDepartmentsMenu}
-            buttonHover={departmentsMenuButtonHover}
-            closeMenu={closeDepartmentsMenu}
-          />
+    <div
+      id="search_container"
+      className="desktop_menu_search_cart"
+      data-toggler="show-for-large"
+    >
+      <DepartmentsMenu
+        className={"search-line_departments-menu"}
+        isVisible={isVisibleDepartmentsMenu}
+        buttonHover={departmentsMenuButtonHover}
+        closeMenu={closeDepartmentsMenu}
+      />
 
-          <div className="container-lg">
-            <div className="row">
-              <HoverIntent
-                onMouseOver={() => {
-                  setDepartmentsMenuButtonHover(true);
-                  openDepartmentsMenu();
-                }}
-                onMouseOut={() => {
-                  setDepartmentsMenuButtonHover(false);
-                }}
-                sensitivity={10}
-                interval={250}
-                timeout={250}
-              >
-                <div className="account-page-left-column col pe-0 d-none d-lg-block">
-                  <div className={classnames([Styles.categoryMenuContainer])}>
-                    <div
-                      className={classnames(
-                        Styles.categoryMenu,
-                        "category-menu__new d-flex align-items-center justify-content-center",
-                        {
-                          [Styles.categoryMenu_active]:
-                            isVisibleDepartmentsMenu,
-                        }
-                      )}
-                    >
-                      <span className={Styles.categoryMenuTitle}>
-                        Departments
-                      </span>
+      <div className="container-lg">
+        <div className="row">
+          <HoverIntent
+            onMouseOver={() => {
+              setDepartmentsMenuButtonHover(true);
+              openDepartmentsMenu();
+            }}
+            onMouseOut={() => {
+              setDepartmentsMenuButtonHover(false);
+            }}
+            sensitivity={10}
+            interval={250}
+            timeout={250}
+          >
+            <div className="account-page-left-column col pe-0 d-none d-lg-block">
+              <div className={classnames([Styles.categoryMenuContainer])}>
+                <div
+                  className={classnames(
+                    Styles.categoryMenu,
+                    "category-menu__new d-flex align-items-center justify-content-center",
+                    {
+                      [Styles.categoryMenu_active]: isVisibleDepartmentsMenu,
+                    }
+                  )}
+                >
+                  <span className={Styles.categoryMenuTitle}>Departments</span>
 
-                      <span className={classnames("ms-2", Styles.triangleIcon)}>
-                        <Triangle />
-                      </span>
-                    </div>
-                  </div>
+                  <span className={classnames("ms-2", Styles.triangleIcon)}>
+                    <Triangle />
+                  </span>
                 </div>
-              </HoverIntent>
+              </div>
+            </div>
+          </HoverIntent>
 
-              <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
-                <Search />
+          <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
+            <Search />
 
-                <div className={"d-none d-lg-flex search-line_buttons"}>
-                  <LoginButtonDesktop isStatic={isStatic} />
+            <div className={"d-none d-lg-flex search-line_buttons"}>
+              <LoginButtonDesktop isStatic={isStatic} />
 
-                  <div className="ms-12">
-                    <MiniCart />
-                  </div>
-                </div>
+              <div className="ms-12">
+                <MiniCart />
               </div>
             </div>
           </div>

@@ -91,4 +91,4 @@ const LoginButtonTablet: React.FC<any> = () => {
   );
 };
 
-export default LoginButtonTablet;
+export default React.memo(LoginButtonTablet);
