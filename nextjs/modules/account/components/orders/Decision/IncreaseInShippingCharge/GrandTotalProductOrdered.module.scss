@@ -47,18 +47,18 @@
     position: absolute;
     border: pxToRem(1) solid #9a1524;
     top: pxToRem(-4);
-    width: calc(100% + pxToRem(21));
+    width: calc(100% + pxToRem(86));
     height: calc(100% + pxToRem(8));
 
     @include breakpoint(md) {
       top: pxToRem(-8);
-      width: calc(100% + pxToRem(53));
+      width: calc(100% + pxToRem(145));
       height: calc(100% + pxToRem(16));
     }
 
     @include breakpoint(lg) {
       top: pxToRem(-12);
-      width: calc(100% + pxToRem(28));
+      width: calc(100% + pxToRem(120));
       height: calc(100% + pxToRem(24));
     }
   }

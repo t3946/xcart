@@ -51,6 +51,7 @@ export default class Product extends React.Component {
       "container",
       "grid-catalog-product-info",
       "product-card-info",
+      "px-0",
     ];
 
     if (this.context) {

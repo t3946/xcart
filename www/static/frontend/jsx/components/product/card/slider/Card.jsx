@@ -26,7 +26,7 @@ export default class Card extends Component {
   productMainInfoBlock() {
     return (
       <a href={this.product.url} title={this.product.name}>
-        <h4 className="products-slider-slide-title" itemProp="name">
+        <h4 className="products-slider-slide-title fw-bold" itemProp="name">
           {this.product.name}
         </h4>
       </a>

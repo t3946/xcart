@@ -67,18 +67,6 @@ export default class Image extends Component {
             </span>
           )}
         </a>
-        {images.length === 1 && (
-          <div
-            onClick={(e) => onFlagClick(e, inList)}
-            className="in-list-flag-container"
-          >
-            {inList ? (
-              <BookmarkIcon className="in-list-flag" />
-            ) : (
-              <BookmarkBorder className="in-list-flag" />
-            )}
-          </div>
-        )}
       </div>
     );
   }

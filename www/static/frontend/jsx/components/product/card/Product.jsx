@@ -50,6 +50,7 @@ export default class Product extends Component {
 
     const cardInfoClasses = [
       "container",
+      "px-0",
       "grid-catalog-product-info",
       "product-card-info",
     ];
