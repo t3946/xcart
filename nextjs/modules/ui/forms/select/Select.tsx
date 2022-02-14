@@ -1,11 +1,6 @@
 import React from "react";
 import cn from "classnames";
-import dynamic from "next/dynamic";
-const ReactSelect = dynamic(
-  import("react-select").then((mod) => mod.default),
-  { ssr: false }
-);
-import { components } from "react-select";
+import ReactSelect, { components } from "react-select";
 
 import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
@@ -57,14 +52,15 @@ const Select = function (props: IProps) {
     defaultIsOpen = false,
     isSearchable = true,
   } = props;
-
   return (
     <ReactSelect
       className={cn(Styles.select, classes?.select)}
       defaultMenuIsOpen={defaultIsOpen}
       isClearable={clearable}
-      onChange={(value) => {
-        onChange && onChange({ target: { name, value } });
+      onChange={(newValue) => {
+        value !== newValue &&
+          onChange &&
+          onChange({ target: { name, value: newValue } });
       }}
       value={value}
       name={name}

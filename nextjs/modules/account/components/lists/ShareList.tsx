@@ -4,8 +4,7 @@ import { useDispatch } from "react-redux";
 import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
-import { VariantsEnum } from "@modules/account/components/shared/Snackbar";
+import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 
 interface ShareList {
   onClose: () => void;
