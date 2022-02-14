@@ -3,6 +3,7 @@ import cn from "classnames";
 import Styles from "@modules/account/components/login-and-security/TSVSettings.module.scss";
 
 const MethodPhoneNumberAppend: React.FC<any> = function () {
+  return null;
   return (
     <div className="row two-step-row__bordered mx-0 pb-lg-2 mb-lg-2 tsv-settings-box-content">
       <div className={cn(Styles.text, "col-12 col-md-3 pe-md-0 ps-lg-0 mb-12")}>
