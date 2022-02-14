@@ -1,5 +1,17 @@
 @import "styles/utils/Utils.module";
 
+.page {
+  flex-wrap: nowrap;
+  position: relative;
+  left: 0;
+  transition: left 0.2s;
+  min-height: 100vh;
+}
+
+.page_shifted {
+  left: pxToRem(300);
+}
+
 .pageRow {
   flex-wrap: nowrap;
 }

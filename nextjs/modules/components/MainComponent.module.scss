@@ -1,8 +1,7 @@
 @import "styles/utils/Utils.module";
 
-.account__mainWrapper {
-  position: relative;
-  left: 0;
+.accountMainWrapper {
+  min-height: 100vh;
   padding: 0 0 pxToRem(26) 0;
 
   @include breakpoint(md) {
@@ -14,11 +13,4 @@
   }
 }
 
-.accountMainWrapper {
-  transition: left 0.33s ease-out;
-  min-height: 100vh;
-}
 
-.accountMainWrapper__mainWrapperShifted {
-  left: pxToRem(300);
-}

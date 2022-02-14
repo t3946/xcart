@@ -23,35 +23,11 @@ $(() => {
     <Provider store={Store as any}>
       <DepartmentsMenuMobile />
       <HatNavigation />
+      <HatSearchLine isStatic={true} />
       <ShadowPanel />
       <PhotoSwipeContainer />
       <MenuMobile isStatic={true} />
     </Provider>,
     target
   );
-});
-
-$(() => {
-  const target = document.getElementById("hat-search-line-target");
-
-  if (!target) {
-    return;
-  }
-  //do not print on cart page
-  if (document.location.pathname === route("cart:list")) {
-    return;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  React.render(
-    <Provider store={Store as any}>
-      <HatSearchLine isStatic={true} />
-    </Provider>,
-    target
-  );
-
-  const component = target.firstChild;
-  target.parentNode.insertBefore(component, target);
-  target.remove();
 });

@@ -2,7 +2,7 @@ import { AddressItemDto } from "./address-item.type";
 import { SelectValue } from "./select-value.type";
 import { CardItemDto, SubmitFormDataDto } from "./wallet.type";
 import { VariantsEnum as AlertVariants } from "@modules/account/utils/alert";
-import { VariantsEnum as SnackbarVariants } from "@modules/account/components/shared/Snackbar";
+import { VariantsEnum as SnackbarVariants } from "@modules/account/hooks/useSnackbar";
 import { List } from "@modules/account/ts/types/list.type";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import { OrdersStore as OrdersMainStore } from "@modules/account/ts/types/order/orders-store.types";

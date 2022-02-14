@@ -4,7 +4,12 @@ import {
   hideSnackbar,
 } from "@redux/actions/account-actions/SnackbarActions";
 import React from "react";
-import { VariantsEnum } from "@modules/account/components/shared/Snackbar";
+
+export enum VariantsEnum {
+  success = "success",
+  warning = "warning",
+  error = "error",
+}
 
 export const useSnackbar = () => {
   return { show: setSnackbar, close: () => Store.dispatch(hideSnackbar()) };

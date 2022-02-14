@@ -1,8 +1,6 @@
 import React from "react";
-import {
-  alertIconTemplate,
-  VariantsEnum,
-} from "@modules/account/components/shared/Snackbar";
+import { alertIconTemplate } from "@modules/account/components/shared/Snackbar";
+import { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useDispatch } from "react-redux";
 import TimesIcon from "@modules/icon/components/account/ModalTimes";

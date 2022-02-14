@@ -43,6 +43,14 @@ const OrderTable: React.FC<IProps> = ({
     return itemsTemplate;
   }
 
+  const itemList = Object.keys(items).map((key) => {
+    const itemLine = React.useMemo(
+      () => rowItemTemplates(items[key]),
+      [items[key]]
+    );
+    return itemLine;
+  });
+
   return (
     <div className={cn(Styles.table, classes?.table)}>
       {caption && (
@@ -64,9 +72,9 @@ const OrderTable: React.FC<IProps> = ({
         {rowTemplate(header, "header")}
       </div>
 
-      {items.map((item, index) => (
+      {itemList.map((item, index) => (
         <div className={cn(Styles.row, classes?.row)} key={`row-${index}`}>
-          {rowTemplate(rowItemTemplates(item), "item")}
+          {rowTemplate(item, "item")}
         </div>
       ))}
     </div>

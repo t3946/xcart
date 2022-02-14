@@ -22,6 +22,10 @@ interface IProps {
 
 export const CancelItems: React.FC<IProps> = (props) => {
   const { orderItem } = props;
+  const products = orderItem.groups.reduce(
+    (items, item) => items.concat(item.products),
+    []
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const snackbar = useSnackbar();
@@ -38,16 +42,19 @@ export const CancelItems: React.FC<IProps> = (props) => {
             order_id: router.query.id,
             cancel_text: formik.values.cancelText,
           },
-          items: formik.values.cancelItemsValues.map((e) => {
-            return { ...e, amount: e.amount.value };
+          items: Object.values(formik.values.cancelItemsValues).map((e) => {
+            return { ...e, amount: e.cancelAmount?.value };
           }),
         })
       )
       .then(() => {
         setLoading(false);
+        formik.setSubmitting(false);
         snackbar.show(
-          `Thank you for your cancellation request! We’ll try our best to cancel the items.`
+          `Thank you for your cancellation request! We’ll try our best to cancel the items.`,
+          10000
         );
+        window.scroll(0, 120);
         formik.resetForm();
       });
   };
@@ -55,7 +62,10 @@ export const CancelItems: React.FC<IProps> = (props) => {
   const formik = useFormik({
     initialValues: {
       cancelText: "",
-      cancelItemsValues: [],
+      cancelItemsValues: products.reduce(
+        (initObj, product) => ({ ...initObj, [product.productId]: product }),
+        {}
+      ),
     },
     validationSchema: Yup.object().shape({
       cancelText: Yup.string()
@@ -66,110 +76,93 @@ export const CancelItems: React.FC<IProps> = (props) => {
   });
 
   const updateValueOnCancelItems = (value, id) => {
-    if (formik.values.cancelItemsValues.find((e) => e.order_item_id === id)) {
-      if (value.value === 0) {
-        formik.setFieldValue(
-          "cancelItemsValues",
-          formik.values.cancelItemsValues.filter((e) => e.order_item_id !== id)
-        );
-        return;
-      }
-
-      formik.setFieldValue(
-        "cancelItemsValues",
-        formik.values.cancelItemsValues.map((e) => {
-          if (e.order_item_id === id)
-            return {
-              ...e,
-              amount: value,
-            };
-          return e;
-        })
-      );
-      return;
-    } else if (value.value !== 0) {
-      formik.setFieldValue(
-        "cancelItemsValues",
-        formik.values.cancelItemsValues.concat({
-          order_item_id: id,
-          amount: value,
-        })
-      );
-    }
+    formik.values.cancelItemsValues[id] = {
+      ...formik.values.cancelItemsValues[id],
+      cancelAmount: value,
+    };
+    formik.setFieldValue("cancelItemsValues", formik.values.cancelItemsValues);
   };
 
   const getProductItem = (id) => {
-    return formik.values.cancelItemsValues.find((e) => e.order_item_id === id);
+    return formik.values.cancelItemsValues[id];
   };
 
   return (
-    <>
-      <div className={cn("order-product-list-body-inner p-lg-0")}>
-        <div
-          className={cn(
-            "page-label",
-            "problem-with-order-label",
-            "text-md-start",
-            StylesOrderActions.title,
-            "mb-lg-20"
-          )}
-        >
-          Cancel items
-        </div>
-        <OrderTable
-          theme="red"
-          header={[
-            <span>Item name / SKU</span>,
+    <form
+      onSubmit={formik.handleSubmit}
+      encType="multipart/form-data"
+      className={cn("order-product-list-body-inner p-lg-0")}
+    >
+      <div
+        className={cn(
+          "page-label",
+          "problem-with-order-label",
+          "text-md-start",
+          StylesOrderActions.title,
+          "mb-lg-20"
+        )}
+      >
+        Cancel items
+      </div>
+      <OrderTable
+        theme="red"
+        header={[
+          <span>Item name / SKU</span>,
+          <>
+            <span className="d-none d-lg-block">Quantity Ordered</span>
+            <span className="d-none d-md-block d-lg-none">Qty Ordered</span>
+          </>,
+          <>
+            <span className="d-none d-lg-block">Quantity to cancel</span>
+            <span className="d-lg-none">Qty to cancel</span>
+          </>,
+        ]}
+        items={formik.values.cancelItemsValues}
+        classes={{
+          table: ["px-md-2", "px-lg-0", StylesOrderActions.form__table],
+          rowHat: StylesOrderActions.tableRow_hat,
+          row: StylesOrderActions.tableRow,
+          columns: [
+            "col-sm me-auto",
+            "col-md-3",
+            "col-5 col-sm-3",
+            "text-center",
+            "text-md-end",
+          ],
+        }}
+        rowItemTemplates={(item) => {
+          return [
             <>
-              <span className="d-none d-lg-block">Quantity Ordered</span>
-              <span className="d-none d-md-block d-lg-none">Qty Ordered</span>
+              <ProductCell name={item.product} sku={item.code} />
+              <div className="d-md-none mt-10">Qty Ordered: {item.amount}</div>
             </>,
-            <>
-              <span className="d-none d-lg-block">Quantity to cancel</span>
-              <span className="d-lg-none">Qty to cancel</span>
-            </>,
-          ]}
-          items={orderItem.groups[0].products}
-          classes={{
-            table: ["px-md-2", "px-lg-0", StylesOrderActions.form__table],
-            rowHat: StylesOrderActions.tableRow_hat,
-            row: StylesOrderActions.tableRow,
-            columns: ["col-sm me-auto", "col-md-3", "col-5 col-sm-3"],
-          }}
-          rowItemTemplates={(item) => {
-            return [
-              <>
-                <ProductCell name={item.product} sku={item.code} />
-                <div className="d-md-none mt-10">
-                  Qty Ordered: {item.amount}
-                </div>
-              </>,
 
-              <span className="d-none d-md-block">{item.amount}</span>,
+            <span className="d-none d-md-block">{item.amount}</span>,
 
-              <div className=" ms-auto col-9 col-sm-6">
-                <Select
-                  clearable={false}
-                  classes={{
-                    select: "order-product-select-count",
-                    control: "p-0",
-                  }}
-                  value={
-                    getProductItem(item.productId)?.amount || {
-                      value: 0,
-                      label: 0,
-                    }
+            <div className=" ms-auto col-9 col-sm-6">
+              <Select
+                clearable={false}
+                classes={{
+                  select: "order-product-select-count",
+                  control: "p-0",
+                }}
+                value={
+                  getProductItem(item.productId)?.cancelAmount || {
+                    value: 0,
+                    label: 0,
                   }
-                  options={fillArrayItemsOnOrderActions(item.amount)}
-                  onChange={(e) =>
-                    updateValueOnCancelItems(e.target.value, item.productId)
-                  }
-                />
-              </div>,
-            ];
-          }}
-        />
-        <div className="px-10 px-lg-0">
+                }
+                options={fillArrayItemsOnOrderActions(item.amount)}
+                onChange={(e) =>
+                  updateValueOnCancelItems(e.target.value, item.productId)
+                }
+              />
+            </div>,
+          ];
+        }}
+      />
+      <div className="px-10 px-lg-0">
+        <div className="position-relative mb-4">
           <Input
             as="textarea"
             name={"cancelText"}
@@ -184,52 +177,59 @@ export const CancelItems: React.FC<IProps> = (props) => {
               StylesOrderActions.form__problemTextArea
             )}
           />
-          <Feedback>
+          <Feedback
+            type="invalid"
+            className="d-block top-100 position-absolute"
+          >
             {!!formik.touched.cancelText && formik.errors.cancelText}
           </Feedback>
+        </div>
 
-          <button
-            disabled={!formik.values.cancelItemsValues.length || loading}
-            className={cn(
-              "form-button",
-              "request-cancellation-btn",
-              "w-100",
-              "w-md-auto",
-              "mx-auto",
-              "mx-lg-0",
-              StylesOrderActions.button
-            )}
-            onClick={openRequest}
-          >
-            {loading ? "sending request..." : "REQUEST CANCELLATION"}
-          </button>
+        <button
+          type="submit"
+          disabled={
+            !Object.values(formik.values.cancelItemsValues).filter(
+              (value) => value.cancelAmount && value.cancelAmount.value
+            ).length || formik.isSubmitting
+          }
+          className={cn(
+            "form-button",
+            "request-cancellation-btn",
+            "w-100",
+            "w-md-auto",
+            "mx-auto",
+            "mx-lg-0",
+            StylesOrderActions.button
+          )}
+        >
+          {loading ? "sending request..." : "REQUEST CANCELLATION"}
+        </button>
+        <div
+          className={cn(
+            "order-cancel-items-disclosure",
+            Styles.order__diclosure
+          )}
+        >
           <div
             className={cn(
-              "order-cancel-items-disclosure",
-              Styles.order__diclosure
+              "order-cancel-items-disclosure-title",
+              StylesOrderActions.disclosureTitle,
+              "mb-md-10"
             )}
           >
-            <div
-              className={cn(
-                "order-cancel-items-disclosure-title",
-                StylesOrderActions.disclosureTitle,
-                "mb-md-10"
-              )}
-            >
-              Disclosure
-            </div>
-            <div
-              className={cn(
-                "order-cancel-items-disclosure-subtitle",
-                StylesOrderActions.disclosureSubtitle
-              )}
-            >
-              We’ll try our best to cancel the items, however cancellation is
-              not guaranteed.
-            </div>
+            Disclosure
+          </div>
+          <div
+            className={cn(
+              "order-cancel-items-disclosure-subtitle",
+              StylesOrderActions.disclosureSubtitle
+            )}
+          >
+            We’ll try our best to cancel the items, however cancellation is not
+            guaranteed.
           </div>
         </div>
       </div>
-    </>
+    </form>
   );
 };

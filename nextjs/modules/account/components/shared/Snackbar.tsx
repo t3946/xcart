@@ -8,14 +8,9 @@ import cn from "classnames";
 import { Alert as BAlert } from "react-bootstrap";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import SnackbarMobile from "@modules/account/components/shared/SnackbarMobile";
+import { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 
 import Styles from "@modules/account/components/shared/Snackbar.module.scss";
-
-export enum VariantsEnum {
-  success = "success",
-  warning = "warning",
-  error = "error",
-}
 
 export function alertIconTemplate(variant: VariantsEnum): React.ReactElement {
   const classes = { icon: ["alert_icon", "alert-icon", Styles.alertIcon] };
@@ -86,6 +81,7 @@ const Snackbar: React.FC = () => {
 
   function contentTemplate() {
     switch (snackbar.alert?.variant) {
+      case VariantsEnum.error:
       case VariantsEnum.success:
       case VariantsEnum.warning:
         return (
@@ -101,26 +97,24 @@ const Snackbar: React.FC = () => {
             {snackbar.alert?.message}
           </p>
         );
-      case VariantsEnum.error:
-        return (
-          <>
-            <p
-              className={cn([
-                Styles.alertContent,
-                "position-relative",
-                "m-0",
-                "alert-header",
-                "alert-header__error",
-              ])}
-            >
-              {alertIconTemplate(snackbar.alert?.variant)}
-              There was a problem
-            </p>
-            <p className="alert-content m-0">
-              {{ __html: snackbar.alert?.message }}
-            </p>
-          </>
-        );
+      // case VariantsEnum.error:
+      //   return (
+      //     <>
+      //       <p
+      //         className={cn([
+      //           Styles.alertContent,
+      //           "position-relative",
+      //           "m-0",
+      //           "alert-header",
+      //           "alert-header__error",
+      //         ])}
+      //       >
+      //         {alertIconTemplate(snackbar.alert?.variant)}
+      //         There was a problem
+      //       </p>
+      //       <p className="alert-content m-0">{snackbar.alert?.message}</p>
+      //     </>
+      //   );
     }
   }
 

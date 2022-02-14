@@ -3,7 +3,7 @@ import cn from "classnames";
 import Select from "@modules/ui/forms/select/Select";
 import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
 import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
+import { useSnackbar, VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
@@ -19,20 +19,55 @@ import ProductCell from "@modules/account/components/order/order-table/ProductCe
 import RadioQuestion from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
 import StylesOrderActions from "@modules/account/components/orders/OrderActions.module.scss";
 import Styles from "@modules/account/components/orders/ReturnOrReplaceItems.module.scss";
+import { ViewCarousel } from "@mui/icons-material";
 
 interface IProps {
   orderItem: OrderView;
+}
+function checkProducts(array) {
+  if (array) {
+    let someProductIsFilled = false;
+    for (let i = 0; i < array.length; i++) {
+      const item = array[i];
+      if (
+        (item.amountSelect &&
+          item.amountSelect.value &&
+          !item.quantitySelect) ||
+        (!item.amountSelect && item.quantitySelect && item.quantitySelect.value)
+      ) {
+        return false;
+      }
+      if (
+        item.amountSelect &&
+        item.amountSelect.value &&
+        item.quantitySelect &&
+        item.quantitySelect.value
+      ) {
+        someProductIsFilled = true;
+      }
+    }
+    return !!array.length && someProductIsFilled;
+  }
+  return false;
 }
 
 export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
   const { orderItem } = props;
   const snackbar = useSnackbar();
   const dispatch = useDispatch();
+  const products = orderItem.groups.reduce(
+    (items, item) => items.concat(item.products),
+    []
+  );
+
   const [files, setFiles] = React.useState<File[]>([]);
 
   const initialValues = {
     rmaText: "",
-    rmaItems: [],
+    rmaItems: products.reduce(
+      (initObj, product) => ({ ...initObj, [product.productId]: product }),
+      {}
+    ),
     file: "",
   };
 
@@ -63,8 +98,18 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
   });
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
-    actions.setSubmitting(true);
-
+    const productList = Object.values(values.rmaItems);
+    if (!checkProducts(productList)) {
+      actions.setErrors({});
+      actions.setSubmitting(false);
+      window.scroll(0, 120);
+      snackbar.show(
+        "You must select at least one product",
+        10000,
+        VariantsEnum.error
+      );
+      return;
+    }
     const fd = new FormData();
 
     for (let i = 0; i < files.length; i++) {
@@ -74,11 +119,11 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
     fd.append("orderId", orderItem.orderId);
     fd.append("rmaText", values.rmaText);
 
-    const items = values.rmaItems.map((e) => {
+    const items = productList.map((e) => {
       return {
-        productId: e.productid,
-        amount: e.amountSelect.value,
-        wouldLike: e.quantitySelect.value,
+        productId: e.productId,
+        amount: e.amountSelect?.value,
+        wouldLike: e.quantitySelect?.value,
       };
     });
 
@@ -88,8 +133,9 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
       openRMARequest({
         data: fd,
         success() {
+          window.scroll(0, 120);
           actions.setSubmitting(false);
-          snackbar.show(`Thank you for your rma request!`);
+          snackbar.show(`Thank you for your rma request!`, 10000);
           actions.resetForm();
           setFiles([]);
         },
@@ -97,25 +143,13 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
     );
   }
 
-  const updateValueOnReturnItems = (value, id, values, setValues) => {
-    if (values.rmaItems.find((e: any) => e.productId == id)) {
-      setValues({
-        rmaItems: values.rmaItems.map((e: any) => {
-          if (e.productId === id) return { ...e, ...value };
-          return e;
-        }),
-      });
-
-      return;
-    }
-
-    setValues({
-      rmaItems: values.rmaItems.concat(value),
-    });
+  const updateValueOnReturnItems = (value, id, values, setFieldValue) => {
+    values.rmaItems[id] = value;
+    setFieldValue("rmaItems", values.rmaItems);
   };
 
   const getProductItem = (id, values) => {
-    return values.rmaItems.find((e) => e.productId == id);
+    return { ...values.rmaItems[id] };
   };
 
   return (
@@ -143,7 +177,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
           values,
           errors,
           touched,
-          setValues,
+          setFieldValue,
         }) => {
           return (
             <Form>
@@ -153,11 +187,11 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                   <span>Item name / SKU</span>,
                   <>
                     <span className="d-none d-lg-block">Return quantity</span>
-                    <span className="d-lg-none">Return Qty</span>
+                    <span className="d-lg-none text-nowrap">Return Qty</span>
                   </>,
                   <span className="d-none d-md-block">I would like to</span>,
                 ]}
-                items={orderItem.groups[0].products}
+                items={values.rmaItems}
                 classes={{
                   table: ["px-md-2", "px-lg-0", StylesOrderActions.form__table],
                   rowHat: StylesOrderActions.tableRow_hat,
@@ -167,8 +201,8 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                     StylesOrderActions.tableRow,
                   ],
                   columns: [
-                    "col-8 col-md-auto col-sm me-auto",
-                    "col-4 col-lg-3",
+                    "col-8 col-md-5 col-lg-6 col-sm me-auto",
+                    "col-4 col-md-3 col-lg-3",
                     "col-md-4 col-lg-3",
                     "col-12 col-md-auto",
                   ],
@@ -189,14 +223,14 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                           }
                         }
                         options={fillArrayItemsOnOrderActions(item.amount)}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           updateValueOnReturnItems(
                             { ...item, amountSelect: e.target.value },
                             item.productId,
                             values,
-                            setValues
-                          )
-                        }
+                            setFieldValue
+                          );
+                        }}
                       />
                     </div>,
 
@@ -211,14 +245,14 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                             label: "Select an option",
                           }
                         }
-                        onChange={(e) =>
+                        onChange={(e) => {
                           updateValueOnReturnItems(
                             { ...item, quantitySelect: e.target.value },
                             item.productId,
                             values,
-                            setValues
-                          )
-                        }
+                            setFieldValue
+                          );
+                        }}
                         options={returnSelectValues}
                       />
                     </div>,
@@ -250,7 +284,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                           { ...item, quantitySelect: e.target.value },
                           item.productId,
                           values,
-                          setValues
+                          setFieldValue
                         )
                       }
                     />,
@@ -260,18 +294,18 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
               <div className="px-10 px-lg-0">
                 <Input
                   as="textarea"
-                  name={"problem_text"}
+                  name={"rmaText"}
                   onChange={handleChange}
                   disabled={isSubmitting}
                   placeholder="Explain why you would like to return products for a refund
                   or replace them with the same or different products"
-                  value={values.problem_text}
-                  isValid={touched.problem_text && !errors.problem_text}
-                  isInvalid={!!touched.problem_text && !!errors.problem_text}
+                  value={values.rmaText}
+                  isValid={touched.rmaText && !errors.rmaText}
+                  isInvalid={!!touched.rmaText && !!errors.rmaText}
                   className={cn("mt-4", StylesOrderActions.problemTextArea)}
                 />
-                <Feedback type="invalid">
-                  {!!touched.problem_text && errors.problem_text}
+                <Feedback className="position-absolute" type="invalid">
+                  {!!touched.rmaText && errors.rmaText}
                 </Feedback>
 
                 <div
@@ -334,15 +368,18 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                 </div>
 
                 <button
-                  disabled={isSubmitting}
+                  type="submit"
+                  disabled={
+                    !checkProducts(Object.values(values.rmaItems)) ||
+                    isSubmitting
+                  }
                   className={cn(
                     "form-button",
                     "submit-to-rma-dep-btn",
                     "w-md-auto",
                     "mx-md-auto",
                     "mx-lg-0",
-                    StylesOrderActions.button,
-                    "mb-4"
+                    StylesOrderActions.button
                   )}
                 >
                   <span className={"d-lg-none"}>REQUEST CANCELLATION</span>
@@ -350,6 +387,12 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                     Submit to RMA department
                   </span>
                 </button>
+                <Feedback
+                  className="d-block text-md-center text-lg-start mb-4"
+                  type="invalid"
+                >
+                  {!!touched.rmaItems && errors.rmaItems}
+                </Feedback>
               </div>
             </Form>
           );

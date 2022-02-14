@@ -11,11 +11,3 @@
 * {
   font-family: Lato, sans-serif;
 }
-
-#__next {
-  overflow: hidden;
-
-  @include breakpoint(lg) {
-    overflow: visible;
-  }
-}
