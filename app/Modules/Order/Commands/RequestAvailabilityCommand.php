@@ -12,12 +12,12 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Commands\Command;
 use Modules\Distributor\Helpers\DistributorHelper;
+use Xcart\App\Main\Xcart;
 
 class RequestAvailabilityCommand extends Command
 {
     public const REQUEST_AVAILABILITY_CB_STATUSES = [
         OrderStatusModel::ORDER_STATUS_COMPLETED,
-        OrderStatusModel::ORDER_STATUS_QUEUED,
         OrderStatusModel::ORDER_STATUS_UNPAID_PO,
         OrderStatusModel::ORDER_STATUS_AUTHORIZED
     ];
