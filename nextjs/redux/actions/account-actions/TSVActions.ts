@@ -12,3 +12,10 @@ export const requireForAllAction = (payload: Record<any, any>): any => ({
   type: "ACCOUNT_TSV_REQUIRE_FOR_ALL",
   payload,
 });
+
+export const changePreferredMethodAction = (
+  payload: Record<any, any>
+): any => ({
+  type: "ACCOUNT_TSV_CHANGE_PREFERRED_METHOD",
+  payload,
+});

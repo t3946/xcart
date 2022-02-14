@@ -9,12 +9,16 @@ import StoreInterface from "@modules/account/ts/types/store.type";
 import FormInputPhone, {
   phoneYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
-
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { changePreferredMethodAction } from "@redux/actions/account-actions/TSVActions";
+import { useRouter } from "next/router";
 
 const TSVChangePreferredMethod: React.FC<any> = function () {
   const countries = useSelector((e: StoreInterface) => e.countries);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const initialValues = {
     phoneCode: "",
@@ -29,22 +33,22 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
 
   function submit(values, actions) {
     const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
-    const form = {
-      phone: `+${phoneCode}${values.phone.replace(/[+()\-\s]/gim, "")}`,
-    };
+    const phone = `+${phoneCode}${values.phone.replace(/[+()\-\s]/gim, "")}`;
 
     dispatch(
-      editPhoneAction({
-        form,
-
-        success(res) {},
-
-        error(err) {
-          actions.setErrors(err);
+      changePreferredMethodAction({
+        data: {
+          phone,
         },
 
-        complete() {
-          actions.setSubmitting(false);
+        success(res: AxiosResponse) {
+          if (res.data.errors) {
+            actions.setErrors(res.data.errors);
+            return;
+          }
+
+          dispatch(userSetAction(res.data.user));
+          router.push("/login-and-security/two-step-verification-settings");
         },
       })
     );

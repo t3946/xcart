@@ -1,6 +1,4 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import { disableAction } from "@redux/actions/account-actions/TSVActions";
@@ -14,8 +12,10 @@ import StylesLoginAndSecurity from "@modules/account/components/login-and-securi
 import cn from "classnames";
 import { AxiosResponse } from "axios";
 import SuppressedDevices from "@modules/account/components/login-and-security/tsv/SuppressedDevices";
-import Tooltip from "@components/common/tooltip/Tooltip";
 import Styles from "@modules/account/components/login-and-security/TSVSettings.module.scss";
+import Methods, {
+  EListType,
+} from "@modules/account/components/login-and-security/tsv/Methods";
 
 const TSVSettings = (): any => {
   const disableTSVModal = useDialog();
@@ -24,12 +24,6 @@ const TSVSettings = (): any => {
   const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
 
   useSelector((e: StoreInterface) => e.main.breakpoint);
-
-  function tsvCountTemplate() {
-    if (user.tsv_count) {
-      return <div>{user.tsv_count} app(s) enrolled</div>;
-    }
-  }
 
   function disableTSVHandler() {
     setIsDisableTsvSending(true);
@@ -123,158 +117,9 @@ const TSVSettings = (): any => {
           Styles.pageBody,
         ]}
       >
-        <div className="row two-step-row__bordered two-step-row__header mx-0 pb-lg-2 lg-2">
-          <div className="col-12 px-lg-0">
-            <h3
-              className={cn(
-                Styles.caption,
-                "mb-0",
-                "content-h3",
-                "tsv-settings-box-header"
-              )}
-            >
-              Preferred method
-            </h3>
-          </div>
-        </div>
+        <Methods type={EListType.PREFERRED} />
 
-        <div className="row two-step-row__bordered mx-0 pb-lg-2 mb-lg-2 tsv-settings-box-content">
-          <div
-            className={cn(
-              Styles.text,
-              "col-12",
-              "col-md-3",
-              "ps-lg-0",
-              "mb-3",
-              "mb-lg-0"
-            )}
-          >
-            Authenticator App
-            {tsvCountTemplate()}
-          </div>
-
-          <div className="col-6 col-md-4 col-lg-5 d-flex justify-content-md-center">
-            <Link
-              exact={true}
-              href={"/login-and-security/two-step-verification-add-new"}
-            >
-              <span className={Styles.commonLink}>Add new app</span>
-            </Link>
-          </div>
-
-          <div className="col-6 col-md-2 col-lg-2 d-flex justify-content-end justify-content-lg-start">
-            <Link
-              exact={true}
-              href={
-                "/login-and-security/two-step-verification-settings-preferred-method"
-              }
-            >
-              <span className={Styles.commonLink}>Change</span>
-            </Link>
-          </div>
-
-          <div className="d-none d-lg-block col-lg-2 pe-0" />
-        </div>
-
-        <div className="row two-step-row__bordered two-step-row__header mx-0 pb-lg-2 lg-2 mt-lg-20">
-          <div className="col-12 px-lg-0">
-            <h3
-              className={cn(
-                Styles.caption,
-                "mb-0",
-                "content-h3",
-                "tsv-settings-box-header"
-              )}
-            >
-              Backup methods
-            </h3>
-          </div>
-        </div>
-
-        <div className="row two-step-row__bordered mx-0 pb-lg-2 mb-lg-2 tsv-settings-box-content">
-          <div
-            className={cn(
-              Styles.text,
-              "col-12 col-md-3 pe-md-0 ps-lg-0 mb-12 mb-lg-0"
-            )}
-          >
-            +79195153333
-            <br />
-            Sent by text message
-          </div>
-
-          <div className="col-6 col-md-4 col-lg-5 text-md-center">
-            <span className="d-block d-md-inline-block">Phone number</span>
-
-            <Tooltip
-              overlay={
-                <div>
-                  <h2 className={"common-tooltip-header"}>
-                    <b>Your phone number</b>
-                  </h2>
-
-                  <p className={"text-align--left auth-form-info mb-0"}>
-                    This is the number listed as your Mobile Phone Number in
-                    Account Settings. During 2SV challenges, this phone number
-                    will be included as an option to receive the One Time
-                    Password (OTP). To change your phone number,{" "}
-                    <a href="#" className={Styles.commonLink}>
-                      click here
-                    </a>
-                    .
-                  </p>
-                </div>
-              }
-            >
-              <span
-                className={cn(
-                  "common-link",
-                  "ms-md-2",
-                  "d-block",
-                  "d-md-inline-block"
-                )}
-              >
-                Learn more
-                <FontAwesomeIcon
-                  className={"ms-1 two-step-learn-more"}
-                  icon={faQuestionCircle}
-                />
-              </span>
-            </Tooltip>
-          </div>
-
-          <div className="col-6 col-md-2 col-lg-2 d-flex align-items-end align-items-md-start justify-content-end justify-content-lg-start">
-            <a className={Styles.commonLink} href="#">
-              Change
-            </a>
-          </div>
-
-          <div className="d-none d-lg-block col-2 pe-0" />
-        </div>
-
-        <div className="row two-step-row__bordered mx-0 pb-lg-2 mb-lg-2 tsv-settings-box-content">
-          <div
-            className={cn(Styles.text, "col-12 col-md-3 pe-md-0 ps-lg-0 mb-12")}
-          >
-            +79195153333
-            <br />
-            Sent by text message
-          </div>
-
-          <div className="d-none d-lg-block col-5 col-md-3 col-lg-5" />
-
-          <div className="order-1 order-md-0 col-6 col-md-6 col-lg-2 text-end text-lg-start">
-            <a className={Styles.commonLink} href="#">
-              Change
-            </a>
-          </div>
-
-          <div className="col-6 col-md-3 col-lg-2 pe-lg-0 d-flex d-lg-block justify-content-md-end">
-            <a className={Styles.commonLink} href="#">
-              Remove
-            </a>
-          </div>
-        </div>
+        <Methods type={EListType.BACKUP} />
 
         <div className="row m-0 mb-lg-2">
           <h3

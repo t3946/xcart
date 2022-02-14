@@ -5885,6 +5885,7 @@ model xcart_users {
   access_token             String?                   @db.VarChar(16)
   tsv_suppressed           Int?                      @default(0)
   stripe_customer_id       String?                   @db.VarChar(32)
+  tsv_preferred_method     xcart_users_tsv_preferred_method @default(phone_number)
   account_addresses        account_addresses[]
   account_credit_cards     account_credit_cards[]
   account_transactions     account_transactions[]
@@ -6585,4 +6586,9 @@ enum xcart_taxes_apply_to {
 enum xcart_templates_for_communication_active {
   Y
   N
+}
+
+enum xcart_users_tsv_preferred_method {
+  authenticator_app @map("authenticator_app")
+  phone_number @map("phone_number")
 }

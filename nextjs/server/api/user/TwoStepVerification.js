@@ -78,4 +78,52 @@ api.get("/require-for-all", isAuthMiddleware, async function (req, res) {
   res.json({ user });
 });
 
+api.post(
+  "/change-preferred-method",
+  isAuthMiddleware,
+  async function (req, res) {
+    const userWithPassedPhone = await prisma.xcart_users.findFirst({
+      where: {
+        phone: req.body.phone,
+      },
+    });
+
+    if (
+      userWithPassedPhone &&
+      userWithPassedPhone.user_id !== req.user.userId
+    ) {
+      res.json({ errors: { phone: "This phone already exits" } });
+      return;
+    }
+
+    const countryCode = parseInt(req.body.phone.slice(1, -10));
+    const country = await prisma.xcart_countries.findUnique({
+      where: {
+        phone_code: countryCode,
+      },
+    });
+
+    await prisma.xcart_users.update({
+      where: {
+        user_id: req.user.userId,
+      },
+      data: {
+        phone: req.body.phone,
+        phone_country_code: country.code,
+        tsv_preferred_method: "phone_number",
+      },
+    });
+
+    const user = await prisma.xcart_users.findUnique({
+      where: {
+        user_id: req.user.userId,
+      },
+    });
+
+    delete user.password;
+
+    res.json({ user });
+  }
+);
+
 module.exports = api;
