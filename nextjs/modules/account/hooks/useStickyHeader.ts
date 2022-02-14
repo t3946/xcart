@@ -11,7 +11,6 @@ export const useStickyHeader = () => {
   const updateStyle = () => {
     window.requestAnimationFrame(function () {
       const delta = lastScroll - window.scrollY;
-      console.log(topSticky + delta);
       if (-ref.current.offsetHeight >= topSticky + delta) {
         topSticky = -ref.current.offsetHeight - 1;
       } else if (0 <= topSticky + delta) {
@@ -19,15 +18,9 @@ export const useStickyHeader = () => {
       } else {
         topSticky += delta;
       }
-      setStyle((prevstate) => {
-        console.log(prevstate, {
-          top: topSticky + "px",
-          position: "sticky",
-        });
-        return {
-          top: topSticky + "px",
-          position: "sticky",
-        };
+      setStyle({
+        top: topSticky + "px",
+        position: "sticky",
       });
       lastScroll = window.scrollY;
     });
