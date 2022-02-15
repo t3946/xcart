@@ -73,7 +73,6 @@ const LoginButtonDesktop: React.FC = function () {
         >
           <div className={cn("sidebar-menu-wrapper", Styles.sidebarContainer)}>
             <SidebarMenu classes={{ item: "pe-2" }} showLogout />
-            {/* <LogoutButton onClick={logoutButtonClickHandler} /> */}
           </div>
         </div>
       );

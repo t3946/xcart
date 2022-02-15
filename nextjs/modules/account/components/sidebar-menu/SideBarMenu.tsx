@@ -8,8 +8,7 @@ import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordio
 import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.scss";
 import { useDispatch } from "react-redux";
 import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
-import { setMobileMenuIsVisible } from "@redux/actions/account-actions/MenuActions";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 
 const classes = {
   dropdownItem: [StylesItem.item_topLevel, StylesItem.item],
@@ -27,7 +26,6 @@ const SideBarMenu: React.FC<IProps> = (props) => {
   const { asPath: activePath } = useRouter();
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
   const menuItems = [
     { to: "/dashboard", label: "Dashboard" },
     {
@@ -63,7 +61,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
   ];
 
   React.useEffect(() => {
-    let sidebar = [];
+    const sidebar = [];
     for (const item of menuItems) {
       sidebar.push({ to: item.to, active: false });
     }
@@ -80,10 +78,9 @@ const SideBarMenu: React.FC<IProps> = (props) => {
               label={value.label}
               badge={value.badge}
               className={[classes.dropdownItem, props.classes?.item]}
-              onClick={breakpoint({
-                xs: () => () => dispatch(setMobileMenuIsVisible(false)),
-                lg: () => {},
-              })}
+              onClick={() => {
+                dispatch(hideAllMenu());
+              }}
               key={index}
               active={value.to === activePath}
             />
