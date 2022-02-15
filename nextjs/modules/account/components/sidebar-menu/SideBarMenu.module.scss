@@ -1,9 +1,8 @@
 @import "styles/utils/Utils.module";
 
 .sidebarMenuWrapper {
-  position: sticky;
-  top: pxToRem(70);
   overflow-y: scroll;
+  max-height: calc(100vh - 53px);
 
   @include breakpoint(md) {
     max-height: calc(100vh - 81px);
