@@ -11,6 +11,7 @@ import TransitionFade from "@client/modules/account/components/shared/Transition
 import UserIcon from "@client/modules/account/components/hat/LoginButton/UserIcon";
 
 import LoginButtonStyles from "@client/modules/account/components/hat/LoginButton/LoginButton.module.scss";
+import Styles from "@client/modules/account/components/hat/LoginButton/LoginButtonTablet.module.scss";
 
 const LoginButtonTablet: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const LoginButtonTablet: React.FC<any> = () => {
       >
         <UserIcon />
 
-        {text}
+        <span className={Styles.userName}>{text}</span>
 
         <i
           className={classNames(

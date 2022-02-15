@@ -6,6 +6,9 @@ import { route } from "@client/jsx/utils/AppData";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
+import cn from "classnames";
+
+import Styles from "@client/jsx/modules/account/components/sidebar-menu/SideBarMenu.module.scss";
 
 interface IProps {
   classes?: {
@@ -62,31 +65,33 @@ const SideBarMenu: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className="sidebar-menu-wrapper">
-      {menuItems.map((value: Record<any, any>) => {
-        if (!value.routerItems) {
+    <div className={cn("sidebar-menu-wrapper")}>
+      <div className={Styles.sidebarMenuWrapper}>
+        {menuItems.map((value: Record<any, any>) => {
+          if (!value.routerItems) {
+            return (
+              <SideBarMenuItem
+                to={value.to}
+                label={value.label}
+                badge={value.badge}
+                className={["sidebar-menu_top-level-item", props.classes?.item]}
+                onClick={value.onClick}
+              />
+            );
+          }
+
           return (
-            <SideBarMenuItem
+            <SideBarMenuAccordion
               to={value.to}
               label={value.label}
-              badge={value.badge}
-              className={["sidebar-menu_top-level-item", props.classes?.item]}
-              onClick={value.onClick}
+              routerItems={value.routerItems}
+              classes={{ handlerClass: "sidebar-menu_top-level-item" }}
             />
           );
-        }
+        })}
 
-        return (
-          <SideBarMenuAccordion
-            to={value.to}
-            label={value.label}
-            routerItems={value.routerItems}
-            classes={{ handlerClass: "sidebar-menu_top-level-item" }}
-          />
-        );
-      })}
-
-      {logoutButtonTemplate()}
+        {logoutButtonTemplate()}
+      </div>
     </div>
   );
 };
