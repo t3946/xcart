@@ -22,7 +22,7 @@ const AddBillingAddress: React.FC<IProps> = (props) => {
     <BootstrapDialogHOC
       onClose={handleClose}
       show={open}
-      title={`Edit payment method`}
+      title={`Add billing address`}
       classes={{
         modal: StylesAddresses.modalWidth,
         body: StylesAddresses.modalBody,

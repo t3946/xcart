@@ -21,7 +21,7 @@ const CardDialog: React.FC<IProps> = (props) => {
     <BootstrapDialogHOC
       onClose={handleClose}
       show={open}
-      title={`Edit payment method`}
+      title={`Add Card`}
       classes={{ modal: "payment-method__modal" }}
     >
       <AddCardForm />
