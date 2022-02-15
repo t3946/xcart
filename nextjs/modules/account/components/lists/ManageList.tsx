@@ -41,9 +41,10 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
   const loading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   const classes = {
-    inputGroup: "d-flex justify-content-between mb-lg-20",
-    label: "col-lg-4",
-    input: "col-lg-8",
+    inputGroup: "d-flex flex-wrap justify-content-lg-between mb-20",
+    label:
+      "col-12 col-md-6 col-lg-4 text-md-end text-lg-start pe-4 mb-10 mb-md-0",
+    input: "col-12 col-md-6 col-lg-8",
     feedback: "mt-0 position-absolute",
   };
 
@@ -176,9 +177,16 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
           </div>
         </div>
 
-        <div className="d-flex justify-content-between align-center">
-          <label className={classnames("form-input-label")}>Birthday</label>
-          <div className="d-flex justify-content-between list-input-manage-list">
+        <div className={classnames(classes.inputGroup)}>
+          <label className={classnames("form-input-label", classes.label)}>
+            Birthday
+          </label>
+          <div
+            className={classnames(
+              "d-flex justify-content-between",
+              classes.input
+            )}
+          >
             <Select
               clearable={false}
               options={monthItems}
@@ -206,29 +214,28 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
           </div>
         </div>
 
-        <div className="d-flex justify-content-between align-items-center">
-          <Label>Shipping Address</Label>
-          <Select
-            clearable={false}
-            options={getValuesForSelect(
-              addresses || [],
-              "address_id",
-              "full_name"
-            )}
-            name={"shippingAddress"}
-            onChange={formik.handleChange}
-            value={formik.values.shippingAddress}
-            classes={{
-              select: [
-                "select-address-on-manage-list",
-                "list-input-manage-list",
-              ],
-            }}
-          />
+        <div className={classnames(classes.inputGroup)}>
+          <Label className={classnames(classes.label)}>Shipping Address</Label>
+          <div className={classnames(classes.input)}>
+            <Select
+              clearable={false}
+              options={getValuesForSelect(
+                addresses || [],
+                "address_id",
+                "full_name"
+              )}
+              name={"shippingAddress"}
+              onChange={formik.handleChange}
+              value={formik.values.shippingAddress}
+              classes={{
+                select: ["select-address-on-manage-list"],
+              }}
+            />
+          </div>
         </div>
 
         <div className={"d-flex justify-content-end manage-list-checkbox"}>
-          <div className="list-input-manage-list">
+          <div className={classnames(classes.input)}>
             <FormCheckBox
               label={"Keep purchased items on this list"}
               value={formik.values.isPurchase}
@@ -240,7 +247,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
         </div>
 
         <div className={"d-flex justify-content-end manage-list-checkbox"}>
-          <div className="list-input-manage-list">
+          <div className={classnames(classes.input)}>
             <FormCheckBox
               label={"Make this list default"}
               value={formik.values.isDefault}
@@ -250,12 +257,12 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
             />
           </div>
         </div>
-        
+
         <SubmitCancelButtonsGroup
           submitText="Confirm"
           cancelText="Cancel"
           onCancel={onCancelClick}
-          groupAdvancedClasses={"manage-list-btns"}
+          groupAdvancedClasses={"manage-list-btns mx-md-auto mx-lg-0"}
           disabled={loading}
         />
       </form>
