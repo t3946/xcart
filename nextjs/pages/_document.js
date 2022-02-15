@@ -24,6 +24,11 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <script dangerouslySetInnerHTML={createMarkup()} />
+          <script
+            src="https://www.google.com/recaptcha/api.js?hl=en"
+            async
+            defer
+          />
         </Head>
         <body>
           <Main />

@@ -11,7 +11,7 @@ const mail = require("../../services/mail");
 const AxiosInstance = axios.create({
   baseURL: process.env.BASE_URL_NGINX,
 });
-const apiTwoStepVerification =  require("./TwoStepVerification");
+const apiTwoStepVerification = require("./TwoStepVerification");
 const apiStripe = require("./stripe/Stripe");
 const stripeService = require("../../services/stripe");
 
@@ -88,9 +88,12 @@ app.post("/check-login", async function (req, res) {
       ],
     },
   });
+  const maxWrongPasswordAttempts = 3;
 
   if (user) {
-    res.send();
+    res.send({
+      captchaRequired: user.wrong_password_attempts >= maxWrongPasswordAttempts,
+    });
   } else {
     res.json({ error: "User not found", user: req.body });
   }
@@ -107,7 +110,6 @@ app.post("/create", async function (req, res) {
   if (users.length) {
     res.json({ error: { email: "This email already registered" } });
   } else {
-
     const user = await prisma.xcart_users.create({
       data: {
         email,

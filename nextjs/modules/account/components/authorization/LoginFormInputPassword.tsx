@@ -24,17 +24,41 @@ interface IProps {
   goToOTPInput: () => void;
   setPassword: (password: string) => void;
   setRememberMe: (rememberMe: boolean) => void;
+  isCaptchaRequired: boolean;
+  setIsCaptchaRequired: (isCaptchaRequired: boolean) => void;
 }
 
 const LoginFormInputPassword = function (props: IProps): any {
   const dispatch = useDispatch();
   const router = useRouter();
   const inputRef = React.createRef<HTMLInputElement>();
-  const { goToInputLogin, goToOTPInput, login, setPassword, setRememberMe } =
-    props;
+  const {
+    goToInputLogin,
+    goToOTPInput,
+    login,
+    setPassword,
+    setRememberMe,
+    isCaptchaRequired,
+    setIsCaptchaRequired,
+  } = props;
+  const [captcha, setCaptcha] = React.useState<number>(null);
 
   React.useEffect(() => {
     inputRef.current?.focus();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (grecaptcha && captcha === null && isCaptchaRequired) {
+      const widget = grecaptcha.render(
+        document.getElementById(
+          "g-recaptcha-6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
+        ),
+        {
+          sitekey: "6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6",
+        }
+      );
+
+      setCaptcha(widget);
+    }
   }, []);
 
   const initialState = {
@@ -62,6 +86,10 @@ const LoginFormInputPassword = function (props: IProps): any {
         fingerprint: await generateFp(),
       };
 
+      if (captcha !== null) {
+        data.captcha = grecaptcha.getResponse(captcha);
+      }
+
       dispatch(
         loginAction({
           form: data,
@@ -69,10 +97,35 @@ const LoginFormInputPassword = function (props: IProps): any {
           success(res: any) {
             actions.setSubmitting(false);
 
+            if (
+              !isCaptchaRequired &&
+              res.data.error.password === "Captcha required"
+            ) {
+              setIsCaptchaRequired(true);
+
+              if (captcha === null) {
+                const widget = grecaptcha.render(
+                  document.getElementById(
+                    "g-recaptcha-6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
+                  ),
+                  {
+                    sitekey: "6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6",
+                  }
+                );
+
+                setCaptcha(widget);
+              }
+              return;
+            }
+
             if (res.data.user) {
               dispatch(userSetAction(res.data.user));
               router.push("/dashboard");
               return;
+            }
+
+            if (captcha !== null) {
+              grecaptcha.reset(captcha);
             }
 
             if (res.data.error === "Need OTP") {
@@ -152,6 +205,17 @@ const LoginFormInputPassword = function (props: IProps): any {
                   <Feedback type="invalid">
                     {!!touched.password && errors.password}
                   </Feedback>
+
+                  <div
+                    id="g-recaptcha-6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
+                    className={cn([
+                      "g-recaptcha",
+                      {
+                        "mt-3": captcha !== null,
+                      },
+                    ])}
+                    data-sitekey="6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
+                  />
                 </RBForm.Group>
               </div>
 

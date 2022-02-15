@@ -69,7 +69,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
             actions.setErrors({ login: error });
           } else {
             setLogin(form.login);
-            props.goToPasswordInput();
+            props.goToPasswordInput(res.data.captchaRequired);
             props.setLastSentForm(form);
           }
         },

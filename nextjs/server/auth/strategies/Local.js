@@ -39,9 +39,53 @@ module.exports = function (passport) {
         user.password
       );
 
+      const maxWrongPasswordAttempts = 3;
+
+      if (user.wrong_password_attempts >= maxWrongPasswordAttempts) {
+        if (req.body.captcha) {
+          let recaptchaPassed;
+
+          await axios
+            .post("https://www.google.com/recaptcha/api/siteverify", null,{
+              params: {
+                secret: "6Le71nweAAAAADfhvwQeioTAIaHxI5Y9v2q8pWlz",
+                response: req.body.captcha,
+              },
+            })
+            .then((resApi) => {
+              recaptchaPassed = resApi.data.success;
+            });
+
+          if (!recaptchaPassed) {
+            return done({ message: { password: "Captcha is invalid" } }, null);
+          }
+        } else {
+          return done({ message: { password: "Captcha required" } }, null);
+        }
+      }
+
       if (!isPasswordsMatch) {
+        await prisma.xcart_users.update({
+          where: {
+            user_id: user.user_id,
+          },
+          data: {
+            wrong_password_attempts: user.wrong_password_attempts + 1,
+          },
+        });
+
         return done({ message: { password: "Wrong password" } }, null);
       }
+
+      //reset wrong_password_attempts
+      await prisma.xcart_users.update({
+        where: {
+          user_id: user.user_id,
+        },
+        data: {
+          wrong_password_attempts: 0,
+        },
+      });
 
       delete user.password;
 

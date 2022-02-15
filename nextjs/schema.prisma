@@ -5882,6 +5882,7 @@ model xcart_users {
   phone_country_code       String?                   @db.VarChar(2)
   tsv_count                Int?                      @default(0) @db.UnsignedSmallInt
   decisions_required_count Int                       @default(0) @db.UnsignedTinyInt
+  wrong_password_attempts  Int                       @default(0) @db.UnsignedTinyInt
   access_token             String?                   @db.VarChar(16)
   tsv_suppressed           Int?                      @default(0)
   stripe_customer_id       String?                   @db.VarChar(32)

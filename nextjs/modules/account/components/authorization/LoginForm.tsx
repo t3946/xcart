@@ -23,6 +23,7 @@ const LoginForm: React.FC<any> = () => {
   const [password, setPassword] = React.useState<any>("");
   const [login, setLogin] = React.useState<any>("");
   const [rememberMe, setRememberMe] = React.useState<any>(false);
+  const [isCaptchaRequired, setIsCaptchaRequired] = React.useState(false);
 
   function headerTemplate() {
     switch (mode) {
@@ -52,8 +53,10 @@ const LoginForm: React.FC<any> = () => {
             login={lastSentForm.login}
             goToInputLogin={goToInputLogin}
             goToOTPInput={goToOTPInput}
+            isCaptchaRequired={isCaptchaRequired}
             setPassword={setPassword}
             setRememberMe={setRememberMe}
+            setIsCaptchaRequired={setIsCaptchaRequired}
           />
         );
       case INPUT_OTP_MODE:
@@ -75,7 +78,8 @@ const LoginForm: React.FC<any> = () => {
     setMode(INPUT_LOGIN_MODE);
   }
 
-  function goToPasswordInput(): void {
+  function goToPasswordInput(isCaptchaRequired: boolean): void {
+    setIsCaptchaRequired(isCaptchaRequired);
     setMode(INPUT_PASSWORD_MODE);
   }
 
