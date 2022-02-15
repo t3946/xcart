@@ -24,6 +24,7 @@ const Item: React.FC<IProps> = (props: IProps) => {
       Styles.ordersNavigationButton,
       Styles.ordersNavigation__button,
       props.classes?.button,
+      "flex-grow-1",
       {
         [Styles.ordersNavigationButton_active]: active,
         [Styles.ordersNavigationButton_badge]: badge,

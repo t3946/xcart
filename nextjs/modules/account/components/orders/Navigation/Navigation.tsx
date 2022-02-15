@@ -14,11 +14,11 @@ const Navigation: React.FC<IProps> = ({ orderId }) => {
   const user = useSelectorAccount((e: StoreInterface) => e.user);
 
   const menu = [
-    {
-      text: "Decisions required",
-      path: "decisions-required",
-      badge: user?.decisions_required_count || 0,
-    },
+    // {
+    //   text: "Decisions required",
+    //   path: "decisions-required",
+    //   badge: user?.decisions_required_count || 0,
+    // },
     {
       text: "Order tracking",
       path: "order-tracking",
@@ -44,7 +44,7 @@ const Navigation: React.FC<IProps> = ({ orderId }) => {
     ),
   });*/
   return (
-    <div className={" order-info-header"}>
+    <div className={"order-info-header"}>
       {menu.map((value, index) => (
         <Item
           {...value}
