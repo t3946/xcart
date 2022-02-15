@@ -12,6 +12,5 @@ export interface UserStore {
   public_name: string;
   rate_us: string;
   tsv_count: string;
-  tsv_secret: string;
   user_id: number;
 }

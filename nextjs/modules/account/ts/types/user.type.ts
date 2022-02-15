@@ -12,5 +12,4 @@ export interface User {
   public_name: string | null;
   rate_us: string | null;
   tsv_count: string | null;
-  tsv_secret: string;
 }

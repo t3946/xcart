@@ -163,8 +163,6 @@ class UserModel extends Model
     public function register()
     {
         $this->password = PasswordHelper::hash($this->password);
-        $g = new GoogleAuthenticator();
-        $this->tsv_secret = $g->generateSecret();
         $this->save();
     }
 
@@ -216,6 +214,7 @@ class UserModel extends Model
     /**
      * Match qr-code secret with otp
      * @param string $otp one time password
+     * @deprecated
      * @return boolean
      */
     public function checkTSVCode(string $otp): bool

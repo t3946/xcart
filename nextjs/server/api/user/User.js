@@ -116,7 +116,6 @@ app.post("/create", async function (req, res) {
         name,
         password: await passwordUtils.encryptPassword(password),
         access_token: generateToken(),
-        tsv_secret,
       },
     });
 
