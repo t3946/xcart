@@ -1,14 +1,24 @@
 import React from "react";
+import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 export const useStickyHeader = () => {
-  const breakpoint = useSelectorAccount((e) => e.main.breakpoint);
+  const breakpoint = useBreakpoint();
+  const lg = useSelectorAccount((e) => e.main.breakpoint?.lg);
   let topSticky = 0;
   const [style, setStyle] = React.useState({});
   const ref = React.useRef<HTMLDivElement>();
   let lastScroll = 0;
 
-  const updateStyle = () => {
+  function removeStickyHandler() {
+    setStyle({
+      top: "-107px",
+      position: "sticky",
+    });
+    document.removeEventListener("scroll", updateStyle);
+  }
+
+  function updateStyle(e) {
     window.requestAnimationFrame(function () {
       const delta = lastScroll - window.scrollY;
       if (-ref.current.offsetHeight >= topSticky + delta) {
@@ -24,13 +34,21 @@ export const useStickyHeader = () => {
       });
       lastScroll = window.scrollY;
     });
-  };
+  }
   React.useEffect(() => {
-    breakpoint?.lg
-      ? window.removeEventListener("scroll", updateStyle)
-      : window.addEventListener("scroll", updateStyle);
-    return () => window.removeEventListener("scroll", updateStyle);
-  }, [breakpoint.lg]);
+    breakpoint({
+      xs: function () {
+        document.addEventListener("scroll", updateStyle);
+      },
+      lg: removeStickyHandler,
+    });
+
+    return removeStickyHandler;
+  }, [lg]);
+
+  React.useEffect(() => {
+    return removeStickyHandler;
+  }, []);
 
   return [style, ref];
 };

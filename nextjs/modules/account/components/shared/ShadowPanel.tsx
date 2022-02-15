@@ -23,6 +23,12 @@ const ShadowPanel = (): any => {
     zIndex: 2,
   };
 
+  React.useEffect(() => {
+    isVisible
+      ? (document.body.style = "overflow: hidden;")
+      : (document.body.style = "");
+  }, [isVisible]);
+
   return (
     <TransitionFade show={isVisible} styles={transitionFadeStyles}>
       <div className={Styles.shadowPanel} onClick={clickHandler} />

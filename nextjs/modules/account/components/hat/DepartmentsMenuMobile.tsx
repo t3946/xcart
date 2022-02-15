@@ -1,7 +1,9 @@
 import React from "react";
 import classnames from "classnames";
-import { useSelector } from "react-redux";
-import { StoreDto } from "@s3stores-mail/ts/types";
+import { useSelector, useDispatch } from "react-redux";
+import { setDepartmentsMenuMobileIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuMobileActions";
+import HideAllMenu from "@modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import Accordion from "react-bootstrap/Accordion";
 import AccordionContext from "react-bootstrap/AccordionContext";
 import { useAccordionButton } from "react-bootstrap/AccordionButton";
@@ -11,15 +13,20 @@ import MinusIcon from "@modules/icon/components/font-awesome/minus/Light";
 import ChevronRightIcon from "@modules/icon/components/font-awesome/chevron-right/Light";
 import cn from "classnames";
 import Styles from "@modules/account/components/hat/DepartmentsMenuMobile.module.scss";
+import TimesIcon from "@modules/icon/components/font-awesome/times/Light";
 
 const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
-  const departmentsMenu = useSelector(
-    (e: StoreDto) => e.departmentsMenu.mobile
-  );
+  const dispatch = useDispatch();
+  const departmentsMenu = useSelector((e) => e.departmentsMenu.mobile);
 
-  const isVisibleMenu = useSelector(
-    (e: StoreDto) => e.departmentsMenuMobile.isVisible
-  );
+  const isVisibleMenu = useSelector((e) => e.departmentsMenuMobile.isVisible);
+
+  function hideMobileDepartmentsMenu(e: any) {
+    e.stopPropagation();
+    HideAllMenu(dispatch);
+    dispatch(setDepartmentsMenuMobileIsVisibleAction(false));
+    dispatch(setVisibleShadowPanelAction(false));
+  }
 
   const classes = {
     container: [
@@ -157,7 +164,12 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
 
   return (
     <div className={classnames(classes.container)}>
-      <h3 className="departments-menu-mobile-hat m-0">Departments</h3>
+      <h3 className="departments-menu-mobile-hat m-0 d-flex align-items-center justify-content-between">
+        Departments
+        <span onClick={hideMobileDepartmentsMenu}>
+          <TimesIcon className={Styles.menuIcon} />
+        </span>
+      </h3>
 
       <Accordion
         className={cn(Styles.departmentsMenuMobileAccordion, "overflow-auto")}

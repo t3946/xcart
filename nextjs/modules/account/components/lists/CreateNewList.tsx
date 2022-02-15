@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {useSnackbar} from "@modules/account/hooks/useSnackbar";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
@@ -41,6 +41,7 @@ export const CreateNewList: React.FC<CreateNewList> = ({
   const router = useRouter();
 
   const { loading } = useSelectorAccount((e) => e.lists);
+  const countList = useSelectorAccount((e) => e.lists.lists?.length);
 
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {
@@ -56,7 +57,7 @@ export const CreateNewList: React.FC<CreateNewList> = ({
 
   const formik = useFormik({
     initialValues: {
-      name: `Shopping List`,
+      name: `Shopping List ${countList ? countList + 1 : 1}`,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Required field"),

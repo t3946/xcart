@@ -8,7 +8,6 @@ import _merge from "lodash/merge";
 import ShadowPanel from "@modules/account/components/shared/ShadowPanel";
 import Styles from "@modules/account/components/layout/Page.module.scss";
 import cn from "classnames";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   showBreadcrumbs?: boolean;
@@ -19,19 +18,13 @@ const Page: React.FC<IProps> = (props: IProps): any => {
     showBreadcrumbs: true,
   };
   const { showBreadcrumbs } = _merge(defaultProps, props);
-  const isVisibleMobileMenu = useSelectorAccount(
-    (state) => state.departmentsMenuMobile.isVisible
-  );
+
 
   return (
     <>
       <ShadowPanel />
       <DepartmentsMenuMobile />
-      <div
-        className={cn(Styles.page, {
-          [Styles.page_shifted]: isVisibleMobileMenu,
-        })}
-      >
+      <div className={cn(Styles.page)}>
         <HatNavigation />
         <HatSearchLine />
         <MenuMobile />
