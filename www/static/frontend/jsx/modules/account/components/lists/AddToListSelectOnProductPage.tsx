@@ -34,7 +34,8 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
 ) => {
   const { name, label = "", product } = props;
   const lists = Store.getState().lists.lists;
-  const productInfo = product || Object.keys(AppData?.products)[0];
+  const productId = Object.keys(AppData?.products)[0];
+  const productInfo = product || AppData?.products[productId];
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);
@@ -58,7 +59,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     breakpoint({
       xs: () =>
         window.location.assign(
-          `/account/shopping-lists/actions/add-list/${productInfo}`
+          `/account/shopping-lists/actions/add-list/${productId}`
         ),
       sm: createListDialog.handleClickOpen,
     });
@@ -67,7 +68,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     if (
       lists
         .find((e) => e.productListId === listId)
-        ?.products.find((e) => e.productId === productInfo)
+        ?.products.find((e) => e.productId === parseInt(productId))
     ) {
       setIsAlreadyInList(true);
       setSelectedList(lists.find((e) => e.productListId === listId));
@@ -78,7 +79,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     setIsAlreadyInList(false);
 
     dispatch(
-      addProduct(listId, productInfo, null, () => showAddProductContent(listId))
+      addProduct(listId, productId, null, () => showAddProductContent(listId))
     );
 
     setSelectedList(lists.find((e) => e.productListId === listId));
@@ -88,7 +89,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     setSelectedList(listInfo);
     createListDialog.handleClose();
     dispatch(
-      addProduct(listInfo.productListId, productInfo, null, () =>
+      addProduct(listInfo.productListId, productId, null, () =>
         showAddProductContent(listInfo.productListId)
       )
     );
@@ -225,7 +226,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       <CreateNewListDialog
         open={createListDialog.open}
         handleClose={createListDialog.handleClose}
-        productId={productInfo}
+        productId={productId}
         onProductAdded={onCreateList}
         actionType={"product"}
       />

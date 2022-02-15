@@ -191,12 +191,21 @@ class AccountListsApi extends Controller
         $data = json_decode(file_get_contents('php://input'), true);
 
         if ($data['productId']) {
-            $list_product_model = new ListItemsModel([
+            $list_item = ListItemsModel::objects()->get([
                 'product_id' => $data['productId'],
                 'product_list_id' => $data['listId'],
-                'product_type' => 'product'
             ]);
-            $list_product_model->save();
+
+            // add item if no exists
+            if (!$list_item) {
+                $list_product_model = new ListItemsModel([
+                    'product_id' => $data['productId'],
+                    'product_list_id' => $data['listId'],
+                    'product_type' => 'product'
+                ]);
+                $list_product_model->save();
+            }
+
             $this->jsonResponse([]);
             return;
         }

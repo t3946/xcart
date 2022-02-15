@@ -15,12 +15,13 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
   isAlreadyInList,
   product,
 }) => {
+  console.log("AddProductToList", {product})
   const viewYourList = () => {
     window.location.assign(`/account/shopping-lists/${info.cacheUrl}`);
   };
 
-  const productInfo = product || window.appData?.productInfo?.product;
   const text = isAlreadyInList ? "This item was already in" : "1 item added to";
+
   return (
     <div>
       <div className="add-product-to-list-label-container d-flex">
@@ -31,11 +32,11 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
       </div>
       <div className="add-product-to-list-content">
         <img
-          src={productInfo?.image}
+          src={product.image}
           className="add-product-to-list-content-img"
         />
         <div className="add-product-to-list-content-text">
-          {productInfo?.product}
+          {product.product}
         </div>
       </div>
       <SubmitCancelButtonsGroup
