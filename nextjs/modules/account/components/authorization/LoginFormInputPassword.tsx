@@ -101,6 +101,7 @@ const LoginFormInputPassword = function (props: IProps): any {
 
             if (
               !isCaptchaRequired &&
+              res.data.error &&
               res.data.error.password === "Captcha required"
             ) {
               setIsCaptchaRequired(true);
@@ -119,6 +120,7 @@ const LoginFormInputPassword = function (props: IProps): any {
             }
 
             if (res.data.user) {
+              setIsCaptchaRequired(false);
               dispatch(userSetAction(res.data.user));
               router.push("/dashboard");
               return;
