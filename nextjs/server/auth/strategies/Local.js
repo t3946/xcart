@@ -48,7 +48,7 @@ module.exports = function (passport) {
           await axios
             .post("https://www.google.com/recaptcha/api/siteverify", null,{
               params: {
-                secret: "6Le71nweAAAAADfhvwQeioTAIaHxI5Y9v2q8pWlz",
+                secret: "6LenP30eAAAAAOo7P0vvQSGN-6aosCRuhUg2w5YR",
                 response: req.body.captcha,
               },
             })

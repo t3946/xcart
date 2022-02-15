@@ -95,6 +95,7 @@ class AccountApi extends Controller
                     'shortName' => $site->short_name,
                     'workingDayTimeNow' => WorkingTimeHelper::workingDayTimeNow(),
                 ],
+                'google_recaptchav2_site_key' => '6LenP30eAAAAAOUcOLvofYoaPMW6lMYTsov-RJ4p',
             ],
             'departmentsMenu' => [
                 'desktop' => GoodsMenuLibrary::toArrayDesktop(),

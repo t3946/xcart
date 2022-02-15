@@ -17,6 +17,7 @@ import Styles from "@modules/account/components/authorization/LoginForm.module.s
 import generateFp from "@utils/generateFp";
 import Tooltip from "@components/common/tooltip/Tooltip";
 import { formatPhone } from "@utils/phoneNumber";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   login: string;
@@ -42,6 +43,10 @@ const LoginFormInputPassword = function (props: IProps): any {
     setIsCaptchaRequired,
   } = props;
   const [captcha, setCaptcha] = React.useState<number>(null);
+  const google_recaptchav2_site_key = useSelectorAccount(
+    (e) => e.config.google_recaptchav2_site_key
+  );
+  console.log({ google_recaptchav2_site_key });
 
   React.useEffect(() => {
     inputRef.current?.focus();
@@ -49,11 +54,9 @@ const LoginFormInputPassword = function (props: IProps): any {
     // @ts-ignore
     if (grecaptcha && captcha === null && isCaptchaRequired) {
       const widget = grecaptcha.render(
-        document.getElementById(
-          "g-recaptcha-6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
-        ),
+        document.getElementById("g-recaptcha-v2"),
         {
-          sitekey: "6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6",
+          sitekey: google_recaptchav2_site_key,
         }
       );
 
@@ -105,11 +108,9 @@ const LoginFormInputPassword = function (props: IProps): any {
 
               if (captcha === null) {
                 const widget = grecaptcha.render(
-                  document.getElementById(
-                    "g-recaptcha-6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
-                  ),
+                  document.getElementById("g-recaptcha-v2"),
                   {
-                    sitekey: "6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6",
+                    sitekey: google_recaptchav2_site_key,
                   }
                 );
 
@@ -207,14 +208,14 @@ const LoginFormInputPassword = function (props: IProps): any {
                   </Feedback>
 
                   <div
-                    id="g-recaptcha-6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
+                    id="g-recaptcha-v2"
                     className={cn([
                       "g-recaptcha",
                       {
                         "mt-3": captcha !== null,
                       },
                     ])}
-                    data-sitekey="6Le71nweAAAAAO2TcovHD0StZgnzUwnCuZquBjg6"
+                    data-sitekey={google_recaptchav2_site_key}
                   />
                 </RBForm.Group>
               </div>
