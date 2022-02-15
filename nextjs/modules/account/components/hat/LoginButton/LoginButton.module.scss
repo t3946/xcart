@@ -11,7 +11,8 @@
 
 .userAvatar {
   width: auto;
-  height: 67%;
+  height: auto;
+  max-height: 67%;
   border-radius: 100px;
 
   @include breakpoint(lg) {

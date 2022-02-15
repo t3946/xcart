@@ -49,7 +49,6 @@ import throttle from "lodash/throttle";
         height: heightOfStickyBlock + "px",
         top: topSticky + "px",
       });
-      console.log("addEvent");
       window.addEventListener("scroll", processScroll);
     };
 

@@ -85,7 +85,7 @@ const MenuMobile: React.FC<IProps> = (props: IProps) => {
 
   const classes = {
     menu: [
-      "account-hat-dropdown-menu__mobile account-hat_mobile-menu",
+      "account-hat-dropdown-menu__mobile account-hat_mobile-menu position-fixed",
       {
         "d-none": !mobileMenuIsVisible,
       },

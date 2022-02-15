@@ -1,15 +1,15 @@
-@import "styles/utils/Utils.module";
+@import "~style-modules/sass-utils";
 
 .sidebarMenuWrapper {
   overflow-y: scroll;
-  max-height: calc(100vh - 53px);
+  max-height: calc(100vh - 73px);
 
-  @include breakpoint(md) {
+  @include breakpoint(md up) {
     max-height: calc(100vh - 81px);
     overflow-y: scroll;
   }
 
-  @include breakpoint(lg) {
+  @include breakpoint(lg up) {
     max-height: initial;
     overflow: initial;
   }

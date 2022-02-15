@@ -1,0 +1,9 @@
+@import "~style-modules/sass-utils";
+
+.userName {
+  flex: 1 1;
+  white-space: nowrap;
+  overflow: hidden;
+  -webkit-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}

@@ -11,11 +11,13 @@
 
 .userAvatar {
   width: auto;
-  height: 67%;
+  height: auto;
+  max-height: 57%;
   border-radius: 100px;
 
   @include breakpoint(lg up) {
     width: rem-calc(30);
+    height: rem-calc(30);
   }
 }
 
