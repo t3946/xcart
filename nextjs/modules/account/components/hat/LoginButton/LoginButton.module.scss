@@ -16,7 +16,7 @@
   border-radius: 100px;
 
   @include breakpoint(lg) {
-    height: auto;
+    height: pxToRem(30);
     width: pxToRem(30);
   }
 }

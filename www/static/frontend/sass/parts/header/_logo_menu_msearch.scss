@@ -1,9 +1,6 @@
 @import "../all_pages/page_width";
 
 header {
-  border-bottom: 1px solid;
-  border-bottom-color: #cdcdcd;
-
   transition: border-bottom-color 300ms ease-out;
 
   .logo_menu {
@@ -29,7 +26,7 @@ header {
       width: rem-calc(25);
       height: rem-calc(19);
 
-      @include breakpoint(medium){
+      @include breakpoint(medium) {
         width: rem-calc(39);
         height: rem-calc(30);
       }
@@ -68,7 +65,7 @@ header {
           }
 
           @include breakpoint(ml down) {
-            &:nth-child(1n+3) {
+            &:nth-child(1n + 3) {
               display: none;
             }
           }
@@ -89,12 +86,12 @@ header {
               color: red;
 
               &:before {
-                content: '';
+                content: "";
                 background: url("/dist/images/stop-corona_sm.png") no-repeat;
-                position:relative;
+                position: relative;
                 width: rem-calc(46);
                 height: rem-calc(46);
-                top:rem-calc(16);
+                top: rem-calc(16);
                 display: inline-block;
                 margin-right: rem-calc(4);
               }
@@ -105,34 +102,37 @@ header {
     }
 
     .mobile__search-btn {
-      background: url("/static/frontend/dist/images/icons/header/magnifier_thin.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/magnifier_thin.svg")
+        no-repeat;
       width: rem-calc(25);
       height: rem-calc(25);
 
-      @include breakpoint(medium){
+      @include breakpoint(medium) {
         width: rem-calc(45);
         height: rem-calc(48);
       }
     }
 
     .mobile__call-btn {
-      background: url("/static/frontend/dist/images/icons/header/phone-call1.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/phone-call1.svg")
+        no-repeat;
       width: rem-calc(25);
       height: rem-calc(25);
 
-      @include breakpoint(medium){
+      @include breakpoint(medium) {
         width: rem-calc(48);
         height: rem-calc(48);
       }
     }
 
     .mobile__cart {
-      background: url("/static/frontend/dist/images/icons/header/cart.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/cart.svg")
+        no-repeat;
       position: relative;
       width: rem-calc(33);
       height: rem-calc(25);
 
-      @include breakpoint(medium){
+      @include breakpoint(medium) {
         width: rem-calc(63);
         height: rem-calc(48);
       }
@@ -143,9 +143,9 @@ header {
 
       .count {
         @include border-radius(10px);
-        background: #F12D2D;
+        background: #f12d2d;
         font: {
-          size: .75em;
+          size: 0.75em;
           weight: 800;
         }
         padding: 0 5px;
@@ -187,19 +187,19 @@ header {
   border-bottom-color: #ffffff;
 }
 
-#top-header-menu{
-  position:relative;
-  z-index:3;
-  min-width: get-width('small');
+#top-header-menu {
+  position: relative;
+  z-index: 3;
+  min-width: get-width("small");
 
-  &.header-fixed{
-    position:fixed;
+  &.header-fixed {
+    position: fixed;
   }
 }
 #top-header {
   overflow: hidden;
 
-  @include breakpoint(sm){
+  @include breakpoint(sm) {
     overflow: visible;
   }
   @include breakpoint(lg up) {
@@ -208,10 +208,10 @@ header {
 }
 
 .header-fixed {
-  position:fixed;
+  position: fixed;
   z-index: 1499;
   width: 100%;
-  #top-header{
+  #top-header {
     background-color: white;
   }
 }

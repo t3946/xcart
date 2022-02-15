@@ -27,11 +27,11 @@ const SideBarMenu: React.FC<IProps> = (props) => {
       to: "",
       label: "Orders",
       routerItems: [
-        {
-          to: route("account:order-decisions-required"),
-          label: "Decisions required",
-          badge: user?.decisions_required_count || 0,
-        },
+        // {
+        //   to: route("account:order-decisions-required"),
+        //   label: "Decisions required",
+        //   badge: user?.decisions_required_count || 0,
+        // },
         { to: "/account/orders/open-orders", label: "Open orders" },
         { to: "/account/orders/canceled-orders", label: "Cancelled orders" },
         { to: "/account/orders/completed-orders", label: "Completed orders" },
@@ -39,7 +39,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
       ],
     },
     {
-      to: "/account/your-lists",
+      to: "/account/shopping-lists",
       label: "Shopping Lists",
     },
     { to: "/account/addresses", label: "Addresses" },
@@ -53,7 +53,6 @@ const SideBarMenu: React.FC<IProps> = (props) => {
     },
     { to: "/account/login-and-security", label: "Login & security" },
     { to: "/account/public-profile", label: "Public profile" },
-    { to: "/account/rewards", label: "Rewards" },
   ];
 
   function logoutButtonTemplate(): any {
