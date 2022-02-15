@@ -46,7 +46,6 @@ const LoginFormInputPassword = function (props: IProps): any {
   const google_recaptchav2_site_key = useSelectorAccount(
     (e) => e.config.google_recaptchav2_site_key
   );
-  console.log({ google_recaptchav2_site_key });
 
   React.useEffect(() => {
     inputRef.current?.focus();
