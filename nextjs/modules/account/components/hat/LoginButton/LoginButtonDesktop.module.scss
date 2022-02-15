@@ -36,6 +36,8 @@
 .sidebarContainer {
   max-height: pxToRem(500);
   overflow-y: auto;
+  scrollbar-color: dark;
+  scrollbar-width: thin;
 
   &::-webkit-scrollbar {
     width: pxToRem(7);

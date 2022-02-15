@@ -1,6 +1,7 @@
 import React from "react";
 import classnames from "classnames";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setDepartmentsMenuMobileIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuMobileActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
 import Accordion from "react-bootstrap/Accordion";
 import AccordionContext from "react-bootstrap/AccordionContext";
@@ -9,8 +10,14 @@ import Card from "react-bootstrap/Card";
 import PlusIcon from "@client/modules/icon/components/font-awesome/plus/Light";
 import MinusIcon from "@client/modules/icon/components/font-awesome/minus/Light";
 import ChevronRightIcon from "@client/modules/icon/components/font-awesome/chevron-right/Light";
+import TimesIcon from "@client/jsx/modules/icon/components/font-awesome/times/Light";
+import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
+import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+
+import Styles from "@client/jsx/modules/account/components/hat/DepartmentsMenuMobile.module.scss";
 
 const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
+  const dispatch = useDispatch();
   const departmentsMenu = useSelector(
     (e: StoreDto) => e.departmentsMenu.mobile
   );
@@ -31,13 +38,11 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
     ],
   };
 
-  const mainWrapper = document.getElementById("main_wrapper");
-  const shiftMainWrapperClass = "account-main-wrapper_main-wrapper-shifted";
-
-  if (isVisibleMenu) {
-    mainWrapper.classList.add(shiftMainWrapperClass);
-  } else {
-    mainWrapper.classList.remove(shiftMainWrapperClass);
+  function hideMobileDepartmentsMenu(e) {
+    e.stopPropagation();
+    HideAllMenu(dispatch);
+    dispatch(setDepartmentsMenuMobileIsVisibleAction(false));
+    dispatch(setVisibleShadowPanelAction(false));
   }
 
   function ContextAwareToggle({ children, eventKey, index }) {
@@ -160,7 +165,12 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
 
   return (
     <div className={classnames(classes.container)}>
-      <h3 className="departments-menu-mobile-hat m-0">Departments</h3>
+      <h3 className="departments-menu-mobile-hat m-0 d-flex justify-content-between align-items-center">
+        Departments
+        <span onClick={hideMobileDepartmentsMenu}>
+          <TimesIcon className={Styles.menuIcon} />
+        </span>
+      </h3>
 
       <Accordion className={"departments-menu-mobile-accordion overflow-auto"}>
         {menuItemsTemplate()}

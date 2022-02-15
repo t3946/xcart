@@ -11,9 +11,7 @@ function resizeHandler() {
   Store.dispatch(setBreakpoint(getBreakpointsFlags(getScreenWidth())));
 }
 
-export default function useBreakpoint(): (
-  actions: Record<any, any>
-) => any {
+export default function useBreakpoint(): (actions: Record<any, any>) => any {
   if (process.browser) {
     window.removeEventListener("resize", resizeHandler);
     window.addEventListener("resize", resizeHandler);

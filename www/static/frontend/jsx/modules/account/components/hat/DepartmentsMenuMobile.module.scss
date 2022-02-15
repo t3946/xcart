@@ -1,0 +1,12 @@
+@import "~style-modules/sass-utils";
+
+.menuIcon {
+  cursor: pointer;
+  width: 2.5625rem;
+  height: 1.5075rem;
+
+  @include breakpoint(md up) {
+    width: 2.4375rem;
+    height: 1.875rem;
+  }
+}
