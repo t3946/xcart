@@ -73,6 +73,10 @@ const ProductReviews: React.FC = function () {
     const ratingElements = [];
 
     if (ratings) {
+      if (ratings.features.length === 0) {
+        return null;
+      }
+
       for (let i = 0; i < ratings.features.length; i++) {
         const {rating} = ratings.features[i];
         const total = parseInt(ratings.features[i].total);
@@ -113,7 +117,13 @@ const ProductReviews: React.FC = function () {
     }
 
     return (
-      <ul className={"product-rating list-unstyled m-0"}>{ratingElements}</ul>
+      <>
+        <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
+          By feature
+        </h4>
+
+        <ul className={"product-rating list-unstyled m-0"}>{ratingElements}</ul>
+      </>
     );
   }
 
@@ -208,10 +218,6 @@ const ProductReviews: React.FC = function () {
           </h3>
 
           {overallRatingTemplate()}
-
-          <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
-            By feature
-          </h4>
 
           {featureRatingsTemplate()}
 
