@@ -93,7 +93,14 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
           <div className="col account-page-right-column d-flex align-items-center mt-2 mt-lg-0">
             <Search />
 
-            <div className={"d-none d-lg-flex search-line_buttons"}>
+            <div
+              className={classnames(
+                "d-none ",
+                "d-lg-flex ",
+                "search-line_buttons",
+                Styles.rightButtonContainer
+              )}
+            >
               <LoginButtonDesktop isStatic={isStatic} />
 
               <div className="ms-12">
