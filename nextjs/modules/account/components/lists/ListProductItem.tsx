@@ -24,6 +24,10 @@ import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
 import Styles from "@modules/account/components/lists/ListProductItem.module.scss";
+import {
+  getAction as cartGetAction,
+  setAction as cartSetAction,
+} from "@redux/actions/CartActions";
 
 export const ListProductItem: React.FC<ListProductItemProps> = ({
   productItem,
@@ -45,6 +49,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   const breakpoint = useBreakpoint();
   const deleteProductDialog = useDialog();
   const mobileMenuDialog = useDialog();
+  const [disabledAddToCart, setDisabledAddToCart] = React.useState(false);
 
   const [countProductsOnCart, setCountProductsOnCart] = useState(
     product.minAmount
@@ -223,16 +228,28 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         </div>
         {!product.outOfStock && (
           <ListProductItemBtns
+            disabledAddToCart={disabledAddToCart}
             btnLabel={"Add to cart"}
             edit={edit}
             // outOfStock={info.product}
             deleteItem={deleteProductDialog.handleClickOpen}
-            onMainBtnClick={() =>
-              cartAdd(
-                data,
-                snackbar.show(`${productItem.product.product} added to cart`)
-              )
-            }
+            onMainBtnClick={() => {
+              setDisabledAddToCart(true);
+
+              cartAdd(data, () => {
+                dispatch(
+                  cartGetAction({
+                    success(res) {
+                      dispatch(cartSetAction({ cart: res.data }));
+                      snackbar.show(
+                        `${productItem.product.product} added to cart`
+                      );
+                      setDisabledAddToCart(false);
+                    },
+                  })
+                );
+              });
+            }}
             time={productItem.add_date}
             listId={productItem.product_list_id}
             productId={productItem.productId}

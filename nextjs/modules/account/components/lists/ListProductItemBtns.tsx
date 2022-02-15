@@ -33,6 +33,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   time,
   listId,
   outOfStock,
+  disabledAddToCart,
 }) => {
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
@@ -60,7 +61,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
     <div className={Styles.container}>
       <Button
         theme={mainBtnType}
-        disabled={outOfStock}
+        disabled={outOfStock || disabledAddToCart}
         className={cn("full-width-button", "fw-bold", Styles.button)}
         onClick={onMainBtnClick}
       >
