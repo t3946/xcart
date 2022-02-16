@@ -29,6 +29,17 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     const groups = await prisma.xcart_order_groups.findMany({
       where: {
         orderid: order.orderid,
+        OR: [
+          {
+            cb_status: "AP",
+          },
+          {
+            cb_status: "P",
+          },
+          {
+            cb_status: "Q",
+          },
+        ],
       },
     });
 
