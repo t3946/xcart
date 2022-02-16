@@ -9,7 +9,7 @@ import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StripeField from "@modules/ui/StripeField";
 import * as stripeJs from "@stripe/stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
-import Button from "@modules/ui/forms/Button";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 import { addCardSaga } from "@redux/actions/account-actions/PaymentsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
@@ -18,6 +18,8 @@ import { addCardFormValidationSchema } from "@modules/account/ts/consts/add-card
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import FormGroup from "@modules/ui/forms/FormGroup";
+import AddBillingAddressForm from "./AddBillingAddressForm";
+import cn from "classnames";
 
 export const AddCardForm: React.FC = () => {
   const stripe = useStripe();
@@ -29,10 +31,9 @@ export const AddCardForm: React.FC = () => {
     )
   );
 
-  const context = useContext(WalletCardsDialogContext);
-  const router = useRouter();
+  const [addAddressForm, setAddAddressForm] = React.useState(false);
+
   const dispatch = useDispatch();
-  const breakPoint = useBreakpoint();
 
   React.useEffect(() => {
     dispatch(getAddresses(user.user_id));
@@ -60,7 +61,6 @@ export const AddCardForm: React.FC = () => {
 
     if (!cardToken) {
       actions.setSubmitting(false);
-      console.log(1);
       return;
     }
     const data = {
@@ -82,7 +82,11 @@ export const AddCardForm: React.FC = () => {
   function onCardReady(cardElement: stripeJs.StripeCardElement) {}
 
   return (
-    <div className="billing-address-container add-card-form-container">
+    <div
+      className={cn("billing-address-container", {
+        "add-card-form-container": !addAddressForm,
+      })}
+    >
       <Formik
         initialValues={initialAddCardFormValue}
         onSubmit={submit}
@@ -98,6 +102,17 @@ export const AddCardForm: React.FC = () => {
           isSubmitting,
           setErrors,
         }) => {
+          if (addAddressForm) {
+            return (
+              <AddBillingAddressForm
+                onSubmitted={(address) => {
+                  setFieldValue("address", address.address_id.toString());
+                  setAddAddressForm(false);
+                }}
+                onCancel={() => setAddAddressForm(false)}
+              />
+            );
+          }
           return (
             <Form className="your-order-form" encType="multipart/form-data">
               <FormGroup
@@ -147,9 +162,18 @@ export const AddCardForm: React.FC = () => {
                     onChange={handleChange}
                     addresses={addresses}
                     disabled={isSubmitting}
+                    classes={{ container: "mb-1" }}
                   />
                 </>
               )}
+              <Button
+                theme={ETheme.outlined}
+                className={"mb-5 fs-6 w-auto px-4"}
+                type="button"
+                onClick={() => setAddAddressForm(true)}
+              >
+                Add billing address
+              </Button>
               <Button
                 type={"submit"}
                 disabled={isSubmitting || !stripe || !elements}

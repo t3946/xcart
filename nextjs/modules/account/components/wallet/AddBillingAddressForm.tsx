@@ -22,13 +22,12 @@ import {
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
-  edit: boolean;
   onCancel: () => void;
   onSubmitted: () => void;
 }
 
 export const AddBillingAddressForm: React.FC<IProps> = (props) => {
-  const { edit, onCancel, onSubmitted } = props;
+  const { onCancel, onSubmitted } = props;
   const dispatch = useDispatch();
   const context = useContext(WalletCardsDialogContext);
   const countryPhoneCodes = useSelectorAccount((e) => e.main.countries);
@@ -59,8 +58,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
       address_type: "billing",
     };
 
-    dispatch(addAddress(newAddress, () => {}, user.userId));
-    window.location.reload();
+    dispatch(addAddress(newAddress, onSubmitted, user.userId));
   };
 
   return (
