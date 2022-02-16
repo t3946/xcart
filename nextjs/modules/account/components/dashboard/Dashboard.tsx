@@ -27,7 +27,7 @@ const Dashboard = (props) => {
           classes={{
             container: ["d-none", "d-md-block", Styles.dashboard__slider],
           }}
-          title="Reccomended products"
+          title="Recommended products"
           url={"/category/featured"}
         />
       </div>
