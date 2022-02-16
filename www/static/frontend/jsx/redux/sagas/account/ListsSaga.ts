@@ -1,22 +1,20 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
-import { ApiService } from "@client/modules/shared/services/api.service";
 import Store from "@client/jsx/redux/stores/Store";
 import { AnyAction } from "redux";
 import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 import { route } from "@client/jsx/utils/AppData";
-
-const api = new ApiService();
+import axiosInstance from "@client/jsx/utils/axiosInstance";
 
 const getUser = () => {
   return Store.getState().user;
 };
 
 function* getLists(): Generator {
-  const result: any = yield api
-    .get("/api/account/lists/get-lists")
-    .then((response) => response);
+  const result: any = yield axiosInstance
+    .get("/axiosInstance/account/lists/get-lists")
+    .then((response) => response.data);
   yield put({
     type: "SET_LISTS",
     lists: result,
@@ -24,15 +22,12 @@ function* getLists(): Generator {
 }
 
 function* createList(action: AnyAction): Generator {
-  const result = yield api
-    .post(
-      "/api/account/lists/create-lists",
-      JSON.stringify({
-        name: action.name,
-        user_id: getUser().id,
-      })
-    )
-    .then((response) => response);
+  const result = yield axiosInstance
+    .post("/axiosInstance/account/lists/create-lists", {
+      name: action.name,
+      user_id: getUser().id,
+    })
+    .then((response) => response.data);
 
   yield put({
     type: "ADD_NEW_LIST",
@@ -43,23 +38,20 @@ function* createList(action: AnyAction): Generator {
 }
 
 function* reorderList(action: AnyAction): Generator {
-  yield api
-    .post<any>(
-      route("account:api:reorder-list"),
-      JSON.stringify({
-        productIds: action.listIds.map((e) => {
-          return e.product_id;
-        }),
-        product_list_id: action.product_list_id,
-      })
-    )
-    .then((response) => response);
+  yield axiosInstance
+    .post<any>(route("account:axiosInstance:reorder-list"), {
+      productIds: action.listIds.map((e) => {
+        return e.product_id;
+      }),
+      product_list_id: action.product_list_id,
+    })
+    .then((response) => response.data);
 }
 
 function* deleteList(action: AnyAction): Generator {
-  yield api
-    .post<any>(route("account:api:delete-list"), action.listId)
-    .then((response) => response);
+  yield axiosInstance
+    .post<any>(route("account:axiosInstance:delete-list"), action.listId)
+    .then((response) => response.data);
 
   yield action.callback();
 
@@ -74,25 +66,25 @@ function* deleteList(action: AnyAction): Generator {
 }
 
 function* moveProduct(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/move-product`,
-      JSON.stringify({
+      `/account/axiosInstance/lists/move-product`,
+      {
         fromListId: action.fromListId,
         toListId: action.toListId.value,
         product: action.product.product_id,
-      })
+      }
     )
-    .then((response) => response);
+    .then((response) => response.data);
 }
 
 function* encryptUrl(action: AnyAction): Generator {
-  const result: any = yield api
+  const result: any = yield axiosInstance
     .post<any>(
-      `/account/api/lists/get-url-encrypt`,
+      `/account/axiosInstance/lists/get-url-encrypt`,
       JSON.stringify({ privateType: action.privateType, hash: action.hash })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 
   yield action.callback(
     `http://${window.location.hostname}/account/your-lists/invite/${result.tag}/${result.text}`
@@ -100,12 +92,12 @@ function* encryptUrl(action: AnyAction): Generator {
 }
 
 function* acceptInvite(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/accept-invite`,
+      `/account/axiosInstance/lists/accept-invite`,
       JSON.stringify({ list_id: action.listId, role: action.role })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 
   yield put({
     type: "GET_LISTS",
@@ -115,42 +107,42 @@ function* acceptInvite(action: AnyAction): Generator {
 }
 
 function* editUserRights(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/edit-user-rights`,
+      `/account/axiosInstance/lists/edit-user-rights`,
       JSON.stringify({
         list_id: action.listId,
         user: action.userId,
         actionType: action.actionType,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 }
 
 function* addProductOnList(action: AnyAction): Generator {
-  const product = yield api
+  const product = yield axiosInstance
     .post(
-      `/api/account/lists/add-product-on-list`,
+      `/axiosInstance/account/lists/add-product-on-list`,
       JSON.stringify({
         listId: action.listId,
         productId: action?.productId,
         name: action.name,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
   yield action?.callback(product);
 }
 
 function* editIdeaName(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/edit-name-in-idea`,
+      `/account/axiosInstance/lists/edit-name-in-idea`,
       JSON.stringify({
         productId: action.productId,
         name: action.name,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 
   yield put({
     type: "SET_LISTS",
@@ -166,16 +158,16 @@ function* editIdeaName(action: AnyAction): Generator {
 }
 
 function* editCommentInProduct(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/edit-comment`,
+      `/account/axiosInstance/lists/edit-comment`,
       JSON.stringify({
         productId: action.productId,
         listId: action.listId,
         data: action.data,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 
   yield put({
     type: "SET_LISTS",
@@ -191,15 +183,15 @@ function* editCommentInProduct(action: AnyAction): Generator {
 }
 
 function* manageList(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/manage-list`,
+      `/account/axiosInstance/lists/manage-list`,
       JSON.stringify({
         listId: action.listId,
         data: action.data,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 
   yield put({
     type: "SET_LISTS",
@@ -212,28 +204,28 @@ function* manageList(action: AnyAction): Generator {
 }
 
 function* deleteProduct(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<any>(
-      `/account/api/lists/delete-product`,
+      `/account/axiosInstance/lists/delete-product`,
       JSON.stringify({
         listId: action.product_list_id,
         product: action.list_items_id,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 
   action?.callback();
 }
 
 function* undoDeleteProduct(action: AnyAction): Generator {
-  yield api
+  yield axiosInstance
     .post<number>(
-      `/account/api/lists/undo-delete-product`,
+      `/account/axiosInstance/lists/undo-delete-product`,
       JSON.stringify({
         product: action.product,
       })
     )
-    .then((response) => response);
+    .then((response) => response.data);
 }
 
 export function* listsActionWatcher(): SagaIterator {

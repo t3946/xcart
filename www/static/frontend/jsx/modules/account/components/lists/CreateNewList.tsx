@@ -59,7 +59,7 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      name: `Shopping List ${Store.getState().lists.lists.length + 2}`,
+      name: `Shopping List ${Store.getState().lists.lists.length + 1}`,
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Required field"),
