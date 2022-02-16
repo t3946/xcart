@@ -16,6 +16,16 @@ return [
         'name' => 'save_price'
     ],
     [
+        'route' => 'dx/feed/save',
+        'target' => [ApiDxController::class, 'saveFeedInfo'],
+        'name' => 'save_feed'
+    ],
+    [
+        'route' => 'dx/feed/get/{:dx}',
+        'target' => [ApiDxController::class, 'getFeedInfo'],
+        'name' => 'get_feed_info'
+    ],
+    [
         'route' => 'dx/scheduletest',
         'target' => [ApiDxController::class, 'scheduleDynamic2'],
         'name' => 'dx_schedule_test'

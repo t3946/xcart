@@ -38,6 +38,7 @@ use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
+use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Manager;
@@ -77,6 +78,7 @@ use Xcart\Manufacturer;
  * @property int ads_products
  * @property float free_shipping_on_orders_over_value
  * @property int dx_leadtime_to
+ * @property JsonField $feed_info
  */
 class DistributorModel extends Model
 {
@@ -636,6 +638,11 @@ class DistributorModel extends Model
             'disable_check_images_link' => [
                 'class' => BooleanField::class,
                 'default' => false
+            ],
+            'feed_info' => [
+                'class' => JsonField::class,
+                'null' => true,
+                'default' => null,
             ],
             'submit_to_operator' => [
                 'class' => CharField::class,

@@ -252,4 +252,43 @@ class ApiDxController extends Controller
         $this->jsonResponse(['column' => $ar_column, 'for_sale_value' => $ar_for_sale_value, 'sites' => $ar_site]);
     }
 
+    public function saveFeedInfo(): void
+    {
+        $post = json_decode(file_get_contents('php://input'), true, 512);
+
+        if (!$post) {
+            $this->jsonResponse(['status' => false], 400);
+        }
+
+        $dx = DistributorModel::objects()->get(['code' => $post['dx_code']]);
+
+        if (!$dx) {
+            $this->jsonResponse(['status' => false, 'message' => 'Dx not found'], 404);
+            return;
+        }
+
+        $dx->feed_info = $post;
+
+        if ($dx->save()) {
+            $this->jsonResponse(['status' => true]);
+            return;
+        }
+
+        $this->jsonResponse(['status' => false]);
+    }
+
+    public function getFeedInfo(string $dx): void
+    {
+        /** @var DistributorModel $dx */
+
+        $dx = DistributorModel::objects()->get(['code' => $dx]);
+
+        if (!$dx) {
+            $this->jsonResponse(['status' => false, 'message' => 'Dx not found'], 404);
+            return;
+        }
+
+        $this->jsonResponse(['status' => true, 'data' => $dx->feed_info]);
+    }
+
 }
