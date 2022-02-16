@@ -311,14 +311,17 @@ class OrdersApi extends Controller
         ]);
 
         if ($_FILES) {
+            $images = [];
             $files = PrepareData::fixFiles($_FILES);
             foreach ($files['files'] as $file) {
                 $image = new ImagesModel([
                     'path' => $file,
                 ]);
                 $image->save();
-                $rma->images[] = $image;
+                $images[] = $image;
+
             }
+            $rma->images = $images;
         }
 
         $rma->save();
