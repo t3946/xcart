@@ -1,4 +1,4 @@
-import React from "preact";
+import React from "react";
 import { Form } from "react-bootstrap";
 import appData from "@admin/utils/app-data";
 
