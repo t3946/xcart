@@ -252,7 +252,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
               <InnerPage
                 header={"Create review"}
                 headerClasses={"text-center text-lg-start"}
-                bodyClasses={"content-panel"}
+                bodyClasses={"content-panel py-4"}
                 footerClasses={"d-flex"}
                 footer={
                   <button
