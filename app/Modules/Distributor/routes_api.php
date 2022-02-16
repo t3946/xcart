@@ -26,6 +26,11 @@ return [
         'name' => 'get_feed_info'
     ],
     [
+        'route' => 'dx/feed/login',
+        'target' => [VrsController::class, 'userAuthorization'],
+        'name' => 'feed_login'
+    ],
+    [
         'route' => 'dx/scheduletest',
         'target' => [ApiDxController::class, 'scheduleDynamic2'],
         'name' => 'dx_schedule_test'
