@@ -13,7 +13,7 @@ const getUser = () => {
 
 function* getLists(): Generator {
   const result: any = yield axiosInstance
-    .get("/axiosInstance/account/lists/get-lists")
+    .get("/api/account/lists/get-lists")
     .then((response) => response.data);
   yield put({
     type: "SET_LISTS",
@@ -23,7 +23,7 @@ function* getLists(): Generator {
 
 function* createList(action: AnyAction): Generator {
   const result = yield axiosInstance
-    .post("/axiosInstance/account/lists/create-lists", {
+    .post("/api/account/lists/create-lists", {
       name: action.name,
       user_id: getUser().id,
     })
@@ -68,7 +68,7 @@ function* deleteList(action: AnyAction): Generator {
 function* moveProduct(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/move-product`,
+      `/account/api/lists/move-product`,
       {
         fromListId: action.fromListId,
         toListId: action.toListId.value,
@@ -81,7 +81,7 @@ function* moveProduct(action: AnyAction): Generator {
 function* encryptUrl(action: AnyAction): Generator {
   const result: any = yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/get-url-encrypt`,
+      `/account/api/lists/get-url-encrypt`,
       JSON.stringify({ privateType: action.privateType, hash: action.hash })
     )
     .then((response) => response.data);
@@ -94,7 +94,7 @@ function* encryptUrl(action: AnyAction): Generator {
 function* acceptInvite(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/accept-invite`,
+      `/account/api/lists/accept-invite`,
       JSON.stringify({ list_id: action.listId, role: action.role })
     )
     .then((response) => response.data);
@@ -109,7 +109,7 @@ function* acceptInvite(action: AnyAction): Generator {
 function* editUserRights(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/edit-user-rights`,
+      `/account/api/lists/edit-user-rights`,
       JSON.stringify({
         list_id: action.listId,
         user: action.userId,
@@ -122,7 +122,7 @@ function* editUserRights(action: AnyAction): Generator {
 function* addProductOnList(action: AnyAction): Generator {
   const product = yield axiosInstance
     .post(
-      `/axiosInstance/account/lists/add-product-on-list`,
+      `/api/account/lists/add-product-on-list`,
       JSON.stringify({
         listId: action.listId,
         productId: action?.productId,
@@ -136,7 +136,7 @@ function* addProductOnList(action: AnyAction): Generator {
 function* editIdeaName(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/edit-name-in-idea`,
+      `/account/api/lists/edit-name-in-idea`,
       JSON.stringify({
         productId: action.productId,
         name: action.name,
@@ -160,7 +160,7 @@ function* editIdeaName(action: AnyAction): Generator {
 function* editCommentInProduct(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/edit-comment`,
+      `/account/api/lists/edit-comment`,
       JSON.stringify({
         productId: action.productId,
         listId: action.listId,
@@ -185,7 +185,7 @@ function* editCommentInProduct(action: AnyAction): Generator {
 function* manageList(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/manage-list`,
+      `/account/api/lists/manage-list`,
       JSON.stringify({
         listId: action.listId,
         data: action.data,
@@ -206,7 +206,7 @@ function* manageList(action: AnyAction): Generator {
 function* deleteProduct(action: AnyAction): Generator {
   yield axiosInstance
     .post<any>(
-      `/account/axiosInstance/lists/delete-product`,
+      `/account/api/lists/delete-product`,
       JSON.stringify({
         listId: action.product_list_id,
         product: action.list_items_id,
@@ -220,7 +220,7 @@ function* deleteProduct(action: AnyAction): Generator {
 function* undoDeleteProduct(action: AnyAction): Generator {
   yield axiosInstance
     .post<number>(
-      `/account/axiosInstance/lists/undo-delete-product`,
+      `/account/api/lists/undo-delete-product`,
       JSON.stringify({
         product: action.product,
       })

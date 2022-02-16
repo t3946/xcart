@@ -9,7 +9,6 @@ instance.interceptors.response.use(
   function (error) {
     if (error.response.status === 401) {
       setTimeout(() => (window.location.href = "/account/login"), 250);
-      // console.log(error.response);
     }
     return Promise.reject(error);
   }
