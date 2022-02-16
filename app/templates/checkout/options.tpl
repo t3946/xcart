@@ -178,7 +178,7 @@
                                             <input {if $first || $phone_order_only || ($method->paymentid == $order->paymentid)}checked{/if}
                                                    id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
                                             <label for="payment_{$method->paymentid}">
-                                                <span class="name">{$method->payment_method}</span>
+                                                <span class="name text-nowrap">{$method->payment_method}</span>
                                             </label>
                                         </div>
                                         <div class="table-cell payment-description">
