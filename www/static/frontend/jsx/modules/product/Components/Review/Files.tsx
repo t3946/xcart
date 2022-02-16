@@ -62,10 +62,10 @@ const Files: React.FC<IProps> = function (props: IProps) {
 
   for (let i = 0; i < props.files.images.length; i++) {
     const file = props.files.images[i];
-    const { path, width, height } = file;
+    const { path, width, height, thumb } = file;
     const link = "/" + path;
 
-    templates.push(thumbTemplate(link, i, "image"));
+    templates.push(thumbTemplate(thumb, i, "image"));
 
     items.push({
       src: link,

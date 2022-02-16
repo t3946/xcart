@@ -5,6 +5,7 @@ namespace Modules\Images\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\FileField;
+use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -18,6 +19,10 @@ class ImagesModel extends Model
 
     public static string $upload_to = '';
     public static string $max_size = '';
+
+    public const IMAGE_SIZE_THUMB = 'thumb';
+    public const IMAGE_SIZE_PREVIEW = 'preview';
+    public const IMAGE_SIZE_DETAIL = 'detail';
 
     static function tableName()
     {
@@ -37,6 +42,7 @@ class ImagesModel extends Model
      */
     protected static function getUploadPath(): string
     {
+
         return self::UPLOAD_PATH;
     }
 
@@ -47,12 +53,26 @@ class ImagesModel extends Model
                 'class' => AutoField::class,
             ],
             'path' => [
-                'class' => FileField::class,
+                'class' => ImageField::class,
                 'required' => false,
                 'null' => true,
                 'adapterName' => 'www',
                 'uploadTo' => rtrim(static::getUploadPath(), '/') . '/%Y/%m/%d',
                 'maxSize' => static::getMaxUploadSizeMB() . 'M',
+                'sizes' => [
+                    self::IMAGE_SIZE_THUMB => [
+                        174,
+                        'method' => 'adaptiveResize',
+                    ],
+                    self::IMAGE_SIZE_PREVIEW => [
+                        520,
+                        'method' => 'adaptiveResize',
+                    ],
+                    self::IMAGE_SIZE_DETAIL => [
+                        800,
+                        'method' => 'adaptiveResize',
+                    ],
+                ]
             ],
             'width' => [
                 'class' => IntField::class,

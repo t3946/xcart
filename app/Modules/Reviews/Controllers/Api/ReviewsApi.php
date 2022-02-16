@@ -5,6 +5,7 @@ namespace Modules\Reviews\Controllers\Api;
 use Modules\Account\Controllers\AccountController;
 
 use Modules\Core\Models\CountryModel;
+use Modules\Reviews\Models\Images\ImagesModel;
 use Modules\Reviews\Models\Videos\VideosModel;
 use Modules\Reviews\Models\ProductReviewsModel;
 use Modules\Reviews\Models\RatingsModel;
@@ -15,6 +16,7 @@ use Modules\Reviews\Models\TotalProductRatingsModel;
 use Modules\Reviews\Models\HelpfulReviewsModel;
 use Modules\GeoIp\Helpers\GeoIpHelper;
 use Modules\Reviews\ReviewsModule;
+use Modules\User\Models\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
@@ -112,13 +114,20 @@ class ReviewsApi extends Controller
 
     public function createReview()
     {
-        $session_data = JWT::decode($_COOKIE["session"], "h93h84fp83", array('HS256'));
+        /**
+         * @var $user UserModel
+        */
+        $user = Xcart::app()->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+        }
 
         $review_data = [
             'header' => $_POST['header'],
             'body' => $_POST['body'],
             'product_id' => $_POST['productId'],
-            'user_id' => $session_data->userId,
+            'user_id' => $user->user_id,
         ];
         $ip = Xcart::app()->request->getUserIP();
         $location = GeoIpHelper::getGeoipLocation($ip)->country;
@@ -288,8 +297,18 @@ class ReviewsApi extends Controller
             $filter = [
                 "review_id" => $reviews[$i]["product_review_id"]
             ];
+            $images = [];
+            $reviews_images = ReviewsImagesModel::objects()->select(['images__*'])->all($filter);
+
+            foreach ($reviews_images as $i => $reviews_image) {
+                $image_model = ImagesModel::objects()->get(["image_id" => $reviews_image->image_id]);
+                $attributes = $image_model->getAttributes();
+                $attributes['thumb'] = $image_model->path->url_thumb;
+                $images[] = $attributes;
+            }
+
             $reviews[$i]['files'] = [
-                'images' => ReviewsImagesModel::objects()->select(['images__*'])->asArray()->all($filter),
+                'images' =>$images,
                 'videos' => ReviewsVideosModel::objects()->select(['videos__*'])->asArray()->all($filter),
             ];
         }
