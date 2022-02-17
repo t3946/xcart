@@ -3326,14 +3326,17 @@ model xcart_old_passwords {
 }
 
 model xcart_one_time_passwords {
-  one_time_password_id Int      @id @default(autoincrement()) @db.UnsignedInt
-  user_id              Int      @unique(map: "xcart_reset_password_otps_user_id_uindex") @db.UnsignedInt
+  one_time_password_id Int         @id @default(autoincrement()) @db.UnsignedInt
+  user_id              Int         @db.UnsignedInt
   one_time_password    String?     @db.Char(6)
   created              DateTime    @default(now()) @db.Timestamp(0)
+  expired              String?     @db.Char(32)
   attempts_number      Int         @default(0) @db.UnsignedTinyInt
   confirmed            Boolean?    @default(false)
-  xcart_users          xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_reset_password_otps_xcart_users_user_id_fk")
+  label                String?     @db.VarChar(64)
+  xcart_users          xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "xcart_one_time_passwords_xcart_users_user_id_fk")
 
+  @@unique([user_id, label], map: "xcart_one_time_passwords_user_id_label_uindex")
   @@index([created], map: "xcart_one_time_passwords_created_index")
 }
 
