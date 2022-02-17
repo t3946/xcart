@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 export const EditInfoInListProductPage: React.FC = () => {
   const router = useRouter();
-  const { productId, productListId } = router.query;
+  const { list_items_id, productListId } = router.query;
   const lists: List[] = useSelectorAccount((state) => state.lists.lists);
 
   const list = lists.find(
@@ -15,7 +15,7 @@ export const EditInfoInListProductPage: React.FC = () => {
   );
 
   const product = list.products.find(
-    (product) => product.productId === Number(productId)
+    (product) => product.list_items_id === Number(list_items_id)
   );
 
   const onCloseClick = () => {
@@ -31,7 +31,7 @@ export const EditInfoInListProductPage: React.FC = () => {
       <div className="page-label">Edit comment, quantity & priority</div>
       <EditComment
         info={product}
-        productId={productId}
+        list_items_id={list_items_id}
         listId={list?.productListId}
         onCloseClick={onCloseClick}
       />

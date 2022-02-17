@@ -14,13 +14,13 @@ import { editCommentProduct } from "@redux/actions/account-actions/ListsActions"
 
 import Styles from "@modules/account/components/lists/EditComment.module.scss";
 
-export const EditComment = ({ onCloseClick, listId, productId, info }) => {
+export const EditComment = ({ onCloseClick, listId, list_items_id, info }) => {
   const dispatch = useDispatch();
   const handleSubmit = (values) => {
     dispatch(
       editCommentProduct(
         listId,
-        productId,
+        list_items_id,
         { ...values, priority: values.priority.value },
         onCloseClick
       )

@@ -58,7 +58,7 @@ const accountListReducer = (
         ...state,
         listView: editCommentDataProduct(
           state.listView,
-          action.productId,
+          action.list_items_id,
           action.data
         ),
       };

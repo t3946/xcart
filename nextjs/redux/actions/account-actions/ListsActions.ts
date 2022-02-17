@@ -123,13 +123,13 @@ export const editIdeaName = (
 
 export const editCommentProduct = (
   productListId: number,
-  productId: number,
+  list_items_id: number,
   data: EditCommentRequestData,
   callback: () => void
 ): any => ({
   type: "EDIT_COMMENT_PRODUCT",
   productListId,
-  productId,
+  list_items_id,
   data,
   callback,
 });

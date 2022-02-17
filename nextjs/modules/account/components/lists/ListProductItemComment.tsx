@@ -33,7 +33,7 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
     dispatch(
       editCommentProduct(
         listInfo.productListId,
-        info.productId,
+        info.list_items_id,
         {
           comment: null,
           priority: null,
@@ -49,7 +49,9 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
     <div
       className={cn(
         Styles.listProductItemCommentContainer,
-        "list-product-item-comment-container"
+        "list-product-item-comment-container",
+        "mb-10",
+        "mb-md-0"
       )}
     >
       <div className="list-product-item-comment-container-text">
@@ -94,16 +96,16 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
           <path
             d="M19.4998 6.5L6.49975 19.5"
             stroke="#4A4949"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M6.50024 6.5L19.5002 19.5"
             stroke="#4A4949"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>

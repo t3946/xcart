@@ -249,7 +249,7 @@ class AccountListsApi extends Controller
             return;
         }
         /** @var ListItemsModel $list_item */
-        if (!$list_item = ListItemsModel::objects()->get(['product_id' => $form['productId'], 'product_list_id' => $form['productListId']])) {
+        if (!$list_item = ListItemsModel::objects()->get(['list_items_id' => $form['list_items_id'], 'product_list_id' => $form['productListId']])) {
             $this->jsonResponse(['Not found list item'], 404);
             return;
         }
