@@ -201,26 +201,6 @@ app.post("/send-login-otp", async function (req, res) {
   res.json({ otp });
 });
 
-app.post("/confirm-login-otp", async function (req, res) {
-  const code = 100000 + Math.floor(Math.random() * 899999);
-  const otp = await prisma.xcart_one_time_passwords.find({
-    data: {
-      user_id: req.body.userId,
-      one_time_password: code.toString(),
-      label: "login-by-sms",
-    },
-  });
-
-  res.json({ otp });
-
-  await AxiosInstance.post("/api/account/send-sms", {
-    phone: user.phone,
-    message: "OPT: " + otp.one_time_password,
-  }).then((phpRes) => {
-    res.json(phpRes.data);
-  });
-});
-
 app.post("/send-otp", async function (req, res) {
   const user = await prisma.xcart_users.findFirst({
     where: {
