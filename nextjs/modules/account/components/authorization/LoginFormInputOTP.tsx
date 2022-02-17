@@ -92,7 +92,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   }
 
   function sendSmsTemplate() {
-    if (EMethodType.PHONE !== preferredTSVMethod) {
+    if (preferredTSVMethod !== EMethodType.PHONE) {
       return null;
     }
 
@@ -110,7 +110,9 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   }
 
   React.useEffect(() => {
-    sendOneTimePassword();
+    if (preferredTSVMethod === EMethodType.PHONE) {
+      sendOneTimePassword();
+    }
   }, []);
 
   return (
