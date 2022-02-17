@@ -6,7 +6,7 @@ import MethodPhoneNumberDefault from "@modules/account/components/login-and-secu
 import MethodPhoneNumberAppend from "@modules/account/components/login-and-security/tsv/MethodPhoneNumberAppend";
 import MethodAuthenticatorApp from "@modules/account/components/login-and-security/tsv/MethodAuthenticatorApp";
 
-enum EMethodType {
+export enum EMethodType {
   APP = "authenticator_app",
   PHONE = "phone_number",
 }

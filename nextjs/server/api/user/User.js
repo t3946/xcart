@@ -93,6 +93,7 @@ app.post("/check-login", async function (req, res) {
   if (user) {
     res.send({
       captchaRequired: user.wrong_password_attempts >= maxWrongPasswordAttempts,
+      preferredTSVMethod: user.tsv_preferred_method,
     });
   } else {
     res.json({ error: "User not found", user: req.body });
@@ -124,6 +125,100 @@ app.post("/create", async function (req, res) {
     delete user.password;
     res.json({ user });
   }
+});
+
+app.post("/send-login-otp", async function (req, res) {
+  const user = await prisma.xcart_users.findFirst({
+    where: {
+      OR: [
+        {
+          email: req.body.login,
+        },
+        {
+          phone: req.body.login,
+        },
+      ],
+    },
+  });
+
+  //check user preferred method
+  if (user.tsv_preferred_method !== "phone_number") {
+    res.sendStatus(403);
+    return;
+  }
+
+  let otp = await prisma.xcart_one_time_passwords.findFirst({
+    where: {
+      user_id: user.user_id,
+      label: "login-by-sms",
+    },
+  });
+
+  //send old otp
+  if (otp) {
+    const now = new Date().getTime();
+    const leftTime = Math.ceil((parseInt(otp.expired) - now) / 1000);
+
+    //return old otp
+    if (leftTime > 0) {
+      delete otp.one_time_password;
+      otp.leftTimeS = leftTime;
+      res.json({
+        otp,
+      });
+      return;
+    }
+
+    //delete expired otp
+    await prisma.xcart_one_time_passwords.delete({
+      where: {
+        one_time_password_id: otp.one_time_password_id,
+      },
+    });
+  }
+
+  //send new otp
+  const expTime = new Date().getTime() + 1000 * 120;
+  const code = 100000 + Math.floor(Math.random() * 899999);
+  otp = await prisma.xcart_one_time_passwords.create({
+    data: {
+      user_id: user.user_id,
+      one_time_password: code.toString(),
+      label: "login-by-sms",
+      expired: expTime.toString(),
+    },
+  });
+
+  await AxiosInstance.post("/api/account/send-sms", {
+    phone: user.phone,
+    message: "OPT: " + otp.one_time_password,
+  });
+
+  delete otp.one_time_password;
+  otp.leftTimeS = Math.ceil(
+    (parseInt(otp.expired) - new Date().getTime()) / 1000
+  );
+  res.json({ otp });
+});
+
+app.post("/confirm-login-otp", async function (req, res) {
+  const code = 100000 + Math.floor(Math.random() * 899999);
+  const otp = await prisma.xcart_one_time_passwords.find({
+    data: {
+      user_id: req.body.userId,
+      one_time_password: code.toString(),
+      label: "login-by-sms",
+    },
+  });
+
+  res.json({ otp });
+
+  await AxiosInstance.post("/api/account/send-sms", {
+    phone: user.phone,
+    message: "OPT: " + otp.one_time_password,
+  }).then((phpRes) => {
+    res.json(phpRes.data);
+  });
 });
 
 app.post("/send-otp", async function (req, res) {

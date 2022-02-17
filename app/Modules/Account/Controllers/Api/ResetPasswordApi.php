@@ -17,12 +17,16 @@ class ResetPasswordApi extends Controller
         /**
          * @var OneTimePasswordModel $otp
          */
-        [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
+        $attributes = [
+            'user_id' => $user_id,
+            'label' => 'reset-password',
+        ];
+        [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate($attributes);
 
         //regenerate obsolete otp
         if (!$otp->isNew()) {
             $otp->delete();
-            [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate(['user_id' => $user_id]);
+            [$otp, $is_new] = OneTimePasswordModel::objects()->getOrCreate($attributes);
         }
 
         return [$otp, $is_new];
@@ -109,7 +113,7 @@ class ResetPasswordApi extends Controller
         /**
          * @var OneTimePasswordModel $otp
          */
-        $otp = OneTimePasswordModel::objects()->get(['user_id' => $user_id]);
+        $otp = OneTimePasswordModel::objects()->get(['user_id' => $user_id, 'label' => 'reset-password']);
 
         // old otp
         if ($otp === null || $otp->isOutdated()) {

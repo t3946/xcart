@@ -103,7 +103,9 @@ module.exports = function (passport) {
         return;
       }
 
-      //check tsv code
+      //tsv
+
+      //auth by fingerprint
       if (req.body.fingerprint) {
         const fp = await prisma.xcart_fingerprints.findFirst({
           where: {
@@ -112,7 +114,7 @@ module.exports = function (passport) {
           },
         });
 
-        //remembered device
+        //known device
         if (fp) {
           done(null, {
             user,
@@ -122,28 +124,89 @@ module.exports = function (passport) {
         }
       }
 
+      //auth by secret code
       if (req.body.code === undefined) {
         return done({ message: "Need OTP" }, null);
       }
 
-      await axios
-        .post(process.env.BASE_URL_NGINX + "/api/account/tsv/check-code", {
-          code: req.body.code,
-          userId: user.user_id,
-        })
-        .then(async (apiRes) => {
-          if (apiRes.data.checkResult === false) {
+      //check code from app
+      switch (user.tsv_preferred_method) {
+        case "authenticator_app":
+          await axios
+            .post(process.env.BASE_URL_NGINX + "/api/account/tsv/check-code", {
+              code: req.body.code,
+              userId: user.user_id,
+            })
+            .then(async (apiRes) => {
+              if (apiRes.data.checkResult === false) {
+                done({ message: { code: "Code is invalid" } }, null);
+                return;
+              }
+
+              const { rememberBrowser, fingerprint } = req.body;
+
+              if (rememberBrowser && fingerprint) {
+                await prisma.xcart_fingerprints.create({
+                  data: {
+                    user_id: user.user_id,
+                    fingerprint: fingerprint,
+                  },
+                });
+              }
+
+              //update user data
+              user = await prisma.xcart_users.findFirst({
+                where: {
+                  user_id: user.user_id,
+                },
+              });
+
+              delete user.password;
+
+              done(null, {
+                user,
+              });
+            });
+          break;
+
+        case "phone_number":
+          const otp = await prisma.xcart_one_time_passwords.findFirst({
+            where: {
+              user_id: user.user_id,
+              label: "login-by-sms",
+            },
+          });
+
+          if (new Date().getTime() > parseInt(otp.expired)) {
+            done({ message: { code: "Code was deprecated" } }, null);
+            return;
+          }
+
+          //wrong code
+          if (req.body.code !== otp.one_time_password) {
             done({ message: { code: "Code is invalid" } }, null);
             return;
           }
 
+          //correct code
+
+          //set otp confirmed
+          await prisma.xcart_one_time_passwords.update({
+            where: {
+              one_time_password_id: otp.one_time_password_id,
+            },
+            data: {
+              confirmed: true,
+            },
+          });
+
+          //remember browser
           const { rememberBrowser, fingerprint } = req.body;
-          const userId = user.user_id;
 
           if (rememberBrowser && fingerprint) {
             await prisma.xcart_fingerprints.create({
               data: {
-                user_id: userId,
+                user_id: user.user_id,
                 fingerprint: fingerprint,
               },
             });
@@ -161,7 +224,9 @@ module.exports = function (passport) {
           done(null, {
             user,
           });
-        });
+
+          break;
+      }
     })
   );
 };

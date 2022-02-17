@@ -14,16 +14,26 @@ import cn from "classnames";
 import StylesLoginForm from "@modules/account/components/authorization/LoginForm.module.scss";
 import Styles from "@modules/account/components/authorization/LoginFormInputOTP.module.scss";
 import { useRouter } from "next/router";
+import { EMethodType } from "@modules/account/components/login-and-security/tsv/Methods";
+import Timer from "@modules/account/components/password-assistance/Timer";
+import { sendLoginOtp } from "@redux/actions/account-actions/AutorizationActions";
 
 interface IProps {
   login: string;
   password: string;
   rememberMe: boolean;
   onLogin: () => void;
+  preferredTSVMethod: EMethodType;
 }
 
 const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
-  const { login, password, rememberMe, onLogin } = props;
+  const { login, password, rememberMe, onLogin, preferredTSVMethod } = props;
+  const formText = {
+    [EMethodType.APP]:
+      "For added security, please enter the One Time Password (OTP) generation by your by Authenticator App",
+    [EMethodType.PHONE]:
+      "For added security, please enter the One Time Password (OTP) sent to your phone",
+  }[preferredTSVMethod];
   const inputRef = React.createRef<HTMLInputElement>();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -35,6 +45,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
     code: yup.string().required("OTP is a required field"),
     rememberBrowser: yup.bool(),
   });
+  const [leftResendTimeS, setLeftResendTimeS] = React.useState(0);
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     const data: Record<any, any> = { ...values, password, login, rememberMe };
@@ -69,6 +80,35 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
     });
   }
 
+  function sendOneTimePassword() {
+    dispatch(
+      sendLoginOtp({
+        data: { login },
+        success(res: AxiosResponse) {
+          setLeftResendTimeS(res.data.otp.leftTimeS);
+        },
+      })
+    );
+  }
+
+  function sendSmsTemplate() {
+    if (EMethodType.PHONE !== preferredTSVMethod) {
+      return null;
+    }
+
+    return (
+      <>
+        <Timer
+          timeLeftS={leftResendTimeS}
+          setTimeLeftS={setLeftResendTimeS}
+          action={sendOneTimePassword}
+          className={"mt-2 text-center"}
+          isActive={leftResendTimeS > 0}
+        />
+      </>
+    );
+  }
+
   return (
     <Formik
       initialValues={initialState}
@@ -88,8 +128,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   "mb-lg-14"
                 )}
               >
-                For added security, please enter the One Time Password (OTP)
-                generation by your by Authenticator App
+                {formText}
               </p>
 
               <RBForm.Group controlId="LoginFormPassword">
@@ -113,6 +152,8 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
                   {!!touched.code && errors.code}
                 </Feedback>
               </RBForm.Group>
+
+              {sendSmsTemplate()}
 
               <RBForm.Group className={"mb-0 mt-3"}>
                 <input

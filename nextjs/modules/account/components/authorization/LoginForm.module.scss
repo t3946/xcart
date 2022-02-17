@@ -55,10 +55,10 @@
 
 .button {
   font-weight: bold;
-  font-size: pxToRem(20);
+  font-size: pxToRem(20) !important;
 
   @include breakpoint(lg) {
-    font-size: pxToRem(14);
+    font-size: pxToRem(14) !important;
   }
 }
 

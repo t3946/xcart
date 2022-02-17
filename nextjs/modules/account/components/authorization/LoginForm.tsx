@@ -8,7 +8,7 @@ import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import cn from "classnames";
-
+import { EMethodType } from "@modules/account/components/login-and-security/tsv/Methods";
 import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 
 const LoginForm: React.FC<any> = () => {
@@ -24,6 +24,9 @@ const LoginForm: React.FC<any> = () => {
   const [login, setLogin] = React.useState<any>("");
   const [rememberMe, setRememberMe] = React.useState<any>(false);
   const [isCaptchaRequired, setIsCaptchaRequired] = React.useState(false);
+  const [preferredTSVMethod, setPreferredTSVMethod] = React.useState(
+    EMethodType.APP
+  );
 
   function headerTemplate() {
     switch (mode) {
@@ -45,6 +48,7 @@ const LoginForm: React.FC<any> = () => {
             goToPasswordInput={goToPasswordInput}
             submit={submit}
             setLogin={setLogin}
+            setPreferredTSVMethod={setPreferredTSVMethod}
           />
         );
       case INPUT_PASSWORD_MODE:
@@ -65,6 +69,7 @@ const LoginForm: React.FC<any> = () => {
             login={login}
             password={password}
             rememberMe={rememberMe}
+            preferredTSVMethod={preferredTSVMethod}
             onLogin={() => {
               setLogin("");
               setLastSentForm({});

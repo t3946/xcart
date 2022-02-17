@@ -37,6 +37,19 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
     otp: "",
   };
 
+  const classes = {
+    attempts: [
+      "reset-password-attempts",
+      {
+        "reset-password-attempts__last": oneTimePassword.left_attempts < 2,
+      },
+    ],
+    newCodeSent: [
+      "auth-form-info_input-caption auth-form-info__theme-success",
+      showNewCodeSent ? "d-block" : "d-none",
+    ],
+  };
+
   function submit(values: Record<any, any>, actions: Record<any, any>) {
     const form = {
       otp: values.otp,
@@ -75,19 +88,6 @@ const OneTimePasswordInputForm: React.FC<any> = function (props) {
       })
     );
   }
-
-  const classes = {
-    attempts: [
-      "reset-password-attempts",
-      {
-        "reset-password-attempts__last": oneTimePassword.left_attempts < 2,
-      },
-    ],
-    newCodeSent: [
-      "auth-form-info_input-caption auth-form-info__theme-success",
-      showNewCodeSent ? "d-block" : "d-none",
-    ],
-  };
 
   function decLeftResendTime() {
     oneTimePassword.left_is_new_time = oneTimePassword.left_is_new_time - 1;

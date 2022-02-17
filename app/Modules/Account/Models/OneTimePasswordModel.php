@@ -52,6 +52,13 @@ class OneTimePasswordModel extends Model
                 'class' => DateTimeField::class,
                 'autoNowAdd' => true,
             ],
+            'label' => [
+                'class' => CharField::class
+            ],
+            'expired' => [
+                'class' => CharField::class,
+                'default' => (time() + 120) * 1000,
+            ]
         ];
     }
 

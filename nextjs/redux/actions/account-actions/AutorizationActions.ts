@@ -17,3 +17,8 @@ export const logoutAction = (payload: any): any => ({
   type: "ACCOUNT_LOGOUT",
   payload,
 });
+
+export const sendLoginOtp = (payload: any): any => ({
+  type: "ACCOUNT_SEND_LOGIN_OTP",
+  payload,
+});

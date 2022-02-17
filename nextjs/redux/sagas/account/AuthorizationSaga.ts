@@ -42,11 +42,16 @@ function* logout(action: AnyAction) {
   yield axios.get("/api-client/user/logout").then(success).catch(error);
 }
 
-function* authorizationActionWatcher(): SagaIterator {
+function* sendLoginOtp(action: AnyAction) {
+  const { data, success } = action.payload;
+
+  yield axios.post("/api-client/user/send-login-otp", data).then(success);
+}
+
+export default function* authorizationActionWatcher(): SagaIterator {
   yield takeLatest("ACCOUNT_REGISTER", register);
   yield takeLatest("ACCOUNT_LOGIN", login);
   yield takeLatest("ACCOUNT_CHECK_USER_LOGIN", checkUserLogin);
   yield takeLatest("ACCOUNT_LOGOUT", logout);
+  yield takeLatest("ACCOUNT_SEND_LOGIN_OTP", sendLoginOtp);
 }
-
-export default authorizationActionWatcher;

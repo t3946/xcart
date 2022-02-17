@@ -4,6 +4,7 @@
 namespace Modules\Account\Controllers\Api;
 
 
+use Aws\Sns\SnsClient;
 use Modules\Account\Controllers\AccountController;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
@@ -113,5 +114,30 @@ class AccountApi extends Controller
         $url = "http://localhost/convert/pdf?orderid={$orderid}&p={$hash}&mode=print";
 
         $this->jsonResponse($url);
+    }
+
+    public function sendSMS()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+        $params = [
+            'credentials' => Xcart::app()->globals['aws']['sns']['credentials'],
+            'region' => 'us-east-1',
+            'version' => 'latest'
+        ];
+        $sns = new SnsClient($params);
+        $args = [
+            "MessageAttributes" => [
+                'AWS.SNS.SMS.SenderID' => [
+                    'DataType' => 'String',
+                    'StringValue' => 'S3Stores'
+                ],
+                'AWS.SNS.SMS.SMSType' => ['DataType' => 'String', 'StringValue' => 'Transactional']
+            ],
+            "PhoneNumber" => $data->phone,
+            "Message" => $data->message,
+        ];
+
+        $sns->publish($args);
+        http_response_code(200);
     }
 }

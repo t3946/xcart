@@ -10,6 +10,12 @@ return [
     ],
 
     [
+        'route' => '/send-sms',
+        'target' => [AccountApi::class, 'sendSMS'],
+        'name' => 'send-sms'
+    ],
+
+    [
         'route' => '/get-initial-data',
         'target' => [AccountApi::class, 'getInitialDataAction'],
         'name' => 'get-initial-data'

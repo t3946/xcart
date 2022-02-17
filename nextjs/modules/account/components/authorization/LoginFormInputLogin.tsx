@@ -9,7 +9,7 @@ import { Form as RBForm } from "react-bootstrap";
 import Link from "next/link";
 import cn from "classnames";
 import { useDispatch } from "react-redux";
-
+import { EMethodType } from "@modules/account/components/login-and-security/tsv/Methods";
 import Styles from "@modules/account/components/authorization/LoginForm.module.scss";
 
 function cleanPhoneFormat(phone: string): string | undefined {
@@ -31,10 +31,11 @@ interface IProps {
   };
   goToPasswordInput: () => void;
   setLastSentForm: () => void;
+  setPreferredTSVMethod: (method: EMethodType) => void;
 }
 
 const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
-  const { setLogin } = props;
+  const { setLogin, setPreferredTSVMethod } = props;
   const dispatch = useDispatch();
   const validationSchema = yup.object().shape({
     login: yup
@@ -53,7 +54,6 @@ const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
   });
   const [showHelpInfo, setShowHelpInfo] = React.useState(false);
   const inputRef = React.createRef<HTMLInputElement>();
-
   const initialState = {
     login: props.lastSentForm.login || "",
   };
@@ -81,6 +81,7 @@ const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
           }
 
           setLogin(form.login);
+          setPreferredTSVMethod(res.data.preferredTSVMethod);
           props.goToPasswordInput(res.data.captchaRequired);
           props.setLastSentForm(form);
         },
