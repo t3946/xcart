@@ -67,6 +67,7 @@ const LoginForm: React.FC<any> = () => {
             rememberMe={rememberMe}
             onLogin={() => {
               setLogin("");
+              setLastSentForm({});
               setMode(INPUT_LOGIN_MODE);
             }}
           />
@@ -74,7 +75,14 @@ const LoginForm: React.FC<any> = () => {
     }
   }
 
-  function goToInputLogin(): void {
+  function goToInputLogin(resetLogin = false): void {
+    if (resetLogin) {
+      setLogin("");
+      setRememberMe(false);
+      setIsCaptchaRequired(false);
+      setLastSentForm({});
+    }
+
     setMode(INPUT_LOGIN_MODE);
   }
 

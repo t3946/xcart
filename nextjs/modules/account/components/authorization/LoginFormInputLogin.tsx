@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
@@ -14,17 +14,26 @@ import Styles from "@modules/account/components/authorization/LoginForm.module.s
 
 function cleanPhoneFormat(phone: string): string | undefined {
   const onlyDigitsPhone = phone.replace(/\D/g, "");
-
   const code = onlyDigitsPhone.slice(0, onlyDigitsPhone.length - 10);
   const number = onlyDigitsPhone.slice(
     onlyDigitsPhone.length - 10,
     onlyDigitsPhone.length
   );
   const match = number.match(/^(\d{10})$/);
+
   if (match && code) return `+${code}${match[1]}`;
 }
 
-const LoginFormInputLogin: React.FC<any> = (props: any) => {
+interface IProps {
+  setLogin: () => void;
+  lastSentForm: {
+    login: string;
+  };
+  goToPasswordInput: () => void;
+  setLastSentForm: () => void;
+}
+
+const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
   const { setLogin } = props;
   const dispatch = useDispatch();
   const validationSchema = yup.object().shape({
@@ -53,7 +62,7 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
     inputRef.current?.focus();
   });
 
-  function submit(values: any, actions: any) {
+  function submit(values: any, actions: FormikHelpers<any>) {
     const form = { login: cleanPhoneFormat(values.login) ?? values.login };
 
     dispatch(
@@ -61,17 +70,19 @@ const LoginFormInputLogin: React.FC<any> = (props: any) => {
         data: form,
 
         success(res: any) {
+          actions.resetForm();
           const error = res.data.error;
 
           actions.setSubmitting(false);
 
           if (error) {
             actions.setErrors({ login: error });
-          } else {
-            setLogin(form.login);
-            props.goToPasswordInput(res.data.captchaRequired);
-            props.setLastSentForm(form);
+            return;
           }
+
+          setLogin(form.login);
+          props.goToPasswordInput(res.data.captchaRequired);
+          props.setLastSentForm(form);
         },
       })
     );

@@ -21,7 +21,7 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   login: string;
-  goToInputLogin: () => void;
+  goToInputLogin: (resetLogin?: boolean) => void;
   goToOTPInput: () => void;
   setPassword: (password: string) => void;
   setRememberMe: (rememberMe: boolean) => void;
@@ -122,6 +122,7 @@ const LoginFormInputPassword = function (props: IProps): any {
             if (res.data.user) {
               setIsCaptchaRequired(false);
               dispatch(userSetAction(res.data.user));
+              goToInputLogin(true);
               router.push("/dashboard");
               return;
             }
@@ -178,7 +179,7 @@ const LoginFormInputPassword = function (props: IProps): any {
 
                   <a
                     href="#"
-                    onClick={goToInputLogin}
+                    onClick={() => goToInputLogin()}
                     className={Styles.commonLink}
                   >
                     Change
