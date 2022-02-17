@@ -3664,8 +3664,10 @@ model xcart_order_groups {
   xcart_order_statuses_xcart_order_groups_bd_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_bd_statusToxcart_order_statuses", fields: [bd_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK3_order_groups_bd_status")
   xcart_order_statuses_xcart_order_groups_cb_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_cb_statusToxcart_order_statuses", fields: [cb_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK1_order_groups_cb_status")
   xcart_order_statuses_xcart_order_groups_dc_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_dc_statusToxcart_order_statuses", fields: [dc_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK2_order_groups_dc_status")
+  xcart_orders                                                            xcart_orders                                     @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "FK_xcart_order_groups_xcart_orders")
   xcart_order_details                                                     xcart_order_details[]
-  xcart_order_tracking                                                    xcart_order_tracking[]
+  trackings                                                               xcart_order_tracking[]
+  statuses_history                                                        xcart_order_statuses_history[]
 
   @@id([orderid, manufacturerid])
   @@index([dc_status], map: "FK2_order_groups_dc_status")
@@ -3673,7 +3675,6 @@ model xcart_order_groups {
   @@index([cb_status, dc_status], map: "cb_status_dc_status")
   @@index([orderid, cb_status], map: "idx_orderid_cb")
   @@index([manufacturerid], map: "manufacturerid")
-  xcart_order_statuses_history xcart_order_statuses_history[] @ignore
 }
 
 model xcart_order_logs {
@@ -3745,7 +3746,7 @@ model xcart_order_tracking {
   aftership_id                 String?                      @db.VarChar(50)
   send_to_amazon               Int                          @default(0) @db.TinyInt
   created_at                   DateTime                     @default(now()) @db.Timestamp(0)
-  xcart_tracking_links_carrier xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
+  carrier                      xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
   xcart_tracking_links         xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
   xcart_order_groups           xcart_order_groups           @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_order_groups")
 
@@ -3930,6 +3931,7 @@ model xcart_orders {
   account_order_cancel_requests            account_order_cancel_requests[]
   account_transactions                     account_transactions[]
   faxes_fax                                faxes_fax[]
+  groups                                   xcart_order_groups[]  
   xcart_amazon_list_inbound_shipments      xcart_amazon_list_inbound_shipments?
   xcart_order_details                      xcart_order_details[]
   xcart_po_pipeline                        xcart_po_pipeline[]

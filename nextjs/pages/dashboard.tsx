@@ -7,19 +7,19 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
-  let groups: { solved: []; notSolved: [] } = null;
+  let orders: { solved: []; notSolved: [] } = null;
 
   await instance
     .get("/api-client/orders/get-order-groups")
     .then((res) => {
-      groups = res.data;
+      orders = res.data;
     })
     .catch((err) => {
       console.log(err);
     });
 
   return {
-    props: { groups },
+    props: { orders },
   };
 }
 
@@ -35,7 +35,7 @@ function Dashboard(props: any) {
 
   return (
     <PageTwoColumns>
-      {props.groups && <DashboardPage {...props} />}
+      {props.orders && <DashboardPage {...props} />}
     </PageTwoColumns>
   );
 }

@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { setListView } from "@redux/actions/account-actions/ListsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { NextPage } from "next";
-import {ListSource} from "@modules/account/ts/types/list.type";
 
 const ShoppingLists: NextPage = () => {
   const { lists, listView } = useSelectorAccount((state) => state.lists);

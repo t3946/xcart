@@ -108,21 +108,21 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       label: "Add comment, quantity & priority",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${productItem.productId}`
+          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${productItem.list_items_id}`
         ),
     },
     {
       label: "Move",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${productItem.productId}`
+          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${productItem.list_items_id}`
         ),
     },
     {
       label: "Delete",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${productItem.productId}`
+          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${productItem.list_items_id}`
         ),
     },
   ];
@@ -252,7 +252,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             }}
             time={productItem.add_date}
             listId={productItem.product_list_id}
-            productId={productItem.productId}
+            productId={productItem.list_items_id}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}

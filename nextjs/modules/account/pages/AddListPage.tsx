@@ -29,7 +29,7 @@ export const AddListPage: React.FC = () => {
         null,
         () =>
           window.location.assign(
-            `/account/your-lists/add-product-to-list/false/${list.product_list_id}/${window.appData?.product_info?.product?.productcode}`
+            `/account/shopping-lists/add-product-to-list/false/${list.product_list_id}/${window.appData?.product_info?.product?.productcode}`
           )
       )
     );

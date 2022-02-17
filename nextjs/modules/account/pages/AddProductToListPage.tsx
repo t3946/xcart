@@ -20,7 +20,6 @@ export const AddProductToListPage: React.FC = () => {
   useEffect(() => {
     if (!list) {
       dispatch(getLists());
-      console.log('getLists AddProductToListPage');
     }
   }, []);
 
@@ -29,7 +28,7 @@ export const AddProductToListPage: React.FC = () => {
       {list && (
         <React.Fragment>
           <MobileMenuBackBtn
-            redirectUrl={`/account/your-lists/${list?.cache_url}`}
+            redirectUrl={`/account/shopping-lists/${list?.cache_url}`}
             label={"back"}
           />
           <div className="page-label">Add to list</div>

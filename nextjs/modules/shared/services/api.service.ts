@@ -1,6 +1,8 @@
+import axios from "axios";
+
 export class ApiService {
   async head(url: string): Promise<Response> {
-    return await fetch(url, {
+    return await axios(url, {
       method: "HEAD",
       mode: "no-cors",
       cache: "no-cache",
@@ -14,9 +16,8 @@ export class ApiService {
   }
 
   async get<T>(url: string): Promise<T> {
-    const response = await fetch(url, {
+    const response = await axios(url, {
       method: "GET",
-      mode: "cors",
       cache: "no-cache",
       credentials: "same-origin",
       headers: {
@@ -28,24 +29,19 @@ export class ApiService {
       referrerPolicy: "no-referrer",
     });
 
-    return response.json();
+    return response.data;
   }
 
   async post<T>(url: string, data: BodyInit): Promise<T> {
-    const response = await fetch(url, {
+    const response = await axios(url, {
       method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
       headers: {
         "Access-Control-Allow-Origin": "*",
         "X-Requested-With": "XMLHttpRequest",
       },
-      body: data,
+      data: data,
     });
 
-    return response.json();
+    return response.data;
   }
 }

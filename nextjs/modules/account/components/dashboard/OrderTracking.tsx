@@ -11,15 +11,24 @@ import Styles from "@modules/account/components/dashboard/OrderTracking.module.s
 
 interface IProps {
   orderInfo: {
-    orderNumber: string;
-    order_group_id: number;
-    tracking: string;
-    statuses: {
-      id: number;
-      group_id: number;
-      status: string;
-      old_status: string;
-      updated: string;
+    order_prefix: string;
+    orderid: number;
+    groups: {
+      order_group_id: number;
+      statuses_history: {
+        id: number;
+        group_id: number;
+        status: string;
+        old_status: string;
+        updated: string;
+      }[];
+      trackings: {
+        id: number;
+        tracknum: string;
+        carrier: {
+          link: string;
+        };
+      }[];
     }[];
   };
 }
@@ -44,13 +53,13 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
         <div className={cn(Styles.header, "d-flex w-100 align-items-end")}>
           <div className={Styles.order}>
             <div className={Styles.orderNumber}>
-              Order # {orderInfo.orderNumber}
+              Order # {`${orderInfo.order_prefix}${orderInfo.orderid}`}
             </div>
           </div>
           <div className="d-none d-md-block text-center text-lg-start flex-grow-1">
             <Link
               href={`/order/[id]/order-tracking`}
-              as={`/order/${orderInfo.orderNumber}/order-tracking`}
+              as={`/order/${orderInfo.orderid}/order-tracking`}
             >
               <a>
                 <span className={Styles.textBlue}>View details</span>
@@ -59,7 +68,9 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
           </div>
           <div className="d-none d-md-inline">
             <Link href={invoiceUrl}>
-              <a className={Styles.textBlue} target={"_blank"}>Invoice.pdf</a>
+              <a className={Styles.textBlue} target={"_blank"}>
+                Invoice.pdf
+              </a>
             </Link>
           </div>
         </div>
@@ -75,14 +86,6 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
               "mt-lg-14"
             )}
           >
-            <b>
-              {orderInfo.tracking && (
-                <>
-                  Tracking number <br className="d-md-none" />
-                  <span className={Styles.textBlue}>{orderInfo.tracking}</span>
-                </>
-              )}
-            </b>
             <Link href={invoiceUrl}>
               <a
                 className={cn(Styles.textBlue, "d-block float-right d-md-none")}
@@ -91,7 +94,31 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
               </a>
             </Link>
           </div>
-          <OrderTrackingLine statuses={orderInfo.statuses} />
+          <div className={Styles.trackingList}>
+            {orderInfo.groups.map((group, i) => (
+              <div key={`${group.order_group_id}_${i}`}>
+                <b>
+                  {!!group.trackings.length &&
+                    group.trackings.map((track, i) => (
+                      <div key={`${track.id}_${i}`}>
+                        Tracking number <br className="d-md-none" />
+                        <a
+                          target={"_blank"}
+                          href={track.carrier.link.replace(
+                            "{{tracknum}}",
+                            track.tracknum
+                          )}
+                          className={Styles.textBlue}
+                        >
+                          {track.tracknum}
+                        </a>
+                      </div>
+                    ))}
+                </b>
+                <OrderTrackingLine statuses={group.statuses_history} />
+              </div>
+            ))}
+          </div>
         </div>
       }
       footer={

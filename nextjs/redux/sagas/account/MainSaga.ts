@@ -15,6 +15,35 @@ import DecisionsSaga from "@redux/sagas/account/DecisionsSaga";
 import SuggestionSaga from "@redux/sagas/SuggestionSaga";
 import FeedbackSaga from "@redux/sagas/account/FeedbackSaga";
 import Cart from "@redux/sagas/Cart";
+import axios from "axios";
+
+axios.interceptors.request.use(
+  function (config) {
+    config.headers = {
+      ...config.headers,
+      "X-Requested-With": "XMLHttpRequest",
+    };
+    return config;
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      window.location.href = "/account/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      window.location.href = "/account/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default function* accountRootSaga(): Generator {
   yield all([

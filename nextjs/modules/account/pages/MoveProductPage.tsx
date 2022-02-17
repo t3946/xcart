@@ -9,9 +9,8 @@ import { transferProductList } from "@redux/actions/account-actions/ListsActions
 
 export const MoveProductPage: React.FC = () => {
   const router = useRouter();
-  const { productListId, productId } = router.query;
+  const { productListId, list_product_id } = router.query;
   let { lists } = useSelectorAccount((state) => state.lists);
-
   if (lists === null) {
     lists = [];
   }
@@ -25,22 +24,30 @@ export const MoveProductPage: React.FC = () => {
       return;
     }
 
-    const toList = lists.find((e) => e.productListId === value);
-
-    if (toList) {
-      const productOnList = toList.products.find(
-        (e) => e.productId === Number(productId)
+    if (list) {
+      const movingItem = list.products.find(
+        (item) => (item.list_product_id = Number(list_product_id))
       );
-      if (productOnList) {
-        snackbar.show(
-          `This item already added to list`,
-          3000,
-          VariantsEnum.error
+      const toList = lists.find((e) => e.productListId === value);
+      if (movingItem?.productType === "product") {
+        const productOnList = toList.products.find(
+          (e) => e.productId === movingItem.productId
         );
-        return;
+        if (productOnList) {
+          snackbar.show(
+            `This item already added to list`,
+            3000,
+            VariantsEnum.error
+          );
+          return;
+        }
       }
       dispatch(
-        transferProductList(Number(productListId), value, Number(productId))
+        transferProductList(
+          Number(productListId),
+          value,
+          Number(list_product_id)
+        )
       );
       router.push(`/shopping-lists/${toList.cacheUrl}`);
     }
@@ -56,6 +63,7 @@ export const MoveProductPage: React.FC = () => {
       {lists.map((e) => (
         <RadioBtn
           name="radio"
+          key={`${e.productListId}`}
           id="radio-item-view"
           viewValue={<div className="move-product-label">{e.name}</div>}
           groupClasses={{

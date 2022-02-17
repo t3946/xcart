@@ -108,6 +108,8 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       </div>
       <div
         className={cn(
+          "mt-20",
+          "mt-md-0",
           "list-header-left-side",
           "justify-content-md-center",
           "justify-content-lg-start",

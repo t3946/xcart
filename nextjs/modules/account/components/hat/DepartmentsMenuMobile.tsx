@@ -164,7 +164,12 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
 
   return (
     <div className={classnames(classes.container)}>
-      <h3 className="departments-menu-mobile-hat m-0 d-flex align-items-center justify-content-between">
+      <h3
+        className={cn(
+          Styles.departmentsMenuMobileHat,
+          "departments-menu-mobile-hat m-0 d-flex align-items-center justify-content-between"
+        )}
+      >
         Departments
         <span onClick={hideMobileDepartmentsMenu}>
           <TimesIcon className={Styles.menuIcon} />

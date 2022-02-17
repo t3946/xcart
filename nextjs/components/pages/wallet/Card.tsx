@@ -79,13 +79,14 @@ const Card: React.FC<IProps> = (props) => {
 
   return (
     <div className="wallet-card-container">
-      <div onClick={accordion.onItemClick} className={`wallet-card-header row m-0`}>
+      <div
+        onClick={accordion.onItemClick}
+        className={`wallet-card-header row m-0`}
+      >
         <CardHeader cardLast4={card.last4} cardType={card.brand} />
-        <div className="col-4">
-          {expTemplate()}
-        </div>
+        <div className="col-4">{expTemplate()}</div>
 
-        <div className="col-4 d-flex align-items-center justify-content-between pe-0">
+        <div className="col-4 d-flex align-items-center justify-content-end justify-content-md-between pe-0">
           <div
             className={`wallet-header-default-block ${
               isDefault && "wallet-header-default-block_is-default"
@@ -128,7 +129,7 @@ const Card: React.FC<IProps> = (props) => {
                 Edit
               </button>
             </div>
-            
+
             <div className="col-6">
               <Button
                 className={"col-6"}

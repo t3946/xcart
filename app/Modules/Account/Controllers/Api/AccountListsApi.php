@@ -107,7 +107,7 @@ class AccountListsApi extends Controller
             return;
         }
         /** @var ListItemsModel $listItem */
-        $listItem = ListItemsModel::objects()->get(['product_list_id' => $form['fromListId'], 'product_id' => $form['productId']]);
+        $listItem = ListItemsModel::objects()->get(['product_list_id' => $form['fromListId'], 'list_items_id' => $form['list_items_id']]);
         $listItem->product_list_id = $form['toListId'];
         $listItem->save();
 

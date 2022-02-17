@@ -1,8 +1,13 @@
 @import "~style-modules/sass-utils";
 
 .userIcon {
-  width: rem-calc(45);
-  height: initial;
+  width: rem-calc(24);
+  height: rem-calc(25);
+
+  @include breakpoint(md up) {
+    width: rem-calc(45);
+    height: rem-calc(30);
+  }
 
   @include breakpoint(lg up) {
     width: rem-calc(20);

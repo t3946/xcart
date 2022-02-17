@@ -17,7 +17,7 @@ export interface OrderStoreItem {
 export interface OrderGroup {
   manufacturer?: OrderManufacturer;
   products?: OrderProduct[];
-  tracks?: OrderGroupTrack[];
+  trackings?: OrderGroupTrack[];
   a2bStatus?: string;
   a2cStatus?: string;
   shippingGross: number;
@@ -27,8 +27,10 @@ export interface OrderGroup {
 }
 
 export interface OrderGroupTrack {
-  number: string;
-  link: string;
+  tracknum: string;
+  carrier: {
+    link: string;
+  };
 }
 
 export interface OrderManufacturer {
