@@ -95,7 +95,7 @@ module.exports = function (passport) {
         },
       });
 
-      if (authenticators.length === 0) {
+      if (authenticators.length === 0 && !user.phone) {
         done(null, {
           user,
         });
@@ -107,6 +107,7 @@ module.exports = function (passport) {
 
       //auth by fingerprint
       if (req.body.fingerprint) {
+        console.log("fp");
         const fp = await prisma.xcart_fingerprints.findFirst({
           where: {
             user_id: user.user_id,
@@ -116,6 +117,7 @@ module.exports = function (passport) {
 
         //known device
         if (fp) {
+          console.log("known device");
           done(null, {
             user,
           });
@@ -128,6 +130,8 @@ module.exports = function (passport) {
       if (req.body.code === undefined) {
         return done({ message: "Need OTP" }, null);
       }
+
+      console.log("user.tsv_preferred_method", user.tsv_preferred_method);
 
       //check code from app
       switch (user.tsv_preferred_method) {
