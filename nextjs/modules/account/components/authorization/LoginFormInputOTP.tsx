@@ -109,6 +109,10 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
     );
   }
 
+  React.useEffect(() => {
+    sendOneTimePassword();
+  }, []);
+
   return (
     <Formik
       initialValues={initialState}
