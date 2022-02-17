@@ -73,7 +73,7 @@ function* transferProductList(action: AnyAction): Generator {
       JSON.stringify({
         fromListId: fromListId,
         toListId: toListId,
-        productId: productId,
+        list_items_id: productId,
       })
     )
     .then((response) => response);

@@ -1,8 +1,13 @@
 @import "~style-modules/sass-utils";
 
 .userIcon {
-  width: rem-calc(45);
-  height: initial;
+  width: rem-calc(24);
+  height: rem-calc(25);
+
+  @include breakpoint(md up) {
+    width: rem-calc(45);
+    height: rem-calc(30);
+  }
 
   @include breakpoint(lg up) {
     width: rem-calc(20);
@@ -12,7 +17,7 @@
 .userAvatar {
   width: auto;
   height: auto;
-  max-height: 57%;
+  max-height: 67%;
   border-radius: 100px;
 
   @include breakpoint(lg up) {

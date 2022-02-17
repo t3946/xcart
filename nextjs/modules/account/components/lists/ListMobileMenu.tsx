@@ -16,14 +16,14 @@ export const ListMobileMenu: React.FC = () => {
     <div>
       <MobileMenuBackBtn redirectUrl={`/account/`} label={"account"} />
       <div className="page-label">Shopping lists</div>
-      <div className="create-list-btn-container-mobile">
+      <div
+        onClick={() => redirectToList("actions/add-list/")}
+        className="create-list-btn-container-mobile"
+      >
         <div className="sidebar-list-cross">
           <img src="/static/frontend/images/icons/account/cross-bold.svg" />
         </div>
-        <div
-          onClick={() => redirectToList("actions/add-list/")}
-          className="create-list-label create-list-label-mobile"
-        >
+        <div className="create-list-label create-list-label-mobile">
           create a list
         </div>
       </div>

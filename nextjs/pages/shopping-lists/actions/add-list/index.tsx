@@ -6,7 +6,6 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const AddList: NextPage = () => {
   const { lists } = useSelectorAccount((state) => state.lists);
-  console.log(lists);
   return (
     <PageTwoColumns bar={<ListsSidebarMenu />}>
       {lists && <AddListPage />}

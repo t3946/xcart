@@ -45,12 +45,17 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
     const toListId = e.target.value.value;
     const toList = lists.find((list) => list.productListId === toListId);
     if (toList) {
-      const inList = toList.products.find(
-        (product) => product.productId === productId
+      const movingItem = toList.products.find(
+        (item) => item.list_items_id === productId
       );
-      if (inList) {
-        snackbar.show(`This item already added to list`);
-        return;
+      if (movingItem?.productType === "product") {
+        const inList = toList.products.find(
+          (product) => product.productId === productId
+        );
+        if (inList) {
+          snackbar.show(`This item already added to list`);
+          return;
+        }
       }
     }
     const fromListId = listView.productListId;

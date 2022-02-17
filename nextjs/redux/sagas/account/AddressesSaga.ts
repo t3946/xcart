@@ -2,6 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 import Store from "@redux/stores/Store";
 
 const api = new ApiService();
@@ -71,16 +72,22 @@ function* removeAddress(action: AnyAction): Generator {
 }
 
 function* addAddress(action: AnyAction): Generator {
-  const { success } = action;
-  const result: any = yield api
-    .post<any>(
-      `/api/account/addresses/add-address`,
-      JSON.stringify({
-        user: action.userId,
-        address: action.address,
-      })
-    )
-    .then(success);
+  const result: any = yield api.post<any>(
+    `/api/account/addresses/add-address`,
+    JSON.stringify({
+      user: action.userId,
+      address: action.address,
+    })
+  );
+
+  const oldList = Store.getState().addresses.addressesList;
+
+  const newBilling = result.find(
+    (newAddress) =>
+      !oldList.find(
+        (oldAddress) => oldAddress.address_id === newAddress.address_id
+      )
+  );
 
   try {
     yield put({
@@ -92,7 +99,9 @@ function* addAddress(action: AnyAction): Generator {
     return;
   }
 
-  yield action.onPendingEnd();
+  if (action.onPendingEnd) {
+    yield action.onPendingEnd(newBilling);
+  }
 }
 
 function* editAddress(action: AnyAction): Generator {

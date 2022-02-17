@@ -29,7 +29,7 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
       )
       .then((e) => {
         if (e.length) {
-          setMarkersCoordinates((prev) => [...prev, [e[0].lat, e[0].lon]]);
+          setMarkerCarrier([e[0].lat, e[0].lon]);
         }
       })
       .catch((e) => console.log(e));
@@ -41,27 +41,18 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
 
   const api = new ApiService();
 
-  const [markersCoordinates, setMarkersCoordinates] = useState<
-    [number, number][]
-  >([]);
-  useEffect(() => {
-    setMarkersCoordinates([shippingPos]);
-  }, [shippingPos]);
-  const showTracking = () => {
-    return orderGroupInfo.tracks?.map((track) => (
-      <OrderTrackingItem
-        orderGroupInfo={orderGroupInfo}
-        trackingInfo={track}
-        orderInfo={orderItem}
-      />
-    ));
-  };
+  const [markerCarrier, setMarkerCarrier] = useState<[number, number] | null>(
+    null
+  );
+
   return (
     <Fragment>
-      {showTracking()}
+      <OrderTrackingItem orderGroupInfo={orderGroupInfo} />
       <div className="order-tracking-info">
         <div ref={ref} className={"order-tracking-map"}>
-          {shippingPos && <Map markers={markersCoordinates} />}
+          {shippingPos && !!shippingPos.length && markerCarrier && (
+            <Map markers={[markerCarrier, shippingPos]} />
+          )}
         </div>
         <div className="order-tracking-info-addresses-cards">
           <OrderTrackingAddressCard
@@ -76,8 +67,10 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
           <OrderTrackingAddressCard
             logo={"/static/frontend/images/icons/account/shipping-to-icon.svg"}
             title="Shipping to"
-            text={`${orderItem.address.shippingZip} ${orderItem.address.shippingCity} 
-            ${orderItem.address.shippingAddress}`}
+            text={`${orderItem.address.shippingZip ?? ""} ${
+              orderItem.address.shippingCity ?? ""
+            } 
+            ${orderItem.address.shippingAddress ?? ""}`}
             onClick={() => onClickAddressCard(shippingPos)}
           />
         </div>

@@ -12,7 +12,7 @@ export const getDataToTracking = (
     { codes: ["T", "K", "M", "E", "DP"], label: "Ordered" },
     { codes: ["C", "L", "DA", "B", "G"], label: "Dispatched" },
     { codes: ["S"], label: "Shipped" },
-    { codes: [], label: "Out for delivery" },
+    { codes: ["OD"], label: "Out for delivery" },
     { codes: ["Z"], label: "Delivered" },
   ];
 

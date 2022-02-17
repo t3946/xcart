@@ -13,11 +13,14 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { ListSource } from "@modules/account/ts/types/list.type";
 import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu";
 import { useRouter } from "next/router";
+import cn from "classnames";
+
 import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
 
 const ListsPage: React.FC = () => {
   const router = useRouter();
   const lists = useSelectorAccount((state) => state.lists.lists);
+  const listView = useSelectorAccount((state) => state.lists.listView);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
   const { role, cacheUrl, source } = useSelectorAccount(
@@ -26,6 +29,7 @@ const ListsPage: React.FC = () => {
   const { cache } = router.query;
   const edit = role !== UserPrivateVariantsEnum.VIEW;
   const isBase = source === ListSource.Default;
+
   return (
     <div>
       {lists ? (
@@ -64,7 +68,9 @@ const ListsPage: React.FC = () => {
           onClick={createIdeaDialog.handleClickOpen}
           theme={ETheme.outlined}
           disabled={!edit}
-          className={"w-md-auto mx-md-auto mx-lg-0"}
+          className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0", {
+            "d-none": !listView.products.length,
+          })}
         >
           Add idea to list
         </Button>
@@ -72,5 +78,5 @@ const ListsPage: React.FC = () => {
     </div>
   );
 };
-66
+66;
 export default ListsPage;

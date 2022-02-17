@@ -14,7 +14,7 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
       .get(
-        `https://nominatim.openstreetmap.org/search.php?street=${order.address.shippingAddress}&city=${order.address.shippingCity}&state=${order.address.shippingState}&postalcode=${order.address.shippingZip}&polygon_geojson=1&format=jsonv2`
+        `https://nominatim.openstreetmap.org/search.php?city=${order.address.shippingCity}&state=${order.address.shippingState}&postalcode=${order.address.shippingZip}&polygon_geojson=1&format=jsonv2`
       )
       .then((e) => {
         if (!e[0]) {

@@ -19,7 +19,7 @@ function createMapIcon(icon: any, height: number, width: number) {
 }
 const formIcon = createMapIcon(iconFrom, 25, 30);
 
-const toIcon = createMapIcon(iconTo, 30, 20);
+const toIcon = createMapIcon(iconTo, 30, 40);
 
 interface Map {
   markers: Array<[number, number]>;

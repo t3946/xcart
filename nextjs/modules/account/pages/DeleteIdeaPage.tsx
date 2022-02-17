@@ -22,7 +22,7 @@ export const DeleteIdeaPage: React.FC = () => {
   };
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${params.listId}`);
+    history.push(`/account/shopping-lists/${params.listId}`);
   };
   return (
     <ConfirmDelete

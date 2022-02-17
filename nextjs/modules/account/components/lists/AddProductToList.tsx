@@ -16,7 +16,7 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
   product,
 }) => {
   const viewYourList = () => {
-    window.location.assign(`/account/your-lists/${info.cache_url}`);
+    window.location.assign(`/account/shopping-lists/${info.cache_url}`);
   };
 
   const productInfo = product || window.appData?.productInfo?.product;

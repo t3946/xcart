@@ -16,13 +16,11 @@ interface DeleteProductPageURLParams {
 export const DeleteProductPage: React.FC = () => {
   const router = useRouter();
   const { lists } = useSelectorAccount((state) => state.lists);
-  const { productListId, productId, entityType } = router.query;
+  const { productListId, list_product_id, entityType } = router.query;
   const dispatch = useDispatch();
 
   const deleteItem = () => {
-    dispatch(
-      deleteProduct(Number(productListId), Number(productId), onCancelClick)
-    );
+    dispatch(deleteProduct(Number(list_product_id), onCancelClick));
   };
 
   const list: List = lists.find(

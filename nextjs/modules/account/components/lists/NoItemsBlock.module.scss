@@ -1,0 +1,11 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  font-size: pxToRem(16);
+  line-height: pxToRem(20);
+  padding: pxToRem(17) pxToRem(10);
+}
+
+.image {
+  width: pxToRem(37);
+}

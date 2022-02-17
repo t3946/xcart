@@ -21,45 +21,35 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     where: {
       user_id: req.user.userId,
     },
+    select: {
+      order_prefix: true,
+      orderid: true,
+      groups: {
+        where: {
+          cb_status: {
+            in: ["AP", "P", "Q"],
+          },
+        },
+        select: {
+          order_group_id: true,
+          statuses_history: true,
+          trackings: {
+            select: {
+              id: true,
+              tracknum: true,
+              carrier: {
+                select: {
+                  link: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 
-  const orderGroups = [];
-
-  for (const order of orders) {
-    const groups = await prisma.xcart_order_groups.findMany({
-      where: {
-        orderid: order.orderid,
-        OR: [
-          {
-            cb_status: "AP",
-          },
-          {
-            cb_status: "P",
-          },
-          {
-            cb_status: "Q",
-          },
-        ],
-      },
-    });
-
-    for (const group of groups) {
-      const statuses = await prisma.xcart_order_statuses_history.findMany({
-        where: {
-          group_id: group.order_group_id,
-        },
-      });
-
-      orderGroups.push({
-        orderNumber: order.order_prefix + order.orderid,
-        order_group_id: group.order_group_id,
-        tracking: group.tracking,
-        statuses,
-      });
-    }
-  }
-
-  res.json(orderGroups);
+  res.json(orders);
 });
 
 module.exports = app;

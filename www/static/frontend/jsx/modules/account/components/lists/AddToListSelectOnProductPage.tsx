@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 import {
   addProduct,
   getLists,
@@ -33,6 +34,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   props: IProps
 ) => {
   const { name, label = "", product } = props;
+  const user = useSelectorAccount((e) => e.user);
   const lists = Store.getState().lists.lists;
   const productId = Object.keys(AppData?.products)[0];
   const productInfo = product || AppData?.products[productId];
@@ -151,6 +153,8 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       StyleUtils.cursorPointer,
     ],
   };
+
+  if (!user) return null;
 
   return (
     <div className={classnames(classes.container)}>

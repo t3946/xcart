@@ -1,7 +1,7 @@
 @import "styles/utils/Utils.module";
 
 .accountInnerPage__divider {
-  margin: pxToRem(-20);
+  margin: pxToRem(20) pxToRem(-20);
 
   @include breakpoint(md) {
     margin: pxToRem(34) pxToRem(-20) pxToRem(16);

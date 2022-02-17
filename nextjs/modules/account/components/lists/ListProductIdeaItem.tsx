@@ -39,7 +39,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
     breakpoint({
       xs: () =>
         router.push(
-          `/shopping-lists/actions/delete-product/idea/${listInfo.productListId}/${productItem.productId}/`
+          `/shopping-lists/actions/delete-product/idea/${listInfo.productListId}/${productItem.list_items_id}`
         ),
       md: deleteIdeaDialog.handleClickOpen,
     });
@@ -54,7 +54,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       label: "Add comment, quantity & priority",
       onClick: () => {
         router.push(
-          `/shopping-lists/actions/add-comment/idea/${listView.productListId}/${productItem.productId}`
+          `/shopping-lists/actions/add-comment/idea/${listInfo.productListId}/${productItem.list_items_id}`
         );
       },
     },
@@ -62,7 +62,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
       label: "Move",
       onClick: () => {
         router.push(
-          `/shopping-lists/actions/move-product/idea/${listView.productListId}/${productItem.productId}`
+          `/shopping-lists/actions/move-product/idea/${listInfo.productListId}/${productItem.list_items_id}`
         );
       },
     },
@@ -133,7 +133,7 @@ export const ListProductIdeaItem: React.FC<ListProductItemProps> = ({
           window.location.assign(`/search?q=${productItem.product.name}`)
         }
         handleDelete={deleteIdea}
-        productId={productItem.productId}
+        productId={productItem.list_items_id}
       />
       <MobileMenuForList
         items={mobileDialogItems}

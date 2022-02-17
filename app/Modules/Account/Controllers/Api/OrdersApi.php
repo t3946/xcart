@@ -141,13 +141,18 @@ class OrdersApi extends Controller
             }
 
             foreach ($group_model->trackings as $tracking_model) {
+                $carrier = $tracking_model->carrier;
                 $tracks[] = [
-                    'number' => $tracking_model->tracknum,
-                    'link' => $tracking_model->link->shipping,
+                    'tracknum' => $tracking_model->tracknum,
+                    'carrier' => [
+                        'link' => $carrier->link,
+                        'name' => $carrier->carrier,
+                        'method' => $tracking_model->link->shipping,
+                    ],
                 ];
             }
             $groups[] = [
-                'tracks' => $tracks ?? [],
+                'trackings' => $tracks ?? [],
                 'products' => $ar_products ?? [],
                 'manufacturer' => $manufacturer->getFrontendAddress(),
                 'a2bStatus' => $group_model->a2b_status,
@@ -156,6 +161,7 @@ class OrdersApi extends Controller
                 'totalPst' => $group_model->total_pst,
                 'totalTax' => $group_model->total_tax,
                 'totalGross' => $group_model->total_gross,
+                'statuses_history' => $group_model->statuses_history->asArray()->all(),
             ];
         }
         foreach ($order_model->logs_model->exclude(['type' => OrderLogModel::LOG_TYPE_PAYMENT_PROCESS]) as $log_model) {

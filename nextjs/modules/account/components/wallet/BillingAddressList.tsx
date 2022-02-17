@@ -10,6 +10,9 @@ interface BillingAddressListProps {
   value: number | null;
   onChange: Dispatch<number>;
   disabled: boolean;
+  classes?: {
+    container?: any;
+  };
 }
 
 export const BillingAddressList: React.FC<BillingAddressListProps> = ({
@@ -17,9 +20,10 @@ export const BillingAddressList: React.FC<BillingAddressListProps> = ({
   value,
   onChange,
   disabled,
+  classes,
 }) => {
   return (
-    <div className="billing-address-list-container">
+    <div className={cn(classes?.container, "billing-address-list-container")}>
       {addresses.length ? (
         addresses.map((e: AddressItemDto) => {
           return (

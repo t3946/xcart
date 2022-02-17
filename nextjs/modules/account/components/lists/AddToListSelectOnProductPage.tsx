@@ -45,7 +45,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     breakpoint({
       xs: () =>
         window.location.assign(
-          `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${productInfo.productcode}`
+          `/account/shopping-lists/add-product-to-list/${isAlreadyInList}/${listId}/${productInfo.productcode}`
         ),
       sm: addProductDialog.handleClickOpen,
     });
@@ -55,7 +55,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
     breakpoint({
       xs: () =>
         window.location.assign(
-          `/account/your-lists/add-list/${productInfo.productcode}`
+          `/account/shopping-lists/add-list/${productInfo.productcode}`
         ),
       sm: createListDialog.handleClickOpen,
     });

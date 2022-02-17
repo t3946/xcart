@@ -28,7 +28,7 @@ const PlusPanelButton: React.FC<IProps> = function (props: IProps) {
       body={
         <div className={Styles.container}>
           <Plus className={classnames(classes.icon)} />
-          <div className={classnames(classes.text)}>{text}</div>
+          {text && <div className={classnames(classes.text)}>{text}</div>}
         </div>
       }
     />

@@ -57,6 +57,7 @@ const EditPaymentMethod: React.FC<IProps> = (props) => {
           <AddBillingAddressForm
             edit={Boolean(card)}
             onCancel={() => setTypeChanging(formType.billing)}
+            onSubmitted={() => setTypeChanging(formType.billing)}
           />
         );
     }

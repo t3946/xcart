@@ -1,8 +1,13 @@
 @import "styles/utils/Utils.module";
 
 .userIcon {
-  width: pxToRem(45);
-  height: initial;
+  width: pxToRem(24);
+  height: pxToRem(25);
+
+  @include breakpoint(md) {
+    width: pxToRem(45);
+    height: pxToRem(30);
+  }
 
   @include breakpoint(lg) {
     width: pxToRem(20);
@@ -16,7 +21,7 @@
   border-radius: 100px;
 
   @include breakpoint(lg) {
-    height: auto;
+    height: pxToRem(30);
     width: pxToRem(30);
   }
 }
