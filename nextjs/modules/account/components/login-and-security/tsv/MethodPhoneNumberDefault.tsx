@@ -11,7 +11,11 @@ import { setPreferredMethodAction } from "@redux/actions/account-actions/TSVActi
 import { AxiosResponse } from "axios";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 
-const PhoneNumberAppend: React.FC<any> = function () {
+interface IProps {
+  showChange: boolean;
+}
+
+const PhoneNumberAppend: React.FC<IProps> = function (props) {
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
 
@@ -85,11 +89,13 @@ const PhoneNumberAppend: React.FC<any> = function () {
         </Tooltip>
       </div>
 
-      <div className="col-6 col-md-2 col-lg-2 d-flex align-items-end align-items-md-start justify-content-end justify-content-lg-start">
-        <span className={Styles.commonLink} onClick={setPreferredMethod}>
-          Change
-        </span>
-      </div>
+      {props.showChange && (
+        <div className="col-6 col-md-2 col-lg-2 d-flex align-items-end align-items-md-start justify-content-end justify-content-lg-start">
+          <span className={Styles.commonLink} onClick={setPreferredMethod}>
+            Change
+          </span>
+        </div>
+      )}
 
       <div className="d-none d-lg-block col-2 pe-0" />
     </div>

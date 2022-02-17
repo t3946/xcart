@@ -27,17 +27,30 @@ const Methods: React.FC<IProps> = function (props) {
     [EListType.PREFERRED]: "Preferred method",
     [EListType.BACKUP]: "Backup method",
   };
-  const appMethods = [<MethodAuthenticatorApp key={"method-auth-app"} />];
+  const appMethods = [
+    <MethodAuthenticatorApp
+      key={"method-auth-app"}
+      showChange={user.tsv_preferred_method !== "authenticator_app"}
+    />,
+  ];
   const phoneMethods = [];
 
   if (user.phone) {
     phoneMethods.push(
-      <MethodPhoneNumberDefault key={"method-phone-default"} />
+      <MethodPhoneNumberDefault
+        key={"method-phone-default"}
+        showChange={user.tsv_preferred_method !== "phone_number"}
+      />
     );
   }
 
   if (user.appendPhone) {
-    phoneMethods.push(<MethodPhoneNumberAppend key={"method-phone-append"} />);
+    phoneMethods.push(
+      <MethodPhoneNumberAppend
+        key={"method-phone-append"}
+        showChange={user.tsv_preferred_method !== "phone_number"}
+      />
+    );
   }
 
   let methods: any = [];

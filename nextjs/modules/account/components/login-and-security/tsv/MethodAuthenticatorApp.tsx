@@ -8,7 +8,11 @@ import { useDispatch } from "react-redux";
 import { AxiosResponse } from "axios";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 
-const MethodPhoneNumberAppend: React.FC<any> = function () {
+interface IProps {
+  showChange: boolean;
+}
+
+const MethodPhoneNumberAppend: React.FC<IProps> = function (props) {
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
 
@@ -38,7 +42,7 @@ const MethodPhoneNumberAppend: React.FC<any> = function () {
           <a className={Styles.commonLink}>Change</a>
         </Link>
       );
-    } else {
+    } else if (props.showChange) {
       actions.push(
         <span className={Styles.commonLink} onClick={setPreferredMethod}>
           Change
