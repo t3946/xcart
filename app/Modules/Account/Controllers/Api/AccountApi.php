@@ -31,8 +31,7 @@ class AccountApi extends Controller
     public function getCountries()
     {
         $countries = [];
-        foreach (CountryModel::objects()->all() as $key => $country)
-        {
+        foreach (CountryModel::objects()->all() as $key => $country) {
             $countries[$key]['value'] = $country->code;
             $countries[$key]['label'] = $country->name;
         }
@@ -42,13 +41,12 @@ class AccountApi extends Controller
     public function getStates()
     {
         $states = [];
-        foreach (StateModel::objects()->all() as $key => $state)
-        {
+        foreach (StateModel::objects()->all() as $key => $state) {
             $states[$key]['value'] = $state->stateid;
             $states[$key]['label'] = $state->state_name;
             $states[$key]['countryCode'] = $state->model_country_code;
         }
-        return$states;
+        return $states;
     }
 
     public function getSitePropertiesAction()
@@ -107,7 +105,8 @@ class AccountApi extends Controller
         $this->jsonResponse($initial_data);
     }
 
-    public function getInvoicePdf () {
+    public function getInvoicePdf()
+    {
         $orderid = 19;
         $order = OrderModel::objects()->get(["orderid" => $orderid]);
         $hash = OrderHelper::getOrderHash([$order->orderid, $order->s_zipcode, $order->email]);
