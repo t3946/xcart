@@ -270,7 +270,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
           listId={listId}
-          productId={productItem.productId}
+          list_items_id={productItem.list_items_id}
           info={productItem}
         />
       </BootstrapDialogHOC>

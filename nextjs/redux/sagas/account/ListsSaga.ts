@@ -152,18 +152,18 @@ function* editIdeaName(action: AnyAction): Generator {
 }
 
 function* editCommentProduct(action: AnyAction): Generator {
-  const { productId, productListId, data } = action;
+  const { list_items_id, productListId, data } = action;
   yield api
     .post(
       `/api/account/lists/edit-comment`,
       JSON.stringify({
-        productId,
+        list_items_id,
         productListId,
         data,
       })
     )
     .then((res) => res);
-  yield put({ type: "EDIT_COMMENT_LIST_VIEW", productId, data });
+  yield put({ type: "EDIT_COMMENT_LIST_VIEW", list_items_id, data });
   yield action.callback();
 }
 

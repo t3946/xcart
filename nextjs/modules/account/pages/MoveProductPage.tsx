@@ -9,7 +9,7 @@ import { transferProductList } from "@redux/actions/account-actions/ListsActions
 
 export const MoveProductPage: React.FC = () => {
   const router = useRouter();
-  const { productListId, list_product_id } = router.query;
+  const { productListId, list_items_id } = router.query;
   let { lists } = useSelectorAccount((state) => state.lists);
   if (lists === null) {
     lists = [];
@@ -26,7 +26,7 @@ export const MoveProductPage: React.FC = () => {
 
     if (list) {
       const movingItem = list.products.find(
-        (item) => (item.list_product_id = Number(list_product_id))
+        (item) => (item.list_items_id = Number(list_items_id))
       );
       const toList = lists.find((e) => e.productListId === value);
       if (movingItem?.productType === "product") {
@@ -43,11 +43,7 @@ export const MoveProductPage: React.FC = () => {
         }
       }
       dispatch(
-        transferProductList(
-          Number(productListId),
-          value,
-          Number(list_product_id)
-        )
+        transferProductList(Number(productListId), value, Number(list_items_id))
       );
       router.push(`/shopping-lists/${toList.cacheUrl}`);
     }
