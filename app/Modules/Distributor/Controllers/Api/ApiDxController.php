@@ -60,7 +60,8 @@ class ApiDxController extends Controller
                     'login' => $dx->d_login ? CoreHelper::cipherText($dx->d_login) : '',
                     'password' => $dx->d_password ? CoreHelper::cipherText($dx->d_password) : ''
                 ],
-                'feeds' => $feedData
+                'feeds' => $feedData,
+                'rules' => $dx->feed_info ?? []
             ]);
         }
     }
