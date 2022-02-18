@@ -31,10 +31,7 @@ const Methods: React.FC<IProps> = function (props) {
   const appMethods = [
     <MethodAuthenticatorApp
       key={"method-auth-app"}
-      showChange={
-        user.tsv_preferred_method !== EMethodType.APP &&
-        user.tsv_preferred_method !== EMethodType.NA
-      }
+      showChange={user.phone && user.tsv_preferred_method === EMethodType.PHONE}
     />,
   ];
   const phoneMethods = [];
