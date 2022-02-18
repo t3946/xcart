@@ -18,6 +18,7 @@ import SuppressedDevices from "@modules/account/components/login-and-security/ts
 import Styles from "@modules/account/components/login-and-security/TSVSettings.module.scss";
 import Methods, {
   EListType,
+  EMethodType,
 } from "@modules/account/components/login-and-security/tsv/Methods";
 
 const TSVSettings = (): any => {
@@ -139,15 +140,22 @@ const TSVSettings = (): any => {
           Styles.pageBody,
         ]}
       >
-        <Methods type={EListType.PREFERRED} />
+        {user.tsv_preferred_method !== EMethodType.NA && (
+          <Methods type={EListType.PREFERRED} />
+        )}
 
-        <Methods type={EListType.BACKUP} />
+        {user.tsv_preferred_method !== EMethodType.NA && (
+          <Methods type={EListType.BACKUP} />
+        )}
 
         <div className="row m-0 mb-lg-2">
           <h3
-            className={
-              "content-h3 two-step_otp-header otp-header tsv-settings-box-header p-lg-0 mb-lg-10"
-            }
+            className={cn([
+              "content-h3 two-step_otp-header otp-header tsv-settings-box-header p-lg-0 mb-lg-10",
+              {
+                "mt-0": user.tsv_preferred_method === EMethodType.NA,
+              },
+            ])}
           >
             <div className={cn(Styles.caption, "col-12")}>
               Devices that suppress OTP
