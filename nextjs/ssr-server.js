@@ -1,5 +1,5 @@
 BigInt.prototype.toJSON = function () {
-  return this.toString();
+  return parseInt(this.toString());
 };
 
 const express = require("express");
