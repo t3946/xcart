@@ -6,8 +6,9 @@ import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { transferProductList } from "@redux/actions/account-actions/ListsActions";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
+import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import Button, { ETheme } from "@modules/ui/forms/Button";
+import { checkProductCollisionInList } from "@modules/account/utils/check-product-collision-in-list";
 
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
 
@@ -44,22 +45,16 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   const handleMove = (e) => {
     const toListId = e.target.value.value;
     const toList = lists.find((list) => list.productListId === toListId);
-    if (toList) {
-      const movingItem = toList.products.find(
-        (item) => item.list_items_id === productId
+    if (checkProductCollisionInList(listView, toList, productId)) {
+      const fromListId = listView.productListId;
+      dispatch(transferProductList(fromListId, toListId, productId));
+    } else {
+      snackbar.show(
+        `This item already added to list`,
+        3000,
+        VariantsEnum.error
       );
-      if (movingItem?.productType === "product") {
-        const inList = toList.products.find(
-          (product) => product.productId === productId
-        );
-        if (inList) {
-          snackbar.show(`This item already added to list`);
-          return;
-        }
-      }
     }
-    const fromListId = listView.productListId;
-    dispatch(transferProductList(fromListId, toListId, productId));
   };
 
   return (

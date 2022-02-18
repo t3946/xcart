@@ -19,6 +19,7 @@ const SnackbarMobile: React.FC = () => {
       dispatch(setVisibleShadowPanelAction(true));
       setDisplaying(true);
     } else {
+      dispatch(setVisibleShadowPanelAction(false));
       setDisplaying(false);
     }
   }, [snackbar]);
