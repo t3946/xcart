@@ -42,7 +42,7 @@ const PublicProfile = (): any => {
   const maxMB = 10;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
-    "/static/frontend/images/pages/account/default-avatar.svg";
+    "static/frontend/images/pages/account/default-avatar.svg";
   const [isRemoveAvatar, setIsRemoveAvatar] = React.useState(false);
   const [avatarRaw, setAvatarRaw] = React.useState("");
   const [isOpenAvatarEditor, setIsOpenAvatarEditor] = React.useState(false);

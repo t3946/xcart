@@ -27,6 +27,7 @@ const TSVChangePreferredMethod: React.FC<any> = function () {
   };
 
   const validationSchema = yup.object().shape({
+    phoneCode: yup.string().required("Required"),
     phone: phoneYupValidation,
     phone_ext: yup.string(),
   });

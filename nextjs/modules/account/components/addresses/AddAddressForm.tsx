@@ -21,6 +21,7 @@ import InputGroup from "./InputGroup";
 import Checkbox from "@modules/ui/forms/Checkbox";
 import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import ErrorFocus from "@components/common/form-validation-focus/focusFormikHook";
 
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
@@ -99,12 +100,14 @@ export const AddAddressForm: React.FC<any> = ({
         className="your-order-form"
         encType="multipart/form-data"
       >
+        <ErrorFocus formik={formik} />
         <InputGroup
           label="Country"
           error={formik.touched.country && formik.errors.country}
           component={
             <div>
               <Select
+                name="country"
                 clearable={false}
                 classes={{
                   indicatorSeparator: "d-none",
