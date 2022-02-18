@@ -1,7 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import { disableAction } from "@redux/actions/account-actions/TSVActions";
+import {
+  disableAction,
+  enableAction,
+} from "@redux/actions/account-actions/TSVActions";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import { useDispatch } from "react-redux";
 import { useDialog } from "@modules/account/hooks/useDialog";
@@ -39,7 +42,8 @@ const TSVSettings = (): any => {
   }
 
   function disableTSVButtonTemplate() {
-    const classes = {
+    const text = user.tsv_preferred_method === "na" ? "enable" : "disable";
+    const classes: any = {
       base: [
         "form-button",
         "form-button__outline",
@@ -52,31 +56,49 @@ const TSVSettings = (): any => {
         "fw-bold",
       ],
       link: ["d-flex", "align-items-center", "d-lg-none"],
-      button: ["d-none", "d-lg-block"],
     };
+
+    if (user.tsv_preferred_method !== "na") {
+      classes.button = ["d-none", "d-lg-block"];
+    }
 
     return (
       <>
-        <Link
-          href={"/login-and-security/two-step-verification-settings-disable"}
-        >
-          <span className={cn(classes.base, classes.link)}>disable</span>
-        </Link>
+        {user.tsv_preferred_method !== "na" && (
+          <Link
+            href={"/login-and-security/two-step-verification-settings-disable"}
+          >
+            <span className={cn(classes.base, classes.link)}>disable</span>
+          </Link>
+        )}
 
         <button
           className={cn(classes.base, classes.button)}
-          onClick={disableTSVModal.handleClickOpen}
+          onClick={() => {
+            //enable tsv
+            if (user.tsv_preferred_method === "na") {
+              dispatch(
+                enableAction({
+                  success(res: AxiosResponse) {
+                    dispatch(userSetAction(res.data.user));
+                  },
+                })
+              );
+              return;
+            }
+
+            //disable tsv
+            disableTSVModal.handleClickOpen();
+          }}
         >
-          disable
+          {text}
         </button>
       </>
     );
   }
 
   function disableTSVTemplate() {
-    if (user.tsv_count === 0) {
-      return;
-    }
+    const text = user.tsv_preferred_method === "na" ? "Disabled" : "Enabled";
 
     return (
       <div className="row mt-3 mt-3">
@@ -85,7 +107,7 @@ const TSVSettings = (): any => {
             Two-Step Verification
           </b>
 
-          <span className={"two-step-status-indicator"}>Enabled</span>
+          <span className={"two-step-status-indicator"}>{text}</span>
         </div>
 
         <div className="col-12 col-sm-6 d-flex justify-content-end">

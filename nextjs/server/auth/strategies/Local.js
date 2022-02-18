@@ -95,7 +95,11 @@ module.exports = function (passport) {
         },
       });
 
-      if (authenticators.length === 0 && !user.phone) {
+      // no tsv methods
+      if (
+        user.tsv_preferred_method === "na" ||
+        (authenticators.length === 0 && !user.phone)
+      ) {
         done(null, {
           user,
         });

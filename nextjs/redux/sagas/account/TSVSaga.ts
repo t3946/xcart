@@ -17,10 +17,16 @@ function* confirmDevice(action: AnyAction) {
     });
 }
 
+function* enable(action: AnyAction) {
+  const { success } = action.payload;
+
+  yield axios.get<any>("/api-client/user/tsv/enable").then(success);
+}
+
 function* disable(action: AnyAction) {
   const { data, success } = action.payload;
 
-  yield axios.get<any>("/api-client/user/tsv/disable", data).then(success);
+  yield axios.post<any>("/api-client/user/tsv/disable", data).then(success);
 }
 
 function* requireForAll(action: AnyAction) {
@@ -50,6 +56,7 @@ function* setPreferredMethod(action: AnyAction) {
 function* TSVSaga(): SagaIterator {
   yield takeLatest("ACCOUNT_TSV_CONFIRM_DEVICE", confirmDevice);
   yield takeLatest("ACCOUNT_TSV_DISABLE", disable);
+  yield takeLatest("ACCOUNT_TSV_ENABLE", enable);
   yield takeLatest("ACCOUNT_TSV_REQUIRE_FOR_ALL", requireForAll);
   yield takeLatest("ACCOUNT_TSV_SET_PREFERRED_METHOD", setPreferredMethod);
   yield takeLatest(

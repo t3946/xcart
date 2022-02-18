@@ -9,6 +9,7 @@ import MethodAuthenticatorApp from "@modules/account/components/login-and-securi
 export enum EMethodType {
   APP = "authenticator_app",
   PHONE = "phone_number",
+  NA = "na",
 }
 
 export enum EListType {
@@ -30,7 +31,10 @@ const Methods: React.FC<IProps> = function (props) {
   const appMethods = [
     <MethodAuthenticatorApp
       key={"method-auth-app"}
-      showChange={user.tsv_preferred_method !== "authenticator_app"}
+      showChange={
+        user.tsv_preferred_method !== EMethodType.APP &&
+        user.tsv_preferred_method !== EMethodType.NA
+      }
     />,
   ];
   const phoneMethods = [];
@@ -39,7 +43,7 @@ const Methods: React.FC<IProps> = function (props) {
     phoneMethods.push(
       <MethodPhoneNumberDefault
         key={"method-phone-default"}
-        showChange={user.tsv_preferred_method !== "phone_number"}
+        showChange={user.tsv_preferred_method !== EMethodType.PHONE}
       />
     );
   }
@@ -48,7 +52,7 @@ const Methods: React.FC<IProps> = function (props) {
     phoneMethods.push(
       <MethodPhoneNumberAppend
         key={"method-phone-append"}
-        showChange={user.tsv_preferred_method !== "phone_number"}
+        showChange={user.tsv_preferred_method !== EMethodType.PHONE}
       />
     );
   }
@@ -61,6 +65,9 @@ const Methods: React.FC<IProps> = function (props) {
       break;
     case EMethodType.PHONE:
       methods = type === EListType.PREFERRED ? phoneMethods : appMethods;
+      break;
+    case EMethodType.NA:
+      methods = type === EListType.PREFERRED ? appMethods : [];
       break;
   }
 

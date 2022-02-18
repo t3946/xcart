@@ -7,25 +7,25 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+import { Formik, Form, FormikHelpers } from "formik";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
 
 const TSVDisable: React.FC<any> = function () {
-  const [isConfirm, setIsConfirm] = React.useState(false);
-  const confirmRef = React.useRef<HTMLInputElement>();
-  const [isDisableTsvSending, setIsDisableTsvSending] = React.useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+  const initialValues = {
+    deleteSettings: false,
+  };
 
-  function disableTSVHandler() {
-    setIsDisableTsvSending(true);
+  function submit(values: any, actions: FormikHelpers<any>) {
+    actions.setSubmitting(true);
 
     dispatch(
       disableAction({
+        data: values,
         success(res: AxiosResponse) {
-          setIsDisableTsvSending(false);
           dispatch(userSetAction(res.data.user));
           router.push("/login-and-security/two-step-verification-settings");
         },
@@ -53,49 +53,62 @@ const TSVDisable: React.FC<any> = function () {
         header="Disable 2SV ?"
         bodyClasses={StylesLoginAndSecurity.pageBody}
       >
-        <div className={"px-10 px-lg-0"}>
-          <p className={"m-0"}>
-            By disabling Two-Step Verification, OTP will no longer be required
-            to Sign-In to your account.
-          </p>
+        <Formik initialValues={initialValues} onSubmit={submit}>
+          {function ({ isSubmitting, values, handleChange }) {
+            return (
+              <Form>
+                <div className={"px-10 px-lg-0"}>
+                  <p className={"m-0"}>
+                    By disabling Two-Step Verification, OTP will no longer be
+                    required to Sign-In to your account.
+                  </p>
 
-          <RBForm.Group className={"mb-4 mt-20"}>
-            <input
-              ref={confirmRef}
-              id="confirmDisableTSVField"
-              className="form-checkbox"
-              type="checkbox"
-              onChange={() => setIsConfirm(confirmRef.current.checked)}
-            />
+                  <RBForm.Group className={"mb-4 mt-20"}>
+                    <input
+                      id="confirmDisableTSVField"
+                      name={"deleteSettings"}
+                      className="form-checkbox"
+                      type="checkbox"
+                      checked={values.deleteSettings}
+                      onChange={handleChange}
+                    />
 
-            <RBForm.Label
-              className={
-                "checkbox-label mb-0 align-items-center d-flex form-label account-modal-text"
-              }
-              htmlFor={"confirmDisableTSVField"}
-            >
-              Also clear my Two-Step Verification settings
-            </RBForm.Label>
-          </RBForm.Group>
-        </div>
-        <div className={"text-center text-md-start"}>
-          <button
-            className="admin-form-control form-button d-inline-block"
-            onClick={() => isConfirm && disableTSVHandler()}
-            disabled={isDisableTsvSending || !isConfirm}
-          >
-            disable
-          </button>
+                    <RBForm.Label
+                      className={
+                        "checkbox-label mb-0 align-items-center d-flex form-label account-modal-text"
+                      }
+                      htmlFor={"confirmDisableTSVField"}
+                    >
+                      Also clear my Two-Step Verification settings
+                    </RBForm.Label>
+                  </RBForm.Group>
+                </div>
 
-          <button
-            className="form-button form-button__outline d-inline-block mt-14 mt-lg-0"
-            onClick={() =>
-              router.push("/login-and-security/two-step-verification-settings")
-            }
-          >
-            cancel
-          </button>
-        </div>
+                <div className={"text-center text-md-start"}>
+                  <button
+                    className="admin-form-control form-button d-inline-block"
+                    disabled={isSubmitting}
+                    type={"submit"}
+                  >
+                    disable
+                  </button>
+
+                  <button
+                    className="form-button form-button__outline d-inline-block mt-14 mt-lg-0"
+                    onClick={() =>
+                      router.push(
+                        "/login-and-security/two-step-verification-settings"
+                      )
+                    }
+                    type={"button"}
+                  >
+                    cancel
+                  </button>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
       </InnerPage>
     </>
   );

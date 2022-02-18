@@ -8,6 +8,11 @@ export const disableAction = (payload: Record<any, any>): any => ({
   payload,
 });
 
+export const enableAction = (payload: Record<any, any>): any => ({
+  type: "ACCOUNT_TSV_ENABLE",
+  payload,
+});
+
 export const requireForAllAction = (payload: Record<any, any>): any => ({
   type: "ACCOUNT_TSV_REQUIRE_FOR_ALL",
   payload,

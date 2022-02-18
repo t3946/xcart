@@ -46,16 +46,47 @@ api.get("/generate", isAuthMiddleware, async function (req, res) {
   });
 });
 
-api.get("/disable", isAuthMiddleware, async function (req, res) {
-  await prisma.xcart_authenticators.deleteMany({
-    where: {
-      user_id: req.user.userId,
+api.post("/disable", isAuthMiddleware, async function (req, res) {
+  if (req.body.deleteSettings) {
+    await prisma.xcart_authenticators.deleteMany({
+      where: {
+        user_id: req.user.userId,
+      },
+    });
+  }
+
+  await prisma.xcart_users.update({
+    where: { user_id: req.user.userId },
+    data: {
+      tsv_preferred_method: "na",
     },
   });
 
   const user = await prisma.xcart_users.findUnique({
     where: { user_id: req.user.userId },
   });
+
+  res.json({ user });
+});
+
+api.get("/enable", isAuthMiddleware, async function (req, res) {
+  let user = await prisma.xcart_users.findUnique({
+    where: { user_id: req.user.userId },
+  });
+
+  if (user.tsv_preferred_method === "na") {
+    console.log("na");
+    await prisma.xcart_users.update({
+      where: { user_id: req.user.userId },
+      data: {
+        tsv_preferred_method: "authenticator_app",
+      },
+    });
+
+    user = await prisma.xcart_users.findUnique({
+      where: { user_id: req.user.userId },
+    });
+  }
 
   res.json({ user });
 });
