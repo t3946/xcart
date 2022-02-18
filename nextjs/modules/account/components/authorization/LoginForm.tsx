@@ -24,9 +24,7 @@ const LoginForm: React.FC<any> = () => {
   const [login, setLogin] = React.useState<any>("");
   const [rememberMe, setRememberMe] = React.useState<any>(false);
   const [isCaptchaRequired, setIsCaptchaRequired] = React.useState(false);
-  const [preferredTSVMethod, setPreferredTSVMethod] = React.useState(
-    EMethodType.APP
-  );
+  const [tsvMethod, setTsvMethod] = React.useState<EMethodType>(EMethodType.NA);
 
   function headerTemplate() {
     switch (mode) {
@@ -48,7 +46,6 @@ const LoginForm: React.FC<any> = () => {
             goToPasswordInput={goToPasswordInput}
             submit={submit}
             setLogin={setLogin}
-            setPreferredTSVMethod={setPreferredTSVMethod}
           />
         );
       case INPUT_PASSWORD_MODE:
@@ -61,6 +58,7 @@ const LoginForm: React.FC<any> = () => {
             setPassword={setPassword}
             setRememberMe={setRememberMe}
             setIsCaptchaRequired={setIsCaptchaRequired}
+            setTsvMethod={setTsvMethod}
           />
         );
       case INPUT_OTP_MODE:
@@ -69,7 +67,7 @@ const LoginForm: React.FC<any> = () => {
             login={login}
             password={password}
             rememberMe={rememberMe}
-            preferredTSVMethod={preferredTSVMethod}
+            tsvMethod={tsvMethod}
             onLogin={() => {
               setLogin("");
               setLastSentForm({});
@@ -86,6 +84,7 @@ const LoginForm: React.FC<any> = () => {
       setRememberMe(false);
       setIsCaptchaRequired(false);
       setLastSentForm({});
+      setTsvMethod(EMethodType.NA);
     }
 
     setMode(INPUT_LOGIN_MODE);

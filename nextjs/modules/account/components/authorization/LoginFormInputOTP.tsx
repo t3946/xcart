@@ -23,17 +23,17 @@ interface IProps {
   password: string;
   rememberMe: boolean;
   onLogin: () => void;
-  preferredTSVMethod: EMethodType;
+  tsvMethod: EMethodType;
 }
 
 const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
-  const { login, password, rememberMe, onLogin, preferredTSVMethod } = props;
+  const { login, password, rememberMe, onLogin, tsvMethod } = props;
   const formText = {
     [EMethodType.APP]:
       "For added security, please enter the One Time Password (OTP) generation by your by Authenticator App",
     [EMethodType.PHONE]:
       "For added security, please enter the One Time Password (OTP) sent to your phone",
-  }[preferredTSVMethod];
+  }[tsvMethod];
   const inputRef = React.createRef<HTMLInputElement>();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -92,7 +92,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   }
 
   function sendSmsTemplate() {
-    if (preferredTSVMethod !== EMethodType.PHONE) {
+    if (tsvMethod !== EMethodType.PHONE) {
       return null;
     }
 
@@ -110,7 +110,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   }
 
   React.useEffect(() => {
-    if (preferredTSVMethod === EMethodType.PHONE) {
+    if (tsvMethod === EMethodType.PHONE) {
       sendOneTimePassword();
     }
   }, []);

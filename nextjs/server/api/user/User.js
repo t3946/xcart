@@ -19,9 +19,9 @@ app.use("/stripe", isAuthMiddleware, apiStripe);
 app.use("/tsv", apiTwoStepVerification);
 
 app.post("/login", function (req, res) {
-  passport.authenticate("local", { session: false }, async (err, result) => {
+  passport.authenticate("local", { session: false }, async (error, result) => {
     if (!result) {
-      return res.send({ error: err.message });
+      return res.send({ error });
     }
 
     req.login(result.user, { session: false }, async (err) => {
@@ -93,7 +93,6 @@ app.post("/check-login", async function (req, res) {
   if (user) {
     res.send({
       captchaRequired: user.wrong_password_attempts >= maxWrongPasswordAttempts,
-      preferredTSVMethod: user.tsv_preferred_method,
     });
   } else {
     res.json({ error: "User not found", user: req.body });
@@ -141,12 +140,27 @@ app.post("/send-login-otp", async function (req, res) {
     },
   });
 
-  //check user preferred method
-  if (user.tsv_preferred_method !== "phone_number") {
+  // check user preferences to submit sms
+
+  if (user.tsv_preferred_method === "na") {
     res.sendStatus(403);
     return;
   }
 
+  const authApp = await prisma.xcart_authenticators.findFirst({
+    where: {
+      user_id: user.user_id,
+    },
+  });
+
+  if (user.tsv_preferred_method === "authenticator_app" && authApp) {
+    res.sendStatus(403);
+    return;
+  }
+
+  // send sms with otp
+
+  // try to send old otp
   let otp = await prisma.xcart_one_time_passwords.findFirst({
     where: {
       user_id: user.user_id,
@@ -154,7 +168,6 @@ app.post("/send-login-otp", async function (req, res) {
     },
   });
 
-  //send old otp
   if (otp) {
     const now = new Date().getTime();
     const leftTime = Math.ceil((parseInt(otp.expired) - now) / 1000);

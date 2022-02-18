@@ -18,6 +18,7 @@ import generateFp from "@utils/generateFp";
 import Tooltip from "@components/common/tooltip/Tooltip";
 import { formatPhone } from "@utils/phoneNumber";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { EMethodType } from "@modules/account/components/login-and-security/tsv/Methods";
 
 interface IProps {
   login: string;
@@ -27,6 +28,7 @@ interface IProps {
   setRememberMe: (rememberMe: boolean) => void;
   isCaptchaRequired: boolean;
   setIsCaptchaRequired: (isCaptchaRequired: boolean) => void;
+  setTsvMethod: (method: EMethodType) => void;
 }
 
 const LoginFormInputPassword = function (props: IProps): any {
@@ -41,6 +43,7 @@ const LoginFormInputPassword = function (props: IProps): any {
     setRememberMe,
     isCaptchaRequired,
     setIsCaptchaRequired,
+    setTsvMethod,
   } = props;
   const [captcha, setCaptcha] = React.useState<number>(null);
   const google_recaptchav2_site_key = useSelectorAccount(
@@ -131,9 +134,10 @@ const LoginFormInputPassword = function (props: IProps): any {
               grecaptcha.reset(captcha);
             }
 
-            if (res.data.error === "Need OTP") {
+            if (res.data.error.message === "tsv required") {
               setPassword(data.password);
               setRememberMe(data.rememberMe);
+              setTsvMethod(res.data.error.method);
               goToOTPInput();
               return;
             }

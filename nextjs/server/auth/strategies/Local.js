@@ -111,7 +111,6 @@ module.exports = function (passport) {
 
       //auth by fingerprint
       if (req.body.fingerprint) {
-        console.log("fp");
         const fp = await prisma.xcart_fingerprints.findFirst({
           where: {
             user_id: user.user_id,
@@ -121,7 +120,6 @@ module.exports = function (passport) {
 
         //known device
         if (fp) {
-          console.log("known device");
           done(null, {
             user,
           });
@@ -130,15 +128,39 @@ module.exports = function (passport) {
         }
       }
 
-      //auth by secret code
-      if (req.body.code === undefined) {
-        return done({ message: "Need OTP" }, null);
+      // select tsv method
+      let method;
+
+      // try toggle tsv method if it can't be supported
+      switch (user.tsv_preferred_method) {
+        case "authenticator_app":
+          if (authenticators.length) {
+            method = "authenticator_app";
+          } else if (authenticators.length === 0 && user.phone) {
+            method = "phone_number";
+          }
+
+          break;
+
+        case "phone_number":
+          if (user.phone) {
+            method = "phone_number";
+          } else if (!user.phone && authenticators.length > 0) {
+            method = "authenticator_app";
+          }
+
+          break;
       }
 
-      console.log("user.tsv_preferred_method", user.tsv_preferred_method);
+      console.log("method", { method });
+
+      // anything method supported but code not found
+      if (method && req.body.code === undefined) {
+        return done({ message: "tsv required", method }, null);
+      }
 
       //check code from app
-      switch (user.tsv_preferred_method) {
+      switch (method) {
         case "authenticator_app":
           await axios
             .post(process.env.BASE_URL_NGINX + "/api/account/tsv/check-code", {
@@ -161,19 +183,6 @@ module.exports = function (passport) {
                   },
                 });
               }
-
-              //update user data
-              user = await prisma.xcart_users.findFirst({
-                where: {
-                  user_id: user.user_id,
-                },
-              });
-
-              delete user.password;
-
-              done(null, {
-                user,
-              });
             });
           break;
 
@@ -220,21 +229,21 @@ module.exports = function (passport) {
             });
           }
 
-          //update user data
-          user = await prisma.xcart_users.findFirst({
-            where: {
-              user_id: user.user_id,
-            },
-          });
-
-          delete user.password;
-
-          done(null, {
-            user,
-          });
-
           break;
       }
+
+      //update user data
+      user = await prisma.xcart_users.findFirst({
+        where: {
+          user_id: user.user_id,
+        },
+      });
+
+      delete user.password;
+
+      done(null, {
+        user,
+      });
     })
   );
 };
