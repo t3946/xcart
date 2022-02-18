@@ -7,13 +7,11 @@ datasource db {
   url      = env("DB_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model a_coeff {
+  id                 Int     @id @default(autoincrement()) @db.UnsignedInt
   manufacturerid     Int     @default(0)
   d_shiiping_a_coeff Decimal @default(0.00) @db.Decimal(12, 2)
   d_shipping_b_coeff Decimal @default(1.00) @db.Decimal(12, 2)
-
-  @@ignore
 }
 
 model account_addresses {
@@ -22,18 +20,18 @@ model account_addresses {
   country                String                  @db.Char(2)
   phone_number           String                  @db.VarChar(50)
   street                 String                  @db.VarChar(50)
-  detailed               String?                  @db.VarChar(50)
+  detailed               String?                 @db.VarChar(50)
   city                   String                  @db.VarChar(50)
-  state                  Int                     @default(0)
+  state                  Int?
   zip                    String                  @db.VarChar(50)
   is_default             Int?                    @db.TinyInt
   delivery_type_id       Int?                    @db.UnsignedInt
-  user_id                Int                     @db.UnsignedInt
+  user_id                BigInt                  @db.UnsignedBigInt
   address_type           String?                 @default("shipping") @db.Char(50)
   phone_ext              String?                 @db.VarChar(10)
   xcart_countries        xcart_countries         @relation(fields: [country], references: [code], onDelete: Cascade, map: "FK_account_addresses_xcart_countries")
   account_delivery_types account_delivery_types? @relation(fields: [delivery_type_id], references: [delivery_type_id], onDelete: Cascade, map: "FK_account_addresses_account_delivery_types")
-  xcart_states           xcart_states            @relation(fields: [state], references: [stateid], onDelete: Cascade, map: "FK_account_addresses_xcart_states")
+  xcart_states           xcart_states?           @relation(fields: [state], references: [stateid], onDelete: Cascade, map: "FK_account_addresses_xcart_states")
   xcart_users            xcart_users             @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_addresses_xcart_users")
   account_credit_cards   account_credit_cards[]
 
@@ -51,7 +49,7 @@ model account_credit_cards {
   card_number          String?                @db.VarChar(50)
   card_type            String?                @db.VarChar(50)
   expires              String?                @db.VarChar(250)
-  user_id              Int                    @db.UnsignedInt
+  user_id              BigInt                 @db.UnsignedBigInt
   account_addresses    account_addresses      @relation(fields: [address_id], references: [address_id], onDelete: Cascade, map: "FK_account_credit_cards_account_addresses")
   xcart_users          xcart_users            @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_credit_cards_xcart_users")
   account_transactions account_transactions[]
@@ -61,16 +59,17 @@ model account_credit_cards {
 }
 
 model account_decisions {
-  decision_id       Int                 @id @default(autoincrement()) @db.UnsignedInt
-  type              String              @db.VarChar(31)
-  solved            Int                 @default(0) @db.UnsignedTinyInt
-  options           Json?
-  order_id          Int
-  order_number      String?             @db.VarChar(31)
-  created           DateTime?           @default(now()) @db.DateTime(0)
-  updated           DateTime?           @default(now()) @db.DateTime(0)
-  xcart_orders      xcart_orders        @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
-  decision_licenses decision_licenses[]
+  decision_id              Int                        @id @default(autoincrement()) @db.UnsignedInt
+  type                     String                     @db.VarChar(63)
+  solved                   Int                        @default(0) @db.UnsignedTinyInt
+  options                  Json?
+  order_id                 Int
+  order_number             String?                    @db.VarChar(31)
+  created                  DateTime?                  @default(now()) @db.DateTime(0)
+  updated                  DateTime?                  @default(now()) @db.DateTime(0)
+  xcart_orders             xcart_orders               @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
+  decision_licenses        decision_licenses[]
+  decisions_customer_files decisions_customer_files[] @ignore
 
   @@index([order_id], map: "account_decision_xcart_orders_orderid_fk")
 }
@@ -87,18 +86,19 @@ model account_list_ideas {
 }
 
 model account_list_items {
-  list_items_id         Int                   @id @default(autoincrement())
+  list_items_id         Int                          @id @default(autoincrement())
   product_id            Int
-  product_list_id       Int                   @db.UnsignedInt
-  order_by              Int                   @default(999999) @db.UnsignedMediumInt
-  product_type          String?               @default("product") @db.VarChar(50)
-  comment               String?               @db.VarChar(256)
-  priority              String?               @db.VarChar(50)
-  needs                 String?               @db.VarChar(50)
-  has                   String?               @db.VarChar(50)
-  add_date              DateTime              @default(now()) @db.Timestamp(0)
-  account_product_lists account_product_lists @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_list_items_account_product_lists")
+  product_list_id       Int                          @db.UnsignedInt
+  order_by              Int                          @default(999999) @db.UnsignedMediumInt
+  product_type          String?                      @default("product") @db.VarChar(50)
+  comment               String?                      @db.VarChar(256)
+  priority              account_list_items_priority?
+  needs                 String?                      @db.VarChar(50)
+  has                   String?                      @db.VarChar(50)
+  add_date              DateTime                     @default(now()) @db.Timestamp(0)
+  account_product_lists account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_list_items_account_product_lists")
 
+  @@unique([product_id, product_list_id], map: "account_list_items_product_id_product_list_id_uindex")
   @@index([product_list_id], map: "FK_account_list_items_account_product_lists")
 }
 
@@ -120,12 +120,13 @@ model account_order_cancel_requests {
 
 model account_order_problems {
   problem_id                      Int                              @id @default(autoincrement()) @db.UnsignedInt
-  problem_status                  Int?                             @default(1) @db.UnsignedInt
+  status_id                       Int?                             @default(1) @db.UnsignedInt
   order_id                        Int?                             @default(0)
   problem_text                    String?                          @db.MediumText
-  account_order_problems_statuses account_order_problems_statuses? @relation(fields: [problem_status], references: [status_id], onDelete: Cascade, onUpdate: Restrict, map: "FK_account_order_problems_account_order_problems_statuses")
+  created_at                      DateTime?                        @default(now()) @db.Timestamp(0)
+  account_order_problems_statuses account_order_problems_statuses? @relation(fields: [status_id], references: [status_id], onDelete: Cascade, onUpdate: Restrict, map: "FK_account_order_problems_account_order_problems_statuses")
 
-  @@index([problem_status], map: "FK_account_order_problems_account_order_problems_statuses")
+  @@index([status_id], map: "FK_account_order_problems_account_order_problems_statuses")
 }
 
 model account_order_problems_statuses {
@@ -152,7 +153,7 @@ model account_transactions {
   transaction_id       Int                  @id @default(autoincrement()) @db.UnsignedInt
   credit_card_id       Int                  @db.UnsignedInt
   order_id             Int
-  user_id              Int               @db.UnsignedInt
+  user_id              BigInt               @db.UnsignedBigInt
   account_credit_cards account_credit_cards @relation(fields: [credit_card_id], references: [credit_card_id], onDelete: Cascade, map: "FK_account_transactions_account_credit_cards")
   xcart_orders         xcart_orders         @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "FK_account_transactions_xcart_orders")
   xcart_users          xcart_users          @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_transactions_xcart_users")
@@ -163,13 +164,14 @@ model account_transactions {
 }
 
 model account_user_list {
-  id                    Int                   @id @default(autoincrement())
-  user_id               Int                @db.UnsignedInt
-  product_list_id       Int                   @db.UnsignedInt
-  role                  String?               @default("owner") @db.VarChar(50)
-  list_type             String?               @default("private") @db.VarChar(50)
-  account_product_lists account_product_lists @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_user_list_account_product_lists")
-  xcart_users           xcart_users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_user_list_xcart_users")
+  id                    Int                       @id @default(autoincrement())
+  user_id               BigInt                    @db.UnsignedBigInt
+  product_list_id       Int                       @db.UnsignedInt
+  role                  String?                   @default("owner") @db.VarChar(50)
+  list_type             String?                   @default("private") @db.VarChar(50)
+  source                account_user_list_source? @default(simple)
+  account_product_lists account_product_lists     @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_user_list_account_product_lists")
+  xcart_users           xcart_users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_user_list_xcart_users")
 
   @@index([product_list_id], map: "FK_account_user_list_account_product_lists")
   @@index([user_id], map: "FK_account_user_list_xcart_users")
@@ -342,14 +344,12 @@ model anveo_calls_listens {
   @@index([call_id], map: "FK_anveo_calls_listens_anveo_calls")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model area_codes {
+  id    Int     @id @default(autoincrement()) @db.UnsignedInt
   code  String? @db.VarChar(50)
   state String? @db.VarChar(50)
   c1    String? @db.VarChar(50)
   c2    String? @db.VarChar(50)
-
-  @@ignore
 }
 
 model cart_cart {
@@ -393,9 +393,9 @@ model cat_categories {
   categoryid      Int     @default(0) @db.UnsignedInt
   parent_category Int     @default(0) @db.UnsignedInt
   products_count  Int     @default(0) @db.UnsignedInt
-  newpath1        Int? @db.UnsignedInt
-  newpath2        Int? @db.UnsignedInt
-  clevel          Int? @db.UnsignedInt
+  newpath1        BigInt? @db.UnsignedBigInt
+  newpath2        BigInt? @db.UnsignedBigInt
+  clevel          BigInt? @db.UnsignedBigInt
 
   @@index([categoryid], map: "idx_categoryid")
   @@index([categoryid, parent_category], map: "idx_categoryid_parent_category")
@@ -421,8 +421,8 @@ model cidev_aaj_units {
   @@index([uom], map: "idx_uom")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model cidev_amazon_shipping_rates {
+  id                Int      @id @default(autoincrement()) @db.UnsignedInt
   tier              String?  @default("") @db.Char(100)
   delivery          String?  @default("") @db.Char(100)
   shippingid        Int?
@@ -435,8 +435,6 @@ model cidev_amazon_shipping_rates {
   wrange3           Decimal? @default(0.00) @db.Decimal(18, 2)
   wrange3_l1        Decimal? @default(0.00) @db.Decimal(18, 2)
   dunnage           Decimal? @default(0.10) @db.Decimal(18, 2)
-
-  @@ignore
 }
 
 model collaborative_fitering {
@@ -478,6 +476,14 @@ model core_static_notification {
   @@index([storefront_id], map: "FK_core_static_notification_xcart_storefronts")
 }
 
+model customer_files {
+  file_id                  Int                        @id @default(autoincrement()) @db.UnsignedInt
+  path                     String?                    @db.VarChar(255)
+  original_name            String?                    @db.VarChar(255)
+  created                  DateTime?                  @default(now()) @db.DateTime(0)
+  decisions_customer_files decisions_customer_files[] @ignore
+}
+
 model decision_licenses {
   decision_license_id Int               @id @default(autoincrement()) @db.UnsignedInt
   decision_id         Int               @db.UnsignedInt
@@ -485,6 +491,18 @@ model decision_licenses {
   account_decisions   account_decisions @relation(fields: [decision_id], references: [decision_id], onDelete: Cascade, onUpdate: NoAction, map: "decision_licenses_account_decisions_decision_id_fk")
 
   @@index([decision_id], map: "decision_licenses_account_decisions_decision_id_fk")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model decisions_customer_files {
+  decision_id       Int?               @db.UnsignedInt
+  file_id           Int?               @db.UnsignedInt
+  account_decisions account_decisions? @relation(fields: [decision_id], references: [decision_id], onDelete: Cascade, onUpdate: NoAction, map: "decisions_files_account_decisions_decision_id_fk")
+  customer_files    customer_files?    @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction, map: "decisions_customer_files_customer_files_file_id_fk")
+
+  @@index([file_id], map: "decisions_customer_files_customer_files_file_id_fk")
+  @@index([decision_id], map: "decisions_files_account_decisions_decision_id_fk")
+  @@ignore
 }
 
 model faxes_fax {
@@ -519,7 +537,7 @@ model forms_email {
   contains_action        Int                      @default(0) @db.UnsignedTinyInt
   original_sender        String?                  @db.VarChar(255)
   forms_email_action     forms_email_action?
-  forms_email_attachment forms_email_attachment[] @ignore
+  forms_email_attachment forms_email_attachment[]
   forms_email_body       forms_email_body?
   forms_email_favorite   forms_email_favorite[]
   forms_email_label      forms_email_label[]
@@ -539,15 +557,14 @@ model forms_email_action {
   @@index([user_id], map: "FK_forms_email_action_xcart_customers")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model forms_email_attachment {
+  id          Int         @id @default(autoincrement()) @db.UnsignedInt
   email_id    Int         @db.UnsignedInt
   attachment  String?     @db.VarChar(1024)
   filename    String?     @db.VarChar(255)
   forms_email forms_email @relation(fields: [email_id], references: [id], onDelete: Cascade, map: "FK_forms_email_attachment_forms_email")
 
   @@index([email_id], map: "FK_forms_email_attachment_forms_email")
-  @@ignore
 }
 
 model forms_email_body {
@@ -642,16 +659,15 @@ model google_products_stats {
   count Int      @default(0)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model helpful_reviews {
-  review_id       Int?          @db.UnsignedInt
-  user_id         Int?          @db.UnsignedInt
+  id              BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
+  review_id       BigInt?          @db.UnsignedBigInt
+  user_id         BigInt?          @db.UnsignedBigInt
   product_reviews product_reviews? @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, map: "helpful_reviews_product_reviews_product_review_id_fk")
   xcart_users     xcart_users?     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "helpful_reviews_xcart_users_user_id_fk")
 
   @@unique([review_id, user_id], map: "helpful_reviews_review_id_user_id_uindex")
   @@index([user_id], map: "helpful_reviews_xcart_users_user_id_fk")
-  @@ignore
 }
 
 model m1_export_category_matching {
@@ -831,8 +847,8 @@ model pb_history {
 }
 
 model product_reviews {
-  product_review_id Int            @id @default(autoincrement()) @db.UnsignedInt
-  user_id           Int?           @db.UnsignedInt
+  product_review_id BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id           BigInt?           @db.UnsignedBigInt
   product_id        Int?
   header            String            @db.VarChar(128)
   body              String            @db.Text
@@ -841,8 +857,8 @@ model product_reviews {
   helpful_total     Int               @default(0) @db.UnsignedInt
   xcart_products    xcart_products?   @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "product_reviews_xcart_products_productid_fk")
   xcart_users       xcart_users?      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "product_reviews_xcart_users_user_id_fk")
-  helpful_reviews   helpful_reviews[] @ignore
-  review_ratings    review_ratings[]  @ignore
+  helpful_reviews   helpful_reviews[]
+  review_ratings    review_ratings[]
 
   @@index([product_id], map: "product_reviews_xcart_products_productid_fk")
   @@index([user_id], map: "product_reviews_xcart_users_user_id_fk")
@@ -859,16 +875,16 @@ model products_sf_moves {
 }
 
 model ratings {
-  rating_id      Int           @id @default(autoincrement()) @db.UnsignedInt
+  rating_id      BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
   name           String           @db.VarChar(256)
   slug           String?          @unique(map: "ratings_slug_uindex") @db.VarChar(256)
-  review_ratings review_ratings[] @ignore
+  review_ratings review_ratings[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model review_ratings {
-  review_id             Int                  @db.UnsignedInt
-  rating_id             Int                  @db.UnsignedInt
+  id                    BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  review_id             BigInt                  @db.UnsignedBigInt
+  rating_id             BigInt                  @db.UnsignedBigInt
   rating                Int                     @db.UnsignedTinyInt
   ratings               ratings                 @relation(fields: [rating_id], references: [rating_id], onDelete: Cascade, map: "review_ratings_ratings_rating_id_fk")
   product_reviews       product_reviews         @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, map: "review_ratings_product_reviews_product_review_id_fk")
@@ -876,7 +892,6 @@ model review_ratings {
 
   @@index([review_id], map: "review_ratings_product_reviews_product_review_id_fk")
   @@index([rating_id], map: "review_ratings_ratings_rating_id_fk")
-  @@ignore
 }
 
 model s3_employees {
@@ -1104,17 +1119,16 @@ model tmp_og_status {
   tmp_og tmp_og[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model total_product_ratings {
+  id             Int             @id @default(autoincrement()) @db.UnsignedInt
   product_id     Int?
-  rating_id      Int?         @db.UnsignedInt
+  rating_id      BigInt?         @db.UnsignedBigInt
   total          Float?          @db.Float
   xcart_products xcart_products? @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "total_product_ratings_xcart_products_productid_fk")
   review_ratings review_ratings? @relation(fields: [rating_id], references: [rating_id], onDelete: Cascade, map: "total_product_ratings_review_ratings_rating_id_fk")
 
   @@unique([product_id, rating_id], map: "total_product_ratings_product_id_rating_id_uindex")
   @@index([rating_id], map: "total_product_ratings_review_ratings_rating_id_fk")
-  @@ignore
 }
 
 model translate_language {
@@ -1185,8 +1199,8 @@ model xcart_amazon_fulfillment_locations {
   address                                                                 String?                               @db.VarChar(255)
   xcart_countries                                                         xcart_countries                       @relation(fields: [country], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_countries")
   xcart_states                                                            xcart_states?                         @relation(fields: [state], references: [stateid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_states")
-  xcart_zip_xcart_amazon_fulfillment_locations_zipcodeToxcart_zip         xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcodeToxcart_zip", fields: [zipcode], references: [zip], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip") @ignore
-  xcart_zip_xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip", fields: [zipcode, country], references: [zip, country], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip_country") @ignore
+  xcart_zip_xcart_amazon_fulfillment_locations_zipcodeToxcart_zip         xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcodeToxcart_zip", fields: [zipcode], references: [zip], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip")
+  xcart_zip_xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip", fields: [zipcode, country], references: [zip, country], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip_country")
   xcart_amazon_list_inbound_shipments                                     xcart_amazon_list_inbound_shipments[]
 
   @@index([country], map: "FK_xcart_amazon_fulfillment_locations_xcart_countries")
@@ -1261,6 +1275,16 @@ model xcart_attention_tags_values_logins {
   action    String @default("") @db.VarChar(8)
 
   @@index([status_id], map: "idxStatusId")
+}
+
+model xcart_authenticators {
+  authenticator_id BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id          BigInt      @db.UnsignedBigInt
+  secret           String      @db.VarChar(16)
+  created_at       DateTime    @default(now()) @db.Timestamp(0)
+  xcart_users      xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "xcart_authenticators_xcart_users_user_id_fk")
+
+  @@index([user_id], map: "xcart_authenticators_xcart_users_user_id_fk")
 }
 
 model xcart_avs_codes {
@@ -1664,7 +1688,7 @@ model xcart_cidev_gmc_quality_issues {
   productid                           Int
   update_date                         DateTime                             @default(now()) @db.Timestamp(0)
   issue_id                            Int
-  issue_date                          DateTime                             @default(dbgenerated("0000-00-00 00:00:00")) @db.Timestamp(0)
+  issue_date                          DateTime                             @default(dbgenerated("'0000-00-00 00:00:00'")) @db.Timestamp(0)
   issue_data                          String?                              @db.LongText
   issue_destination                   String?                              @db.LongText
   fixed                               xcart_cidev_gmc_quality_issues_fixed @default(N)
@@ -1758,13 +1782,11 @@ model xcart_cidev_surf_path {
   @@index([resource_type], map: "resource_type")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_cidev_updated_amazon_orders {
+  id         Int  @id @default(autoincrement()) @db.UnsignedInt
   orderid    Int?
   type       Int?
   time_stamp Int?
-
-  @@ignore
 }
 
 model xcart_cidev_updated_products {
@@ -2359,71 +2381,57 @@ model xcart_fedex_zips {
   @@index([zip_zone], map: "zip_zone")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_attention_tag_statuses {
+  id        Int @id @default(autoincrement()) @db.UnsignedInt
   fid       Int @default(0)
   status_id Int @default(0)
 
   @@index([fid], map: "idxfid")
   @@index([status_id], map: "idxstatus")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_distributors {
+  id             Int @id @default(autoincrement()) @db.UnsignedInt
   fid            Int @default(0)
   manufacturerid Int @default(0)
-
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_fraud_statuses {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   fid          Int
   fraud_status String @default("") @db.VarChar(1)
 
   @@index([fid], map: "idx_fid")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_po_statuses {
+  id     Int                                    @id @default(autoincrement()) @db.UnsignedInt
   fid    Int
   status xcart_filter_preset_po_statuses_status
-
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_product_question_statuses {
+  id        Int    @id @default(autoincrement()) @db.UnsignedInt
   fid       Int
   pq_status String @default("") @db.VarChar(32)
-
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_ship_to_country {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   fid          Int
   country_code String @default("") @db.VarChar(32)
-
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_statuses {
+  id     Int    @id @default(autoincrement()) @db.UnsignedInt
   fid    Int
   status String @default("") @db.VarChar(2)
-
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_storefronts {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   fid          Int
   storefrontid String @default("0") @db.VarChar(32)
-
-  @@ignore
 }
 
 model xcart_filter_presets {
@@ -2445,8 +2453,9 @@ model xcart_filter_presets {
 }
 
 model xcart_fingerprints {
-  user_id     Int      @db.UnsignedInt
+  user_id     BigInt      @db.UnsignedBigInt
   fingerprint String      @db.Char(32)
+  created     DateTime?   @default(now()) @db.Timestamp(0)
   xcart_users xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_fingerprints_xcart_users_user_id_fk")
 
   @@unique([user_id, fingerprint], map: "xcart_fingerprints_user_id_fingerprint_uindex")
@@ -2588,7 +2597,7 @@ model xcart_images {
   width                Int?                   @db.UnsignedSmallInt
   height               Int?                   @db.UnsignedSmallInt
   created_at           DateTime?              @default(now()) @db.Timestamp(0)
-  xcart_reviews_images xcart_reviews_images[] @ignore
+  xcart_reviews_images xcart_reviews_images[]
 }
 
 model xcart_images_A {
@@ -2974,8 +2983,8 @@ model xcart_mailchimp_newslists {
   storefrontid Int
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_manufacturer_feed_fields {
+  id             Int    @id @default(autoincrement()) @db.UnsignedInt
   feed_id        Int?   @default(0)
   manufacturerid Int?   @default(0)
   field_name     String @default("") @db.VarChar(100)
@@ -2984,7 +2993,6 @@ model xcart_manufacturer_feed_fields {
 
   @@unique([feed_id, manufacturerid, field_name], map: "f_m_fn")
   @@index([manufacturerid], map: "manufacturerid")
-  @@ignore
 }
 
 model xcart_manufacturers {
@@ -3326,14 +3334,14 @@ model xcart_old_passwords {
 }
 
 model xcart_one_time_passwords {
-  one_time_password_id Int         @id @default(autoincrement()) @db.UnsignedInt
-  user_id              Int         @db.UnsignedInt
+  one_time_password_id BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id              BigInt      @db.UnsignedBigInt
   one_time_password    String?     @db.Char(6)
   created              DateTime    @default(now()) @db.Timestamp(0)
-  expired              String?     @db.Char(32)
   attempts_number      Int         @default(0) @db.UnsignedTinyInt
   confirmed            Boolean?    @default(false)
-  label                String?     @db.VarChar(64)
+  label                String      @db.VarChar(64)
+  expired              String      @db.VarChar(32)
   xcart_users          xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "xcart_one_time_passwords_xcart_users_user_id_fk")
 
   @@unique([user_id, label], map: "xcart_one_time_passwords_user_id_label_uindex")
@@ -3387,7 +3395,7 @@ model xcart_order_amazon_details {
   orderid                   Int
   type                      xcart_order_amazon_details_type @default(Fee)
   manufacturerid            Int
-  reportId                  Int                          @db.UnsignedInt
+  reportId                  BigInt                          @db.UnsignedBigInt
 
   @@id([AmazonShipmentID, SKU, AmazonOrderItemCode])
   @@index([AmazonOrderItemCode], map: "AmazonOrderItemCode")
@@ -3454,7 +3462,7 @@ model xcart_order_details {
 
 model xcart_order_events {
   event_id   Int      @id @default(autoincrement()) @db.UnsignedInt
-  order_id   Int   @db.UnsignedInt
+  order_id   BigInt   @db.UnsignedBigInt
   created_at DateTime @db.DateTime(0)
   message    String?  @db.VarChar(225)
   user_id    Int?
@@ -3574,8 +3582,8 @@ model xcart_order_group_taxes {
 }
 
 model xcart_order_groups {
-  order_group_id                                                          Int                                              @unique(map: "order_group_id") @default(autoincrement())
-  orderid                                                                 Int                                              @default(0)
+  order_group_id                                                          Int                                              @id @default(autoincrement())
+  orderid                                                                 Int?
   manufacturerid                                                          Int                                              @default(0)
   shippingid                                                              Int?
   shipping                                                                String                                           @default("") @db.VarChar(255)
@@ -3667,12 +3675,12 @@ model xcart_order_groups {
   xcart_order_statuses_xcart_order_groups_bd_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_bd_statusToxcart_order_statuses", fields: [bd_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK3_order_groups_bd_status")
   xcart_order_statuses_xcart_order_groups_cb_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_cb_statusToxcart_order_statuses", fields: [cb_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK1_order_groups_cb_status")
   xcart_order_statuses_xcart_order_groups_dc_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_dc_statusToxcart_order_statuses", fields: [dc_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK2_order_groups_dc_status")
-  xcart_orders                                                            xcart_orders                                     @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "FK_xcart_order_groups_xcart_orders")
+  xcart_orders                                                            xcart_orders?                                    @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "FK_xcart_order_groups_xcart_orders")
   xcart_order_details                                                     xcart_order_details[]
-  trackings                                                               xcart_order_tracking[]
-  statuses_history                                                        xcart_order_statuses_history[]
+  xcart_order_statuses_history                                            xcart_order_statuses_history[]
+  xcart_order_tracking                                                    xcart_order_tracking[]
 
-  @@id([orderid, manufacturerid])
+  @@unique([orderid, manufacturerid], map: "orderid_manufacturerid")
   @@index([dc_status], map: "FK2_order_groups_dc_status")
   @@index([bd_status], map: "FK3_order_groups_bd_status")
   @@index([cb_status, dc_status], map: "cb_status_dc_status")
@@ -3739,6 +3747,17 @@ model xcart_order_statuses {
   @@index([type], map: "type2")
 }
 
+model xcart_order_statuses_history {
+  id                 Int                 @id @default(autoincrement())
+  group_id           Int?
+  status             String?             @db.VarChar(31)
+  old_status         String?             @db.VarChar(31)
+  updated            DateTime?           @default(now()) @db.Timestamp(0)
+  xcart_order_groups xcart_order_groups? @relation(fields: [group_id], references: [order_group_id], onDelete: NoAction, onUpdate: NoAction, map: "adshf9h9h2934f")
+
+  @@index([group_id], map: "adshf9h9h2934f")
+}
+
 model xcart_order_tracking {
   id                           Int                          @id @default(autoincrement()) @db.UnsignedInt
   order_group_id               Int
@@ -3749,7 +3768,7 @@ model xcart_order_tracking {
   aftership_id                 String?                      @db.VarChar(50)
   send_to_amazon               Int                          @default(0) @db.TinyInt
   created_at                   DateTime                     @default(now()) @db.Timestamp(0)
-  carrier                      xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
+  xcart_tracking_links_carrier xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
   xcart_tracking_links         xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
   xcart_order_groups           xcart_order_groups           @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_order_groups")
 
@@ -3783,8 +3802,8 @@ model xcart_order_transactions {
 }
 
 model xcart_order_user_actives {
-  user_id    Int
-  order_id   Int
+  user_id    BigInt
+  order_id   BigInt
   created_at DateTime                         @db.DateTime(0)
   action     xcart_order_user_actives_action?
 
@@ -3793,8 +3812,8 @@ model xcart_order_user_actives {
 }
 
 model xcart_order_user_actives_last {
-  user_id    Int
-  order_id   Int
+  user_id    BigInt
+  order_id   BigInt
   created_at DateTime @db.DateTime(0)
 
   @@id([user_id, order_id])
@@ -3802,7 +3821,7 @@ model xcart_order_user_actives_last {
 
 model xcart_orders {
   orderid                                  Int                                  @default(autoincrement())
-  user_id                                  Int?                              @db.UnsignedInt
+  user_id                                  BigInt?                              @db.UnsignedBigInt
   order_prefix                             String                               @db.VarChar(50)
   order_type                               xcart_orders_order_type              @default(XCART)
   login                                    String                               @default("") @db.VarChar(32)
@@ -3930,16 +3949,16 @@ model xcart_orders {
   billing_same_shipping                    Int                                  @default(1) @db.TinyInt
   is_new_checkout                          Int                                  @default(0) @db.UnsignedTinyInt
   xcart_storefronts                        xcart_storefronts                    @relation(fields: [storefrontid], references: [storefrontid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_orders_xcart_storefronts")
+  xcart_users                              xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_orders_xcart_users_user_id_fk")
   account_decisions                        account_decisions[]
   account_order_cancel_requests            account_order_cancel_requests[]
   account_transactions                     account_transactions[]
   faxes_fax                                faxes_fax[]
-  groups                                   xcart_order_groups[]  
   xcart_amazon_list_inbound_shipments      xcart_amazon_list_inbound_shipments?
   xcart_order_details                      xcart_order_details[]
-  xcart_po_pipeline                        xcart_po_pipeline[]
-  xcart_users                              xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_orders_xcart_users_user_id_fk")
+  xcart_order_groups                       xcart_order_groups[]
   xcart_order_transactions                 xcart_order_transactions[]
+  xcart_po_pipeline                        xcart_po_pipeline[]
 
   @@id([orderid, date])
   @@index([amazon_fulfillment_channel, orderid, date], map: "amazon_fulfillment_channel")
@@ -4091,11 +4110,11 @@ model xcart_partner_plans {
 }
 
 model xcart_partner_plans_commissions {
-  plan_id         Int                                             @default(0)
-  commission      Decimal                                         @default(0.00) @db.Decimal(12, 2)
-  commission_type xcart_partner_plans_commissions_commission_type @default(dbgenerated("%"))
-  item_id         Int                                             @default(0)
-  item_type       String                                          @default("A") @db.Char(1)
+  plan_id         Int     @default(0)
+  commission      Decimal @default(0.00) @db.Decimal(12, 2)
+  commission_type String  @default("%") @db.Char(1)
+  item_id         Int     @default(0)
+  item_type       String  @default("A") @db.Char(1)
 
   @@id([plan_id, item_id, item_type])
 }
@@ -4114,8 +4133,8 @@ model xcart_partner_tier_commissions {
   commission Decimal @default(0.00) @db.Decimal(12, 2)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_partner_views {
+  id        Int    @id @default(autoincrement()) @db.UnsignedInt
   login     String @default("") @db.VarChar(32)
   add_date  Int    @default(0)
   class     String @default("") @db.Char(1)
@@ -4123,7 +4142,6 @@ model xcart_partner_views {
   productid Int    @default(0)
 
   @@index([login], map: "login")
-  @@ignore
 }
 
 model xcart_payment_methods {
@@ -4189,7 +4207,7 @@ model xcart_pbx_options {
 
 model xcart_pc_category_terms {
   categoryid     Int            @default(0)
-  termid         Int         @default(0)
+  termid         BigInt         @default(0)
   term_count     Int            @default(0) @db.UnsignedInt
   xcart_pc_terms xcart_pc_terms @relation(fields: [termid], references: [termid], onDelete: Cascade, map: "FK_xcart_pc_category_terms_xcart_pc_terms")
 
@@ -4236,7 +4254,7 @@ model xcart_pc_runs_log {
 }
 
 model xcart_pc_terms {
-  termid                  Int                    @id @default(autoincrement())
+  termid                  BigInt                    @id @default(autoincrement())
   term                    String                    @unique(map: "term-sfid") @default("") @db.VarChar(255)
   xcart_pc_category_terms xcart_pc_category_terms[]
 
@@ -4444,7 +4462,7 @@ model xcart_product_reviews {
   email                String                 @default("") @db.VarChar(128)
   message              String                 @db.Text
   productid            Int                    @default(0)
-  xcart_reviews_images xcart_reviews_images[] @ignore
+  xcart_reviews_images xcart_reviews_images[]
   xcart_reviews_videos xcart_reviews_videos[]
 
   @@index([productid], map: "productid")
@@ -4458,19 +4476,8 @@ model xcart_product_taxes {
   @@id([productid, taxid])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model xcart_product_tmp {
-  productid        Int     @default(0)
-  brandid          Int?
-  fulldescr        String  @db.MediumText
-  brand_normalized Boolean @default(false)
-  new_map_price    Decimal @default(0.00) @db.Decimal(12, 2)
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_product_verification_history {
+  id                                                                                                                      Int                                 @id @default(autoincrement()) @db.UnsignedInt
   productid                                                                                                               Int
   verification_note                                                                                                       String                              @db.Text
   timestamp                                                                                                               Int
@@ -4484,15 +4491,14 @@ model xcart_product_verification_history {
   @@index([productid], map: "fk_xcart_verification_history_xcart_product_st_idx2")
   @@index([oldstatusid], map: "fk_xcart_verification_history_xcart_product_verification_st_idx")
   @@index([newstatusid], map: "fk_xcart_verification_history_xcart_product_verification_st_idx1")
-  @@ignore
 }
 
 model xcart_product_verification_statuses {
   statusid                                                                                                               Int                                  @id @default(autoincrement())
   name                                                                                                                   String                               @db.VarChar(255)
   orderby                                                                                                                Int                                  @default(10)
-  xcart_product_verification_history_xcart_product_verification_history_newstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_newstatusidToxcart_product_verification_statuses") @ignore
-  xcart_product_verification_history_xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses") @ignore
+  xcart_product_verification_history_xcart_product_verification_history_newstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_newstatusidToxcart_product_verification_statuses")
+  xcart_product_verification_history_xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses")
 }
 
 model xcart_product_videos {
@@ -4616,7 +4622,7 @@ model xcart_products {
   last_verify_date                           Int?                                        @default(0)
   retail_trust_enabled                       xcart_products_retail_trust_enabled         @default(N)
   log_stock_history                          xcart_products_log_stock_history            @default(N)
-  in_list_showed                             Int?                                     @default(0)
+  in_list_showed                             BigInt?                                     @default(0)
   splash_id                                  Int?
   group_root                                 Int?
   group_option                               String?                                     @db.VarChar(255)
@@ -4634,18 +4640,18 @@ model xcart_products {
   collaborative_fitering                     collaborative_fitering[]
   google_products                            google_products?
   product_reviews                            product_reviews[]
-  total_product_ratings                      total_product_ratings[]                     @ignore
+  total_product_ratings                      total_product_ratings[]
   xcart_external_verification_products_queue xcart_external_verification_products_queue?
   xcart_images_D                             xcart_images_D[]
   xcart_pricing                              xcart_pricing[]
   xcart_product_options                      xcart_product_options[]
   xcart_product_question                     xcart_product_question[]
-  xcart_product_verification_history         xcart_product_verification_history[]        @ignore
+  xcart_product_verification_history         xcart_product_verification_history[]
   xcart_products_categories                  xcart_products_categories[]
   xcart_products_hard_resell                 xcart_products_hard_resell?
   xcart_products_sf                          xcart_products_sf[]
   xcart_products_showed                      xcart_products_showed?
-  xcart_products_videos                      xcart_products_videos[]                     @ignore
+  xcart_products_videos                      xcart_products_videos[]
 
   @@index([ASIN], map: "ASIN")
   @@index([manufacturerid], map: "FK_xcart_products_xcart_manufacturers")
@@ -4664,17 +4670,6 @@ model xcart_products {
   @@index([pc_classify_status, forsale], map: "pc_classify_status")
   @@index([r_avail], map: "r_avail")
   @@index([supplier_internal_product_id], map: "supplier_internal_product_id")
-}
-
-model xcart_order_statuses_history {
-  id                 Int                 @id
-  group_id           Int?
-  status             String?             @db.VarChar(32)
-  old_status         String?             @db.VarChar(32)
-  updated            DateTime?           @db.DateTime(0)
-  xcart_order_groups xcart_order_groups? @relation(fields: [group_id], references: [order_group_id], onDelete: NoAction, onUpdate: NoAction, map: "adshf9h9h2934f")
-
-  @@index([group_id], map: "adshf9h9h2934f")
 }
 
 model xcart_products_amazon_rates {
@@ -4830,8 +4825,8 @@ model xcart_products_upc_changes {
   last_date     DateTime @default(now()) @db.Timestamp(0)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_products_videos {
+  id             Int            @id @default(autoincrement()) @db.UnsignedInt
   product_id     Int
   video_id       Int            @db.UnsignedInt
   xcart_products xcart_products @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "products_videos_xcart_products_productid_fk")
@@ -4839,7 +4834,6 @@ model xcart_products_videos {
 
   @@index([product_id], map: "products_videos_xcart_products_productid_fk")
   @@index([video_id], map: "xcart_products_videos_xcart_videos_video_id_fk")
-  @@ignore
 }
 
 model xcart_quick_flags {
@@ -5100,8 +5094,8 @@ model xcart_returns {
   @@index([itemid], map: "itemid")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_reviews_images {
+  id                    Int                   @id @default(autoincrement()) @db.UnsignedInt
   review_id             Int                   @db.UnsignedInt
   image_id              Int                   @db.UnsignedInt
   xcart_images          xcart_images          @relation(fields: [image_id], references: [image_id], onDelete: Cascade, map: "xcart_reviews_images_xcart_images_image_id_fk")
@@ -5109,10 +5103,10 @@ model xcart_reviews_images {
 
   @@index([image_id], map: "xcart_reviews_images_xcart_images_image_id_fk")
   @@index([review_id], map: "xcart_reviews_images_xcart_product_reviews_review_id_fk")
-  @@ignore
 }
 
 model xcart_reviews_videos {
+  id                    Int                   @id @default(autoincrement()) @db.UnsignedInt
   review_id             Int                   @db.UnsignedInt
   video_id              Int                   @db.UnsignedInt
   xcart_product_reviews xcart_product_reviews @relation(fields: [review_id], references: [review_id], onDelete: Cascade, map: "xcart_reviews_videos_xcart_product_reviews_review_id_fk")
@@ -5122,8 +5116,8 @@ model xcart_reviews_videos {
   @@index([video_id], map: "xcart_reviews_videos_xcart_videos_video_id_fk")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_rma_details {
+  id          Int    @id @default(autoincrement()) @db.UnsignedInt
   rma_id      Int    @default(0)
   productid   Int    @default(0)
   itemid      Int    @default(0)
@@ -5133,6 +5127,13 @@ model xcart_rma_details {
   would_like  String @default("O") @db.Char(1)
 
   @@index([rma_id], map: "rma_id")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model xcart_rma_images {
+  rma_id   Int?
+  image_id Int?
+
   @@ignore
 }
 
@@ -5227,7 +5228,7 @@ model xcart_sessions_data {
   cart_number            Int                      @default(0)
   id                     Int                      @unique(map: "id") @default(autoincrement()) @db.UnsignedInt
   new_column             Int?
-  user_id                Int?                  @db.UnsignedInt
+  user_id                BigInt?                  @db.UnsignedBigInt
   xcart_users            xcart_users?             @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_sessions_data_xcart_users_user_id_fk")
   collaborative_fitering collaborative_fitering[]
   xcart_cidev_surf_meta  xcart_cidev_surf_meta?
@@ -5442,7 +5443,7 @@ model xcart_states {
   population                         Int?
   account_addresses                  account_addresses[]
   xcart_amazon_fulfillment_locations xcart_amazon_fulfillment_locations[]
-  xcart_zip                          xcart_zip[]                          @ignore
+  xcart_zip                          xcart_zip[]
 
   @@unique([country_code, code], map: "code")
   @@unique([state, country_code], map: "state")
@@ -5498,18 +5499,17 @@ model xcart_stats_pages {
   @@index([page], map: "page")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_pages_paths {
+  id   Int    @id @default(autoincrement()) @db.UnsignedInt
   path String @default("") @db.VarChar(255)
   date Int    @default(0)
 
   @@index([date], map: "counter")
   @@index([path], map: "path")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_pages_views {
+  id       Int @id @default(autoincrement()) @db.UnsignedInt
   pageid   Int @default(0)
   time_avg Int @default(0)
   date     Int @default(0)
@@ -5517,11 +5517,10 @@ model xcart_stats_pages_views {
   @@index([date], map: "date")
   @@index([pageid], map: "pageid")
   @@index([time_avg], map: "time_avg")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_search {
+  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   search       String @default("") @db.VarChar(255)
   date         Int    @default(0)
   storefrontid Int    @default(0)
@@ -5529,19 +5528,17 @@ model xcart_stats_search {
   @@index([date], map: "date")
   @@index([search], map: "search")
   @@index([storefrontid], map: "storefrontid")
-  @@ignore
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_shop {
-  id     Int    @default(0)
-  action String @default("V") @db.Char(1)
-  date   Int    @default(0)
+  stats_id Int    @id @default(autoincrement()) @db.UnsignedInt
+  id       Int    @default(0)
+  action   String @default("V") @db.Char(1)
+  date     Int    @default(0)
 
   @@index([action], map: "action")
   @@index([date], map: "date")
   @@index([id], map: "id")
-  @@ignore
 }
 
 model xcart_stop_list {
@@ -5559,12 +5556,10 @@ model xcart_stop_list {
   @@index([ip], map: "ip")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_storefront_links {
+  id          Int @id @default(autoincrement()) @db.UnsignedInt
   storefront1 Int
   storefront2 Int
-
-  @@ignore
 }
 
 model xcart_storefronts {
@@ -5707,8 +5702,8 @@ model xcart_supplier_feeds {
   @@index([process_time], map: "process_time")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_supplier_product_feeds {
+  id                                      Int     @id @default(autoincrement()) @db.UnsignedInt
   manufacturerid                          Int     @default(0)
   storefrontid                            Int     @default(0)
   enabled_feed                            String  @default("N") @db.Char(1)
@@ -5731,7 +5726,6 @@ model xcart_supplier_product_feeds {
 
   @@index([manufacturerid], map: "manufacturerid")
   @@index([storefrontid], map: "storefrontid")
-  @@ignore
 }
 
 model xcart_tax_rate_memberships {
@@ -5873,48 +5867,38 @@ model xcart_user_filter_link {
 }
 
 model xcart_users {
-  user_id                  Int                       @id @default(autoincrement())
-  name                     String                    @db.VarChar(64)
-  rate_us                  Int?                      @db.UnsignedTinyInt
-  experience_comment       String?                   @db.MediumText
-  email                    String?                   @unique(map: "xcart_users_email_uindex") @db.VarChar(128)
-  password                 String?                   @db.VarChar(64)
-  phone                    String?                   @unique(map: "xcart_users_phone_uindex") @db.VarChar(32)
-  avatar_image             String?                   @db.VarChar(128)
+  user_id                  BigInt                           @id @default(autoincrement()) @db.UnsignedBigInt
+  name                     String                           @db.VarChar(64)
+  rate_us                  Int?                             @db.UnsignedTinyInt
+  experience_comment       String?                          @db.MediumText
+  email                    String?                          @unique(map: "xcart_users_email_uindex") @db.VarChar(128)
+  password                 String?                          @db.VarChar(64)
+  phone                    String?                          @unique(map: "xcart_users_phone_uindex") @db.VarChar(32)
+  avatar_image             String?                          @db.VarChar(128)
   cart_number              Int?
-  location                 String?                   @db.VarChar(64)
-  public_name              String?                   @db.VarChar(64)
-  phone_country_code       String?                   @db.VarChar(2)
-  tsv_count                Int?                      @default(0) @db.UnsignedSmallInt
-  decisions_required_count Int                       @default(0) @db.UnsignedTinyInt
-  wrong_password_attempts  Int                       @default(0) @db.UnsignedTinyInt
-  access_token             String?                   @db.VarChar(16)
-  tsv_suppressed           Int?                      @default(0)
-  stripe_customer_id       String?                   @db.VarChar(32)
+  location                 String?                          @db.VarChar(64)
+  public_name              String?                          @db.VarChar(64)
+  phone_country_code       String?                          @db.VarChar(2)
+  decisions_required_count Int                              @default(0) @db.UnsignedTinyInt
+  access_token             String?                          @db.VarChar(16)
+  tsv_suppressed           Int?                             @default(0)
+  stripe_customer_id       String?                          @db.VarChar(32)
+  tsv_count                Int?                             @default(0) @db.UnsignedSmallInt
   tsv_preferred_method     xcart_users_tsv_preferred_method @default(na)
+  wrong_password_attempts  Int                              @default(0)
   account_addresses        account_addresses[]
   account_credit_cards     account_credit_cards[]
   account_transactions     account_transactions[]
   account_user_list        account_user_list[]
-  helpful_reviews          helpful_reviews[]         @ignore
+  helpful_reviews          helpful_reviews[]
   product_reviews          product_reviews[]
+  xcart_authenticators     xcart_authenticators[]
   xcart_fingerprints       xcart_fingerprints[]
-  xcart_one_time_passwords xcart_one_time_passwords?
+  xcart_one_time_passwords xcart_one_time_passwords[]
   xcart_orders             xcart_orders[]
   xcart_sessions_data      xcart_sessions_data[]
-  xcart_authenticators     xcart_authenticators[]
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
-}
-
-model xcart_authenticators {
-  authenticator_id Int         @id @default(autoincrement()) @db.Int
-  user_id                Int                     @db.UnsignedInt
-  secret           String      @db.VarChar(16)
-  created_at       DateTime    @default(now()) @db.Timestamp(0)
-  xcart_users      xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_authenticators_xcart_users_user_id_fk")
-
-  @@index([user_id], map: "xcart_authenticators_xcart_users_user_id_fk")
 }
 
 model xcart_users_online {
@@ -5955,7 +5939,7 @@ model xcart_videos {
   provider              String?                 @db.VarChar(31)
   image_1               String?                 @db.VarChar(255)
   image_2               String?                 @db.VarChar(255)
-  xcart_products_videos xcart_products_videos[] @ignore
+  xcart_products_videos xcart_products_videos[]
   xcart_reviews_videos  xcart_reviews_videos[]
 }
 
@@ -6011,8 +5995,8 @@ model xcart_xmlmap_lastmod {
   @@unique([id, type], map: "it")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_zip {
+  id                                                                                               Int                                  @id @default(autoincrement()) @db.UnsignedInt
   zip                                                                                              String                               @db.VarChar(20)
   country                                                                                          String                               @db.Char(2)
   city                                                                                             String                               @db.VarChar(180)
@@ -6025,7 +6009,6 @@ model xcart_zip {
   @@index([country, state], map: "FK_xcart_zip_xcart_states")
   @@index([city], map: "city")
   @@index([zip, country], map: "zip_country")
-  @@ignore
 }
 
 model xcart_zip_code_info {
@@ -6049,12 +6032,11 @@ model xcart_zip_code_info {
   @@index([primary_city], map: "primary_city")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_zip_code_info_helper {
-  n Int
+  id Int @id @default(autoincrement()) @db.UnsignedInt
+  n  Int
 
   @@index([n], map: "idx_n")
-  @@ignore
 }
 
 model xcart_zone_element {
@@ -6073,6 +6055,19 @@ model xcart_zones {
   provider   String @default("") @db.VarChar(32)
 
   @@index([zone_name, provider], map: "zone_name")
+}
+
+enum account_list_items_priority {
+  lwst
+  low
+  med
+  high
+  hgst
+}
+
+enum account_user_list_source {
+  default
+  simple
 }
 
 enum amazon_inventory_queue_type {
@@ -6466,13 +6461,6 @@ enum xcart_orders_order_type {
   FB
 }
 
-enum xcart_partner_plans_commissions_commission_type {
-  // $ @map("$")
-  // % @map("%")
-  DOLLAR
-  PERCENT
-}
-
 enum xcart_payment_methods_order_tag_preference {
   MFN
   AFN
@@ -6595,7 +6583,7 @@ enum xcart_templates_for_communication_active {
 }
 
 enum xcart_users_tsv_preferred_method {
-  authenticator_app @map("authenticator_app")
-  phone_number @map("phone_number")
-  na @map("na")
+  authenticator_app
+  phone_number
+  na
 }

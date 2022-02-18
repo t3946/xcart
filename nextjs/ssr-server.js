@@ -1,3 +1,7 @@
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
 const express = require("express");
 const next = require("next");
 const bodyParser = require("body-parser");
