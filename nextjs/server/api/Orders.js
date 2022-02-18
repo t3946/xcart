@@ -24,7 +24,7 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     select: {
       order_prefix: true,
       orderid: true,
-      groups: {
+      xcart_order_groups: {
         where: {
           cb_status: {
             in: ["AP", "P", "Q"],
@@ -32,12 +32,12 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
         },
         select: {
           order_group_id: true,
-          statuses_history: true,
-          trackings: {
+          xcart_order_statuses_history: true,
+          xcart_order_tracking: {
             select: {
               id: true,
               tracknum: true,
-              carrier: {
+              xcart_tracking_links_carrier: {
                 select: {
                   link: true,
                 },
@@ -48,6 +48,25 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
       },
     },
   });
+
+  // rename some fields
+  for (const i in orders) {
+    orders[i].groups = orders[i].xcart_order_groups;
+    delete orders[i].xcart_order_groups;
+    const groups = orders[i].groups;
+
+    for (const group of groups) {
+      group.statuses_history = group.xcart_order_statuses_history;
+      delete group.xcart_order_statuses_history;
+      group.trackings = group.xcart_order_tracking;
+      delete group.xcart_order_tracking;
+
+      for (const tracking of group.trackings) {
+        tracking.carrier = tracking.xcart_tracking_links_carrier;
+        delete tracking.xcart_tracking_links_carrier;
+      }
+    }
+  }
 
   res.json(orders);
 });
