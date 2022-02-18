@@ -1686,15 +1686,14 @@ model xcart_cidev_filters {
 
 model xcart_cidev_gmc_quality_issues {
   productid                           Int
-  update_date                         DateTime                             @default(now()) @db.Timestamp(0)
   issue_id                            Int
-  issue_date                          DateTime                             @default(dbgenerated("'0000-00-00 00:00:00'")) @db.Timestamp(0)
-  issue_data                          String?                              @db.LongText
-  issue_destination                   String?                              @db.LongText
+  name                                String                               @db.VarChar(255)
   fixed                               xcart_cidev_gmc_quality_issues_fixed @default(N)
-  xcart_cidev_issues_processing_rules xcart_cidev_issues_processing_rules  @relation(fields: [issue_id], references: [issue_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_cidev_gmc_quality_issues_ibfk_1")
+  issue_date                          DateTime                             @default(now()) @db.Timestamp(0)
+  update_date                         DateTime?                            @db.Timestamp(0)
+  xcart_cidev_issues_processing_rules xcart_cidev_issues_processing_rules  @relation(fields: [issue_id], references: [issue_id], onDelete: Cascade, map: "xcart_cidev_gmc_quality_issues_ibfk_1")
 
-  @@id([productid, issue_id])
+  @@id([productid, issue_id, name])
   @@index([fixed], map: "fixed")
   @@index([issue_id], map: "xcart_cidev_gmc_quality_issues_ibfk_1")
 }
