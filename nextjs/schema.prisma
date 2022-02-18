@@ -1664,7 +1664,7 @@ model xcart_cidev_filter_products {
 model xcart_cidev_filter_values {
   fv_id       Int    @id @default(autoincrement())
   f_id        Int    @default(0)
-  fv_name     String @default("") @db.VarChar(768)
+  fv_name     String @default("") @db.VarChar(512)
   fv_order_by Int    @default(10)
   fv_active   String @default("Y") @db.Char(1)
 
