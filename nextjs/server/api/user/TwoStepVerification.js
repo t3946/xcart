@@ -53,6 +53,12 @@ api.post("/disable", isAuthMiddleware, async function (req, res) {
         user_id: req.user.userId,
       },
     });
+
+    await prisma.xcart_fingerprints.deleteMany({
+      where: {
+        user_id: req.user.userId,
+      },
+    });
   }
 
   await prisma.xcart_users.update({
