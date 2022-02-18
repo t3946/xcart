@@ -220,6 +220,11 @@ function* fetchListView(action: AnyAction): Generator {
   const listView = yield api
     .get(`/api/account/lists/get/${action.cache}`)
     .then((res) => res);
+
+  listView.listType = listView.users.find(
+    (user) => user.userId === getUser()?.user_id
+  ).listType;
+
   yield put({
     type: "SET_LIST_VIEW",
     listView,
