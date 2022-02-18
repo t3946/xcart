@@ -187,7 +187,8 @@ class XcartSession extends Session
                 $passed_time > $exp_time
                 || ($this->get('remember_me') === false && $passed_time > $two_hours_s)
             ) {
-                Xcart::app()->request->session->remove((new Auth)->authSessionName);
+                $this->request->cookie->remove($this->getSessionKey());
+                $this->clear();
             }
 
             if ($this->registerGlobals) {
