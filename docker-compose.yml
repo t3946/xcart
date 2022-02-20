@@ -110,6 +110,10 @@ services:
       - "443:443"
     volumes:
       - ./:/var/www
+      - /mnt/disk2/files/images:/var/www/www/images
+      - /mnt/disk2/files/files:/var/www/www/files
+      - /mnt/disk2/files/product_files:/var/www/www/product_files
+      - /mnt/disk2/files/media:/var/www/www/media
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
       - ./docker/nginx/configs/:/etc/nginx/configs/
