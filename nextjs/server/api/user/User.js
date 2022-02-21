@@ -204,7 +204,7 @@ app.post("/send-login-otp", async function (req, res) {
 
   await AxiosInstance.post("/api/account/send-sms", {
     phone: user.phone,
-    message: "OTP: " + otp.one_time_password,
+    message: "This is your One Time Password: " + otp.one_time_password,
   });
 
   delete otp.one_time_password;
