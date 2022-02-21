@@ -152,8 +152,6 @@ module.exports = function (passport) {
           break;
       }
 
-      console.log("method", { method });
-
       // anything method supported but code not found
       if (method && req.body.code === undefined) {
         return done({ message: "tsv required", method }, null);
@@ -195,13 +193,13 @@ module.exports = function (passport) {
           });
 
           if (new Date().getTime() > parseInt(otp.expired)) {
-            done({ message: { code: "Code was deprecated" } }, null);
+            done({ code: "Code was deprecated" }, null);
             return;
           }
 
           //wrong code
           if (req.body.code !== otp.one_time_password) {
-            done({ message: { code: "Code is invalid" } }, null);
+            done({ code: "Code is invalid" }, null);
             return;
           }
 
