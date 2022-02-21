@@ -46,7 +46,10 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
         const file = e.target.files[index];
 
         if (file instanceof File) {
-          if (true || formats.includes(file.type) && file.size <= maxSize * sizes.MB) {
+          if (
+            true ||
+            (formats.includes(file.type) && file.size <= maxSize * sizes.MB)
+          ) {
             if (multiple) {
               setFiles((prevState) => [...prevState, file]);
             } else {
@@ -126,7 +129,11 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
             </React.Fragment>
           ))}
         </div>
-        {error && <Feedback type="invalid">{error}</Feedback>}
+        {error && (
+          <Feedback className="d-block" type="invalid">
+            {error}
+          </Feedback>
+        )}
       </div>
     );
   }
