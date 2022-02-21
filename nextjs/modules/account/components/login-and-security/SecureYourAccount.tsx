@@ -5,17 +5,37 @@ import AlertExclamationTriangle from "@modules/icon/components/account/exclamati
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import cn from "classnames";
 import { useRouter } from "next/router";
-
+import { Formik, Form, FormikHelpers } from "formik";
 import Styles from "@modules/account/components/login-and-security/SecureYourAccount.module.scss";
+import { requireForAllAction } from "@redux/actions/account-actions/TSVActions";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { useDispatch } from "react-redux";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 function SecureYourAccount() {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelectorAccount((e) => e.user);
+
+  function submit(values: any, actions: FormikHelpers<any>) {
+    actions.setSubmitting(true);
+
+    dispatch(
+      requireForAllAction({
+        success(res: AxiosResponse) {
+          dispatch(userSetAction(res.data.user));
+          actions.setSubmitting(false);
+        },
+      })
+    );
+  }
 
   function stepItem(
     number: number,
     title: string,
     caption: string | React.ReactNode,
-    tip: string,
+    tip: string | null,
     button?: React.ReactNode
   ) {
     return (
@@ -32,7 +52,7 @@ function SecureYourAccount() {
         >
           <div>
             <div className={cn("mb-2", Styles.stepCaption)}>{caption}</div>
-            <div className={Styles.stepTip}>Tip: {tip}</div>
+            {tip && <div className={Styles.stepTip}>Tip: {tip}</div>}
           </div>
           <div>{button}</div>
         </div>
@@ -81,19 +101,32 @@ function SecureYourAccount() {
             3,
             "Sign out all apps, devices, and web browsers",
             <div className="d-flex align-items-center">
-              <AlertExclamationTriangle
-                className={"alert-icon__warning me-2"}
-              />
-              50 app(s) signed in to your S3 Stores account
+              {user.tsv_suppressed > 0 && (
+                <AlertExclamationTriangle
+                  className={"alert-icon__warning me-2"}
+                />
+              )}
+              {user.tsv_suppressed} app(s) signed in to your S3 Stores account
             </div>,
-            "For maximum security, sign out of everything",
-            <Button
-              type={"button"}
-              theme={ETheme.themeDarkGrey}
-              className={"w-md-auto"}
-            >
-              Sign-out everything
-            </Button>
+            user.tsv_suppressed
+              ? "For maximum security, sign out of everything"
+              : null,
+            <Formik initialValues={{}} onSubmit={submit}>
+              {function ({ isSubmitting }) {
+                return (
+                  <Form>
+                    <Button
+                      type={"submit"}
+                      theme={ETheme.themeDarkGrey}
+                      className={"w-md-auto"}
+                      disabled={isSubmitting || user.tsv_suppressed === 0}
+                    >
+                      Sign-out everything
+                    </Button>
+                  </Form>
+                );
+              }}
+            </Formik>
           ),
         ]}
       />
