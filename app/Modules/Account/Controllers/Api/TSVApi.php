@@ -2,11 +2,15 @@
 
 namespace Modules\Account\Controllers\Api;
 
+use Modules\User\Models\UserAccount\UserModel;
 use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use Sonata\GoogleAuthenticator\GoogleAuthenticator;
 use Modules\Account\Models\AuthenticatorsModel;
+use Modules\Account\Models\TSVRecoveryModel;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TSVApi extends Controller
 {
@@ -46,5 +50,28 @@ class TSVApi extends Controller
         }
 
         $this->jsonResponse(["checkResult" => $check_result]);
+    }
+
+    public function recovery()
+    {
+        $login = $_POST['login'];
+        $user = UserModel::objects()->get(new QOr(['phone' => $login, 'email' => $login]));
+        $file = $_FILES['file'];
+
+        $uploaded_file = new UploadedFile(
+            $file['tmp_name'],
+            $file['name'],
+            $file['type'],
+            (int)$file['size'],
+            (int)$file['error'],
+        );
+
+        $model = new TSVRecoveryModel([
+            'user_id' => $user->user_id,
+            'document_path' => $uploaded_file,
+        ]);
+
+        $model->save();
+        http_response_code(200);
     }
 }

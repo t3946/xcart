@@ -201,7 +201,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
             </button>
 
             <div className="px-12 px-sm-0">
-              <Link href={"/login-and-security/two-step-verification-recovery"}>
+              <Link href={`/login/tsv-recovery/${login}`}>
                 <a className={"auth-form-info"}>
                   Two-step Verification account recovery
                 </a>

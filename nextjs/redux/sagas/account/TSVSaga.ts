@@ -56,7 +56,10 @@ function* setPreferredMethod(action: AnyAction) {
 function* accessRecovery(action: AnyAction) {
   const { data, success } = action.payload;
 
-  yield axios.post<any>("/api-client/tsv/recovery", data).then(success);
+  yield axios
+    .post<any>("/api/account/tsv/recovery", data)
+    .then(success)
+    .finally(action.payload.finally);
 }
 
 function* TSVSaga(): SagaIterator {

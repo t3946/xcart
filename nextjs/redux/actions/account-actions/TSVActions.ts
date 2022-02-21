@@ -1,3 +1,5 @@
+import {AxiosError, AxiosResponse} from "axios";
+
 export const confirmDeviceAction = (payload: Record<any, any>): any => ({
   type: "ACCOUNT_TSV_CONFIRM_DEVICE",
   payload,
@@ -30,7 +32,14 @@ export const setPreferredMethodAction = (payload: Record<any, any>): any => ({
   payload,
 });
 
-export const accessRecovery = (payload: Record<any, any>): any => ({
+interface IPayloadFormSubmit {
+  data: Record<string, any> | FormData;
+  success: (res: AxiosResponse) => void;
+  catch?: (err: AxiosError) => void;
+  finally?: () => void;
+}
+
+export const accessRecovery = (payload: IPayloadFormSubmit): any => ({
   type: "ACCOUNT_TSV_RECOVERY",
   payload,
 });

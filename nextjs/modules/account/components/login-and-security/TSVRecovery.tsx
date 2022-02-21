@@ -2,18 +2,20 @@ import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import UploadFile from "@modules/ui/UploadFile";
 import cn from "classnames";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import * as yup from "yup";
 import { accessRecovery } from "@redux/actions/account-actions/TSVActions";
 import { useDispatch } from "react-redux";
-
+import { useRouter } from "next/router";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import Styles from "@modules/account/components/login-and-security/TSVRecovery.module.scss";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 
 const TSVRecovery: React.FC<any> = function () {
   const dispatch = useDispatch();
+  const router = useRouter();
   const inputFileRef = React.useRef<HTMLInputElement>();
   const [files, setFiles] = React.useState<File[]>([]);
 
@@ -31,6 +33,7 @@ const TSVRecovery: React.FC<any> = function () {
   const initialValues = {
     file: [],
   };
+  const snackbar = useSnackbar();
 
   const validationSchema = yup.object().shape({
     file: yup
@@ -47,30 +50,29 @@ const TSVRecovery: React.FC<any> = function () {
       ),
   });
 
-  function submit(values, actions) {
-    actions.setSubmitting(true);
+  function submit(values: any, actions: FormikHelpers<any>) {
     if (!files.length) {
       actions.setFieldError("file", "Need to upload a document");
-      actions.setSubmitting(false);
       return;
     }
 
+    actions.setSubmitting(true);
+
     const formData = new FormData();
-
     formData.append("file", inputFileRef.current.files[0]);
+    formData.append("login", router.query.login);
 
-    actions.setSubmitting(false);
     dispatch(
       accessRecovery({
         data: formData,
-        success(res) {},
+        success(res) {
+          snackbar.show("Your recovery request was sent");
+        },
+        finally() {
+          actions.setSubmitting(false);
+        },
       })
     );
-    setTimeout(() => {
-      actions.setSubmitting(false);
-    }, 3000);
-
-    //
   }
 
   return (
@@ -147,7 +149,7 @@ const TSVRecovery: React.FC<any> = function () {
                   formats={accessFileFormats}
                   maxSize={maxFileSizeMB}
                   error={errors?.file}
-                  classNames={"mb-18 mb-lg-3"}
+                  classNames={"mb-0"}
                 />
               </div>
 
@@ -159,6 +161,7 @@ const TSVRecovery: React.FC<any> = function () {
                     "form-button d-md-inline-block tsv-recovery-submit-button"
                   }
                   disabled={isSubmitting}
+                  type={"submit"}
                 >
                   Submit
                 </button>

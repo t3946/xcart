@@ -13,4 +13,10 @@ return [
         'target' => [TSVApi::class, 'checkCode'],
         'name' => 'check-code'
     ],
+    [
+
+        'route' => '/recovery',
+        'target' => [TSVApi::class, 'recovery'],
+        'name' => 'recovery',
+    ],
 ];
