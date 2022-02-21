@@ -29,7 +29,10 @@ axios.interceptors.request.use(
     if (error.response.status === 401) {
       window.location.href = "/account/login";
     }
-    return Promise.reject(error);
+
+    return Promise.reject(error).catch(() => {
+      console.log("Server not responded");
+    });
   }
 );
 
@@ -41,7 +44,10 @@ axios.interceptors.response.use(
     if (error.response.status === 401) {
       window.location.href = "/account/login";
     }
-    return Promise.reject(error);
+
+    return Promise.reject(error).catch(() => {
+      console.log("Server responded with error");
+    });
   }
 );
 
