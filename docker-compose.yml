@@ -134,6 +134,7 @@ services:
       - mysql
       - redis
     tty: true
+    command: "/bin/sh -c 'while :; do sleep 1m & wait $${!}; php /var/www/app/console.php Core Cron; done;'"
     environment:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
