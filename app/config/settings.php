@@ -66,7 +66,7 @@ return array_replace_recursive([
                    'autoCommit' => true,
                    'driver' => 'pdo_mysql',
                    'dbname' => 'xcart_k',
-                   'host' => '127.0.0.1',
+                   'host' => 'mysql',
                    'user' => 'xcart_k',
                    'password' => 'i250923lst',
                    'charset'  => 'utf8mb4',
@@ -76,7 +76,7 @@ return array_replace_recursive([
                    'wrapperClass' => false,
                    'cache' => [
                        'class' => RedisCache::class,
-                       'host' => '127.0.0.1'
+                       'address' => 'redis'
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
@@ -215,6 +215,7 @@ return array_replace_recursive([
            'drivers' => [
                'default' =>  [
                    'class' => Redis::class,
+		    'address' =>  'redis'
                ],
                'html' =>  [
                    'class' => File::class,
@@ -228,6 +229,12 @@ return array_replace_recursive([
        'mail' => [
            'class' => Mailer::class,
            'defaultFrom' => 'robot@s3stores.com',
+           'mode' => 'smtp',
+           'config' => [
+               'host' => 'smtp',
+               'port' => '25',
+
+           ],
        ],
 
        'auth' => [
