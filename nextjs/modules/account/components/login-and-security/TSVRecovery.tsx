@@ -10,6 +10,7 @@ import { accessRecovery } from "@redux/actions/account-actions/TSVActions";
 import { useDispatch } from "react-redux";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import Styles from "@modules/account/components/login-and-security/TSVRecovery.module.scss";
 
 const TSVRecovery: React.FC<any> = function () {
   const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const TSVRecovery: React.FC<any> = function () {
     "image/jpeg",
     "image/png",
     "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ];
 
   const maxFileSizeMB = 10;
@@ -125,7 +128,13 @@ const TSVRecovery: React.FC<any> = function () {
                   re-enable Two-Step Verification at any time.
                 </p>
 
-                <h2>Upload a document</h2>
+                <h2>
+                  Upload a document
+                  <div className={Styles.fileFormate}>
+                    (Acceptable document types: DOC, DOCX, JPG, JPEG, PDF,
+                    PJPEG, PNG)
+                  </div>
+                </h2>
 
                 <UploadFile
                   ref={inputFileRef}

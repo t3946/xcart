@@ -105,7 +105,7 @@ const LoginFormInputPassword = function (props: IProps): any {
             if (
               !isCaptchaRequired &&
               res.data.error &&
-              res.data.error.password === "Captcha required"
+              res.data.error.message.password === "Captcha required"
             ) {
               setIsCaptchaRequired(true);
 
@@ -142,7 +142,7 @@ const LoginFormInputPassword = function (props: IProps): any {
               return;
             }
 
-            actions.setErrors({ password: res.data.error.password });
+            actions.setErrors({ password: res.data.error.message.password });
           },
         })
       );

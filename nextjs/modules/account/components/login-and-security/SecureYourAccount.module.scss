@@ -15,24 +15,24 @@
 }
 
 .pageCaption {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: pxToRem(14);
+  line-height: pxToRem(20);
 }
 
 .stepTip {
   color: #959595;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: pxToRem(14);
+  line-height: pxToRem(20);
 }
 
 .stepTitle {
-  font-size: 18px;
-  line-height: 23px;
+  font-size: pxToRem(18);
+  line-height: pxToRem(23);
 }
 
 .stepBody {
   flex-direction: column;
-  gap: 10px;
+  gap: pxToRem(10);
 
   @include breakpoint(lg) {
     flex-direction: row;
@@ -40,8 +40,8 @@
 }
 
 .stepCaption {
-  font-size: 16px;
-  line-height: 22px;
+  font-size: pxToRem(16);
+  line-height: pxToRem(22);
 }
 
 .table_item {
@@ -50,7 +50,7 @@
 
 .tableItem {
   border: none;
-  border-bottom: 1px solid #c4c4c4;
+  border-bottom: pxToRem(1) solid #c4c4c4;
 
   &:last-child {
     border: none;
