@@ -41,7 +41,7 @@ return [
                     'wrapper' => false,
                     'cache' => [
                         'class' => RedisCache::class,
-                        'host' => 'redis'
+                        'address' => 'redis'
                     ],
                 ]
             ],
