@@ -20,8 +20,9 @@ import Styles from "@modules/account/components/hat/HatNavigation.module.scss";
 const HatNavigation: React.FC = () => {
   const dispatch = useDispatch();
   const isVisibleShadowPanel = useSelectorAccount(
-    (e: Record<any, any>) => e.shadowPanel.isVisible
+    (e) => e.shadowPanel.isVisible
   );
+  const siteCode = useSelectorAccount((e) => e.config.site.code);
   const [headerStyles, headerRef] = useStickyHeader();
   const cart = useSelectorAccount((e) => e.cart);
   const isVisibleMenu = useSelectorAccount(
@@ -110,13 +111,13 @@ const HatNavigation: React.FC = () => {
               <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
                 <a href="/">
                   <img
-                    src={`/static/frontend/dist/images/logos/sites/${AppData.site.code}/logo.svg`}
+                    src={`/static/frontend/dist/images/logos/sites/${siteCode}/logo.svg`}
                     alt={AppData.config.companyName}
                     className="d-none d-lg-block hat-logo"
                   />
 
                   <img
-                    src={`/static/frontend/dist/images/logos/sites/${AppData.site.code}/logo-small.svg`}
+                    src={`/static/frontend/dist/images/logos/sites/${siteCode}/logo-small.svg`}
                     alt={AppData.config.companyName}
                     className="d-block d-lg-none hat-logo"
                   />
