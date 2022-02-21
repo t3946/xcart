@@ -53,6 +53,12 @@ function* setPreferredMethod(action: AnyAction) {
     .then(success);
 }
 
+function* accessRecovery(action: AnyAction) {
+  const { data, success } = action.payload;
+
+  yield axios.post<any>("/api-client/tsv/recovery", data).then(success);
+}
+
 function* TSVSaga(): SagaIterator {
   yield takeLatest("ACCOUNT_TSV_CONFIRM_DEVICE", confirmDevice);
   yield takeLatest("ACCOUNT_TSV_DISABLE", disable);
@@ -63,6 +69,7 @@ function* TSVSaga(): SagaIterator {
     "ACCOUNT_TSV_CHANGE_PREFERRED_METHOD",
     changePreferredMethod
   );
+  yield takeLatest("ACCOUNT_TSV_RECOVERY", accessRecovery);
 }
 
 export default TSVSaga;

@@ -1,66 +1,163 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
+import UploadFile from "@modules/ui/UploadFile";
 import cn from "classnames";
+import { Formik, Form } from "formik";
+import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
+import validatorFileFormat from "@utils/yup/validatorFileFormat";
+import * as yup from "yup";
+import { accessRecovery } from "@redux/actions/account-actions/TSVActions";
+import { useDispatch } from "react-redux";
 
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 
 const TSVRecovery: React.FC<any> = function () {
+  const dispatch = useDispatch();
+  const inputFileRef = React.useRef<HTMLInputElement>();
+  const [files, setFiles] = React.useState<File[]>([]);
+
+  const accessFileFormats = [
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "application/pdf",
+  ];
+
+  const maxFileSizeMB = 10;
+
+  const initialValues = {
+    file: [],
+  };
+
+  const validationSchema = yup.object().shape({
+    file: yup
+      .mixed()
+      .test(
+        "fileSize",
+        `Maximum uploaded file size: ${maxFileSizeMB} MB`,
+        validatorMaxFileSize(inputFileRef, maxFileSizeMB)
+      )
+      .test(
+        "fileType",
+        "Unsupported File Format",
+        validatorFileFormat(inputFileRef, accessFileFormats)
+      ),
+  });
+
+  function submit(values, actions) {
+    actions.setSubmitting(true);
+    if (!files.length) {
+      actions.setFieldError("file", "Need to upload a document");
+      actions.setSubmitting(false);
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("file", inputFileRef.current.files[0]);
+
+    actions.setSubmitting(false);
+    dispatch(
+      accessRecovery({
+        data: formData,
+        success(res) {},
+      })
+    );
+    setTimeout(() => {
+      actions.setSubmitting(false);
+    }, 3000);
+
+    //
+  }
+
   return (
     <InnerPage
       header={"Two-Step Verification Account Recovery"}
       bodyClasses={cn("p-0", StylesLoginAndSecurity.pageBody)}
     >
-      <div className={"content-panel"}>
-        <p>
-          To regain access to your account, you'll need to verify your identity.
-          To do so, you'll need to provide a picture (a scan, or a photo) of a
-          government-issued identity document. Acceptable forms of
-          government-issued identification include:
-        </p>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={submit}
+        validationSchema={validationSchema}
+      >
+        {({
+          values,
+          errors,
+          handleChange,
+          isSubmitting,
+          touched,
+          setFieldValue,
+        }) => {
+          return (
+            <Form>
+              <div className={"content-panel"}>
+                <p>
+                  To regain access to your account, you'll need to verify your
+                  identity. To do so, you'll need to provide a picture (a scan,
+                  or a photo) of a government-issued identity document.
+                  Acceptable forms of government-issued identification include:
+                </p>
 
-        <ul>
-          <li>A state-issued driver license</li>
-          <li>A state ID card</li>
-          <li>A voter registration card</li>
-        </ul>
+                <ul>
+                  <li>A state-issued driver license</li>
+                  <li>A state ID card</li>
+                  <li>A voter registration card</li>
+                </ul>
 
-        <strong>Before uploading, please make sure that:</strong>
+                <strong>Before uploading, please make sure that:</strong>
 
-        <ul>
-          <li>
-            Any sensitive information, such as account number or identification
-            numbers, are covered, concealed, or removed.
-          </li>
-          <li>
-            Your name and address, as well as the issuing authority (e.g., state
-            or country) are clearly visible.
-          </li>
-        </ul>
+                <ul>
+                  <li>
+                    Any sensitive information, such as account number or
+                    identification numbers, are covered, concealed, or removed.
+                  </li>
+                  <li>
+                    Your name and address, as well as the issuing authority
+                    (e.g., state or country) are clearly visible.
+                  </li>
+                </ul>
 
-        <p>
-          The verification process may take 1-2 days to complete. We will send
-          an email to <b>albert.einstein@gmail.com</b> once Two Step
-          Verification has been disabled. You will then be able to access your
-          account, with only your password. You can re-enable Two-Step
-          Verification at any time.
-        </p>
+                <p>
+                  The verification process may take 1-2 days to complete. We
+                  will send an email to <b>albert.einstein@gmail.com</b> once
+                  Two Step Verification has been disabled. You will then be able
+                  to access your account, with only your password. You can
+                  re-enable Two-Step Verification at any time.
+                </p>
 
-        <h2>Upload a document</h2>
+                <h2>Upload a document</h2>
 
-        <button
-          className={"form-button form-button__theme-grey form-button__micro"}
-        >
-          Choose file
-        </button>
-      </div>
+                <UploadFile
+                  ref={inputFileRef}
+                  onChange={handleChange}
+                  files={files}
+                  setFiles={setFiles}
+                  name="file"
+                  disabled={isSubmitting}
+                  touched={!!touched.file}
+                  formats={accessFileFormats}
+                  maxSize={maxFileSizeMB}
+                  error={errors?.file}
+                  classNames={"mb-18 mb-lg-3"}
+                />
+              </div>
 
-      <div className={"text-md-center text-lg-start account-page-footer"}>
-        <button
-          className={"form-button d-md-inline-block tsv-recovery-submit-button"}
-        >
-          Submit
-        </button>
-      </div>
+              <div
+                className={"text-md-center text-lg-start account-page-footer"}
+              >
+                <button
+                  className={
+                    "form-button d-md-inline-block tsv-recovery-submit-button"
+                  }
+                  disabled={isSubmitting}
+                >
+                  Submit
+                </button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
     </InnerPage>
   );
 };
