@@ -2452,10 +2452,11 @@ model xcart_filter_presets {
 }
 
 model xcart_fingerprints {
-  user_id     BigInt      @db.UnsignedBigInt
-  fingerprint String      @db.Char(32)
-  created     DateTime?   @default(now()) @db.Timestamp(0)
-  xcart_users xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_fingerprints_xcart_users_user_id_fk")
+  user_id        BigInt      @db.UnsignedBigInt
+  fingerprint    String      @db.Char(32)
+  created        DateTime?   @default(now()) @db.Timestamp(0)
+  fingerprint_id Int         @id @db.UnsignedInt
+  xcart_users    xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_fingerprints_xcart_users_user_id_fk")
 
   @@unique([user_id, fingerprint], map: "xcart_fingerprints_user_id_fingerprint_uindex")
 }
@@ -6054,6 +6055,13 @@ model xcart_zones {
   provider   String @default("") @db.VarChar(32)
 
   @@index([zone_name, provider], map: "zone_name")
+}
+
+model tsv_recovery {
+  tsv_recovery_id Int       @id @default(autoincrement()) @db.UnsignedInt
+  user_id         BigInt    @db.UnsignedBigInt
+  document_path   String    @db.VarChar(255)
+  created         DateTime? @default(now()) @db.DateTime(0)
 }
 
 enum account_list_items_priority {
