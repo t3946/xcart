@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { EMethodType } from "@modules/account/components/login-and-security/tsv/Methods";
 import Timer from "@modules/account/components/password-assistance/Timer";
 import { sendLoginOtp } from "@redux/actions/account-actions/AutorizationActions";
+import Link from "next/link";
 
 interface IProps {
   login: string;
@@ -200,9 +201,11 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
             </button>
 
             <div className="px-12 px-sm-0">
-              <a href={"/contactus/"} className={"auth-form-info"}>
-                Two-step Verification account recovery
-              </a>
+              <Link href={"/login-and-security/two-step-verification-recovery"}>
+                <a className={"auth-form-info"}>
+                  Two-step Verification account recovery
+                </a>
+              </Link>
             </div>
           </Form>
         );
