@@ -60,7 +60,7 @@ class DashboardController extends PrototypeAdminController
                     'models' => $models,
                     'row_col' => DashboardFilter::getMaxRowCol(),
                     'myModels' => $myModels,
-                    'groups' => GroupModel::objects()->filter(['filters__name__isnull' => false])->group(['id'])->all(),
+                    'groups' => GroupModel::objects()->filter(['filters__name__isnull' => false])->order(['id'])->group(['id'])->all(),
                     'questions' => $questionModels,
                     'inquiries' => $inquiries,
                     'inquiries_tags' => $inquiries_tags,
