@@ -24,7 +24,7 @@ const MenuMobile: React.FC<IProps> = (props: IProps) => {
       if (isStatic) {
         return (
           <a
-            href={route("account:dashboard")}
+            href={"/account/dashboard"}
             className="common-link text-decoration-none ms-3 mobile-menu-user-name"
             onClick={() => dispatch(hideAllMenu())}
           >
@@ -34,7 +34,7 @@ const MenuMobile: React.FC<IProps> = (props: IProps) => {
       } else {
         return (
           <Link
-            to={route("account:dashboard")}
+            to={"/dashboard"}
             className="common-link text-decoration-none ms-3 mobile-menu-user-name"
             onClick={() => dispatch(hideAllMenu())}
           >
