@@ -1,0 +1,58 @@
+@import "styles/utils/Utils.module";
+
+.page__table {
+  @include breakpoint(md) {
+    margin: 0 pxToRem(-5);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-25);
+  }
+}
+
+.pageTable {
+  border: 1px solid #c4c4c4;
+}
+
+.pageCaption {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.stepTip {
+  color: #959595;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.stepTitle {
+  font-size: 18px;
+  line-height: 23px;
+}
+
+.stepBody {
+  flex-direction: column;
+  gap: 10px;
+
+  @include breakpoint(lg) {
+    flex-direction: row;
+  }
+}
+
+.stepCaption {
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.table_item {
+  margin: 0;
+}
+
+.tableItem {
+  border: none;
+  border-bottom: 1px solid #c4c4c4;
+
+  &:last-child {
+    border: none;
+  }
+}
