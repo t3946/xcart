@@ -98,7 +98,11 @@ const UploadFile: React.FC<IProps> = React.forwardRef<HTMLInputElement, IProps>(
           </Button>
         </div>
 
-        <div className={Styles.log}>
+        <div
+          className={cn(Styles.log, {
+            "d-none": files.length === 0,
+          })}
+        >
           {files.map((item, index) => (
             <React.Fragment key={`${item.name}_${index}`}>
               <div className={cn(["me-14", Styles.fileDetails])}>
