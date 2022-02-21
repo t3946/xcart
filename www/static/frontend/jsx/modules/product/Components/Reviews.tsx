@@ -36,8 +36,6 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const breakpoint = useBreakpoint();
   const [isIntersecting, setIsIntersecting] = React.useState(false);
 
-  console.log({ isLoading });
-
   //load first reviews
   if (!isAllLoaded && !isLoading) {
     if (!reviews || isIntersecting) {
