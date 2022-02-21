@@ -2,6 +2,7 @@ import React from "react";
 import cn from "classnames";
 import ReactSelect, { components } from "react-select";
 
+import Input from "@modules/ui/forms/select/Input";
 import Control from "@modules/ui/forms/select/Control";
 import Option from "@modules/ui/forms/select/Option";
 import Menu from "@modules/ui/forms/select/Menu";
@@ -15,7 +16,7 @@ import Styles from "@modules/ui/forms/select/Select.module.scss";
 interface IProps {
   options: any;
   disabled?: boolean;
-  name?: string;
+  name: string;
   value: { value: string | number; label: string };
   clearable?: boolean;
   isValid?: boolean;
@@ -76,6 +77,7 @@ const Select = function (props: IProps) {
         Menu,
         MenuList,
         Control,
+        Input,
         IndicatorsContainer,
         DropdownIndicator,
         IndicatorSeparator,

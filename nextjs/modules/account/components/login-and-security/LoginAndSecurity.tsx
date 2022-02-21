@@ -71,7 +71,7 @@ const LoginAndSecurity = (): any => {
         container: Styles.gridItemContainer_small,
         caption: Styles.gridItemCaption_small,
       },
-      route: "",
+      route: "/login-and-security/secure-your-account",
     },
   ];
 

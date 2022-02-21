@@ -11,7 +11,6 @@ import { getStates } from "@modules/account/utils/get-states";
 import { useDispatch } from "react-redux";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
 import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsDialogContext";
-import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import FormGroup from "@modules/ui/forms/FormGroup";
 import Input from "@modules/ui/forms/Input";
 import Button, { ETheme } from "@modules/ui/forms/Button";
@@ -20,6 +19,7 @@ import {
   editAddress,
 } from "@redux/actions/account-actions/AddressActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import ErrorFocus from "@components/common/form-validation-focus/focusFormikComponent";
 
 interface IProps {
   onCancel: () => void;
@@ -79,9 +79,11 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
         }) => {
           return (
             <Form className="your-order-form" encType="multipart/form-data">
+              <ErrorFocus />
               <FormGroup
                 input={
                   <Select
+                    name="country"
                     clearable={false}
                     options={countryPhoneCodes}
                     value={values.country}
@@ -89,7 +91,6 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                       setFieldValue("country", e.target.value);
                       setFieldValue("state", initialAddAddressFormValue.state);
                     }}
-                    name={"state"}
                     isValid={!!touched.country && !errors.country}
                     isInvalid={!!touched.country && !!errors.country}
                   />

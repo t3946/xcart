@@ -9,6 +9,7 @@ import { Alert as BAlert } from "react-bootstrap";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import SnackbarMobile from "@modules/account/components/shared/SnackbarMobile";
 import { VariantsEnum } from "@modules/account/hooks/useSnackbar";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 
 import Styles from "@modules/account/components/shared/Snackbar.module.scss";
 
@@ -52,6 +53,7 @@ const Snackbar: React.FC = () => {
     if (timoutRef.current) {
       clearTimeout(timoutRef.current);
       timoutRef.current = undefined;
+      dispatch(setVisibleShadowPanelAction(false));
       setDisplaing(false);
     }
   };

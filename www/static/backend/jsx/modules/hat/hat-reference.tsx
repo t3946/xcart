@@ -6,7 +6,9 @@ import DropPopoverMenu from "@admin/modules/common/components/drop-popover-menu/
 import $ from "jquery";
 
 const HatReference: React.FC<any> = function () {
-  const [logo, setLogo] = React.useState(appData().site.logo ? `/${appData().site.logo}` : '');
+  const [logo, setLogo] = React.useState(
+    appData().site.logo ? `/${appData().site.logo}` : ""
+  );
   const menuRef = React.createRef();
 
   function logout() {
@@ -104,9 +106,7 @@ const HatReference: React.FC<any> = function () {
 
   function selectSiteTemplate(): any {
     if (!appData().user) {
-      return (
-        <img className="hat-logo" src={logo} alt={appData().site.name} />
-      );
+      return <img className="hat-logo" src={logo} alt={appData().site.name} />;
     }
 
     return (
@@ -123,7 +123,7 @@ const HatReference: React.FC<any> = function () {
             method: "POST",
             dataType: "json",
             success(res) {
-              setLogo('/' + res.logoUrl);
+              setLogo("/" + res.logoUrl);
             },
           });
         }}
@@ -146,14 +146,14 @@ const HatReference: React.FC<any> = function () {
 
           <div className="col">
             <div className="column-right-wrapper row hat-reference_right-column">
-              <div className="col-3">
+              <div className="col-4">
                 <div className="holiday-block hat_holiday-block">
                   <div className="hat-date">{appData().hat.date}</div>
                   <div className="until-holiday">{appData().hat.holiday}</div>
                 </div>
               </div>
 
-              <div className="col-6 text-center">
+              <div className="col-5 text-center">
                 <div className="time-block">{timeTemplate()}</div>
               </div>
 
