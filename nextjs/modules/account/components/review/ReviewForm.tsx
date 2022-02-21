@@ -281,7 +281,8 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
 
                   <div>
                     <p className={"form-review-product-name m-0"}>
-                      {product.group_mask + product.product}
+                      {product.group_mask}
+                      {product.product}
                     </p>
 
                     <div className="d-md-none mt-2">
@@ -290,7 +291,12 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   </div>
                 </div>
 
-                <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
+                <div
+                  className={cn(
+                    "account-inner-page-divider",
+                    Styles.accountInnerPage__divider
+                  )}
+                />
 
                 <div className={"d-none d-md-block"}>
                   <h2 className={"account-inner-page-header-2 mb-1"}>
@@ -299,7 +305,12 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
 
                   {overallRatingTemplate(values, handleChange, setValues)}
 
-                  <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
+                  <div
+                    className={cn(
+                      "account-inner-page-divider",
+                      Styles.accountInnerPage__divider
+                    )}
+                  />
                 </div>
 
                 <div>
@@ -312,7 +323,12 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   </div>
                 </div>
 
-                <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
+                <div
+                  className={cn(
+                    "account-inner-page-divider",
+                    Styles.accountInnerPage__divider
+                  )}
+                />
 
                 <div>
                   <h2 className={"account-inner-page-header-2 mb-1"}>
@@ -389,7 +405,12 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   </RBForm.Group>
                 </div>
 
-                <div className={cn("account-inner-page-divider", Styles.accountInnerPage__divider)} />
+                <div
+                  className={cn(
+                    "account-inner-page-divider",
+                    Styles.accountInnerPage__divider
+                  )}
+                />
 
                 <div>
                   <RBForm.Group
