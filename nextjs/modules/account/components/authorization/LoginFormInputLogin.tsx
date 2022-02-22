@@ -62,6 +62,7 @@ const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
   });
 
   function submit(values: any, actions: FormikHelpers<any>) {
+    actions.setSubmitting(true);
     const form = { login: cleanPhoneFormat(values.login) ?? values.login };
 
     dispatch(
@@ -69,7 +70,6 @@ const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
         data: form,
 
         success(res: any) {
-          actions.resetForm();
           const error = res.data.error;
 
           actions.setSubmitting(false);
@@ -78,6 +78,8 @@ const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
             actions.setErrors({ login: error });
             return;
           }
+
+          actions.resetForm();
 
           setLogin(form.login);
           setUserEmail(res.data.email);
