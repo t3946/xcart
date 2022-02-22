@@ -36,9 +36,13 @@ interface IProps {
 const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
   const dispatch = useDispatch();
   const [invoiceUrl, setInvoicePdf] = React.useState<string>("");
+
   React.useEffect(() => {
     dispatch(
       getInvoicePdf({
+        data: {
+          orderid: orderInfo.orderid,
+        },
         success(res) {
           setInvoicePdf(res.data);
         },

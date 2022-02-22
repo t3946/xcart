@@ -62,9 +62,9 @@ function* openRMARequest(action: AnyAction): Generator {
 }
 
 function* getInvoicePdf(action: AnyAction): Generator {
-  const { success } = action;
+  const { data, success } = action;
 
-  yield axios.get("/api/account/get-invoice-pdf").then(success).catch();
+  yield axios.post("/api/account/get-invoice-pdf", data).then(success).catch();
 }
 
 function* editShippingAddress(action: AnyAction): Generator {
