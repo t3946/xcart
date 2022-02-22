@@ -35,14 +35,15 @@ export const CountInput: React.FC<CountInputProps> = ({
       </div>
 
       <input
-        onChange={(e) => onChange(Number(e.target.value), true)}
+        onChange={(e) => onChange(parseInt(e.target.value), true)}
         value={value}
         type={"number"}
+        step="1"
         className={cn(Styles.input, "count-input")}
         onBlur={onBlur}
         max={avail}
       />
-      
+
       <div
         onClick={() => onChange(value + (multOrderQuantity ? minAmount : 1))}
         className={cn(
