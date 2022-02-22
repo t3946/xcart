@@ -94,8 +94,6 @@ class AccountController extends FrontendController
 
     public function actionIndex()
     {
-        $this->generateQrCode();
-
         $this->display('account/base.tpl');
     }
 
