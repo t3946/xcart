@@ -19,6 +19,7 @@ interface OrderAddressesPage {
 export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
   orderItem,
 }) => {
+  console.log({ orderItem });
   const changeShippingAddressDialog = useDialog();
 
   function shippingAddress() {
@@ -205,13 +206,15 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
         }}
         items={gridItems}
       />
-      <HighlightCheckbox
-        className={"mt-4 mb-4"}
-        onChange={() => {}}
-        checked={true}
-        disabled={false}
-        label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
-      />
+      {orderItem.non_us_confirmation && (
+        <HighlightCheckbox
+          className={"mt-4 mb-4"}
+          onChange={() => {}}
+          checked={true}
+          disabled={false}
+          label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+        />
+      )}
 
       <BootstrapDialogHOC
         classes={{

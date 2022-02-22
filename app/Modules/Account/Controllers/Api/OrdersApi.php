@@ -196,6 +196,7 @@ class OrdersApi extends Controller
             $purchase_data = $extra_model->getFrontendPurchase();
         }
         $order = [
+            'non_us_confirmation' => $order_model->non_us_confirmation,
             'subtotal' => $order_model->subtotal,
             'total' => $order_model->total,
             'orderNumber' => $order_model->getOrderNumber(),
