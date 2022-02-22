@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="column small-12 large-5 block">
+    <div class="col-12 col-lg-5 block">
 
         <div class="options">
             <div class="h2 title">{t 'Options'}</div>
@@ -45,7 +45,7 @@
         </div>
 
     </div>
-    <div class="column small-12 large-7 block">
+    <div class="col-12 col-lg-7 block">
 
         <div class="description">
             <div class="h2 title">{t 'Description'}</div>
