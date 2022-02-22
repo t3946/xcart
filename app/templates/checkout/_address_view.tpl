@@ -14,7 +14,7 @@
 
     <div class="row align-center">
         <div class=" col-12">
-            <a href="{url $uri}" class="button yellow-white waves waves-orange waves-effect col yellow-border">{t 'Modify' }</a>
+            <a href="{url $uri}" class="button yellow-white waves waves-orange waves-effect col yellow-border text-decoration-none">{t 'Modify' }</a>
         </div>
     </div>
 </div>

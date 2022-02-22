@@ -1,6 +1,6 @@
 <div class="row align-center">
     <div class="column column-with-button">
-        <h1 class="text-center">{$header}</h1>
+        <h1 class="text-center fw-bold fs-3">{$header}</h1>
 
         <button type="submit" class="button submit yellow waves waves-orange waves-effect show-for-medium additional-button-large">
             <span class="short-label">{t 'Submit' }</span>
@@ -130,7 +130,7 @@
                 <span class="label">{t 'Total' }:</span>
                 <span class="sum">{$order->subtotal|site_currency}</span>
             </div>
-            <div class="info-row total-shipping">
+            <div class="info-row total-shipping border-0 pt-0">
                 <span class="label">{t 'Total Shipping Cost' }:</span>
                 <span class="sum">{$order->shipping_cost|site_currency}</span>
             </div>

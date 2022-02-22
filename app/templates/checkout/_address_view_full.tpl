@@ -31,7 +31,7 @@
 
 <div class="row align-center button-row">
     <div class=" col-12 text-left">
-        <a href="{url $uri}?modify=1#billing-address" class="button yellow-white waves waves-orange waves-effect col yellow-border">{t 'Modify' }</a>
+        <a href="{url $uri}?modify=1#billing-address" class="button yellow-white waves waves-orange waves-effect col yellow-border text-decoration-none small">{t 'Modify' }</a>
     </div>
 </div>
 

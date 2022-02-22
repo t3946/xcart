@@ -31,6 +31,6 @@ import "./Components/checkout/File";
 
   $("#checkout-review-accordion").on("click", function () {
     $("#shipping-review-container").slideToggle();
-    $(this).toggleClass("minus");
+    $(this).toggleClass("is-active");
   });
 })();
