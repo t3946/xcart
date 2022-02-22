@@ -151,12 +151,16 @@ class OrdersApi extends Controller
                     ],
                 ];
             }
+
+            $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
+            $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+
             $groups[] = [
                 'trackings' => $tracks ?? [],
                 'products' => $ar_products ?? [],
                 'manufacturer' => $manufacturer->getFrontendAddress(),
-                'a2bStatus' => $group_model->a2b_status,
-                'a2cStatus' => $group_model->a2c_status,
+                'a2bStatus' => $cb_status_name,
+                'a2cStatus' => $dc_status_name,
                 'shippingGross' => $group_model->shipping_gross,
                 'totalPst' => $group_model->total_pst,
                 'totalTax' => $group_model->total_tax,

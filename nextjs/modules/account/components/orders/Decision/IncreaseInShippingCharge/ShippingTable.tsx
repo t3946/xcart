@@ -17,7 +17,7 @@ const ShippingTable: React.FC<IProps> = ({ group, showCaption }) => {
     const total = parseFloat((item.price * item.amount).toFixed(2));
     return { ...item, total };
   });
-  
+
   return (
     <>
       <div className={cn([Styles.table__name, Styles.tableName])}>
