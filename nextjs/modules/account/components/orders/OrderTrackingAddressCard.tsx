@@ -12,8 +12,8 @@ export const OrderTrackingAddressCard: React.FC<
 > = ({ logo, text, title, onClick }) => {
   return (
     <div
-      onClick={onClick}
-      className="order-tracking-container address-card-container"
+      // onClick={onClick}
+      className="order-tracking-container w-100 address-card-container"
     >
       <img src={logo} className="address-card-img" />
       <div className="address-card-title">{title}</div>
