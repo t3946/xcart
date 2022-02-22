@@ -91,12 +91,14 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
             </div>
             <div className="order-address-text">{shippingAddress()}</div>
           </div>
-          <button
-            onClick={changeShippingAddressDialog.handleClickOpen}
-            className="form-button order-change-address-btn"
-          >
-            Change shipping address
-          </button>
+          {orderItem.dc_status === "T" && (
+            <button
+              onClick={changeShippingAddressDialog.handleClickOpen}
+              className="form-button order-change-address-btn"
+            >
+              Change shipping address
+            </button>
+          )}
         </div>
       </div>
       <div className={Styles.orderAddressItem}>

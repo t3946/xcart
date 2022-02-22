@@ -196,6 +196,7 @@ class OrdersApi extends Controller
             $purchase_data = $extra_model->getFrontendPurchase();
         }
         $order = [
+            'dc_status' => $order_model->dc_status,
             'non_us_confirmation' => $order_model->non_us_confirmation,
             'subtotal' => $order_model->subtotal,
             'total' => $order_model->total,
