@@ -76,17 +76,31 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
               "/static/frontend/images/icons/account/shipping-from-icon.svg"
             }
             title="Shipping from"
-            text={`${orderGroupInfo.manufacturer?.zip} ${orderGroupInfo.manufacturer?.city} 
-            ${orderGroupInfo.manufacturer?.address}`}
+            text={
+              <>
+                {orderGroupInfo.manufacturer?.address ?? ""}
+                <br />
+                {orderGroupInfo.manufacturer?.state ?? ""},{" "}
+                {orderGroupInfo.manufacturer?.city ?? ""}{" "}
+                {orderGroupInfo.manufacturer?.zip ?? ""}
+                <br />
+                {orderGroupInfo.manufacturer?.country ?? ""}
+              </>
+            }
             onClick={() => onClickAddressCard(markersCoordinates)}
           />
           <OrderTrackingAddressCard
             logo={"/static/frontend/images/icons/account/shipping-to-icon.svg"}
             title="Shipping to"
-            text={`${orderItem.address.shippingZip ?? ""} ${
-              orderItem.address.shippingCity ?? ""
-            } 
-            ${orderItem.address.shippingAddress ?? ""}`}
+            text={
+              <>
+                {orderItem.address.shippingAddress ?? ""}
+                <br />
+                {orderItem.address.shippingState ?? ""},{" "}
+                {orderItem.address.shippingCity ?? ""}{" "}
+                {orderItem.address.shippingZip ?? ""}
+              </>
+            }
             onClick={() => onClickAddressCard(shippingPos)}
           />
         </div>
