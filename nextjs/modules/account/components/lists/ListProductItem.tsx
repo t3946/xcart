@@ -56,20 +56,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   );
   const changeCount = (value: number, isInputEnter?: boolean) => {
     if (isInputEnter) {
-      if (value < product.minAmount) {
-        return;
-      }
-      if (value > product.avail) {
-        setCountProductsOnCart(product.avail);
-        return;
-      }
       setCountProductsOnCart(value);
       return;
     }
     if (value < product.minAmount) {
-      return;
-    }
-    if (value > product.avail) {
       return;
     }
 
@@ -91,11 +81,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   const snackbar = useSnackbar();
 
   const onCountInputBlur = () => {
-    if (countProductsOnCart > product.avail) {
-      setCountProductsOnCart(product.avail);
-    }
-    if (countProductsOnCart > 0) {
-      return;
+    if (product.multOrderQuantity) {
+      setCountProductsOnCart(
+        Math.ceil(countProductsOnCart / product.minAmount) * product.minAmount
+      );
     }
   };
 
@@ -193,7 +182,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
               value={countProductsOnCart}
               onChange={changeCount}
               minAmount={product.minAmount}
-              multOrderQuantity={product.multOrderQuantity === "Y"}
+              multOrderQuantity={product.multOrderQuantity}
             />
           </div>
           {edit &&
