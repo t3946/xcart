@@ -17,7 +17,6 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
   });
   const accordion = useAccordion(200);
   const [showAllItems, setShowAllItems] = useState(false);
-  const shippingAddress = `${order.address.shippingZip} ${order.address.shippingCity} ${order.address.shippingAddress}`;
 
   console.log(order);
 
@@ -136,7 +135,15 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div className="order-item-body-title address-title">
             Shipping address
           </div>
-          <div className="order-item-body-address">{shippingAddress}</div>
+          <div className="order-item-body-address">
+            {order.address.shippingAddress ?? ""}
+            <br />
+            {order.address.shippingCity ?? ""}{" "}
+            {order.address.shippingState
+              ? `${order.address.shippingState},`
+              : ""}{" "}
+            {order.address.shippingZip ?? ""}
+          </div>
         </div>
       </div>
     </div>
