@@ -80,8 +80,8 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
               <>
                 {orderGroupInfo.manufacturer?.address ?? ""}
                 <br />
-                {orderGroupInfo.manufacturer?.state ?? ""},{" "}
                 {orderGroupInfo.manufacturer?.city ?? ""}{" "}
+                {orderGroupInfo.manufacturer?.state ?? ""},{" "}
                 {orderGroupInfo.manufacturer?.zip ?? ""}
                 <br />
                 {orderGroupInfo.manufacturer?.country ?? ""}
@@ -96,8 +96,8 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
               <>
                 {orderItem.address.shippingAddress ?? ""}
                 <br />
-                {orderItem.address.shippingState ?? ""},{" "}
                 {orderItem.address.shippingCity ?? ""}{" "}
+                {orderItem.address.shippingState ?? ""},{" "}
                 {orderItem.address.shippingZip ?? ""}
               </>
             }

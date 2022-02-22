@@ -6,11 +6,11 @@ import Styles from "@modules/account/components/orders/Decision/IncreaseInShippi
 interface IProps {
   className?: any;
   totals?: {};
+  isDecision?: boolean;
 }
 
 const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
-  const { totals, className, order } = props;
-
+  const { totals, className, order, isDecision = false } = props;
   function printTaxes() {
     const taxes = [];
 
@@ -36,21 +36,27 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
       <span>Total items cost:</span>
       <span>US$ {order.subtotal}</span>
       <span
-        className={cn([
+        className={cn(
           Styles.totalTableShippingCost,
           Styles.totalTable__shippingCost,
-          Styles.totalTableShippingCost__label,
-        ])}
+          {
+            [Styles.totalTableShippingCost_highlite]: isDecision,
+            [Styles.totalTableShippingCostLabel_highlite]: isDecision,
+          }
+        )}
       >
         Total shipping cost:
       </span>
 
       <span
-        className={cn([
+        className={cn(
           Styles.totalTableShippingCost,
           Styles.totalTable__shippingCost,
-          Styles.totalTableShippingCost__value,
-        ])}
+          {
+            [Styles.totalTableShippingCost_highlite]: isDecision,
+            [Styles.totalTableShippingCostValue_highlite]: isDecision,
+          }
+        )}
       >
         US$ 11.90
       </span>

@@ -1,6 +1,5 @@
 import React from "react";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import ShippingTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/ShippingTable";
 import OrderTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/OrderTable";
 import cn from "classnames";
 import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
