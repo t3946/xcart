@@ -17,6 +17,10 @@ const MiniCart: React.FC = () => {
   const dispatch = useDispatch();
 
   function showMiniCart() {
+    if (cart.quantity === 0) {
+      return;
+    }
+
     hideAllMenu(dispatch);
     setIsEnter(true);
     dispatch(setVisibleShadowPanelAction(true));
