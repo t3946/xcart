@@ -2455,7 +2455,7 @@ model xcart_fingerprints {
   user_id        BigInt      @db.UnsignedBigInt
   fingerprint    String      @db.Char(32)
   created        DateTime?   @default(now()) @db.Timestamp(0)
-  fingerprint_id Int         @id @db.UnsignedInt
+  fingerprint_id Int         @id @default(autoincrement()) @db.UnsignedInt
   xcart_users    xcart_users @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_fingerprints_xcart_users_user_id_fk")
 
   @@unique([user_id, fingerprint], map: "xcart_fingerprints_user_id_fingerprint_uindex")
