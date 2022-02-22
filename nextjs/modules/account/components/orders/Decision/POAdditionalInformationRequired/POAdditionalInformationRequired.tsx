@@ -65,7 +65,7 @@ const getValidationScheme = (
       ),
     isApprove: yup.bool().oneOf([true], "Need to approve"),
     phone: phoneYupValidation,
-    phone_ext: yup.string(),
+    phone_ext: yup.string().max(4, "The maximum number of characters is 4"),
     phoneCode: yup.string().required("Required field"),
   });
 };

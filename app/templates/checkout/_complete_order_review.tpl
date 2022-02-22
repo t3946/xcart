@@ -107,7 +107,7 @@
                     <span class="sum-info-label">{t 'Total' }:</span>
                     <span class="sum">{$order->subtotal|site_currency}</span>
                 </div>
-                <div class="info-row total-shipping">
+                <div class="info-row total-shipping border-0">
                     <span class="sum-info-label">{t 'Total Shipping Cost' }:</span>
                     <span class="sum">{$order->shipping_cost|site_currency}</span>
                 </div>

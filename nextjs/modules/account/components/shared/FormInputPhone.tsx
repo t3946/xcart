@@ -138,9 +138,11 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
             mask={phoneMask}
             disabled={disabled}
           />
-          {!!touched[name] && !!errors[name] && (
-            <Feedback className="position-absolute" type="invalid">
-              {errors[name]}
+
+          {((!!touched[name] && !!errors[name]) ||
+            (!!touched[ExtFieldName] && !!errors[ExtFieldName])) && (
+            <Feedback className="position-absolute d-block" type="invalid">
+              {errors[name] || errors[ExtFieldName]}
             </Feedback>
           )}
         </RBForm.Group>
@@ -169,6 +171,8 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           disabled={disabled}
           autoComplete={"off"}
           placeholder="12345"
+          isValid={!!(touched[ExtFieldName] && !errors[ExtFieldName])}
+          isInvalid={!!(touched[ExtFieldName] && errors[ExtFieldName])}
         />
       </RBForm.Group>
     </div>

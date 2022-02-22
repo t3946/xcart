@@ -30,6 +30,7 @@ export const getAddAddressFormValidationSchema = (states) =>
       .max(50, "The maximum number of characters is 50"),
     phone_numberCode: Yup.string().required("Required field"),
     phone_number: phoneYupValidation,
+    phone_ext: Yup.string().max(4, "The maximum number of characters is 4"),
     street: Yup.string()
       .required("Required field")
       .max(50, "The maximum number of characters is 50"),

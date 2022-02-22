@@ -63,7 +63,7 @@
         {/foreach}
         <div class="row align-center">
             <div class=" col-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' }</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border text-decoration-none">{t 'Modify' }</a>
             </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
         </div>
         <div class="row align-center">
             <div class=" col-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border">{t 'Modify' }</a>
+                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border text-decoration-none">{t 'Modify' }</a>
             </div>
         </div>
     </div>
