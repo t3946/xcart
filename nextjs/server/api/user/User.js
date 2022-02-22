@@ -461,6 +461,10 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
     const deliveryMethods = [];
 
     for (const group of order.groups) {
+      if (!group.shippingid) {
+        continue;
+      }
+
       const shippingName = (
         await prisma.xcart_shipping.findUnique({
           where: { shippingid: group.shippingid },
@@ -487,25 +491,25 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       await prisma.xcart_states.findFirst({
         where: { code: order.s_state, country_code: order.s_country },
       })
-    ).state;
+    )?.state;
 
     order.b_state = (
       await prisma.xcart_states.findFirst({
         where: { code: order.b_state, country_code: order.b_country },
       })
-    ).state;
+    )?.state;
 
     order.s_country = (
       await prisma.xcart_countries.findFirst({
         where: { code: order.s_country },
       })
-    ).name;
+    )?.name;
 
     order.b_country = (
       await prisma.xcart_countries.findFirst({
         where: { code: order.b_country },
       })
-    ).name;
+    )?.name;
 
     const ORDER_STATUS_UNPAID_PO = "O";
     const ORDER_STATUS_INCOMPLETE_PO = "IO";
