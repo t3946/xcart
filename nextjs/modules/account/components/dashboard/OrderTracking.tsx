@@ -67,11 +67,9 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
             </Link>
           </div>
           <div className="d-none d-md-inline">
-            <Link href={invoiceUrl}>
-              <a className={Styles.textBlue} target={"_blank"}>
-                Invoice.pdf
-              </a>
-            </Link>
+            <a href={invoiceUrl} className={Styles.textBlue} target={"_blank"}>
+              Invoice.pdf
+            </a>
           </div>
         </div>
       }
