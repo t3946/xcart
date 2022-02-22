@@ -21,6 +21,7 @@ import Link from "next/link";
 
 interface IProps {
   login: string;
+  email: string;
   password: string;
   rememberMe: boolean;
   onLogin: () => void;
@@ -28,7 +29,7 @@ interface IProps {
 }
 
 const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
-  const { login, password, rememberMe, onLogin, tsvMethod } = props;
+  const { login, email, password, rememberMe, onLogin, tsvMethod } = props;
   const formText = {
     [EMethodType.APP]:
       "For added security, please enter the One Time Password (OTP) generation by your by Authenticator App",
@@ -201,7 +202,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
             </button>
 
             <div className="px-12 px-sm-0">
-              <Link href={`/login/tsv-recovery/${login}`}>
+              <Link href={`/login/tsv-recovery/${email}`}>
                 <a className={"auth-form-info"}>
                   Two-step Verification account recovery
                 </a>

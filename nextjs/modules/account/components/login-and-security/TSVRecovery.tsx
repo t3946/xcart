@@ -124,9 +124,9 @@ const TSVRecovery: React.FC<any> = function () {
 
                 <p>
                   The verification process may take 1-2 days to complete. We
-                  will send an email to <b>albert.einstein@gmail.com</b> once
-                  Two Step Verification has been disabled. You will then be able
-                  to access your account, with only your password. You can
+                  will send an email to <b>{router.query.login}</b> once Two
+                  Step Verification has been disabled. You will then be able to
+                  access your account, with only your password. You can
                   re-enable Two-Step Verification at any time.
                 </p>
 

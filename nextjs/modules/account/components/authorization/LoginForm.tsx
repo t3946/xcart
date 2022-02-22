@@ -25,6 +25,7 @@ const LoginForm: React.FC<any> = () => {
   const [rememberMe, setRememberMe] = React.useState<any>(false);
   const [isCaptchaRequired, setIsCaptchaRequired] = React.useState(false);
   const [tsvMethod, setTsvMethod] = React.useState<EMethodType>(EMethodType.NA);
+  const [email, setUserEmail] = React.useState<string>("");
 
   function headerTemplate() {
     switch (mode) {
@@ -46,6 +47,7 @@ const LoginForm: React.FC<any> = () => {
             goToPasswordInput={goToPasswordInput}
             submit={submit}
             setLogin={setLogin}
+            setUserEmail={setUserEmail}
           />
         );
       case INPUT_PASSWORD_MODE:
@@ -65,6 +67,7 @@ const LoginForm: React.FC<any> = () => {
         return (
           <LoginFormInputOTP
             login={login}
+            email={email}
             password={password}
             rememberMe={rememberMe}
             tsvMethod={tsvMethod}

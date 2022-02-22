@@ -93,6 +93,7 @@ app.post("/check-login", async function (req, res) {
   if (user) {
     res.send({
       captchaRequired: user.wrong_password_attempts >= maxWrongPasswordAttempts,
+      email: user.email,
     });
   } else {
     res.json({ error: "User not found", user: req.body });

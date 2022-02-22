@@ -30,10 +30,11 @@ interface IProps {
   };
   goToPasswordInput: () => void;
   setLastSentForm: () => void;
+  setUserEmail: (email: string) => void;
 }
 
 const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
-  const { setLogin } = props;
+  const { setLogin, setUserEmail } = props;
   const dispatch = useDispatch();
   const validationSchema = yup.object().shape({
     login: yup
@@ -79,6 +80,7 @@ const LoginFormInputLogin: React.FC<any> = (props: IProps) => {
           }
 
           setLogin(form.login);
+          setUserEmail(res.data.email);
           props.goToPasswordInput(res.data.captchaRequired);
           props.setLastSentForm(form);
         },
