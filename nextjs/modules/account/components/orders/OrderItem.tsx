@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useAccordion } from "@modules/account/hooks/useAccordion";
 import { OrderStoreItem } from "@modules/account/ts/types/order/orders-store.types";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 interface OrderItemProps {
   order: OrderStoreItem;
@@ -32,11 +33,12 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             href={`/order/[id]/order-tracking`}
             as={`/order/${order.orderId}/order-tracking`}
           >
-            <a>
-              <button className="form-button form-button__outline order-details-btn">
-                order details
-              </button>
-            </a>
+            <Button
+              className={"order-details-btn w-auto"}
+              theme={ETheme.outlined}
+            >
+              order details
+            </Button>
           </Link>
         </div>
         <div className="order-item-body-right-side header-right">
