@@ -1,16 +1,19 @@
 import { SelectDate } from "@modules/account/ts/types/order/orders-store.types";
 
+const nowTimeS = Math.floor(new Date().getTime() / 1000);
+const dayTimeS = 60 * 60 * 24;
+
 export const ordersHeaderSelectValues: SelectDate[] = [
   {
-    value: new Date().setDate(new Date().getDate() - 7),
+    value: nowTimeS - dayTimeS * 7,
     label: "Last 7 days",
   },
   {
-    value: new Date().setDate(new Date().getDate() - 30),
+    value: nowTimeS - dayTimeS * 30,
     label: "Last 30 days",
   },
   {
-    value: new Date().setDate(new Date().getDate() - 90),
+    value: nowTimeS - dayTimeS * 90,
     label: "Last 90 days",
   },
   {
