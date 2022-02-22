@@ -34,3 +34,7 @@ import "./Components/checkout/File";
     $(this).toggleClass("is-active");
   });
 })();
+
+$("[data-toggle]").on("click", function () {
+  $(`#${$(this).attr("data-toggle")}`).toggleClass("show");
+});
