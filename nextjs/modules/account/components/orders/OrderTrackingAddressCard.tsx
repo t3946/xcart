@@ -3,7 +3,7 @@ import React from "react";
 interface OrderTrackingAddressCardProps {
   logo: string;
   title: string;
-  text: string;
+  text: React.ReactNode;
   onClick: () => void;
 }
 
