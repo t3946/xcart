@@ -94,7 +94,7 @@ const LTLFreightShipment: React.FC = () => {
   const getValidationScheme = () => {
     const fields: Record<string, any> = {
       phone: phoneYupValidation,
-      phone_ext: Yup.string(),
+      phone_ext: Yup.string().max(4, "The maximum number of characters is 4"),
       phoneCode: Yup.string().required("Required field"),
     };
 
