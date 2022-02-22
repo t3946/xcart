@@ -7,6 +7,11 @@ import t from "@utils/i18n";
 import React from "react";
 import $ from "jquery";
 import { addToCart } from "@utils/Analytics";
+import {
+  getAction as cartGetAction,
+  setAction as cartSetAction,
+} from "@redux/actions/CartActions";
+import Store from "@redux/stores/Store";
 
 export default class AddToCartButton extends React.Component {
   constructor(props) {
@@ -118,6 +123,7 @@ export default class AddToCartButton extends React.Component {
   }
 
   onAddToCart() {
+    console.log("onAddToCart");
     const button = this.button.current;
 
     if (this.state.mode === this.SIMPLE_MODE) {
@@ -185,6 +191,14 @@ export default class AddToCartButton extends React.Component {
 
         // show caption on product page
         $(".jackpot").show();
+
+        Store.dispatch(
+          cartGetAction({
+            success(res) {
+              Store.dispatch(cartSetAction({ cart: res.data }));
+            },
+          })
+        );
       });
 
       addToCart(product);
