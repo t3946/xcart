@@ -11,7 +11,6 @@ interface IProps {
 }
 
 const LogItemMobile: React.FC<IProps> = ({ item }) => {
-  console.log(item.type);
   return (
     <div>
       <div>

@@ -122,7 +122,7 @@ class OrdersApi extends Controller
     {
         /**
          * @var $user UserModel
-        */
+         */
         $user = Xcart::app()->auth->getUser(true);
 
         if ($user->getIsGuest()) {
@@ -164,7 +164,16 @@ class OrdersApi extends Controller
                 'statuses_history' => $group_model->statuses_history->asArray()->all(),
             ];
         }
-        foreach ($order_model->logs_model->exclude(['type' => OrderLogModel::LOG_TYPE_PAYMENT_PROCESS]) as $log_model) {
+
+        $log_models = $order_model->logs_model->exclude([
+            'type__in' => [
+                OrderLogModel::LOG_TYPE_CUSTOMER,
+                OrderLogModel::LOG_TYPE_XCART,
+                OrderLogModel::LOG_TYPE_SYSTEM
+            ]
+        ]);
+
+        foreach ($log_models as $log_model) {
             $logs[] = [
                 'type' => $log_model->type,
                 'date' => $log_model->date,
@@ -356,11 +365,11 @@ class OrdersApi extends Controller
         $order_model->setAttributes($address_data);
 
         $order_model->save();
-        
+
         $transaction = $order_model->transactions[0];
 
         $order = [
-            'orderNumber' =>  $order_model->orderid,
+            'orderNumber' => $order_model->orderid,
             'client' => [
                 'firstName' => $order_model->firstname,
                 'phone' => $order_model->phone,
