@@ -98,6 +98,7 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
         </div>
       </Accordion.Collapse>
       <GrandTotalProductOrdered
+        isDecision={true}
         className={{
           "border-0": !isOpened,
           [Styles.accordionFooter_opened]: isOpened,
