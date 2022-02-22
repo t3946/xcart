@@ -41,7 +41,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);
-  const breakpoint = useBreakpoint();
   const addProductDialog = useDialog();
   const clickListener = useCLickListener(() => setOpen(false));
   const buttonRef = React.useRef<HTMLDivElement>(null);
@@ -49,22 +48,10 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const dispatch = useDispatch();
 
   const showAddProductContent = (listId) => {
-    breakpoint({
-      xs: () =>
-        window.location.assign(
-          `/account/your-lists/add-product-to-list/${isAlreadyInList}/${listId}/${productInfo.productcode}`
-        ),
-      sm: addProductDialog.handleClickOpen,
-    });
+    addProductDialog.handleClickOpen();
   };
   const createList = () => {
-    breakpoint({
-      xs: () =>
-        window.location.assign(
-          `/account/shopping-lists/actions/add-list/${productId}`
-        ),
-      sm: createListDialog.handleClickOpen,
-    });
+    createListDialog.handleClickOpen();
   };
   const addProductToList = (listId: number) => {
     if (
