@@ -5,7 +5,7 @@ import OrdersPage from "@modules/account/pages/OrdersPage";
 function CompletedOrders() {
   return (
     <PageTwoColumns>
-      <OrdersPage label={"Cancelled orders"} type={"completed"} />
+      <OrdersPage label={"Completed orders"} type={"completed"} />
     </PageTwoColumns>
   );
 }
