@@ -6,6 +6,10 @@ import { ApiService } from "@modules/shared/services/api.service";
 import { OrderGroup } from "@modules/account/ts/types/order/orders-store.types";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import dynamic from "next/dynamic";
+import cn from "classnames";
+
+import Styles from "@modules/account/components/orders/OrderTrackingGroup.module.scss";
+
 interface OrderTrackingGroupProps {
   orderGroupInfo: OrderGroup;
   orderItem: OrderView;
@@ -49,12 +53,24 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
     <Fragment>
       <OrderTrackingItem orderGroupInfo={orderGroupInfo} />
       <div className="order-tracking-info">
-        <div ref={ref} className={"order-tracking-map"}>
-          {shippingPos && !!shippingPos.length && markerCarrier && (
-            <Map markers={[markerCarrier, shippingPos]} />
+        {shippingPos && !!shippingPos.length && markerCarrier && (
+          <div ref={ref} className={"order-tracking-map"}>
+            <Map markers={[shippingPos, markerCarrier]} />
+          </div>
+        )}
+        <div
+          className={cn(
+            Styles.addresses,
+            {
+              [Styles.addresses_fullWidth]: !(
+                shippingPos &&
+                !!shippingPos.length &&
+                markerCarrier
+              ),
+            },
+            "order-tracking-info-addresses-cards"
           )}
-        </div>
-        <div className="order-tracking-info-addresses-cards">
+        >
           <OrderTrackingAddressCard
             logo={
               "/static/frontend/images/icons/account/shipping-from-icon.svg"
