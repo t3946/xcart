@@ -21,8 +21,7 @@ interface IProps {
 const Reviews: React.FC<any> = function (props: IProps) {
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
-
-  const totalReviews = AppData.products[props.productId].total_reviews;
+  const totalReviews = AppData.products[props.productId].total_reviews || 0;
   const ReviewsContainerRef = React.useRef<any>();
   const { reviews, country } =
     useSelector((e: StoreInterface) => e.productsReviews)[props.productId] ||
@@ -160,6 +159,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
   });
 
   function hatTemplate() {
+    console.log({totalReviews});
     if (totalReviews === 0) {
       return "No reviews";
     }
