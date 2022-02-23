@@ -183,6 +183,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
               onChange={changeCount}
               minAmount={product.minAmount}
               multOrderQuantity={product.multOrderQuantity}
+              className={Styles.counter}
             />
           </div>
           {edit &&

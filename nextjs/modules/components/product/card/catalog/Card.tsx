@@ -8,8 +8,7 @@ import CatalogContext from "@modules/components/catalog/CatalogContext";
 import t from "@utils/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@modules/components/product/AddToCartButton";
-import Store from "@redux/stores/Store";
-import { AddToListSelectOnProductPage } from "@modules/account/components/lists/AddToListSelectOnProductPage";
+import CountInput from "@modules/account/components/shared/CountInput";
 import React from "react";
 
 export default class Card extends React.Component {
@@ -23,7 +22,7 @@ export default class Card extends React.Component {
     this.state = {
       buttonSimple: true,
       // how many add product in cart when add to cart pressed
-      quantityAdd: 0,
+      quantityAdd: props.product.min_amount,
     };
 
     for (let i = 0; product.images && i < product.images.length; i++) {
@@ -224,6 +223,12 @@ export default class Card extends React.Component {
       buttonSimple: newMode === "simple",
     });
   }
+  addToCartHandler() {
+    //reset cart quantity count to min amount
+    // document.getElementById(`quantity-${this.product.productid}`).value =
+    //   this.product.min_amount;
+    this.setState({ quantityAdd: this.product.min_amount });
+  }
 
   /**
    * all price related elements as prices, buy button discount etc.
@@ -340,19 +345,24 @@ export default class Card extends React.Component {
                       {this.context.viewMode === "list" && (
                         <label
                           htmlFor={"quantity-" + product.productid}
-                          className="show-for-large"
+                          className="show-for-large me-2"
                         >
                           <span className="show-for-xl">Quantity:</span>
                           <span className="show-for-large-only">Qty:</span>
                         </label>
                       )}
 
-                      <QuantityGroup
-                        product={product}
-                        classes={quantityGroupClasses}
-                        onChange={(q) => {
-                          this.setState({ quantityAdd: q });
+                      <CountInput
+                        className={quantityGroupClasses}
+                        minAmount={this.product.minAmount}
+                        value={this.state.quantityAdd}
+                        onChange={(value) => {
+                          this.setState({ quantityAdd: value });
                         }}
+                        multOrderQuantity={
+                          this.product.mult_order_quantity === "Y"
+                        }
+                        avail={this.product.r_avail}
                       />
                     </div>
 
@@ -368,6 +378,7 @@ export default class Card extends React.Component {
                       <AddToCartButton
                         classes={addToCartClasses}
                         onChangeMode={this.addToCartChangeMode.bind(this)}
+                        onAddToCart={this.addToCartHandler.bind(this)}
                         quantity={this.state.quantityAdd}
                       />
                     </div>

@@ -12,6 +12,7 @@ import {
   setAction as cartSetAction,
 } from "@redux/actions/CartActions";
 import Store from "@redux/stores/Store";
+import cn from "classnames";
 
 export default class AddToCartButton extends React.Component {
   constructor(props) {
@@ -108,22 +109,10 @@ export default class AddToCartButton extends React.Component {
     }
   }
 
-  productItemResetState(product) {
-    const input = product.querySelector(".quantity-group input");
-    const val = input.min;
-
-    input.value = val;
-    product.dataset.quantity = val;
-
-    $(document).trigger("component.quantity.change", {
-      target: product,
-      val: val,
-      product: product,
-    });
-  }
-
   onAddToCart() {
-    console.log("onAddToCart");
+    //reset products counter to min amount
+    this.props.onAddToCart();
+
     const button = this.button.current;
 
     if (this.state.mode === this.SIMPLE_MODE) {
@@ -176,19 +165,19 @@ export default class AddToCartButton extends React.Component {
         });
       }
 
+      const quantity = this.props.quantity;
       const data = [
         {
           id: product.dataset.product,
-          quantity: this.props.quantity,
+          quantity,
           options: opt,
         },
       ];
 
       buttonAnimation.start();
 
+      console.log("data", data);
       cartAdd(data, () => {
-        this.productItemResetState(product);
-
         // show caption on product page
         $(".jackpot").show();
 
@@ -211,7 +200,7 @@ export default class AddToCartButton extends React.Component {
     return (
       <div className={this.classes.mainWrapper} ref={this.mainWrapper}>
         <a
-          className={this.classes.button}
+          className={cn(this.classes.button, "text-decoration-none")}
           onClick={this.onAddToCart}
           ref={this.button}
         >
@@ -228,7 +217,7 @@ export default class AddToCartButton extends React.Component {
           >
             <a
               href={this.context.checkoutUrl}
-              className={this.classes.checkoutLink}
+              className={cn(this.classes.checkoutLink, "text-decoration-none")}
               ref={this.checkoutLink}
             >
               {t("Checkout")}

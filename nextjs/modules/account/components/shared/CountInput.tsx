@@ -3,25 +3,29 @@ import cn from "classnames";
 
 import Styles from "@modules/account/components/shared/CountInput.module.scss";
 
-interface CountInputProps {
+interface IProps {
   value: number;
   onChange: (value: number, isInputEnter?: boolean) => void;
-  onBlur: () => void;
+  onBlur?: () => void;
   minAmount: number;
   multOrderQuantity: boolean;
   avail: number;
+  className: any;
 }
 
-export const CountInput: React.FC<CountInputProps> = ({
-  value,
-  onChange,
-  onBlur,
-  minAmount,
-  multOrderQuantity,
-  avail,
-}) => {
+export const CountInput: React.FC<IProps> = (props) => {
+  const {
+    value,
+    onChange,
+    onBlur,
+    minAmount,
+    multOrderQuantity,
+    avail,
+    className,
+  } = props;
+
   return (
-    <div className="d-flex">
+    <div className={cn("d-flex", className)}>
       <div
         onClick={() => onChange(value - (multOrderQuantity ? minAmount : 1))}
         className={cn(
@@ -39,7 +43,7 @@ export const CountInput: React.FC<CountInputProps> = ({
           onChange(parseInt(e.target.value) || minAmount, true);
         }}
         value={value}
-        className={cn(Styles.input, "count-input")}
+        className={cn(Styles.input, "count-input", "flex-grow-1")}
         onBlur={onBlur}
         max={avail}
       />
@@ -58,3 +62,5 @@ export const CountInput: React.FC<CountInputProps> = ({
     </div>
   );
 };
+
+export default CountInput;
