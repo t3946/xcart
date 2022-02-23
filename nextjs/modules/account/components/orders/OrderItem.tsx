@@ -32,7 +32,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             href={`/order/[id]/order-tracking`}
             as={`/order/${order.orderId}/order-tracking`}
           >
-            <a>
+            <a className={"text-decoration-none"}>
               <Button
                 className={"order-details-btn w-auto"}
                 theme={ETheme.outlined}
