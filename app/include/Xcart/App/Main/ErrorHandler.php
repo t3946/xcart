@@ -6,6 +6,7 @@ use ErrorException;
 use Exception;
 use Modules\Pages\Models\PagesStorefrontLink;
 use Modules\Sites\Models\SiteModel;
+use Throwable;
 use Xcart\App\Application\Application;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Exceptions\CompileErrorException;
@@ -317,9 +318,9 @@ class ErrorHandler
      * Displays the uncaught PHP exception.
      * This method displays the exception in HTML when there is
      * no active error handler.
-     * @param Exception $exception the uncaught exception
+     * @param Throwable $exception the uncaught exception
      */
-    public function displayException(Exception $exception)
+    public function displayException(Throwable $exception)
     {
         if (http_response_code() == 200) {
             http_response_code(500);
