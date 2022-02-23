@@ -126,9 +126,9 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
       footer={
         <Link
           href={`/order/[id]/order-tracking`}
-          as={`/order/${orderInfo.orderNumber}/order-tracking`}
+          as={`/order/${orderInfo.orderid}/order-tracking`}
         >
-          <button
+          <a
             className={cn(
               Styles.button,
               "mt-4",
@@ -139,7 +139,7 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
             )}
           >
             view details
-          </button>
+          </a>
         </Link>
       }
     />
