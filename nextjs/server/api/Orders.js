@@ -20,6 +20,9 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
   const orders = await prisma.xcart_orders.findMany({
     where: {
       user_id: req.user.userId,
+      cb_status: {
+        in: ["F", "P", "Z", "AP", "P", "Q", "F", "A", "D"],
+      },
     },
     select: {
       order_prefix: true,
