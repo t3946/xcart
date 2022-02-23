@@ -120,15 +120,17 @@ const ShippingTable: React.FC<IProps> = (props) => {
           }
 
           elements.push(
-            <div className={cn("d-flex", "justify-content-center")}>
+            <div
+              className={cn("d-md-flex", "justify-content-center mb-3 mb-md-4")}
+            >
               <a className={"text-decoration-none"} href={item.url}>
-                <Button className={"w-auto me-10"}>buy again</Button>
+                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>buy again</Button>
               </a>
 
               <Link href={`/create-review/${item.productId}`}>
                 <a className={"text-decoration-none"}>
-                  <Button className={"w-auto"} theme={ETheme.outlined}>
-                    write product review
+                  <Button className={"w-md-auto"} theme={ETheme.outlined}>
+                    write a product review
                   </Button>
                 </a>
               </Link>
