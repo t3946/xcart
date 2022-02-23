@@ -117,7 +117,13 @@ const ShippingTable: React.FC<IProps> = (props) => {
 
           elements.push(
             <div
-              className={cn("d-md-flex", "justify-content-center mb-3 mb-md-4")}
+              className={cn(
+                "d-md-flex",
+                "justify-content-center",
+                "justify-content-lg-start",
+                "mb-3",
+                "mb-md-4"
+              )}
             >
               <a className={"text-decoration-none"} href={item.url}>
                 <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>
