@@ -29,16 +29,18 @@ export const getOrderReturnProducts = (groups) => {
 // получить список продуктов, которые могут быть отменены
 export const getOrderCancelProducts = (groups) => {
   return groups.reduce((products, group) => {
-    let dispatchedStatus;
+    let dispatched = false;
+    const dispatchStatuses = ["T", "K", "M", "E", "DP"];
 
     for (const statusesHistoryElement of group.statuses_history) {
-      if (statusesHistoryElement.status === "DC") {
-        dispatchedStatus = statusesHistoryElement;
+      if (dispatchStatuses.indexOf(statusesHistoryElement.status) !== -1) {
+        dispatched = true;
         break;
       }
     }
 
-    if (dispatchedStatus) {
+    //не выводить продукты, если прошли диспетчеризацию
+    if (dispatched) {
       return products;
     }
 
