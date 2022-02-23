@@ -19,10 +19,10 @@ import ProductCell from "@modules/account/components/order/order-table/ProductCe
 import RadioQuestion from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
 import StylesOrderActions from "@modules/account/components/orders/OrderActions.module.scss";
 import Styles from "@modules/account/components/orders/ReturnOrReplaceItems.module.scss";
-import { ViewCarousel } from "@mui/icons-material";
 
 interface IProps {
   orderItem: OrderView;
+  products: any;
 }
 function checkProducts(array) {
   if (array) {
@@ -52,13 +52,9 @@ function checkProducts(array) {
 }
 
 export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
-  const { orderItem } = props;
+  const { orderItem, products } = props;
   const snackbar = useSnackbar();
   const dispatch = useDispatch();
-  const products = orderItem.groups.reduce(
-    (items, item) => items.concat(item.products),
-    []
-  );
 
   const [files, setFiles] = React.useState<File[]>([]);
 
@@ -126,6 +122,8 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
         wouldLike: e.quantitySelect?.value,
       };
     });
+
+    console.log({items})
 
     fd.append("items", JSON.stringify(items));
 

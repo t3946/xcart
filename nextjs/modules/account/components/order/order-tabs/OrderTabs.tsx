@@ -4,7 +4,10 @@ import { ProblemWithOrder } from "@modules/account/components/orders/ProblemWith
 import { ReturnOrReplaceItems } from "@modules/account/components/orders/ReturnOrReplaceItems";
 import { CancelItems } from "@modules/account/components/orders/CancelItems";
 import cn from "classnames";
-
+import {
+  getOrderReturnProducts,
+  getOrderCancelProducts,
+} from "@modules/account/components/order/ts/getOrderReturnProducts";
 import Styles from "@modules/account/components/order/order-tabs/OrderTabs.module.scss";
 
 export const OrderTabs: React.FC = (props) => {
@@ -14,6 +17,9 @@ export const OrderTabs: React.FC = (props) => {
   const getTabClasses = (key: string) => {
     return cn({ [Styles.tab_active]: key === tab });
   };
+
+  const orderReturnProducts = getOrderReturnProducts(orderItem.groups);
+  const cancelProducts = getOrderCancelProducts(orderItem.groups);
 
   return (
     <Tabs
@@ -32,25 +38,32 @@ export const OrderTabs: React.FC = (props) => {
         </div>
       </Tab>
 
-      <Tab
-        tabClassName={getTabClasses("profile")}
-        eventKey="profile"
-        title="Return or replace items"
-      >
-        <div className={Styles.tabContent}>
-          <ReturnOrReplaceItems orderItem={orderItem} />
-        </div>
-      </Tab>
+      {orderReturnProducts.length > 0 && (
+        <Tab
+          tabClassName={getTabClasses("profile")}
+          eventKey="profile"
+          title="Return or replace items"
+        >
+          <div className={Styles.tabContent}>
+            <ReturnOrReplaceItems
+              orderItem={orderItem}
+              products={orderReturnProducts}
+            />
+          </div>
+        </Tab>
+      )}
 
-      <Tab
-        tabClassName={getTabClasses("contact")}
-        eventKey="contact"
-        title="Cancel items"
-      >
-        <div className={Styles.tabContent}>
-          <CancelItems orderItem={orderItem} />
-        </div>
-      </Tab>
+      {cancelProducts.length > 0 && (
+        <Tab
+          tabClassName={getTabClasses("contact")}
+          eventKey="contact"
+          title="Cancel items"
+        >
+          <div className={Styles.tabContent}>
+            <CancelItems orderItem={orderItem} products={cancelProducts} />
+          </div>
+        </Tab>
+      )}
     </Tabs>
   );
 };

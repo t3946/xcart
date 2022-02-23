@@ -18,14 +18,11 @@ import Styles from "@modules/account/components/orders/CancelItems.module.scss";
 
 interface IProps {
   orderItem: OrderView;
+  products: any;
 }
 
 export const CancelItems: React.FC<IProps> = (props) => {
-  const { orderItem } = props;
-  const products = orderItem.groups.reduce(
-    (items, item) => items.concat(item.products),
-    []
-  );
+  const { orderItem, products } = props;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const snackbar = useSnackbar();

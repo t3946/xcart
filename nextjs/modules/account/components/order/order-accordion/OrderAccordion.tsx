@@ -4,7 +4,10 @@ import { Accordion } from "react-bootstrap";
 import { ReturnOrReplaceItems } from "@modules/account/components/orders/ReturnOrReplaceItems";
 import { CancelItems } from "@modules/account/components/orders/CancelItems";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
-
+import {
+  getOrderReturnProducts,
+  getOrderCancelProducts,
+} from "@modules/account/components/order/ts/getOrderReturnProducts";
 import Styles from "@modules/account/components/order/order-accordion/OrderAccordion.module.scss";
 
 const plus = (
@@ -48,7 +51,8 @@ const OrderAccordion: React.FC<IProps> = (props) => {
   const [activeKey, setActiveKey] = React.useState<string | undefined>(
     undefined
   );
-
+  const orderReturnProducts = getOrderReturnProducts(orderItem.groups);
+  const cancelProducts = getOrderCancelProducts(orderItem.groups);
   const changeAccordion = (key: string | undefined) => {
     if (activeKey === key) {
       setActiveKey(undefined);
@@ -70,30 +74,43 @@ const OrderAccordion: React.FC<IProps> = (props) => {
       <Accordion.Collapse eventKey="problem">
         <ProblemWithOrder />
       </Accordion.Collapse>
-      <div
-        onClick={() => changeAccordion("return")}
-        className={`order-actions-accordion-header ${
-          activeKey === "return" && "order-actions-accordion-header__open"
-        }`}
-      >
-        <div>Return or replace items</div>
-        {activeKey !== "return" ? minus : plus}
-      </div>
-      <Accordion.Collapse eventKey="return">
-        <ReturnOrReplaceItems orderItem={orderItem} />
-      </Accordion.Collapse>
-      <div
-        onClick={() => changeAccordion("cancel")}
-        className={`order-actions-accordion-header ${
-          activeKey === "cancel" && "order-actions-accordion-header__open"
-        }`}
-      >
-        <div>Cancel items</div>
-        {activeKey !== "cancel" ? minus : plus}
-      </div>
-      <Accordion.Collapse eventKey="cancel">
-        <CancelItems orderItem={orderItem} />
-      </Accordion.Collapse>
+
+      {orderReturnProducts.length > 0 && (
+        <>
+          <div
+            onClick={() => changeAccordion("return")}
+            className={`order-actions-accordion-header ${
+              activeKey === "return" && "order-actions-accordion-header__open"
+            }`}
+          >
+            <div>Return or replace items</div>
+            {activeKey !== "return" ? minus : plus}
+          </div>
+          <Accordion.Collapse eventKey="return">
+            <ReturnOrReplaceItems
+              orderItem={orderItem}
+              products={orderReturnProducts}
+            />
+          </Accordion.Collapse>
+        </>
+      )}
+
+      {cancelProducts.length > 0 && (
+        <>
+          <div
+            onClick={() => changeAccordion("cancel")}
+            className={`order-actions-accordion-header ${
+              activeKey === "cancel" && "order-actions-accordion-header__open"
+            }`}
+          >
+            <div>Cancel items</div>
+            {activeKey !== "cancel" ? minus : plus}
+          </div>
+          <Accordion.Collapse eventKey="cancel">
+            <CancelItems orderItem={orderItem} products={cancelProducts} />
+          </Accordion.Collapse>
+        </>
+      )}
     </Accordion>
   );
 };
