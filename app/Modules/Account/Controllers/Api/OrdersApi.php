@@ -6,6 +6,7 @@ use Modules\Account\Models\OrderCancelItemsModel;
 use Modules\Account\Models\OrderCancelRequestModel;
 use Modules\Account\Models\OrderProblemsModel;
 use Modules\Account\Models\OrderProblemStatusesModel;
+use Modules\Order\Models\OrderGroupModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
@@ -122,6 +123,7 @@ class OrdersApi extends Controller
 
         /** @var OrderModel $order_model */
         $order_model = $user->orders->get(["pk" => $order_id]);
+        /** @var OrderGroupModel $group_model */
         foreach ($order_model->groups as $group_model) {
             $ar_products = [];
             $manufacturer = $group_model->manufacturer;
@@ -186,6 +188,7 @@ class OrdersApi extends Controller
             $purchase_data = $extra_model->getFrontendPurchase();
         }
         $order = [
+            'cb_status' => $order_model->cb_status,
             'dc_status' => $order_model->dc_status,
             'non_us_confirmation' => $order_model->non_us_confirmation,
             'subtotal' => $order_model->subtotal,
@@ -302,6 +305,7 @@ class OrdersApi extends Controller
                 'product' => $detail->product,
                 'amount' => $item['amount'],
                 'would_like' => $item['wouldLike'],
+                'pageUrl' => 'page url',
             ];
         }
 

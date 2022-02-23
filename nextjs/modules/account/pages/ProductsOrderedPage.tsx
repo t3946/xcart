@@ -23,7 +23,7 @@ export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
       <div className="page-label products-ordered-label">Products ordered</div>
 
       {orderItem.groups.map((group, i) => (
-        <ShippingTable group={group} key={`product-${i}`} />
+        <ShippingTable group={group} key={`product-${i}`} order={orderItem} />
       ))}
 
       <GrandTotalProductOrdered order={orderItem} />

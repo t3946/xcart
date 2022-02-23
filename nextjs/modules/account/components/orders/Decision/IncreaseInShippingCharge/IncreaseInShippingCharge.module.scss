@@ -335,3 +335,16 @@
     padding: 0 pxToRem(31);
   }
 }
+
+.windowCloseText {
+  color: #fe1104;
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}

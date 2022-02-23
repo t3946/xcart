@@ -43,13 +43,34 @@
 }
 
 .row {
+  position: relative;
+  border-bottom: 1px solid #e1e1e1;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+
+    &:last-child {
+      border-bottom: 1px solid #e1e1e1;
+    }
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    border-bottom: 1px solid #c4c4c4;
+
+    &:last-child {
+      border-bottom: 1px solid #c4c4c4;
+    }
+  }
+}
+
+.rowItems {
   display: flex;
   text-align: center;
   align-items: center;
-  padding: pxToRem(15) pxToRem(9);
-  position: relative;
   font-size: pxToRem(16);
-  border-bottom: 1px solid #e1e1e1;
+  position: relative;
 
   & > *:first-child {
     text-align: left;
@@ -62,25 +83,17 @@
   &:last-child {
     border: none;
   }
+}
+
+.rowItems_data {
+  padding: pxToRem(15) pxToRem(9);
 
   @include breakpoint(md) {
     padding: pxToRem(30) pxToRem(20);
-    font-size: pxToRem(18);
-    line-height: pxToRem(22);
-
-    &:last-child {
-      border-bottom: 1px solid #e1e1e1;
-    }
   }
 
   @include breakpoint(lg) {
     padding: pxToRem(26) pxToRem(24);
-    font-size: pxToRem(16);
-    border-bottom: 1px solid #c4c4c4;
-
-    &:last-child {
-      border-bottom: 1px solid #c4c4c4;
-    }
   }
 }
 

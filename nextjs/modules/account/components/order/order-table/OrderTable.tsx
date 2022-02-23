@@ -14,42 +14,42 @@ interface IProps {
     columns?: any[];
     row?: any;
     rowHat?: any;
+    rowItem?: any;
   };
+  rowFooterTemplate?: (item: any) => any;
 }
 
-const OrderTable: React.FC<IProps> = ({
-  header,
-  theme,
-  items,
-  rowItemTemplates,
-  classes,
-  caption,
-}) => {
+const OrderTable: React.FC<IProps> = (props) => {
+  const {
+    header,
+    theme,
+    items,
+    rowItemTemplates,
+    classes,
+    caption,
+    rowFooterTemplate,
+  } = props;
   function rowTemplate(items: React.ReactNode[], name: string) {
     const itemsTemplate = [];
 
     for (const i in items) {
-      const headerItem = items[i];
+      const item = items[i];
 
       itemsTemplate.push(
         <div
           className={cn(classes?.columns && classes.columns[i])}
           key={`${name}-cell-${i}`}
         >
-          {headerItem}
+          {item}
         </div>
       );
     }
     return itemsTemplate;
   }
 
-  const itemList = Object.keys(items).map((key) => {
-    const itemLine = React.useMemo(
-      () => rowItemTemplates(items[key]),
-      [items[key]]
-    );
-    return itemLine;
-  });
+  const itemList = Object.keys(items).map((key) =>
+    React.useMemo(() => rowItemTemplates(items[key]), [items[key]])
+  );
 
   return (
     <div className={cn(Styles.table, classes?.table)}>
@@ -69,12 +69,18 @@ const OrderTable: React.FC<IProps> = ({
           }
         )}
       >
-        {rowTemplate(header, "header")}
+        <div className={cn(Styles.rowItems, "h-100")}>
+          {rowTemplate(header, "header")}
+        </div>
       </div>
 
       {itemList.map((item, index) => (
-        <div className={cn(Styles.row, classes?.row)} key={`row-${index}`}>
-          {rowTemplate(item, "item")}
+        <div className={cn(Styles.row)} key={`row-${index}`}>
+          <div className={cn(Styles.rowItems, Styles.rowItems_data, classes?.row, classes?.rowItem)}>
+            {rowTemplate(item, "item")}
+          </div>
+
+          {rowFooterTemplate && rowFooterTemplate(items[index])}
         </div>
       ))}
     </div>

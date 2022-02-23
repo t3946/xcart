@@ -200,6 +200,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                     "flex-md-nowrap",
                     StylesOrderActions.tableRow,
                   ],
+
                   columns: [
                     "col-8 col-md-5 col-lg-6 col-sm me-auto",
                     "col-4 col-md-3 col-lg-3",

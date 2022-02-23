@@ -4,15 +4,23 @@ import ProductCell from "@modules/account/components/order/order-table/ProductCe
 import OrderTable from "@modules/account/components/order/order-table/OrderTable";
 import TableFooter from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/TableFooter";
 import cn from "classnames";
-
 import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Button, { ETheme } from "@modules/ui/forms/Button";
+import Link from "next/link";
 
 interface IProps {
   group: any;
+  order: any;
   showCaption?: boolean;
 }
 
-const ShippingTable: React.FC<IProps> = ({ group, showCaption }) => {
+const ShippingTable: React.FC<IProps> = (props) => {
+  const { group, showCaption, order } = props;
+
+  if (order) {
+    console.log({ order });
+  }
+
   const items = group.products.map((item) => {
     const total = parseFloat((item.price * item.amount).toFixed(2));
     return { ...item, total };
@@ -77,6 +85,58 @@ const ShippingTable: React.FC<IProps> = ({ group, showCaption }) => {
             US$ {(item.amount * item.price).toFixed(2)}
           </span>,
         ]}
+        rowFooterTemplate={(item) => {
+          if (order.cb_status !== "P" || order.dc_status !== "Z") {
+            return null;
+          }
+
+          const elements = [];
+          let deliveredStatus;
+
+          for (const statusesHistoryElement of group.statuses_history) {
+            if (statusesHistoryElement.status === "Z") {
+              deliveredStatus = statusesHistoryElement;
+            }
+          }
+
+          if (deliveredStatus) {
+            const timeOneDay = 1000 * 60 * 60 * 24;
+            const timeDelivered = new Date(deliveredStatus.updated).getTime();
+            const dateEndReturn = new Date(timeDelivered + timeOneDay * 14);
+
+            if (dateEndReturn > new Date()) {
+              const date = dateEndReturn.toLocaleDateString("en-EN", {
+                month: "long",
+                day: "2-digit",
+                year: "numeric",
+              });
+
+              elements.push(
+                <p className={cn(Styles.windowCloseText, "my-3")}>
+                  Return window closed on {date}
+                </p>
+              );
+            }
+          }
+
+          elements.push(
+            <div className={cn("d-flex", "justify-content-center")}>
+              <a className={"text-decoration-none"} href={item.url}>
+                <Button className={"w-auto me-10"}>buy again</Button>
+              </a>
+
+              <Link href={`/create-review/${item.productId}`}>
+                <a className={"text-decoration-none"}>
+                  <Button className={"w-auto"} theme={ETheme.outlined}>
+                    write product review
+                  </Button>
+                </a>
+              </Link>
+            </div>
+          );
+
+          return elements;
+        }}
       />
 
       <TableFooter

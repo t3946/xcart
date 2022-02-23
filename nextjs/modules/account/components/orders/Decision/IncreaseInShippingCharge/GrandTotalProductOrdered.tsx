@@ -11,6 +11,7 @@ interface IProps {
 
 const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
   const { totals, className, order, isDecision = false } = props;
+
   function printTaxes() {
     const taxes = [];
 
