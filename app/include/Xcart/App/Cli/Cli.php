@@ -8,6 +8,6 @@ class Cli
      */
     public static function isCli()
     {
-        return php_sapi_name() === 'cli';
+        return PHP_SAPI === 'cli';
     }
 }
