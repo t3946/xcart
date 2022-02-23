@@ -88,6 +88,7 @@ services:
       DB_DUMP_BEGIN: 0600
       DB_SERVER: mysql
       DB_PORT: 3306
+      MYSQLDUMP_OPTS: --single-transaction --routines --triggers --events
       AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
       AWS_SECRET_ACCESS_KEY: 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
       AWS_DEFAULT_REGION: us-east-1
