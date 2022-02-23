@@ -65,16 +65,6 @@ class OrdersApi extends Controller
                     'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
                 ]);
                 break;
-            case self::ORDER_TYPE_OPEN:
-                $filter = array_merge($filter, [
-                    'cb_status__in' => [
-                        OrderStatusModel::ORDER_STATUS_AUTHORIZED,
-                        OrderStatusModel::ORDER_STATUS_COMPLETED,
-                        OrderStatusModel::ORDER_STATUS_QUEUED
-                    ],
-                    'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
-                ]);
-                break;
             case self::ORDER_TYPE_CANCELLED:
                 $filter = array_merge($filter, [
                     'cb_status__in' => [
