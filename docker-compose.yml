@@ -72,25 +72,25 @@ services:
 #      DB_USER: root
 #      DB_PASSWORD: 8Ap6dvSWVJ7r8U8x
 
-#  backup:
-#    container_name: backup
-#    image: databack/mysql-backup
-#    restart: always
-#    networks:
-#      - backend
-#    volumes:
-#      - ./docker/mysql/backup/data:/db
-#    environment:
-#      DB_DUMP_TARGET: s3://backup-xcart/dumps
-#      DB_USER: root
-#      DB_PASS: 8Ap6dvSWVJ7r8U8x
-#      DB_DUMP_FREQ: 1440
-#      DB_DUMP_BEGIN: 0200
-#      DB_SERVER: mysql
-#      DB_PORT: 3306
-#      AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
-#      AWS_SECRET_ACCESS_KEY: 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
-#      AWS_DEFAULT_REGION: us-east-1
+  backup:
+    container_name: backup
+    image: databack/mysql-backup
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./docker/mysql/backup/data:/db
+    environment:
+      DB_DUMP_TARGET: s3://backup-xcart/dumps
+      DB_USER: root
+      DB_PASS: 8Ap6dvSWVJ7r8U8x
+      DB_DUMP_FREQ: 1440
+      DB_DUMP_BEGIN: 0600
+      DB_SERVER: mysql
+      DB_PORT: 3306
+      AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
+      AWS_SECRET_ACCESS_KEY: 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
+      AWS_DEFAULT_REGION: us-east-1
 
   # Nginx
   nginx:
@@ -189,8 +189,6 @@ services:
     networks:
       - frontend
       - backend
-    ports:
-      - "6379:6379"
     restart: always
 
   node:
