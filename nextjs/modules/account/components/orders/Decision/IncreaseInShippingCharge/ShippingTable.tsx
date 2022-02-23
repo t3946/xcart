@@ -17,10 +17,6 @@ interface IProps {
 const ShippingTable: React.FC<IProps> = (props) => {
   const { group, showCaption, order } = props;
 
-  if (order) {
-    console.log({ order });
-  }
-
   const items = group.products.map((item) => {
     const total = parseFloat((item.price * item.amount).toFixed(2));
     return { ...item, total };
@@ -124,7 +120,9 @@ const ShippingTable: React.FC<IProps> = (props) => {
               className={cn("d-md-flex", "justify-content-center mb-3 mb-md-4")}
             >
               <a className={"text-decoration-none"} href={item.url}>
-                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>buy again</Button>
+                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>
+                  buy again
+                </Button>
               </a>
 
               <Link href={`/create-review/${item.productId}`}>
