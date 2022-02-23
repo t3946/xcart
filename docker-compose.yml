@@ -45,32 +45,32 @@ services:
       - DKIM_SIGN_HEADERS=Date:From:To:Subject:Message-ID
       - DKIM_DOMAINS=s3stores.com
 
-#  pmm-server:
-#    container_name: pmm
-#    image: percona/pmm-server:latest
-#    restart: always
-#    networks:
-#      - backend
-#    ports:
-#      - "4443:443"
-#    environment:
-#      SERVER_USER: pmm
-#      SERVER_PASSWORD: pmm
-#  pmm-client-ps:
-#    container_name: pmm-client
-#    image: perconalab/pmm-client:latest
-#    restart: always
-#    networks:
-#      - backend
-#    environment:
-#      PMM_SERVER: pmm-server:443
-#      PMM_USER: pmm
-#      PMM_PASSWORD: pmm
-#      DB_TYPE: mysql
-#      DB_HOST: percona-server
-#      DB_PORT: 3306
-#      DB_USER: root
-#      DB_PASSWORD: 8Ap6dvSWVJ7r8U8x
+  pmm-server:
+    container_name: pmm
+    image: percona/pmm-server:latest
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "4443:443"
+    environment:
+      SERVER_USER: pmm
+      SERVER_PASSWORD: pmm
+  pmm-client-ps:
+    container_name: pmm-client
+    image: perconalab/pmm-client:latest
+    restart: always
+    networks:
+      - backend
+    environment:
+      PMM_SERVER: pmm-server:443
+      PMM_USER: pmm
+      PMM_PASSWORD: pmm
+      DB_TYPE: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: 8Ap6dvSWVJ7r8U8x
 
   backup:
     container_name: backup
