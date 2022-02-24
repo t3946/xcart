@@ -76,7 +76,7 @@ return array_replace_recursive([
                    'wrapperClass' => false,
                    'cache' => [
                        'class' => RedisCache::class,
-                       'address' => 'redis'
+                       'host' => 'redis'
                    ],
                    'driverOptions' => [
 //                       PDO::ATTR_EMULATE_PREPARES => false,
