@@ -8,7 +8,7 @@ import CatalogContext from "@modules/components/catalog/CatalogContext";
 import t from "@utils/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@modules/components/product/AddToCartButton";
-import CountInput from "@modules/account/components/shared/CountInput";
+import { CountGroup } from "@modules/account/components/shared/CountGroup";
 import React from "react";
 
 export default class Card extends React.Component {
@@ -352,17 +352,23 @@ export default class Card extends React.Component {
                         </label>
                       )}
 
-                      <CountInput
-                        className={quantityGroupClasses}
-                        minAmount={this.product.minAmount}
+                      <CountGroup
                         value={this.state.quantityAdd}
-                        onChange={(value) => {
-                          this.setState({ quantityAdd: value });
+                        minAmount={product.min_amount}
+                        multOrderQuantity={product.mult_order_quantity}
+                        onChange={(q) => {
+                          this.setState({ quantityAdd: q });
                         }}
-                        multOrderQuantity={
-                          this.product.mult_order_quantity === "Y"
-                        }
-                        avail={this.product.r_avail}
+                        onBlur={() => {
+                          if (product.mult_order_quantity) {
+                            this.setState((prevstate) => ({
+                              quantityAdd:
+                                Math.ceil(
+                                  prevstate.quantityAdd / product.min_amount
+                                ) * product.min_amount,
+                            }));
+                          }
+                        }}
                       />
                     </div>
 

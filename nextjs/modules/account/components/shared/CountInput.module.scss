@@ -1,3 +1,6 @@
+@import "styles/utils/Utils.module";
+
 .input {
   border: 1px solid #ffe296;
+  width: pxToRem(49);
 }
