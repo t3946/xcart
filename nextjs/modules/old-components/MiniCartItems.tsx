@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Component } from "preact";
+import CountInput from "@modules/account/components/shared/CountInput";
 import map from "lodash/map";
 import Price from "@modules/components/product/card/components/Price";
 import classnames from "classnames";
@@ -113,13 +113,16 @@ const MiniCartItems: React.FC<IProps> = function (props) {
 
                     <div className="quantity-extended">
                       <div className="quantity">
-                        <input
+                        <CountInput
                           name={"quantity"}
-                          type="number"
-                          min="1"
+                          minAmount={item.minAmount}
                           max={item.avail}
                           value={values.quantity}
-                          onChange={handleChange}
+                          onChange={(q) =>
+                            handleChange({
+                              target: { name: "quantity", value: q },
+                            })
+                          }
                           onBlur={() => {
                             setSubmitting(true);
                             console.log(item.id, values.quantity);
@@ -137,7 +140,6 @@ const MiniCartItems: React.FC<IProps> = function (props) {
                             );
                           }}
                           disabled={isSubmitting}
-                          className={cn(Styles.quantity)}
                         />
                       </div>
                       <div className="x">x</div>

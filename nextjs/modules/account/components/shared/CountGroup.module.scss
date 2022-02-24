@@ -1,0 +1,22 @@
+@import "styles/utils/Utils.module";
+
+.button {
+  background-color: #ffe296;
+  border: 1px solid #ffe296;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #ffe296;
+  }
+}
+
+.button_disable {
+  background-color: #fff0ca;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #fff0ca;
+  }
+}
