@@ -43,6 +43,7 @@ export default class AddToCartButton extends Component {
       "waves waves-orange",
       "waves-effect",
       "add-to-cart-button-checkout",
+      "text-decoration-none",
     ];
     const addToCartLongText = [
       "button-text",

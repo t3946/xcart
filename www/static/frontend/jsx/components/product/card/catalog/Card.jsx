@@ -386,7 +386,7 @@ export default class Card extends Component {
                     >
                       <a
                         href={this.context.checkoutUrl}
-                        className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout"
+                        className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout text-decoration-none"
                         title={this.product.name}
                       >
                         Checkout
