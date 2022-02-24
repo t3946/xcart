@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 
-import Styles from "@modules/account/components/shared/CountInput.module.scss";
+import Styles from "@modules/ui/CountInput.module.scss";
 
 interface IProps {
   minAmount: number;

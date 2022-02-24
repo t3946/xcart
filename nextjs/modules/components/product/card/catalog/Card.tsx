@@ -8,7 +8,7 @@ import CatalogContext from "@modules/components/catalog/CatalogContext";
 import t from "@utils/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@modules/components/product/AddToCartButton";
-import { CountGroup } from "@modules/account/components/shared/CountGroup";
+import { CountGroup } from "@modules/ui/CountGroup";
 import React from "react";
 import LeadTimeIcon from "@modules/icon/components/account/lead-time/LeadTime";
 import OutOfStockIcon from "@modules/icon/components/account/out-of-stock/OutOfStock";

@@ -1,5 +1,5 @@
 import * as React from "react";
-import CountInput from "@modules/account/components/shared/CountInput";
+import CountInput from "@modules/ui/CountInput";
 import map from "lodash/map";
 import Price from "@modules/components/product/card/components/Price";
 import classnames from "classnames";
