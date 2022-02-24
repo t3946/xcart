@@ -284,19 +284,19 @@ export default class Card extends React.Component {
     return (
       <Fragment>
         <div className={classnames(containerClasses)}>
-          {product.listPrice.number > product.price.number && (
-            <div className="old">
-              <span className={classnames(priceCaptionClasses)}>
-                {t("List Price")}:{" "}
-              </span>
-              <span className="products-slider-old-price">
+          <div className="old w-100">
+            <span className={classnames(priceCaptionClasses)}>
+              {t("List Price")}:{" "}
+            </span>
+            <span className="products-slider-old-price">
+              {product.listPrice.number > product.price.number && (
                 <Price
                   currency={product.currency}
                   price={product.listPrice.number}
                 />
-              </span>
-            </div>
-          )}
+              )}
+            </span>
+          </div>
 
           <div className="current">
             <span className={classnames(priceCaptionClasses)}>

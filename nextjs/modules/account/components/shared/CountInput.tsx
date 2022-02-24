@@ -10,6 +10,7 @@ interface IProps {
   onChange: (quantity: number, isInputEnter: boolean) => void;
   onBlur?: (e: React.SyntheticEvent<HTMLInputElement>) => void;
   name?: string;
+  disabled?: boolean;
 }
 
 const CountInput: React.FC<IProps> = ({
@@ -19,17 +20,19 @@ const CountInput: React.FC<IProps> = ({
   max,
   value,
   name,
+  disabled,
 }) => {
   return (
     <input
       name={name}
       onChange={(e) => {
-        onChange(parseInt(e.target.value) || minAmount, true);
+        onChange(Math.abs(parseInt(e.target.value)) || minAmount, true);
       }}
       value={value}
       className={cn(Styles.input, "count-input")}
       onBlur={onBlur}
       max={max}
+      disabled={disabled}
     />
   );
 };

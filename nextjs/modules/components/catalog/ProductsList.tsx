@@ -111,7 +111,7 @@ export default class ProductsList extends React.Component {
             nextPageUrl = this.getNextPageUrl();
           }
 
-          this.context.setItems(this.context.items)
+          this.context.setItems(this.context.items);
 
           this.setState({
             isLoaded: true,
