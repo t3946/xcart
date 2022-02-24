@@ -17,6 +17,11 @@ export const phoneYupValidation = Yup.string()
   .required("Required field")
   .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format");
 
+export const phoneExtYupValidation = Yup.string().max(
+  5,
+  "The maximum number of characters is 5"
+);
+
 interface IProps {
   handleChange: () => any;
   setFieldValue: (arg0: string, arg1: any) => void;

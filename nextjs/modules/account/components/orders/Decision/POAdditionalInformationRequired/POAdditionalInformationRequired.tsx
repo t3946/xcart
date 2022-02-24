@@ -3,7 +3,7 @@ import InnerPage from "@components/common/inner-page/InnerPage";
 import UploadFile from "@modules/ui/UploadFile";
 import Checkbox from "@modules/ui/forms/Checkbox";
 import FormInputPhone, {
-  phoneYupValidation,
+  phoneYupValidation, phoneExtYupValidation
 } from "@modules/account/components/shared/FormInputPhone";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
@@ -65,7 +65,7 @@ const getValidationScheme = (
       ),
     isApprove: yup.bool().oneOf([true], "Need to approve"),
     phone: phoneYupValidation,
-    phone_ext: yup.string().max(4, "The maximum number of characters is 4"),
+    phone_ext: phoneExtYupValidation,
     phoneCode: yup.string().required("Required field"),
   });
 };
