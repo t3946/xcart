@@ -10,6 +10,8 @@ import Highlighter from "react-highlight-words";
 import AddToCartButton from "@modules/components/product/AddToCartButton";
 import { CountGroup } from "@modules/account/components/shared/CountGroup";
 import React from "react";
+import LeadTimeIcon from "@modules/icon/components/account/lead-time/LeadTime";
+import OutOfStockIcon from "@modules/icon/components/account/out-of-stock/OutOfStock";
 
 export default class Card extends React.Component {
   constructor(props) {
@@ -187,7 +189,7 @@ export default class Card extends React.Component {
     if (leadTimeMessage) {
       return (
         <div className="p-label lead-time product-card__label">
-          <i />
+          <LeadTimeIcon className={"flex-shrink-0"} width="26" height="26" />
           <div className="text">{leadTimeMessage}</div>
         </div>
       );
@@ -412,7 +414,11 @@ export default class Card extends React.Component {
                 return (
                   <div className={classnames(infoContainerClasses)}>
                     <div className="p-label out-of-stock product-card__label">
-                      <i />
+                      <OutOfStockIcon
+                        className={"flex-shrink-0"}
+                        width="26"
+                        height="26"
+                      />
                       <span className="text p-label-text_out-of-stock">
                         {t("Out of stock")}
                       </span>
