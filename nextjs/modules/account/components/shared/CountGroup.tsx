@@ -23,17 +23,20 @@ export const CountGroup: React.FC<CountInputProps> = ({
 }) => {
   return (
     <div className="d-flex">
-      <div
+      <button
         onClick={() => onChange(value - (multOrderQuantity ? minAmount : 1))}
         className={cn(
           Styles.button,
           "count-input-btn",
+          "text-center",
+          "fw-bold",
           "count-input-btn__left",
           { [Styles.button_disable]: value === minAmount }
         )}
+        disabled={value === minAmount}
       >
         -
-      </div>
+      </button>
 
       <CountInput
         minAmount={multOrderQuantity ? minAmount : 1}
@@ -43,17 +46,20 @@ export const CountGroup: React.FC<CountInputProps> = ({
         max={avail}
       />
 
-      <div
+      <button
+        disabled={value === avail}
         onClick={() => onChange(value + (multOrderQuantity ? minAmount : 1))}
         className={cn(
           Styles.button,
           "count-input-btn",
+          "text-center",
+          "fw-bold",
           "count-input-btn__right",
           { [Styles.button_disable]: value === avail }
         )}
       >
         +
-      </div>
+      </button>
     </div>
   );
 };

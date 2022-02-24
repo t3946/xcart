@@ -24,6 +24,7 @@ const CountInput: React.FC<IProps> = ({
 }) => {
   return (
     <input
+      type={"number"}
       name={name}
       onChange={(e) => {
         onChange(Math.abs(parseInt(e.target.value)) || minAmount, true);
@@ -31,6 +32,7 @@ const CountInput: React.FC<IProps> = ({
       value={value}
       className={cn(Styles.input, "count-input")}
       onBlur={onBlur}
+      min={minAmount}
       max={max}
       disabled={disabled}
     />
