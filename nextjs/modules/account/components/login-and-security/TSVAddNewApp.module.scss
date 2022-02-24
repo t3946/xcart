@@ -1,0 +1,11 @@
+@import "styles/utils/Utils.module";
+
+.tsvCodeField {
+  @include breakpoint(md) {
+    width: pxToRem(190);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(154);
+  }
+}

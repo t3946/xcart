@@ -1,0 +1,148 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(6, pxToRem(83));
+  row-gap: pxToRem(16);
+  grid-auto-flow: column;
+
+  @include breakpoint(md) {
+    grid-template-rows: repeat(6, pxToRem(129));
+    row-gap: pxToRem(14);
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, pxToRem(102));
+    column-gap: pxToRem(15);
+    row-gap: pxToRem(20);
+  }
+}
+
+.card {
+  padding: 0;
+  color: $black;
+  transition: box-shadow background-color 0.5s ease-in-out;
+  border: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: $black;
+    background-color: #f1f1f1;
+    border: none;
+  }
+
+  @include breakpoint(md) {
+    box-shadow: 0 0 0 pxToRem(1) #c4c4c4;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $black;
+      background-color: #f1f1f1;
+      box-shadow: pxToRem(0) pxToRem(2) pxToRem(4) rgba(0, 0, 0, 0.25);
+      border: none;
+    }
+  }
+}
+
+.cardImageWrapper {
+  min-width: pxToRem(95);
+  max-width: pxToRem(95);
+  height: pxToRem(83);
+  overflow: hidden;
+  position: relative;
+
+  @include breakpoint(md) {
+    min-width: pxToRem(146);
+    max-width: pxToRem(146);
+    height: pxToRem(129);
+  }
+
+  @include breakpoint(lg) {
+    min-width: pxToRem(116);
+    max-width: pxToRem(116);
+    height: pxToRem(102);
+  }
+}
+
+.cardImageBackground {
+  left: 0;
+  top: pxToRem(1);
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.cardImageBackground_hover {
+  transform: scale(1.2);
+}
+
+.cardImageIcon {
+  z-index: 1;
+  transition: transform 0.5s ease-in-out;
+}
+
+.cardImageIcon_hover {
+  transform: scale(1.1);
+}
+
+.body {
+  padding: 0 pxToRem(14);
+  color: black;
+  gap: pxToRem(8);
+
+  @include breakpoint(md) {
+    padding: pxToRem(0) pxToRem(105) pxToRem(8) pxToRem(39);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(40) 0 pxToRem(28);
+  }
+}
+
+.bodyCaption {
+  color: #4a4949;
+  font-size: pxToRem(13);
+  line-height: pxToRem(15);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(13);
+    line-height: pxToRem(17);
+  }
+}
+
+.bodyTitle {
+  font-size: pxToRem(18);
+  line-height: 1;
+  font-weight: bold;
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+    text-transform: none;
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(20);
+  }
+}
+
+.link {
+  &:hover,
+  &:focus,
+  &:active {
+    color: black;
+    text-decoration: none;
+  }
+}

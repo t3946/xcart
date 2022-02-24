@@ -1,0 +1,15 @@
+@import "styles/utils/Utils.module";
+
+.breadcrumbSlide {
+  font-size: pxToRem(12);
+  color: #888888;
+
+  &:not(:last-child):after {
+    content: ">";
+    padding: 0 pxToRem(5);
+  }
+
+  &:last-child {
+    color: #000000;
+  }
+}

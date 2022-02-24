@@ -265,15 +265,6 @@
       font-weight: bold;
     }
 
-    .logo-big{
-
-      max-width: 170px;
-
-      @include breakpoint(large){
-        max-width: 150px;
-      }
-    }
-
     .place-for-witter{
       height: 30px;
       margin-top: 10px;

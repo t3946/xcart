@@ -10,7 +10,7 @@
             data-product-removed="{t 'The selected product has been removed successfully' }"
     >
         <div class="row">
-            <div class="columns small-12 large-4 checkout-left-column">
+            <div class="col-12 col-lg-4 checkout-left-column">
                 <div class="checkout-left-column-wrapper">
                     {* shipping address form *}
                     {* shipping address form -- header *}
@@ -47,7 +47,8 @@
                 {/foreach}
                 </div>
             </div>
-            <div class="columns small-12 large-8">
+
+            <div class="col-12 col-lg-8">
                 <div class="checkout-cart-content-wrapper">
                     <div class="checkout-cart-content">
                         <h2 class="title checkout-secondtitle checkout-second-header checkout__second-header checkout_shipping-header checkout_shipping-header-first-header text-center large-text-left checkout__delivery-methods-header checkout-delivery-methods-header">
@@ -229,23 +230,25 @@
         </div>
 
         <div class="row align-center">
-            <div class="column small-12">
+            <div class="col-12">
                 {include 'checkout/payment_methods_one_page.tpl'}
             </div>
         </div>
 
         <div class="row checkout-customer-notes__row checkout-customer-notes-row">
-            <div class="column small-12 medium-4 checkout-customer-notes-header">
+            <div class="col-12 col-md-4 checkout-customer-notes-header">
                 <h2 class="customer-notes-header">Customers notes</h2>
             </div>
-            <div class="column small-12 medium-8 checkout-customer-notes-field">
+
+            <div class="col-12 col-md-8 checkout-customer-notes-field">
                 <textarea name="CheckoutForm[customer_notes]" class="checkout-customer-notes" placeholder="Put order related instructions here">{$order->attributes['customer_notes']}</textarea>
             </div>
         </div>
 
         <div class="row align-center">
-            <div class="column show-for-large large-4"></div>
-            <div class="column small-12 large-8">
+            <div class="d-none d-lg-block col-lg-4"></div>
+
+            <div class="col-12 col-lg-8">
                 <div class="checkout-submit checkout-form__submit-button">
                     <button type="submit" class="button submit yellow waves waves-orange waves-effect submit_big">Submit order</button>
                     <p class="checkout-submit-hint checkout_submit-hint"></p>

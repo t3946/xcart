@@ -68,7 +68,7 @@ class OrderEventsModel extends Model
         {
             if (!$user_id) {
                 if ($user = Xcart::app()->getUser()) {
-                    $user_id = Xcart::app()->getUser()->pk;
+                    $user_id = $user->pk;
                 }
             }
 

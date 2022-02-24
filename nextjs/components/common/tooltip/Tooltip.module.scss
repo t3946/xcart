@@ -1,0 +1,38 @@
+@import "styles/utils/Utils.module";
+
+.tooltip {
+  $bg-color: #fef8ea;
+  $border-color: #e8e1cc;
+
+  &:global(.show) {
+    opacity: 1;
+  }
+
+  :global(.tooltip-inner) {
+    text-align: left;
+    background: $bg-color;
+    color: #000000;
+    box-shadow: 0 pxToRem(2) pxToRem(3) rgba(64, 60, 50, 0.13);
+    border: 1px solid $border-color;
+    border-radius: 0;
+    max-width: pxToRem(350);
+    padding: pxToRem(20) pxToRem(24) pxToRem(24);
+  }
+
+  :global(.tooltip-arrow) {
+    &:before{
+      border-top-color: $border-color;
+      border-width: pxToRem(8) pxToRem(8) 0;
+    }
+    &:after {
+      content: "";
+      border-style: solid;
+      border-color: transparent;
+      border-top-color: $bg-color;
+      border-width: pxToRem(8) pxToRem(8) 0;
+      position: relative;
+      display: block;
+      inset: pxToRem(-2) 0 0 0;
+    }
+  }
+}

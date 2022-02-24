@@ -23,6 +23,7 @@ class EmailEntityModel extends Model
                 'primary' => true,
             ],
             'order' => [
+
                 'field' => 'entity_id',
                 'class' => ForeignField::class,
                 'modelClass' => OrderModel::class,

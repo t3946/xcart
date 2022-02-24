@@ -1,0 +1,7 @@
+.product-reviews__share-your-thoughts {
+  margin: 0 0 rem-calc(20);
+
+  @include breakpoint(lg up) {
+    margin: 0 0 rem-calc(32);
+  }
+}

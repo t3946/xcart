@@ -7,7 +7,11 @@ import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
 import Product from "../Product";
-import { PriceProduct } from "../components/PriceProduct";
+import { Provider } from "react-redux";
+import Store from "../../../../redux/stores/Store";
+import Snackbar from "../../../../modules/account/components/snackbar/Snackbar";
+import { AddToListSelectOnProductPage } from "../../../../modules/account/components/lists/AddToListSelectOnProductPage";
+import React from "react";
 
 export default class Card extends Component {
   constructor(props) {
@@ -413,7 +417,18 @@ export default class Card extends Component {
               }
             })()}
           </div>
-
+          {this.context.viewMode !== "tile" && product.avail > 0 && (
+            <Provider store={Store}>
+              <Snackbar>
+                <div className="add-to-list-on-product-list">
+                  <AddToListSelectOnProductPage
+                    product={this.product}
+                    id={"add-to-list-btn"}
+                  />
+                </div>
+              </Snackbar>
+            </Provider>
+          )}
           {this.context.viewMode === "tile" && (
             <div className={classnames(infoContainerClasses)}>
               {this.leadTime()}
@@ -448,6 +463,8 @@ export default class Card extends Component {
         mainInfo={this.productContentBlock()}
         price={this.productPriceBlock()}
         classes={classes}
+        inList={props.inList}
+        onFlagClick={props.onFlagClick}
       />
     );
   }

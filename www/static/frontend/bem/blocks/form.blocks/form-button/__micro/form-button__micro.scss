@@ -1,0 +1,14 @@
+.form-button__micro {
+  height: rem-calc(31);
+  font-size: rem-calc(14);
+
+  @include breakpoint(md up) {
+    height: rem-calc(35);
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(34);
+    font-size: rem-calc(14);
+  }
+}

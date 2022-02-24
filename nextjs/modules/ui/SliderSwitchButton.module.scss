@@ -1,0 +1,126 @@
+@import "styles/utils/Utils.module";
+
+@mixin slideTransition($props...) {
+  transition: 0.3s ease-out;
+  transition-property: $props;
+}
+
+.background {
+  width: calc(260% + 10px);
+  position: absolute;
+  height: calc(100% + 10px);
+  background: linear-gradient(-90deg, #1ca839 40%, #3691d3 60%);
+  top: pxToRem(-5);
+  z-index: 0;
+  box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+  @include slideTransition(left);
+}
+
+.background_enabled {
+  left: pxToRem(-134);
+}
+
+.background_disabled {
+  left: pxToRem(-3);
+}
+
+.caption {
+  position: absolute;
+  color: #ffffff;
+  text-transform: capitalize;
+  font-size: pxToRem(18);
+  z-index: 1;
+  top: 0;
+
+  @include slideTransition(left, right, opacity);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.caption_enabledActive {
+  left: pxToRem(21);
+  opacity: 1;
+
+  @include breakpoint(lg) {
+    left: pxToRem(19);
+  }
+}
+
+.caption_enabledInactive {
+  left: pxToRem(-37);
+  opacity: 0;
+}
+
+.caption_disabledActive {
+  right: pxToRem(25);
+  opacity: 1;
+
+  @include breakpoint(lg) {
+    right: pxToRem(20);
+  }
+}
+
+.caption_disabledInactive {
+  right: pxToRem(-37);
+  opacity: 0;
+}
+
+.ball {
+  position: absolute;
+  display: block;
+  top: pxToRem(4);
+  width: pxToRem(24);
+  height: pxToRem(24);
+  background: #ffffff;
+  border-radius: pxToRem(13);
+  z-index: 1;
+  box-shadow: 0 pxToRem(3) pxToRem(3) pxToRem(-1) rgba(0, 0, 0, 0.38);
+
+  @include slideTransition(left);
+
+  @include breakpoint(lg) {
+    top: pxToRem(3);
+    width: pxToRem(21);
+    height: pxToRem(21);
+  }
+}
+
+.ball_enabled {
+  left: pxToRem(61);
+
+  @include breakpoint(lg) {
+    left: pxToRem(54);
+  }
+}
+
+.ball_disabled {
+  left: pxToRem(4);
+  @include breakpoint(lg) {
+    left: pxToRem(3);
+  }
+}
+
+.label {
+  position: relative;
+  display: block;
+  background: #ffffff;
+  border-radius: pxToRem(20);
+  height: pxToRem(32);
+  width: pxToRem(89);
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  @include breakpoint(lg) {
+    height: pxToRem(27);
+    width: pxToRem(78);
+  }
+}
+
+.border {
+  padding: pxToRem(2);
+  display: inline-block;
+  border-radius: pxToRem(100);
+  background: linear-gradient(180deg, #cbcccb, #ececec);
+}

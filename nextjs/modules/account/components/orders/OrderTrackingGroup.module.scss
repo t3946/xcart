@@ -1,0 +1,19 @@
+@import "styles/utils/Utils.module";
+
+.addresses {
+  width: 100%;
+  gap: pxToRem(18);
+  flex-shrink: 0;
+
+  @include breakpoint(md) {
+    width: pxToRem(304);
+  }
+}
+
+.addresses_fullWidth {
+  @include breakpoint(md) {
+    flex-direction: row;
+    width: 100%;
+    gap: pxToRem(34);
+  }
+}

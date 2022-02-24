@@ -1,0 +1,11 @@
+.review-body-wrapper_long {
+  &:after {
+    position: absolute;
+    content: '';
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 10em;
+    background: linear-gradient(0deg, #ffffff 10%, #ffffff00)
+  }
+}

@@ -1,0 +1,24 @@
+.account-modal-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: rem-calc(48);
+  width: rem-calc(66);
+
+  &:hover {
+    .account-modal-close-icon {
+      color: #ababab;
+    }
+  }
+
+  &:active {
+    .account-modal-close-icon {
+      color: #8d8d8d;
+    }
+  }
+
+  @include breakpoint(sm up) {
+    height: 100%;
+  }
+}

@@ -1,0 +1,16 @@
+.form-review__remove-file {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.form-review-remove-file {
+  padding: rem-calc(10);
+  cursor: pointer;
+}
+
+.form-review-remove-file-icon {
+  height: rem-calc(24);
+  width: rem-calc(24);
+  color: #ababab;
+}

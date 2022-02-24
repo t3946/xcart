@@ -1,0 +1,27 @@
+.decisions-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: rem-calc(70);
+  border-top: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+  font-size: rem-calc(18);
+  padding: 0 rem-calc(21);
+
+  &:hover, &:active {
+    .decisions-item-text {
+      text-decoration: underline;
+    }
+  }
+
+  @include breakpoint(md up) {
+    height: rem-calc(75);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+    padding: 0 rem-calc(26);
+    height: rem-calc(70);
+  }
+}

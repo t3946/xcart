@@ -1,0 +1,9 @@
+.hat-navigation-item-wrapper {
+    padding: 0 rem-calc(5);
+    height: rem-calc(53);
+
+    @include breakpoint(md up) {
+        padding: 0 rem-calc(10);
+        height: rem-calc(80);
+    }
+}

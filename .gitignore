@@ -22,6 +22,9 @@ package-lock.json
 /www/product_files/
 /.idea/
 /.composer/
+/www/user_files/
+/**/.next/
+/nextjs/.env
 /www/verificator/cookies/*
 /www/include/system/
 node_modules
@@ -36,7 +39,7 @@ node_modules
 /app/Modules/Translate/lang/*.mo
 /www/static/frontend/dist
 /www/static/frontend/versions
-/www/static/frontend/bem/bem.scss
+/www/static/frontend/bem/dist/*
 /www/static/backend/dist
 /www/static/backend/versions
 /www/static/backend/bem/bem.scss
@@ -45,3 +48,5 @@ node_modules
 /docker/mysql/data/
 /docker/redis/data/
 /docker/certbot/
+notes.md
+/home/falcon/xcart/nextjs/out/

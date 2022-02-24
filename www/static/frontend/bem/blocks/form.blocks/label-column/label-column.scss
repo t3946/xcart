@@ -1,0 +1,13 @@
+.label-column {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  @include breakpoint(md up) {
+    justify-content: flex-end;
+  }
+
+  @include breakpoint(lg up) {
+    justify-content: flex-start;
+  }
+}

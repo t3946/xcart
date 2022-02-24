@@ -8,8 +8,9 @@ config = {
   output: {
     path: path.resolve("./" + paths.dst.jsx),
     filename: "[name].[hash].js",
-    clean: true
+    clean: true,
   },
+  stats: "errors-only",
   target: "web",
   resolve: {
     alias: {
@@ -20,6 +21,11 @@ config = {
       // Not necessary unless you consume a module using `createClass`
       "create-react-class": "preact/compat/lib/create-react-class",
       "@": path.resolve("./frontend/jsx"),
+      "@client/modules": path.resolve("./frontend/jsx/modules"),
+      "@client/redux": path.resolve("./frontend/jsx/redux"),
+      "@client": path.resolve("./frontend"),
+      "@local_modules": path.resolve("./local_modules"),
+      "style-modules": path.resolve("./frontend/style-modules"),
     },
 
     modules: [
@@ -45,6 +51,37 @@ config = {
         test: /\.js$/,
         enforce: "pre",
         use: ["source-map-loader"],
+      },
+      {
+        test: /\.css$/,
+        use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: [
+          { loader: "style-loader" },
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                exportLocalsConvention: "camelCase",
+              },
+            },
+          },
+          { loader: "sass-loader" },
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
+      },
+      {
+        test: /\.svg$/,
+        loader: "svg-inline-loader",
       },
       {
         test: /\.(js|jsx)?$/,

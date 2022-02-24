@@ -1,0 +1,9 @@
+@import "~style-modules/sass-utils";
+
+.list__label {
+  margin: 0 0 rem-calc(4);
+
+  &:last-child {
+    margin: 0;
+  }
+}

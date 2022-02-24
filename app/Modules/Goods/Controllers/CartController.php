@@ -31,11 +31,18 @@ class CartController extends BaseCartController
 
     public function actionProductsDel(): void
     {
+        $items = $this->getRequest()->post->get('items', []);
 
+        if (!$items) {
+            $json = file_get_contents("php://input");
+
+            if ($json) {
+                $items = json_decode($json, true)["items"];
+            }
+        }
         $cart = $this->getCart();
 
-        if ($items = $this->getRequest()->post->get('items', [])) {
-
+        if ($items) {
             foreach ( $items as $item) {
                 $cart->removeByKey($item);
             }
@@ -53,6 +60,13 @@ class CartController extends BaseCartController
         }
 
         $this->actionProductsGet();
+    }
+
+    function setQuantity(): void
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $this->setInternal($data['id'], $data['quantity']);
+        $this->jsonResponse($this->getCartStateArray());
     }
 
     /**

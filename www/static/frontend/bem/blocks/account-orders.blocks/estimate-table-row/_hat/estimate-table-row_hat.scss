@@ -1,0 +1,18 @@
+.estimate-table-row_hat {
+  padding: 0 rem-calc(9);
+  color: #494949;
+  height: rem-calc(35);
+  font-size: rem-calc(14);
+
+  @include breakpoint(md up) {
+    padding: 0 rem-calc(20);
+    height: rem-calc(43);
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(24);
+    height: rem-calc(46);
+    font-size: rem-calc(16);
+  }
+}

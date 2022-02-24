@@ -1,0 +1,19 @@
+@import "styles/utils/Utils.module";
+
+.tableRow__question {
+  margin: 0 pxToRem(-10);
+
+  @include breakpoint(md) {
+    margin: 0;
+  }
+}
+
+.question {
+  width: calc(100% + pxToRem(20));
+
+  @include breakpoint(md) {
+    width: 100%;
+  }
+}
+
+

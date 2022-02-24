@@ -1,0 +1,61 @@
+@import "styles/utils/Utils.module";
+
+.hat {
+  padding: pxToRem(28) pxToRem(5) pxToRem(20) 0;
+
+  @include breakpoint(lg) {
+    padding: pxToRem(45) pxToRem(25) pxToRem(24);
+  }
+}
+
+.text {
+  line-height: pxToRem(23);
+}
+
+.green {
+  color: #459a56;
+}
+
+.green_submitting {
+  opacity: 0.7;
+}
+
+.button {
+  font-size: pxToRem(20);
+  height: pxToRem(47);
+
+  @include breakpoint(md) {
+    height: pxToRem(57);
+    font-size: pxToRem(26);
+    padding: 0 pxToRem(49);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(41);
+    font-size: pxToRem(18);
+    padding: 0 pxToRem(42);
+  }
+}
+
+.title {
+  font-weight: bold;
+  font-size: pxToRem(20);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.footer {
+  @include breakpoint(lg) {
+    padding: pxToRem(34) pxToRem(24) 0;
+  }
+}
+
+.phoneLabel{
+  font-weight: normal;
+}
+
+.checkbox {
+  width: fit-content;
+}

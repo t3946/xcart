@@ -2,4 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: top 0.1s;
+
+  @include breakpoint(lg up) {
+    top: rem-calc(-107);
+  }
 }

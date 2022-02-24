@@ -6,7 +6,7 @@ import documentReady from "../../utils/documentReady";
         // высота меню
         const MENU_HEIGHT = 50;
 
-        let buttons = $('.all-departments-menu-container').css('overflow', 'hidden');
+        let buttons = $('.all-departments-menu-container');
         let sections = $('.sections');
         let container = buttons.parent().css('height', 'auto');
         let initialHeight = container.height();
@@ -28,7 +28,6 @@ import documentReady from "../../utils/documentReady";
 
         container.css({
             'height': initialHeight + 'px',
-            'overflow': 'hidden'
         });
 
         // Открыть пункт меню (закрыть меню)

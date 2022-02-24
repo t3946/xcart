@@ -1,0 +1,5 @@
+.decisions-lists {
+  @include breakpoint(lg up) {
+    max-width: rem-calc(550);
+  }
+}

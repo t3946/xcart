@@ -5,8 +5,8 @@
     <section class="page pages receipt-confirmation bg-dark-blue" style="padding-top: 5em; padding-bottom: 5em;">
         <div class="vertical-middle">
             <div class="row w1280 align-middle">
-                <div class="hide-for-small-only columns medium-2 large-3"></div>
-                <div class="columns small-12 medium-8 large-6">
+                <div class="hide-for-small-only  col-md-2 col-lg-3"></div>
+                <div class=" col-12 col-md-8 col-lg-6">
                     <div style="text-align: center">
                         <form id="payment-form" style="width:100%; background-color:#efefef;">
                             <div id="payment-request-button"></div>
@@ -17,7 +17,7 @@
                             <div id="card-errors" role="alert" style="text-align: center"></div>
 
                             <div style="margin-top: 2rem;" class="row align-center">
-                                <div class="column small-12">
+                                <div class="column col-12">
                                     <div class="buttons text-center">
                                         {set $shipping_info = $order->getAddressInfo()[0]}
                                         {set $billing_info = $order->getAddressInfo()[1]}
@@ -48,7 +48,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="hide-for-small-only columns medium-2 large-3"></div>
+                <div class="hide-for-small-only  col-md-2 col-lg-3"></div>
             </div>
         </div>
     </section>

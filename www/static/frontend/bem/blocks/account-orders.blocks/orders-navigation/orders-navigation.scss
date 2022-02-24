@@ -1,0 +1,18 @@
+.orders-navigation {
+  display: grid;
+
+  @include breakpoint(md up) {
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: rem-calc(14);
+  }
+
+  @include breakpoint(lg up) {
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: rem-calc(7);
+  }
+
+  @include breakpoint(xxl up) {
+    display: flex;
+    grid-gap: initial;
+  }
+}

@@ -1,40 +1,24 @@
 @import "../all_pages/page_width";
 
 header {
-
-  border-bottom: 1px solid #cdcdcd;
+  transition: border-bottom-color 300ms ease-out;
 
   .logo_menu {
-    padding: rem-calc(7) 0;
     height: rem-calc(53);
-    line-height: rem-calc(39);
+    display: block;
+    align-items: center;
+    background-color: #ffffff;
+    box-sizing: content-box;
 
     @include breakpoint(medium) {
-      //padding: rem-calc(17) 0;
       height: rem-calc(80);
-      line-height: rem-calc(63);
     }
 
     @include breakpoint(large) {
-      padding: 0;
-      margin: rem-calc(7) 0;
-    }
-
-    .right-icon {
-      //margin-left: rem-calc(30);
-      margin-left: rem-calc(10);
-
-      @include breakpoint(medium) {
-        margin-left: rem-calc(24);
-      }
-
-      &:first-child{
-        margin-left: 0;
-      }
+      padding: rem-calc(7) 0;
     }
 
     @include breakpoint(large up) {
-      line-height: rem-calc(62);
       height: rem-calc(62);
     }
 
@@ -42,22 +26,10 @@ header {
       width: rem-calc(25);
       height: rem-calc(19);
 
-      @include breakpoint(medium){
+      @include breakpoint(medium) {
         width: rem-calc(39);
         height: rem-calc(30);
       }
-    }
-
-    .logo-small {
-      height: rem-calc(26);
-
-      @include breakpoint(medium){
-        height: rem-calc(48);
-      }
-    }
-
-    .logo-big {
-      height: rem-calc(62);
     }
 
     .main-menu-wrap {
@@ -82,13 +54,18 @@ header {
         li {
           display: inline-block;
           line-height: rem-calc(39);
+          margin: 0 rem-calc(15) 0 0;
+
+          &:last-child {
+            margin: 0;
+          }
 
           @include breakpoint(large up) {
             line-height: rem-calc(62);
           }
 
           @include breakpoint(ml down) {
-            &:nth-child(1n+3) {
+            &:nth-child(1n + 3) {
               display: none;
             }
           }
@@ -109,12 +86,12 @@ header {
               color: red;
 
               &:before {
-                content: '';
-                background: url("../images/stop-corona_sm.png") no-repeat;
-                position:relative;
+                content: "";
+                background: url("/dist/images/stop-corona_sm.png") no-repeat;
+                position: relative;
                 width: rem-calc(46);
                 height: rem-calc(46);
-                top:rem-calc(16);
+                top: rem-calc(16);
                 display: inline-block;
                 margin-right: rem-calc(4);
               }
@@ -125,36 +102,38 @@ header {
     }
 
     .mobile__search-btn {
-      //background: url("../images/icons/header/magnifier.svg") no-repeat;
-      background: url("../images/icons/header/magnifier_thin.svg") no-repeat;
-      width: rem-calc(30);
-      height: rem-calc(30);
+      background: url("/static/frontend/dist/images/icons/header/magnifier_thin.svg")
+        no-repeat;
+      width: rem-calc(25);
+      height: rem-calc(25);
 
-      @include breakpoint(medium){
-        width: rem-calc(48);
+      @include breakpoint(medium) {
+        width: rem-calc(45);
         height: rem-calc(48);
       }
     }
 
     .mobile__call-btn {
-      background: url("../images/icons/header/phone-call1.svg") no-repeat;
-      width: rem-calc(30);
-      height: rem-calc(30);
+      background: url("/static/frontend/dist/images/icons/header/phone-call1.svg")
+        no-repeat;
+      width: rem-calc(25);
+      height: rem-calc(25);
 
-      @include breakpoint(medium){
+      @include breakpoint(medium) {
         width: rem-calc(48);
         height: rem-calc(48);
       }
     }
 
     .mobile__cart {
-      background: url("../images/icons/header/cart.svg") no-repeat;
+      background: url("/static/frontend/dist/images/icons/header/cart.svg")
+        no-repeat;
       position: relative;
-      width: rem-calc(40);
-      height: rem-calc(30);
+      width: rem-calc(33);
+      height: rem-calc(25);
 
-      @include breakpoint(medium){
-        width: rem-calc(67);
+      @include breakpoint(medium) {
+        width: rem-calc(63);
         height: rem-calc(48);
       }
 
@@ -164,24 +143,25 @@ header {
 
       .count {
         @include border-radius(10px);
-        background: #F12D2D;
+        background: #f12d2d;
         font: {
-          size: .75em;
+          size: 0.75em;
           weight: 800;
         }
         padding: 0 5px;
         color: $white;
         position: absolute;
-        left: -3px;
-        top: -1px;
+        left: -5px;
+        top: 11px;
         line-height: 1.2;
         min-width: 1.5em;
         text-align: center;
 
         @include breakpoint(medium) {
           font-size: rem-calc(20);
+          left: -5px;
+          top: 15px;
         }
-
 
         .mc_count {
           display: inline-block;
@@ -201,33 +181,37 @@ header {
       text-align: center;
     }
   }
-
 }
 
-#top-header-menu{
-  position:relative;
-  z-index:3;
-  min-width: get-width('small');
+.header__shadow-panel-visible {
+  border-bottom-color: #ffffff;
+}
 
-  &.header-fixed{
-    position:fixed;
+#top-header-menu {
+  position: relative;
+  z-index: 3;
+  min-width: get-width("small");
+
+  &.header-fixed {
+    position: fixed;
   }
 }
-#top-header{
+#top-header {
   overflow: hidden;
 
-  @include breakpoint(sm){
+  @include breakpoint(sm) {
     overflow: visible;
   }
   @include breakpoint(lg up) {
     border: none;
   }
 }
+
 .header-fixed {
-  position:fixed;
+  position: fixed;
   z-index: 1499;
   width: 100%;
-  #top-header{
+  #top-header {
     background-color: white;
   }
 }

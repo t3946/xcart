@@ -1,0 +1,7 @@
+@import "styles/utils/Utils.module";
+
+.caption {
+  @include breakpoint(lg) {
+    font-size: pxToRem(12);
+  }
+}

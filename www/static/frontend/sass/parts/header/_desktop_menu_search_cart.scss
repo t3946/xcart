@@ -39,15 +39,7 @@ $search_input_large_height: rem-calc(36);
 
   .search-form-container {
     position: relative;
-    //display: block;
-    //height: 100%;
-    //
-    //form {
-    //  display: inline-block;
-    //  width: 100%;
-    //  height: 100%;
-    //  line-height: rem-calc(50);
-    //}
+    flex-grow: 1;
 
     .search {
       width: 100%;
@@ -57,7 +49,7 @@ $search_input_large_height: rem-calc(36);
       border: 2px solid #8a8a8a;
       padding: 0 2.6%;
       color: $dark_blue;
-      margin-top: rem-calc(5);
+      margin: rem-calc(4) 0 0 0;
 
       &:focus {
         border: 2px solid $dark_blue;
@@ -68,7 +60,7 @@ $search_input_large_height: rem-calc(36);
         border: 1px solid $dark_blue;
         height: $search_input_large_height;
         line-height: $search_input_large_height;
-        margin: rem-calc(8) 0 0;
+        margin: 0;
 
         &:focus {
           border: 1px solid $dark_blue;
@@ -152,9 +144,6 @@ $search_input_large_height: rem-calc(36);
       //display:block;
 
       .found {
-        border: 1px solid $dark_blue;
-        border-top: 0;
-
         .suggestions {
           //margin: -5px 0 0;
           margin: 0;
@@ -338,6 +327,7 @@ $search_input_large_height: rem-calc(36);
     height: rem-calc(50);
     text-align: center;
     cursor: pointer;
+    transition: all 300ms ease-out;
 
     @include active-triangle(6px, 6px, $white, true, $dark_blue, is-active);
 

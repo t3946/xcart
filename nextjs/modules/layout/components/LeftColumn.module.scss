@@ -1,0 +1,6 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  flex: 0 0 pxToRem(220);
+  max-width: pxToRem(220);
+}

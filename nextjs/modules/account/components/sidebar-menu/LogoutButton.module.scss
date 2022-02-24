@@ -1,0 +1,35 @@
+@import "styles/utils/Utils.module";
+
+.button {
+  height: pxToRem(45);
+  font-size: pxToRem(18);
+  display: flex;
+  align-items: center;
+  padding: 0 pxToRem(36) 0 pxToRem(16);
+  text-decoration: none;
+  cursor: pointer;
+  color: #9a1524;
+  transition: all 0.3s ease-out;
+  position: relative;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+
+  @include breakpoint(md) {
+    height: pxToRem(60);
+    font-size: pxToRem(22);
+    padding: 0 pxToRem(50) 0 pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(49);
+    font-size: pxToRem(18);
+    font-weight: bold;
+    padding: 0 pxToRem(40) 0 pxToRem(20);
+
+    &:active {
+      background-color: $white;
+    }
+  }
+}

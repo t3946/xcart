@@ -1,0 +1,6 @@
+.form-review-star_overall {
+  @include breakpoint(md up) {
+    width: rem-calc(32);
+    height: rem-calc(32);
+  }
+}

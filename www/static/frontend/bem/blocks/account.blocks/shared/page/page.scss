@@ -1,0 +1,14 @@
+.page-label{
+  margin-bottom: rem-calc(15);
+  margin-left: rem-calc(24);
+  font-size: rem-calc(24);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .page-label{
+    text-align: center;
+    margin-left: 0;
+    padding-top: rem-calc(15);
+  }
+}

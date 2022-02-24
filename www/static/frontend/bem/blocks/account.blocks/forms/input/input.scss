@@ -1,0 +1,20 @@
+.form-input-label-error{
+ color: #f02a36;
+}
+
+.form-input-space-between{
+  justify-content: space-between !important;
+}
+
+.form-input-flex-end{
+  justify-content: flex-end !important;
+}
+
+.form-input-container{
+  margin-bottom: rem-calc(20);
+}
+
+.error-message-input-container{
+  display: flex;
+  justify-content: flex-end;
+}

@@ -1,0 +1,5 @@
+@each $value in (bold) {
+  .fw-#{$value} {
+    font-weight: $value!important;
+  }
+}

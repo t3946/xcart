@@ -2,7 +2,7 @@ import { Fragment, createRef } from "preact";
 import { loadStripe } from "@stripe/stripe-js/pure";
 import InputError from "@/components/Checkout/InputError";
 import "regenerator-runtime/runtime";
-import _ from "lodash";
+import merge from "lodash/merge";
 import Price from "@/components/product/card/components/Price";
 import { PriceProduct } from "../product/card/components/PriceProduct";
 
@@ -12,7 +12,7 @@ export default class PayByCardStripe extends Component {
 
     this.errorRef = createRef();
 
-    this.state = _.merge(dataProvider.get("stripe"), {
+    this.state = merge(dataProvider.get("stripe"), {
       error: "",
       grand_total: app.options.order.total,
     });

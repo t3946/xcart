@@ -1,0 +1,68 @@
+.billing-address-item-container{
+  padding: 14px 24px;
+  cursor: pointer;
+}
+
+.billing-address-item-container-selected{
+ background-color: #F4F4F4;
+}
+
+.billing-address-list-container{
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 23px;
+}
+
+.billing-address-container{
+  padding: 0;
+}
+
+
+.billing-address-back-btn, .add-billing-address-btn{
+  margin-right: 5px !important;
+}
+
+.billing-address-add-btns{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.billing-address-add-btns-container{
+  display: flex;
+  width: 50%;
+}
+
+.add-billing-address-container{
+  width: 75%;
+}
+
+.billing-address-butns{
+  display: flex;
+}
+
+@media (max-width: 1000px) {
+  .add-billing-address-container{
+    width: 100%;
+  }
+
+  .billing-address-add-btns-container{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .billing-address-add-btns-container{
+    flex-direction: column;
+  }
+
+  .billing-address-back-btn, .add-billing-address-btn{
+    margin-right: 0px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .billing-address-butns{
+    flex-direction: column;
+  }
+
+}

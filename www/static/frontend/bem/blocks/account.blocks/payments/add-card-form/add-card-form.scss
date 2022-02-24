@@ -1,0 +1,64 @@
+.expirations-date-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-card-input{
+  width: 67%;
+}
+
+.add-card-select-expiration{
+  width: 48% !important;
+}
+
+.add-card-form-container{
+  width: 60%;
+}
+
+.add-card-form-btns{
+  width: 67%;
+  display: flex;
+}
+
+.cancel-btn{
+  margin-right: 10px !important;
+}
+
+@media (max-width: 1250px) {
+  .add-card-form-container{
+   width: 80%;
+    margin: 0 auto;
+  }
+
+  .add-card-form-btns{
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .add-card-form-container{
+    width: 100%;
+    margin: 0 auto;
+  }
+
+
+
+  .cancel-btn{
+    margin-right: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .add-card-form-btns{
+    width: 100%;
+  }
+
+  .add-card-input{
+    width: 100%;
+  }
+
+  .add-card-form-btns{
+    flex-direction: column;
+  }
+}

@@ -1,7 +1,8 @@
 .list-item-wrap {
   position: relative;
-  padding: 3px 10px;
+  padding: 3px 40px;
   cursor: pointer;
+  background-color: white;
   color: #494949 !important;
   font-weight: 600;
   z-index: 1;
@@ -68,6 +69,7 @@
   max-width: 380px;
   align-items: center;
 }
+
 .subject-email-block-personal {
   overflow: hidden;
   display: flex;
@@ -159,6 +161,7 @@
 }
 
 .date {
+  margin: 0 22px 0 30px;
 }
 
 .email-item-block {

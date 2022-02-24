@@ -1,0 +1,16 @@
+.departments-menu-mobile-subcategory-link {
+  padding: rem-calc(8) rem-calc(16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: rem-calc(52);
+  font-size: rem-calc(14);
+
+  &:hover, &:focus {
+    text-decoration: none;
+
+    .subcategory-link-text {
+      text-decoration: underline;
+    }
+  }
+}

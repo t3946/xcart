@@ -2,6 +2,7 @@
 
 namespace Modules\Goods\Controllers;
 
+use Modules\Account\Controllers\AccountController;
 use Modules\Goods\Forms\NotifyStockForm;
 use Modules\Goods\Forms\ProductQuestionForm;
 use Modules\Goods\Helpers\CreateProductPageFormHelper;
@@ -9,9 +10,10 @@ use Modules\Goods\Helpers\ProductHelper;
 use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\ProductQuestionModel;
-use Modules\Goods\Models\ProductVideosModel;
+use Modules\Goods\Models\ProductsVideosModel;
 use Modules\Meta\Types\MetaType;
 use Modules\Sites\Models\SiteModel;
+use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
@@ -22,9 +24,10 @@ use Xcart\App\Pagination\Pagination;
 
 class DefaultController extends FrontendController
 {
-    public function actionViewOld($id, $slug): void
+    public function actionViewOld($id): void
     {
-        /** @var ProductModel $model */
+        $product = AccountController::getProduct($id);
+        StorageHelper::push($product, $id, 'products');
         $model = ProductModel::objects()->filter(['productid' => $id])->get();
         $this->view_internal($model);
     }
@@ -134,19 +137,14 @@ class DefaultController extends FrontendController
             'helper' => new ProductHelper(),
         ];
 
-        $flag = true;
-        /** @var ProductVideosModel $video_models */
-        if ($video_models = ProductVideosModel::objects()->filter(['product_id' => $model->productid])->all()) {
-            foreach ($video_models as $video_model) {
-                if (!preg_match('/youtu/i', $video_model->video)) {
-                    $flag = false;
-                }
-            }
-        }
+        $product_id = $model->productid;
+        $videos = ProductsVideosModel::objects()
+            ->select(['videos__*'])
+            ->filter(['product_id' => $product_id])
+            ->asArray()
+            ->all();
 
-        if ($flag) {
-            $params['videos'] = $video_models;
-        }
+        $params['videos'] = $videos;
 
 
         if ($model->isGroupRoot()) {
@@ -187,6 +185,24 @@ class DefaultController extends FrontendController
         } else {
             $this->setCanonical($model);
         }
+
+        StorageHelper::push([
+            'product' => $model->getAttributes(),
+            'image' => (string) $model->getMainImage(),
+            'brand' => $model->brand,
+            'distributor' => $model->distributor,
+            'flags' => [
+                'isGroupRoot' => $model->isGroupRoot(),
+                'isOutOfStockFrontend' => $model->isOutOfStockFrontend(),
+                'isFreeShipping' => $model->isFreeShipping(),
+                'isFlatRate' => $model->isFlatRate(),
+                'isEarlyChildhoodResources' => $model->manufacturerid === 85,
+            ],
+        ], null, 'product_info');
+
+        StorageHelper::push([
+            'time' => time(),
+        ], null, 'server');
 
         $this->display('product/product.tpl', $params);
     }

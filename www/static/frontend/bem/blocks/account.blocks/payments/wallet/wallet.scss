@@ -1,0 +1,134 @@
+.wallet-label{
+  font-size: 18px;
+  font-weight: 700;
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
+
+.wallet-card-container{
+  margin-bottom: 10px;
+}
+.wallet-container{
+  width: 100%;
+}
+
+.wallet-card-header{
+  border: 1px solid #C4C4C4;
+  padding: 7px 25px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.wallet-card-header-first{
+  border-top: 1px solid #C4C4C4;
+}
+
+.wallet-card-content{
+  padding: 15px 25px;
+  border: 1px solid #C4C4C4;
+  border-top: 0;
+  display: flex;
+}
+
+
+.wallet-card-content-container{
+  transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  overflow: hidden;
+}
+
+.wallet-card-content-label{
+font-weight: 700;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.edit-card-btn{
+  margin-right: 5px !important;
+}
+
+.wallet-card-buttons{
+  display: flex;
+}
+
+.wallet-card-name{
+  width: 33%;
+}
+
+.wallet-card-billing{
+  width: 33%;
+}
+
+.wallet-card-name-header{
+  display: flex;
+  align-items: center;
+}
+
+.wallet-card-img{
+  margin-right: 10px ;
+}
+
+.wallet-header-arrow-block{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 33%;
+}
+
+.wallet-header-default-block{
+  color: #055A93;
+}
+
+.wallet-header-default-block_is-default{
+  color: #83132B;
+}
+
+.wallet-cards-list-container{
+  margin-bottom: 31px;
+}
+
+.add-card-select-expiration-month{
+  width: 278px !important;
+}
+
+.add-card-select-expiration-years{
+  width: 225px !important;
+}
+
+@media (max-width: 1000px) {
+  .wallet-card-buttons{
+    display: block;
+  }
+  .edit-card-btn{
+  margin-bottom: 10px !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .wallet-card-billing-header, .wallet-header-default-block{
+    display: none;
+  }
+
+  .wallet-card-header{
+    justify-content: space-between;
+  }
+
+
+  .wallet-card-billing, .wallet-card-name{
+    width: 60%;
+  }
+
+  .wallet-card-name-header{
+    width: 80%;
+  }
+
+  .wallet-header-arrow-block{
+    justify-content: flex-end;
+  }
+
+  .wallet-card-content{
+    display: block;
+  }
+
+}

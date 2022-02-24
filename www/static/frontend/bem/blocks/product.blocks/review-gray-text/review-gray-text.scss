@@ -1,0 +1,8 @@
+.review-gray-text {
+  color: #565656;
+  font-size: rem-calc(14);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(16);
+  }
+}

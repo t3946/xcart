@@ -1,0 +1,25 @@
+.order-product-list-header{
+  padding: rem-calc(13) rem-calc(34);
+  background-color: #FFF1F0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.order-product-list-header-sku{
+  width: 60%;
+}
+
+.order-product-list-header-quantity{
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}
+
+.order-product-list-header-quantity-cancel{
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+}
+

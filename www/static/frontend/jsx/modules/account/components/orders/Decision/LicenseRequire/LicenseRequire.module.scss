@@ -1,0 +1,54 @@
+@import "~style-modules/sass-utils";
+
+.buttonUpload {
+  border-radius: rem-calc(4);
+  padding: rem-calc(2) rem-calc(20) rem-calc(3) rem-calc(13);
+  font-size: rem-calc(14);
+  line-height: rem-calc(22);
+}
+
+
+.description {
+  font-size: rem-calc(16);
+  line-height: rem-calc(23);
+}
+
+.label {
+  font-size: rem-calc(18);
+  line-height: rem-calc(23);
+  margin: rem-calc(39) 0 rem-calc(15) 0
+}
+
+.form__submitButton {
+  margin: rem-calc(34) 0 0;
+}
+
+.submitButton {
+  width: fit-content;
+}
+
+//.decision {
+//  margin: rem-calc(43) 0;
+//}
+//
+//.decisionInnerTitle {
+//  font-family: Lato;
+//  font-style: normal;
+//  font-weight: bold;
+//  font-size: rem-calc(24);
+//  line-height: rem-calc(29);
+//  color: #000000;
+//  margin: 0 0 rem-calc(26);
+//}
+//
+//.decisionTableRow {
+//  display: grid;
+//  grid-template-columns: 4fr 2fr 2fr;
+//}
+//.decisionTableRow_header {
+//      padding: rem-calc(14) 0 rem-calc(13) rem-calc(24);
+//      background: #F4F4F4;
+//      font-size: rem-calc(16);
+//      line-height: rem-calc(19);
+//    }
+//

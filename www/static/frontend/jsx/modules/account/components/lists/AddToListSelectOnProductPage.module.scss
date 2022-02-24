@@ -1,0 +1,54 @@
+@import "~style-modules/sass-utils.scss";
+
+.addToListLabel {
+  font-size: rem-calc(18);
+  flex: 1 0 auto;
+}
+
+.addToListArrowBlock {
+  width: rem-calc(50);
+  height: 100%;
+  border-left: 2px solid #ffb400;
+  background-color: #fff1cf;
+  color: #4a4949;
+}
+
+.addToListArrowBlockIcon {
+  width: rem-calc(18);
+  height: auto;
+  transform: rotate(180deg);
+  transition: all 0.15s linear;
+
+  &__flip {
+    transform: rotate(0);
+  }
+}
+
+.addToListHeader {
+  border-radius: 4px;
+  border: 2px solid #FFB400;
+  background: #FFFFFF;
+  height: rem-calc(50);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.createListButton {
+  border-top: 1px solid #c4c4c4;
+  height: rem-calc(50);
+  color: #055a93;
+  font-size: rem-calc(18);
+  background-color: #ffffff;
+  transition: background-color 0.15s ease-out;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.createListButtonIcon {
+  width: rem-calc(21);
+  height: auto;
+}

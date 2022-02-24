@@ -1,0 +1,16 @@
+.review-file-thumb {
+  background-position: center;
+  background-size: cover;
+  display: inline-block;
+  cursor: pointer;
+  height: rem-calc(123);
+  border: 1px solid #f5f5f5;
+
+  @include breakpoint(md up) {
+    height: rem-calc(116);
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(88);
+  }
+}

@@ -1,0 +1,233 @@
+import classnames from "classnames";
+import CatalogContext from "@modules/components/catalog/CatalogContext";
+import { cartAdd } from "@redux/reducers/appCartReducer";
+import * as preact from "preact";
+import CreateWaitButton from "@modules/components/AnimateWaitButton";
+import t from "@utils/i18n";
+import React from "react";
+import $ from "jquery";
+import { addToCart } from "@utils/Analytics";
+import {
+  getAction as cartGetAction,
+  setAction as cartSetAction,
+} from "@redux/actions/CartActions";
+import Store from "@redux/stores/Store";
+import cn from "classnames";
+
+export default class AddToCartButton extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.SIMPLE_MODE = "simple";
+    this.COMPLEX_MODE = "complex";
+    this.state = {
+      classes: {},
+      mode: this.SIMPLE_MODE,
+    };
+
+    this.onAddToCart = this.onAddToCart.bind(this);
+
+    this.checkoutLink = preact.createRef();
+    this.button = preact.createRef();
+    this.mainWrapper = preact.createRef();
+    this.checkoutWrapper = preact.createRef();
+  }
+
+  /**
+   * computed html classes for redraw component
+   */
+  computeClasses() {
+    const mainWrapper = ["add-to-cart-button"];
+    const button = [
+      "add",
+      "button",
+      "yellow",
+      "wait-button",
+      "add-to-cart-button-add",
+    ];
+    const checkoutLinkWrapper = ["add-to-cart-button-wrapper"];
+    const checkoutLink = [
+      "button",
+      "yellow-white",
+      "waves waves-orange",
+      "waves-effect",
+      "add-to-cart-button-checkout",
+    ];
+    const addToCartLongText = [
+      "button-text",
+      {
+        complex: this.state.mode === this.COMPLEX_MODE,
+      },
+    ];
+
+    const classes = {
+      mainWrapper,
+      button,
+      checkoutLinkWrapper,
+      checkoutLink,
+      addToCartLongText,
+      waitText: ["wait-text", "button-wait-text"],
+    };
+
+    const propsClasses = this.props.classes;
+
+    // extend computed classes by props classes
+    if (propsClasses) {
+      button.push(`add-to-cart-button-add__${this.state.mode}`);
+      checkoutLink.push(`add-to-cart-button-checkout__${this.state.mode}`);
+
+      if (this.state.mode === this.COMPLEX_MODE) {
+        button.push(propsClasses.buttonComplex);
+        checkoutLink.push(propsClasses.checkoutLinkComplex);
+      }
+
+      for (const key in classes) {
+        classes[key].push(propsClasses[key]);
+      }
+    }
+
+    // join classes
+    for (const key in classes) {
+      classes[key] = classnames(classes[key]);
+    }
+
+    this.classes = classes;
+  }
+
+  /**
+   * print no need account template part if need
+   */
+  noAccount() {
+    const noAccount = false;
+
+    if (noAccount) {
+      return (
+        <div className="no-account">
+          {t("No account needed! \n Checkout only takes 3 minutes.")}
+        </div>
+      );
+    }
+  }
+
+  onAddToCart() {
+    //reset products counter to min amount
+    this.props.onAddToCart();
+
+    const button = this.button.current;
+
+    if (this.state.mode === this.SIMPLE_MODE) {
+      setTimeout(() => {
+        this.setState({ mode: this.COMPLEX_MODE });
+        this.computeClasses();
+
+        if (typeof this.props.onChangeMode === "function") {
+          this.props.onChangeMode();
+        }
+      }, 1000);
+    }
+
+    const buttonAnimation = CreateWaitButton(button);
+    const product = button.closest("[data-product]");
+
+    if (product) {
+      let form = null;
+
+      // product options form (need to determine exactly sort of product)
+      const infoFormId = button
+        .closest(".cart-add")
+        .getAttribute("data-form-id");
+
+      if (infoFormId) {
+        form = document.getElementById(infoFormId);
+
+        if (
+          typeof document.formValidators !== "undefined" &&
+          document.formValidators[infoFormId] !== "undefined"
+        ) {
+          const formValidate = document.formValidators[infoFormId];
+          formValidate.checkAllForm();
+
+          if (formValidate.hasErrors) {
+            return false;
+          }
+        }
+      }
+
+      const opt = [];
+      const values = $(form).serializeArray();
+
+      for (const oneValue of values) {
+        const valueParts = oneValue.value.split("_");
+        const identifiersParts = valueParts[0].split("-");
+        opt.push({
+          optionId: identifiersParts[0],
+          variantId: identifiersParts[1],
+        });
+      }
+
+      const quantity = this.props.quantity;
+      const data = [
+        {
+          id: product.dataset.product,
+          quantity,
+          options: opt,
+        },
+      ];
+
+      buttonAnimation.start();
+
+      console.log("data", data);
+      cartAdd(data, () => {
+        // show caption on product page
+        $(".jackpot").show();
+
+        Store.dispatch(
+          cartGetAction({
+            success(res) {
+              Store.dispatch(cartSetAction({ cart: res.data }));
+            },
+          })
+        );
+      });
+
+      addToCart(product);
+    }
+  }
+
+  render() {
+    this.computeClasses();
+
+    return (
+      <div className={this.classes.mainWrapper} ref={this.mainWrapper}>
+        <a
+          className={cn(this.classes.button, "text-decoration-none")}
+          onClick={this.onAddToCart}
+          ref={this.button}
+        >
+          <span className={this.classes.addToCartLongText}>
+            {t("Add to cart")}
+          </span>
+          <span className={this.classes.waitText}>{t("Added")}</span>
+        </a>
+
+        {this.state.mode === this.COMPLEX_MODE && (
+          <div
+            className={this.classes.checkoutLinkWrapper}
+            ref={this.checkoutWrapper}
+          >
+            <a
+              href={this.context.checkoutUrl}
+              className={cn(this.classes.checkoutLink, "text-decoration-none")}
+              ref={this.checkoutLink}
+            >
+              {t("Checkout")}
+            </a>
+            {this.noAccount()}
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
+AddToCartButton.contextType = CatalogContext;

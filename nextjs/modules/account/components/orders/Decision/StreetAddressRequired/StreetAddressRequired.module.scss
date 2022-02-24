@@ -1,0 +1,207 @@
+@import "styles/utils/Utils.module";
+
+.header {
+  text-transform: capitalize;
+  padding: pxToRem(30) 0  pxToRem(16) 0;
+
+  @include breakpoint(md) {
+    text-transform: none;
+    padding: pxToRem(37) 0 0 pxToRem(48);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(45) pxToRem(26) pxToRem(23);
+  }
+}
+
+.headerText {
+  font-weight: bold;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+    line-height: pxToRem(36);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(24);
+    line-height: pxToRem(28);
+    text-transform: none;
+  }
+}
+
+.form__header {
+  @include breakpoint(lg) {
+    margin-top: pxToRem(45);
+  }
+}
+
+.decision__text {
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(21);
+  }
+}
+
+.decisionPage {
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    padding: pxToRem(20) pxToRem(21) pxToRem(16);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.text {
+  padding: 0 pxToRem(10);
+  line-height: pxToRem(23);
+  
+  @include breakpoint(lg) {
+    padding: 0;
+    line-height: pxToRem(26);
+  }
+
+  @include breakpoint(lg) {
+    line-height: pxToRem(24);
+  }
+}
+
+.decision__caption {
+  @include breakpoint(md) {
+    margin: pxToRem(22) 0 pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(28);
+  }
+}
+
+.decision__addresses {
+  margin: 0 0 pxToRem(26);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(42);
+  }
+  
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-24) pxToRem(33);
+  }
+}
+
+.addresses {
+  column-gap: pxToRem(10);
+  row-gap: pxToRem(10);
+
+  @include breakpoint(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include breakpoint(xl) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.address {
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  @include breakpoint(md) {
+    min-height: pxToRem(234);
+    padding: pxToRem(23) pxToRem(19) pxToRem(21) pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    min-height: pxToRem(244);
+    padding: pxToRem(20) pxToRem(23) pxToRem(26) pxToRem(22);
+  }
+}
+
+.addressCard_mobile {
+  gap: pxToRem(12);
+}
+
+.addressHeader {
+  text-align: left;
+  font-weight: bold;
+  color: #000000;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(22);
+    padding: 0 0 pxToRem(25);
+  }
+}
+
+.addressBody {
+  white-space: pre-line;
+  color: #262626;
+
+  @include breakpoint(lg) {
+    line-height: pxToRem(24);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(20);
+  }
+}
+
+.addressFooter {
+  color: #055a93;
+  text-align: right;
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(19);
+  }
+}
+
+.addressFooter_disabled {
+  color: #808080;
+}
+
+.newAddressText {
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+}
+
+.button {
+  font-size: pxToRem(20);
+  line-height: pxToRem(24);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    line-height: pxToRem(31);
+    padding: 0 pxToRem(50);
+    height: pxToRem(57);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(43);
+    height: pxToRem(41);
+  }
+}
+
+.decision__addAddressForm {
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-24) pxToRem(34);
+  }
+}
+
+.addAddressForm {
+  border: 1px solid #c4c4c4;
+  padding: pxToRem(19) pxToRem(24) pxToRem(14);
+
+  max-width: pxToRem(640);
+}
+
+.cursor_pointer {
+  cursor: pointer;
+}

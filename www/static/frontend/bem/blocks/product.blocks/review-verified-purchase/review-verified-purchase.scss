@@ -1,0 +1,13 @@
+.review-verified-purchase {
+  color: #c55513;
+  font-size: rem-calc(14);
+  font-weight: bold;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(16);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}

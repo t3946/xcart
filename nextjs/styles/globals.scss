@@ -1,0 +1,13 @@
+@import "@styles/old/Styles";
+@import "@submodules/bootstrap/dist/css/bootstrap";
+@import "@submodules/bootstrap/dist/css/bootstrap-grid";
+@import "~swiper/swiper-bundle";
+@import "~cropperjs/dist/cropper";
+@import "bem";
+@import "@styles/fonts/lato";
+@import "@styles/utils-style/utils-style";
+@import "~leaflet/dist/leaflet.css";
+
+* {
+  font-family: Lato, sans-serif;
+}

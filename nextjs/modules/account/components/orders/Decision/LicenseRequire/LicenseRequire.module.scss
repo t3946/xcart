@@ -1,0 +1,54 @@
+@import "styles/utils/Utils.module";
+
+.buttonUpload {
+  border-radius: pxToRem(4);
+  padding: 0 pxToRem(13);
+  font-size: pxToRem(14);
+  line-height: pxToRem(22);
+  cursor: pointer;
+}
+
+.description {
+  font-size: pxToRem(16);
+  line-height: pxToRem(23);
+}
+
+.label {
+  font-size: pxToRem(18);
+  line-height: pxToRem(23);
+  margin: pxToRem(39) 0 pxToRem(15) 0;
+}
+
+.form__submitButton {
+  margin: pxToRem(34) 0 0;
+}
+
+.submitButton {
+  width: fit-content;
+}
+
+//.decision {
+//  margin: pxToRem(43) 0;
+//}
+//
+//.decisionInnerTitle {
+//  font-family: Lato;
+//  font-style: normal;
+//  font-weight: bold;
+//  font-size: pxToRem(24);
+//  line-height: pxToRem(29);
+//  color: #000000;
+//  margin: 0 0 pxToRem(26);
+//}
+//
+//.decisionTableRow {
+//  display: grid;
+//  grid-template-columns: 4fr 2fr 2fr;
+//}
+//.decisionTableRow_header {
+//      padding: pxToRem(14) 0 pxToRem(13) pxToRem(24);
+//      background: #F4F4F4;
+//      font-size: pxToRem(16);
+//      line-height: pxToRem(19);
+//    }
+//

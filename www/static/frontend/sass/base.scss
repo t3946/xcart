@@ -2,7 +2,6 @@
 
 @import 'settings/colors';
 @import 'settings/icons';
-
 @import 'settings/foundation_settings';
 @import 'settings/foundation_includes';
 
@@ -11,16 +10,10 @@
 @import 'mixins/menu';
 @import 'mixins/bem';
 
-
-
 @import 'base/base';
 @import 'base/typography';
 @import 'base/global';
-//@import 'base/page';
-
-
 @import 'base/_header';
-
 
 @import 'parts/breadcrumbs';
 @import 'parts/title_block';
@@ -30,5 +23,3 @@
 @import 'pages/home';
 @import 'pages/product';
 @import 'pages/cart';
-
-@import '../bem/bem';

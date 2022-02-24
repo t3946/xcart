@@ -1,0 +1,9 @@
+@import "styles/utils/Utils.module";
+
+.button {
+  font-size: pxToRem(20);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}

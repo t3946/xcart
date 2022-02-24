@@ -324,11 +324,11 @@ function change_states() {
 		}
 	}
 
-	/* Call old onchange event handler	*/
+	/* сall old onchange event handler	*/
 	if (this.oldOnchange)
 		this.oldOnchange();
 
-	/* Call counties rebuild procedure	*/
+	/* сall counties rebuild procedure	*/
 	if (this.states.onchange)
 		this.states.onchange();
 

@@ -1,0 +1,136 @@
+import React from "react";
+import InnerPage from "@components/common/inner-page/InnerPage";
+import { Form, Formik } from "formik";
+import { getCountryByCode } from "@utils/Countries";
+import { editPhoneAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
+import * as yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import StoreInterface from "@modules/account/ts/types/store.type";
+import FormInputPhone, {
+  phoneYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
+import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import { changePreferredMethodAction } from "@redux/actions/account-actions/TSVActions";
+import { useRouter } from "next/router";
+
+const TSVChangePreferredMethod: React.FC<any> = function () {
+  const countries = useSelector((e: StoreInterface) => e.countries);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const initialValues = {
+    phoneCode: "",
+    phone: "",
+    phone_ext: "",
+  };
+
+  const validationSchema = yup.object().shape({
+    phoneCode: yup.string().required("Required"),
+    phone: phoneYupValidation,
+    phone_ext: yup.string(),
+  });
+
+  function submit(values, actions) {
+    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
+    const phone = `+${phoneCode}${values.phone.replace(/[+()\-\s]/gim, "")}`;
+
+    dispatch(
+      changePreferredMethodAction({
+        data: {
+          phone,
+        },
+
+        success(res: AxiosResponse) {
+          if (res.data.errors) {
+            actions.setErrors(res.data.errors);
+            return;
+          }
+
+          dispatch(userSetAction(res.data.user));
+          router.push("/login-and-security/two-step-verification-settings");
+        },
+      })
+    );
+  }
+
+  return (
+    <InnerPage
+      header={"Change preferred method"}
+      hat={
+        <p className={"mb-0 px-10 px-md-0"}>
+          If you would like to change your preferred method, you can do so by
+          selecting a new or an existing device. This device should be available
+          whenever you sign in to your S3 Stores account.
+        </p>
+      }
+      bodyClasses={["p-0", StylesLoginAndSecurity.pageBody]}
+      headerClasses={"mb-3"}
+    >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={submit}
+      >
+        {function ({
+          isSubmitting,
+          setFieldValue,
+          values,
+          errors,
+          touched,
+          handleChange,
+        }) {
+          return (
+            <Form>
+              <div className="content-panel">
+                <h3>Use your phone as a 2SV authenticator</h3>
+
+                <p>
+                  Tell us a phone number you'd like to use for 2SV
+                  authentication challenges.
+                </p>
+
+                <p>Where should we send the One Time Password (OTP)?</p>
+
+                <FormInputPhone
+                  setFieldValue={setFieldValue}
+                  handleChange={handleChange}
+                  touched={touched}
+                  errors={errors}
+                  name={"phone"}
+                  values={values}
+                  mode={"mobile"}
+                  label={"New Mobile number"}
+                  classes={{ select: "col-1", container: "flex-nowrap" }}
+                />
+
+                <p className="form-info mt-3 mb-0">
+                  By enrolling a mobile phone number, you consent to receive
+                  automated text messages from or on behalf of S3 Stores related
+                  to account management and security. Remove your number in{" "}
+                  <b>Login & Security</b> to cancel. Message and data rates may
+                  apply.
+                </p>
+              </div>
+
+              <div className="text-center text-lg-start account-page-footer">
+                <button
+                  className={
+                    "admin-form-control form-button form-button__wide w-md-auto d-inline-block"
+                  }
+                  disabled={isSubmitting}
+                  type="submit"
+                >
+                  continue
+                </button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
+    </InnerPage>
+  );
+};
+
+export default TSVChangePreferredMethod;

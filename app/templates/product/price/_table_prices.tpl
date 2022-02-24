@@ -9,16 +9,16 @@
 
             <div class="product-quantity">
                 <div class="column small-12">
-                    <div class="table table__prices table__prices--top product-quantity-row__title">
-                        <div class="title column small-4 product-quantity-title">{t 'Unit Price'}</div>
-                        <div class="title column small-4 product-quantity-title">{t 'Quantity'}</div>
+                    <div class="row m-0 table__prices table__prices--top product-quantity-row__title">
+                        <div class="title col-4 product-quantity-title">{t 'Unit Price'}</div>
+                        <div class="title col-4 product-quantity-title">{t 'Quantity'}</div>
                         {if !$model->isOutOfStockFrontend()}
-                            <div class="title column small-4 product-quantity-title">{t 'Subtotal'}</div>
+                            <div class="title col-4 product-quantity-title">{t 'Subtotal'}</div>
                         {/if}
                     </div>
 
-                    <div class="table table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if}">
-                        <div class="column product-table-prices_price-column column-price small-4">
+                    <div class="d-flex align-items-center table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if}">
+                        <div class="column product-table-prices_price-column column-price col-4">
                             <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
                                 {$model->getFrontendPrice($model->min_amount)|site_currency:$site:'var-price'}
                             </div>
@@ -29,8 +29,8 @@
                             {/if}
                         </div>
 
-                        <div class="column quantity small-4">
-                            <div class="value">
+                        <div class="column quantity col-4">
+                            <div class="value d-flex justify-content-center">
                                 {if !$model->isOutOfStockFrontend()}
                                     {include "product/parts/_quantity_group.tpl"}
                                 {else}
@@ -40,7 +40,7 @@
                         </div>
 
                         {if !$model->isOutOfStockFrontend()}
-                            <div class="column product-table-prices_price-column column-extended small-4">
+                            <div class="product-table-prices_price-column column-extended col-4">
                                 <div class="product-quantity-extended-price">
                                     {set $estended_price = $model->getFrontendPrice($model->min_amount) * $model->min_amount}
                                     {$estended_price|site_currency:$site:'var-price-extended'}
@@ -97,26 +97,35 @@
                 </div>
             </div>
         </div>
-        <div class="button-section columns small-12">
+        <div class="button-section">
             {if !$model->isOutOfStockFrontend()}
-                <div class="row">
-                    <div class="columns small-12">
-                        {if $form}
-                            {include "product/parts/_options.tpl" form=$form}
-                        {/if}
-                        {if $site.code !== 'RD'}
-                            <div class="jackpot">
-                                {t 'Congratulations! You got a great price!'}
-                            </div>
-                        {/if}
-                        <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
-                            {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true }
+                <div class="col-12 px-md-0">
+                    {if $form}
+                        {include "product/parts/_options.tpl" form=$form}
+                    {/if}
+                    {if $site.code !== 'RD'}
+                        <div class="jackpot">
+                            {t 'Congratulations! You got a great price!'}
                         </div>
+                    {/if}
+                    <div class="cart_add add-product" data-form-id="{if $form}{$form->getFormId()}{/if}">
+                        {include "product/parts/_add_to_cart.tpl" type='product' noAccount=true }
                     </div>
                 </div>
             {/if}
         </div>
     </div>
+
+    {if $model->isGroupChild()}
+        {set $parent = $model->parent}
+        {if $parent}
+            <div class="link__group_root">
+                <a href="{$parent->getAbsoluteUrl()}" title="{t 'See full'} {$parent->getFrontendName()} {t 'product line'}">
+                    {t 'Click here to see full product line'}
+                </a>
+            </div>
+        {/if}
+    {/if}
 
     {if $model->isOutOfStockFrontend()}
         <div class="notify-me-stock">
@@ -124,6 +133,8 @@
             <a class="notify-me grey-border">
                 <span>{t 'Notify me when product is in stock'}</span>
             </a>
+            <div class="product-page-add-to-list-btn out-of-stock" data-out-of-stock="{$model->r_avail === 0 ? '1' : '0'}"></div>
+
 
         </div>
     {/if}

@@ -1,0 +1,37 @@
+@import "styles/utils/Utils.module";
+
+.productInfoName {
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.productInfoPrice {
+  padding: pxToRem(10) 0;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(24);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.productInfoDate {
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(16);
+  }
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.counter {
+  max-width: pxToRem(100);
+}

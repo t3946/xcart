@@ -2,6 +2,7 @@
 namespace Modules\User\Components;
 
 
+use Firebase\JWT\JWT;
 use Modules\User\Models\UserModel;
 use Xcart\App\Cli\Cli;
 use Xcart\App\Helpers\SmartProperties;
@@ -22,7 +23,7 @@ class Auth implements AuthInterface
      * Default: 60 days
      * @var int
      */
-    public $expire = 5184000;
+    public $expire = 60 * 60 * 24 * 2;
 
     /**
      * @var string
@@ -36,13 +37,12 @@ class Auth implements AuthInterface
     public $authSessionName = 'admin_login';
 
     public $class = 'Modules\User\Models\UserModel';
+    public $newUserClass = 'Modules\User\Models\UserAccount\UserModel';
 
-    public function login($user, $rememberMe = true)
+    public function login($user, $remember_me = false)
     {
         $this->updateSession($user);
-        if ($rememberMe) {
-            $this->updateCookie($user);
-        }
+        Xcart::app()->request->session->add('remember_me', $remember_me);
         $this->setUser($user);
     }
 
@@ -57,10 +57,13 @@ class Auth implements AuthInterface
         $this->_user = null;
     }
 
-    public function getUser()
+    /**
+     * @param bool $new_user Если true, то работать будет с пользователем из xcart_users(из обновы с личным кабинетом)
+     */
+    public function getUser($new_user = false)
     {
-        if (!$this->_user) {
-            $this->_user = $this->fetchUser();
+        if (!$this->_user || $new_user) {
+            $this->_user = $this->fetchUser($new_user);
         }
         return $this->_user;
     }
@@ -72,14 +75,16 @@ class Auth implements AuthInterface
         $this->updateSession($user);
     }
 
-    public function fetchUser()
+    public function fetchUser($new_user = false)
     {
         $user = null;
 
         if (!Cli::isCli()) {
-            if ($connection = Xcart::app()->db->getConnection()) {
-                if (!$user = $this->getSessionUser()) {
-                    if ($user = $this->getCookieUser()) {
+            $user = $this->getSessionUser($new_user);
+
+            if (!$user) {
+                if ($user = $this->getCookieUser($new_user)) {
+                    if (!$new_user) {
                         $this->updateSession($user);
                     }
                 }
@@ -87,7 +92,7 @@ class Auth implements AuthInterface
         }
 
         if (!$user) {
-            $class = $this->class;
+            $class = $new_user ? $this->newUserClass : $this->class;
             $user = new $class();
         }
 
@@ -98,34 +103,58 @@ class Auth implements AuthInterface
      * Find user in database by id or login
      *
      * @param int|string $id
+     * @param bool $new_user true если нужно работать с моделью новго пользователя
      * @return mixed
      */
-    public function findUser($id)
+    public function findUser($id, $new_user = false)
     {
-        $class = $this->class;
-        /** @var UserModel $class */
-        return $class::objects()->filter(['id' => $id])->limit(1)->get();
+        if ($new_user) {
+            $class = \Modules\User\Models\UserAccount\UserModel::class;
+            return $class::objects()->filter(['user_id' => $id])->limit(1)->get();
+        } else {
+            $class = $this->class;
+            return $class::objects()->filter(['id' => $id])->limit(1)->get();
+        }
     }
 
-    public function getSessionUser()
+    public function getSessionUser($new_user = false)
     {
-        $id = $this->getSession();
-        if ($id) {
-            return $this->findUser($id);
+        if ($new_user) {
+            return null;
         }
+
+        $user_id = $this->getSession();
+
+        if ($user_id) {
+            return $this->findUser($user_id, $new_user);
+        }
+
         return null;
     }
 
-    public function getCookieUser()
+    public function getCookieUser($new_user = false)
     {
-        $cookie = $this->getCookie();
+        $cookie = $this->getCookie($new_user);
         if ($cookie) {
+            if ($new_user) {
+                if ($cookie->timeout < time() * 1000) {
+                    return null;
+                }
+
+                $user = $this->findUser($cookie->userId, $new_user);
+
+                if ($cookie->accessToken !== $user->access_token) {
+                    return null;
+                }
+
+                return $user;
+            }
             $data = explode(':', $cookie);
             if (count($data) == 2) {
                 $id = $data[0];
                 $key = $data[1];
 
-                $user = $this->findUser($id);
+                $user = $this->findUser($id, $new_user);
                 if ($user && password_verify($user->email . $user->password, $key)) {
                     return $user;
                 }
@@ -141,14 +170,21 @@ class Auth implements AuthInterface
 
     public function updateCookie( $user)
     {
-        $value = implode(':', [$user->id, password_hash($user->email . $user->password, PASSWORD_DEFAULT)]);
+        $login = $user->login ??$user->email;
+        $id = $user->id ?? $user->user_id;
+
+        $value = implode(':', [$id, password_hash($login . $user->password, PASSWORD_DEFAULT)]);
         $this->setCookie($value);
     }
 
     public function setSession($user)
     {
-        Xcart::app()->request->session->add($this->authSessionName, $user->id);
-        Xcart::app()->request->session->add('login', $user->login);
+        $login = $user->login ??$user->email;
+        $id = $user->id ?? $user->user_id;
+
+        Xcart::app()->request->session->add($this->authSessionName, $id);
+        Xcart::app()->request->session->add('login',  $login);
+        Xcart::app()->request->session->setUserId((int)$id);
     }
 
     public function getSession()
@@ -170,8 +206,11 @@ class Auth implements AuthInterface
         Xcart::app()->request->cookie->add($this->authCookieName, $cookie, time() + $this->expire, '/');
     }
     
-    public function getCookie()
+    public function getCookie($new_user = false)
     {
+        if ($new_user && $jwt_cookie = Xcart::app()->request->cookie->get('session')) {
+            return JWT::decode($jwt_cookie, 'h93h84fp83', array('HS256'));
+        }
         return Xcart::app()->request->cookie->get($this->authCookieName);
     }
 

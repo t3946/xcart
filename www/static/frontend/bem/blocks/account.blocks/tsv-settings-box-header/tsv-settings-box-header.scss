@@ -1,0 +1,12 @@
+.tsv-settings-box-header{
+  line-height: rem-calc(38);
+
+  @include breakpoint(md up) {
+    line-height: rem-calc(45);
+  }
+
+  @include breakpoint(lg up) {
+    line-height: initial;
+    padding: 0;
+  }
+}

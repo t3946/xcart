@@ -3,9 +3,9 @@
 {set $isCartEmpty = $.app->cart->getIsEmpty()}
 {add $site = $.getSite}
 {add $site_currency = $site->getCurrency()}
-<section class="cart-page cart_shipping-page">
+<section class="cart-page cart_shipping-page container">
     <div class="row head_line">
-        <div class="columns small-6 medium-3">
+        <div class="col-6 col-md-3">
             <div class="b-back">
                 <a href="/" class="button yellow-white waves waves-orange waves-effect">
                     {t 'Shop more'}
@@ -13,15 +13,15 @@
             </div>
         </div>
 
-        <div class="columns small-12 medium-6 flex-container align-center align-middle head-line__header-column {if $isCartEmpty}align-self-middle{/if} small-order-2 medium-order-1">
+        <div class="col-12 col-md-6 d-flex justify-content-center align-items-center head-line__header-column {if $isCartEmpty}align-self-middle{/if} small-order-2 medium-order-1">
             {if $isCartEmpty}
-                <h2 class="text-center margin-0">{t 'Your shopping cart is empty'}</h2>
+                <h2 class="text-center m-0">{t 'Your shopping cart is empty'}</h2>
             {else}
-                <h2 class="cart-number-header margin-0">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
+                <h2 class="cart-number-header m-0">{t 'Shopping Cart #'} {$.app->cart->getCartNumber()}</h2>
             {/if}
         </div>
 
-        <div class="columns small-6 medium-3 small-order-1 medium-order-2">
+        <div class="col-6 col-md-3 small-order-1 medium-order-2">
             {if !$isCartEmpty}
                 <div class="b-next">
                     <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
@@ -63,10 +63,6 @@
                         <div class="table-column extended">
                             {t 'Extended'  }
                         </div>
-
-                        {*<div class="table-column remove">*}
-                            {*{t 'Remove'  }*}
-                        {*</div>*}
                     </div>
                     <div class="table-body">
                         {foreach $items as $key=>$position}

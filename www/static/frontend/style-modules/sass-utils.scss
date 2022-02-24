@@ -1,0 +1,20 @@
+//sass utils
+$breakpoints: (
+        small: 0,
+        sm: 370px,
+        ms: 640px,
+        md: 768px,
+        medium: 768px,
+        ml: 960px,
+        lg: 992px,
+        large: 992px,
+        xl: 1280px,
+        xxl: 1400px,
+        xxxl: 1620px,
+  //bootstrap v.5 breakpoints
+        bootstrap_sm: 576px,
+);
+
+@import "node_modules/foundation-sites/scss/util/_unit.scss";
+@import "node_modules/foundation-sites/scss/util/_value.scss";
+@import "node_modules/foundation-sites/scss/util/_breakpoint.scss";

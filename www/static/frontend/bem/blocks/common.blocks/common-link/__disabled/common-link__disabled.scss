@@ -1,0 +1,7 @@
+.common-link__disabled {
+  color: #acacac;
+  cursor: default;
+  &:hover {
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,7 @@
+.hat-navigation_departments-menu-mobile {
+  position: fixed;
+  left: rem-calc(-300);
+  top: 0;
+  z-index: 101;
+  transition: left .33s ease-out;
+}

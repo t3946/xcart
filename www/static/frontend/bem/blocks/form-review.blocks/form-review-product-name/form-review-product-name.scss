@@ -1,0 +1,33 @@
+.form-review-product-name {
+  font-size: rem-calc(16);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+  }
+}
+
+.form-review-product-image {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.form-review-product-image-container {
+  width: 100px;
+  height: 100px;
+}
+
+.form-review__image {
+  margin: 0 rem-calc(14) 0 0;
+
+  @include breakpoint(md up) {
+    margin: 0 rem-calc(34) 0 0;
+  }
+
+  @include breakpoint(md up) {
+    margin: 0 rem-calc(47) 0 0;
+  }
+}

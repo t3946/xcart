@@ -1,0 +1,176 @@
+@import "styles/utils/Utils.module";
+
+.orderTrackingLine {
+  background-color: #dcdcdc;
+  position: relative;
+  width: pxToRem(8);
+  height: pxToRem(430);
+  margin: 0 auto;
+
+  @include breakpoint(md) {
+    height: pxToRem(8);
+    width: 100%;
+    margin: pxToRem(50) 0 pxToRem(136) 0;
+  }
+}
+
+.orderTrackingLineBlue {
+  background-color: #99bbd2;
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+  width: pxToRem(8);
+  bottom: 0;
+  top: auto;
+  @include breakpoint(md) {
+    width: auto;
+    bottom: auto;
+    height: pxToRem(8);
+    left: 0;
+    top: 0;
+  }
+}
+
+.orderTrackingLineRound {
+  width: pxToRem(26);
+  height: pxToRem(26);
+  border-radius: 50%;
+  border: pxToRem(1) solid #959595;
+  background-color: #fff;
+  margin: 0 auto;
+  margin-bottom: pxToRem(22);
+  position: relative;
+}
+
+.orderTrackingLineRoundDate {
+  margin-top: pxToRem(12);
+  text-align: center;
+  color: #4a4949;
+}
+
+.orderTrackingLineRoundText {
+  font-size: pxToRem(18);
+  color: #4a4949;
+  text-align: center;
+}
+
+.orderTrackingLineRoundContainer {
+  position: absolute;
+  top: -100%;
+  width: pxToRem(125);
+
+  &:last-child {
+    right: 0;
+  }
+
+  &:first-child {
+    left: 0;
+  }
+}
+
+.orderTrackingLineRound_lastContainer {
+  margin-right: -pxToRem(2);
+}
+
+.orderTrackingLineRoundDate_lastContainer,
+.orderTrackingLineRoundText_lastContainer {
+  text-align: right;
+}
+
+.orderTrackingLineRound_firstContainer {
+  margin-left: -pxToRem(2);
+}
+
+.orderTrackingLineRoundDate_firstContainer,
+.orderTrackingLineRoundText_firstContainer {
+  text-align: left;
+}
+
+.orderTrackingLineRound_completed {
+  border-color: #055a93;
+  &:after {
+    position: absolute;
+    content: "";
+    width: pxToRem(14);
+    height: pxToRem(11);
+    background: url(/static/frontend/images/icons/account/checked-mark-blue.svg)
+      no-repeat 50% / cover;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.orderTrackingLineRoundText_completed {
+  color: #000;
+}
+
+.orderTrackingLineRoundContainer_current {
+  top: -150%;
+}
+
+.orderTrackingLineRound_current {
+  border-color: #055a93;
+  width: pxToRem(30);
+  height: pxToRem(30);
+  background: #055a93;
+  margin-bottom: pxToRem(24);
+
+  &:after {
+    position: absolute;
+    content: "";
+    width: pxToRem(14);
+    height: pxToRem(11);
+    background: url(/static/frontend/images/icons/account/checked-mark-white.svg)
+      no-repeat 50% / cover;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.orderTrackingLineRoundText_current {
+  font-weight: 700;
+  color: #000;
+}
+
+@media (max-width: pxToRem(767)) {
+  .orderTrackingLineRound {
+    margin: 0 pxToRem(20) !important;
+  }
+
+  .orderTrackingLineRoundContainer {
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: pxToRem(320);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: pxToRem(84);
+
+    &:first-child {
+      top: 0;
+      left: auto;
+      align-items: flex-start;
+      transform: translate(-50%) !important;
+    }
+
+    &:last-child {
+      bottom: 0;
+      top: auto;
+      align-items: flex-end;
+      transform: translate(-50%) !important;
+    }
+  }
+
+  .orderTrackingLineRoundDate {
+    width: pxToRem(107);
+    margin-top: 0;
+    text-align: left !important;
+    font-size: pxToRem(14);
+  }
+
+  .orderTrackingLineRoundText {
+    width: pxToRem(107);
+    text-align: right !important;
+  }
+}

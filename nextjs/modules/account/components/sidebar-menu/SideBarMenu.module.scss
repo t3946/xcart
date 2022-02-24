@@ -1,0 +1,15 @@
+@import "styles/utils/Utils.module";
+
+.sidebarMenuWrapper {
+  overflow-y: auto;
+  max-height: calc(100vh - 53px);
+
+  @include breakpoint(md) {
+    max-height: calc(100vh - 81px);
+  }
+
+  @include breakpoint(lg) {
+    max-height: initial;
+    overflow: initial;
+  }
+}

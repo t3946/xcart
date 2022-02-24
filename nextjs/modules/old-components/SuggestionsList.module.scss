@@ -1,0 +1,73 @@
+@import "styles/utils/Utils.module";
+
+.suggestion {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+  border-top: 1px solid #0d2431;
+
+  @include breakpoint(lg) {
+    border-top: 1px solid #dcdcdc;
+  }
+
+  &:first-child {
+    border-top: 0;
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 0 0.5rem;
+  }
+}
+
+.suggestion_d_none {
+  display: none;
+}
+
+@for $i from 0 through 2 {
+  .item#{$i} {
+    display: block;
+  }
+}
+
+@include breakpoint(lg) {
+  @for $i from 3 through 4 {
+    .item#{$i} {
+      display: block;
+    }
+  }
+}
+
+.suggestionsTitle {
+  height: pxToRem(22);
+  font-size: pxToRem(12);
+  color: #616161;
+  padding: pxToRem(3) pxToRem(12);
+}
+
+.item {
+  list-style-type: none;
+  line-height: pxToRem(37);
+  height: pxToRem(37);
+  padding: 0 pxToRem(10);
+  cursor: pointer;
+  border-top: 1px solid #e6e6e6;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:first-child {
+    border: 0;
+  }
+
+  &:hover {
+    background-color: #edf0f2;
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 1rem;
+    line-height: pxToRem(26);
+    height: pxToRem(26);
+    border: 0;
+  }
+}

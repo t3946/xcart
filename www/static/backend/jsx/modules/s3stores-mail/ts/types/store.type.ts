@@ -1,4 +1,5 @@
 import { EmailDto, EmailLabel } from "./email.type";
+import CountryDto from "@client/modules/account/ts/types/country.type";
 
 export interface StoreDto {
   labelsList: EmailLabel[];
@@ -19,6 +20,19 @@ export interface StoreDto {
   moreViewed: boolean;
   templates?: any;
   user: any;
+  breadcrumbs: Record<string, string>;
+  shadowPanel: {
+    isVisible: boolean;
+    zIndex?: number;
+  };
+  countries: CountryDto[];
+  departmentsMenu: {
+    mobile: Record<any, any>[];
+    desktop: Record<any, any>[];
+  };
+  departmentsMenuMobile: {
+    isVisible: boolean;
+  };
 }
 
 export interface EmailStoreItems {

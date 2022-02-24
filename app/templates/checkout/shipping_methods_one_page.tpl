@@ -39,7 +39,7 @@
     {elseif !isset($silent) || $silent===false}
         {add $phone_order_only = true}
         <div class="row">
-            <div class="columns small-12">
+            <div class="col-12">
                 <div class="no-quotes">
                     {t "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"}
                     <br/>

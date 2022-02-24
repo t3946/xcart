@@ -1,0 +1,87 @@
+@import "styles/utils/Utils.module";
+
+.buttonContainer {
+  width: pxToRem(117);
+  height: pxToRem(31);
+  @include breakpoint(md) {
+    width: pxToRem(130);
+    height: pxToRem(35);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    width: pxToRem(102);
+    height: pxToRem(27);
+  }
+}
+
+.label {
+  font-size: pxToRem(14);
+  text-transform: none;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.button_valid {
+  border-color: $valid;
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $valid;
+  }
+}
+
+.button_invalid {
+  border-color: $invalid;
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: $invalid;
+  }
+}
+
+.log {
+  margin: pxToRem(13) 0 0;
+  display: grid;
+  grid-template-columns: 1fr pxToRem(20);
+  row-gap: pxToRem(10);
+  line-height: 19px;
+
+  @include breakpoint(md) {
+    margin: pxToRem(18) 0 0;
+    row-gap: pxToRem(8);
+    width: fit-content;
+  }
+}
+
+.fileDetails {
+  line-height: 19px;
+}
+
+.fileDetailsName {
+  color: #075a91;
+}
+
+.fileDetailsSize {
+  color: #8a8a8a;
+}
+
+.fileDetailsRemove {
+  color: #494949;
+  cursor: pointer;
+}
+
+.fileDetailsRemoveTimes {
+  width: pxToRem(16);
+  height: pxToRem(16);
+}
+
+.h100 {
+  height: 100%;
+}

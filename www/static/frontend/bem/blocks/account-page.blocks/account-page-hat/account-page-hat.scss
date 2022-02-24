@@ -1,0 +1,11 @@
+.account-page-hat {
+  padding: rem-calc(18) rem-calc(0) rem-calc(22);
+
+  @include breakpoint(md up) {
+    padding: 0 rem-calc(24) rem-calc(20);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(24) rem-calc(30);
+  }
+}

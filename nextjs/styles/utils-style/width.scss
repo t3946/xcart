@@ -1,0 +1,17 @@
+@import "styles/utils/Utils.module";
+
+@each $bp in (xs, md, lg) {
+  @each $kye, $val in (auto: auto, 100: 100%) {
+    @if $bp == xs {
+      .w-#{$kye} {
+        width: $val !important;
+      }
+    } @else {
+      @include breakpoint($bp) {
+        .w-#{$bp}-#{$kye} {
+          width: $val !important;
+        }
+      }
+    }
+  }
+}

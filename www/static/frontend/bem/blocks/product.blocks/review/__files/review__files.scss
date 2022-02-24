@@ -1,0 +1,7 @@
+.review__files {
+  margin: rem-calc(21) 0 0;
+
+  @include breakpoint(md up) {
+    margin: rem-calc(18) 0 0;
+  }
+}

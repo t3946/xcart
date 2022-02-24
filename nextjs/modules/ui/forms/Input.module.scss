@@ -1,0 +1,66 @@
+@use "sass:color";
+@import "styles/utils/Utils.module";
+
+.input {
+  border: 1px solid #c4c4c4;
+  padding: 0 pxToRem(8);
+  width: 100%;
+  line-height: pxToRem(32);
+  border-radius: 0;
+  height: pxToRem(38);
+  color: $black;
+  font-size: pxToRem(18);
+  outline: none;
+  transition: 0.15s ease-out;
+  transition-property: box-shadow, border-color;
+
+  @include breakpoint(md) {
+    height: pxToRem(42);
+    padding: 0 pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(34);
+    padding: 0 pxToRem(15);
+    font-size: pxToRem(14);
+  }
+
+  &::placeholder {
+    font-style: italic;
+    font-size: pxToRem(14);
+    color: #959595;
+  }
+
+  &:focus {
+    border-color: #f2b405;
+    box-shadow: 0 0 0 pxToRem(3) rgba(242, 180, 5, 0.34);
+  }
+
+  &:disabled {
+    background-color: #f5f5f5;
+  }
+}
+
+.input_masked {
+  &::placeholder {
+    font-style: normal;
+  }
+}
+
+.input_valid {
+  border-color: $valid;
+
+  &:focus {
+    box-shadow: 0 0 0 pxToRem(3) color.adjust($valid, $alpha: -0.6);
+    border-color: $valid;
+  }
+}
+
+.input_invalid {
+  border-color: $invalid;
+
+  &:focus {
+    border-color: $invalid;
+    box-shadow: 0 0 0 pxToRem(3) color.adjust($invalid, $alpha: -0.6);
+  }
+}

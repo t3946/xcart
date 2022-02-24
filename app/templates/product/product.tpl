@@ -65,60 +65,61 @@
          data-rows="2"
          {if $model->getFrontendPrice() < $model->list_price}
          data-list-price="{$model->list_price}"
-         {/if}>
+         {/if}
+>
+    <div class="container">
+        <section class="product-title product-title-small">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="fw-bold">
+                        {$model->getFrontendName()}
 
-    <section class="product-title product-title-small">
-        <div class="row">
-            <div class="column large-12">
-                <h1>
-                    {$model->getFrontendName()}
+                        {if $model->retail_trust_enabled}
+                            <i class="icon retailTrust"></i>
+                        {/if}
+                    </h1>
 
-                    {if $model->retail_trust_enabled}
-                        <i class="icon retailTrust"></i>
-                    {/if}
+                    <div class="row align-justify align-middle">
+                        <div class="col shrink sku">
+                            <span class="value">
+                                {t 'SKU'}: <span class="style">{$model->productcode}</span>
+                            </span>
+                        </div>
 
-                </h1>
-
-                {*<div class="float-right show-for-medium-only show-for-ml-only godaddy">*}
-                    {*<img src="/static/frontend/dist/images/icons/item_product/gd_label.png" alt="GODADDY Verified & secured" class="gd">*}
-                {*</div>*}
-                <div class="row align-justify align-middle">
-                    <div class="column shrink sku">
-                        <span class="value">
-                            {t 'SKU'}: <span class="style">{$model->productcode}</span>
-                        </span>
-                    </div>
-                    <div class="column shrink notifications hide-for-ml product_notifications">
-                        <div class="notifications-info small-collapse">
-                            <div class="column shrink">
-                                {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
+                        <div class="col shrink notifications hide-for-ml product_notifications">
+                            <div class="notifications-info small-collapse">
+                                <div class="column shrink">
+                                    {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <span class="clearfix"></span>
-            </div>
-        </div>
-    </section>
 
-    <section class="images_prices">
-        <div class="row">
-            <div class="column small-12 ml-6 large-6 block__image">
-                <div class="product__images-slider">
+                    <span class="clearfix"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="images_prices row row-cols-1 row-cols-lg-2">
+            <div class="col block__image mb-10">
+                <div class="product-slider-sticky-container">
+                    <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
 
                     {set $images = $model->getImages()}
 
                     {if $images}
-                        <div class="product-slider-sceleton-wrapper">
-                            <div class="product-slider-imgs-sceleton-wrapper">
-                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
-                                <div class="sceleton" style="max-width: 52px; height: 60px; margin-bottom: 10px"></div>
+                        <div class="product-slider-skeleton-wrapper">
+                            <div class="product-slider-images-skeleton-wrapper d-none d-lg-block">
+                                <div class="sceleton product-slider-images-skeleton-arrow"></div>
+
+                                {for $i=1 to=5}
+                                    <div class="sceleton product-slider-images-skeleton-thumb product-slider-skeleton-wrapper__thumb"></div>
+                                {/for}
+
+                                <div class="sceleton product-slider-images-skeleton-arrow"></div>
                             </div>
-                            <div class="sceleton product-slider-big-img-sceleton"></div>
+                            <div class="sceleton product-slider-big-img-skeleton"></div>
                         </div>
 
                         <noscript>
@@ -136,32 +137,20 @@
                                             data-thumb="{$image->getCdnURL('thumb')}"
                                             data-preview="{$image->getCdnURL('preview')}"
                                             data-id="{$image->pk}"
+                                            data-width="{$image->getAttribute('image_x')}"
+                                            data-height="{$image->getAttribute('image_y')}"
                                             type="image">
                                     </option>
                                 {/if}
                             {/foreach}
+
                             {if $videos}
                                 {foreach $videos as $video}
-                                    <option value="{$video->video}"
-                                            data-thumb=""
-                                            data-id="{$video->id}"
+                                    <option data-video='{json_encode($video)}'
                                             type="video">
-
                                     </option>
                                 {/foreach}
                             {/if}
-
-                            {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ"*}
-                            {*type="video"*}
-                            {*data-thumb=""*}
-                            {*data-id="{$video->id}"*}
-                            {*></option>*}
-                            {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-                            {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
-                            {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-                            {*<option value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" type="video"></option>*}
-                            {*<option value="https://www.youtube.com/watch?v=yPYZpwSpKmA" type="video"></option>*}
-
                         </datalist>
                     {else}
                         <div class="not-avail-thumb">
@@ -185,27 +174,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="col block__title_price">
+                <div id="product-labels-target"></div>
 
                 {if $model->descr}
                     <div class="highlights show-for-ml">
                         {raw $model->descr|html_entity_decode}
                     </div>
                 {/if}
-
                     {if !$model->isGroupRoot()}
                         <div class="prices">
                             {include "product/price/_table_prices.tpl" model=$model form=$form}
-
-                            {if $model->isGroupChild()}
-                                {set $parent = $model->parent}
-                                {if $parent}
-                                    <div class="link__group_root">
-                                        <a href="{$parent->getAbsoluteUrl()}">
-                                            {t 'Full'} {$parent->getFrontendName()} {t 'product line'}
-                                        </a>
-                                    </div>
-                                {/if}
-                            {/if}
                         </div>
                     {else}
                         <div class="full_line__group_root buttons">
@@ -215,12 +196,11 @@
                         </div>
                     {/if}
                 </div>
-            </div>
         </section>
 
+        {include 'product/_tabs.tpl' model=$model}
 
-    {include 'product/_tabs.tpl' model=$model}
-    {if $model->isGroupRoot()}
+        {if $model->isGroupRoot()}
         {set $pager_data = ['pageSize' => $pager->getPageSize(), 'currentPage' => $pager->getPage(), 'paginateCount' => count($pager->paginate()), 'total' => $pager->getTotal()]}
         <section>
             <div class="row">
@@ -231,33 +211,33 @@
                      data-catalog-url="{$pager->createView()->getUrl(1)}"
                      data-checkout-url="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}"
                      data-mode="group-product"
-                     class="column groupped-products"
+                     class="col groupped-products"
                      id="products">
                 </div>
             </div>
         </section>
     {/if}
-
+    </div>
 </div>
 {/block}
 
 {block 'after-content'}
     <div class="row">
-        <div class="small-12 column slider-also_bought">
+        <div class="col-12 slider-also_bought">
             {set $link}{url 'api:also_boundApi' id=$model->pk}{/set}
             {set $lbl}{t 'Customers Who Bought This Item Also Bought'}{/set}
             {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
     <div class="row">
-        <div class="small-12 column slider-related">
+        <div class="col-12 slider-related">
             {set $link}{url 'api:relatedApi' id=$model->pk}{/set}
             {set $lbl}{t 'Similar products'}{/set}
             {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}
         </div>
     </div>
     <div class="row">
-        <div class="small-12 column slider-viewed">
+        <div class="col-12 slider-viewed">
             {set $link}{url 'api:viewedApiProduct' id=$model->pk}{/set}
             {set $lbl}{t 'You recently viewed items'}{/set}
             {include 'slider/base_product_slider.tpl' title=$lbl link=$link hide=false hide_link=true}

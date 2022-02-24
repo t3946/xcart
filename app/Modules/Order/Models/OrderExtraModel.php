@@ -11,11 +11,13 @@ use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Model;
 
 /**
+ * Class OrderExtraModel
  * @property string latitude
  * @property string longitude
  * @property string ip
  * @property array purchase_order
  * @property OrderModel order
+ * @package Modules\Order\Models
  */
 class OrderExtraModel extends Model
 {
@@ -95,5 +97,25 @@ class OrderExtraModel extends Model
             );
         }
         return null;
+    }
+
+    public function getFrontendPurchase(): array
+    {
+        if ($data = $this->purchase_order) {
+            return [
+                'poNumber' => $data['po_number'],
+                'company' => $data['company_name'],
+                'managerName' => $data['name_of_purchaser'],
+                'managerPhoneExt' => $data['purchase_manager_phone_ext'],
+                'managerEmail' => $data['managerEmail'],
+                'managerFax' => $data['purchase_manager_fax'] ?? null,
+                'managerPhone' => $data['purchase_manager_phone'],
+                'accountsPayablePhone' => $data['accounts_payable_phone'],
+                'accountsPayableFax' => $data['accounts_payable_fax'] ?? null,
+                'accountsPayableEmail' => $data['accounts_payable_email'],
+                'accountsPayableName' => $data['accounts_payable_full_name']
+            ];
+        }
+        return [];
     }
 }

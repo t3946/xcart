@@ -1,0 +1,14 @@
+.decisions-item-icon_required {
+  width: rem-calc(12);
+  height: rem-calc(17);
+
+  @include breakpoint(md up) {
+    width: rem-calc(14);
+    height: rem-calc(19);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(11);
+    height: rem-calc(15);
+  }
+}

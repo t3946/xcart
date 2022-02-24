@@ -1,0 +1,7 @@
+.decision__estimate-table {
+  margin: 0 0 rem-calc(34);
+
+  @include breakpoint(md up) {
+    margin: 0 0 rem-calc(45);
+  }
+}

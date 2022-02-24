@@ -1,4 +1,3 @@
-import { SwitcherSlider } from "@/js/Classes/SwitcherSlider";
 import Checkout from "@/js/Components/checkout/Checkout";
 
 export const PaymentMethods = (function () {
@@ -82,18 +81,6 @@ export const PaymentMethods = (function () {
 
     // billing same shipping
     const $addressFields = $(".billing-form-address-fields");
-
-    const switcher = new SwitcherSlider(
-      $(".switcher-slider-label"),
-      function () {
-        $addressFields.stop(true, false).slideDown();
-        Checkout.update({ "CheckoutForm[billing_same_shipping]": "1" });
-      },
-      function () {
-        $addressFields.stop(true, false).slideUp();
-        Checkout.update({ "CheckoutForm[billing_same_shipping]": "0" });
-      }
-    );
 
     // show fields if billing_same_shipping checked
     if (switcher.isOn === true) {

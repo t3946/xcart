@@ -1,0 +1,12 @@
+.link-arrow {
+    &:after {
+        content: '';
+        margin: 0 0 0 rem-calc(8);
+        height: rem-calc(6);
+        width: rem-calc(10);
+        display: inline-block;
+        background: url("/static/frontend/images/icons/account/arrow-1.svg") no-repeat;
+        position: relative;
+        top: rem-calc(-2);
+    }
+}

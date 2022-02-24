@@ -1,14 +1,10 @@
-import { CountUp } from "countup.js";
-import storeCart from "../../stores/StoreCart";
-import storeApp from "../../stores/StoreApp";
-import CreateWaitButton from "../../components/AnimateWaitButton";
-
-import { hideAll, action } from "../../redusers/appHeadReduser";
-import { cartAdd } from "../../redusers/appCartRediser";
+import storeCart from "../../redux/stores/StoreCart";
+import storeApp from "../../redux/stores/StoreApp";
+import { hideAll, action } from "../../redux/reduсers/appHeadReduсer";
+import { cartAdd } from "../../redux/reduсers/appCartReducer";
 import { AddToCartButton } from "@/js/Classes/AddToCartButton";
 import { h, render } from "preact";
 import SelectNumberItems from "../../components/SelectNumberItems";
-import { convertCartNumber } from "../../utils/convertCartNumber";
 
 (() => {
   let $minicart = $(".minicart");
@@ -106,8 +102,7 @@ import { convertCartNumber } from "../../utils/convertCartNumber";
     })
     // Изменение колличества товара в корзине в верхней части окна
     .on("update.cart.store", (e, data) => {
-      let qtyNewNum = data.state.cart.quantity;
-      const qtyOldNum = data.prevState.cart.quantity;
+      const qtyNewNum = data.state.cart.quantity;
       const miniCartCounter = document.querySelector(".mc_count");
 
       if (miniCartCounter) {
@@ -117,9 +112,11 @@ import { convertCartNumber } from "../../utils/convertCartNumber";
           miniCartCounter.classList.remove("small");
         }
 
-        miniCartCounter.innerHTML = qtyNewNum;
-
-        $("#desktop-cart-quantity").html(convertCartNumber(qtyNewNum));
+        document.dispatchEvent(
+          new CustomEvent("cartCountChanged", {
+            detail: { quantity: qtyNewNum },
+          })
+        );
       }
     })
     // Раскрыть корзину в верхней части окна

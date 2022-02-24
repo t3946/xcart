@@ -1,0 +1,17 @@
+@import "styles/utils/Utils.module";
+
+.paymentItemName {
+  column-gap: pxToRem(16);
+  line-height: pxToRem(19);
+
+  @include breakpoint(md) {
+    column-gap: pxToRem(23);
+    font-size: pxToRem(20);
+    line-height: pxToRem(24);
+  }
+
+  @include breakpoint(lg) {
+    font-size: inherit;
+    line-height: pxToRem(19);
+  }
+}

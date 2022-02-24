@@ -1,0 +1,13 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  margin: 0 0 pxToRem(20);
+}
+
+.feedback {
+  font-size: 0.75rem;
+}
+
+.group__feedback {
+  margin: pxToRem(8) 0 0 50%;
+}

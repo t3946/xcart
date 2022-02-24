@@ -17,7 +17,7 @@
         {block 'content-header'}
             <div class="content-header">
                 <div class="row">
-                    <div class="column large-12">
+                    <div class="col-12">
 
                         {if $.block.heading}
                             <div class="heading">

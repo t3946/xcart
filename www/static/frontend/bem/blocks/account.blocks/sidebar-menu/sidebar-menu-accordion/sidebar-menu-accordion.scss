@@ -1,0 +1,23 @@
+.sidebar-menu-accordion-content {
+  padding: rem-calc(3) 0 rem-calc(8);
+
+  @include breakpoint(md up) {
+    padding: 0;
+  }
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(3) 0 rem-calc(10);
+  }
+}
+
+.accordion {
+  justify-content: space-between;
+}
+
+.accordion-arrow-open {
+  transform: rotate(180deg);
+}
+
+.accordion-content-close {
+  height: 0;
+}

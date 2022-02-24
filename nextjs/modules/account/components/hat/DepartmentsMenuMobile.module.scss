@@ -1,0 +1,21 @@
+@import "styles/utils/Utils.module.scss";
+
+.departmentsMenuMobileAccordion {
+  overflow-y: auto;
+  height: 100%;
+}
+
+.menuIcon {
+  cursor: pointer;
+  width: 2.5625rem;
+  height: 1.5075rem;
+
+  @include breakpoint(md) {
+    width: 2.4375rem;
+    height: 1.875rem;
+  }
+}
+
+.departmentsMenuMobileHat {
+  padding: 0 pxToRem(7) 0 pxToRem(20);
+}

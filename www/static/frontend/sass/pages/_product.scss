@@ -8,7 +8,7 @@
 
 .product-page {
   @include getProductTabs();
-  //
+
   @include getPricesTable();
   #questions {
 
@@ -37,14 +37,6 @@
     }
   }
 
-  .block__image {
-    @include breakpoint(large up) {
-      padding-right: rem-calc(46);
-      max-width: rem-calc(617);
-      width: auto;
-    }
-  }
-
   .block__title_price {
     @include breakpoint(large up) {
       max-width: 100%;
@@ -69,8 +61,11 @@
     }
   }
 
+
+  //поразобрался со стилями на продукте, но со слайдером всё ещё какая то хрень с отступами
+
+
   .product__images-slider {
-    margin: 0 -10px;
     height: 100%;
 
     @include breakpoint(md up) {

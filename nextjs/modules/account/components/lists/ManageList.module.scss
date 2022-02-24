@@ -1,0 +1,6 @@
+@import "styles/utils/Utils.module";
+
+.textarea {
+  resize: none;
+  height: pxToRem(135);
+}

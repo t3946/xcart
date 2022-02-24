@@ -1,0 +1,37 @@
+.form-input {
+    border: 1px solid #c4c4c4;
+    padding: 0 rem-calc(8);
+    width: 100%;
+    line-height: rem-calc(32);
+    border-radius: 0;
+    height: rem-calc(38);
+    color: #000000;
+    font-size: rem-calc(18);
+
+    @include breakpoint(md up) {
+        height: rem-calc(42);
+        padding: 0 rem-calc(18);
+    }
+
+    @include breakpoint(lg up) {
+        height: rem-calc(34);
+        padding: 0 rem-calc(14);
+        font-size: rem-calc(14);
+    }
+
+    &::placeholder{
+        font-style: italic;
+        font-size: rem-calc(14);
+        color: #959595;
+    }
+
+    &:focus {
+        border-color: #f2b405;
+        box-shadow: 0 0 0 0.2rem rgba(242, 180, 5, 0.34);
+    }
+}
+
+.form-input.is-invalid,
+.form-input.is-valid {
+    background-image: none;
+}

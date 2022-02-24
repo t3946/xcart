@@ -1,0 +1,15 @@
+.account-text {
+    font-size: rem-calc(14);
+    line-height: rem-calc(20);
+
+    @include breakpoint(md up) {
+        font-size: rem-calc(16);
+        line-height: rem-calc(22);
+    }
+
+    @include breakpoint(lg up) {
+        font-size: rem-calc(14);
+    }
+
+    color: #000000;
+}

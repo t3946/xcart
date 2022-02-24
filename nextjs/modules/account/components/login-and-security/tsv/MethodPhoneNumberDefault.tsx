@@ -1,0 +1,105 @@
+import React from "react";
+import cn from "classnames";
+import Styles from "@modules/account/components/login-and-security/TSVSettings.module.scss";
+import { formatPhone } from "@utils/phoneNumber";
+import Tooltip from "@components/common/tooltip/Tooltip";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useDispatch } from "react-redux";
+import { setPreferredMethodAction } from "@redux/actions/account-actions/TSVActions";
+import { AxiosResponse } from "axios";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
+
+interface IProps {
+  showChange: boolean;
+}
+
+const PhoneNumberAppend: React.FC<IProps> = function (props) {
+  const user = useSelectorAccount((e) => e.user);
+  const dispatch = useDispatch();
+
+  function setPreferredMethod() {
+    dispatch(
+      setPreferredMethodAction({
+        data: {
+          method: "phone_number",
+        },
+        success(res: AxiosResponse) {
+          dispatch(userSetAction(res.data.user));
+        },
+      })
+    );
+  }
+
+  if (!user.phone) {
+    return null;
+  }
+
+  return (
+    <div className="row two-step-row__bordered mx-0 pb-lg-2 mb-lg-2 tsv-settings-box-content">
+      <div
+        className={cn(
+          Styles.text,
+          "col-12 col-md-3 pe-md-0 ps-lg-0 mb-12 mb-lg-0"
+        )}
+      >
+        {formatPhone(user.phone, true)}
+        <br />
+        Sent by text message
+      </div>
+
+      <div className="col-6 col-md-4 col-lg-5 text-md-center">
+        <span className="d-block d-md-inline-block">Phone number</span>
+
+        <Tooltip
+          overlay={
+            <div>
+              <h2 className={"common-tooltip-header"}>
+                <b>Your phone number</b>
+              </h2>
+
+              <p className={"text-align--left auth-form-info mb-0"}>
+                This is the number listed as your Mobile Phone Number in Account
+                Settings. During 2SV challenges, this phone number will be
+                included as an option to receive the One Time Password (OTP). To
+                change your phone number,{" "}
+                <a href="#" className={Styles.commonLink}>
+                  click here
+                </a>
+                .
+              </p>
+            </div>
+          }
+        >
+          <span
+            className={cn(
+              "common-link",
+              "ms-md-2",
+              "d-block",
+              "d-md-inline-block"
+            )}
+          >
+            Learn more
+            <FontAwesomeIcon
+              className={"ms-1 two-step-learn-more"}
+              icon={faQuestionCircle}
+            />
+          </span>
+        </Tooltip>
+      </div>
+
+      {props.showChange && (
+        <div className="col-6 col-md-2 col-lg-2 d-flex align-items-end align-items-md-start justify-content-end justify-content-lg-start">
+          <span className={Styles.commonLink} onClick={setPreferredMethod}>
+            Change
+          </span>
+        </div>
+      )}
+
+      <div className="d-none d-lg-block col-2 pe-0" />
+    </div>
+  );
+};
+
+export default PhoneNumberAppend;

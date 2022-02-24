@@ -15,7 +15,7 @@
         {block 'content-header'}
             <div class="content-header">
                 <div class="row">
-                    <div class="column large-12">
+                    <div class="col-12">
                         {block 'breadcrumbs'}
 
                         {/block}

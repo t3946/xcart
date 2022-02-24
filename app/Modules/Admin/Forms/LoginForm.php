@@ -66,7 +66,7 @@ class LoginForm extends Form
         $data = $this->getAttributes();
         $user = $this->getUser($data['login']);
         if ($user) {
-            Xcart::app()->auth->login($user);
+            Xcart::app()->auth->login($user, Xcart::app()->request->post->get('is_remember') === 'Y');
         }
 
         $session = Xcart::app()->request->session;

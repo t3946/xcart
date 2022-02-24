@@ -1,0 +1,6 @@
+[submodule "www/static/local_modules/bootstrap"]
+	path = www/static/local_modules/bootstrap
+	url = https://github.com/alexander-gvozd/bootstrap.git
+[submodule "nextjs/submodules/bootstrap"]
+	path = nextjs/submodules/bootstrap
+	url = https://github.com/AzureBin/bootstrap

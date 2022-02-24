@@ -1,0 +1,11 @@
+.two-step-info {
+  font-size: rem-calc(14);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(16);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}

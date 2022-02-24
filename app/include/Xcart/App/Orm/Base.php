@@ -576,7 +576,7 @@ abstract class Base implements ModelInterface, ArrayAccess, Serializable
     }
 
     /**
-     * @param array $fields
+     * @param array $fields изменённые поля в модели, которые нужно сохранить. Остальные сохранены не будут
      * @return bool
      */
     public function save(array $fields = [])

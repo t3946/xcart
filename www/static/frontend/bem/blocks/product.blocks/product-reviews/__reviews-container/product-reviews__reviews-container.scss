@@ -1,0 +1,5 @@
+.product-reviews__reviews-container {
+  @include breakpoint(lg up) {
+    margin: 0 rem-calc(-24) 0 0;
+  }
+}

@@ -2,12 +2,12 @@
 
 
 {block "content"}
-    <div class="default-content-page page-departments-container brands-list-container">
+    <div class="default-content-page page-departments-container brands-list-container container">
         <div class="page-departments">
 
             {* Меню категорий *}
             <div class="all-departments-menu-container">
-                <div class="row all-departments-menu  small-up-5 medium-up-10 ml-up-15">
+                <div class="all-departments-menu">
                     {foreach $brands as $letter => $brand}
                         <a href="#id{$letter}" class="item-title column link-id{$letter}">
                             <span class="title">{$letter}</span>
@@ -41,9 +41,9 @@
                         </div>
 
                         {* Меню подбрендов брендов категории *}
-                        <div class="row departments-submenu-items small-up-1 medium-up-2 ml-up-3 large-up-4">
+                        <div class="row departments-submenu-items">
                             {foreach $brands as $brand}
-                                <div class="group-items column">
+                                <div class="group-items col-12 col-sm-6 col-md-4 col-lg-3">
                                     <div class="items-title">
                                         <a href="{$brand->getAbsoluteUrl()}">{$brand->brand}</a>
                                     </div>

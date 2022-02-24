@@ -1,0 +1,7 @@
+.main-menu_item {
+  margin: 0 rem-calc(16) 0 0;
+
+  &:last-child{
+    margin: 0;
+  }
+}

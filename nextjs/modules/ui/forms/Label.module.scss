@@ -1,0 +1,48 @@
+@import "styles/utils/Utils.module";
+
+.formInputLabel {
+  font-weight: 700;
+  font-size: pxToRem(16);
+  line-height: pxToRem(18);
+  color: #000000;
+  position: relative;
+  font-weight: bold;
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(25);
+    margin-bottom: pxToRem(10);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}
+
+.formInputLabel_optional {
+  &:after {
+    content: " (optional)";
+    color: #959595;
+    font-size: pxToRem(12);
+    font-weight: normal;
+    text-transform: none;
+
+    @include breakpoint(md) {
+      font-size: pxToRem(14);
+    }
+  }
+}
+
+.formInputLabel_required {
+  &:after {
+    position: relative;
+    content: " *";
+    color: #eb2d04;
+    font-weight: normal;
+  }
+}
+
+.formInputLabel_error {
+  color: #f02a36;
+}

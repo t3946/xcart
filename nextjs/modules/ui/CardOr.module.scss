@@ -1,0 +1,35 @@
+@import "styles/utils/Utils.module";
+
+.cardLayout {
+  display: flex;
+  flex-direction: column;
+  gap: pxToRem(14);
+
+  @include breakpoint(md) {
+    display: grid;
+    grid-gap: 0;
+    grid-template-columns: 1fr pxToRem(69) 1fr;
+    max-width: pxToRem(747);
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: 1fr pxToRem(77) 1fr;
+    max-width: pxToRem(803);
+  }
+}
+
+.or {
+  width: pxToRem(35);
+  height: pxToRem(35);
+  background-color: #e2e2e2;
+  border-radius: 50%;
+  font-size: pxToRem(14);
+  line-height: pxToRem(23);
+  user-select: none;
+  text-transform: uppercase;
+
+  @include breakpoint(lg) {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}

@@ -7,7 +7,7 @@
 
     <div class="row">
         {if $is_specs}
-        <div class="columns small-12 large-4 block">
+        <div class="col-12 col-lg-4 block">
             <div class="h2 title">{t 'Shipping specs'}</div>
             <div class="options">
                 <div class="content">
@@ -44,7 +44,7 @@
             </div>
         </div>
         {/if}
-        <div class="columns small-12 {if $is_specs}large-8{else}large-12{/if} block">
+        <div class="col-12 {if $is_specs}col-lg-8{else}col-lg-12{/if} block">
             <div class="h2 title">{t 'Shipping from'}</div>
             <div class="content">
                 <div class="row">

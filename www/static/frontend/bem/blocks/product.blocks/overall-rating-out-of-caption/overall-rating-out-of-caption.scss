@@ -1,0 +1,13 @@
+.overall-rating-out-of-caption {
+  font-size: rem-calc(18);
+  font-weight: bold;
+  line-height: 1;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(24);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(18);
+  }
+}

@@ -1,0 +1,50 @@
+@import "styles/utils/Utils.module";
+
+.pageColumn {
+  gap: pxToRem(18);
+
+  @include breakpoint(md) {
+    gap: pxToRem(14);
+  }
+
+  @include breakpoint(lg) {
+    gap: pxToRem(34);
+  }
+}
+
+.card {
+  color: $black;
+  cursor: default;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $white;
+    color: $black;
+    border: none;
+    box-shadow: 0 0 pxToRem(5) rgba(0, 0, 0, 0.25);
+  }
+
+  @include breakpoint(md) {
+    box-shadow: none;
+    border: 1px solid #c4c4c4;
+    &:hover,
+    &:active,
+    &:focus {
+      box-shadow: none;
+      background-color: $white;
+      color: $black;
+      border: 1px solid #c4c4c4;
+    }
+  }
+}
+
+.dashboard__slider {
+  @include breakpoint(md) {
+    margin: pxToRem(46) 0 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(40) 0 0;
+  }
+}

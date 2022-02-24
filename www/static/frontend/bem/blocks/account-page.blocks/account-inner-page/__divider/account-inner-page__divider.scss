@@ -1,0 +1,7 @@
+.account-inner-page__divider {
+  margin: rem-calc(34) rem-calc(-20) rem-calc(16);
+
+  @include breakpoint(md up) {
+    margin: rem-calc(34) rem-calc(-23) rem-calc(16);
+  }
+}

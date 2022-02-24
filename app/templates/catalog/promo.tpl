@@ -7,15 +7,16 @@
 
     {block "content-top"}
         <div class="row">
-            <div class="columns large-2 show-for-large">
+            <div class="col-2 d-none d-lg-block">
                 <div class="top-block">
                     {*<div class="image" id="image_left-top">*}
                         {*<img src="/static/frontend/demo_images/category/1280/image.png" alt="image" itemprop="image" />*}
                     {*</div>*}
                 </div>
             </div>
-            <div class="columns large-10">
-                <h1 class="title" itemprop="name">
+
+            <div class="col-12 col-lg-10">
+                <h1 class="title fw-bold" itemprop="name">
                     {$title}
                 </h1>
 

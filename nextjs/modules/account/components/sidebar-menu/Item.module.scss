@@ -1,0 +1,87 @@
+@import "styles/utils/Utils.module";
+
+.item {
+  height: pxToRem(45);
+  font-size: pxToRem(18);
+  background-color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  padding: 0 pxToRem(36) 0 pxToRem(16);
+  text-decoration: none;
+  cursor: pointer;
+  color: $black;
+  transition: all 0.3s ease-out;
+  position: relative;
+
+  &:hover,
+  &:focus {
+    color: $black;
+  }
+
+  @include breakpoint(md) {
+    height: pxToRem(60);
+    font-size: pxToRem(22);
+    background-color: #ffffff;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 0 pxToRem(50) 0 pxToRem(20);
+
+    &:active {
+      font-weight: bold;
+      background-color: #ffffff;
+    }
+
+    &:hover {
+      background-color: #ffffff;
+    }
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(45);
+    font-size: pxToRem(18);
+    background-color: #f4f4f4;
+    border-bottom: none;
+    padding: 0 pxToRem(40) 0 pxToRem(20);
+  }
+}
+
+.item_active {
+  color: $black;
+  cursor: default;
+
+  @include breakpoint(md) {
+    font-weight: bold;
+    background-color: #ffffff;
+  }
+}
+
+.item_topLevel {
+  margin: 0 0 pxToRem(2) 0;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  @include breakpoint(md) {
+    margin: 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(2) 0;
+  }
+}
+
+.item_accordion_opened {
+  box-shadow: 0 2px #f0f0f0;
+  font-weight: bold;
+  background-color: $white;
+
+  @include breakpoint(md) {
+    box-shadow: none;
+    border-bottom: 1px solid #c4c4c4;
+  }
+
+  @include breakpoint(lg) {
+    border: none;
+    box-shadow: 0 2px #f0f0f0;
+  }
+}

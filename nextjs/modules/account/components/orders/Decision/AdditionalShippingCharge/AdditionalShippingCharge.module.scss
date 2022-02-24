@@ -1,0 +1,188 @@
+@import "styles/utils/Utils.module";
+
+.page__gridCancelOrder {
+  margin: pxToRem(11) pxToRem(-10) 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(11) 0 0;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(34) 0 0;
+  }
+}
+
+.page__text {
+  margin: 0 0 pxToRem(23);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25);
+  }
+}
+
+.page__gridShipping {
+  margin: 0 0 pxToRem(27);
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(36);
+  }
+}
+
+.page__gridPayment {
+  margin: 0 pxToRem(-10);
+
+  @include breakpoint(md) {
+    margin: 0;
+  }
+}
+
+.pageText {
+  line-height: pxToRem(22);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.pageCaption {
+  font-size: pxToRem(18);
+  line-height: pxToRem(25);
+  @include breakpoint(md) {
+    font-size: pxToRem(20);
+  }
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+}
+
+.hat {
+  padding: pxToRem(28) pxToRem(1) pxToRem(17) 0;
+  @include breakpoint(lg) {
+    padding: pxToRem(45) pxToRem(26) pxToRem(25);
+  }
+}
+
+.header {
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    text-transform: none;
+  }
+}
+
+.gridShipping {
+  border: 1px solid #c4c4c4;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.gridItem {
+  padding: 0;
+  &:last-child {
+    padding: pxToRem(11) pxToRem(9);
+    border-top: 1px solid #c4c4c4;
+    background: #fff1f0;
+    @include breakpoint(lg) {
+      padding: pxToRem(8) pxToRem(25);
+    }
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.gridItemSublinesItem {
+  padding: pxToRem(11) 0;
+
+  &:first-child {
+    color: #2a8c3e;
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(9) 0;
+  }
+}
+
+.gridItem_border_none {
+  border: none;
+}
+
+.gridPayment {
+  background: #f0f8ff;
+  padding: 0 pxToRem(10);
+
+  @include breakpoint(md) {
+    background: none;
+    padding: pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    background: none;
+    padding: pxToRem(20) pxToRem(23) 0;
+  }
+}
+
+.gridPaymentItem {
+  padding: pxToRem(17) 0 0;
+
+  &:last-child {
+    padding: pxToRem(17) 0 pxToRem(2);
+
+    @include breakpoint(lg) {
+      padding: pxToRem(29) 0 pxToRem(2);
+    }
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(10) 0 0;
+  }
+}
+
+.gridPaymentItemCaption {
+  line-height: pxToRem(22);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.gridCancel {
+  padding: pxToRem(14) pxToRem(10);
+
+  @include breakpoint(md) {
+    padding: pxToRem(28) pxToRem(24) pxToRem(38);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(28) pxToRem(24) pxToRem(38);
+  }
+}
+
+.payment {
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+}
+
+.list {
+  margin: 0 0 0 pxToRem(26);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 0 pxToRem(24);
+  }
+}

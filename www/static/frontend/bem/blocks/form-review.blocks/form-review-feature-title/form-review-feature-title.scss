@@ -1,0 +1,11 @@
+.form-review-feature-title {
+  font-size: rem-calc(16);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}

@@ -1,0 +1,10 @@
+@import "~style-modules/sass-utils";
+
+.container {
+  width: rem-calc(147);
+  position: relative;
+}
+
+.container_user_logined {
+  width: rem-calc(180);
+}

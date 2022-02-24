@@ -1,0 +1,10 @@
+@import "styles/utils/Utils.module";
+
+.accountMainWrapper {
+  min-height: 100vh;
+}
+
+.accountMainWrapper_shifted {
+  overflow: hidden;
+  height: 100vh;
+}

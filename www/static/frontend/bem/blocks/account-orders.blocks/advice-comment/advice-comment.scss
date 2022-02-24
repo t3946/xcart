@@ -1,0 +1,15 @@
+textarea.advice-comment {
+  min-height: rem-calc(126);
+
+  @include breakpoint(md up) {
+    min-height: rem-calc(118);
+  }
+
+  @include breakpoint(lg up) {
+    min-height: rem-calc(128);
+  }
+
+  &:disabled {
+    resize: none;
+  }
+}

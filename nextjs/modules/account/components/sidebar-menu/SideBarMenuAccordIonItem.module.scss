@@ -1,0 +1,18 @@
+@import "styles/utils/Utils.module";
+
+.item_active {
+  color: $black;
+}
+
+.accordionItem {
+  height: auto;
+  min-height: pxToRem(35);
+
+  @include breakpoint(md) {
+    min-height: pxToRem(50);
+  }
+
+  @include breakpoint(lg) {
+    min-height: pxToRem(35);
+  }
+}

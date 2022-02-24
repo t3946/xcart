@@ -72,7 +72,7 @@ export default (function Forms() {
   document.addEventListener(
     "form.client.validation",
     function (event) {
-      let form = new FormValidation(event.detail);
+      let form = formValidation(event.detail);
       createDuplicatedFields(form.fields);
       rememberCreatedFormValidator(event.detail, form);
     },

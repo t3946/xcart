@@ -1,0 +1,42 @@
+.form-radio input[type=radio] {
+  display: none;
+}
+.form-radio label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  line-height: 18px;
+  width: 100%;
+  user-select: none;
+  pointer-events: none;
+  margin: 0;
+}
+
+.form-radio-checked{
+  background-color: #F4F4F4;
+}
+.form-radio label:before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-right: 1.5em;
+  background-position: center center;
+  background-size: 50% 50%;
+  background: url("/static/frontend/images/icons/account/radio.svg") no-repeat center / cover;
+}
+
+.form-radio input[type=radio]:checked + label:before {
+  background: url("/static/frontend/images/icons/account/radio-checked.svg") no-repeat center / cover;
+}
+
+.form-radio label:hover:before {
+  filter: brightness(120%);
+}
+
+.form-radio input[type=radio]:disabled + label:before {
+  filter: grayscale(100%);
+}

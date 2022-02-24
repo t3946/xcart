@@ -1,4 +1,5 @@
 <?php
+
 return [
     [
         'route' => '/api/',
@@ -20,5 +21,4 @@ return [
             'cache' => false,
         ]
     ],
-
 ];

@@ -17,6 +17,9 @@ $noUi-css-prefix: range;
     border-bottom: 1px solid #dcdcdc;
 
     .accordion-item {
+      border: none;
+      border-bottom: 2px solid $white;
+
       .accordion-title {
         border: none;
         font-size: rem-calc(16);

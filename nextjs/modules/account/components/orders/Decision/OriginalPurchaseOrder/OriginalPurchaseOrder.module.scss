@@ -1,0 +1,141 @@
+@import "styles/utils/Utils.module";
+
+.decisionTitle {
+  font-size: pxToRem(22);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(24);
+  }
+}
+
+.decisionCaption {
+  font-size: pxToRem(16);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.decision__caption {
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(25) 0;
+  }
+}
+
+.card {
+  box-shadow: 0 0 pxToRem(4) rgb(0 0 0 / 25%);
+  border-radius: pxToRem(4);
+  padding: pxToRem(15) pxToRem(11) pxToRem(31);
+
+  @include breakpoint(md) {
+    padding: pxToRem(19) pxToRem(21) pxToRem(39);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(19) pxToRem(25) pxToRem(37);
+  }
+}
+
+.cardText {
+  text-transform: lowercase;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    text-transform: none;
+  }
+}
+
+.decision__CardLayout {
+  margin: 0 0 pxToRem(25);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(35);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(30);
+  }
+}
+
+.decisionCardLayout {
+  @include breakpoint(md) {
+    display: grid;
+    grid-template-columns: 1fr pxToRem(77) 1fr;
+    max-width: pxToRem(747);
+  }
+
+  @include breakpoint(lg) {
+    max-width: pxToRem(803);
+  }
+}
+
+.decisionCard {
+  width: 100%;
+
+  @include breakpoint(sm) {
+    height: 100%;
+  }
+}
+
+.decisionCardBodyFax {
+  height: pxToRem(136);
+
+  @include breakpoint(sm) {
+    height: 100%;
+  }
+}
+
+.decisionCardLayout__or {
+  margin: pxToRem(14) auto;
+}
+
+.or {
+  width: pxToRem(35);
+  height: pxToRem(35);
+  background-color: #e2e2e2;
+  border-radius: 50%;
+  font-size: pxToRem(14);
+  line-height: pxToRem(23);
+
+  @include breakpoint(lg) {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+.button {
+  width: 100%;
+  height: pxToRem(47);
+  font-size: pxToRem(20);
+
+  &:disabled {
+    background-color: #ffb426;
+    border: none;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  @include breakpoint(md) {
+    width: fit-content;
+    padding: 0 pxToRem(35);
+    font-size: pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    height: pxToRem(41);
+    padding: 0 pxToRem(33);
+  }
+}

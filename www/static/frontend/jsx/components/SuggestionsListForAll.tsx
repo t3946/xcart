@@ -1,39 +1,76 @@
 import React from "react";
-import { SuggestionList } from "./SuggestionsList";
-interface SuggestionsListForAll {
+import SuggestionsListForPhrase from "@client/jsx/components/SuggestionsListForPhrase";
+import SuggestionsListForProduct from "@client/jsx/components/SuggestionsListForProduct";
+import SuggestionsListForCategory from "@client/jsx/components/SuggestionsListForCategory";
+import classnames from "classnames";
+import HatSearchLineStyles from "@client/jsx/modules/account/components/hat/HatSearchLine.module.scss";
+import Styles from "@client/jsx/components/SuggestionsListForAll.module.scss";
+
+interface IProps {
   suggestions: any;
-  search: string;
+  searchString: string;
 }
-export const SuggestionsListForAll: React.FC<SuggestionsListForAll> = ({
-  suggestions,
-  search,
-}) => {
-  return (
-    <div className="found">
-      {suggestions.phrase_suggestions && (
-        <SuggestionList
-          items={suggestions.phrase_suggestions}
-          search={search}
+
+const SuggestionsListForAll: React.FC<IProps> = function (props: IProps) {
+  const { suggestions, searchString } = props;
+
+  function renderPhrase() {
+    if (
+      suggestions.phrase_suggestions &&
+      suggestions.phrase_suggestions.length > 0
+    ) {
+      return (
+        <SuggestionsListForPhrase
+          suggestions={suggestions.phrase_suggestions}
+          searchString={searchString}
           title="Search suggestions"
-          typeList="phrase"
         />
-      )}
-      {suggestions.category_suggestions && (
-        <SuggestionList
-          items={suggestions.category_suggestions}
-          search={search}
+      );
+    }
+  }
+
+  function renderCategory() {
+    if (
+      props.suggestions.category_suggestions &&
+      props.suggestions.category_suggestions.length > 0
+    ) {
+      return (
+        <SuggestionsListForCategory
+          suggestions={suggestions.category_suggestions}
+          searchString={searchString}
           title="Categories"
-          typeList="categories"
         />
-      )}
-      {suggestions.product_suggestions && (
-        <SuggestionList
-          items={suggestions.product_suggestions}
-          search={search}
+      );
+    }
+  }
+
+  function renderProduct() {
+    if (
+      props.suggestions.product_suggestions &&
+      props.suggestions.product_suggestions.length > 0
+    ) {
+      return (
+        <SuggestionsListForProduct
+          suggestions={suggestions.product_suggestions}
+          searchString={searchString}
           title="Products"
-          typeList="product"
         />
+      );
+    }
+  }
+
+  return (
+    <div
+      className={classnames(
+        Styles.mainContainer,
+        HatSearchLineStyles.searchFormContainer__suggestion
       )}
+    >
+      {renderPhrase()}
+      {renderCategory()}
+      {renderProduct()}
     </div>
   );
 };
+
+export default SuggestionsListForAll;

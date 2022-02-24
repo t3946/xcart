@@ -4,6 +4,11 @@ import classnames from "classnames";
 import ProductCard from "@/components/product/card/slider/Card";
 import { CardSceleton } from "@/components/product/card/slider/CardSceleton";
 import $ from "jquery";
+import Store from "../../../redux/stores/Store";
+import {
+  addProduct,
+  deleteProduct,
+} from "@client/jsx/redux/actions/account-actions/ListsActions";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
@@ -24,10 +29,32 @@ export default class SliderProducts extends Component {
       items: Array(10).fill(1),
       isEnd: true,
       isBeginning: true,
+      lists: null,
     };
 
     this.swiperRef = React.createRef();
+
+    Store.subscribe(() => {
+      this.setState({
+        ...this.state,
+        lists: Store.getState().lists?.lists?.find((e, index) => index === 0),
+      });
+    });
   }
+
+  onFlagClick (e, inList, productId) {
+    e.stopPropagation();
+
+    if (!inList) {
+      Store.dispatch(
+        addProduct(this.state.lists.product_list_id, productId, null, () => {})
+      );
+      return;
+    }
+    Store.dispatch(
+      deleteProduct(this.state.lists.product_list_id, productId, () => {})
+    );
+  };
 
   loadNewItems() {
     const url = this.props.url + "?page=" + this.paginationPage;
@@ -74,10 +101,7 @@ export default class SliderProducts extends Component {
     }
 
     if (this.state.items.length === 0) {
-      $(this.swiperRef.current)
-        .parents(".slider-block")
-        .find(".title_container")
-        .hide();
+      $(this.swiperRef.current).parents(".slider-block").hide();
     }
   }
 
@@ -168,7 +192,17 @@ export default class SliderProducts extends Component {
         >
           {items.map((product, i) => (
             <SwiperSlide className="products-slider-slide" key={i}>
-              {isLoaded ? <ProductCard product={product} /> : <CardSceleton />}
+              {isLoaded ? (
+                <ProductCard
+                  onFlagClick={this.onFlagClick}
+                  inList={this.state.lists?.products?.find(
+                    (e) => e.product_id === product.productid
+                  )}
+                  product={product}
+                />
+              ) : (
+                <CardSceleton />
+              )}
             </SwiperSlide>
           ))}
 

@@ -1,0 +1,7 @@
+.content-panel_footer {
+  margin: 0 rem-calc(-10);
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}

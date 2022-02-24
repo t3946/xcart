@@ -7,6 +7,7 @@
         <li class="tabs-title">
           <a href="#shipping" aria-selected="false">{t 'Shipping'}</a>
         </li>
+
         {add $warehouse = $model->distributor}
         {set $tabs = $warehouse->tabs}
         {foreach $tabs as $tab}
@@ -25,11 +26,14 @@
         <li class="tabs-title">
           <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
         </li>
+
+        <li class="tabs-title">
+            <a href="#reviews" aria-selected="false">Customer reviews</a>
+        </li>
     </ul>
     <div class="tabs-content" data-tabs-content="product_tabs">
-
         <div class="tabs-panel is-active" id="description">
-            <div class="tab-description tab-content">
+            <div class="tab-content">
                 {include 'product/tabs/_description.tpl' model=$model}
             </div>
         </div>
@@ -70,6 +74,12 @@
         <div class="tabs-panel" id="questions" data-productid="{$model->productid}">
             <div class="tab-content tab-questions">
                 {include 'product/tabs/_wait.tpl' model=$model}
+            </div>
+        </div>
+
+        <div class="tabs-panel" id="reviews">
+            <div class="tab-content">
+                <div id="product-reviews-target"></div>
             </div>
         </div>
     </div>

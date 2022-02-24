@@ -1,0 +1,92 @@
+@import "styles/utils/Utils.module.scss";
+
+.searchMobile_hidden {
+  display: none;
+
+  @include breakpoint(lg) {
+    display: block;
+  }
+}
+
+.buttonSearch {
+  height: pxToRem(36);
+  width: pxToRem(36);
+  color: #154159;
+  padding: pxToRem(5);
+  cursor: pointer;
+}
+
+.buttonClear {
+  display: none;
+  width: pxToRem(32);
+  height: pxToRem(32);
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  opacity: 0.6;
+  right: pxToRem(2);
+
+  @include breakpoint(lg) {
+    width: pxToRem(27);
+    height: pxToRem(27);
+    right: pxToRem(46);
+  }
+
+  &:hover {
+    opacity: 1;
+    &:after {
+      opacity: 0.6;
+    }
+  }
+
+  &:after {
+    @include breakpoint(lg) {
+      content: "";
+      display: inline-block;
+      background: #b9b9b9;
+      width: 1px;
+      height: pxToRem(30);
+      position: relative;
+      left: pxToRem(30);
+      bottom: 2px;
+      opacity: 1;
+    }
+  }
+}
+
+.searchForm {
+  position: relative;
+}
+
+.searchForm__buttonSearch {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.inputSearch {
+  height: pxToRem(36);
+  font-size: pxToRem(14);
+  width: 100%;
+  padding: 0 pxToRem(36) 0 pxToRem(10);
+  border: 2px solid #0d2431;
+
+  &:focus {
+    outline: none;
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(80) 0 pxToRem(10);
+    border-top: none;
+    border-bottom: 1px solid #0d2431;
+    border-left: 1px solid #0d2431;
+    border-right: 1px solid #0d2431;
+  }
+}
+.buttonClear__svg {
+  margin: pxToRem(7);
+
+  @include breakpoint(lg) {
+    margin: pxToRem(5);
+  }
+}

@@ -1,0 +1,11 @@
+.hat-login-button-username {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(10);
+  }
+}

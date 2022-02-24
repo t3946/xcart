@@ -1,0 +1,10 @@
+.product-photo-slider-button_right {
+  background: rgba(0, 0, 255, 0);
+
+  @include breakpoint(xl up) {
+    width: calc(100% - 90px);
+  }
+  @include breakpoint(xxl up) {
+    width: calc(100% - 180px);
+  }
+}
