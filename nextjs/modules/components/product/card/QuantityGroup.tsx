@@ -111,10 +111,23 @@ export default class QuantityGroup extends React.Component {
           ref={this.inputRef}
           onChange={(e) => {
             self.setState({
-              value: e.target.value,
+              value: Math.abs(parseInt(e.target.value)) || this.state.min,
             });
 
-            self.props.onChange(e.target.value);
+            self.props.onChange(
+              Math.abs(parseInt(e.target.value)) || this.state.min
+            );
+          }}
+          onBlur={(e) => {
+            self.setState({
+              value:
+                Math.ceil(Math.abs(parseInt(e.target.value)) / this.state.min) *
+                  this.state.min || this.state.min,
+            });
+            self.props.onChange(
+              Math.ceil(Math.abs(parseInt(e.target.value)) / this.state.min) *
+                this.state.min || this.state.min
+            );
           }}
         />
 

@@ -64,8 +64,8 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
           form: data,
 
           success(res: AxiosResponse) {
-            if (res.data.error) {
-              actions.setErrors(res.data.error);
+            if (res.data.error?.message) {
+              actions.setErrors(res.data.error.message);
               actions.setSubmitting(false);
               return;
             }

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const getDataToTracking = (
   statuses: {
     id: number;
@@ -36,17 +38,7 @@ export const getDataToTracking = (
           : { [vertical ? "height" : "width"]: `${index * 25 + 12.5}%` };
 
       roundItemProps.containerClass.completed = true;
-      const date1 = new Date(status.updated).toLocaleDateString("en-EN", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      });
-      const date2 = new Date(status.updated).toLocaleTimeString("en-EN", {
-        hour: "numeric",
-        minute: "numeric",
-      });
-
-      roundItemProps.date = date1 + "\n" + date2;
+      roundItemProps.date = moment(status.updated).format("MMM DD, Y, HH:mm A");
     }
     if (index !== 0 && index !== 4) {
       roundItemProps.roundStyle = {

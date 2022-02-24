@@ -13,7 +13,7 @@ import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "@redux/reducers/appCartReducer";
 import useSnackbar from "@modules/account/hooks/useSnackbar";
-import { CountInput } from "@modules/account/components/shared/CountInput";
+import { CountGroup } from "@modules/account/components/shared/CountGroup";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
@@ -176,7 +176,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           <div className="d-flex align-items-center">
             <div className={Styles.productInfoPrice}>${product?.price}</div>
             <div className="multiplication-symbol">X</div>
-            <CountInput
+            <CountGroup
               avail={product.avail}
               onBlur={onCountInputBlur}
               value={countProductsOnCart}

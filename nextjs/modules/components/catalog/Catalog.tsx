@@ -6,6 +6,7 @@ import LoadMore from "@modules/components/catalog/LoadMore";
 import Storage from "@utils/localStorage/storage";
 import $ from "jquery";
 import React from "react";
+import NoItems from "@modules/account/components/common/NoItems";
 //
 // interface IProps {
 //   catalogUrl: string;
@@ -15,6 +16,9 @@ import React from "react";
 //   sortingKey: string;
 //   sortingOptions: Record<any, any>;
 // }
+
+// сколько вывести скелетов, когда нет продуктов
+const skeletonsNumber = 12;
 
 export default class Catalog extends React.Component {
   constructor(props) {
@@ -33,6 +37,7 @@ export default class Catalog extends React.Component {
 
     this.state = {
       ...props,
+      items: [],
       viewMode: Storage.get(this.VIEW_MODE_STORAGE_KEY, "tile"),
       onViewModeChange,
       onUpdateProductList,
@@ -94,7 +99,6 @@ export default class Catalog extends React.Component {
       },
       sortKey: this.state.sortKey,
     };
-
     switch (this.props.mode) {
       case "group-product":
         return (
@@ -107,6 +111,10 @@ export default class Catalog extends React.Component {
         return <StateLine {...props} onSort={this.onSortCatalog.bind(this)} />;
     }
   }
+
+  setItems = (items) => {
+    this.setState({ items });
+  };
 
   onSortCatalog(sortKey) {
     this.setState({ sortKey });
@@ -185,7 +193,9 @@ export default class Catalog extends React.Component {
   render() {
     return (
       <div className="catalog">
-        <CatalogContext.Provider value={this.state}>
+        <CatalogContext.Provider
+          value={{ ...this.state, setItems: this.setItems }}
+        >
           {this.printStateLine()}
 
           <ProductsList

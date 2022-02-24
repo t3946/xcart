@@ -9,6 +9,7 @@ import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.
 import { useDispatch } from "react-redux";
 import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
 import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
+import Head from "next/head";
 
 const classes = {
   dropdownItem: [StylesItem.item_topLevel, StylesItem.item],
@@ -68,44 +69,63 @@ const SideBarMenu: React.FC<IProps> = (props) => {
     dispatch(setMenuItemsAction({ menuItems: sidebar }));
   }, []);
 
+  function getTitle(): string {
+    for (const item of menuItems) {
+      const activePage = item?.routerItems?.find(
+        (childItem) => childItem.to == activePath
+      )?.label;
+      if (activePage) {
+        return activePage;
+      }
+      if (item.to === activePath) return item.label;
+    }
+
+    return "";
+  }
+
   return (
-    <div className={Styles.sidebarMenuWrapper}>
-      {menuItems.map((value: Record<any, any>, index) => {
-        if (!value.routerItems) {
+    <>
+      <Head>
+        <title>{getTitle()}</title>
+      </Head>
+      <div className={Styles.sidebarMenuWrapper}>
+        {menuItems.map((value: Record<any, any>, index) => {
+          if (!value.routerItems) {
+            return (
+              <Item
+                to={value.to}
+                label={value.label}
+                badge={value.badge}
+                className={[classes.dropdownItem, props.classes?.item]}
+                onClick={() => {
+                  dispatch(hideAllMenu());
+                }}
+                key={index}
+                active={value.to === activePath}
+              />
+            );
+          }
+
           return (
-            <Item
+            <ItemAccordion
               to={value.to}
               label={value.label}
-              badge={value.badge}
-              className={[classes.dropdownItem, props.classes?.item]}
-              onClick={() => {
-                dispatch(hideAllMenu());
-              }}
+              routerItems={value.routerItems}
+              classes={{ handlerClass: classes.dropdownItem }}
               key={index}
-              active={value.to === activePath}
             />
           );
-        }
+        })}
 
-        return (
-          <ItemAccordion
-            to={value.to}
-            label={value.label}
-            routerItems={value.routerItems}
-            classes={{ handlerClass: classes.dropdownItem }}
-            key={index}
-          />
-        );
-      })}
-
-      <LogoutButton
-        classes={[
-          ...classes.dropdownItem,
-          "d-md-block",
-          { "d-none": !user, "d-lg-none": !showLogout },
-        ]}
-      />
-    </div>
+        <LogoutButton
+          classes={[
+            ...classes.dropdownItem,
+            "d-md-block",
+            { "d-none": !user, "d-lg-none": !showLogout },
+          ]}
+        />
+      </div>
+    </>
   );
 };
 

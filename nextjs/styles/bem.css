@@ -12483,7 +12483,7 @@ div.account-page-right-column {
 
 .catalog-product__tile {
     flex: 0 0 33.33333%;
-    width: 33.33333%;
+    width: 50%;
     padding: 15px
 }
 

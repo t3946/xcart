@@ -83,17 +83,13 @@ export default class StateLine extends React.Component {
           >
             {(() => {
               const options = [];
-
               for (const key in this.sortingOptions) {
                 const option = this.sortingOptions[key];
-
                 options.push(
                   <option
                     key={`sort-option${key}`}
                     value={key}
-                    className={cn({
-                      active: key === this.props.sortKey,
-                    })}
+                    selected={key === this.props.sortKey}
                   >
                     {option}
                   </option>
