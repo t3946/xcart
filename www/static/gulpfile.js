@@ -282,6 +282,7 @@ gulp.task(
   "build:frontend",
   gulp.series(
     "clear:frontend",
+    "frontend:bem",
     "client:bem:css",
     "frontend:css",
     "frontend:jsx",
