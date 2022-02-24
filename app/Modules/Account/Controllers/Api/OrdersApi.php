@@ -126,6 +126,7 @@ class OrdersApi extends Controller
         /** @var OrderGroupModel $group_model */
         foreach ($order_model->groups as $group_model) {
             $ar_products = [];
+            $tracks = [];
             $manufacturer = $group_model->manufacturer;
 
             foreach ($group_model->detail_models as $model) {
