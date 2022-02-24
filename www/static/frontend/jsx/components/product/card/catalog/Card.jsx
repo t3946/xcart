@@ -1,12 +1,13 @@
 import classnames from "classnames";
-import { Fragment } from "preact";
+import { Fragment, createRef } from "preact";
+import Product from "@/components/product/card/Product";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
+import Price from "@/components/product/card/components/Price";
 import QuantityGroup from "@/components/product/card/QuantityGroup";
 import CatalogContext from "@/components/catalog/CatalogContext";
 import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
-import Product from "../Product";
 import { Provider } from "react-redux";
 import Store from "../../../../redux/stores/Store";
 import Snackbar from "../../../../modules/account/components/snackbar/Snackbar";
@@ -16,6 +17,7 @@ import React from "react";
 export default class Card extends Component {
   constructor(props) {
     super(props);
+    console.log("catalog card", {product: props.product})
 
     const product = (this.product = props.product);
 
@@ -290,7 +292,10 @@ export default class Card extends Component {
                 {t("List Price")}:{" "}
               </span>
               <span className="products-slider-old-price">
-                <PriceProduct price={product.listPrice.number} />
+                <Price
+                  currency={product.currency}
+                  price={product.listPrice.number}
+                />
               </span>
             </div>
           )}
@@ -300,7 +305,7 @@ export default class Card extends Component {
               {t("Price")}:{" "}
             </span>
             <span className="products-slider-current-price">
-              <PriceProduct price={product.price.number} />
+              <Price currency={product.currency} price={product.price.number} />
             </span>
           </div>
         </div>
@@ -317,9 +322,7 @@ export default class Card extends Component {
                       title={this.product.name}
                     >
                       <span className="text">
-                        {t(`See product variation`, {
-                          count: this.product.childrenNumber,
-                        })}
+                        See {this.product.childrenNumber} products variation
                       </span>
                     </a>
                   </div>

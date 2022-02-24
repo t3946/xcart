@@ -1,4 +1,5 @@
 import Product from "@/components/product/card/Product";
+import Price from "@/components/product/card/components/Price";
 import { Fragment } from "preact";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
 
