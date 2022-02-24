@@ -15,6 +15,7 @@ import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { List } from "@client/modules/account/ts/types/list.type";
 import Styles from "@client/modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
+import AppData from "@client/jsx/utils/AppData";
 import Medium from "@client/modules/icon/components/account/chevron-down/Medium";
 import StyleUtils from "@client/style-modules/style-utils.module.scss";
 import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
@@ -35,8 +36,10 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const { name, label = "", product } = props;
   const user = useSelectorAccount((e) => e.user);
   const lists = Store.getState().lists.lists;
-  const productId = product.productid;
-  const productInfo = product;
+  const productId =
+    product?.productid ||
+    (AppData?.products && Object.keys(AppData?.products)[0]);
+  const productInfo = product || AppData?.products[productId];
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);
