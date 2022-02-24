@@ -1,8 +1,8 @@
 import React from "react";
 import cn from "classnames";
-import CountInput from "@modules/account/components/shared/CountInput";
+import CountInput from "@modules/ui/CountInput";
 
-import Styles from "@modules/account/components/shared/CountGroup.module.scss";
+import Styles from "@modules/ui/CountGroup.module.scss";
 
 interface CountInputProps {
   value: number;
