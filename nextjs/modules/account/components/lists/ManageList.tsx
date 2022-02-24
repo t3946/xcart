@@ -84,11 +84,9 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
     },
     validationSchema: Yup.object().shape({
       listName: Yup.string().required("Required field"),
-      description: Yup.string().required("Required field"),
-      recipientName: Yup.string().required("Required field"),
-      email: Yup.string()
-        .required("Required field")
-        .email("Please enter valid email"),
+      description: Yup.string(),
+      recipientName: Yup.string(),
+      email: Yup.string().email("Please enter valid email"),
     }),
     onSubmit: handleSubmit,
   });

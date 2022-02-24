@@ -59,7 +59,7 @@ export const EditCard: React.FC<EditCardProps> = ({
                       />
                     </div>
                   </div>
-                  <div className="d-flex align-center justify-content-center">
+                  <div className="d-flex align-center justify-content-between">
                     <div className="wallet-card-content-label label-card-block">
                       Billing address
                     </div>
