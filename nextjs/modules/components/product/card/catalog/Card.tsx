@@ -13,6 +13,8 @@ import React from "react";
 import LeadTimeIcon from "@modules/icon/components/account/lead-time/LeadTime";
 import OutOfStockIcon from "@modules/icon/components/account/out-of-stock/OutOfStock";
 
+import Styles from "@modules/components/product/card/catalog/Card.module.scss";
+
 export default class Card extends React.Component {
   constructor(props) {
     super(props);
@@ -452,7 +454,9 @@ export default class Card extends React.Component {
     const classes = this.props.classes ?? { product: [] };
     const self = this;
 
-    classes.product.push("catalog-product", "item");
+    classes.product.push("catalog-product", "item", {
+      [Styles.item_border]: this.context.viewMode === "list",
+    });
     classes.image = {
       link: `product-image__catalog-${self.context.viewMode} product-image-link`,
       container: [

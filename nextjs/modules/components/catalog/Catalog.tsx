@@ -99,6 +99,7 @@ export default class Catalog extends React.Component {
       },
       sortKey: this.state.sortKey,
     };
+
     switch (this.props.mode) {
       case "group-product":
         return (
