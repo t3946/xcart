@@ -16,6 +16,12 @@ return [
     ],
 
     [
+        'route' => '/get-payment-methods',
+        'target' => [AccountApi::class, 'getPaymentMethods'],
+        'name' => 'get-payment-methods'
+    ],
+
+    [
         'route' => '/get-initial-data',
         'target' => [AccountApi::class, 'getInitialDataAction'],
         'name' => 'get-initial-data'

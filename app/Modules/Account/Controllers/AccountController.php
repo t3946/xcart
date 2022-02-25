@@ -97,27 +97,6 @@ class AccountController extends FrontendController
         $this->display('account/base.tpl');
     }
 
-    public function actionTSVAddNew()
-    {
-        self::actionIndex();
-    }
-
-    public function logout()
-    {
-        Xcart::app()->auth->logout(false);
-        $this->actionIndex();
-    }
-
-    public function dashboard()
-    {
-        $this->actionIndex();
-    }
-
-    public function publicProfile()
-    {
-        $this->actionIndex();
-    }
-
     /**
      * get product data with total reviews number
      */

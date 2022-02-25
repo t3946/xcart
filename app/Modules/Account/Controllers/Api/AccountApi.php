@@ -17,6 +17,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\PaymentMethodModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
@@ -140,5 +141,17 @@ class AccountApi extends Controller
 
         $sns->publish($args);
         http_response_code(200);
+    }
+
+    public function getPaymentMethods()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $payment_methods = $site->payment_methods->filter(['is_active' => 1])->order(['position'])->all();
+
+        if (!$payment_methods) {
+            $payment_methods = PaymentMethodModel::objects()->asArray()->select(["logo", "name"])->all(['is_active' => 1]);
+        }
+
+        $this->jsonResponse($payment_methods);
     }
 }
