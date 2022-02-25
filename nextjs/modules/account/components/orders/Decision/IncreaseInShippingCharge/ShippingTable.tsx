@@ -100,7 +100,7 @@ const ShippingTable: React.FC<IProps> = (props) => {
             const timeDelivered = new Date(deliveredStatus.updated).getTime();
             const dateEndReturn = new Date(timeDelivered + timeOneDay * 14);
 
-            if (dateEndReturn > new Date()) {
+            if (dateEndReturn < new Date()) {
               const date = dateEndReturn.toLocaleDateString("en-EN", {
                 month: "long",
                 day: "2-digit",
