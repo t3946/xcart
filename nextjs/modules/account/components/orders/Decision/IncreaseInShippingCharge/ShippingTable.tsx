@@ -68,7 +68,7 @@ const ShippingTable: React.FC<IProps> = (props) => {
         }}
         rowItemTemplates={(item) => [
           <ProductImage image={item.image} />,
-          <ProductCell name={item.product} sku={item.code} />,
+          <ProductCell name={item.product} sku={item.code} url={item.url} />,
           <span className="d-none d-lg-block">US$ {item.price}</span>,
           <>
             <span className="d-none d-lg-block">{item.amount}</span>
@@ -124,7 +124,9 @@ const ShippingTable: React.FC<IProps> = (props) => {
               className={cn("d-md-flex", "justify-content-center mb-3 mb-md-4")}
             >
               <a className={"text-decoration-none"} href={item.url}>
-                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>buy again</Button>
+                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>
+                  buy again
+                </Button>
               </a>
 
               <Link href={`/create-review/${item.productId}`}>

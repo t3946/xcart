@@ -11,11 +11,14 @@ interface OrderItemProps {
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
-  const orderDate = new Date(Number(order.date)).toLocaleDateString("en-EN", {
-    month: "long",
-    day: "2-digit",
-    year: "numeric",
-  });
+  const orderDate = new Date(Number(order.date * 1000)).toLocaleDateString(
+    "en-EN",
+    {
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+    }
+  );
   const accordion = useAccordion(200);
   const [showAllItems, setShowAllItems] = useState(false);
 
@@ -60,7 +63,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div className="order-item-body-right-side"></div>
           <div className="order-item-body-title">items ordered</div>
 
-          {order.groups[0] && (
+          {order.groups[0]?.products[0] && (
             <div className={"order-item-body-product-container"}>
               <div className="order-item-body-product-left-part">
                 <img
@@ -68,7 +71,10 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                   src={order.groups[0].products[0].image}
                 />
                 <div>
-                  <a className="order-item-body-product-name">
+                  <a
+                    href={order.groups[0].products[0].url}
+                    className="order-item-body-product-name"
+                  >
                     {order.groups[0].products[0].product}
                   </a>
                   <div className="order-item-body-product-sku">
@@ -106,7 +112,10 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                         src={product.image}
                       />
                       <div>
-                        <a className="order-item-body-product-name">
+                        <a
+                          href={product.url}
+                          className="order-item-body-product-name"
+                        >
                           {product.product}
                         </a>
                         <div className="order-item-body-product-sku">

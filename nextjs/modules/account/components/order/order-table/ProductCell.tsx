@@ -6,12 +6,13 @@ import Styles from "@modules/account/components/order/order-table/ProductCell.mo
 interface IProps {
   name: string;
   sku: string;
+  url?: string;
 }
 
-const ProductCell: React.FC<IProps> = ({ name, sku }) => {
+const ProductCell: React.FC<IProps> = ({ name, sku, url }) => {
   return (
     <span className={cn(["text-left", Styles.name])}>
-      <span>{name}</span>
+      <a href={url}>{name}</a>
       <br />
       <span className={Styles.sku}>{sku}</span>
     </span>

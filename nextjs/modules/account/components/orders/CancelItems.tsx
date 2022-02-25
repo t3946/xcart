@@ -130,7 +130,7 @@ export const CancelItems: React.FC<IProps> = (props) => {
         rowItemTemplates={(item) => {
           return [
             <>
-              <ProductCell name={item.product} sku={item.code} />
+              <ProductCell name={item.product} sku={item.code} url={item.url} />
               <div className="d-md-none mt-10">Qty Ordered: {item.amount}</div>
             </>,
 
