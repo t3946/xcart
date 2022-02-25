@@ -48,7 +48,7 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
   function ContextAwareToggle({ children, eventKey, index }) {
     const currentEventKey = React.useContext(AccordionContext);
     const decoratedOnClick = useAccordionButton(eventKey);
-    const isCurrentEventKey = currentEventKey === eventKey;
+    const isCurrentEventKey = currentEventKey.activeEventKey === eventKey;
 
     function icon() {
       if (isCurrentEventKey) {
