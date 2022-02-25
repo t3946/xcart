@@ -4,6 +4,16 @@ use Modules\Account\Controllers\Api\OrdersApi;
 
 return [
     [
+        'route' => '/get-order-taxes',
+        'target' => [OrdersApi::class, 'getOrderTaxes'],
+        'name' => 'get-order-taxes',
+    ],
+    [
+        'route' => '/get-order-group-taxes',
+        'target' => [OrdersApi::class, 'getOrderGroupTaxes'],
+        'name' => 'get-order-group-taxes',
+    ],
+    [
         'route' => '/get/{*:orders_type}/{*:to_date}',
         'target' => [OrdersApi::class, 'getOrders'],
         'name' => 'get-orders',

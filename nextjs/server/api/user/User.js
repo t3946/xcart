@@ -417,6 +417,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
           orderid: true,
           date: true,
           total: true,
+          subtotal: true,
           order_prefix: true,
           order_type: true,
           s_firstname: true,
@@ -450,6 +451,13 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const cards = (await stripeService.getSources(req.user.userId)).data;
 
   for (const order of orders) {
+    //get order taxes
+    await AxiosInstance.post("/api/account/orders/get-order-taxes", {
+      order_id: order.orderid,
+    }).then((res) => {
+      order.taxes = res.data;
+    });
+
     order.groups = await prisma.xcart_order_groups.findMany({
       where: {
         orderid: order.orderid,
@@ -460,8 +468,18 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
     });
 
     const deliveryMethods = [];
+    let totalShipping = 0;
 
     for (const group of order.groups) {
+      totalShipping += parseFloat(group.shipping_gross);
+
+      //get order group taxes
+      await AxiosInstance.post("/api/account/orders/get-order-group-taxes", {
+        order_group_id: group.order_group_id,
+      }).then((res) => {
+        group.taxes = res.data;
+      });
+
       if (!group.shippingid) {
         continue;
       }
@@ -477,6 +495,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       }
     }
 
+    order.totalShipping = totalShipping;
     order.deliveryMethods = deliveryMethods.join(", ");
 
     order.status = await prisma.xcart_order_statuses.findFirst({

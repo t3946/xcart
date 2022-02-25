@@ -27,6 +27,20 @@ class OrdersApi extends Controller
     private const ORDER_TYPE_OPEN = 'open';
     private const ORDER_TYPE_CANCELLED = 'cancelled';
 
+    public function getOrderTaxes() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        /* @var $order OrderModel */
+        $order = OrderModel::objects()->get(['orderid' => $data['order_id']]);
+        $this->jsonResponse($order->getTaxes());
+    }
+
+    public function getOrderGroupTaxes() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        /* @var $group OrderGroupModel */
+        $group = OrderGroupModel::objects()->get(['order_group_id' => $data['order_group_id']]);
+        $this->jsonResponse($group->getTaxes());
+    }
+
     public function getOrders($orders_type, $to_date)
     {
         $filter = [];

@@ -1,6 +1,25 @@
 import React from "react";
 
-export const TransactionItemsListTotal = ({ orderInfo }) => {
+export const TransactionItemsListTotal = ({ group, orderInfo }) => {
+  function groupTaxesTemplate() {
+    const templates = [];
+
+    for (const taxesKey in group.taxes) {
+      const taxValue = group.taxes[taxesKey];
+
+      templates.push(
+        <div
+          className="info-item-container info-item-container-spacing tax"
+          key={`group-tax-${taxesKey}`}
+        >
+          <p>{taxesKey}: </p>
+          <p>US$ {taxValue}</p>
+        </div>
+      );
+    }
+
+    return templates;
+  }
   return (
     <div className="transaction-total-container">
       <div className="total-left-side">
@@ -16,19 +35,14 @@ export const TransactionItemsListTotal = ({ orderInfo }) => {
       <div className="total-group-right-side">
         <div className="info-item-container info-item-container-spacing regular">
           <p className=""> Regular shipping:</p>
-          <p className="">US$ {orderInfo.shipping_gross}</p>
+          <p className="">US$ {group.shipping_gross}</p>
         </div>
-        <div className="info-item-container info-item-container-spacing tax">
-          <div className="">Sales Tax:</div>
-          <div className="">US$ {orderInfo.total_pst}</div>
-        </div>
-        <div className="info-item-container info-item-container-spacing tax">
-          <p className="">VAT Tax: </p>
-          <p className="">US$ {orderInfo.total_tax}</p>
-        </div>
+
+        {groupTaxesTemplate()}
+
         <div className="info-item-container info-item-container-spacing subtotal">
           <p className="">Subtotal:</p>
-          <p className="">US$ {orderInfo.total_gross}</p>
+          <p className="">US$ {group.total_gross}</p>
         </div>
       </div>
     </div>

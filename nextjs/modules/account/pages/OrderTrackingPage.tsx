@@ -10,7 +10,6 @@ interface OrderTrackingPage {
   order: OrderView;
 }
 export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
-  console.log({order})
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
