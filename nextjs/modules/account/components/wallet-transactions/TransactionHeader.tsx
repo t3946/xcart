@@ -17,7 +17,10 @@ export const TransactionHeader = ({
     year: "numeric",
   });
   return (
-    <div onClick={onClick}>
+    <div
+      className={cn({ "transactions-header-refund": refund })}
+      onClick={onClick}
+    >
       <div
         className={`transactions-header ${
           refund && "transactions-header-refund"

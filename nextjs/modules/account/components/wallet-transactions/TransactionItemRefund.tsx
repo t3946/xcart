@@ -46,9 +46,7 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
         card={card}
       />
       <div
-        className={`transaction-body transaction-body-refund ${
-          accordion.open && "transaction-body-open"
-        }`}
+        className={`transaction-body transaction-body-refund`}
         style={{
           height: accordion.height,
         }}

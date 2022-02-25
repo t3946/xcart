@@ -11707,7 +11707,7 @@ div.account-page-right-column {
 
 .transaction-contact-info-container {
   padding: 20px 25px 10px;
-  border-bottom: 2px solid #c4c4c4;
+  border-bottom: 1px solid #c4c4c4;
   background-color: #f9f9f9;
 }
 
@@ -11845,7 +11845,7 @@ div.account-page-right-column {
 
 .total-shipping {
   padding-top: 29px;
-  border-top: 2px solid #8a8a8a;
+  border-top: 1px solid #8a8a8a;
 }
 
 @media (max-width: 1400px) {

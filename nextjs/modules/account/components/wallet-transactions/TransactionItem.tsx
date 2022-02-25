@@ -82,9 +82,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
       />
 
       <div
-        className={`transaction-body position-relative ${
-          accordion.open && "transaction-body-open"
-        }`}
+        className={`transaction-body position-relative`}
         style={{
           height: accordion.height,
         }}
