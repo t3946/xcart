@@ -441,6 +441,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
           email: true,
           firstname: true,
           lastname: true,
+          non_us_confirmation: true,
         },
       },
     },

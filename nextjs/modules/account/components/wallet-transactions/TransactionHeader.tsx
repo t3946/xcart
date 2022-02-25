@@ -36,7 +36,7 @@ export const TransactionHeader = ({
 
           <div className="transactions-header-name">
             {refund ? "Refund" : "Receipt"}
-            {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
+            {` # ${order.order_prefix}${order.orderid}`}
           </div>
         </div>
 

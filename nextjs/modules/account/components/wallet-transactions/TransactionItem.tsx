@@ -17,6 +17,32 @@ interface IProps {
   first: any;
 }
 
+function isCompleted(transaction: any) {
+  if (
+    transaction.type === "refund" &&
+    transaction.transaction_status === "refunded"
+  ) {
+    return true;
+  }
+
+  if (
+    transaction.type === "authorization" &&
+    (transaction.transaction_status === "captured" ||
+      transaction.transaction_status === "voided")
+  ) {
+    return true;
+  }
+
+  if (
+    transaction.type === "capture" &&
+    transaction.transaction_status === "completed"
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export const TransactionItem: React.FC<IProps> = (props) => {
   const { order, transaction, card, first } = props;
   const accordion = useAccordion(500);
@@ -24,7 +50,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
 
   return (
     <div className="transaction">
-      {(first || breakpoint.is768) && (
+      {(isCompleted(transaction) || breakpoint.is768) && (
         <div className={"transactions-completed-header"}>Completed</div>
       )}
 
@@ -48,16 +74,18 @@ export const TransactionItem: React.FC<IProps> = (props) => {
         <TransactionItemContactBlock order={order} />
         <TransactionAddresses order={order} />
         {order.extra && <PurchaseOrderInformation order={order} />}
-        <div className="transaction-checkbox">
-          <FormCheckBox
-            label={
-              "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
-            }
-            value={true}
-            name={"is_default"}
-            handleChange={() => {}}
-          />
-        </div>
+        {order.non_us_confirmation === "Y" && (
+          <div className="transaction-checkbox">
+            <FormCheckBox
+              label={
+                "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+              }
+              value={true}
+              name={"is_default"}
+              handleChange={() => {}}
+            />
+          </div>
+        )}
 
         <div className="transaction-items-label">
           Refund issued for the following items
