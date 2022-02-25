@@ -10,14 +10,7 @@ import { FormCheckBox } from "../shared/FormCheckBox";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 
-interface IProps {
-  order: any;
-  transaction: any;
-  card: any;
-  first: any;
-}
-
-function isCompleted(transaction: any) {
+export function isCompleted(transaction: any) {
   if (
     transaction.type === "refund" &&
     transaction.transaction_status === "refunded"
@@ -42,6 +35,15 @@ function isCompleted(transaction: any) {
 
   return false;
 }
+
+interface IProps {
+  order: any;
+  transaction: any;
+  card: any;
+  first: any;
+}
+
+
 
 export const TransactionItem: React.FC<IProps> = (props) => {
   const { order, transaction, card, first } = props;
@@ -70,7 +72,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
 
   return (
     <div className="transaction">
-      {(isCompleted(transaction) || breakpoint.is768) && (
+      {isCompleted(transaction) && (
         <div className={"transactions-completed-header"}>Completed</div>
       )}
 

@@ -7,6 +7,7 @@ import { TransactionItems } from "./TransactionItems";
 import { useAccordion } from "../../hooks/useAccordion";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
+import { isCompleted } from "./TransactionItem";
 
 export const TransactionItemRefund = ({ order, transaction, card, first }) => {
   const accordion = useAccordion(500);
@@ -34,7 +35,7 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
 
   return (
     <div>
-      {(first || breakpoint.is768) && (
+      {isCompleted(transaction) && (
         <div className={"transactions-completed-header"}>Completed</div>
       )}
       <TransactionHeader
