@@ -406,6 +406,78 @@ app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
   });
 });
 
+function getPaymentStatusCommonName(code) {
+  let paymentStatus = null;
+
+  switch (code) {
+    case "P":
+    case "AP":
+    case "CH":
+    case "V":
+    case "3":
+      paymentStatus = "Paid";
+      break;
+
+    case "S1":
+    case "S2":
+    case "S3":
+    case "S4":
+    case "Q":
+    case "O":
+    case "IO":
+    case "I":
+      paymentStatus = "Unpaid";
+      break;
+
+    case "A":
+      paymentStatus = "Canceled";
+      break;
+
+    case "H":
+    case "R":
+      paymentStatus = "Refunded";
+      break;
+  }
+
+  return paymentStatus;
+}
+
+function getShippingStatusCommonName(code) {
+  let shippingStatus = null;
+
+  switch (code) {
+    case "T":
+    case "K":
+    case "M":
+    case "E":
+    case "DP":
+      shippingStatus = "Ordered";
+      break;
+
+    case "C":
+    case "L":
+    case "DA":
+    case "B":
+    case "G":
+      shippingStatus = "Dispatched";
+      break;
+
+    case "S":
+      shippingStatus = "Shipped";
+      break;
+
+    case "OD":
+      shippingStatus = "Out for delivery";
+      break;
+
+    case "Z":
+      shippingStatus = "Delivered";
+      break;
+  }
+
+  return shippingStatus;
+}
+
 app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const data = await prisma.xcart_users.findUnique({
     where: {
@@ -471,7 +543,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
     let totalShipping = 0;
 
     for (const group of order.groups) {
-      totalShipping += parseFloat(group.shipping_gross);
+      totalShipping = totalShipping + parseFloat(group.shipping_gross);
 
       //get order group taxes
       await AxiosInstance.post("/api/account/orders/get-order-group-taxes", {
@@ -479,6 +551,8 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       }).then((res) => {
         group.taxes = res.data;
       });
+      group.paymentStatus = getPaymentStatusCommonName(group.cb_status);
+      group.shippingStatus = getShippingStatusCommonName(group.dc_status);
 
       if (!group.shippingid) {
         continue;
@@ -495,7 +569,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       }
     }
 
-    order.totalShipping = totalShipping;
+    order.totalShipping = totalShipping.toFixed(2);
     order.deliveryMethods = deliveryMethods.join(", ");
 
     order.status = await prisma.xcart_order_statuses.findFirst({

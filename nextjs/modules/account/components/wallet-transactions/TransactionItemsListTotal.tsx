@@ -1,6 +1,8 @@
 import React from "react";
 
-export const TransactionItemsListTotal = ({ group, orderInfo }) => {
+export const TransactionItemsListTotal = (props) => {
+  const { group } = props;
+
   function groupTaxesTemplate() {
     const templates = [];
 
@@ -25,11 +27,11 @@ export const TransactionItemsListTotal = ({ group, orderInfo }) => {
       <div className="total-left-side">
         <div className="info-item-container">
           <p className="label-info-item right-part">Payment status:</p>
-          <p className="left-part">{orderInfo.a2b_status}</p>
+          <p className="left-part">{group.paymentStatus}</p>
         </div>
         <div className="info-item-container">
           <p className="label-info-item right-part">Shipping status:</p>
-          <p className="left-part">{orderInfo.a2c_status}</p>
+          <p className="left-part">{group.shippingStatus}</p>
         </div>
       </div>
       <div className="total-group-right-side">

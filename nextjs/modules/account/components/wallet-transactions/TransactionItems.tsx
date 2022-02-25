@@ -34,7 +34,7 @@ export const TransactionItems = ({ refund = false, group, order }) => {
           />
         );
       })}
-      {!refund && <TransactionItemsListTotal group={group} orderInfo={order} />}
+      {!refund && <TransactionItemsListTotal group={group} />}
     </div>
   );
 };
