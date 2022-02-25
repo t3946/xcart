@@ -1,0 +1,25 @@
+@import "styles/utils/Utils.module";
+
+.link_default {
+  color: #83132b;
+
+  &:hover {
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+.walletCardContent {
+  padding: pxToRem(15) pxToRem(25);
+  border: 1px solid #c4c4c4;
+  border-top: 0;
+}
+
+.editRemoveButtonsGroup {
+
+  @include breakpoint(lg) {
+    display: grid;
+    grid-column-gap: pxToRem(12);
+    grid-template-columns: repeat(2, 50%);
+  }
+}

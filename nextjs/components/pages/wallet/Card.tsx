@@ -11,6 +11,9 @@ import Button, { ETheme } from "@modules/ui/forms/Button";
 import { deleteCard } from "@redux/actions/account-actions/PaymentsActions";
 import { useDispatch } from "react-redux";
 import AddCard from "@components/pages/wallet/dialog/AddCard";
+import LinkStyles from "@components/common/link/Link.module.scss";
+import Styles from "@components/pages/wallet/Card.module.scss";
+import cn from "classnames";
 
 export function addressToString(address) {
   const parts = [];
@@ -47,7 +50,7 @@ const Card: React.FC<IProps> = (props) => {
 
     return `Exp: ${month}/${card.exp_year}`;
   }
-
+  card.metadata.cardHolderName = "Debug Card Name";
   function changeDefaultCard(e: MouseEvent) {
     e.stopPropagation();
     changeDefaultCardId(card.id);
@@ -110,34 +113,64 @@ const Card: React.FC<IProps> = (props) => {
         ref={accordion.ref}
         className="wallet-card-content-container"
       >
-        <div className={`wallet-card-content row m-0`}>
-          <div className="col-4 ps-0">
-            {card.metadata?.cardHolderName && (
-              <div className="wallet-card-content-label">Name on card </div>
-            )}
-            <div>{card.metadata.cardHolderName}</div>
-          </div>
-
-          <div className="col-4">{billingAddressTemplate()}</div>
-
-          <div className="col-4 row">
-            <div className="col-6">
-              <button
-                className="form-button account-submit-btn edit-card-btn"
-                onClick={() => editCard(card)}
-              >
-                Edit
-              </button>
+        <div className={cn(Styles.walletCardContent)}>
+          <div className="row">
+            <div className="col-12 col-md-4">
+              {card.metadata?.cardHolderName && (
+                <div className="wallet-card-content-label">Name on card</div>
+              )}
+              <div>{card.metadata.cardHolderName}</div>
             </div>
 
-            <div className="col-6">
-              <Button
-                className={"col-6"}
-                theme={ETheme.outlined}
-                onClick={removeCard}
-              >
-                remove
-              </Button>
+            <div className="col-12 col-md-4">{billingAddressTemplate()}</div>
+
+            <div className="d-none d-md-block col-md-4">
+              <div className={cn(Styles.editRemoveButtonsGroup, "w-100")}>
+                <Button
+                  className={"w-100 mb-10 mb-lg-0 p-0"}
+                  onClick={() => editCard(card)}
+                >
+                  Edit
+                </Button>
+
+                <Button
+                  className={"w-100"}
+                  theme={ETheme.outlined}
+                  onClick={removeCard}
+                >
+                  remove
+                </Button>
+              </div>
+            </div>
+
+            <div className="col d-md-none">
+              <div className="row">
+                <div className="col-7">
+                  <span
+                    className={cn(LinkStyles.link)}
+                    onClick={() => editCard(card)}
+                  >
+                    Edit
+                  </span>{" "}
+                  {" | "}
+                  <span className={cn(LinkStyles.link)} onClick={removeCard}>
+                    Remove
+                  </span>
+                </div>
+
+                <div className="col-5 text-end">
+                  <div
+                    className={cn(LinkStyles.link, {
+                      [Styles.link_default]: isDefault,
+                    })}
+                    onClick={(e: any) => {
+                      !isDefault && changeDefaultCard(e);
+                    }}
+                  >
+                    {isDefault ? "Default" : "Set default"}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
