@@ -109,6 +109,78 @@ class OrdersApi extends Controller
         $this->jsonResponse($ar_data ?? []);
     }
 
+    public function getPaymentStatusCommonName($code) {
+        $paymentStatus = null;
+
+        switch ($code) {
+            case 'P':
+            case'AP':
+            case'CH':
+            case 'V':
+            case '3':
+                $paymentStatus = 'Paid';
+                break;
+
+            case'S1':
+            case'S2':
+            case'S3':
+            case'S4':
+            case'Q':
+            case'O':
+            case'IO':
+            case'I':
+                $paymentStatus = 'Unpaid';
+                break;
+
+            case'A':
+                $paymentStatus = 'Canceled';
+                break;
+
+            case'H':
+            case'R':
+                $paymentStatus = 'Refunded';
+                break;
+        }
+
+        return $paymentStatus;
+    }
+
+    public function getShippingStatusCommonName($code) {
+        $shippingStatus = null;
+
+        switch ($code) {
+            case 'T':
+            case'K':
+            case'M':
+            case 'E':
+            case 'DP':
+                $shippingStatus = 'Ordered';
+                break;
+
+            case'C':
+            case'L':
+            case'DA':
+            case'B':
+            case'G':
+                $shippingStatus = 'Dispatched';
+                break;
+
+            case'S':
+                $shippingStatus = 'Shipped';
+                break;
+
+            case'OD':
+                $shippingStatus = 'Out for delivery';
+                break;
+
+            case'Z':
+                $shippingStatus = 'Delivered';
+                break;
+        }
+
+        return $shippingStatus;
+    }
+
     public function getOrder($order_id)
     {
         /**
@@ -147,68 +219,8 @@ class OrdersApi extends Controller
 
             $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
             $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
-            $paymentStatus = null;
-            $shippingStatus = null;
-
-            switch ($group_model->cb_status) {
-                case 'P':
-                case'AP':
-                case'CH':
-                case 'V':
-                case '3':
-                    $paymentStatus = 'Paid';
-                    break;
-
-                case'S1':
-                case'S2':
-                case'S3':
-                case'S4':
-                case'Q':
-                case'O':
-                case'IO':
-                case'I':
-                    $paymentStatus = 'Unpaid';
-                    break;
-
-                case'A':
-                    $paymentStatus = 'Canceled';
-                    break;
-
-                case'H':
-                case'R':
-                    $paymentStatus = 'Refunded';
-                    break;
-            }
-
-            switch ($group_model->dc_status) {
-                case 'T':
-                case'K':
-                case'M':
-                case 'E':
-                case 'DP':
-                $shippingStatus = 'Ordered';
-                    break;
-
-                case'C':
-                case'L':
-                case'DA':
-                case'B':
-                case'G':
-                $shippingStatus = 'Dispatched';
-                    break;
-
-                case'S':
-                    $shippingStatus = 'Shipped';
-                    break;
-
-                case'OD':
-                    $shippingStatus = 'Out for delivery';
-                    break;
-
-                case'Z':
-                    $shippingStatus = 'Delivered';
-                    break;
-            }
+            $paymentStatus = $this->getPaymentStatusCommonName($group_model->cb_status);
+            $shippingStatus = $this->getShippingStatusCommonName($group_model->dc_status);
 
             $groups[] = [
                 'trackings' => $tracks ?? [],
@@ -243,15 +255,13 @@ class OrdersApi extends Controller
                 'id' => $log_model->pk
             ];
         }
-//        $emails = EmailModel::objects()->filter(["order_models__orderid" => $order_id])->order(['-date']);
-//        /** @var EmailModel $email_model */
-//        foreach ($emails as $email_model) {
-//            $ar_emails[] = $email_model->getFrontendEmail();
-//        }
+
         $transaction = $order_model->transactions[0];
+
         if ($order_model->isPurchaseOrder() && $extra_model = $order_model->extra_model) {
             $purchase_data = $extra_model->getFrontendPurchase();
         }
+
         $order = [
             'cb_status' => $order_model->cb_status,
             'dc_status' => $order_model->dc_status,
@@ -274,7 +284,7 @@ class OrdersApi extends Controller
             'poNumber' => $order_model->po_number,
             'address' => $order_model->getFrontendAddress(),
             'payment' => [
-                'status' => $order_model->cb_status_model->name,
+                'status' => $this->getPaymentStatusCommonName($order_model->cb_status),
                 'date' => $transaction ? $transaction->date : $order_model->date, // TODO: Поменять на метод getFirstTransaction из master branch
             ],
             'logs' => $logs ?? [],
