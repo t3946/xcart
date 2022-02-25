@@ -8,6 +8,7 @@ import { useAccordion } from "../../hooks/useAccordion";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { isCompleted } from "./TransactionItem";
+import cn from "classnames";
 
 export const TransactionItemRefund = ({ order, transaction, card, first }) => {
   const accordion = useAccordion(500);
@@ -47,7 +48,9 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
         card={card}
       />
       <div
-        className={`transaction-body transaction-body-refund`}
+        className={cn(`transaction-body transaction-body-refund`, {
+          "border-bottom-0": !accordion.open,
+        })}
         style={{
           height: accordion.height,
         }}

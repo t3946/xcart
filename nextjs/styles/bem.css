@@ -11589,7 +11589,6 @@ div.account-page-right-column {
   overflow: hidden;
   border: 1px solid #c4c4c4;
   border-top: 0;
-  border-bottom: 0;
 }
 
 .transaction-body p {
@@ -11744,6 +11743,13 @@ div.account-page-right-column {
 
 .transaction-shipping-address {
   width: 62%;
+  border-bottom: 1px solid #c4c4c4;
+}
+
+@media screen and (min-width: 768px) {
+  .transaction-shipping-address {
+  border-bottom: none;
+  }
 }
 
 .order-information {
@@ -11989,7 +11995,6 @@ div.account-page-right-column {
 }
 
 .transactions-header-left-block {
-  width: 70%;
   display: flex;
   margin-right: 10px;
 }
@@ -12004,7 +12009,6 @@ div.account-page-right-column {
   text-align: center;
   color: #055a93;
   cursor: pointer;
-  width: 50%;
 }
 
 .transactions-header-name:hover {
@@ -12069,7 +12073,7 @@ div.account-page-right-column {
 .wallet-label {
   font-size: 18px;
   font-weight: 700;
-  margin-left: 30px;
+  margin-left: 24px;
 }
 
 .wallet-card-container,

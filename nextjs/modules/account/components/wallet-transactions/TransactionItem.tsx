@@ -9,6 +9,7 @@ import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
+import cn from "classnames";
 
 export function isCompleted(transaction: any) {
   if (
@@ -42,8 +43,6 @@ interface IProps {
   card: any;
   first: any;
 }
-
-
 
 export const TransactionItem: React.FC<IProps> = (props) => {
   const { order, transaction, card, first } = props;
@@ -84,7 +83,9 @@ export const TransactionItem: React.FC<IProps> = (props) => {
       />
 
       <div
-        className={`transaction-body position-relative`}
+        className={cn(`transaction-body position-relative`, {
+          "border-bottom-0": !accordion.open,
+        })}
         style={{
           height: accordion.height,
         }}

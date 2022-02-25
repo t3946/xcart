@@ -22,29 +22,29 @@ export const TransactionHeader = ({
       onClick={onClick}
     >
       <div
-        className={`transactions-header ${
+        className={`transactions-header flex-wrap flex-sm-nowrap ${
           refund && "transactions-header-refund"
         }`}
       >
-        <div className="transactions-header-main-block">
-          <div className={"transactions-header-left-block"}>
-            <div className="transactions-header-date">{date}</div>
-            {card && (
-              <div className="transactions-header-card">
-                {card.brand.toUpperCase()}
-                {` **** ${card.last4} `}
-              </div>
-            )}
-          </div>
-
-          <div className="transactions-header-name">
-            {refund ? "Refund" : "Receipt"}
-            {` # ${order.order_prefix}${order.orderid}`}
-          </div>
+        {/* <div className="transactions-header-main-block"> */}
+        <div className={"transactions-header-left-block col-6 col-sm-5"}>
+          <div className="transactions-header-date">{date}</div>
+          {card && (
+            <div className="transactions-header-card">
+              {card.brand.toUpperCase()}
+              {` **** ${card.last4} `}
+            </div>
+          )}
         </div>
 
+        <div className="transactions-header-name order-1 col-12 col-sm-auto  order-sm-0">
+          {refund ? "Refund" : "Receipt"}
+          {` # ${order.order_prefix}${order.orderid}`}
+        </div>
+        {/* </div> */}
+
         <div
-          className={`transactions-header-price ${
+          className={`transactions-header-price col order-0 ${
             refund && "transactions-header-price-refund"
           }`}
         >

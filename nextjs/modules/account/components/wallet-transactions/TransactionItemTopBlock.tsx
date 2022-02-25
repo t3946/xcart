@@ -22,20 +22,20 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
-        <div className="transaction-name-block flex-wrap flex-xl-nowrap mt-20">
-          <div className="transaction-top-block-logo m-0">
+        <div className="transaction-name-block d-flex flex-wrap flex-xl-nowrap mt-20">
+          <div className="transaction-top-block-logo m-0 order-1 order-md-0 flex-shrink-0">
             <img
               src="/static/frontend/dist/images/icons/account/s3stores-logo.svg"
               alt={""}
             />
           </div>
-          <div className="mt-20 mt-xl-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
-            <div className="transaction-name">
+          <div className="mb-20  mt-xl-0 order-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
+            <div className="transaction-name order-1 order-sm-0 mt-10 mt-sm-0">
               {refund ? "REFUND" : "RECEIPT"}
               {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
             </div>
 
-            <div className="row">
+            <div className="row order-0">
               <ReactToPrint
                 trigger={() => (
                   <div className={"col-6"}>
@@ -66,7 +66,8 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
           </div>
         </div>
         <div className="transaction-top-info-container">
-          <div className="transaction-top-info">
+          <div className="d-none d-xl-block transaction-top-block-logo" />
+          <div className="col transaction-top-info">
             <div className="transaction-top-info-left-part">
               <div className="transaction-top-info-left-part-label">
                 S3 Stores Inc.
