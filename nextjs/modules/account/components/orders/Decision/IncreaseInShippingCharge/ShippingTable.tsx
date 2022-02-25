@@ -64,7 +64,7 @@ const ShippingTable: React.FC<IProps> = (props) => {
         }}
         rowItemTemplates={(item) => [
           <ProductImage image={item.image} />,
-          <ProductCell name={item.product} sku={item.code} />,
+          <ProductCell name={item.product} sku={item.code} url={item.url} />,
           <span className="d-none d-lg-block">US$ {item.price}</span>,
           <>
             <span className="d-none d-lg-block">{item.amount}</span>

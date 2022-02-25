@@ -20,6 +20,8 @@ import { List } from "@modules/account/ts/types/list.type";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
 import cn from "classnames";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 
 import Styles from "@modules/account/components/lists/ManageList.module.scss";
 
@@ -29,12 +31,20 @@ interface ManageListProps {
 
 export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
   const listView: List = useSelectorAccount((state) => state.lists.listView);
-  const addresses: AddressItemDto[] = useSelectorAccount(
-    (state) => state.addresses.addressesList
+  const user = useSelectorAccount((state) => state.user);
+  const addresses: AddressItemDto[] = useSelectorAccount((state) =>
+    state.addresses.addressesList?.filter(
+      (address) => address.address_type === AddressTypeEnum.SHIPPING
+    )
   );
+
   const monthItems = fillingMassForMonths();
 
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(getAddresses(user.user_id));
+  }, []);
 
   const [dayItems, setDayItems] = useState(getDaysForSelect(0));
 

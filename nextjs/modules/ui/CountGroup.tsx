@@ -1,6 +1,10 @@
 import React from "react";
 import cn from "classnames";
 import CountInput from "@modules/ui/CountInput";
+import PlusAsh from "@modules/icon/components/common/switcher-count/PlusAsh";
+import Plus from "@modules/icon/components/common/switcher-count/Plus";
+import MinusAsh from "@modules/icon/components/common/switcher-count/MinusAsh";
+import Minus from "@modules/icon/components/common/switcher-count/Minus";
 
 import Styles from "@modules/ui/CountGroup.module.scss";
 
@@ -35,7 +39,11 @@ export const CountGroup: React.FC<CountInputProps> = ({
         )}
         disabled={value === minAmount}
       >
-        -
+        {value === minAmount ? (
+          <MinusAsh width="10" height="10" />
+        ) : (
+          <Minus width="10" height="10" />
+        )}
       </button>
 
       <CountInput
@@ -58,7 +66,11 @@ export const CountGroup: React.FC<CountInputProps> = ({
           { [Styles.button_disable]: value === avail }
         )}
       >
-        +
+        {value === avail ? (
+          <PlusAsh width="10" height="10" />
+        ) : (
+          <Plus width="10" height="10" />
+        )}
       </button>
     </div>
   );

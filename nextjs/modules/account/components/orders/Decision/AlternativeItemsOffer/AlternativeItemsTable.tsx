@@ -60,7 +60,7 @@ const AlternativeItemsTable: React.FC<IProps> = ({ type, items }) => {
           ],
         },
         rowItemTemplates: (item) => [
-          <ProductCell name={item.name} sku={item.sku} />,
+          <ProductCell name={item.name} sku={item.sku} url={item.url} />,
           <span className="d-none d-md-block">{item.amount}</span>,
           <span className="d-none d-md-block">{item.date}</span>,
           <div className="d-flex justify-content-between d-md-none mt-1">

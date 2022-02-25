@@ -28,5 +28,7 @@ div.option_selected {
 }
 
 div.option_focus {
-  background-color: #f4f4f4;
+  @include breakpoint(lg) {
+    background-color: #f4f4f4;
+  }
 }

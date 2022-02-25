@@ -13,8 +13,12 @@
   white-space: nowrap;
 }
 
-.select {
-  border: 1px solid #aaaaaa;
-  background: #ffffff;
-  outline: none;
+div.select {
+  height: pxToRem(24) !important;
+  font-size: 14px;
+  min-width: 162px;
+}
+
+div.menu {
+  font-size: 14px;
 }
