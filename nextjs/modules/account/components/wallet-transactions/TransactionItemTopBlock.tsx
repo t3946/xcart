@@ -52,7 +52,7 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
               <ReactToPrint
                 trigger={() => (
                   <div className={"col-6"}>
-                    <Button className={"p-0"} theme={ETheme.outlined}>
+                    <Button className={"py-0 px-2"} theme={ETheme.outlined}>
                       <div className="d-flex align-items-center">
                         <PictureAsPdfIcon className="me-2" />
                         <div>OPEN PDF</div>

@@ -45,7 +45,7 @@ export const TransactionHeader = ({
             refund && "transactions-header-price-refund"
           }`}
         >
-          {refund ? `(US$ ${order.total})` : `US$ ${order.total}` }
+          {refund ? `(US$ ${order.total})` : `US$ ${order.total}`}
         </div>
         <div className="transactions-header-arrow">
           <ChevronIcon
