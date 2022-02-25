@@ -26,17 +26,17 @@ export default class CatalogViewMode extends React.Component {
       button: {
         tile: [
           Styles.button,
-          "d-flex",
-          "me-2",
+          "me-lg-2",
           {
             [Styles.button_active]: mode === this.TILE_MODE,
+            "d-flex": mode !== this.TILE_MODE,
           },
         ],
         list: [
           Styles.button,
-          "d-flex",
           {
             [Styles.button_active]: mode === this.LIST_MODE,
+            "d-flex": mode !== this.LIST_MODE,
           },
         ],
       },
@@ -45,8 +45,8 @@ export default class CatalogViewMode extends React.Component {
     };
 
     return (
-      <div className="action_block view d-flex align-items-center ">
-        <span className="show-for-large lh-1 me-2">View as</span>
+      <div className="action_block view d-flex align-items-center w-md-100">
+        <span className="d-none d-lg-block lh-1 me-2">View as</span>
 
         <a
           onClick={(e) => this.setMode(e, this.TILE_MODE)}
