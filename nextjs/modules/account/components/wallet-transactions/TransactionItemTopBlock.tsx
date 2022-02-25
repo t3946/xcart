@@ -13,7 +13,7 @@ interface IProps {
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   const { componentRef, refund, order } = props;
 
-  const date = new Date(Number(order.date)).toLocaleDateString("en-EN", {
+  const date = new Date(Number(order.date * 1000)).toLocaleDateString("en-EN", {
     month: "long",
     day: "2-digit",
     year: "numeric",
@@ -22,14 +22,14 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
-        <div className="transaction-name-block">
-          <div className="transaction-top-block-logo">
+        <div className="transaction-name-block flex-wrap flex-xl-nowrap mt-20">
+          <div className="transaction-top-block-logo m-0">
             <img
               src="/static/frontend/dist/images/icons/account/s3stores-logo.svg"
               alt={""}
             />
           </div>
-          <div className="transaction-top-name-btns">
+          <div className="mt-20 mt-xl-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
             <div className="transaction-name">
               {refund ? "REFUND" : "RECEIPT"}
               {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}

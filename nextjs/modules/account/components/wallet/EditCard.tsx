@@ -73,7 +73,7 @@ export const EditCard: React.FC<EditCardProps> = ({
                 </div>
                 <div className="col">
                   <div className="edit-card-from-container justify-content-between">
-                    <div className="col-lg-4">
+                    <div className="col-lg-8">
                       <div className="wallet-card-content-label">
                         Name on card
                       </div>

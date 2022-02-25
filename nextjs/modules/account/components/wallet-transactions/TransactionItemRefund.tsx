@@ -82,14 +82,30 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
               <p className="total-text  total-text-left">
                 Shipping Cost Refund:{" "}
               </p>
-              <p className="total-text">(US$ {order.totalShipping})</p>
+              <p className="total-text">
+                (US$ {order.shipping_gross?.toFixed(2)})
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <div className="total-text  total-text-left">
+                Sales Tax Refund:
+              </div>
+              <div className="total-text">
+                (US$ {order.total_pst?.toFixed(2)})
+              </div>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <p className="total-text  total-text-left">VAT Tax Refund: </p>
+              <p className="total-text">(US$ {order.total_tax?.toFixed(2)})</p>
             </div>
 
             {orderTaxesTemplate()}
 
             <div className="info-item-container info-item-container-spacing subtotal">
               <p className="total-text total-text-left">Total Refund: </p>
-              <p className="total-text">(US$ {order.total})</p>
+              <p className="total-text">
+                (US$ {order.total_gross?.toFixed(2)})
+              </p>
             </div>
           </div>
         </div>

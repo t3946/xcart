@@ -28,6 +28,7 @@ export const TransactionItems = ({ refund = false, group, order }) => {
       {group.xcart_order_details.map((detail, i) => {
         return (
           <TransactionItemsElem
+            refund={refund}
             breakpoint={breakpoint}
             orderGroupsItemInfo={detail}
             key={`transaction-item-${i}-${detail.itemid}`}

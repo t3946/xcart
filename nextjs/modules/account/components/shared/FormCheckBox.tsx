@@ -5,6 +5,7 @@ export const FormCheckBox = ({
   label,
   value,
   handleChange,
+  disabled,
   id = "styled-checkbox-2 ",
 }) => {
   return (
@@ -17,9 +18,10 @@ export const FormCheckBox = ({
         name={name}
         onChange={handleChange}
         checked={value}
+        disabled={disabled}
       />
       <label className={"checkbox-label"} htmlFor={id}>
-        <div className={"label-text"}>{label}</div>
+        <div className={"label-text text-dark"}>{label}</div>
       </label>
     </div>
   );

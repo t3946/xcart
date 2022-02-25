@@ -1,6 +1,10 @@
 import React from "react";
 
-export const TransactionItemsElem = ({ orderGroupsItemInfo, breakpoint }) => {
+export const TransactionItemsElem = ({
+  orderGroupsItemInfo,
+  breakpoint,
+  refund = false,
+}) => {
   return (
     <div className="transaction-items-list-item">
       <div className="transaction-items-sku-block">
@@ -19,7 +23,13 @@ export const TransactionItemsElem = ({ orderGroupsItemInfo, breakpoint }) => {
         {orderGroupsItemInfo.amount}
       </div>
       <div className="transaction-items-extended-block">
-        (US$ {orderGroupsItemInfo.price * orderGroupsItemInfo.amount})
+        {refund
+          ? `(US$ ${(
+              orderGroupsItemInfo.price * orderGroupsItemInfo.amount
+            )?.toFixed(2)})`
+          : `US$ ${(
+              orderGroupsItemInfo.price * orderGroupsItemInfo.amount
+            )?.toFixed(2)}`}
       </div>
     </div>
   );

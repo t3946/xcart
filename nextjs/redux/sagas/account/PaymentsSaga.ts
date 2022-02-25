@@ -125,6 +125,15 @@ function* changeCardHolderName(action: any): Generator {
     .catch();
 }
 
+function* getPaymentMethods(action: any): Generator {
+  const payments = yield axios
+    .get("/api/account/get-payment-methods")
+    .then((response) => response.data)
+    .catch();
+
+  yield put({ type: "SET_PAYMENT_METHODS", payload: payments });
+}
+
 export function* paymentsActionWatcher(): SagaIterator {
   yield takeLatest("GET_CARDS", getCards);
   yield takeLatest("EDIT_CARD", editCard);
@@ -135,4 +144,5 @@ export function* paymentsActionWatcher(): SagaIterator {
   yield takeLatest("DELETE_CARD", deleteCard);
   yield takeLatest("CHANGE_ADDRESS_CARD", changeAddressCard);
   yield takeLatest("CHANGE_CARDHOLDER_NAME", changeCardHolderName);
+  yield takeLatest("GET_PAYMENT_METHODS", getPaymentMethods);
 }

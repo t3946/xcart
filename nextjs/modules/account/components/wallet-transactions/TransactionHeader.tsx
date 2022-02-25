@@ -11,7 +11,7 @@ export const TransactionHeader = ({
   order,
   card,
 }) => {
-  const date = new Date(Number(order.date)).toLocaleDateString("en-EN", {
+  const date = new Date(Number(order.date * 1000)).toLocaleDateString("en-EN", {
     month: "long",
     day: "2-digit",
     year: "numeric",
@@ -45,7 +45,7 @@ export const TransactionHeader = ({
             refund && "transactions-header-price-refund"
           }`}
         >
-          (US$ {order.total})
+          {refund ? `(US$ ${order.total})` : `US$ ${order.total}` }
         </div>
         <div className="transactions-header-arrow">
           <ChevronIcon

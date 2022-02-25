@@ -37,14 +37,22 @@ export const TransactionItemsListTotal = (props) => {
       <div className="total-group-right-side">
         <div className="info-item-container info-item-container-spacing regular">
           <p className=""> Regular shipping:</p>
-          <p className="">US$ {group.shipping_gross}</p>
+          <p className="">US$ {orderInfo.shipping_gross?.toFixed(2)}</p>
+        </div>
+        <div className="info-item-container info-item-container-spacing tax">
+          <div className="">Sales Tax:</div>
+          <div className="">US$ {orderInfo.total_pst?.toFixed(2)}</div>
+        </div>
+        <div className="info-item-container info-item-container-spacing tax">
+          <p className="">VAT Tax: </p>
+          <p className="">US$ {orderInfo.total_tax?.toFixed(2)}</p>
         </div>
 
         {groupTaxesTemplate()}
 
         <div className="info-item-container info-item-container-spacing subtotal">
           <p className="">Subtotal:</p>
-          <p className="">US$ {group.total_gross}</p>
+          <p className="">US$ {orderInfo.total_gross?.toFixed(2)}</p>
         </div>
       </div>
     </div>
