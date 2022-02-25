@@ -81,7 +81,7 @@ const ShippingTable: React.FC<IProps> = (props) => {
             US$ {(item.amount * item.price).toFixed(2)}
           </span>,
         ]}
-        rowFooterTemplate={(item) => {
+        rowFooterTemplate={(item, index) => {
           if (order.cb_status !== "P" || order.dc_status !== "Z") {
             return null;
           }
@@ -124,11 +124,13 @@ const ShippingTable: React.FC<IProps> = (props) => {
                 "mb-3",
                 "mb-md-4"
               )}
+              key={`row-item-${index}`}
             >
-              <a className={"text-decoration-none"} href={item.url}>
-                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>
-                  buy again
-                </Button>
+              <a
+                className={"text-decoration-none me-md-10 mb-3 mb-md-0 d-block"}
+                href={item.url}
+              >
+                <Button className={"w-md-auto"}>buy again</Button>
               </a>
 
               <Link href={`/create-review/${item.productId}`}>
@@ -146,8 +148,8 @@ const ShippingTable: React.FC<IProps> = (props) => {
       />
 
       <TableFooter
-        paymentStatus={group.a2bStatus}
-        shippingStatus={group.a2cStatus}
+        paymentStatus={group.paymentStatus}
+        shippingStatus={group.shippingStatus}
         regularShipping={group.shippingGross}
         salesTax={group.totalPst}
         vatTax={group.totalTax}

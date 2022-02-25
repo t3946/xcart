@@ -147,11 +147,75 @@ class OrdersApi extends Controller
 
             $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
             $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+            $paymentStatus = null;
+            $shippingStatus = null;
+
+            switch ($group_model->cb_status) {
+                case 'P':
+                case'AP':
+                case'CH':
+                case 'V':
+                case '3':
+                    $paymentStatus = 'Paid';
+                    break;
+
+                case'S1':
+                case'S2':
+                case'S3':
+                case'S4':
+                case'Q':
+                case'O':
+                case'IO':
+                case'I':
+                    $paymentStatus = 'Unpaid';
+                    break;
+
+                case'A':
+                    $paymentStatus = 'Canceled';
+                    break;
+
+                case'H':
+                case'R':
+                    $paymentStatus = 'Refunded';
+                    break;
+            }
+
+            switch ($group_model->dc_status) {
+                case 'T':
+                case'K':
+                case'M':
+                case 'E':
+                case 'DP':
+                $shippingStatus = 'Ordered';
+                    break;
+
+                case'C':
+                case'L':
+                case'DA':
+                case'B':
+                case'G':
+                $shippingStatus = 'Dispatched';
+                    break;
+
+                case'S':
+                    $shippingStatus = 'Shipped';
+                    break;
+
+                case'OD':
+                    $shippingStatus = 'Out for delivery';
+                    break;
+
+                case'Z':
+                    $shippingStatus = 'Delivered';
+                    break;
+            }
 
             $groups[] = [
                 'trackings' => $tracks ?? [],
                 'products' => $ar_products ?? [],
                 'manufacturer' => $manufacturer->getFrontendAddress(),
+                'paymentStatus' => $paymentStatus,
+                'shippingStatus' => $shippingStatus,
                 'a2bStatus' => $cb_status_name,
                 'a2cStatus' => $dc_status_name,
                 'shippingGross' => $group_model->shipping_gross,
