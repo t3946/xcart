@@ -23,6 +23,16 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
       cb_status: {
         in: ["F", "P", "Z", "AP", "P", "Q", "F", "A", "D"],
       },
+      NOT: {
+        AND: [
+          {
+            cb_status: "P",
+          },
+          {
+            dc_status: "Z",
+          },
+        ],
+      },
     },
     select: {
       order_prefix: true,
