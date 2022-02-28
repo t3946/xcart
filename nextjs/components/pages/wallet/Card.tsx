@@ -40,7 +40,7 @@ const Card: React.FC<IProps> = (props) => {
   const accordion = useAccordion();
   const removeDialog = useDialog();
   const editDialog = useDialog();
-  const breakpoint = useBreakpoint();
+
   function expTemplate() {
     let month = card.exp_month.toString();
 
@@ -50,7 +50,7 @@ const Card: React.FC<IProps> = (props) => {
 
     return `Exp: ${month}/${card.exp_year}`;
   }
-  card.metadata.cardHolderName = "Debug Card Name";
+
   function changeDefaultCard(e: MouseEvent) {
     e.stopPropagation();
     changeDefaultCardId(card.id);
