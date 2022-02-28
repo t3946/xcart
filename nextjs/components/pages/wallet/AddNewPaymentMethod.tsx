@@ -47,8 +47,8 @@ export const AddNewPaymentMethod: React.FC = () => {
         <p>S3 Stores Inc accepts major credit and debit cards</p>
 
         <div className="d-flex gap-1 flex-wrap">
-          {paymentMethods.map((method) => (
-            <PaymentCardImage logo={method.logo} name={method.name} />
+          {paymentMethods.map((method, i) => (
+            <PaymentCardImage key={i} logo={method.logo} name={method.name} />
           ))}
         </div>
       </div>
