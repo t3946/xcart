@@ -163,7 +163,7 @@ services:
     depends_on:
       - php
     tty: true
-#    command: "/bin/sh -c 'while :; do sleep 1m & wait $${!}; php /var/www/app/console.php Core Cron; done;'"
+    command: "/bin/sh -c 'while :; do sleep 1m & wait $${!}; php /var/www/app/console.php Core Cron; done;'"
     environment:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
