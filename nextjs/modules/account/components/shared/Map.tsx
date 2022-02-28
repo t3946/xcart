@@ -10,7 +10,7 @@ function createMapIcon(icon: any, height: number, width: number) {
   return new L.Icon({
     iconUrl: icon,
     iconRetinaUrl: icon,
-    iconAnchor: null,
+    iconAnchor: [15, 40],
     popupAnchor: null,
     shadowSize: null,
     shadowAnchor: null,
