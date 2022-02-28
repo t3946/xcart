@@ -41,9 +41,6 @@ export const ShareListManagePeopleSelect: React.FC<
         }`,
         classes?.group
       )}
-      container
-      alignItems="center"
-      justifyContent="space-between"
     >
       <div
         onClick={() => {
