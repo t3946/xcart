@@ -13,17 +13,21 @@ export const TransactionItems = ({ refund = false, group, order }) => {
         The items below are shipped from {group.shipping}
       </div>
       <div
-        className={`transaction-items-list-header ${
+        className={`transaction-items-list-header px-2 px-md-4 ${
           refund && "transaction-items-list-refund-header"
         }`}
       >
-        <div className="transaction-items-sku-block">SKU</div>
-        <div className="transaction-items-name-block">Item name</div>
-        <div className="transaction-items-price-block">
-          {breakpoint.is768 ? " Price x Qty" : "Price"}
+        <div className="col-lg-2 d-none d-lg-block">SKU</div>
+        <div className="col-md-6 col-lg-5 text-start text-lg-center">
+          Item name <span className="d-lg-none">/ SKU</span>
         </div>
-        <div className="transaction-items-qty-block">Qty ordered</div>
-        <div className="transaction-items-extended-block">Extended</div>
+        <div className="col-md-3 col-lg-2 d-none d-md-block text-center">
+          {breakpoint.lg ? "Price" : "Price x Qty"}
+        </div>
+        <div className="col-lg-1 d-none d-lg-block text-center">
+          Qty ordered
+        </div>
+        <div className="col-md-3 col-lg-2 text-end">Extended</div>
       </div>
       {group.xcart_order_details.map((detail, i) => {
         return (
