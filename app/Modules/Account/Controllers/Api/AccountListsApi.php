@@ -37,9 +37,22 @@ class AccountListsApi extends Controller
     public function getListByCache(string $cache)
     {
         /** @var ProductListsModel $list_product_model */
-        if ($list_product_model = ProductListsModel::objects()->get(['cache_url' => $cache])) {
-            $data = $list_product_model->getFrontendData();
-        }
+        $list_product_model = ProductListsModel::objects()->get(['cache_url' => $cache]);
+        $data = $list_product_model->getFrontendData();
+
+        /** @var UserModel $user */
+        $user = Xcart::app()->getUser(true);
+
+        /** @var UserListModel $user_list */
+        $user_list = UserListModel::objects()->get(
+            [
+                'product_list_id' => $list_product_model->product_list_id,
+                'user_id' => $user->user_id,
+            ],
+        );
+
+        $data['role'] = $user_list->role;
+
         $this->jsonResponse($data ?? null);
     }
 
