@@ -22,6 +22,7 @@ export const TransactionItemsListTotal = (props) => {
 
     return templates;
   }
+
   return (
     <div className="transaction-total-container">
       <div className="total-left-side">
@@ -37,22 +38,22 @@ export const TransactionItemsListTotal = (props) => {
       <div className="total-group-right-side">
         <div className="info-item-container info-item-container-spacing regular">
           <p className=""> Regular shipping:</p>
-          <p className="">US$ {orderInfo.shipping_gross?.toFixed(2)}</p>
+          <p className="">US$ {parseFloat(group.shipping_gross)?.toFixed(2)}</p>
         </div>
         <div className="info-item-container info-item-container-spacing tax">
           <div className="">Sales Tax:</div>
-          <div className="">US$ {orderInfo.total_pst?.toFixed(2)}</div>
+          <div className="">US$ {parseFloat(group.total_pst)?.toFixed(2)}</div>
         </div>
         <div className="info-item-container info-item-container-spacing tax">
           <p className="">VAT Tax: </p>
-          <p className="">US$ {orderInfo.total_tax?.toFixed(2)}</p>
+          <p className="">US$ {parseFloat(group.total_tax)?.toFixed(2)}</p>
         </div>
 
         {groupTaxesTemplate()}
 
         <div className="info-item-container info-item-container-spacing subtotal">
           <p className="">Subtotal:</p>
-          <p className="">US$ {orderInfo.total_gross?.toFixed(2)}</p>
+          <p className="">US$ {parseFloat(group.total_gross)?.toFixed(2)}</p>
         </div>
       </div>
     </div>

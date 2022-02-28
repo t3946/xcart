@@ -16,8 +16,10 @@ export const TransactionItemsElem = ({
       <div className="transaction-items-price-block">
         US${" "}
         {breakpoint.is768
-          ? `${orderGroupsItemInfo.price} x ${orderGroupsItemInfo.amount}`
-          : orderGroupsItemInfo.price}
+          ? `${parseFloat(orderGroupsItemInfo.price)?.toFixed(2)} x ${
+              orderGroupsItemInfo.amount
+            }`
+          : parseFloat(orderGroupsItemInfo.price)?.toFixed(2)}
       </div>
       <div className="transaction-items-qty-block">
         {orderGroupsItemInfo.amount}
