@@ -6,6 +6,8 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Modules\Brand\Models\BrandStorefrontModel;
 use Modules\Goods\Helpers\ProductHelper;
+use Modules\Reviews\Models\ProductReviewsModel;
+use Modules\Reviews\Models\TotalProductRatingsModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Amazon\Models\AmazonFbaMissingSkuModel;
@@ -991,4 +993,52 @@ class ProductModel extends Model implements ICartItem
         return $this->createSlug($this->product);
     }
 
+    public function getRatings(): array {
+        $total_product_ratings = TotalProductRatingsModel::objects()->all(['product_id' => $this->productid]);
+
+        $ratings = array_map(function ($total_model) {
+            $rating_model = $total_model->rating->getAttributes();
+
+            $result = $total_model->getAttributes();
+            $result['rating'] = $rating_model;
+
+            if ($rating_model['slug'] === 'overall') {
+                $rates = ProductReviewsModel::objects()
+                    ->select([
+                        'rating__rating_id',
+                        'rating__rating',
+                        'totalRates' => 'count(review_id)',
+                    ])
+                    ->filter([
+                        'product_id' => $this->productid,
+                        'rating__rating_id' => $rating_model['rating_id'],
+                        'rating__rating__isnull' => false,
+                        'rating__rating__gt' => 0,
+                    ])
+                    ->group(['rating__rating', 'rating__rating_id'])
+                    ->asArray()
+                    ->all();
+
+                $result['rates'] = $rates;
+            }
+
+            return $result;
+        }, $total_product_ratings);
+
+        $overall_rating = null;
+        $features_ratings = [];
+
+        array_walk($ratings, function ($rating) use (&$overall_rating, &$features_ratings) {
+            if ($rating['rating']['slug'] === 'overall') {
+                $overall_rating = $rating;
+            } else {
+                $features_ratings[] = $rating;
+            }
+        });
+
+        return [
+            'overall' => $overall_rating,
+            'features' => $features_ratings,
+        ];
+    }
 }

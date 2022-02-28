@@ -123,6 +123,7 @@ class ListItemsModel extends Model
                         'minAmount' => $product_model->min_amount,
                         'multOrderQuantity' => $product_model->mult_order_quantity,
                         'outOfStock' => $product_model->r_avail === 0,
+                        'ratings' => $product_model->getRatings(),
                     ]
                 ]);
                 break;

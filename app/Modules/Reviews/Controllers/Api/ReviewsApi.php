@@ -42,6 +42,7 @@ class ReviewsApi extends Controller
     {
         AccountController::provideAccountData();
     }
+
     public function __construct()
     {
         $this->data = json_decode(file_get_contents('php://input'), true);
@@ -58,9 +59,9 @@ class ReviewsApi extends Controller
         ]))->save();
     }
 
-    public function getTotalRatings(): array
+    public function getTotalRatings($product_id): array
     {
-        $total_product_ratings = TotalProductRatingsModel::objects()->all(['product_id' => $this->data['productId']]);
+        $total_product_ratings = TotalProductRatingsModel::objects()->all(['product_id' => $product_id]);
         $ratings = array_map(function ($total_model) {
             $rating_model = $total_model->rating->getAttributes();
 
@@ -109,7 +110,8 @@ class ReviewsApi extends Controller
 
     public function getRatingsAction()
     {
-        $this->jsonResponse($this->getTotalRatings());
+        $product_id = $this->data['productId'];
+        $this->jsonResponse($this->getTotalRatings($product_id));
     }
 
     public function createReview()
@@ -342,7 +344,7 @@ class ReviewsApi extends Controller
         $location = GeoIpHelper::getGeoipLocation($ip)->country ?: $default_location;
 
         $this->jsonResponse([
-            'ratings' => $this->getTotalRatings(),
+            'ratings' => $this->getTotalRatings($product_id),
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
             'country' => CountryModel::objects()->get(['code' => $location])->name,
             'product' => AccountController::getProduct($this->data['productId']),
