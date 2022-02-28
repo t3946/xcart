@@ -19,10 +19,14 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   );
 
   return (
-    <div className={classnames(`col-4 ps-0`, containerClass)}>
-      <div>
-        <PaymentCardImage logo={cardIconPath} name={cardType} /> ending in{" "}
-        {cardLast4}
+    <div className={classnames(`col col-md-4 ps-0`, containerClass)}>
+      <div className="d-flex gap-2">
+        <PaymentCardImage logo={cardIconPath} name={cardType} />
+        <div>
+          <b className="d-lg-none">{cardType.toUpperCase()}</b>
+          <span className="d-none d-lg-inline-block">{cardType}</span>{" "}
+          <span className="d-inline-block">ending in {cardLast4}</span>
+        </div>
       </div>
     </div>
   );
