@@ -17,6 +17,10 @@ import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import AppData from "@utils/AppData";
 import Styles from "@modules/account/components/review/ReviewForm.module.scss";
+import Input from "@modules/ui/forms/Input";
+import Feedback from "@modules/ui/forms/Feedback";
+import Label from "@modules/ui/forms/Label";
+import Textarea from "@modules/ui/forms/Textarea";
 
 interface IProps {
   product: number;
@@ -378,14 +382,14 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       </p>
                     </RBForm.Label>
 
-                    <RBForm.Control
-                      type="text"
-                      name="videoLink"
+                    <Input
                       value={values.videoLink}
-                      className={"form-input"}
+                      name="videoLink"
+                      onChange={handleChange}
                       isInvalid={!!touched.videoLink && !!errors.videoLink}
                       isValid={touched.videoLink && !errors.videoLink}
-                      onChange={handleChange}
+                      placeholder={"Video link"}
+                      disabled={isCheckFileLink || isSubmitting}
                       onBlur={() => {
                         videoLinkChangeHandler(
                           values,
@@ -395,8 +399,6 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                           setTouched
                         );
                       }}
-                      placeholder={"Video link"}
-                      disabled={isCheckFileLink || isSubmitting}
                     />
 
                     <RBForm.Control.Feedback type="invalid">
@@ -413,51 +415,30 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                 />
 
                 <div>
-                  <RBForm.Group
-                    controlId="headLine"
-                    className={"w-100 form-group_full-width"}
-                  >
-                    <RBForm.Label>
+                  <div className="mb-3">
+                    <Label>
                       <h2 className={"account-inner-page-header-2 mb-1"}>
                         Add a headline
                       </h2>
-                    </RBForm.Label>
+                      <Input
+                        name={"headLine"}
+                        onChange={handleChange}
+                        isInvalid={!!touched.headLine && !!errors.headLine}
+                        isValid={touched.headLine && !errors.headLine}
+                        placeholder={"What’s most important to know?"}
+                        disabled={isSubmitting}
+                      />
+                    </Label>
+                    <Feedback type="invalid">{errors.headLine}</Feedback>
+                  </div>
 
-                    <RBForm.Control
-                      type="text"
-                      name="headLine"
-                      value={values.headLine}
-                      onChange={handleChange}
-                      className={"form-input"}
-                      isInvalid={!!touched.headLine && !!errors.headLine}
-                      isValid={touched.headLine && !errors.headLine}
-                      placeholder={"What’s most important to know?"}
-                      disabled={isSubmitting}
-                    />
-
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.headLine}
-                    </RBForm.Control.Feedback>
-                  </RBForm.Group>
-
-                  <RBForm.Group
-                    controlId="textBody"
-                    className={
-                      "w-100 form-group_full-width mt-3 mt-md-4 mt-lg-20"
-                    }
-                  >
-                    <RBForm.Label>
-                      <h2 className={"account-inner-page-header-2"}>
-                        Add a written review
-                      </h2>
-                    </RBForm.Label>
-
-                    <RBForm.Control
-                      as="textarea"
+                  <Label>
+                    <h2 className={"account-inner-page-header-2"}>
+                      Add a written review
+                    </h2>
+                    <Textarea
                       name="textBody"
-                      value={values.textBody}
                       onChange={handleChange}
-                      className={"form-input form-review-text-body"}
                       isInvalid={!!touched.textBody && !!errors.textBody}
                       isValid={touched.textBody && !errors.textBody}
                       placeholder={
@@ -465,11 +446,8 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       }
                       disabled={isSubmitting}
                     />
-
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.textBody}
-                    </RBForm.Control.Feedback>
-                  </RBForm.Group>
+                  </Label>
+                  <Feedback type="invalid">{errors.textBody}</Feedback>
 
                   <h2
                     className={

@@ -10,6 +10,7 @@ interface IProps extends FormControlProps {
   value?: any;
   disabled?: boolean;
   onChange?: (e: ChangeEvent) => void;
+  onBlur?: (e: BlurEvent) => void;
   className?: any;
   isValid?: boolean;
   isInvalid?: boolean;
