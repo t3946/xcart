@@ -102,6 +102,8 @@ function* editUserRights(action: AnyAction): Generator {
       })
     )
     .then((response) => response);
+
+  window.location.reload();
 }
 
 function* addProductOnList(action: AnyAction): Generator {
