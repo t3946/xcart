@@ -67,8 +67,8 @@ class Mailer
         if ($this->mode == self::MODE_SMTP) {
             $security = $config['security'] ?? null;
             $transport = new Swift_SmtpTransport($config['host'], $config['port'], $security);
-            $transport->setUsername($config['username']);
-            $transport->setPassword($config['password']);
+            $transport->setUsername($config['username'] ?? '');
+            $transport->setPassword($config['password'] ?? '');
             return $transport;
         }
 //        elseif ($this->mode == self::MODE_MAIL) {
