@@ -115,7 +115,7 @@ class SearchController extends PrototypeAdminController
             /** @var ProductModel $product */
             // search by PRODUCT UPC
             if (preg_match(self::PATTERNS['upc'], $search_string, $matches) === 1) {
-                $product = ProductModel::objects()->get(['upc' => $matches[0]]);
+                $product = ProductModel::objects()->limit(1)->get(['upc' => $matches[0]]);
             }
 
             // search by PRODUCT SKU
