@@ -5,6 +5,7 @@ import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
+import {AxiosResponse} from "axios";
 
 interface ShareList {
   onClose: () => void;
@@ -16,21 +17,31 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
 
   const dispatch = useDispatch();
 
-  const encodeUrl = (type: ShowSharedStatusEnum) => {
-    dispatch(encryptUrl(type, cache, onUrlEncoded));
-  };
+  const encodeUrl = (privateType: ShowSharedStatusEnum) => {
+    // dispatch(encryptUrl(privateType, hash, onUrlEncoded));
+    dispatch(
+      encryptUrl({
+        data: {
+          hash: cache,
+          privateType,
+        },
+        success(res: AxiosResponse) {
+          const { tag, text } = res.data;
+          const url = `http://${window.location.hostname}/account/shopping-lists/invite/${tag}/${text}`;
 
-  const onUrlEncoded = (url: string) => {
-    navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        onClose();
-        snackbar.show(`Url copied`);
+          window.navigator.clipboard
+            .writeText(url)
+            .then(() => {
+              onClose();
+              snackbar.show(`Url copied`);
+            })
+            .catch(() => {
+              onClose();
+              snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
+            });
+        },
       })
-      .catch(() => {
-        onClose();
-        snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
-      });
+    );
   };
 
   return (

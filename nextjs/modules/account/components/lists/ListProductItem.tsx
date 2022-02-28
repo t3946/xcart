@@ -174,7 +174,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           )}
 
           <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>${product?.price}</div>
+            <div className={Styles.productInfoPrice}>${product?.price.toFixed(2)}</div>
             <div className="multiplication-symbol">X</div>
             <CountGroup
               avail={product.avail}

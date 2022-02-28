@@ -71,15 +71,9 @@ export const undoDeleteProduct = (
   product,
 });
 
-export const encryptUrl = (
-  privateType: ShowSharedStatusEnum,
-  hash: string,
-  callback: (url: string) => void
-): any => ({
+export const encryptUrl = (payload: any): any => ({
   type: "ENCRYPT_URL",
-  hash,
-  privateType,
-  callback,
+  payload,
 });
 
 export const editUserRights = (

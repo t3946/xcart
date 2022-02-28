@@ -86,14 +86,9 @@ function* transferProductList(action: AnyAction): Generator {
 }
 
 function* encryptUrl(action: AnyAction): Generator {
-  const result: any = yield api
-    .post<any>(
-      `/api/account/lists/get-url-encrypt`,
-      JSON.stringify({ privateType: action.privateType, hash: action.hash })
-    )
-    .then((response) => response);
-  const url = `http://${window.location.hostname}/account/shopping-lists/invite/${result.tag}/${result.text}`;
-  yield action.callback(url);
+  const { data, success } = action.payload;
+
+  axios.post<any>(`/api/account/lists/get-url-encrypt`, data).then(success);
 }
 
 function* editUserRights(action: AnyAction): Generator {

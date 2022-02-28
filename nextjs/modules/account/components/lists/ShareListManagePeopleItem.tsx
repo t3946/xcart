@@ -20,11 +20,8 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   onClick,
 }) => {
   const isYourAccount = userListInfo.userId === Store.getState().user.id;
-
   const breakpoint = useBreakpoint();
-
   const mobileMenuDialog = useDialog();
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       component: (

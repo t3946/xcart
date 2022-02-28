@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
 
-interface ShareListInviteSection {
+interface IProps {
   onCopyLinkFunc: (value: ShowSharedStatusEnum) => void;
 }
 
-export const ShareListInviteSection: React.FC<ShareListInviteSection> = ({
+export const ShareListInviteSection: React.FC<IProps> = ({
   onCopyLinkFunc,
 }) => {
   const [showSharedStatus, setShowSharedStatus] = useState(
@@ -68,7 +68,7 @@ export const ShareListInviteSection: React.FC<ShareListInviteSection> = ({
             Copy link
           </div>
         </div>
-        <div className="share-variants-logo-container">
+        <div className="share-variants-logo-container d-none">
           <img
             className="share-variants-logo"
             src="/static/frontend/images/icons/account/email.svg"
