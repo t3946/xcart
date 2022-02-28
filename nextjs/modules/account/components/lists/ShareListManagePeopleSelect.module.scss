@@ -1,0 +1,26 @@
+@import "styles/utils/Utils.module";
+
+.remove {
+  &:hover {
+    border-radius: pxToRem(4);
+  }
+}
+
+div.option {
+  color: $black;
+
+  &:hover {
+    background-color: $white;
+  }
+}
+
+div.menu {
+  width: pxToRem(200);
+  right: 0;
+}
+
+div.control_opened {
+  transition: background-color 0.1s;
+  background-color: #eaeaea;
+  border-radius: pxToRem(4);
+}

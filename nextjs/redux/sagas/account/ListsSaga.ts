@@ -94,7 +94,7 @@ function* encryptUrl(action: AnyAction): Generator {
 function* editUserRights(action: AnyAction): Generator {
   yield api
     .post<any>(
-      `/api/lists/edit-user-rights`,
+      `/api/account/lists/edit-user-rights`,
       JSON.stringify({
         list_id: action.listId,
         user: action.userId,

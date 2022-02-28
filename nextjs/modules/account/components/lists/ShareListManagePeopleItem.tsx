@@ -117,12 +117,12 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
           md: (
             <ShareListManagePeopleSelect
               items={[
-                { value: UserRightsActionsEnum.EDIT, viewValue: "Edit" },
-                { value: UserRightsActionsEnum.VIEW, viewValue: "View" },
+                { value: UserRightsActionsEnum.EDIT, label: "Editor" },
+                { value: UserRightsActionsEnum.VIEW, label: "Viewer" },
               ]}
               value={{
                 value: userListInfo.role,
-                viewValue: viewUserListRight(userListInfo.role),
+                label: viewUserListRight(userListInfo.role),
               }}
               id={userListInfo.userId}
               onClick={(selectValue) =>

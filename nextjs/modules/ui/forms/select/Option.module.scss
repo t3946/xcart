@@ -3,6 +3,7 @@
 div.option {
   background-color: transparent;
   line-height: 1;
+  padding: pxToRem(8) pxToRem(12);
 
   &:hover {
     background-color: #f4f4f4;
