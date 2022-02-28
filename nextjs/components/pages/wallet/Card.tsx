@@ -87,7 +87,7 @@ const Card: React.FC<IProps> = (props) => {
         className={`wallet-card-header row m-0`}
       >
         <CardHeader cardLast4={card.last4} cardType={card.brand} />
-        <div className="col-4">{expTemplate()}</div>
+        <div className="col-4 d-none d-md-block">{expTemplate()}</div>
 
         <div className="col-4 d-flex align-items-center justify-content-end justify-content-md-between pe-0">
           <div
