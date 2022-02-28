@@ -44,6 +44,8 @@ const accountWalletReducer = (
         ...state,
         transactions: action.transactions,
       };
+    case "SET_PAYMENT_METHODS":
+      return { ...state, methods: action.payload };
     default:
       return state;
   }

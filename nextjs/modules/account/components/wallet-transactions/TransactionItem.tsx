@@ -9,15 +9,9 @@ import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
+import cn from "classnames";
 
-interface IProps {
-  order: any;
-  transaction: any;
-  card: any;
-  first: any;
-}
-
-function isCompleted(transaction: any) {
+export function isCompleted(transaction: any) {
   if (
     transaction.type === "refund" &&
     transaction.transaction_status === "refunded"
@@ -41,6 +35,13 @@ function isCompleted(transaction: any) {
   }
 
   return false;
+}
+
+interface IProps {
+  order: any;
+  transaction: any;
+  card: any;
+  first: any;
 }
 
 export const TransactionItem: React.FC<IProps> = (props) => {
@@ -70,7 +71,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
 
   return (
     <div className="transaction">
-      {(isCompleted(transaction) || breakpoint.is768) && (
+      {isCompleted(transaction) && (
         <div className={"transactions-completed-header"}>Completed</div>
       )}
 
@@ -82,9 +83,9 @@ export const TransactionItem: React.FC<IProps> = (props) => {
       />
 
       <div
-        className={`transaction-body position-relative ${
-          accordion.open && "transaction-body-open"
-        }`}
+        className={cn(`transaction-body position-relative`, {
+          "border-bottom-0": !accordion.open,
+        })}
         style={{
           height: accordion.height,
         }}
@@ -103,6 +104,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
               value={true}
               name={"is_default"}
               handleChange={() => {}}
+              disabled={true}
             />
           </div>
         )}
@@ -124,21 +126,35 @@ export const TransactionItem: React.FC<IProps> = (props) => {
           <div className="total-right-side total-group-right-side total-right-side">
             <div className="info-item-container info-item-container-spacing">
               <p className="total-text total-text-left"> Total Items Cost:</p>
-              <p className="total-text">US$ {order.subtotal}</p>
+              <p className="total-text">
+                US$ {order.shipping_gross?.toFixed(2)}
+              </p>
             </div>
             <div className="info-item-container info-item-container-spacing regular">
               <p className="total-text total-text-left">
                 {" "}
                 Total Shipping Cost:
               </p>
-              <p className="total-text">US$ {order.totalShipping}</p>
+              <p className="total-text">
+                US$ {order.shipping_gross?.toFixed(2)}
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <div className="total-text total-text-left">Total Sales Tax:</div>
+              <div className="total-text">
+                US$ {order.total_pst?.toFixed(2)}
+              </div>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <p className="total-text total-text-left">Total VAT Tax: </p>
+              <p className="total-text">US$ {order.total_tax?.toFixed(2)}</p>
             </div>
 
             {orderTaxesTemplate()}
 
             <div className="info-item-container info-item-container-spacing subtotal">
               <p className="total-text total-text-left">GRAND TOTAL:</p>
-              <p className="total-text">US$ {order.total}</p>
+              <p className="total-text">US$ {order.total_gross?.toFixed(2)}</p>
             </div>
           </div>
         </div>

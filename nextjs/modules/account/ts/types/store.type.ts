@@ -65,6 +65,7 @@ export interface AccountPaymentsStore {
   submitFormData?: SubmitFormDataDto | null;
   submitCardFormLoading?: boolean;
   transactions: any;
+  methods: { logo: string; name: string }[];
 }
 
 export interface AccountLoginAndSecurityStore {

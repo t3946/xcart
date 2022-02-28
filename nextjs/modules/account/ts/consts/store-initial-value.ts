@@ -13,6 +13,7 @@ export const accountPaymentsStoreInitialValue = {
   cards: [],
   cardsLoading: false,
   transactions: undefined,
+  methods: [],
 };
 
 export const accountAddressesInitialValue = {

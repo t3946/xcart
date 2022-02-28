@@ -13,7 +13,7 @@ interface IProps {
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   const { componentRef, refund, order } = props;
 
-  const date = new Date(Number(order.date)).toLocaleDateString("en-EN", {
+  const date = new Date(Number(order.date * 1000)).toLocaleDateString("en-EN", {
     month: "long",
     day: "2-digit",
     year: "numeric",
@@ -22,20 +22,20 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
-        <div className="transaction-name-block">
-          <div className="transaction-top-block-logo">
+        <div className="transaction-name-block d-flex flex-wrap flex-xl-nowrap mt-20">
+          <div className="transaction-top-block-logo m-0 order-1 order-md-0 flex-shrink-0">
             <img
               src="/static/frontend/dist/images/icons/account/s3stores-logo.svg"
               alt={""}
             />
           </div>
-          <div className="transaction-top-name-btns">
-            <div className="transaction-name">
+          <div className="mb-20  mt-xl-0 order-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
+            <div className="transaction-name order-1 order-sm-0 mt-10 mt-sm-0">
               {refund ? "REFUND" : "RECEIPT"}
               {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
             </div>
 
-            <div className="row">
+            <div className="row order-0">
               <ReactToPrint
                 trigger={() => (
                   <div className={"col-6"}>
@@ -52,7 +52,7 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
               <ReactToPrint
                 trigger={() => (
                   <div className={"col-6"}>
-                    <Button className={"p-0"} theme={ETheme.outlined}>
+                    <Button className={"py-0 px-2"} theme={ETheme.outlined}>
                       <div className="d-flex align-items-center">
                         <PictureAsPdfIcon className="me-2" />
                         <div>OPEN PDF</div>
@@ -66,7 +66,8 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
           </div>
         </div>
         <div className="transaction-top-info-container">
-          <div className="transaction-top-info">
+          <div className="d-none d-xl-block transaction-top-block-logo" />
+          <div className="col transaction-top-info">
             <div className="transaction-top-info-left-part">
               <div className="transaction-top-info-left-part-label">
                 S3 Stores Inc.

@@ -7,6 +7,8 @@ import { TransactionItems } from "./TransactionItems";
 import { useAccordion } from "../../hooks/useAccordion";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
+import { isCompleted } from "./TransactionItem";
+import cn from "classnames";
 
 export const TransactionItemRefund = ({ order, transaction, card, first }) => {
   const accordion = useAccordion(500);
@@ -34,7 +36,7 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
 
   return (
     <div>
-      {(first || breakpoint.is768) && (
+      {isCompleted(transaction) && (
         <div className={"transactions-completed-header"}>Completed</div>
       )}
       <TransactionHeader
@@ -46,9 +48,9 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
         card={card}
       />
       <div
-        className={`transaction-body transaction-body-refund ${
-          accordion.open && "transaction-body-open"
-        }`}
+        className={cn(`transaction-body transaction-body-refund`, {
+          "border-bottom-0": !accordion.open,
+        })}
         style={{
           height: accordion.height,
         }}
@@ -82,14 +84,30 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
               <p className="total-text  total-text-left">
                 Shipping Cost Refund:{" "}
               </p>
-              <p className="total-text">(US$ {order.totalShipping})</p>
+              <p className="total-text">
+                (US$ {order.shipping_gross?.toFixed(2)})
+              </p>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <div className="total-text  total-text-left">
+                Sales Tax Refund:
+              </div>
+              <div className="total-text">
+                (US$ {order.total_pst?.toFixed(2)})
+              </div>
+            </div>
+            <div className="info-item-container info-item-container-spacing tax">
+              <p className="total-text  total-text-left">VAT Tax Refund: </p>
+              <p className="total-text">(US$ {order.total_tax?.toFixed(2)})</p>
             </div>
 
             {orderTaxesTemplate()}
 
             <div className="info-item-container info-item-container-spacing subtotal">
               <p className="total-text total-text-left">Total Refund: </p>
-              <p className="total-text">(US$ {order.total})</p>
+              <p className="total-text">
+                (US$ {order.total_gross?.toFixed(2)})
+              </p>
             </div>
           </div>
         </div>

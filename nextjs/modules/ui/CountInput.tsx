@@ -24,7 +24,6 @@ const CountInput: React.FC<IProps> = ({
 }) => {
   return (
     <input
-      type={"number"}
       name={name}
       onChange={(e) => {
         onChange(Math.abs(parseInt(e.target.value)) || minAmount, true);

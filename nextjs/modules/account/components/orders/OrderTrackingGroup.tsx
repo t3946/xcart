@@ -78,8 +78,6 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
             title="Shipping from"
             text={
               <>
-                {orderGroupInfo.manufacturer?.address ?? ""}
-                <br />
                 {orderGroupInfo.manufacturer?.city ?? ""}{" "}
                 {orderGroupInfo.manufacturer?.state ?? ""},{" "}
                 {orderGroupInfo.manufacturer?.zip ?? ""}

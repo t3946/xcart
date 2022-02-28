@@ -37,5 +37,9 @@ export const TransactionsList: React.FC<IProps> = (props) => {
     return transactions;
   }
 
-  return getTransactionsTemplates();
+  return (
+    <div className="flex-dir-column d-flex gap-4 gap-md-0">
+      {getTransactionsTemplates()}
+    </div>
+  );
 };
