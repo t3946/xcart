@@ -20,7 +20,6 @@ import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss
 const ListsPage: React.FC = () => {
   const router = useRouter();
   const lists = useSelectorAccount((state) => state.lists.lists);
-  const listView = useSelectorAccount((state) => state.lists.listView);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
   const { role, cacheUrl, source } = useSelectorAccount(
@@ -78,5 +77,5 @@ const ListsPage: React.FC = () => {
     </div>
   );
 };
-66;
+
 export default ListsPage;
