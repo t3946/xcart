@@ -68,7 +68,7 @@ const ListsPage: React.FC = () => {
           onClick={createIdeaDialog.handleClickOpen}
           theme={ETheme.outlined}
           disabled={!edit}
-          className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0", {
+          className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
             "d-none": !cache,
           })}
         >
