@@ -32,7 +32,7 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
           <div className="mb-20  mt-xl-0 order-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
             <div className="transaction-name order-1 order-sm-0 mt-10 mt-sm-0">
               {refund ? "REFUND" : "RECEIPT"}
-              {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
+              {` # ${order.order_prefix}${order.orderid}`}
             </div>
 
             <div className="row order-0">
