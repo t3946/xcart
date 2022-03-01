@@ -27,14 +27,16 @@ class OrdersApi extends Controller
     private const ORDER_TYPE_OPEN = 'open';
     private const ORDER_TYPE_CANCELLED = 'cancelled';
 
-    public function getOrderTaxes() {
+    public function getOrderTaxes()
+    {
         $data = json_decode(file_get_contents('php://input'), true);
         /* @var $order OrderModel */
         $order = OrderModel::objects()->get(['orderid' => $data['order_id']]);
         $this->jsonResponse($order->getTaxes());
     }
 
-    public function getOrderGroupTaxes() {
+    public function getOrderGroupTaxes()
+    {
         $data = json_decode(file_get_contents('php://input'), true);
         /* @var $group OrderGroupModel */
         $group = OrderGroupModel::objects()->get(['order_group_id' => $data['order_group_id']]);
@@ -123,7 +125,8 @@ class OrdersApi extends Controller
         $this->jsonResponse($ar_data ?? []);
     }
 
-    public function getPaymentStatusCommonName($code) {
+    public function getPaymentStatusCommonName($code)
+    {
         $paymentStatus = null;
 
         switch ($code) {
@@ -159,7 +162,8 @@ class OrdersApi extends Controller
         return $paymentStatus;
     }
 
-    public function getShippingStatusCommonName($code) {
+    public function getShippingStatusCommonName($code)
+    {
         $shippingStatus = null;
 
         switch ($code) {
@@ -193,6 +197,55 @@ class OrdersApi extends Controller
         }
 
         return $shippingStatus;
+    }
+
+    private function getOrderGroups(OrderModel $order_model)
+    {
+        $groups = [];
+
+        foreach ($order_model->groups as $group_model) {
+            $ar_products = [];
+            $tracks = [];
+            $manufacturer = $group_model->manufacturer;
+
+            foreach ($group_model->detail_models as $model) {
+                $ar_products[] = $model->getFrontendProduct();
+            }
+
+            foreach ($group_model->trackings as $tracking_model) {
+                $carrier = $tracking_model->carrier;
+                $tracks[] = [
+                    'tracknum' => $tracking_model->tracknum,
+                    'carrier' => [
+                        'link' => $carrier->link,
+                        'name' => $carrier->carrier,
+                        'method' => $tracking_model->link->shipping,
+                    ],
+                ];
+            }
+
+            $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
+            $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+            $paymentStatus = $this->getPaymentStatusCommonName($group_model->cb_status);
+            $shippingStatus = $this->getShippingStatusCommonName($group_model->dc_status);
+
+            $groups[] = [
+                'trackings' => $tracks ?? [],
+                'products' => $ar_products ?? [],
+                'manufacturer' => $manufacturer->getFrontendAddress(),
+                'paymentStatus' => $paymentStatus,
+                'shippingStatus' => $shippingStatus,
+                'a2bStatus' => $cb_status_name,
+                'a2cStatus' => $dc_status_name,
+                'shippingGross' => $group_model->shipping_gross,
+                'totalPst' => $group_model->total_pst,
+                'totalTax' => $group_model->total_tax,
+                'totalGross' => $group_model->total_gross,
+                'statuses_history' => $group_model->statuses_history->asArray()->all(),
+            ];
+        }
+
+        return $groups;
     }
 
     public function getOrder($order_id)
@@ -448,14 +501,10 @@ class OrdersApi extends Controller
         }
 
         [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'), true));
-
         /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
-
         $order_model->setAttributes($address_data);
-
         $order_model->save();
-
         $transaction = $order_model->transactions[0];
 
         $order = [
@@ -469,7 +518,7 @@ class OrdersApi extends Controller
                 'billingName' => $order_model->b_firstname,
                 'company' => $order_model->b_company,
             ],
-            'groups' => $groups ?? [],
+            'groups' => $this->getOrderGroups($order_model),
             'orderId' => $order_model->orderid,
             'poNumber' => $order_model->po_number,
             'address' => $order_model->getFrontendAddress(),
