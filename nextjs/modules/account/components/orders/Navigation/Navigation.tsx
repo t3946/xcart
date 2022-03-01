@@ -44,7 +44,7 @@ const Navigation: React.FC<IProps> = ({ orderId }) => {
     ),
   });*/
   return (
-    <div className={"order-info-header"}>
+    <div className={"order-info-header p-0"}>
       {menu.map((value, index) => (
         <Item
           {...value}
