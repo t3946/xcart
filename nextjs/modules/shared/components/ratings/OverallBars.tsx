@@ -13,7 +13,10 @@ const OverallBars: React.FC<IProps> = function (props: IProps): any {
   if (!ratings) {
     for (let i = minRating; i <= maxRating; i++) {
       bars.push(
-        <div className="skeleton-box d-flex justify-content-between align-items-center overall-rating_bar-group">
+        <div
+          key={i}
+          className="skeleton-box d-flex justify-content-between align-items-center overall-rating_bar-group"
+        >
           <div className={"overall-rating-bar-caption"}>0 Star</div>
 
           <div className="overall-rating-bar overall-rating_bar">
@@ -78,7 +81,10 @@ const OverallBars: React.FC<IProps> = function (props: IProps): any {
     const percent = percents[rate];
 
     bars.push(
-      <div className="d-flex justify-content-between align-items-center overall-rating_bar-group">
+      <div
+        key={rate}
+        className="d-flex justify-content-between align-items-center overall-rating_bar-group"
+      >
         <div className={"overall-rating-bar-caption"}>{rate} Star</div>
 
         <div className="overall-rating-bar overall-rating_bar">
