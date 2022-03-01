@@ -55,11 +55,11 @@ const ShippingTable: React.FC<IProps> = (props) => {
             "col-lg-1",
             "text-start col-9 col-md me-auto",
             "col-lg-2",
-            "col-md-2",
-            "col-md-2 col-lg-1",
-            "col-4 col-md-auto text-start",
-            "col-4 col-md-auto text-start",
-            "col-4 col-md-auto",
+            "col-md-3",
+            "col-md-2 col-lg-2",
+            "col-5 col-md-auto text-start",
+            "col-2 col-md-auto text-start",
+            "col-5 col-md-auto",
           ],
         }}
         rowItemTemplates={(item) => [

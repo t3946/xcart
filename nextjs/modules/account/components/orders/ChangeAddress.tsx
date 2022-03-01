@@ -80,13 +80,6 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
         },
         success(response) {
           setSubmitting(false);
-          breakpoint({
-            xs: () =>
-              router.push(
-                `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`
-              ),
-            md: handleClose,
-          });
           handleClose && handleClose();
         },
       })
