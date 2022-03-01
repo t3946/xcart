@@ -16,21 +16,19 @@
 
                 <div class="d-flex align-items-center table__prices table__prices--top {if $has_discount}product-quantity-row__price_discount{else}product-quantity-row__price{/if} text-center">
                     <div class="product-table-prices_price-column column-price col-4">
-                        <div class="value product-quantity-one-price {if $has_discount}product-quantity-one-price__discount{/if}">
-                            {$site_currency->symbol_prefix}
+                        <div class="value product-quantity-one-price d-flex justify-content-center {if $has_discount}product-quantity-one-price__discount{/if}">
                             <span>
-                                {if !$site_currency->after}
-                                    {$site_currency}
-                                {/if}
+                                {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
                             </span>
-                            <span class="price" var-price>
+                            <span class="price ms-1" var-price>
                                 {$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount))}
                             </span>
-                            <span>
-                                {if $site_currency->after}
+
+                            {if $site_currency->after}
+                                <span class="ms-1">
                                     {$site_currency}
-                                {/if}
-                            </span>
+                                </span>
+                            {/if}
                         </div>
                         {if $has_discount}
                             <div class="value product-quantity-old-price">
@@ -66,7 +64,7 @@
                         <div class="product-table-prices_price-column column-extended col-4">
                             <div class="product-quantity-extended-price">
                                 {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if}
-                                <span class="price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount) * $model->min_amount)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
+                                <span class="ms-1 price" var-price-extended>{$site_currency->getCurrencyFormat($model->getFrontendPrice($model->min_amount) * $model->min_amount)}</span>&nbsp;{if $site_currency->after}{$site_currency}{/if}
                             </div>
                             {if $model->list_price > $model->getFrontendPrice($model->min_amount)}
                                 <div class="value product-quantity-old-price">
@@ -161,7 +159,7 @@
     {if $model->isOutOfStockFrontend()}
         <div class="notify-me-stock">
 
-            <a class="notify-me grey-border">
+            <a class="notify-me grey-border text-decoration-none">
                 <span>{t 'Notify me when product is in stock'}</span>
             </a>
             <div class="product-page-add-to-list-btn out-of-stock" data-out-of-stock="{$model->r_avail === 0 ? '1' : '0'}"></div>
