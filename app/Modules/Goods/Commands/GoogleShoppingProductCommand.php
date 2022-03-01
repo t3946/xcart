@@ -291,7 +291,7 @@ class GoogleShoppingProductCommand extends Command
 
                         $oService->products->customBatch($batchReq);
 
-                        UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type' => 1]);
+
 
                     } catch (Exception $e) {
                         $log_text .= "{$e->getMessage()}\n";
@@ -302,6 +302,8 @@ class GoogleShoppingProductCommand extends Command
                         echo $log_text;
                     }
                 }
+
+                UpdatedProductModel::objects()->delete(['resourceid__in' => $toDelete, 'type' => 1]);
             }
         }
     }
