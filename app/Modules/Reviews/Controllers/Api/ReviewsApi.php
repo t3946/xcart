@@ -302,7 +302,7 @@ class ReviewsApi extends Controller
             $images = [];
             $reviews_images = ReviewsImagesModel::objects()->select(['images__*'])->all($filter);
 
-            foreach ($reviews_images as $i => $reviews_image) {
+            foreach ($reviews_images as $_ => $reviews_image) {
                 $image_model = ImagesModel::objects()->get(["image_id" => $reviews_image->image_id]);
                 $attributes = $image_model->getAttributes();
                 $attributes['thumb'] = $image_model->path->url_thumb;
