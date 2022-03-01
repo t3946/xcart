@@ -429,7 +429,8 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                         disabled={isSubmitting}
                       />
                     </Label>
-                    <Feedback type="invalid">{errors.headLine}</Feedback>
+
+                    {!!touched.headLine && !!errors.headLine && <Feedback type="invalid">{errors.headLine}</Feedback>}
                   </div>
 
                   <Label>
@@ -447,7 +448,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       disabled={isSubmitting}
                     />
                   </Label>
-                  <Feedback type="invalid">{errors.textBody}</Feedback>
+                  {!!touched.textBody && !!errors.textBody && <Feedback type="invalid">{errors.textBody}</Feedback>}
 
                   <h2
                     className={
