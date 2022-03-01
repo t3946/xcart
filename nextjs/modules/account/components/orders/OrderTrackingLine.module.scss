@@ -68,7 +68,7 @@
 }
 
 .orderTrackingLineRound_lastContainer {
-  margin-right: -pxToRem(2);
+  margin-right: pxToRem(-2);
 }
 
 .orderTrackingLineRoundDate_lastContainer,
@@ -77,7 +77,7 @@
 }
 
 .orderTrackingLineRound_firstContainer {
-  margin-left: -pxToRem(2);
+  margin-left: pxToRem(-2);
 }
 
 .orderTrackingLineRoundDate_firstContainer,
