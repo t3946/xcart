@@ -74,7 +74,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     },
   ];
 
-  const ratings = productItem.product.ratings;
+  const ratings = productItem.product.ratings?.overall;
 
   const snackbar = useSnackbar();
 
@@ -157,16 +157,30 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             )}
           </div>
 
-          {ratings?.overall && (
+          {ratings && (
             <Tooltip
               target={
-                <div className="tooltip-rating-stars-target">
-                  <RatingStars rating={3} />
+                <div className="tooltip-rating-stars-target gap-2 d-flex">
+                  <RatingStars rating={ratings.total} />
+                  <a
+                    className="lh-sm d-md-none"
+                    href={`/product/${productItem.productId}/`}
+                  >
+                    {ratings.rates.reduce(
+                      (pv, cv) => pv + parseInt(cv.totalRates),
+                      0
+                    )}
+                  </a>
                 </div>
               }
               content={
-                <div className="rating-stars-tooltip">
+                <div className={Styles.rating}>
                   <OverallRating ratings={ratings} />
+                  <div className="text-center mt-14">
+                    <a href={`/product/${productItem.productId}/`}>
+                      See all customer reviews
+                    </a>
+                  </div>
                 </div>
               }
             />

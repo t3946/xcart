@@ -6,11 +6,16 @@ import L from "leaflet";
 import iconFrom from "../../../../public/images/icons/account/shipping-from.png";
 import iconTo from "../../../../public/images/icons/account/shipping-to.png";
 
-function createMapIcon(icon: any, height: number, width: number) {
+function createMapIcon(
+  icon: any,
+  height: number,
+  width: number,
+  iconAnchor: L.PointExpression | undefined = undefined
+) {
   return new L.Icon({
     iconUrl: icon,
     iconRetinaUrl: icon,
-    iconAnchor: [15, 40],
+    iconAnchor: iconAnchor,
     popupAnchor: null,
     shadowSize: null,
     shadowAnchor: null,
@@ -19,7 +24,7 @@ function createMapIcon(icon: any, height: number, width: number) {
 }
 const formIcon = createMapIcon(iconFrom, 25, 30);
 
-const toIcon = createMapIcon(iconTo, 30, 40);
+const toIcon = createMapIcon(iconTo, 30, 40, [15, 40]);
 
 interface Map {
   markers: Array<[number, number]>;

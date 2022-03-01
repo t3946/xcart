@@ -35,3 +35,14 @@
 .counter {
   max-width: pxToRem(100);
 }
+
+.rating {
+  @include breakpoint(md) {
+    width: pxToRem(401);
+    padding: pxToRem(20) pxToRem(25);
+  }
+  @include breakpoint(lg) {
+    width: pxToRem(352);
+    padding: pxToRem(25);
+  }
+}

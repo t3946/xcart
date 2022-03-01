@@ -11,9 +11,7 @@ interface IProps {
   };
 }
 
-export const RatingStars: React.FC<IProps> = (
-  props: IProps
-) => {
+export const RatingStars: React.FC<IProps> = (props: IProps) => {
   const rating = Math.round(props.rating);
   const maxRating = 5;
   const stars = Array(maxRating).fill(null);
@@ -39,10 +37,12 @@ export const RatingStars: React.FC<IProps> = (
     <div className={classnames(classes.container)}>
       {stars.map((e, index) => {
         if (index < rating) {
-          return <StarFilled className={classnames(classes.icon)} />;
+          return (
+            <StarFilled key={index} className={classnames(classes.icon)} />
+          );
         }
 
-        return <StarStroked className={classnames(classes.icon)} />;
+        return <StarStroked key={index} className={classnames(classes.icon)} />;
       })}
     </div>
   );
