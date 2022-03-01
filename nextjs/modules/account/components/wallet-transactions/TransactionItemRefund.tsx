@@ -5,14 +5,10 @@ import { TransactionItemContactBlock } from "./TransactionItemContactBlock";
 import { TransactionAddresses } from "./TransactionAddresses";
 import { TransactionItems } from "./TransactionItems";
 import { useAccordion } from "../../hooks/useAccordion";
-import { useSelector } from "react-redux";
-import StoreInterface from "@modules/account/ts/types/store.type";
-import { isCompleted } from "./TransactionItem";
 import cn from "classnames";
 
-export const TransactionItemRefund = ({ order, transaction, card, first }) => {
+export const TransactionItemRefund = ({ order, transaction, card, header }) => {
   const accordion = useAccordion(500);
-  const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   function orderTaxesTemplate() {
     const templates = [];
@@ -36,9 +32,8 @@ export const TransactionItemRefund = ({ order, transaction, card, first }) => {
 
   return (
     <div>
-      {isCompleted(transaction) && (
-        <div className={"transactions-completed-header"}>Completed</div>
-      )}
+      <div className={"transactions-completed-header d-md-none"}>{header}</div>
+
       <TransactionHeader
         onClick={accordion.onItemClick}
         open={accordion.open}

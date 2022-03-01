@@ -7,47 +7,18 @@ import { TransactionAddresses } from "@modules/account/components/wallet-transac
 import { TransactionItems } from "./TransactionItems";
 import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { useSelector } from "react-redux";
-import StoreInterface from "@modules/account/ts/types/store.type";
 import cn from "classnames";
-
-export function isCompleted(transaction: any) {
-  if (
-    transaction.type === "refund" &&
-    transaction.transaction_status === "refunded"
-  ) {
-    return true;
-  }
-
-  if (
-    transaction.type === "authorization" &&
-    (transaction.transaction_status === "captured" ||
-      transaction.transaction_status === "voided")
-  ) {
-    return true;
-  }
-
-  if (
-    transaction.type === "capture" &&
-    transaction.transaction_status === "completed"
-  ) {
-    return true;
-  }
-
-  return false;
-}
 
 interface IProps {
   order: any;
   transaction: any;
   card: any;
-  first: any;
+  header: string;
 }
 
 export const TransactionItem: React.FC<IProps> = (props) => {
-  const { order, transaction, card, first } = props;
+  const { order, card, header } = props;
   const accordion = useAccordion(500);
-  const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
 
   function orderTaxesTemplate() {
     const templates = [];
@@ -71,9 +42,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
 
   return (
     <div className="transaction">
-      {isCompleted(transaction) && (
-        <div className={"transactions-completed-header"}>Completed</div>
-      )}
+      <div className={"transactions-completed-header d-md-none"}>{header}</div>
 
       <TransactionHeader
         onClick={accordion.onItemClick}
