@@ -88,7 +88,7 @@ export const TransactionsList: React.FC<IProps> = (props) => {
 
     return (
       <div>
-        {groups.completed.length && (
+        {groups.completed.length > 0 && (
           <>
             <div className={"transactions-completed-header d-none d-md-block"}>
               Completed
@@ -97,7 +97,7 @@ export const TransactionsList: React.FC<IProps> = (props) => {
           </>
         )}
 
-        {groups.pending.length && (
+        {groups.pending.length > 0 && (
           <>
             <div className={"transactions-completed-header d-none d-md-block"}>
               Pending
@@ -106,7 +106,7 @@ export const TransactionsList: React.FC<IProps> = (props) => {
           </>
         )}
 
-        {groups.cancelled.length && (
+        {groups.cancelled.length > 0 && (
           <>
             <div className={"transactions-completed-header d-none d-md-block"}>
               Cancelled
