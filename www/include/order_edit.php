@@ -1497,9 +1497,8 @@ if ($REQUEST_METHOD === 'POST')
 
                         if ($update_memos_table_flag) {
 
-                            func_array2update("order_group_memos", $group_memos, "orderid='$orderid' AND manufacturerid='$certain_mid' AND memo_number='$memo_number'");
-
                             if ($memo_model = OrderGroupMemoModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $certain_mid, 'memo_number' => $memo_number])) {
+                                $memo_model->setAttributes($group_memos);
                                 $t_invdate = trim($groups[$certain_mid]["memo_date"][$memo_number]);
                                 $t_invdate = empty($t_invdate) ? new DateTime() : DateTime::createFromFormat('m/d/Y', $t_invdate);
                                 $memo_model->memo_date = $t_invdate;
