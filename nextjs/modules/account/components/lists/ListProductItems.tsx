@@ -28,7 +28,6 @@ export const ListProductItems: React.FC = () => {
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
 
-
   const deleteItem = (id) => {
     dispatch(deleteProduct(id));
   };
@@ -44,6 +43,7 @@ export const ListProductItems: React.FC = () => {
     const reOrder = reorderMass(listView.products, startIndex, endIndex);
     dispatch(reorderList(reOrder));
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">

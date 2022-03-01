@@ -74,9 +74,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     },
   ];
 
-  const allRatings = useSelectorAccount((e) => e.productsRatings);
-
-  const ratings = allRatings ? allRatings[productItem.productId] : undefined;
+  const ratings = productItem.product.ratings;
 
   const snackbar = useSnackbar();
 
@@ -115,6 +113,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         ),
     },
   ];
+
   return (
     <div
       className={cn(
@@ -158,7 +157,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             )}
           </div>
 
-          {ratings && (
+          {ratings?.overall && (
             <Tooltip
               target={
                 <div className="tooltip-rating-stars-target">
@@ -174,7 +173,9 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           )}
 
           <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>${product?.price.toFixed(2)}</div>
+            <div className={Styles.productInfoPrice}>
+              ${product?.price.toFixed(2)}
+            </div>
             <div className="multiplication-symbol">X</div>
             <CountGroup
               avail={product.avail}
