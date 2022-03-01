@@ -109,9 +109,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
           </div>
         )}
 
-        <div className="transaction-items-label">
-          Refund issued for the following items
-        </div>
+        <div className="transaction-items-label">Products ordered</div>
         {order.groups.map((group, i) => {
           return (
             <TransactionItems

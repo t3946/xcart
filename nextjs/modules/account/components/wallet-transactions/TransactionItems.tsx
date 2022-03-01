@@ -9,9 +9,11 @@ export const TransactionItems = ({ refund = false, group, order }) => {
 
   return (
     <div>
-      <div className="transaction-items-label transaction-items-sublabel">
-        The items below are shipped from {group.shipping}
-      </div>
+      {!refund && (
+        <div className="transaction-items-label transaction-items-sublabel">
+          The items below are shipped from {group.shipping}
+        </div>
+      )}
       <div
         className={`transaction-items-list-header px-2 px-md-4 ${
           refund && "transaction-items-list-refund-header"
