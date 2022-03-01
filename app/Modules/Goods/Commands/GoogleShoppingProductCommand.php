@@ -52,20 +52,19 @@ class GoogleShoppingProductCommand extends Command
                     $model->delete();
                 }
             }
+
             self::sendMessage($entries, $site);
         }
     }
 
     private static function sendMessage(array $entries, SiteModel $site): void
     {
-        if ($entries) {
-            $message = [
-                'products' => $entries,
-                'site' => $site->pk
-            ];
+        $message = [
+            'products' => $entries,
+            'site' => $site->pk
+        ];
 
-            Xcart::app()->queue->send('google_shopping_products', json_encode($message, JSON_THROW_ON_ERROR));
-        }
+        Xcart::app()->queue->send('google_shopping_products', json_encode($message, JSON_THROW_ON_ERROR));
     }
 
 }
