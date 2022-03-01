@@ -19,6 +19,7 @@ import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cn from "classnames";
+import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
 import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -162,8 +163,11 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
               target={
                 <div className="tooltip-rating-stars-target gap-2 d-flex">
                   <RatingStars rating={ratings.total} />
+                  <a className="d-none d-md-block">
+                    <Chevron />
+                  </a>
                   <a
-                    className="lh-sm d-md-none"
+                    className="lh-sm"
                     href={`/product/${productItem.productId}/`}
                   >
                     {ratings.rates.reduce(
