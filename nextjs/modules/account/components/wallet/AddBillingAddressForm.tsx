@@ -32,9 +32,6 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
   const context = useContext(WalletCardsDialogContext);
   const countryPhoneCodes = useSelectorAccount((e) => e.main.countries);
   const countries = useSelectorAccount((e) => e.countries);
-  const submitCardFormLoading = useSelectorAccount(
-    (e) => e.payments.submitCardFormLoading
-  );
   const states = useSelectorAccount((e) => e.main.states);
   const user = useSelectorAccount((e) => e.user);
 
@@ -76,6 +73,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
           touched,
           handleChange,
           handleBlur,
+          isSubmitting,
         }) => {
           return (
             <Form className="your-order-form" encType="multipart/form-data">
@@ -211,13 +209,13 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                     onClick={onCancel}
                     theme={ETheme.outlined}
                     type={"button"}
-                    disabled={submitCardFormLoading}
+                    disabled={isSubmitting}
                     className={"me-2"}
                   >
                     back
                   </Button>
 
-                  <Button disabled={submitCardFormLoading} type={"submit"}>
+                  <Button disabled={isSubmitting} type={"submit"}>
                     use this address
                   </Button>
                 </div>

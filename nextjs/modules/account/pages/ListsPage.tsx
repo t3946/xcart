@@ -19,7 +19,7 @@ import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss
 
 const ListsPage: React.FC = () => {
   const router = useRouter();
-  const lists = useSelectorAccount((state) => state.lists.lists);
+  const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
   const { role, cacheUrl, source } = useSelectorAccount(
@@ -68,7 +68,8 @@ const ListsPage: React.FC = () => {
           theme={ETheme.outlined}
           disabled={!edit}
           className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
-            "d-none": !cache,
+            "d-none": !cache || loading,
+            "d-lg-none": loading,
           })}
         >
           Add idea to list

@@ -19,7 +19,6 @@ interface OrderAddressesPage {
 export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
   orderItem,
 }) => {
-  console.log({ orderItem });
   const changeShippingAddressDialog = useDialog();
 
   function shippingAddress() {
