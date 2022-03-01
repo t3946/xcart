@@ -35,7 +35,7 @@ class GoogleShoppingProductCommand extends Command
                 ->select(['*', 'product__forsale', 'utype' => new Expression('MIN(type)')])
                 ->filter(['product__sites__storefrontid' => $site->storefrontid, 'type' => 1, new QOr(['mask__isnull' => true, new QOrNot(['mask' => 0])])])
                 ->group(['resourceid'])
-                ->paginate(1, self::BATCH_SIZE)->all()) {
+                ->paginate(1, 10000)->all()) {
 
                 foreach ($up as $model) {
                     if (($product = $model->product) && !$product->isGroupRoot()) {
