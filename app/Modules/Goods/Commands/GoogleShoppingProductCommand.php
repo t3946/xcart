@@ -52,6 +52,8 @@ class GoogleShoppingProductCommand extends Command
                     $model->delete();
                 }
             }
+
+            self::sendMessage($entries, $site);
         }
     }
 
