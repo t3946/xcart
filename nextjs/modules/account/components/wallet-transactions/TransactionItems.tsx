@@ -24,7 +24,7 @@ export const TransactionItems = ({ refund = false, group, order }) => {
           Item name <span className="d-lg-none">/ SKU</span>
         </div>
         <div className="col-md-3 col-lg-2 d-none d-md-block text-center">
-          {breakpoint.lg ? "Price" : "Price x Qty"}
+          Price
         </div>
         <div className="col-lg-1 d-none d-lg-block text-center">
           Qty ordered
