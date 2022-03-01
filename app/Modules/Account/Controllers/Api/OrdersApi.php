@@ -365,14 +365,14 @@ class OrdersApi extends Controller
     public function sendProblemMessage()
     {
         $user = Xcart::app()->auth->getUser(true);
-
-        if (!$user) {
-            $this->jsonResponse('user not login');
-            return;
-        }
-
         $data = json_decode(file_get_contents('php://input'), true);
-        OrderProblemsModel::objects()->create($data);
+        $order = OrderModel::objects()->get(["user_id" => $user->user_id, "orderid" => $data->order_id]);
+
+        OrderProblemsModel::objects()->create([
+            "problem_text" => $data["problem_text"],
+            "status_id" => $data["status_id"],
+            "order_id" => $order->orderid,
+        ]);
 
         $this->jsonResponse(['success']);
     }
