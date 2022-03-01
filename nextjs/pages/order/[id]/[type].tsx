@@ -23,6 +23,7 @@ const OrderPage: NextPage = () => {
   }, []);
 
   const order: OrderView = useSelectorAccount((state) => state.orderView);
+
   if (!order) {
     return null;
   }
