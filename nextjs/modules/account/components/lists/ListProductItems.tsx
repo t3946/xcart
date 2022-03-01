@@ -18,7 +18,7 @@ import { DeleteProductPlaceholder } from "@modules/account/components/lists/Dele
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
 
 export const ListProductItems: React.FC = () => {
-  const listView: List = useSelectorAccount((state) => state.lists.listView);
+  const { listView, loading } = useSelectorAccount((state) => state.lists);
   const edit = listView.role !== UserPrivateVariantsEnum.VIEW;
   const dispatch = useDispatch();
 
@@ -43,6 +43,10 @@ export const ListProductItems: React.FC = () => {
     const reOrder = reorderMass(listView.products, startIndex, endIndex);
     dispatch(reorderList(reOrder));
   };
+
+  if (loading) {
+    return <span className="ps-4">Loading..</span>;
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

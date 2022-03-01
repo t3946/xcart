@@ -11,10 +11,8 @@ export const AddListPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const onCancelClick = () => {
-    if (productId) {
-      window.history.go(-1);
-      return;
-    }
+    window.history.go(-1);
+    return;
   };
 
   const onCreateList = (list: any) => {

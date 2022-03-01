@@ -52,6 +52,7 @@ const accountListReducer = (
       return {
         ...state,
         listView: action.listView,
+        loading: false,
       };
     case "EDIT_COMMENT_LIST_VIEW":
       return {
@@ -134,6 +135,9 @@ const accountListReducer = (
       return deleteList(state, action.productListId);
     case "ADD_LIST":
       return { ...state, lists: [...state.lists, action.data] };
+    case "FETCH_LISTS":
+    case "FETCH_LIST":
+      return { ...state, loading: true };
     default:
       return state;
   }

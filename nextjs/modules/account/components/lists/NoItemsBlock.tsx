@@ -26,15 +26,6 @@ export const NoItemsBlock: React.FC<NoItemsBlockProps> = ({ listInfo }) => {
       <div className="mt-12 mb-16">
         There are no items in this List. Add items you want to shop for.
       </div>
-
-      <Button
-        theme={ETheme.outlined}
-        onClick={addIdea}
-        type={"submit"}
-        className="full-width d-lg-none"
-      >
-        Add idea to list
-      </Button>
     </div>
   );
 };
