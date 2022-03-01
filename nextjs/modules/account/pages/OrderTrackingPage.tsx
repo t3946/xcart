@@ -40,14 +40,19 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
         />
       ))}
       <div className="order-tracking-container order-tracking-footer">
-        <p>
-          <b>Payment status: </b>
-          <span>{order.payment.status}</span>
-        </p>
-        <div>
-          <b>Payment date: </b>
-          <span>{moment.unix(order.payment.date).format("LL")}</span>
-        </div>
+        {!!order.payment.status && (
+          <p>
+            <b>Payment status: </b>
+            <span>{order.payment.status}</span>
+          </p>
+        )}
+
+        {!!order.payment.date && (
+          <div>
+            <b>Payment date: </b>
+            <span>{moment.unix(order.payment.date).format("LL")}</span>
+          </div>
+        )}
       </div>
     </div>
   );

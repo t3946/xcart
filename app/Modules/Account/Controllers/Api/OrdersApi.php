@@ -127,7 +127,7 @@ class OrdersApi extends Controller
 
     public function getPaymentStatusCommonName($code)
     {
-        $paymentStatus = null;
+        $payment_status = null;
 
         switch ($code) {
             case 'P':
@@ -135,7 +135,7 @@ class OrdersApi extends Controller
             case'CH':
             case 'V':
             case '3':
-                $paymentStatus = 'Paid';
+                $payment_status = 'Paid';
                 break;
 
             case'S1':
@@ -146,20 +146,22 @@ class OrdersApi extends Controller
             case'O':
             case'IO':
             case'I':
-                $paymentStatus = 'Unpaid';
+                $payment_status = 'Unpaid';
                 break;
 
+            case'F':
             case'A':
-                $paymentStatus = 'Canceled';
+            case'D':
+                $payment_status = 'Canceled';
                 break;
 
             case'H':
             case'R':
-                $paymentStatus = 'Refunded';
+                $payment_status = 'Refunded';
                 break;
         }
 
-        return $paymentStatus;
+        return $payment_status;
     }
 
     public function getShippingStatusCommonName($code)
@@ -329,6 +331,17 @@ class OrdersApi extends Controller
             $purchase_data = $extra_model->getFrontendPurchase();
         }
 
+        $payment_info = [
+            'status' => $this->getPaymentStatusCommonName($order_model->cb_status),
+        ];
+
+        $unpaid_statuses = ['S1', 'S2', 'S3', 'S4', 'Q', 'O', 'IO', 'I'];
+
+        //order paid
+        if (!in_array($order_model->cb_status, $unpaid_statuses)) {
+            $payment_info['date'] = $transaction ? $transaction->date : $order_model->date;
+        }
+
         $order = [
             'cb_status' => $order_model->cb_status,
             'dc_status' => $order_model->dc_status,
@@ -351,10 +364,7 @@ class OrdersApi extends Controller
             'orderId' => $order_model->orderid,
             'poNumber' => $order_model->po_number,
             'address' => $order_model->getFrontendAddress(),
-            'payment' => [
-                'status' => $this->getPaymentStatusCommonName($order_model->cb_status),
-                'date' => $transaction ? $transaction->date : $order_model->date, // TODO: Поменять на метод getFirstTransaction из master branch
-            ],
+            'payment' => $payment_info,
             'logs' => $logs ?? [],
             'emails' => [],
             'purchase' => $purchase_data ?? null
