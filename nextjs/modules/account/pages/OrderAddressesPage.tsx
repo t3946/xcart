@@ -8,6 +8,7 @@ import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import { useRouter } from "next/router";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
+import AddressText from "@components/common/address-text/AddressText";
 
 import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 import Styles from "@modules/account/pages/OrderAddressesPage.module.scss";
@@ -22,27 +23,33 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
   const changeShippingAddressDialog = useDialog();
 
   function shippingAddress() {
-    const parts = [
-      orderItem.address.shippingZip || "",
-      orderItem.address.shippingCity || "",
-      orderItem.address.shippingAddress || "",
-    ];
-
-    const address = parts.join(" ").trim();
-
-    return address || "No shipping address";
+    return (
+      <AddressText
+        address={{
+          street: orderItem.address.shippingAddress,
+          city: orderItem.address.shippingCity,
+          state: !!orderItem.address.shippingState && {
+            label: orderItem.address.shippingState,
+          },
+          zip: orderItem.address.shippingZip,
+        }}
+      />
+    );
   }
 
   function billingAddress() {
-    const parts = [
-      orderItem.address.billingZip || "",
-      orderItem.address.billingCity || "",
-      orderItem.address.billingAddress || "",
-    ];
-
-    const address = parts.join(" ").trim();
-
-    return address || "No billing address";
+    return (
+      <AddressText
+        address={{
+          street: orderItem.address.billingAddress,
+          city: orderItem.address.billingCity,
+          state: !!orderItem.address.billingState && {
+            label: orderItem.address.billingState,
+          },
+          zip: orderItem.address.billingZip,
+        }}
+      />
+    );
   }
 
   function phone() {

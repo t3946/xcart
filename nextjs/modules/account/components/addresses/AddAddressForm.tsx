@@ -45,12 +45,6 @@ export const AddAddressForm: React.FC<any> = ({
   };
 
   const submitForm = () => {
-    if (
-      !formik.values.state.value &&
-      getStates(states, formik.values.country.value).length
-    ) {
-      formik.setFieldError("state", "Required field");
-    }
     const phoneCode = getCountryByCode(
       formik.values.phone_numberCode,
       countries
@@ -63,7 +57,7 @@ export const AddAddressForm: React.FC<any> = ({
       )}`,
 
       country: formik.values.country.value,
-      state: formik.values.state.value,
+      state: formik.values.state.value || null,
     };
 
     if (addressInfo) {
@@ -162,6 +156,7 @@ export const AddAddressForm: React.FC<any> = ({
         />
 
         <InputGroup
+          placeholder="Street address or P.O. Box"
           label="Address"
           value={formik.values.street}
           name={"street"}

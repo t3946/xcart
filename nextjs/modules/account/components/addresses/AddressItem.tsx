@@ -14,6 +14,7 @@ import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
 import cn from "classnames";
 import { formatPhone } from "@utils/phoneNumber";
+import AddressText from "@components/common/address-text/AddressText";
 
 import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 import Styles from "@modules/account/components/addresses/AddressItem.module.scss";
@@ -60,7 +61,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   const editAddress = () => {
     editAddressDialog.handleClickOpen();
   };
-
+  console.log({ addressInfo });
   return (
     <div
       className={cn(
@@ -93,7 +94,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           {addressInfo.full_name}
         </div>
         <div className="address-text address-text-address">
-          {addressInfo.street}, {addressInfo.detailed}
+          <AddressText address={addressInfo} />
         </div>
         <div className="address-text">{addressInfo.country.viewValue}</div>
         <div>
