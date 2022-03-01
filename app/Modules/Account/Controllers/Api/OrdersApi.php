@@ -6,6 +6,7 @@ use Modules\Account\Models\OrderCancelItemsModel;
 use Modules\Account\Models\OrderCancelRequestModel;
 use Modules\Account\Models\OrderProblemsModel;
 use Modules\Account\Models\OrderProblemStatusesModel;
+use Modules\Core\Models\StateModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderLogModel;
@@ -92,8 +93,11 @@ class OrdersApi extends Controller
                 ]);
                 break;
         }
+
+        /* @var OrderModel $order_model */
         foreach ($user->orders->filter($filter) as $order_model) {
             $group_data = [];
+
             foreach ($order_model->groups as $group) {
                 $ar_products = [];
                 $manufacturer = $group->manufacturer;
@@ -513,9 +517,16 @@ class OrdersApi extends Controller
         [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'), true));
         /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+
+        //get state name
+        $state = StateModel::objects()->get(['stateid' => $address_data['s_state']]);
+        $address_data['s_state'] = $state->code;
+
         $order_model->setAttributes($address_data);
         $order_model->save();
         $transaction = $order_model->transactions[0];
+        $address = $order_model->getFrontendAddress();
+
 
         $order = [
             'orderNumber' => $order_model->orderid,
@@ -531,7 +542,7 @@ class OrdersApi extends Controller
             'groups' => $this->getOrderGroups($order_model),
             'orderId' => $order_model->orderid,
             'poNumber' => $order_model->po_number,
-            'address' => $order_model->getFrontendAddress(),
+            'address' => $address,
             'payment' => [
                 'status' => $order_model->cb_status_model->name,
                 'date' => $transaction ? $transaction->date : $order_model->date,
