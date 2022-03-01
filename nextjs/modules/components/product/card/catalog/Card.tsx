@@ -12,7 +12,7 @@ import { CountGroup } from "@modules/ui/CountGroup";
 import React from "react";
 import LeadTimeIcon from "@modules/icon/components/account/lead-time/LeadTime";
 import OutOfStockIcon from "@modules/icon/components/account/out-of-stock/OutOfStock";
-
+import cn from "classnames";
 import Styles from "@modules/components/product/card/catalog/Card.module.scss";
 
 export default class Card extends React.Component {
@@ -285,24 +285,44 @@ export default class Card extends React.Component {
       `info-container__${this.context.viewMode}`,
     ];
 
-    return (
-      <Fragment>
-        <div className={classnames(containerClasses)}>
+    const classes = {
+      currentPrice: [
+        "current",
+        {
+          "mt-3":
+            this.context.viewMode === "tile" &&
+            product.listPrice.number <= product.price.number,
+        },
+      ],
+    };
+
+    function oldPriceTemplate() {
+      if (product.listPrice.number > product.price.number) {
+        // this.context.viewMode
+        return (
           <div className="old w-100">
             <span className={classnames(priceCaptionClasses)}>
               {t("List Price")}:{" "}
             </span>
             <span className="products-slider-old-price">
-              {product.listPrice.number > product.price.number && (
-                <Price
-                  currency={product.currency}
-                  price={product.listPrice.number}
-                />
-              )}
+              <Price
+                currency={product.currency}
+                price={product.listPrice.number}
+              />
             </span>
           </div>
+        );
+      }
 
-          <div className="current">
+      return null;
+    }
+
+    return (
+      <Fragment>
+        <div className={classnames(containerClasses)}>
+          {oldPriceTemplate()}
+
+          <div className={cn(classes.currentPrice)}>
             <span className={classnames(priceCaptionClasses)}>
               {t("Price")}:{" "}
             </span>
