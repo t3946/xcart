@@ -58,20 +58,26 @@ const TableFooter: React.FC<IProps> = (props) => {
       </div>
 
       <div className={cn([Styles.tableFooterShippingTotals])}>
-        <span
-          className={cn([Styles.tableFooterShippingSubtotalRegularShipping])}
-        >
-          Regular shipping:
-        </span>
+        {regularShipping > 0 && (
+          <>
+            <span
+              className={cn([
+                Styles.tableFooterShippingSubtotalRegularShipping,
+              ])}
+            >
+              Regular shipping:
+            </span>
 
-        <span
-          className={cn([
-            Styles.tableFooterShippingSubtotalRegularShipping,
-            Styles.tableFooterShippingSubtotal__regularShipping,
-          ])}
-        >
-          US$ {regularShipping}
-        </span>
+            <span
+              className={cn([
+                Styles.tableFooterShippingSubtotalRegularShipping,
+                Styles.tableFooterShippingSubtotal__regularShipping,
+              ])}
+            >
+              US$ {regularShipping}
+            </span>
+          </>
+        )}
 
         {!!salesTax && (
           <span

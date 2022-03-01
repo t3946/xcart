@@ -280,6 +280,7 @@ class OrdersApi extends Controller
             'cb_status' => $order_model->cb_status,
             'dc_status' => $order_model->dc_status,
             'non_us_confirmation' => $order_model->non_us_confirmation,
+            'shippingTotal' => $order_model->getShippingCost(),
             'subtotal' => $order_model->subtotal,
             'total' => $order_model->total,
             'orderNumber' => $order_model->getOrderNumber(),
