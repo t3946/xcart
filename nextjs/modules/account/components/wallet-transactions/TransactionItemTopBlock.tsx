@@ -30,38 +30,38 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
             />
           </div>
           <div className="mb-20  mt-xl-0 order-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
-            <div className="transaction-name order-1 order-sm-0 mt-10 mt-sm-0">
+            <div className="transaction-name">
               {refund ? "REFUND" : "RECEIPT"}
               {` # ${order.order_prefix}${order.orderid}`}
             </div>
 
-            <div className="row order-0">
-              <ReactToPrint
-                trigger={() => (
-                  <div className={"col-6"}>
+            <div className="d-none d-lg-flex">
+              <div className={"w-50 me-2"}>
+                <ReactToPrint
+                  trigger={() => (
                     <Button theme={ETheme.outlined}>
                       <div className="btn-entry">
                         <PrintIcon className="me-2" />
                         <div>PRINT</div>
                       </div>
                     </Button>
-                  </div>
-                )}
-                content={() => componentRef.current}
-              />
-              <ReactToPrint
-                trigger={() => (
-                  <div className={"col-6"}>
-                    <Button className={"py-0 px-2"} theme={ETheme.outlined}>
+                  )}
+                  content={() => componentRef.current}
+                />
+              </div>
+              <div className={"w-50 ms-2"}>
+                <ReactToPrint
+                  trigger={() => (
+                    <Button theme={ETheme.outlined}>
                       <div className="d-flex align-items-center">
                         <PictureAsPdfIcon className="me-2" />
                         <div>OPEN PDF</div>
                       </div>
                     </Button>
-                  </div>
-                )}
-                content={() => componentRef.current}
-              />
+                  )}
+                  content={() => componentRef.current}
+                />
+              </div>
             </div>
           </div>
         </div>
