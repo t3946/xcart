@@ -50,6 +50,7 @@ use Xcart\App\Orm\Model;
  * @property CountryModel country_model
  * @property CorporateModel|null corporation
  * @property bool show_full_state_country
+ * @property SiteMarketplaceModel[]|Manager $marketplaces
  */
 class SiteModel extends Model
 {
