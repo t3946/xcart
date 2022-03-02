@@ -48,8 +48,9 @@ class AmpController extends FrontendController
                 $this->redirect('/');
             }
 
-            $u_slug = $model->getSlugPart();
-            if ($slug != $u_slug) {
+            $u_slug = $model->getSlugPart() ?: $model->pk;
+            
+            if ($slug !== $u_slug) {
                 $this->redirect('amp:product', ['id' => $id, 'slug' => $u_slug], 301);
             }
 
