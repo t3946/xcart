@@ -12,8 +12,6 @@ const stripePromise = loadStripe();
 import { Elements } from "@stripe/react-stripe-js";
 
 function MyApp({ Component, pageProps, state }) {
-  console.log("state.config.site.account_enabled", state.config.site.account_enabled);
-
   if (state.config.site.account_enabled === false) {
     if (process.browser) {
       document.location.href = "/";
