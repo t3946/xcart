@@ -380,7 +380,7 @@ class OrdersApi extends Controller
     {
         $user = Xcart::app()->auth->getUser(true);
         $data = json_decode(file_get_contents('php://input'), true);
-        $order = OrderModel::objects()->get(["user_id" => $user->user_id, "orderid" => $data->order_id]);
+        $order = OrderModel::objects()->get(["user_id" => $user->user_id, "orderid" => $data['order_id']]);
 
         OrderProblemsModel::objects()->create([
             "problem_text" => $data["problem_text"],
