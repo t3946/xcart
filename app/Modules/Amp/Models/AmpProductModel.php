@@ -23,7 +23,7 @@ class AmpProductModel extends ProductModel
                 'amp:product',
                 [
                     'id' => $this->pk,
-                    'slug' => $this->getSlugPart()
+                    'slug' => $this->getSlugPart() ?: $this->productid
                 ]
             );
             if ($full) {
