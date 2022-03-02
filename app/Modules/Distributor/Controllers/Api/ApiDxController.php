@@ -126,6 +126,9 @@ class ApiDxController extends Controller
      */
     public function loadFile(): void
     {
+        ini_set('memory_limit', '-1');
+        set_time_limit ( 0 );
+
         $post = json_decode(file_get_contents('php://input'), false, 512, JSON_THROW_ON_ERROR);
         $file_id = $post->fileId;
         try {
