@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { RadioBtn } from "@modules/account/components/shared/RadioBtn";
 import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 interface IProps {
-  onCopyLinkFunc: (value: ShowSharedStatusEnum) => void;
+  showSharedStatus: ShowSharedStatusEnum;
+  setShowSharedStatus: (status: ShowSharedStatusEnum) => void;
+  onCopyLinkFunc: (res: boolean) => void;
+  sharedLink: string;
 }
 
 export const ShareListInviteSection: React.FC<IProps> = ({
   onCopyLinkFunc,
+  sharedLink,
+  setShowSharedStatus,
+  showSharedStatus,
 }) => {
-  const [showSharedStatus, setShowSharedStatus] = useState(
-    ShowSharedStatusEnum.VIEW
-  );
-
   const setNewStatus = (value: ShowSharedStatusEnum) => {
     setShowSharedStatus(value);
   };
@@ -57,16 +60,32 @@ export const ShareListInviteSection: React.FC<IProps> = ({
       />
       <div className="share-variants-container">
         <div className="share-variants-logo-container">
-          <img
-            className="share-variants-logo"
-            src="/static/frontend/images/icons/account/paper_clip.svg"
-          />
-          <div
-            onClick={() => onCopyLinkFunc(showSharedStatus)}
-            className="share-variants-label share-variants-label-copy"
-          >
-            Copy link
-          </div>
+          {sharedLink ? (
+            <>
+              <img
+                className="share-variants-logo"
+                src="/static/frontend/images/icons/account/paper_clip.svg"
+              />
+              <CopyToClipboard
+                text={sharedLink}
+                onCopy={(text, result) => onCopyLinkFunc(result)}
+              >
+                <div className="share-variants-label share-variants-label-copy">
+                  Copy link
+                </div>
+              </CopyToClipboard>
+            </>
+          ) : (
+            <>
+              <img
+                className="share-variants-logo"
+                src="/static/frontend/images/icons/account/paper_clip.svg"
+              />
+              <div className="share-variants-label share-variants-label-copy text-black-50">
+                Copy link
+              </div>
+            </>
+          )}
         </div>
         <div className="share-variants-logo-container d-none">
           <img

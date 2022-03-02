@@ -6,7 +6,6 @@ import { ShareListInviteSection } from "@modules/account/components/lists/ShareL
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import { AxiosResponse } from "axios";
-import clipboard from "@utils/clipboard";
 
 interface ShareList {
   onClose: () => void;
@@ -15,48 +14,47 @@ interface ShareList {
 
 export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
   const snackbar = useSnackbar();
-
   const dispatch = useDispatch();
+  const [showSharedStatus, setShowSharedStatus] = React.useState(
+    ShowSharedStatusEnum.VIEW
+  );
 
-  const encodeUrl = (privateType: ShowSharedStatusEnum) => {
-    // dispatch(encryptUrl(privateType, hash, onUrlEncoded));
+  const [sharedLink, setSharedLink] = React.useState("");
+
+  React.useEffect(() => {
     dispatch(
       encryptUrl({
         data: {
           hash: cache,
-          privateType,
+          showSharedStatus,
         },
         success(res: AxiosResponse) {
           const { tag, text } = res.data;
           const url = `http://${window.location.hostname}/account/shopping-lists/invite/${tag}/${text}`;
-          try {
-            clipboard.copy(url);
-            onClose();
-            snackbar.show(`Url copied`);
-          } catch (e) {
-            onClose();
-            snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
-            console.log(e);
-          }
-
-          // window.navigator.clipboard
-          //   .writeText(url)
-          //   .then(() => {
-          //     onClose();
-          //     snackbar.show(`Url copied`);
-          //   })
-          //   .catch(() => {
-          //     onClose();
-          //     snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
-          //   });
+          setSharedLink(url);
         },
       })
     );
+  }, []);
+
+  const onCopyLink = (result: boolean) => {
+    if (result) {
+      onClose();
+      snackbar.show(`Url copied`);
+    } else {
+      onClose();
+      snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
+    }
   };
 
   return (
     <div>
-      <ShareListInviteSection onCopyLinkFunc={encodeUrl} />
+      <ShareListInviteSection
+        showSharedStatus={showSharedStatus}
+        sharedLink={sharedLink}
+        setShowSharedStatus={setShowSharedStatus}
+        onCopyLinkFunc={onCopyLink}
+      />
       <hr className="share-list-center-line" />
       <ShareListManagePeople closeDialog={onClose} id={cache} />
     </div>
