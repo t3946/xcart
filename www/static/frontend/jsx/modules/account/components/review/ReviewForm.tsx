@@ -97,7 +97,7 @@ const ReviewForm = (): any => {
     if (user && user.avatar_image) {
       return (
         <img
-          src={user.avatar_image}
+          src={`/${user.avatar_image}`}
           className={"mobile-menu-avatar form-review-avatar"}
           alt={""}
         />
