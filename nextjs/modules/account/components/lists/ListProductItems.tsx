@@ -41,7 +41,7 @@ export const ListProductItems: React.FC = () => {
 
   const reorderProductList = (startIndex: number, endIndex: number) => {
     const reOrder = reorderMass(listView.products, startIndex, endIndex);
-    dispatch(reorderList(reOrder));
+    dispatch(reorderList(reOrder, listView?.productListId));
   };
 
   if (loading) {
