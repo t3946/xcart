@@ -2,7 +2,9 @@
 {config_load file="$skin_config"}
 <html>
 <head>
-    <title>{if $login ne ""}{if $current_storefront_info.prefix eq "MAIN_SF_PREFIX"}AR-{else}{$current_storefront_info.prefix}{/if}Admin: {$cidev_firstname} ({$login}){else}{$lng.txt_site_title}{/if}</title>
+    {assign var=site_prefix value=$xcartApp->getModule('Sites')->getSite()->code}
+
+    <title>{if $xcartApp->user->login}{$site_prefix}-Admin: {$cidev_firstname} ({$xcartApp->user->login}){else}{$lng.txt_site_title}{/if}</title>
     {include file="meta.tpl"}
 
     {$xcartApp->template->render('inSmarty/headers_admin.tpl')}
