@@ -36,7 +36,7 @@ const OrderTrackingLine: React.FC<IProps> = ({ statuses }) => {
   React.useEffect(() => {
     setTrackingViewData(getDataToTracking(statuses, !breakpoints?.md));
   }, [breakpoints, statuses]);
-  
+
   return (
     <div className={Styles.orderTrackingLine}>
       <div

@@ -42,9 +42,11 @@
 }
 
 .orderTrackingLineRoundDate {
-  margin-top: pxToRem(12);
+  margin: pxToRem(12) auto 0;
+  width: pxToRem(87);
   text-align: center;
   color: #4a4949;
+  font-size: pxToRem(14);
 }
 
 .orderTrackingLineRoundText {
@@ -73,6 +75,7 @@
 
 .orderTrackingLineRoundDate_lastContainer,
 .orderTrackingLineRoundText_lastContainer {
+  margin-right: 0;
   text-align: right;
 }
 
@@ -82,6 +85,7 @@
 
 .orderTrackingLineRoundDate_firstContainer,
 .orderTrackingLineRoundText_firstContainer {
+  margin-left: 0;
   text-align: left;
 }
 
@@ -163,13 +167,17 @@
   }
 
   .orderTrackingLineRoundDate {
-    width: pxToRem(107);
-    margin-top: 0;
+    position: absolute;
+    right: 0;
+    width: pxToRem(87);
+    margin: 0;
     text-align: left !important;
     font-size: pxToRem(14);
   }
 
   .orderTrackingLineRoundText {
+    position: absolute;
+    left: 0;
     width: pxToRem(107);
     text-align: right !important;
   }
