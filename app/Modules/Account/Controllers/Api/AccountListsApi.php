@@ -89,15 +89,46 @@ class AccountListsApi extends Controller
 
     public function reorderProducts()
     {
-        if (!$this->checkRightsUser()) {
+        $user = Xcart::app()->auth->getUser(true);
+        $data = json_decode(file_get_contents('php://input'), true);
+        $list = ProductListsModel::objects()->get(['product_list_id' => $data['productListId']]);
+
+        // check list exists
+        if (!$list) {
+            http_response_code(400);
             return;
         }
-        $data = json_decode(file_get_contents('php://input'), true);
 
-        foreach ($data['productIds'] as $key => $list_items_id) {
+        /* @var $user_list UserListModel */
+        $user_list = UserListModel::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
+
+        // check user rights
+        if (!$user_list || $user_list->role !== 'edit' && $user_list->role !== 'owner') {
+            http_response_code(400);
+            return;
+        }
+
+        // check products consistence
+        $list_items = ListItemsModel::objects()->all(['product_list_id' => $list->product_list_id]);
+
+        if (count($data['productIds']) !== count($list_items)) {
+            http_response_code(400);
+            return;
+        }
+
+        /* @var $list_item ListItemsModel */
+        foreach ($list_items as $_ => $list_item) {
+            //unexpected product
+            if (in_array($list_item->list_items_id, $data['productIds']) === false) {
+                http_response_code(400);
+                return;
+            }
+        }
+
+        foreach ($data['productIds'] as $index => $list_items_id) {
             /** @var ListItemsModel $list_item */
             $list_item = ListItemsModel::objects()->get(['list_items_id' => $list_items_id]);
-            $list_item->order_by = $key;
+            $list_item->order_by = $index;
             $list_item->save();
         }
 
