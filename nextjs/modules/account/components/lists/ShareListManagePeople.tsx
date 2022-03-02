@@ -28,7 +28,6 @@ export const ShareListManagePeople: React.FC<ShareListManagePeopleProps> = ({
       <div className="share-list-label">Manage people</div>
       {list.users.map((item, i) => (
         <ShareListManagePeopleItem
-          key={i}
           onClick={handleSelectItemCLick}
           userListInfo={item}
           key={`ShareListManagePeopleItem-${i}`}

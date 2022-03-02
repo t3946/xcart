@@ -62,19 +62,20 @@ const ListsPage: React.FC = () => {
         />
       </BootstrapDialogHOC>
 
-      <div className={StylesInnerPage.accountPageFooter}>
-        <Button
-          onClick={createIdeaDialog.handleClickOpen}
-          theme={ETheme.outlined}
-          disabled={!edit}
-          className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
-            "d-none": !cache || loading,
-            "d-lg-none": loading,
-          })}
-        >
-          Add idea to list
-        </Button>
-      </div>
+      {edit && (
+        <div className={StylesInnerPage.accountPageFooter}>
+          <Button
+            onClick={createIdeaDialog.handleClickOpen}
+            theme={ETheme.outlined}
+            className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
+              "d-none": !cache || loading,
+              "d-lg-none": loading,
+            })}
+          >
+            Add idea to list
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

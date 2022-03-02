@@ -22,13 +22,25 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   const isYourAccount = userListInfo.userId === Store.getState().user.id;
   const breakpoint = useBreakpoint();
   const mobileMenuDialog = useDialog();
+  const defaultAvatar =
+    "/static/frontend/images/pages/account/default-avatar.svg";
+  const userAvatar = userListInfo.user.avatar_image;
+  const avatarImage = userAvatar ? `/${userAvatar}` : defaultAvatar;
+
+  console.log({
+    defaultAvatar,
+    userAvatar,
+    avatarImage,
+  });
+
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       component: (
         <div className="d-flex align-items-center share-list-people-left-side-container">
           <img
-            src="/static/frontend/images/pages/account/default-avatar.svg"
+            src={avatarImage}
             className="page-invitation-user-profile-avatar"
+            alt={"avatar image"}
           />
           <div>
             <div>{userListInfo.user.name}</div>
@@ -87,7 +99,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
     <div className="share-list-people-container justify-content-between">
       <div className="d-flex align-items-center share-list-people-left-side-container">
         <img
-          src="/static/frontend/images/pages/account/default-avatar.svg"
+          src={avatarImage}
           className="page-invitation-user-profile-avatar"
         />
         <div>
