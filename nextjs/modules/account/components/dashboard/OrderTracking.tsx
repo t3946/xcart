@@ -102,8 +102,17 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
                 <b>
                   {!!group.trackings.length &&
                     group.trackings.map((track, i) => (
-                      <div key={`${track.id}_${i}`}>
-                        Tracking number <br className="d-md-none" />
+                      <div
+                        className={cn("mb-10", "mb-md-0", Styles.tracknum)}
+                        key={`${track.id}_${i}`}
+                      >
+                        <span className="d-md-none d-lg-inline">
+                          Tracking number
+                        </span>
+                        <span className="fw-normal d-none d-md-inline d-lg-none">
+                          Tracking number
+                        </span>{" "}
+                        <br className="d-md-none" />
                         <a
                           target={"_blank"}
                           href={track.carrier.link.replace(

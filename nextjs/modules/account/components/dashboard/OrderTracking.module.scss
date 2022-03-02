@@ -73,3 +73,15 @@
     gap: pxToRem(20);
   }
 }
+
+.tracknum {
+  font-size: pxToRem(18);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(20);
+  }
+}
