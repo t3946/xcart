@@ -38,7 +38,7 @@ export const getDataToTracking = (
           : { [vertical ? "height" : "width"]: `${index * 25 + 12.5}%` };
 
       roundItemProps.containerClass.completed = true;
-      roundItemProps.date = moment(status.updated).format("MMM DD, Y, HH:mm A");
+      roundItemProps.date = moment(status.updated).format(`HH:mm A MMM DD, Y`);
     }
     if (index !== 0 && index !== 4) {
       roundItemProps.roundStyle = {
