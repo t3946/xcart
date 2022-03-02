@@ -56,8 +56,17 @@
   }
 }
 
-.textBlue {
+.tracknumLink {
+  font-weight: bold;
   color: #055a93;
+
+  @include breakpoint(md) {
+    font-weight: normal;
+  }
+
+  @include breakpoint(lg) {
+    font-weight: bold;
+  }
 }
 
 .button {
