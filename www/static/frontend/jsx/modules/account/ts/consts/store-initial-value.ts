@@ -115,6 +115,9 @@ export const photoswipeInitialValue = {
   ownerId: null,
 };
 
+export const configInitialValue = appData.config;
+export const siteInitialValue = appData.site;
+
 const storeInitialValue = {
   main: accountMainStoreInitialValue,
   addresses: accountAddressesInitialValue,
@@ -132,6 +135,8 @@ const storeInitialValue = {
   product: null,
   photoswipe: photoswipeInitialValue,
   decisions,
+  config: configInitialValue,
+  site: siteInitialValue
 };
 
 export default storeInitialValue;

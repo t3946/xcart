@@ -94,6 +94,7 @@ class AccountApi extends Controller
                     'code' => strtolower($site->code),
                     'shortName' => $site->short_name,
                     'workingDayTimeNow' => WorkingTimeHelper::workingDayTimeNow(),
+                    'account_enabled' => $site->account_enabled,
                 ],
                 'google_recaptchav2_site_key' => '6LenP30eAAAAAOUcOLvofYoaPMW6lMYTsov-RJ4p',
             ],

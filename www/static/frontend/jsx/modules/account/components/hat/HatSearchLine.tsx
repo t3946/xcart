@@ -26,6 +26,9 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
   const isVisibleDepartmentsMenu = useSelector(
     (e: StoreInterface) => e.departmentsMenuDesktop.isVisible
   );
+  const account_enabled = useSelector(
+    (e: StoreInterface) => e.site.account_enabled,
+  );
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
 
@@ -95,13 +98,15 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
 
             <div
               className={classnames(
-                "d-none ",
-                "d-lg-flex ",
-                "search-line_buttons",
-                Styles.rightButtonContainer
+                [
+                  "d-none",
+                  "search-line_buttons",
+                  Styles.rightButtonContainer,
+                  "d-lg-flex",
+                ]
               )}
             >
-              <LoginButtonDesktop isStatic={isStatic} />
+              {account_enabled && <LoginButtonDesktop isStatic={isStatic}/>}
 
               <div className="ms-12">
                 <MiniCart />

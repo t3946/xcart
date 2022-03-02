@@ -40,6 +40,8 @@ import PhotoSwipeReducer from "@client/jsx/redux/reduсers/PhotoSwipeReducer";
 import DecisionsReducer from "@client/jsx/redux/reduсers/account/DecisionsReducer";
 import MobileSearchReducer from "@client/jsx/redux/reduсers/MobileSearchReducer";
 import SuggestionReducer from "@client/jsx/redux/reduсers/SuggestionReducer";
+import ConfigReducer from "@client/jsx/redux/reduсers/account/ConfigReducer";
+import SiteReducer from "@client/jsx/redux/reduсers/account/SiteReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -70,6 +72,8 @@ const Store: ReduxStore<StoreInterface> = createStore(
     product: ProductReducer,
     photoswipe: PhotoSwipeReducer,
     decisions: DecisionsReducer,
+    config: ConfigReducer,
+    site: SiteReducer,
   }),
   storeInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

@@ -44,6 +44,7 @@ class AccountController extends FrontendController
             "code" => strtolower($site->code),
             "shortName" => $site->short_name,
             "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
+            'account_enabled' => $site->account_enabled,
         ], null, 'site');
 
         StorageHelper::push([
