@@ -207,6 +207,7 @@ class GoogleShoppingHelper
 
             $entry->setMethod($method);
             if ($entry->getMethod() === 'delete') {
+                echo "Delete online:$lang:$marketplace->countries:$product->productid \n";
                 $entry->setProductId("online:$lang:$marketplace->countries:$product->productid");
             } else {
                 $entry->setProduct($batch);
