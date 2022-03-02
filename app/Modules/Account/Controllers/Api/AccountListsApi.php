@@ -100,16 +100,20 @@ class AccountListsApi extends Controller
 
     public function deleteList(int $list_id)
     {
-        /** @var UserModel $user */
-        if (!$user = $this->checkRightsUser()) {
-            return;
+        /* @var $user_list ProductListsModel */
+        $list = ProductListsModel::objects()->get(['product_list_id' => $list_id]);
+        $user = Xcart::app()->getUser(true);
+        /* @var $user_list UserListModel */
+        $user_list = UserListModel::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
+
+        //user is owner
+        if ($user_list->role === 'owner') {
+            $list->delete();
+        } else {
+            $user_list->delete();
         }
-        /** @var UserListModel $list */
-        if ($list = UserListModel::objects()->get(['product_list_id' => $list_id, 'user_id' => $user->user_id])) {
-            ProductListsModel::objects()->delete(['product_list_id' => $list_id]);
-            $this->jsonResponse(['Delete successfully']);
-        }
-        $this->jsonResponse(['Deleting error']);
+
+        $this->jsonResponse(['Delete successfully']);
     }
 
     public function transferProduct()

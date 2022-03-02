@@ -173,29 +173,27 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       >
         <div className="list-header-actions flex-grow-1 ms-lg-5">
           {edit && (
-            <Fragment>
-              <div
-                onClick={manageListDialog.handleClickOpen}
-                className={cn(
-                  Styles.istHeaderActions__listHeaderAction,
-                  Styles.listHeaderAction
-                )}
-              >
-                Manage list
-              </div>
-              {!isShoppingList && (
-                <div
-                  onClick={deleteListDialog.handleClickOpen}
-                  className={cn(
-                    Styles.istHeaderActions__listHeaderAction,
-                    Styles.listHeaderAction,
-                    Styles.listHeaderAction_red
-                  )}
-                >
-                  Delete list
-                </div>
+            <div
+              onClick={manageListDialog.handleClickOpen}
+              className={cn(
+                Styles.istHeaderActions__listHeaderAction,
+                Styles.listHeaderAction
               )}
-            </Fragment>
+            >
+              Manage list
+            </div>
+          )}
+          {!isShoppingList && (
+            <div
+              onClick={deleteListDialog.handleClickOpen}
+              className={cn(
+                Styles.istHeaderActions__listHeaderAction,
+                Styles.listHeaderAction,
+                Styles.listHeaderAction_red
+              )}
+            >
+              Delete list
+            </div>
           )}
         </div>
         {edit && (
