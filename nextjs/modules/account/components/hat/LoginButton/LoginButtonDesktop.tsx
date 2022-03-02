@@ -32,7 +32,6 @@ const LoginButtonDesktop: React.FC = function () {
       "d-flex",
       "align-items-center",
       "position-relative",
-      "cursor-pointer",
       "text-decoration-none",
       { [Styles.button_logined]: user },
     ],

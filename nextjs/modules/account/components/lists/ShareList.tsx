@@ -5,7 +5,8 @@ import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
+import clipboard from "@utils/clipboard";
 
 interface ShareList {
   onClose: () => void;
@@ -28,17 +29,26 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
         success(res: AxiosResponse) {
           const { tag, text } = res.data;
           const url = `http://${window.location.hostname}/account/shopping-lists/invite/${tag}/${text}`;
+          try {
+            clipboard.copy(url);
+            onClose();
+            snackbar.show(`Url copied`);
+          } catch (e) {
+            onClose();
+            snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
+            console.log(e);
+          }
 
-          window.navigator.clipboard
-            .writeText(url)
-            .then(() => {
-              onClose();
-              snackbar.show(`Url copied`);
-            })
-            .catch(() => {
-              onClose();
-              snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
-            });
+          // window.navigator.clipboard
+          //   .writeText(url)
+          //   .then(() => {
+          //     onClose();
+          //     snackbar.show(`Url copied`);
+          //   })
+          //   .catch(() => {
+          //     onClose();
+          //     snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
+          //   });
         },
       })
     );
