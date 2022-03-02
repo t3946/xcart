@@ -145,6 +145,12 @@ export const setListView = (listView: List) => ({
   type: "SET_LIST_VIEW",
   listView,
 });
+
+export const dropByHash = (hash: List) => ({
+  type: "LIST_DROP_BY_HASH",
+  hash,
+});
+
 export const fetchListByCache = (cache: string) => ({
   type: "FETCH_LIST",
   cache,

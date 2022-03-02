@@ -213,10 +213,26 @@ function* undoDeleteProduct(action: AnyAction): Generator {
     )
     .then((response) => response);
 }
+
 function* fetchListView(action: AnyAction): Generator {
   const listView = yield api
     .get(`/api/account/lists/get/${action.cache}`)
     .then((res) => res);
+
+  // list removed
+  if (listView === null) {
+    yield put({
+      type: "LIST_DROP_BY_HASH",
+      hash: action.cache,
+    });
+
+    yield put({
+      type: "SET_LIST_VIEW",
+      listView: null,
+    });
+
+    return;
+  }
 
   listView.listType = listView.users.find(
     (user) => user.userId === getUser()?.user_id

@@ -42,17 +42,17 @@ const accountListReducer = (
         lists: action.lists,
         loading: false,
       };
-    case "EDIT_IDEA_NAME":
-      return {
-        ...state,
-        loading: false,
-        listView: editIdeaName(state.listView, action.productId, action.name),
-      };
     case "SET_LIST_VIEW":
       return {
         ...state,
         listView: action.listView,
         loading: false,
+      };
+    case "EDIT_IDEA_NAME":
+      return {
+        ...state,
+        loading: false,
+        listView: editIdeaName(state.listView, action.productId, action.name),
       };
     case "EDIT_COMMENT_LIST_VIEW":
       return {
@@ -138,6 +138,19 @@ const accountListReducer = (
     case "FETCH_LISTS":
     case "FETCH_LIST":
       return { ...state, loading: true };
+    case "LIST_DROP_BY_HASH":
+      const newLists = [];
+      state.lists;
+
+      for (const list of state.lists) {
+        if (list.cacheUrl !== action.hash) {
+          newLists.push(list);
+        }
+      }
+
+      state.lists = newLists;
+
+      return { ...state };
     default:
       return state;
   }

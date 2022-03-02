@@ -38,6 +38,12 @@ class AccountListsApi extends Controller
     {
         /** @var ProductListsModel $list_product_model */
         $list_product_model = ProductListsModel::objects()->get(['cache_url' => $cache]);
+
+        // list not found
+        if (!$list_product_model) {
+            http_response_code(400);
+            return;
+        }
         $data = $list_product_model->getFrontendData();
 
         /** @var UserModel $user */
@@ -119,6 +125,13 @@ class AccountListsApi extends Controller
     public function transferProduct()
     {
         $form = json_decode(file_get_contents('php://input'), true);
+        $list = ProductListsModel::objects()->get(['product_list_id' => $form['fromListId']]);
+
+        if (!$list) {
+            http_response_code(400);
+            return;
+        }
+
         /** @var UserModel $user */
         if (!$this->checkRightsUser()) {
             return;
@@ -154,6 +167,13 @@ class AccountListsApi extends Controller
             return;
         }
 
+        $list = ProductListsModel::objects()->get(['product_list_id' => $form['listId']]);
+
+        if (!$list) {
+            http_response_code(400);
+            return;
+        }
+
         /** @var UserListModel $sharedModel */
         $sharedModel = UserListModel::objects()->get(['product_list_id' => $form['listId']]);
         $sharedModel->list_type = "shared";
@@ -180,10 +200,15 @@ class AccountListsApi extends Controller
             return;
         }
 
+        $list = ProductListsModel::objects()->get(['product_list_id' => $list_id]);
+
+        if (!$list) {
+            http_response_code(400);
+            return;
+        }
+
         $edit_user_list = UserListModel::objects()->get(['user_id' => $user_id, 'product_list_id' => $list_id]);
-
         $request_user_role = UserListModel::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $list_id]);
-
 
         if ($request_user_role->role === 'edit' || $request_user_role->role === 'owner') {
             if ($type === 'delete') {
@@ -191,9 +216,12 @@ class AccountListsApi extends Controller
                 $this->jsonResponse(['success delete']);
                 return;
             }
+
             $edit_user_list->role = $type;
             $edit_user_list->save();
             $this->jsonResponse(['success']);
+        } else {
+            http_response_code(400);
         }
     }
 
@@ -206,6 +234,12 @@ class AccountListsApi extends Controller
             return;
         }
         $data = json_decode(file_get_contents('php://input'), true);
+        $list = ProductListsModel::objects()->get(['product_list_id' => $data['listId']]);
+
+        if (!$list) {
+            http_response_code(400);
+            return;
+        }
 
         if ($data['productId']) {
             $list_item = ListItemsModel::objects()->get([
@@ -221,6 +255,9 @@ class AccountListsApi extends Controller
                     'product_type' => 'product'
                 ]);
                 $list_product_model->save();
+            } else {
+                http_response_code(400);
+                return;
             }
 
             $this->jsonResponse([]);
@@ -243,17 +280,19 @@ class AccountListsApi extends Controller
         if (!$this->checkRightsUser()) {
             return;
         }
+
         $data = json_decode(file_get_contents('php://input'), true);
-        try {
-            /** @var ListIdeaModel $idea_model */
-            $idea_model = ListIdeaModel::objects()->get(['product_id' => $data['productId']]);
-            $idea_model->name = $data['name'];
-            $idea_model->save();
-            $this->jsonResponse([]);
-        } catch (Throwable $exception) {
-            // TODO: Добавить обработку ошибок на фронт
-            $this->jsonResponse([], 400);
+        /** @var ListIdeaModel $idea_model */
+        $idea_model = ListIdeaModel::objects()->get(['product_id' => $data['productId']]);
+
+        if (!$idea_model) {
+            http_response_code(400);
+            return;
         }
+
+        $idea_model->name = $data['name'];
+        $idea_model->save();
+        $this->jsonResponse([]);
     }
 
     /**
@@ -262,9 +301,18 @@ class AccountListsApi extends Controller
     public function editComment()
     {
         $form = json_decode(file_get_contents('php://input'), true);
+
         if (!$this->checkRightsUser()) {
             return;
         }
+
+        $list = ProductListsModel::objects()->get(['product_list_id' => $form['productListId']]);
+
+        if (!$list) {
+            http_response_code(400);
+            return;
+        }
+
         /** @var ListItemsModel $list_item */
         if (!$list_item = ListItemsModel::objects()->get(['list_items_id' => $form['list_items_id'], 'product_list_id' => $form['productListId']])) {
             $this->jsonResponse(['Not found list item'], 404);
@@ -283,6 +331,12 @@ class AccountListsApi extends Controller
         $form = json_decode(file_get_contents('php://input'), true);
         /** @var UserModel $user */
         if (!$this->checkRightsUser()) {
+            return;
+        }
+        $list = ProductListsModel::objects()->get(['product_list_id' => $form['productListId']]);
+
+        if (!$list) {
+            http_response_code(400);
             return;
         }
         /** @var ProductListsModel $product_list_model */
@@ -312,7 +366,7 @@ class AccountListsApi extends Controller
             $this->jsonResponse(['Success']);
             return;
         }
-        $this->jsonResponse(['Error delete']);
+        http_response_code(400);
     }
 
     public function undoDeleteProduct()

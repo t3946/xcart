@@ -28,26 +28,19 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const shareDialog = useDialog();
   const list = useSelectorAccount((state) => state.lists.listView);
   const manageListDialog = useDialog();
-
   const deleteListDialog = useDialog();
-
   const mobileMenuDialog = useDialog();
-
   const router = useRouter();
-
   const dispatch = useDispatch();
-
   const onRequestEnd = () => {
     deleteListDialog.handleClose();
     snackbar.show(`${list.name} list deleted successfully`);
     router.replace(`/shopping-lists/`);
   };
   const edit = list.role !== UserPrivateVariantsEnum.VIEW;
-
   const handleDeleteList = () => {
     dispatch(deleteList(list.productListId, onRequestEnd));
   };
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
