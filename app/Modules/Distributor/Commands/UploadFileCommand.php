@@ -23,6 +23,8 @@ class UploadFileCommand extends Command
 
     public function handle($arguments = []): void
     {
+        ini_set('memory_limit', '2G');
+
         Xcart::app()->queue->setCount(1)->consume('dx_prices', [$this, 'consume']);
     }
 

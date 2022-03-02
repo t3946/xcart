@@ -60,9 +60,6 @@ class SaveFilePrice
             throw new Exception('Please selected fields for update ');
         }
         foreach ($select as $table_index => $ar_key) {
-            if (empty($ar_key)) {
-                throw new Exception('Please selected fields for update ');
-            }
             foreach ($ar_key as $key => $field) {
                 $value = array_column($ar_save[$table_index], $key);
                 if ($field === 'images') {
