@@ -38,3 +38,12 @@ import "./Components/checkout/File";
 $("[data-toggle]").on("click", function () {
   $(`#${$(this).attr("data-toggle")}`).toggleClass("show");
 });
+
+$(".accordion-item").each(function () {
+  let accordion = $(this);
+  let contentBlock = accordion.find(".accordion-content");
+  accordion.find(".accordion-title").on("click", function () {
+    accordion.toggleClass("is-active");
+    contentBlock.slideToggle();
+  });
+});
