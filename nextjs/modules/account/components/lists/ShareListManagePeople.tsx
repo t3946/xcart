@@ -16,7 +16,6 @@ export const ShareListManagePeople: React.FC<ShareListManagePeopleProps> = ({
   const lists: List[] = useSelector((state) => state.lists.lists);
   const list: List = lists.find((list) => list.cacheUrl === id);
   const dispatch = useDispatch();
-  console.log(list);
 
   const handleSelectItemCLick = (
     actionType: UserRightsActionsEnum,

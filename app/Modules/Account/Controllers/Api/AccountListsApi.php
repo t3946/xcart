@@ -379,23 +379,33 @@ class AccountListsApi extends Controller
 
     public function deleteProduct()
     {
-        if (!$this->checkRightsUser()) {
-            return;
-        }
         $form = json_decode(file_get_contents('php://input'), true);
         $attr_form = ['list_items_id' => $form['list_items_id']];
-        
-        /** @var ListItemsModel $list_item */
-        if ($list_item = ListItemsModel::objects()->get($attr_form)) {
-            if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
-                ListIdeaModel::objects()->delete(['list_idea_id' => $list_item->product_id]);
-            }
-            ListItemsModel::objects()->delete($attr_form);
-            $this->jsonResponse(['Success']);
+        $user = Xcart::app()->auth->getUser(true);
+        $list_item = ListItemsModel::objects()->get($attr_form);
+
+
+        if (!$list_item) {
+            http_response_code(400);
             return;
         }
 
-        http_response_code(400);
+        $list = ProductListsModel::objects()->get(['product_list_id' => $list_item->product_list_id]);
+
+        //have no permissions on edit this idea
+        if (!self::canEdit($list, $user)) {
+            http_response_code(400);
+            return;
+        }
+
+        /** @var ListItemsModel $list_item */
+        if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
+            ListIdeaModel::objects()->delete(['list_idea_id' => $list_item->product_id]);
+        }
+
+        ListItemsModel::objects()->delete($attr_form);
+
+        $this->jsonResponse(['Success']);
     }
 
     public function undoDeleteProduct()
@@ -470,6 +480,7 @@ class AccountListsApi extends Controller
         }
 
         [$user_id, $role, $hash] = explode('/', CoreHelper::decryptText($code, $tag));
+        Xcart::app()->logger->debug([$user_id, $role, $hash]);
         $list = ProductListsModel::objects()->get(['cache_url' => $hash]);
 
         //list no found
@@ -481,9 +492,9 @@ class AccountListsApi extends Controller
 
         // already invited
         /** @var ProductListsUserRoles $invite */
-        $role = ProductListsUserRoles::objects()->get(['user_id' => $user->pk, 'product_list_id' => $list->product_list_id]);
+        $role_model = ProductListsUserRoles::objects()->get(['user_id' => $user->pk, 'product_list_id' => $list->product_list_id]);
 
-        if ($role) {
+        if ($role_model) {
             $this->jsonResponse(['cache' => $invite->list_model->cache_url], 208);
             return;
         }

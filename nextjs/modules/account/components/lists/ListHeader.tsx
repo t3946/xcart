@@ -29,6 +29,20 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const { listView: list, loading } = useSelectorAccount(
     (state) => state.lists
   );
+  const userId = useSelectorAccount((e) => e.user.user_id);
+  function listIsEdit() {
+    if (list.owner.userId === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    if (
+      list?.users.find((user) => user.userId === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const manageListDialog = useDialog();
   const deleteListDialog = useDialog();
   const mobileMenuDialog = useDialog();
@@ -39,7 +53,6 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
     snackbar.show(`${list.name} list deleted successfully`);
     router.replace(`/shopping-lists/`);
   };
-  const edit = list.role !== UserPrivateVariantsEnum.VIEW;
   const handleDeleteList = () => {
     dispatch(deleteList(list.productListId, onRequestEnd));
   };
