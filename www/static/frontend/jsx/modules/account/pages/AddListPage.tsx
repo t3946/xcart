@@ -21,12 +21,12 @@ export const AddListPage: React.FC = () => {
       window.history.go(-1);
       return;
     }
-    history.push(`/account/your-lists`);
+    history.push(`/shopping-lists`);
   };
 
   const onCreateList = (list: any) => {
     if (!params?.productId) {
-      history.push(`/account/your-lists/${list.cache_url}`);
+      history.push(`/shopping-lists/${list.cache_url}`);
       return;
     }
     dispatch(
@@ -36,7 +36,7 @@ export const AddListPage: React.FC = () => {
         null,
         () =>
           window.location.assign(
-            `/account/your-lists/add-product-to-list/false/${list.product_list_id}/${window.appData?.product_info?.product?.productcode}`
+            `/shopping-lists/add-product-to-list/false/${list.product_list_id}/${window.appData?.product_info?.product?.productcode}`
           )
       )
     );
@@ -44,7 +44,7 @@ export const AddListPage: React.FC = () => {
 
   return (
     <div>
-      <MobileMenuBackBtn redirectUrl={`/account/your-lists`} label={"back"} />
+      <MobileMenuBackBtn redirectUrl={`/shopping-lists`} label={"back"} />
       <div className="page-label">Create list</div>
       <CreateNewList
         productId={window.appData?.product_info?.product?.productid}

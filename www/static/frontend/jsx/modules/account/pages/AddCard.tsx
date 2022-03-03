@@ -6,10 +6,7 @@ import { MobileMenuBackBtn } from "@client/modules/account/pages/MobileMenuBackB
 export const AddCard: React.FC = () => {
   return (
     <React.Fragment>
-      <MobileMenuBackBtn
-        redirectUrl={`/account/payments/wallet/`}
-        label={"back"}
-      />
+      <MobileMenuBackBtn redirectUrl={`/payments/wallet/`} label={"back"} />
       <CardAction
         contentType={BillingAddressFormEnum.ADD_CARD}
         actionType={BillingAddressFormEnum.ADD_CARD}

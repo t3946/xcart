@@ -17,7 +17,7 @@ export const EditInfoInListProductPage: React.FC = () => {
   const lists = Store.getState().lists.lists;
 
   if (!lists) {
-    history.push(`/account/your-lists/${params.listHash}`);
+    history.push(`/shopping-lists/${params.listHash}`);
     return;
   }
 
@@ -28,13 +28,13 @@ export const EditInfoInListProductPage: React.FC = () => {
   );
 
   const onCloseClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    history.push(`/shopping-lists/${list.cache_url}`);
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${params.listHash}`}
+        redirectUrl={`/shopping-lists/${params.listHash}`}
         label={"back"}
       />
       <div className="page-label">Edit comment, quantity & priority</div>

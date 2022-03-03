@@ -13,10 +13,7 @@ export const EditCard: React.FC = () => {
   const location = useLocation<LocationCardState>();
   return (
     <React.Fragment>
-      <MobileMenuBackBtn
-        redirectUrl={`/account/payments/wallet/`}
-        label={"back"}
-      />
+      <MobileMenuBackBtn redirectUrl={`/payments/wallet/`} label={"back"} />
       <CardAction
         contentType={BillingAddressFormEnum.EDIT}
         actionType={BillingAddressFormEnum.EDIT}

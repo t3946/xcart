@@ -16,7 +16,7 @@ export const ListMobileMenu: React.FC<ListMobileMenuProps> = ({ lists }) => {
 
   return (
     <div>
-      <MobileMenuBackBtn redirectUrl={`/account/`} label={"account"} />
+      <MobileMenuBackBtn redirectUrl={`/dashboard`} label={"account"} />
       <div className="page-label">Shopping lists</div>
       <div className="create-list-btn-container-mobile">
         <div className="sidebar-list-cross">
