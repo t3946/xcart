@@ -31,7 +31,7 @@ export const AddProductToListPage: React.FC = () => {
       {list && (
         <React.Fragment>
           <MobileMenuBackBtn
-            redirectUrl={`/account/your-lists/${list?.cache_url}`}
+            redirectUrl={`/shopping-lists/${list?.cache_url}`}
             label={"back"}
           />
           <div className="page-label">Add to list</div>

@@ -19,13 +19,13 @@ export const DeleteListPage: React.FC = () => {
   const lists = Store.getState().lists.lists;
 
   if (!lists) {
-    history.push("/account/your-lists/");
+    history.push("/shopping-lists/");
   }
 
   const list = lists.find((e) => e.cache_url === params.listHash);
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${list.cache_url}`);
+    history.push(`/shopping-lists/${list.cache_url}`);
   };
 
   const onRequestEnd = () => {
@@ -37,14 +37,14 @@ export const DeleteListPage: React.FC = () => {
   };
 
   const handleDeleteList = () => {
-    history.push("/account/your-lists");
+    history.push("/shopping-lists");
     dispatch(deleteList(list.product_list_id, onRequestEnd));
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${params.listHash}`}
+        redirectUrl={`/shopping-lists/${params.listHash}`}
         label={"back"}
       />
       <div className="page-label">Delete list</div>

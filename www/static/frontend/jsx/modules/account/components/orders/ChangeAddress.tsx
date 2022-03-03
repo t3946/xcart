@@ -67,7 +67,7 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
         breakpoint({
           xs: () =>
             history.push(
-              `/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`
+              `/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`
             ),
           md: handleClose,
         });
@@ -88,7 +88,7 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
   return (
     <>
       <MobileMenuBackBtn
-        redirectUrl={`/account/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`}
+        redirectUrl={`/orders/${urlParams.id}/${urlParams.orderType}/order-info/addresses`}
         label={"Addresses"}
       />
 

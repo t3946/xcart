@@ -18,7 +18,7 @@ export const ShareListPage: React.FC = () => {
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/shopping-lists/${list.cacheUrl}`}
+        redirectUrl={`/shopping-lists/${list.cacheUrl}`}
         label={"back"}
       />
       <div className="page-label">Share list with others</div>
