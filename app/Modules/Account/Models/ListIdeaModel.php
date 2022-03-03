@@ -22,7 +22,7 @@ class ListIdeaModel extends Model
     public static function getFields()
     {
         return [
-            'product_id' => [
+            'list_idea_id' => [
                 'class' => AutoField::class,
             ],
             'name' => [

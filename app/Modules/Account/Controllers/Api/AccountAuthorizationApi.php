@@ -3,7 +3,7 @@
 namespace Modules\Account\Controllers\Api;
 
 use Modules\User\Models\FingerprintModel;
-use Modules\Account\Models\UserListModel;
+use Modules\Account\Models\ProductListsUserRoles;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
@@ -43,7 +43,7 @@ class AccountAuthorizationApi extends Controller
             $model->save();
             $model->cache_url = md5($model->product_list_id + false);
             $model->save();
-            UserListModel::objects()->create(['user_id' =>$user->user_id, 'product_list_id' => $model->product_list_id]);
+            ProductListsUserRoles::objects()->create(['user_id' =>$user->user_id, 'product_list_id' => $model->product_list_id]);
             $user->authenticate();
             $this->jsonResponse($user->toArray());
         } else {

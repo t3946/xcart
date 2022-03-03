@@ -12,7 +12,7 @@ use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
 /**
- * Class UserListModel
+ * Class TSVRecoveryModel
  * @property ProductListsModel list_model
  * @property string role
  * @property string list_type

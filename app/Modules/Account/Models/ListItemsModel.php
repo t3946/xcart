@@ -54,7 +54,7 @@ class ListItemsModel extends Model
                 'field' => 'product_id',
                 'class' => ForeignField::class,
                 'modelClass' => ListIdeaModel::class,
-                'link' => ['product_id' => 'product_id'],
+                'link' => ['product_id' => 'list_idea_id'],
             ],
             'list' => [
                 'field' => 'product_list_id',
