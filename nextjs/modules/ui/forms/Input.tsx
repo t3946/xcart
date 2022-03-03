@@ -36,8 +36,19 @@ const Input = React.forwardRef<HTMLInputElement | null, IProps>(
     const { maxLength = Number.MAX_VALUE, onChange, type = "text" } = props;
     const mergeProps = {
       ...props,
-      type,
+      type: type === "number" ? "text" : type,
       onChange: (e) => {
+        if (type === "number") {
+          e.target.value.length <= maxLength &&
+            onChange &&
+            onChange({
+              target: {
+                name: mergeProps.name,
+                value: Math.abs(parseInt(e.target.value)) || 0,
+              },
+            });
+          return;
+        }
         e.target.value.length <= maxLength && onChange && onChange(e);
       },
       className: cn(classes),
