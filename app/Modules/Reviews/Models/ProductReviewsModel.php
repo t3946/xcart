@@ -17,7 +17,7 @@ class ProductReviewsModel extends Model
 {
     public static function tableName()
     {
-        return 'product_reviews';
+        return 'xcart_product_reviews';
     }
 
     public static function getFields()

@@ -16,7 +16,7 @@ model a_coeff {
 
 model account_addresses {
   address_id             Int                     @id @default(autoincrement()) @db.UnsignedInt
-  full_name              String?                 @db.VarChar(50)
+  full_name              String                  @db.VarChar(50)
   country                String                  @db.Char(2)
   phone_number           String                  @db.VarChar(50)
   street                 String                  @db.VarChar(50)
@@ -660,11 +660,11 @@ model google_products_stats {
 }
 
 model helpful_reviews {
-  id              BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
-  review_id       BigInt?          @db.UnsignedBigInt
-  user_id         BigInt?          @db.UnsignedBigInt
-  product_reviews product_reviews? @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, map: "helpful_reviews_product_reviews_product_review_id_fk")
-  xcart_users     xcart_users?     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "helpful_reviews_xcart_users_user_id_fk")
+  id                    BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  review_id             BigInt?                @db.UnsignedBigInt
+  user_id               BigInt?                @db.UnsignedBigInt
+  xcart_product_reviews xcart_product_reviews? @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, map: "helpful_reviews_product_reviews_product_review_id_fk")
+  xcart_users           xcart_users?           @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "helpful_reviews_xcart_users_user_id_fk")
 
   @@unique([review_id, user_id], map: "helpful_reviews_review_id_user_id_uindex")
   @@index([user_id], map: "helpful_reviews_xcart_users_user_id_fk")
@@ -846,24 +846,6 @@ model pb_history {
   @@index([productid], map: "productid")
 }
 
-model product_reviews {
-  product_review_id BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
-  user_id           BigInt?           @db.UnsignedBigInt
-  product_id        Int?
-  header            String            @db.VarChar(128)
-  body              String            @db.Text
-  location          String            @default("US") @db.Char(2)
-  created           DateTime?         @default(now()) @db.DateTime(0)
-  helpful_total     Int               @default(0) @db.UnsignedInt
-  xcart_products    xcart_products?   @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "product_reviews_xcart_products_productid_fk")
-  xcart_users       xcart_users?      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "product_reviews_xcart_users_user_id_fk")
-  helpful_reviews   helpful_reviews[]
-  review_ratings    review_ratings[]
-
-  @@index([product_id], map: "product_reviews_xcart_products_productid_fk")
-  @@index([user_id], map: "product_reviews_xcart_users_user_id_fk")
-}
-
 model products_sf_moves {
   batch_id             Int
   productid            Int
@@ -887,7 +869,7 @@ model review_ratings {
   rating_id             BigInt                  @db.UnsignedBigInt
   rating                Int                     @db.UnsignedTinyInt
   ratings               ratings                 @relation(fields: [rating_id], references: [rating_id], onDelete: Cascade, map: "review_ratings_ratings_rating_id_fk")
-  product_reviews       product_reviews         @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, map: "review_ratings_product_reviews_product_review_id_fk")
+  xcart_product_reviews xcart_product_reviews   @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, map: "review_ratings_product_reviews_product_review_id_fk")
   total_product_ratings total_product_ratings[]
 
   @@index([review_id], map: "review_ratings_product_reviews_product_review_id_fk")
@@ -4341,12 +4323,14 @@ model xcart_product_htmlshot {
 }
 
 model xcart_product_images {
-  image_id Int     @id @default(autoincrement()) @db.UnsignedInt
-  path     String  @db.VarChar(255)
-  width    Int?    @db.UnsignedSmallInt
-  height   Int?    @db.UnsignedSmallInt
-  hash     String  @unique(map: "hash") @db.VarChar(50)
-  link     String? @db.VarChar(50)
+  image_id      Int       @id @default(autoincrement()) @db.UnsignedInt
+  path          String    @db.VarChar(255)
+  width         Int?      @db.UnsignedSmallInt
+  height        Int?      @db.UnsignedSmallInt
+  hash          String    @unique(map: "hash") @db.VarChar(50)
+  created_at    DateTime? @default(now()) @db.Timestamp(0)
+  is_downloaded Int?      @default(0) @db.UnsignedTinyInt
+  is_manual     Int       @default(0) @db.UnsignedTinyInt
 }
 
 model xcart_product_links {
@@ -4457,16 +4441,23 @@ model xcart_product_question {
 }
 
 model xcart_product_reviews {
-  review_id            Int                    @id @default(autoincrement()) @db.UnsignedInt
-  remote_ip            String                 @default("") @db.VarChar(15)
-  email                String                 @default("") @db.VarChar(128)
-  message              String                 @db.Text
-  productid            Int                    @default(0)
+  product_review_id    BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id              BigInt?                @db.UnsignedBigInt
+  product_id           Int?
+  header               String                 @db.VarChar(128)
+  body                 String                 @db.Text
+  location             String                 @default("US") @db.Char(2)
+  created              DateTime?              @default(now()) @db.DateTime(0)
+  helpful_total        Int                    @default(0) @db.UnsignedInt
+  xcart_products       xcart_products?        @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "product_reviews_xcart_products_productid_fk")
+  xcart_users          xcart_users?           @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "product_reviews_xcart_users_user_id_fk")
+  helpful_reviews      helpful_reviews[]
+  review_ratings       review_ratings[]
   xcart_reviews_images xcart_reviews_images[]
   xcart_reviews_videos xcart_reviews_videos[]
 
-  @@index([productid], map: "productid")
-  @@index([remote_ip], map: "remote_ip")
+  @@index([product_id], map: "product_reviews_xcart_products_productid_fk")
+  @@index([user_id], map: "product_reviews_xcart_users_user_id_fk")
 }
 
 model xcart_product_taxes {
@@ -4632,6 +4623,8 @@ model xcart_products {
   in_stock                                   Int?                                        @db.TinyInt
   hash_product                               String?                                     @db.VarChar(50)
   total_reviews                              Int?                                        @default(0) @db.UnsignedSmallInt
+  is_group_root                              Int                                         @default(0) @db.UnsignedTinyInt
+  last_modify_id                             Int?                                        @db.UnsignedInt
   xcart_brands                               xcart_brands?                               @relation(fields: [brandid], references: [brandid], map: "FK_xcart_products_xcart_brands")
   xcart_manufacturers                        xcart_manufacturers                         @relation(fields: [manufacturerid], references: [manufacturerid], onDelete: Cascade, map: "FK_xcart_products_xcart_manufacturers")
   amazon_inventory_queue                     amazon_inventory_queue?
@@ -4639,13 +4632,13 @@ model xcart_products {
   amazon_reorder_batch_data                  amazon_reorder_batch_data[]
   collaborative_fitering                     collaborative_fitering[]
   google_products                            google_products?
-  product_reviews                            product_reviews[]
   total_product_ratings                      total_product_ratings[]
   xcart_external_verification_products_queue xcart_external_verification_products_queue?
   xcart_images_D                             xcart_images_D[]
   xcart_pricing                              xcart_pricing[]
   xcart_product_options                      xcart_product_options[]
   xcart_product_question                     xcart_product_question[]
+  xcart_product_reviews                      xcart_product_reviews[]
   xcart_product_verification_history         xcart_product_verification_history[]
   xcart_products_categories                  xcart_products_categories[]
   xcart_products_hard_resell                 xcart_products_hard_resell?
@@ -4779,6 +4772,8 @@ model xcart_products_hard_resell {
 model xcart_products_images {
   product_id Int
   image_id   Int
+  is_active  Int @default(1) @db.UnsignedTinyInt
+  order_by   Int @default(0) @db.UnsignedInt
 
   @@id([product_id, image_id])
 }
@@ -5096,20 +5091,20 @@ model xcart_returns {
 
 model xcart_reviews_images {
   id                    Int                   @id @default(autoincrement()) @db.UnsignedInt
-  review_id             Int                   @db.UnsignedInt
+  review_id             BigInt                @db.UnsignedBigInt
   image_id              Int                   @db.UnsignedInt
   xcart_images          xcart_images          @relation(fields: [image_id], references: [image_id], onDelete: Cascade, map: "xcart_reviews_images_xcart_images_image_id_fk")
-  xcart_product_reviews xcart_product_reviews @relation(fields: [review_id], references: [review_id], onDelete: Cascade, map: "xcart_reviews_images_xcart_product_reviews_review_id_fk")
+  xcart_product_reviews xcart_product_reviews @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, onUpdate: NoAction, map: "xcart_reviews_images_product_reviews_product_review_id_fk")
 
+  @@index([review_id], map: "xcart_reviews_images_product_reviews_product_review_id_fk")
   @@index([image_id], map: "xcart_reviews_images_xcart_images_image_id_fk")
-  @@index([review_id], map: "xcart_reviews_images_xcart_product_reviews_review_id_fk")
 }
 
 model xcart_reviews_videos {
   id                    Int                   @id @default(autoincrement()) @db.UnsignedInt
-  review_id             Int                   @db.UnsignedInt
+  review_id             BigInt                @db.UnsignedBigInt
   video_id              Int                   @db.UnsignedInt
-  xcart_product_reviews xcart_product_reviews @relation(fields: [review_id], references: [review_id], onDelete: Cascade, map: "xcart_reviews_videos_xcart_product_reviews_review_id_fk")
+  xcart_product_reviews xcart_product_reviews @relation(fields: [review_id], references: [product_review_id], onDelete: Cascade, onUpdate: NoAction, map: "xcart_reviews_videos_product_reviews_product_review_id_fk")
   xcart_videos          xcart_videos          @relation(fields: [video_id], references: [video_id], onDelete: Cascade, map: "xcart_reviews_videos_xcart_videos_video_id_fk")
 
   @@unique([review_id, video_id], map: "xcart_reviews_videos_review_id_video_id_uindex")
@@ -5596,12 +5591,16 @@ model xcart_storefronts {
   logo                          String?                    @db.VarChar(255)
   logo_mobile                   String?                    @db.VarChar(255)
   base_category_id              Int?
+  account_enabled               Int                        @default(0) @db.TinyInt
   xcart_currencies              xcart_currencies?          @relation(fields: [currency_id], references: [currency_id], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_currencies")
   core_static_notification      core_static_notification[]
   sites_payment_methods         sites_payment_methods[]
   xcart_manufacturers_site      xcart_manufacturers_site[]
   xcart_orders                  xcart_orders[]
   xcart_products_sf             xcart_products_sf[]
+  xcart_site_socials            xcart_site_socials[]
+  xcart_sites_addresses         xcart_sites_addresses[]
+  xcart_sites_menu              xcart_sites_menu[]
   xcart_vrs                     xcart_vrs[]
 
   @@index([currency_id], map: "FK_xcart_storefronts_xcart_currencies")
@@ -5891,11 +5890,11 @@ model xcart_users {
   account_transactions     account_transactions[]
   account_user_list        account_user_list[]
   helpful_reviews          helpful_reviews[]
-  product_reviews          product_reviews[]
   xcart_authenticators     xcart_authenticators[]
   xcart_fingerprints       xcart_fingerprints[]
   xcart_one_time_passwords xcart_one_time_passwords[]
   xcart_orders             xcart_orders[]
+  xcart_product_reviews    xcart_product_reviews[]
   xcart_sessions_data      xcart_sessions_data[]
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
@@ -6062,6 +6061,72 @@ model tsv_recovery {
   user_id         BigInt    @db.UnsignedBigInt
   document_path   String    @db.VarChar(255)
   created         DateTime? @default(now()) @db.DateTime(0)
+}
+
+model xcart_site_addresses {
+  address_id            Int                     @id @default(autoincrement())
+  name                  String?                 @db.VarChar(70)
+  company               String?                 @db.VarChar(100)
+  address               String?                 @db.VarChar(255)
+  address_state         String?                 @db.VarChar(100)
+  country               String?                 @db.VarChar(50)
+  xcart_sites_addresses xcart_sites_addresses[]
+}
+
+model xcart_site_menu {
+  menu_id          Int                @id @default(autoincrement())
+  name             String?            @db.VarChar(155)
+  pos              Int?               @db.MediumInt
+  root             Int?
+  level            Int?
+  lft              Int?
+  rgt              Int?
+  parent_id        Int?
+  url              String?            @default("") @db.VarChar(100)
+  xcart_sites_menu xcart_sites_menu[]
+}
+
+model xcart_site_socials {
+  site_social_id    Int                @id @default(autoincrement())
+  site_id           Int?
+  social_id         Int?
+  is_active         Boolean?           @default(false)
+  order_by          Int?
+  xcart_storefronts xcart_storefronts? @relation(fields: [site_id], references: [storefrontid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_site_socials_xcart_storefronts")
+  xcart_socials     xcart_socials?     @relation(fields: [social_id], references: [social_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_site_socials_xcart_socials")
+
+  @@index([social_id], map: "FK_xcart_site_socials_xcart_socials")
+  @@index([site_id], map: "FK_xcart_site_socials_xcart_storefronts")
+}
+
+model xcart_sites_addresses {
+  site_address_id      Int                   @id @default(autoincrement())
+  site_id              Int?
+  address_id           Int?
+  xcart_site_addresses xcart_site_addresses? @relation(fields: [address_id], references: [address_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_sites_addresses_xcart_site_addresses")
+  xcart_storefronts    xcart_storefronts?    @relation(fields: [site_id], references: [storefrontid], onDelete: NoAction, onUpdate: NoAction, map: "FK__xcart_storefronts")
+
+  @@index([site_id], map: "FK__xcart_storefronts")
+  @@index([address_id], map: "FK_xcart_sites_address_xcart_address")
+}
+
+model xcart_sites_menu {
+  site_menu_id      Int                @id @default(autoincrement())
+  site_id           Int?
+  menu_id           Int?
+  xcart_site_menu   xcart_site_menu?   @relation(fields: [menu_id], references: [menu_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_sites_menu_xcart_site_menu")
+  xcart_storefronts xcart_storefronts? @relation(fields: [site_id], references: [storefrontid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_sites_menu_xcart_storefronts")
+
+  @@index([menu_id], map: "FK_xcart_sites_menu_xcart_site_menu")
+  @@index([site_id], map: "FK_xcart_sites_menu_xcart_storefronts")
+}
+
+model xcart_socials {
+  social_id          Int                  @id @default(autoincrement())
+  type               String               @default("") @db.VarChar(50)
+  logo_path          String?              @default("") @db.VarChar(255)
+  url                String               @default("") @db.VarChar(255)
+  xcart_site_socials xcart_site_socials[]
 }
 
 enum account_list_items_priority {
