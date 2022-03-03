@@ -159,7 +159,6 @@ const Reviews: React.FC<any> = function (props: IProps) {
   });
 
   function hatTemplate() {
-    console.log({totalReviews});
     if (totalReviews === 0) {
       return "No reviews";
     }

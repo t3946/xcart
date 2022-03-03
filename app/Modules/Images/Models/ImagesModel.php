@@ -42,7 +42,6 @@ class ImagesModel extends Model
      */
     protected static function getUploadPath(): string
     {
-
         return self::UPLOAD_PATH;
     }
 

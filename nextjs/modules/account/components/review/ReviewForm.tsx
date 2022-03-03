@@ -46,8 +46,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
     videos: ["video/mp4", "video/ogg", "video/webm"],
   };
   const inputFileRef = React.useRef<HTMLInputElement>();
-  const { maxImageSizeMB, maxVideoSizeMB, maxAttachments } =
-    AppData.reviews.limits;
+  const maxImageSizeMB = 10;
+  const maxVideoSizeMB = 20;
+  const maxAttachments = 10;
 
   const [attachmentsNumber, setAttachmentsNumber] = React.useState(0);
 
@@ -359,12 +360,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       maxFiles={maxAttachments}
                     />
 
-                    <RBForm.Control.Feedback
-                      type="invalid"
-                      className={cn({ "d-block": !!errors.files })}
-                    >
-                      {errors.files}
-                    </RBForm.Control.Feedback>
+                    {!!errors.files && (
+                      <Feedback type="invalid">{errors.files}</Feedback>
+                    )}
                   </RBForm.Group>
 
                   <RBForm.Group
@@ -401,9 +399,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       }}
                     />
 
-                    <RBForm.Control.Feedback type="invalid">
-                      {errors.videoLink}
-                    </RBForm.Control.Feedback>
+                    <Feedback type="invalid">{errors.videoLink}</Feedback>
                   </RBForm.Group>
                 </div>
 
@@ -430,7 +426,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       />
                     </Label>
 
-                    {!!touched.headLine && !!errors.headLine && <Feedback type="invalid">{errors.headLine}</Feedback>}
+                    {!!touched.headLine && !!errors.headLine && (
+                      <Feedback type="invalid">{errors.headLine}</Feedback>
+                    )}
                   </div>
 
                   <Label>
@@ -448,7 +446,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       disabled={isSubmitting}
                     />
                   </Label>
-                  {!!touched.textBody && !!errors.textBody && <Feedback type="invalid">{errors.textBody}</Feedback>}
+                  {!!touched.textBody && !!errors.textBody && (
+                    <Feedback type="invalid">{errors.textBody}</Feedback>
+                  )}
 
                   <h2
                     className={

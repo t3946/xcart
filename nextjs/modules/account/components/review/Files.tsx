@@ -112,6 +112,10 @@ const Files: React.FC<IProps> = function (props: IProps) {
 
       reader.readAsDataURL(file);
     }
+
+    console.log("before reset", inputRef.current.files.length);
+    inputRef.current.value = "";
+    console.log(inputRef.current.files.length);
   }
 
   function filesListTemplate() {
