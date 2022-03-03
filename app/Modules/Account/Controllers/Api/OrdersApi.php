@@ -60,12 +60,6 @@ class OrdersApi extends Controller
         }
 
         switch ($orders_type) {
-            case self::ORDERS_TYPE_CLOSED:
-                $filter = array_merge(
-                    $filter, [
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_FAILED
-                ]);
-                break;
             case self::ORDER_TYPE_COMPLETED:
                 $filter = array_merge(
                     $filter, [
