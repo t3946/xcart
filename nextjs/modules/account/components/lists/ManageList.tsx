@@ -235,9 +235,6 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
               name={"shippingAddress"}
               onChange={formik.handleChange}
               value={formik.values.shippingAddress}
-              classes={{
-                select: ["select-address-on-manage-list"],
-              }}
             />
           </div>
         </div>
