@@ -26,7 +26,9 @@ interface ListHeaderProps {
 export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const list = useSelectorAccount((state) => state.lists.listView);
+  const { listView: list, loading } = useSelectorAccount(
+    (state) => state.lists
+  );
   const manageListDialog = useDialog();
   const deleteListDialog = useDialog();
   const mobileMenuDialog = useDialog();
@@ -63,6 +65,10 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
     onClick: () =>
       router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
   };
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <div
