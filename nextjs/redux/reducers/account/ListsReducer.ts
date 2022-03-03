@@ -8,6 +8,7 @@ import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/m
 import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
 import { addProductToList } from "@modules/account/utils/edit-store-funcs/lists/add-product-to-list";
 import { editIdeaName } from "@modules/account/utils/edit-store-funcs/lists/edit-idea-name";
+import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 const initialValue: AccountListsStore = {
   lists: null,
@@ -39,7 +40,12 @@ const accountListReducer = (
     case "SET_LISTS":
       return {
         ...state,
-        lists: action.lists,
+        lists: action.lists.map((list) => ({
+          ...list,
+          listType: list.users.length
+            ? ListPrivateEnum.SHARED
+            : ListPrivateEnum.PRIVATE,
+        })),
         loading: false,
       };
     case "SET_LIST_VIEW":

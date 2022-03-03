@@ -24,7 +24,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   const mobileMenuDialog = useDialog();
   const defaultAvatar =
     "/static/frontend/images/pages/account/default-avatar.svg";
-  const userAvatar = userListInfo.user.avatar_image;
+  const userAvatar = userListInfo.avatar_image;
   const avatarImage = userAvatar ? `/${userAvatar}` : defaultAvatar;
 
   const mobileDialogItems: MobileMenuForListItem[] = [
@@ -37,10 +37,8 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
             alt={"avatar image"}
           />
           <div>
-            <div>{userListInfo.user.name}</div>
-            <div className="share-list-people-email">
-              {userListInfo.user.email}
-            </div>
+            <div>{userListInfo.name}</div>
+            <div className="share-list-people-email">{userListInfo.email}</div>
           </div>
         </div>
       ),
@@ -98,12 +96,10 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         />
         <div>
           <div>
-            {userListInfo.user.name}
+            {userListInfo.name}
             {isYourAccount && "(You)"}
           </div>
-          <div className="share-list-people-email">
-            {userListInfo.user.email}
-          </div>
+          <div className="share-list-people-email">{userListInfo.email}</div>
         </div>
       </div>
       {isYourAccount || UserPrivateVariantsEnum.OWNER === userListInfo.role ? (

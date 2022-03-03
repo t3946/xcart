@@ -26,7 +26,7 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
       encryptUrl({
         data: {
           hash: cache,
-          showSharedStatus,
+          role: showSharedStatus,
         },
         success(res: AxiosResponse) {
           const { tag, text } = res.data;
