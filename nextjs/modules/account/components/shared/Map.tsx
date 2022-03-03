@@ -37,7 +37,7 @@ const Map: React.FC<Map> = ({ markers }) => {
     <MapContainer
       bounds={markers.map((point) => point.map((item) => item))}
       zoom={4}
-      style={{ height: "374px" }}
+      style={{ height: "374px", zIndex: "1" }}
     >
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

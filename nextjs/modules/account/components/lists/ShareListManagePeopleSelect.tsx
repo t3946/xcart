@@ -19,18 +19,12 @@ interface ShareListManagePeopleSelectProps {
   items: SelectValue<UserRightsActionsEnum, string>[];
   onClick: (value: SelectValue<UserRightsActionsEnum, string>) => void;
   value: SelectValue<UserRightsActionsEnum, string>;
-  classes?: {
-    group?: string | string[];
-    input?: string | string[];
-    selectList?: string | string[];
-  };
   name: string;
-  id?: string;
 }
 
 export const ShareListManagePeopleSelect: React.FC<
   ShareListManagePeopleSelectProps
-> = ({ items, onClick, value, name, classes, id }) => {
+> = ({ items, onClick, value, name }) => {
   return (
     <ReactSelect
       classes={{

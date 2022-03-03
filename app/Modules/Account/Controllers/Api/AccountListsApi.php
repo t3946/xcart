@@ -16,32 +16,35 @@ use Xcart\App\Main\Xcart;
 
 class AccountListsApi extends Controller
 {
+    /** 
+     * check user $user can edit list $list
+     */
+    private static function canEdit($list, $user): bool {
+        if ($user->user_id !== $list->user_id) {
+            /* @var $role ProductListsUserRoles */
+            $role = ProductListsUserRoles::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
+
+            if ($role !== 'owner') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function getListByCache(string $cache)
     {
         /** @var ProductListsModel $list_product_model */
-        $list_product_model = ProductListsModel::objects()->get(['cache_url' => $cache]);
+        $list = ProductListsModel::objects()->get(['cache_url' => $cache]);
 
         // list not found
-        if (!$list_product_model) {
+        if (!$list) {
             http_response_code(400);
             return;
         }
-        $data = $list_product_model->getFrontendData();
 
-        /** @var UserModel $user */
-        $user = Xcart::app()->getUser(true);
-
-        /** @var ProductListsUserRoles $user_list */
-        $user_list = ProductListsUserRoles::objects()->get(
-            [
-                'product_list_id' => $list_product_model->product_list_id,
-                'user_id' => $user->user_id,
-            ],
-        );
-
-        $data['role'] = $user_list->role;
-
-        $this->jsonResponse($data ?? null);
+        $list_data = $list->getFrontendData();
+        $this->jsonResponse($list_data ?? null);
     }
 
     /**
@@ -54,17 +57,13 @@ class AccountListsApi extends Controller
         }
 
         $form = json_decode(file_get_contents('php://input'), true);
+        $form['user_id'] = $user->user_id;
         $model = new ProductListsModel($form);
         $model->save();
         $model->cache_url = md5($model->product_list_id + $model->public);
         $model->save();
 
-        $user_list = new ProductListsUserRoles(['user_id' => $user->user_id, 'product_list_id' => $model->product_list_id]);
-        $user_list->save();
-        $ar_data = array_merge($model->getFrontendData(), [
-            'listType' => $user_list->list_type,
-            'role' => $user_list->role,
-        ]);
+        $ar_data = $model->getFrontendData();
 
         $this->jsonResponse($ar_data);
     }
@@ -81,11 +80,7 @@ class AccountListsApi extends Controller
             return;
         }
 
-        /* @var $user_list ProductListsUserRoles */
-        $user_list = ProductListsUserRoles::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
-
-        // check user rights
-        if (!$user_list || $user_list->role !== 'edit' && $user_list->role !== 'owner') {
+        if (!self::canEdit($list, $user)) {
             http_response_code(400);
             return;
         }
@@ -119,17 +114,17 @@ class AccountListsApi extends Controller
 
     public function deleteList(int $list_id)
     {
-        /* @var $user_list ProductListsModel */
+        /* @var $list ProductListsModel */
         $list = ProductListsModel::objects()->get(['product_list_id' => $list_id]);
         $user = Xcart::app()->getUser(true);
-        /* @var $user_list ProductListsUserRoles */
-        $user_list = ProductListsUserRoles::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
+        /* @var $role ProductListsUserRoles */
+        $role = ProductListsUserRoles::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
 
         //user is owner
-        if ($user_list->role === 'owner') {
+        if ($user->user_id === $list->user_id) {
             $list->delete();
-        } else {
-            $user_list->delete();
+        } elseif ($role) {
+            $role->delete();
         }
 
         $this->jsonResponse(['Delete successfully']);
@@ -137,18 +132,19 @@ class AccountListsApi extends Controller
 
     public function transferProduct()
     {
+        $user = Xcart::app()->auth->getUser(true);
         $form = json_decode(file_get_contents('php://input'), true);
-        $list = ProductListsModel::objects()->get(['product_list_id' => $form['fromListId']]);
+        $list_1 = ProductListsModel::objects()->get(['product_list_id' => $form['fromListId']]);
+        $list_2 = ProductListsModel::objects()->get(['product_list_id' => $form['toListId']]);
 
-        if (!$list) {
+        // user have not permissions
+        if (!self::canEdit($list_1, $user) || !self::canEdit($list_2, $user)) {
             http_response_code(400);
             return;
         }
+        
 
-        /** @var UserModel $user */
-        if (!$this->checkRightsUser()) {
-            return;
-        }
+        // move product
         /** @var ListItemsModel $listItem */
         $listItem = ListItemsModel::objects()->get(['product_list_id' => $form['fromListId'], 'list_items_id' => $form['list_items_id']]);
         $listItem->product_list_id = $form['toListId'];
@@ -160,21 +156,25 @@ class AccountListsApi extends Controller
     public function getUrlEncrypt()
     {
         $form = json_decode(file_get_contents('php://input'), true);
+       
         /** @var UserModel $user */
         if (!$user = $this->checkRightsUser()) {
             return;
         }
 
-        $encrypt_params = CoreHelper::cipherText($user->user_id . '/' . $form['privateType'] . '/' . $form['hash']);
+        $encrypt_params = CoreHelper::cipherText($user->user_id . '/' . $form['role'] . '/' . $form['hash']);
+        
         foreach ($encrypt_params as $key => $param) {
             $encrypt_params[$key] = urlencode($param);
         }
+
         $this->jsonResponse($encrypt_params);
     }
 
     public function acceptInvitation()
     {
         $form = json_decode(file_get_contents('php://input'), true);
+
         /** @var UserModel $user */
         if (!$user = $this->checkRightsUser()) {
             return;
@@ -187,16 +187,10 @@ class AccountListsApi extends Controller
             return;
         }
 
-        /** @var ProductListsUserRoles $sharedModel */
-        $sharedModel = ProductListsUserRoles::objects()->get(['product_list_id' => $form['listId']]);
-        $sharedModel->list_type = "shared";
-        $sharedModel->save();
-
         ProductListsUserRoles::objects()->create([
             'user_id' => $user->pk,
             'product_list_id' => $form['listId'],
             'role' => $form['role'],
-            'source' => ProductListsUserRoles::SOURCE_CREATE_SIMPLE
         ]);
 
         $this->jsonResponse([]);
@@ -204,38 +198,33 @@ class AccountListsApi extends Controller
 
     public function editUsersInList()
     {
-        [$list_id, $user_id, $type] = array_values(json_decode(file_get_contents('php://input'), true));
-
         $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            $this->jsonResponse('user not login');
-            return;
-        }
+        [$list_id, $user_id, $action] = array_values(json_decode(file_get_contents('php://input'), true));
 
         $list = ProductListsModel::objects()->get(['product_list_id' => $list_id]);
 
         if (!$list) {
+            Xcart::app()->logger->debug("no list");
             http_response_code(400);
             return;
         }
 
-        $edit_user_list = ProductListsUserRoles::objects()->get(['user_id' => $user_id, 'product_list_id' => $list_id]);
-        $request_user_role = ProductListsUserRoles::objects()->get(['user_id' => $user->user_id, 'product_list_id' => $list_id]);
-
-        if ($request_user_role->role === 'edit' || $request_user_role->role === 'owner') {
-            if ($type === 'delete') {
-                ProductListsUserRoles::objects()->delete(['user_id' => $user_id, 'product_list_id' => $list_id]);
-                $this->jsonResponse(['success delete']);
-                return;
-            }
-
-            $edit_user_list->role = $type;
-            $edit_user_list->save();
-            $this->jsonResponse(['success']);
-        } else {
+        if (!self::canEdit($list, $user)) {
             http_response_code(400);
+            return;
         }
+
+        if ($action === 'delete') {
+            ProductListsUserRoles::objects()->delete(['user_id' => $user_id, 'product_list_id' => $list_id]);
+            $this->jsonResponse(['success delete']);
+            return;
+        }
+
+        $role = ProductListsUserRoles::objects()->get(['user_id' => $user_id, 'product_list_id' => $list_id]);
+        $role->role = $action;
+        $role->save();
+
+        $this->jsonResponse(['success']);
     }
 
     /**
@@ -243,13 +232,16 @@ class AccountListsApi extends Controller
      */
     public function addProductOnList()
     {
-        if (!$this->checkRightsUser()) {
-            return;
-        }
         $data = json_decode(file_get_contents('php://input'), true);
         $list = ProductListsModel::objects()->get(['product_list_id' => $data['listId']]);
+        $user = Xcart::app()->auth->getUser(true);
 
         if (!$list) {
+            http_response_code(400);
+            return;
+        }
+
+        if (!self::canEdit($list, $user)) {
             http_response_code(400);
             return;
         }
@@ -276,10 +268,11 @@ class AccountListsApi extends Controller
             $this->jsonResponse([]);
             return;
         }
+
         $idea_model = new ListIdeaModel(['name' => $data['name']]);
         $idea_model->save();
         $list_product_model = new ListItemsModel([
-            'product_id' => $idea_model->product_id,
+            'product_id' => $idea_model->list_idea_id,
             'product_list_id' => $data['listId'],
             'product_type' => 'idea'
         ]);
@@ -290,21 +283,28 @@ class AccountListsApi extends Controller
 
     public function editIdeaName()
     {
-        if (!$this->checkRightsUser()) {
-            return;
-        }
-
+        $user = Xcart::app()->auth->getUser(true);
+        //todo: нет проверки на право редактирования списка
         $data = json_decode(file_get_contents('php://input'), true);
         /** @var ListIdeaModel $idea_model */
-        $idea_model = ListIdeaModel::objects()->get(['list_idea_id' => $data['productId']]);
+        $idea = ListIdeaModel::objects()->get(['list_idea_id' => $data['productId']]);
 
-        if (!$idea_model) {
+        if (!$idea) {
             http_response_code(400);
             return;
         }
 
-        $idea_model->name = $data['name'];
-        $idea_model->save();
+        $list_item = ListItemsModel::objects()->get(['product_id' => $idea->list_idea_id]);
+        $list = ProductListsModel::objects()->get(['product_list_id' => $list_item['product_list_id']]);
+
+        //have no permissions on edit this idea
+        if (!self::canEdit($list, $user)) {
+            http_response_code(400);
+            return;
+        }
+
+        $idea->name = $data['name'];
+        $idea->save();
         $this->jsonResponse([]);
     }
 
@@ -326,13 +326,22 @@ class AccountListsApi extends Controller
             return;
         }
 
+        $list_item = ListItemsModel::objects()->get(
+            [
+                'list_items_id' => $form['list_items_id'],
+                'product_list_id' => $form['productListId']
+            ]
+        );
+
         /** @var ListItemsModel $list_item */
-        if (!$list_item = ListItemsModel::objects()->get(['list_items_id' => $form['list_items_id'], 'product_list_id' => $form['productListId']])) {
-            $this->jsonResponse(['Not found list item'], 404);
+        if (!$list_item) {
+            http_response_code(400);
             return;
         }
+
         $list_item->setAttributes($form['data']);
         $list_item->save();
+
         $this->jsonResponse(['success']);
     }
 
@@ -342,16 +351,21 @@ class AccountListsApi extends Controller
     public function manageList()
     {
         $form = json_decode(file_get_contents('php://input'), true);
-        /** @var UserModel $user */
-        if (!$this->checkRightsUser()) {
-            return;
-        }
+        $user = Xcart::app()->auth->getUser(true);
         $list = ProductListsModel::objects()->get(['product_list_id' => $form['productListId']]);
 
         if (!$list) {
             http_response_code(400);
             return;
         }
+
+        
+        //have no permissions on edit this idea
+        if (!self::canEdit($list, $user)) {
+            http_response_code(400);
+            return;
+        }
+        
         /** @var ProductListsModel $product_list_model */
         if (!$product_list_model = ProductListsModel::objects()->get(['product_list_id' => $form['productListId']])) {
             $this->jsonResponse(['Not found product list'], 404);
@@ -365,21 +379,33 @@ class AccountListsApi extends Controller
 
     public function deleteProduct()
     {
-        if (!$this->checkRightsUser()) {
-            return;
-        }
         $form = json_decode(file_get_contents('php://input'), true);
         $attr_form = ['list_items_id' => $form['list_items_id']];
-        /** @var ListItemsModel $list_item */
-        if ($list_item = ListItemsModel::objects()->get($attr_form)) {
-            if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
-                ListIdeaModel::objects()->delete(['list_idea_id' => $list_item->product_id]);
-            }
-            ListItemsModel::objects()->delete($attr_form);
-            $this->jsonResponse(['Success']);
+        $user = Xcart::app()->auth->getUser(true);
+        $list_item = ListItemsModel::objects()->get($attr_form);
+
+
+        if (!$list_item) {
+            http_response_code(400);
             return;
         }
-        http_response_code(400);
+
+        $list = ProductListsModel::objects()->get(['product_list_id' => $list_item->product_list_id]);
+
+        //have no permissions on edit this idea
+        if (!self::canEdit($list, $user)) {
+            http_response_code(400);
+            return;
+        }
+
+        /** @var ListItemsModel $list_item */
+        if ($list_item->product_type === ListItemsModel::TYPE_IDEA) {
+            ListIdeaModel::objects()->delete(['list_idea_id' => $list_item->product_id]);
+        }
+
+        ListItemsModel::objects()->delete($attr_form);
+
+        $this->jsonResponse(['Success']);
     }
 
     public function undoDeleteProduct()
@@ -427,10 +453,20 @@ class AccountListsApi extends Controller
     public function actionGetLists(): void
     {
         $user = Xcart::app()->auth->getUser(true);
-        $lists = ProductListsModel::objects()->all(["user_id" => $user->user_id]);
         $lists_data = [];
 
+        //select self lists
+        $lists = ProductListsModel::objects()->all(["user_id" => $user->user_id]);
+
         foreach ($lists as $_ => $list) {
+            $lists_data[] = $list->getFrontendData();
+        }
+
+        //select foreign lists
+        $roles = ProductListsUserRoles::objects()->all(["user_id" => $user->user_id]);
+
+        foreach ($roles as $_ => $role) {
+            $list = ProductListsModel::objects()->get(["product_list_id" => $role->product_list_id]);
             $lists_data[] = $list->getFrontendData();
         }
 
@@ -442,26 +478,37 @@ class AccountListsApi extends Controller
         if (!$user = $this->checkRightsUser()) {
             return;
         }
-        [$user_id, $type, $listHash] = explode('/', CoreHelper::decryptText($code, $tag));
+
+        [$user_id, $role, $hash] = explode('/', CoreHelper::decryptText($code, $tag));
+        Xcart::app()->logger->debug([$user_id, $role, $hash]);
+        $list = ProductListsModel::objects()->get(['cache_url' => $hash]);
+
+        //list no found
         /** @var ProductListsModel $invite_list */
-        if (!$invite_list = ProductListsModel::objects()->get(['cache_url' => $listHash])) {
+        if (!$list) {
             $this->jsonResponse(['Not found list invite', 404]);
             return;
         }
+
+        // already invited
         /** @var ProductListsUserRoles $invite */
-        if ($invite = ProductListsUserRoles::objects()->get(['user_id' => $user->pk, 'product_list_id' => $invite_list->product_list_id])) {
+        $role_model = ProductListsUserRoles::objects()->get(['user_id' => $user->pk, 'product_list_id' => $list->product_list_id]);
+
+        if ($role_model) {
             $this->jsonResponse(['cache' => $invite->list_model->cache_url], 208);
             return;
         }
+
         /** @var UserModel $invited_user */
         $invited_user = UserModel::objects()->get(['pk' => $user_id]);
+
         $this->jsonResponse([
             'inviteUser' => $invited_user->name,
-            'type' => $type,
+            'type' => $role,
             'listData' => [
-                'productListId' => $invite_list->product_list_id,
-                'name' => $invite_list->name,
-                'cacheUrl' => $invite_list->cache_url,
+                'productListId' => $list->product_list_id,
+                'name' => $list->name,
+                'cacheUrl' => $list->cache_url,
             ]
         ]);
     }

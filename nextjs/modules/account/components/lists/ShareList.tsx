@@ -22,11 +22,12 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
   const [sharedLink, setSharedLink] = React.useState("");
 
   React.useEffect(() => {
+    setSharedLink("");
     dispatch(
       encryptUrl({
         data: {
           hash: cache,
-          showSharedStatus,
+          role: showSharedStatus,
         },
         success(res: AxiosResponse) {
           const { tag, text } = res.data;
@@ -35,7 +36,7 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
         },
       })
     );
-  }, []);
+  }, [showSharedStatus]);
 
   const onCopyLink = (result: boolean) => {
     if (result) {

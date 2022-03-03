@@ -5,6 +5,7 @@ import Store from "@redux/stores/Store";
 import { AnyAction } from "redux";
 import axios from "axios";
 import { List } from "@modules/account/ts/types/list.type";
+import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 const api = new ApiService();
 
@@ -97,8 +98,8 @@ function* editUserRights(action: AnyAction): Generator {
       `/api/account/lists/edit-user-rights`,
       JSON.stringify({
         list_id: action.listId,
-        user: action.userId,
-        actionType: action.actionType,
+        user_id: action.userId,
+        action: action.actionType,
       })
     )
     .then((response) => response);
@@ -217,7 +218,7 @@ function* undoDeleteProduct(action: AnyAction): Generator {
 function* fetchListView(action: AnyAction): Generator {
   const listView = yield api
     .get(`/api/account/lists/get/${action.cache}`)
-    .then((res) => res);
+    .then((res: List | null) => res);
 
   // list removed
   if (listView === null) {
@@ -234,9 +235,9 @@ function* fetchListView(action: AnyAction): Generator {
     return;
   }
 
-  listView.listType = listView.users.find(
-    (user) => user.userId === getUser()?.user_id
-  ).listType;
+  listView.listType = listView.users.length
+    ? ListPrivateEnum.SHARED
+    : ListPrivateEnum.PRIVATE;
 
   yield put({
     type: "SET_LIST_VIEW",
