@@ -119,7 +119,7 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
                             "{{tracknum}}",
                             track.tracknum
                           )}
-                          className={Styles.textBlue}
+                          className={Styles.tracknumLink}
                         >
                           {track.tracknum}
                         </a>

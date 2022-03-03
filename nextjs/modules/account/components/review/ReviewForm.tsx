@@ -151,7 +151,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
             actions.setErrors(res.errors);
           }
 
-          setIsSubmitting(false);
+          window.location.href = `/product/${product.productid}/`;
         },
       })
     );
