@@ -57,13 +57,16 @@ class GeoIpHelper
         return self::getGeoipLocation2($ip);
     }
 
-    public static function getMelissaIpLocation($ip)
+    public static function getMelissaIpLocation($ip): ?GeoipLitecityLocationModel
     {
         if ($res = FraudCheckHelper::fetchMelissaIp($ip)) {
+            if (!$res['Country'] || !$res['State']) {
+                return null;
+            }
             if ($country = CountryModel::objects()->get(['name' => $res['Country']])) {
                 $state = StateModel::objects()->get(['state' => $res['State'], 'country_code' => $country->code]);
             }
-            $model = new GeoipLitecityLocationModel(
+            return new GeoipLitecityLocationModel(
                 [
                     'country' => $country ? $country->code : null,
                     'region' => $state ? $state->code : null,
@@ -71,7 +74,6 @@ class GeoIpHelper
                     'postalCode' => $res['PostalCode'] ?? null,
                 ]
             );
-            return $model;
         }
         return null;
     }
