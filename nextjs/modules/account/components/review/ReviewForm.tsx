@@ -150,7 +150,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
             actions.setErrors(res.errors);
           }
 
-          setIsSubmitting(false);
+          window.location.href = `/product/${product.productid}/`;
         },
       })
     );
@@ -430,7 +430,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       />
                     </Label>
 
-                    {!!touched.headLine && !!errors.headLine && <Feedback type="invalid">{errors.headLine}</Feedback>}
+                    {!!touched.headLine && !!errors.headLine && (
+                      <Feedback type="invalid">{errors.headLine}</Feedback>
+                    )}
                   </div>
 
                   <Label>
@@ -448,7 +450,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       disabled={isSubmitting}
                     />
                   </Label>
-                  {!!touched.textBody && !!errors.textBody && <Feedback type="invalid">{errors.textBody}</Feedback>}
+                  {!!touched.textBody && !!errors.textBody && (
+                    <Feedback type="invalid">{errors.textBody}</Feedback>
+                  )}
 
                   <h2
                     className={
