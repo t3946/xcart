@@ -21,7 +21,7 @@ function* getProductRatingsAndReviews(action): Generator {
 
   yield put({
     type: "SET_PRODUCT_REVIEWS_ORDERS",
-    reviews: res.reviewsOrders,
+    reviews: res.reviews,
   });
 
   yield put({
