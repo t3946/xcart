@@ -30,7 +30,9 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
   const { product } = props;
   const dispatch = useDispatch();
   const user = useSelector((e: StoreInterface) => e.user);
-
+  if (!user) {
+    return null;
+  }
   const [files, setFiles] = React.useState([]);
   const initialValues = {
     overall: 0,

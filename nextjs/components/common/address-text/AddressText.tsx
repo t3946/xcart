@@ -18,7 +18,6 @@ interface IProps {
 }
 
 const AddressText: React.FC<IProps> = ({ address }) => {
-  console.log(address);
   return (
     <>
       {!!address.street && `${address.street},`} {address.detailed ?? ""}
