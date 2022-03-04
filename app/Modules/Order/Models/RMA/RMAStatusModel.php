@@ -29,4 +29,9 @@ class RMAStatusModel extends Model
             'orderby' => IntField::class
         ];
     }
+
+    public function __toString()
+    {
+        return (string)$this->name;
+    }
 }

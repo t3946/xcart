@@ -3,11 +3,11 @@
 
 {if $rmas ne ""}
 <br />
-{foreach from=$rmas item=rma key=rma_id}
+{foreach from=$rmas item=rma}
 
-<a name="target_rma_{$rma_id}" id="target_rma_{$rma_id}"></a>
+<a name="target_rma_{$rma->pk}" id="target_rma_{$rma->pk}"></a>
 
-<div align="center"><h1  style="color: #550000; margin-bottom: 0px;">RMA Request # {$order.order_prefix}{$order.orderid}_R-{$rma.rma_number}</h1></div>
+<div align="center"><h1  style="color: #550000; margin-bottom: 0px;">RMA Request # {$order.order_prefix}{$order.orderid}_R-{$rma->rma_number}</h1></div>
 
 {include file="customer/main/rma_products.tpl" rma_info=$rma}
 

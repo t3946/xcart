@@ -23,8 +23,6 @@ use Xcart\OrderDetail;
  * @property ProductModel product_model
  * @property OrderModel order
  * @property int orderid
- * @property ProductModel product_model
- * @property int amount
  */
 class OrderDetailModel extends Model
 {
@@ -89,11 +87,6 @@ class OrderDetailModel extends Model
             ],
             'amount' => [
                 'class' => IntField::class,
-            ],
-            'order' => [
-                'class' => HasManyField::class,
-                'modelClass' => OrderModel::class,
-                'link' => ['orderid' => 'orderid'],
             ],
         ];
     }

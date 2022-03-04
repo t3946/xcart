@@ -8,6 +8,7 @@ use Modules\Order\Models\OrderModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
@@ -60,6 +61,11 @@ class RMAModel extends Model
                 'class' => CharField::class,
                 'default' => '',
                 'null' => false
+            ],
+            'details' => [
+                'class' => HasManyField::class,
+                'modelClass' => RMADetailModel::class,
+                'link' => ['rma_id' => 'rma_id']
             ],
             'images' => [
                 'class' => ManyToManyField::class,

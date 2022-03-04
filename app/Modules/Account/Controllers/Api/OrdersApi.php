@@ -306,6 +306,7 @@ class OrdersApi extends Controller
                 'amount' => $item['amount'],
                 'would_like' => $item['wouldLike'],
                 'pageUrl' => 'page url',
+                'itemid' => $detail->pk
             ];
         }
 
@@ -314,6 +315,8 @@ class OrdersApi extends Controller
             return;
         }
 
+        $rma_count = RMAModel::objects()->filter(['orderid' => $order->pk])->count();
+
         $rma = new RMAModel([
             'orderid' => $order->pk,
             'zipcode' => $order->s_zipcode,
@@ -321,8 +324,7 @@ class OrdersApi extends Controller
             'order_email' => $order->email,
             'explanation' => $request_data['rmaText'],
             'status' => RMAStatusModel::STATUS_SUBMIT_TO_US,
-            'rma_number' => 1,
-
+            'rma_number' => ++$rma_count,
         ]);
 
         if ($_FILES) {

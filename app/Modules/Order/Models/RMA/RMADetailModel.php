@@ -20,7 +20,13 @@ class RMADetailModel extends Model
     public static function getFields()
     {
         return [
-            'rma_id' => AutoField::class,
+            'id' => AutoField::class,
+            'rma' => [
+                'field' => 'rma_id',
+                'class' => ForeignField::class,
+                'modelClass' => RMAModel::class,
+                'link' => ['rma_id' => 'rma_id']
+            ],
             'product_item' => [
                 'field' => 'productid',
                 'class' => ForeignField::class,

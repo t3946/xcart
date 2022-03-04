@@ -21,6 +21,7 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
+use Modules\Order\Models\RMA\RMAModel;
 use Modules\Order\Stores\OrderStore;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
@@ -2964,15 +2965,7 @@ if (!empty($config["Purchase_Order"]["Checks_deposited_Attention_tag"])) {
 
 func_other_customer_orders($order["email"], $orderid);
 
-$rmas = func_query_hash("SELECT * FROM $sql_tbl[rmas] WHERE orderid='$orderid'", 'rma_id', false);
-if (!empty($rmas)) {
-    foreach ($rmas as $k => $v) {
-        $rmas[$k]["rma_id"]   = $k;
-        $rmas[$k]["products"] = func_query_hash("SELECT * FROM $sql_tbl[rma_details] WHERE rma_id='$k'", 'itemid', false);
-        $rmas[$k]["images"]   = func_query("SELECT * FROM $sql_tbl[images_R] WHERE id='$k'");
-    }
-
-    $smarty->assign("rmas", $rmas);
+    $smarty->assign("rmas", RMAModel::objects()->filter(['orderid' => $orderid])->all());
 
     $rma_would_like_variants = func_query("SELECT * FROM $sql_tbl[rma_would_like_variants] ORDER BY orderby, name");
     $smarty->assign("rma_would_like_variants", $rma_would_like_variants);
@@ -2982,7 +2975,6 @@ if (!empty($rmas)) {
 
     $crypt_orderid = text_crypt($orderid);
     $smarty->assign("crypt_orderid", $crypt_orderid);
-}
 
 if (!empty($order["refund_groups"])) {
     $TOTAL_refund_groups_total_gross = 0;
