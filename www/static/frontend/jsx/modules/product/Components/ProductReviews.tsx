@@ -1,15 +1,35 @@
 import React from "react";
 import OverallRating from "@client/jsx/modules/shared/components/ratings/OverallRating";
-import {getRatingsAndReviewsAction} from "@client/jsx/redux/actions/ProductActions";
-import {useDispatch} from "react-redux";
+import { getRatingsAndReviewsAction } from "@client/jsx/redux/actions/ProductActions";
+import { useDispatch } from "react-redux";
 import ArrowIcon from "@client/modules/icon/components/account/chevron-down/AccountSidebarTablet";
-import {Collapse} from "react-bootstrap";
+import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
 import Reviews from "@client/modules/product/Components/Reviews";
-import AppData, {route} from "@client/jsx/utils/AppData";
+import AppData, { route } from "@client/jsx/utils/AppData";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
+const WriteAReviewButton: React.FC = function () {
+  const user = useSelectorAccount((e) => e.user);
+  const productId = AppData.product_info.product.productid;
+  const href = user
+    ? `/account/create-review/${productId}`
+    : "/account/login?page=" +
+      encodeURIComponent(`/create-review/${productId}`);
+
+  return (
+    <a
+      className="d-flex justify-content-center text-decoration-none"
+      href={href}
+    >
+      <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
+        <span className={"d-none d-md-block"}>write a customer review</span>
+        <span className={"d-md-none"}>write a review</span>
+      </button>
+    </a>
+  );
+};
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
@@ -50,26 +70,9 @@ const ProductReviews: React.FC = function () {
     }
   } else {
     dispatch(
-      getRatingsAndReviewsAction({data: {productId, limit: 3, offset: 0}})
+      getRatingsAndReviewsAction({ data: { productId, limit: 3, offset: 0 } })
     );
   }
-
-  const WriteAReviewButton: React.FC = function () {
-    const productId = AppData.product_info.product.productid;
-    const href = user ? `/account/create-review/${productId}` : "/account/login";
-
-    return (
-      <a
-        className="d-flex justify-content-center text-decoration-none"
-        href={href}
-      >
-        <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
-          <span className={"d-none d-md-block"}>write a customer review</span>
-          <span className={"d-md-none"}>write a review</span>
-        </button>
-      </a>
-    );
-  };
 
   function featureRatingsTemplate() {
     const ratingElements = [];
@@ -80,7 +83,7 @@ const ProductReviews: React.FC = function () {
       }
 
       for (let i = 0; i < ratings.features.length; i++) {
-        const {rating} = ratings.features[i];
+        const { rating } = ratings.features[i];
         const total = parseInt(ratings.features[i].total);
 
         ratingElements.push(
@@ -132,7 +135,7 @@ const ProductReviews: React.FC = function () {
   function writeAReviewTemplate() {
     return (
       <>
-        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark"/>
+        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
 
         <h4 className={"product-reviews-header mb-2 mb-lg-3 mb-md-20"}>
           Review this product
@@ -142,7 +145,7 @@ const ProductReviews: React.FC = function () {
           Share your thoughts with other customers
         </p>
 
-        <WriteAReviewButton/>
+        <WriteAReviewButton />
       </>
     );
   }
@@ -161,8 +164,8 @@ const ProductReviews: React.FC = function () {
         >
           Overall
           <span className={"overall-header-total d-lg-none"}>
-              {totalRatingsNumber.toLocaleString()} Ratings
-            </span>
+            {totalRatingsNumber.toLocaleString()} Ratings
+          </span>
         </h4>
 
         <div className="product-rating">
@@ -174,9 +177,7 @@ const ProductReviews: React.FC = function () {
           <div className="how-calculated product-reviews_how-calculated">
             <div
               className={"common-link common-link_spoiler d-inline-block"}
-              onClick={() =>
-                setIsVisibleHowCalculated(!isVisibleHowCalculated)
-              }
+              onClick={() => setIsVisibleHowCalculated(!isVisibleHowCalculated)}
             >
               <div className="d-flex align-items-center">
                 <ArrowIcon
@@ -188,17 +189,17 @@ const ProductReviews: React.FC = function () {
 
             <Collapse in={isVisibleHowCalculated}>
               <p className={"how-calculated_text"}>
-                To calculate the overall star rating and percentage breakdown
-                by star, we don’t use a simple average. Instead, our system
-                considers things like how recent a review is and if the
-                reviewer bought the item on S3 stores. It also analyzes
-                reviews to verify trustworthiness.
+                To calculate the overall star rating and percentage breakdown by
+                star, we don’t use a simple average. Instead, our system
+                considers things like how recent a review is and if the reviewer
+                bought the item on S3 stores. It also analyzes reviews to verify
+                trustworthiness.
               </p>
             </Collapse>
           </div>
         </div>
 
-        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark"/>
+        <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />
       </>
     );
   }
@@ -223,7 +224,7 @@ const ProductReviews: React.FC = function () {
         </div>
 
         <div className="col-12 col-lg product-reviews-right-column">
-          <Reviews productId={productId}/>
+          <Reviews productId={productId} />
         </div>
       </div>
     </div>

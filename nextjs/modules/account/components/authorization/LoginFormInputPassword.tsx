@@ -34,6 +34,9 @@ interface IProps {
 const LoginFormInputPassword = function (props: IProps): any {
   const dispatch = useDispatch();
   const router = useRouter();
+  const redirectURL = router.query.page
+    ? decodeURIComponent(router.query.page)
+    : "/dashboard";
   const inputRef = React.createRef<HTMLInputElement>();
   const {
     goToInputLogin,
@@ -126,7 +129,7 @@ const LoginFormInputPassword = function (props: IProps): any {
               setIsCaptchaRequired(false);
               dispatch(userSetAction(res.data.user));
               goToInputLogin(true);
-              router.push("/dashboard");
+              router.push(redirectURL);
               return;
             }
 

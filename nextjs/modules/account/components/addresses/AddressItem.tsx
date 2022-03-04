@@ -61,7 +61,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   const editAddress = () => {
     editAddressDialog.handleClickOpen();
   };
-  console.log({ addressInfo });
+
   return (
     <div
       className={cn(

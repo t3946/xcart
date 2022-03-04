@@ -39,6 +39,9 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
   const inputRef = React.createRef<HTMLInputElement>();
   const dispatch = useDispatch();
   const router = useRouter();
+  const redirectURL = router.query.page
+    ? decodeURIComponent(router.query.page)
+    : "/dashboard";
   const initialState = {
     code: "",
     rememberBrowser: false,
@@ -73,7 +76,7 @@ const LoginFormInputOTP: React.FC<IProps> = function (props: IProps): any {
             if (res.data.user) {
               onLogin();
               dispatch(userSetAction(res.data.user));
-              router.push("/dashboard");
+              router.push(redirectURL);
               return;
             }
           },

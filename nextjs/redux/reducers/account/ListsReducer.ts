@@ -40,12 +40,14 @@ const accountListReducer = (
     case "SET_LISTS":
       return {
         ...state,
-        lists: action.lists.map((list) => ({
-          ...list,
-          listType: list.users.length
-            ? ListPrivateEnum.SHARED
-            : ListPrivateEnum.PRIVATE,
-        })),
+        lists:
+          action.lists &&
+          action.lists.map((list) => ({
+            ...list,
+            listType: list.users.length
+              ? ListPrivateEnum.SHARED
+              : ListPrivateEnum.PRIVATE,
+          })),
         loading: false,
       };
     case "SET_LIST_VIEW":
