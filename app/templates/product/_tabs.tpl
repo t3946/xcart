@@ -28,7 +28,7 @@
           <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
         </li>
 
-        {if $site.account_enabled === false}
+        {if $site.account_enabled === true}
         <li class="tabs-title">
             <a href="#reviews" aria-selected="false">Customer reviews</a>
         </li>
@@ -78,7 +78,7 @@
             </div>
         </div>
 
-        {if $site.account_enabled === false}
+        {if $site.account_enabled === true}
             <div class="tabs-panel" id="reviews">
                 <div class="tab-content">
                     <div id="product-reviews-target"></div>
