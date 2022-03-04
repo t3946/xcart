@@ -43,7 +43,6 @@ $(".mobileMenu")
   .find(".accordion-item")
   .each(function () {
     let accordion = $(this);
-    console.log(this);
     let contentBlock = accordion.find(".accordion-content");
     accordion.find(".accordion-title").on("click", function () {
       accordion.toggleClass("is-active");

@@ -72,6 +72,17 @@ function* getReviews(action): Generator {
     });
 }
 
+function* reportReview(action): Generator {
+  const { data, success, error } = action.payload;
+
+  yield api
+    .post<any>("/api-client/review/report-abuse", JSON.stringify(data))
+    .then(function (res) {
+      success(res);
+    })
+    .catch(error);
+}
+
 export default function* reviewsActionWatcher(): SagaIterator {
   yield takeLatest(
     "GET_PRODUCT_RATINGS_AND_REVIEWS",
@@ -81,4 +92,5 @@ export default function* reviewsActionWatcher(): SagaIterator {
   yield takeLatest("MARK_HELPFUL", markHelpful);
   yield takeLatest("UNMARK_HELPFUL", unmarkHelpful);
   yield takeLatest("GET_REVIEWS", getReviews);
+  yield takeLatest("REPORT_REVIEW", reportReview);
 }

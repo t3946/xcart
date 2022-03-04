@@ -7,9 +7,10 @@ import { useRouter } from "next/router";
 
 interface IProps {
   orderId: number;
+  orderStatus: string;
 }
 
-const Navigation: React.FC<IProps> = ({ orderId }) => {
+const Navigation: React.FC<IProps> = ({ orderId, orderStatus }) => {
   const router = useRouter();
   const user = useSelectorAccount((e: StoreInterface) => e.user);
 
@@ -19,10 +20,10 @@ const Navigation: React.FC<IProps> = ({ orderId }) => {
     //   path: "decisions-required",
     //   badge: user?.decisions_required_count || 0,
     // },
-    {
-      text: "Order tracking",
-      path: "order-tracking",
-    },
+    // {
+    //   text: "Order tracking",
+    //   path: "order-tracking",
+    // },
     { text: "Products ordered", path: "products-ordered" },
     { text: "Addresses and contacts", path: "addresses" },
     { text: "Order actions", path: "order-actions" },
@@ -31,6 +32,12 @@ const Navigation: React.FC<IProps> = ({ orderId }) => {
     { text: "Order log", path: `log` },
   ];
 
+  if (!["D", "A", "F"].includes(orderStatus)) {
+    menu.unshift({
+      text: "Order tracking",
+      path: "order-tracking",
+    });
+  }
   // const breakpoint = useBreakpoint();
 
   //todo: fix breakpoint
