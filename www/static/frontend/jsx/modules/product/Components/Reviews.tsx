@@ -87,6 +87,9 @@ const Reviews: React.FC<any> = function (props: IProps) {
         },
 
         success(res) {
+          if (!res.reviews.length) {
+            setIsAllLoaded(true);
+          }
           setIsLoading(false);
           setCurrentPage(currentPage + 1);
 
