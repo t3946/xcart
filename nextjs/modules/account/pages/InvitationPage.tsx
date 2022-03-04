@@ -48,8 +48,8 @@ export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
       <MobileMenuBackBtn redirectUrl={`/`} label={"account"} />
       <div className="page-label">Collaboration invitation</div>
       <div className="page-invitation-subtitle">
-        You have been invited to collaborate on "
-        {`${other.listData.name} by ${other.inviteUser}`}
+        You have been invited to collaborate on <b>"{other.listData.name}"</b>{" "}
+        by {other.inviteUser}
       </div>
       <div className="page-invitation-subtitle">
         You will appear to others in the List as{" "}

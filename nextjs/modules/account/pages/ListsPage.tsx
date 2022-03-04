@@ -22,13 +22,33 @@ const ListsPage: React.FC = () => {
   const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
-  const { role, cacheUrl, source } = useSelectorAccount(
-    (state) => state.lists.listView
-  );
-  const { cache } = router.query;
-  const edit = role !== UserPrivateVariantsEnum.VIEW;
-  const isBase = source === ListSource.Default;
+  const userId = useSelectorAccount((e) => e.user.user_id);
+  const listView = useSelectorAccount((state) => state.lists.listView);
+  let role, cacheUrl, source, owner, users;
 
+  if (listView) {
+    role = listView.role;
+    cacheUrl = listView.cacheUrl;
+    source = listView.source;
+    owner = listView.owner;
+    users = listView.users;
+  }
+
+  function listIsEdit() {
+    if (owner?.userId === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    if (
+      users?.find((user) => user.userId === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+  const { cache } = router.query;
+  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
+  const isBase = source === ListSource.Default;
   return (
     <div>
       {lists ? (
@@ -38,7 +58,7 @@ const ListsPage: React.FC = () => {
           ) : (
             <ListMobileMenu />
           ),
-          lg: <ViewLists isShoppingList={isBase} />,
+          lg: !!listView && <ViewLists isShoppingList={isBase} />,
         })
       ) : (
         <React.Fragment>
@@ -62,7 +82,7 @@ const ListsPage: React.FC = () => {
         />
       </BootstrapDialogHOC>
 
-      {edit && (
+      {edit && listView && (
         <div className={StylesInnerPage.accountPageFooter}>
           <Button
             onClick={createIdeaDialog.handleClickOpen}
