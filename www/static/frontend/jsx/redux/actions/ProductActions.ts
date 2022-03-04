@@ -27,3 +27,8 @@ export const clearReviewsAction = (payload: Record<any, any>): any => ({
   type: "CLEAR_REVIEWS",
   payload,
 });
+
+export const reportReview = (payload: Record<any, any>): any => ({
+  type: "REPORT_REVIEW",
+  payload,
+});
