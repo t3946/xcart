@@ -17,7 +17,7 @@ const ShoppingLists: NextPage = () => {
   }, [lists]);
   return (
     <PageTwoColumns bar={<ListsSidebarMenu />}>
-      {listView && <ListsPage />}
+      <ListsPage />
     </PageTwoColumns>
   );
 };

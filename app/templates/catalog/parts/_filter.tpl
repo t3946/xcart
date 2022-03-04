@@ -5,7 +5,7 @@
             {t 'Filter by'}
         </div>
 
-        <ul class="accordion" data-accordion data-allow-all-closed="true" data-multi-expand="true">
+        <ul class="accordion p-0" data-accordion data-allow-all-closed="true" data-multi-expand="true">
             {foreach $filters as $item index=$index}
                 <li class="accordion-item {if $item.changed! && $item.changed}changed{/if}" data-accordion-item>
                     <a class="accordion-title">

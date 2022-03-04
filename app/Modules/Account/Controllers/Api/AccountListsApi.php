@@ -24,7 +24,7 @@ class AccountListsApi extends Controller
             /* @var $role ProductListsUserRoles */
             $role = ProductListsUserRoles::objects()->get(['product_list_id' => $list->product_list_id, 'user_id' => $user->user_id]);
 
-            if ($role !== 'owner') {
+            if ($role->role !== 'editor') {
                 return false;
             }
         }
@@ -237,11 +237,13 @@ class AccountListsApi extends Controller
         $user = Xcart::app()->auth->getUser(true);
 
         if (!$list) {
+            Xcart::app()->logger->debug("no list");
             http_response_code(400);
             return;
         }
 
         if (!self::canEdit($list, $user)) {
+            Xcart::app()->logger->debug("cant edit");
             http_response_code(400);
             return;
         }
@@ -503,7 +505,7 @@ class AccountListsApi extends Controller
         $invited_user = UserModel::objects()->get(['pk' => $user_id]);
 
         $this->jsonResponse([
-            'inviteUser' => $invited_user->name,
+            'inviteUser' => $invited_user->public_name ?? $invited_user->name,
             'type' => $role,
             'listData' => [
                 'productListId' => $list->product_list_id,
