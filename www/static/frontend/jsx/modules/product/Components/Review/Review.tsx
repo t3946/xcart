@@ -10,26 +10,29 @@ import Files from "@client/jsx/modules/product/Components/Review/Files";
 import dateTimeToDate from "@client/jsx/utils/dateTimeToDate";
 
 interface IProps {
-  product_review_id: string;
-  user_id: string;
-  product_id: string;
-  header: string;
-  body: string;
-  location: string;
-  created: string;
-  overall_rating: string;
-  user_public_name: string;
-  user_avatar: string;
-  helpful_total: string;
-  marked_helpful: boolean;
-  files: {
-    images: Record<any, any>[];
-    videos: Record<any, any>[];
-  };
+  review: {
+    product_review_id: string;
+    user_id: string;
+    product_id: string;
+    header: string;
+    body: string;
+    location: string;
+    created: string;
+    overall_rating: string;
+    user_public_name: string;
+    user_avatar: string;
+    helpful_total: string;
+    marked_helpful: boolean;
+    verifiedPurchase: boolean;
+    files: {
+      images: Record<any, any>[];
+      videos: Record<any, any>[];
+    };
+  }
 }
 
 const Review: React.FC<IProps> = function (props: IProps) {
-  const rating = parseFloat(props.overall_rating);
+  const rating = parseFloat(props.review.overall_rating);
   const classes = {
     header: [
       "review__header",
@@ -41,7 +44,7 @@ const Review: React.FC<IProps> = function (props: IProps) {
       },
     ],
   };
-  const helpful_total = parseInt(props.helpful_total);
+  const helpful_total = parseInt(props.review.helpful_total);
 
   function formatDate(dateTime: string): string {
     const dateObject = dateTimeToDate(dateTime);
@@ -53,8 +56,8 @@ const Review: React.FC<IProps> = function (props: IProps) {
   }
 
   function getLocation() {
-    if (props.location) {
-      return "in the " + props.location;
+    if (props.review.location) {
+      return "in the " + props.review.location;
     }
 
     return "from the Earth";
@@ -69,8 +72,8 @@ const Review: React.FC<IProps> = function (props: IProps) {
 
     return (
       <MarkAsHelpful
-        isHelpful={props.marked_helpful}
-        reviewId={parseInt(props.product_review_id)}
+        isHelpful={props.review.marked_helpful}
+        reviewId={parseInt(props.review.product_review_id)}
       />
     );
   }
@@ -79,31 +82,31 @@ const Review: React.FC<IProps> = function (props: IProps) {
     <div className={"reviews__review review"}>
       <div>
         <img
-          src={"/" + props.user_avatar}
-          alt={props.user_public_name}
+          src={"/" + props.review.user_avatar}
+          alt={props.review.user_public_name}
           width={32}
           height={32}
           className={"review-avatar-image review__avatar"}
         />
-        {props.user_public_name}
+        {props.review.user_public_name}
       </div>
 
       <div className={"d-md-flex align-items-center"}>
-        <RatingStars rating={parseFloat(props.overall_rating)} />
-        <h3 className={classnames(classes.header)}>{props.header}</h3>
+        <RatingStars rating={parseFloat(props.review.overall_rating)} />
+        <h3 className={classnames(classes.header)}>{props.review.header}</h3>
       </div>
 
       <div className={"review-location review__location"}>
         <div className={"review-gray-text"}>
-          Reviewed {getLocation()} on {formatDate(props.created)}
+          Reviewed {getLocation()} on {formatDate(props.review.created)}
         </div>
 
-        <span className={"review-verified-purchase"}>Verified Purchase</span>
+        {props.review.verifiedPurchase && <span className={"review-verified-purchase"}>Verified Purchase</span>}
       </div>
 
-      <Body content={props.body} />
+      <Body content={props.review.body} />
 
-      <Files files={props.files} />
+      <Files files={props.review.files} />
 
       <div>
         <HelpfulCount count={helpful_total} />

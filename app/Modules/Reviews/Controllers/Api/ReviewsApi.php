@@ -5,6 +5,8 @@ namespace Modules\Reviews\Controllers\Api;
 use Modules\Account\Controllers\AccountController;
 
 use Modules\Core\Models\CountryModel;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Reviews\Models\Images\ImagesModel;
 use Modules\Reviews\Models\Videos\VideosModel;
 use Modules\Reviews\Models\ProductReviewsModel;
@@ -233,6 +235,7 @@ class ReviewsApi extends Controller
             '*',
             'helpful__user_id',
             'overall_rating' => 'rating__rating',
+            'user_id' => 'user__user_id',
             'user_public_name' => 'user__public_name',
             'user_avatar' => 'user__avatar_image',
             'marked_helpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
@@ -295,6 +298,7 @@ class ReviewsApi extends Controller
         $reviews = $query_set->all();
 
         for ($i = 0; $i < count($reviews); $i++) {
+            $review = $reviews[$i];
             $reviews[$i]['marked_helpful'] = $reviews[$i]['marked_helpful'] !== 0;
             $filter = [
                 "review_id" => $reviews[$i]["product_review_id"]
@@ -313,6 +317,24 @@ class ReviewsApi extends Controller
                 'images' =>$images,
                 'videos' => ReviewsVideosModel::objects()->select(['videos__*'])->asArray()->all($filter),
             ];
+
+            // check on purchase
+            $orders = OrderModel::objects()->all([
+                'user_id' => $review['user_id'],
+                'cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+                'dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+            ]);
+            $reviews[$i]['verified_purchase'] = false;
+
+            foreach ($orders as $_ => $order) {
+                $details = $order->detail_models;
+
+                foreach ($details as $_ => $detail) {
+                    if ($detail->productid === $product_id) {
+                        $reviews[$i]['verifiedPurchase'] = true;
+                    }
+                }
+            }
         }
 
         return $reviews;

@@ -54,9 +54,9 @@ const Reviews: React.FC<any> = function (props: IProps) {
     if (reviews) {
       for (let i = 0; i < reviews.length; i++) {
         if (i + 1 === reviews.length) {
-          reviewsTemplates.push(<Review {...reviews[i]} ref={LastReviewRef} />);
+          reviewsTemplates.push(<Review review={reviews[i]} ref={LastReviewRef} />);
         } else {
-          reviewsTemplates.push(<Review {...reviews[i]} />);
+          reviewsTemplates.push(<Review review={reviews[i]} />);
         }
       }
     }
