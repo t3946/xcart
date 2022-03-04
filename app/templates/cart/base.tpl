@@ -30,9 +30,9 @@
                 </div>
                 <div class="col col-lg-4 contacts-logo-block d-none d-lg-block">
                     <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
-                        <div class="text-order-online">
+                        <div class="text-order-online ws-nowrap">
                             <span class="green-circle-icon"></span>
-                            <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
+                            <span class="grey-text-label ws-nowrap">{t 'Order online or call us. Operators are standing by!'}</span>
                         </div>
                         <div class="phone">
                             <span class="phone-number">{$config.local_phone}</span>

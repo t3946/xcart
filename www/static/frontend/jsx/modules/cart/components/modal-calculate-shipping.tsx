@@ -358,7 +358,7 @@ function ModalCalculateShipping() {
       <img
         src={"/static/frontend/dist/images/logos/s3stores.svg"}
         alt="s3stores"
-        className="show-for-large s3-logo-big"
+        className="show-for-large s3-logo-big m-lg-0"
         onClick={handleOpen}
       />
       <Modal
