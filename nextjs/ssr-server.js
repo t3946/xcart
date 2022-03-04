@@ -12,6 +12,7 @@ const UserApi = require("./server/api/user/User");
 const DecisionsApi = require("./server/api/Decisions");
 const OrdersApi = require("./server/api/Orders");
 const ProductApi = require("./server/api/Product");
+const ReviewsApi = require("./server/api/Reviews");
 const cookieParser = require("cookie-parser");
 
 function listen() {
@@ -31,6 +32,7 @@ apiApp.use("/user", UserApi);
 apiApp.use("/decisions", DecisionsApi);
 apiApp.use("/orders", OrdersApi);
 apiApp.use("/product", ProductApi);
+apiApp.use("/review", ReviewsApi);
 mainApp.use("/api-client", apiApp);
 
 if (process.env.RUN_BACKEND_ONLY === "true") {
