@@ -7,16 +7,19 @@ import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import moment from "moment";
 import { useRouter } from "next/router";
+import cn from "classnames";
+
 interface OrderTrackingPage {
   order: OrderView;
 }
+
 export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
   const router = useRouter();
   if (["D", "A", "F"].includes(order.cb_status)) {
     router.push(`/order/${order.orderId}/products-ordered`);
     return null;
   }
-  
+
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
@@ -48,10 +51,10 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
       ))}
       <div className="order-tracking-container order-tracking-footer">
         {!!order.payment.status && (
-          <p>
+          <div className={cn({ "mb-3": !!order.payment.date })}>
             <b>Payment status: </b>
             <span>{order.payment.status}</span>
-          </p>
+          </div>
         )}
 
         {!!order.payment.date && (

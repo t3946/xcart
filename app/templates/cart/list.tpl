@@ -210,13 +210,13 @@
 
                 <div class="bottom_line">
                     <div class="b-next">
-                        <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect">
+                        <a href="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}" class="button yellow waves waves-orange waves-effect text-decoration-none">
                             {t 'Checkout'}
                         </a>
                     </div>
 
                     <div class="b-back">
-                        <a href="/" class="button yellow-white waves waves-orange waves-effect">
+                        <a href="/" class="button yellow-white waves waves-orange waves-effect text-decoration-none">
                             {t 'Shop more'}
                         </a>
                     </div>

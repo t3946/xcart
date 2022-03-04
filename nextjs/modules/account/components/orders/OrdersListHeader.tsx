@@ -26,7 +26,10 @@ export const OrdersListHeader: React.FC<OrdersListHeaderProps> = ({
       <div className={"d-flex align-items-center"}>
         <div className={cn(Styles.timePeriod, "me-2")}>Time period:</div>
         <Select
-          classes={{ indicatorSeparator: "d-none" }}
+          classes={{
+            indicatorSeparator: "d-none",
+            select: Styles.selectTimeContainer,
+          }}
           clearable={false}
           name={"awd"}
           options={ordersHeaderSelectValues}

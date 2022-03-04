@@ -5,7 +5,7 @@
 
 {block "header"}
     <header class="cart-header" itemscope itemtype="http://schema.org/WPHeader">
-        <section class="container px-0">
+        <section class="container">
             <div class="logo_menu row d-flex">
                 <div class="col col-6 col-lg-4 shop-logo-block">
                     <a href="/">
@@ -63,17 +63,19 @@
             {if $breadcrumbs}
                 <div class="container">
                     <div class="row cart-steps-container">
-                    {if !$breadcrumbs->isFirstStage()}
-                        <a class="col-auto shrink cart-steps-back d-lg-none"
-                           href="{$breadcrumbs->getPrevStage().url}">
-                            <span class="img">
-                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
-                            </span>
-                            <span class="text">{t 'BACK'}</span>
-                        </a>
-                    {/if}
+                    <div class="col-auto pe-0 d-md-none">
+                        {if !$breadcrumbs->isFirstStage()}
+                            <a class="cart-steps-back d-lg-none d-flex m-0"
+                               href="{$breadcrumbs->getPrevStage().url}">
+                                <span class="img">
+                                    <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg" alt="">
+                                </span>
+                                <span class="text">{t 'BACK'}</span>
+                            </a>
+                        {/if}
+                    </div>
 
-                    <section class="cart-steps-section col pe-0">
+                    <section class="cart-steps-section col">
                         <ul class="cart-steps-items list-unstyled m-0">
                             {foreach $breadcrumbs as $key => $item}
                                 <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
