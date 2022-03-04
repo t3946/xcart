@@ -10,21 +10,6 @@ import Reviews from "@client/modules/product/Components/Reviews";
 import AppData, {route} from "@client/jsx/utils/AppData";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
-const WriteAReviewButton: React.FC = function () {
-  const productId = AppData.product_info.product.productid;
-
-  return (
-    <a
-      className="d-flex justify-content-center text-decoration-none"
-      href={`/account/create-review/${productId}`}
-    >
-      <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
-        <span className={"d-none d-md-block"}>write a customer review</span>
-        <span className={"d-md-none"}>write a review</span>
-      </button>
-    </a>
-  );
-};
 
 const ProductReviews: React.FC = function () {
   const dispatch = useDispatch();
@@ -68,6 +53,23 @@ const ProductReviews: React.FC = function () {
       getRatingsAndReviewsAction({data: {productId, limit: 3, offset: 0}})
     );
   }
+
+  const WriteAReviewButton: React.FC = function () {
+    const productId = AppData.product_info.product.productid;
+    const href = user ? `/account/create-review/${productId}` : "/account/login";
+
+    return (
+      <a
+        className="d-flex justify-content-center text-decoration-none"
+        href={href}
+      >
+        <button className="mx--10 m-md-0 form-button w-100 w-md-auto w-lg-100 p-lg-0">
+          <span className={"d-none d-md-block"}>write a customer review</span>
+          <span className={"d-md-none"}>write a review</span>
+        </button>
+      </a>
+    );
+  };
 
   function featureRatingsTemplate() {
     const ratingElements = [];
@@ -128,10 +130,6 @@ const ProductReviews: React.FC = function () {
   }
 
   function writeAReviewTemplate() {
-    if (!user) {
-      return;
-    }
-
     return (
       <>
         <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark"/>
