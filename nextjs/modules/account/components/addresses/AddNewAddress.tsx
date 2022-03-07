@@ -4,7 +4,7 @@ import PlusPanelButton from "@modules/account/components/common/PlusPanelButton"
 import AddressItemStyles from "@modules/account/components/addresses/AddressItem.module.scss";
 
 interface IProps {
-  onClick: any;
+  onClick?: any;
   classes?: {
     container?: any;
     text?: any;

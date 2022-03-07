@@ -10,26 +10,29 @@ import SliderProducts from "@modules/account/components/dashboard/SliderProducts
 const Dashboard = (props) => {
   const user = useSelectorAccount((e) => e.user);
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="mt-20 mt-md-0 pb-3">
       <div className={cn("d-flex", "flex-dir-column", Styles.pageColumn)}>
-        <AccountInfo />
-        {props.orders?.map((order, key) => (
-          <OrderTracking orderInfo={order} key={`tracking-${key}`} />
-        ))}
+        {user && (
+          <>
+            <AccountInfo />
+            {props.orders?.map((order, key) => (
+              <OrderTracking orderInfo={order} key={`tracking-${key}`} />
+            ))}
+          </>
+        )}
 
         <AccountNavigation />
-        <SliderProducts
-          classes={{
-            container: ["d-none", "d-md-block", Styles.dashboard__slider],
-          }}
-          title="Recommended products"
-          url={"/category/featured"}
-        />
+
+        {user && (
+          <SliderProducts
+            classes={{
+              container: ["d-none", "d-md-block", Styles.dashboard__slider],
+            }}
+            title="Recommended products"
+            url={"/category/featured"}
+          />
+        )}
       </div>
     </div>
   );

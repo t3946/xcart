@@ -2,8 +2,6 @@ import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import DashboardPage from "@modules/account/components/dashboard/Dashboard";
 import { getInstance } from "@services/axios/Instance";
-import { useRouter } from "next/router";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
@@ -15,7 +13,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
       orders = res.data;
     })
     .catch((err) => {
-      console.log(err);
+      orders = [];
     });
 
   return {
@@ -24,15 +22,6 @@ export async function getServerSideProps(ctx: Record<any, any>) {
 }
 
 function Dashboard(props: any) {
-  const router = useRouter();
-  const user = useSelectorAccount((e) => e.user);
-
-  React.useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  });
-
   return (
     <PageTwoColumns>
       {props.orders && <DashboardPage {...props} />}

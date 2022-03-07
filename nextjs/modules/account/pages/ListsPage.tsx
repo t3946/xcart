@@ -22,8 +22,13 @@ const ListsPage: React.FC = () => {
   const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
-  const userId = useSelectorAccount((e) => e.user.user_id);
+  const user = useSelectorAccount((e) => e.user);
   const listView = useSelectorAccount((state) => state.lists.listView);
+
+  if (!user) {
+    return null;
+  }
+
   let role, cacheUrl, source, owner, users;
 
   if (listView) {
@@ -35,6 +40,8 @@ const ListsPage: React.FC = () => {
   }
 
   function listIsEdit() {
+    const userId = user.user_id;
+
     if (owner?.userId === userId) {
       return UserPrivateVariantsEnum.EDIT;
     }
