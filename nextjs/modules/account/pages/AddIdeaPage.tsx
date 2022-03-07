@@ -17,7 +17,7 @@ export const AddIdeaPage: React.FC = () => {
         redirectUrl={`/shopping-lists/${cache}`}
         label={"back"}
       />
-      <div className="page-label">Add idea</div>
+      <div className="page-label">Create a new Idea</div>
       <AddIdea listHash={cache} onCancelBtnClick={onCancelClick} />
     </div>
   );
