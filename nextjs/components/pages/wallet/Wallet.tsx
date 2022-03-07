@@ -1,7 +1,5 @@
 import React from "react";
 import { AddNewPaymentMethod } from "@components/pages/wallet/AddNewPaymentMethod";
-//todo: deprecated
-// import { getCards } from "@redux/actions/account-actions/PaymentsActions";
 import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import { Card as ICard } from "@stripe/stripe-js";

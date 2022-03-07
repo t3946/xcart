@@ -8,13 +8,23 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   let cards;
   let defaultCardId;
 
-  await instance.get("/api-client/user/stripe/card/get").then((res) => {
-    cards = res.data.data;
-  });
+  await instance
+    .get("/api-client/user/stripe/card/get")
+    .then((res) => {
+      cards = res.data.data;
+    })
+    .catch((err) => {
+      cards = [];
+    });
 
-  await instance.get("/api-client/user/stripe/customer/get").then((res) => {
-    defaultCardId = res.data.default_source;
-  });
+  await instance
+    .get("/api-client/user/stripe/customer/get")
+    .then((res) => {
+      defaultCardId = res.data.default_source;
+    })
+    .catch((err) => {
+      defaultCardId = null;
+    });
 
   return {
     props: {
