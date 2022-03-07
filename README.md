@@ -37,6 +37,7 @@
 Перейти в `/www/static`
 
 Выполнить
+- `npm run gulp frontend:bem`
 - `npm run gulp build:frontend [NODE_ENV=production]`
 
 #### Админская часть
