@@ -45,6 +45,8 @@ class AccountController extends FrontendController
             "shortName" => $site->short_name,
             "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
             'account_enabled' => $site->account_enabled,
+            'logo' => $site->logo,
+            'logo_mobile' => $site->logo_mobile,
         ], null, 'site');
 
         StorageHelper::push([
