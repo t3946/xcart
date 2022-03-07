@@ -28,22 +28,26 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
     <div className="order-item-container">
       <div className="order-item-header-container">
         <div className="order-item-body-left-side header-left">
-          <div className="order-item-name">
-            Order # <b>{order.orderNumber}</b>
-          </div>
-          <Link
-            href={`/order/[id]/order-tracking`}
-            as={`/order/${order.orderId}/order-tracking`}
-          >
-            <a className={"text-decoration-none"}>
-              <Button
-                className={"order-details-btn w-auto"}
-                theme={ETheme.outlined}
+          <div className="row">
+            <div className="col">
+              <div className="order-item-name ws-nowrap text-center mb-3">
+                Order # <b>{order.orderNumber}</b>
+              </div>
+            </div>
+
+            <div className="col">
+              <Link
+                href={`/order/[id]/order-tracking`}
+                as={`/order/${order.orderId}/order-tracking`}
               >
-                order details
-              </Button>
-            </a>
-          </Link>
+                <a className={"text-decoration-none w-100 w-md-auto"}>
+                  <Button className={"w-100 w-md-auto"} theme={ETheme.outlined}>
+                    order details
+                  </Button>
+                </a>
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="order-item-body-right-side header-right">
           <div>
