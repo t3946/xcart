@@ -60,6 +60,8 @@ class AccountController extends FrontendController
             "cidev_top_header_code" => $config['cidev_top_header_code'],
             "cidev_header_code" => $config['cidev_header_code'],
             "companyName" => $config['company_name'],
+            'logo' => (string)$site->logo,
+            'logo_mobile' => (string)$site->logo_mobile,
         ], null, 'config');
 
         StorageHelper::push([

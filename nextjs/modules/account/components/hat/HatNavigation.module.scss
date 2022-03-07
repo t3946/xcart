@@ -32,6 +32,10 @@
   min-width: pxToRem(320);
   box-shadow: 0 1px #c4c4c4;
   transition: box-shadow 250ms ease-out 0s;
+
+  @include breakpoint(lg) {
+    box-shadow: none;
+  }
 }
 
 .topHeaderMenu_sticky {

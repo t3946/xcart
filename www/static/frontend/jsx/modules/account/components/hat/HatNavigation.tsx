@@ -101,13 +101,13 @@ const HatNavigation = (): any => {
               <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
                 <a href="/">
                   <img
-                    src={`/static/frontend/dist/images/logos/sites/${AppData.site.code}/logo.svg`}
+                    src={`/${AppData.config.logo}`}
                     alt={AppData.config.companyName}
                     className="d-none d-lg-block hat-logo"
                   />
 
                   <img
-                    src={`/static/frontend/dist/images/logos/sites/${AppData.site.code}/logo-small.svg`}
+                    src={`/${AppData.config.logo_mobile}`}
                     alt={AppData.config.companyName}
                     className="d-block d-lg-none hat-logo"
                   />

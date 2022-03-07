@@ -1,25 +1,25 @@
 import React from "react";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
-import { Formik, Form } from "formik";
-import { Form as RBForm } from "react-bootstrap";
+import {useDispatch} from "react-redux";
+import {Form, Formik} from "formik";
+import {Form as RBForm} from "react-bootstrap";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
-import { savePublicProfileAction } from "@redux/actions/account-actions/ProfileActions";
+import {savePublicProfileAction, setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import classnames from "classnames";
 import TimesLightIcon from "@modules/components/icons/font-awesome/times/TimesLightIcon";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import Alert from "@modules/account/components/shared/Alert";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
-import { userSetAction } from "@redux/actions/account-actions/UserActions";
+import {userSetAction} from "@redux/actions/account-actions/UserActions";
 import AvatarEditor from "@modules/account/components/public-profile/AvatarEditor";
 import dataURItoBlob from "@utils/dataURItoBlob";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Button, {ETheme} from "@modules/ui/forms/Button";
 
 const PublicProfile = (): any => {
   const router = useRouter();
@@ -363,7 +363,7 @@ const PublicProfile = (): any => {
                     </div>
 
                     <div className="mb-md-3 col-12 col-lg-6">
-                      <div className="d-flex justify-content-center justify-content-lg-start">
+                      <div className="d-flex justify-content-center justify-content-lg-start mt-10 mt-md-0">
                         <div className="position-relative">
                           {removeAvatarButtonTemplate()}
 
@@ -427,13 +427,14 @@ const PublicProfile = (): any => {
 
                   <Link href={"/dashboard"}>
                     <a className={"text-decoration-none"}>
-                      <button
+                      <Button
                         type="button"
-                        className="form-button public-profile-footer-button form-button__outline ms-md-12"
+                        theme={ETheme.outlined}
                         disabled={isSubmitting}
+                        className={"ms-md-12"}
                       >
                         not now
-                      </button>
+                      </Button>
                     </a>
                   </Link>
                 </div>
