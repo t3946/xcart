@@ -102,7 +102,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
           Styles.shoppingList__mobileHeader
         )}
       >
-        <Link href="/dashboard">
+        <Link href="/shopping-lists/">
           <a
             className={cn(
               Styles.accountButton,
@@ -114,7 +114,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
             )}
           >
             <Arrow className={cn(Styles.accountButtonIcon, "me-2")} />
-            Back to Account
+            Back
           </a>
         </Link>
       </div>
