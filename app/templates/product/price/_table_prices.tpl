@@ -43,10 +43,11 @@
                             <div class="product-table-prices_price-column column-extended col-4">
                                 <div class="product-quantity-extended-price">
                                     {set $estended_price = $model->getFrontendPrice($model->min_amount) * $model->min_amount}
+
                                     {$estended_price|site_currency:$site:'var-price-extended'}
                                 </div>
                                 {if $model->list_price > $model->getFrontendPrice($model->min_amount)}
-                                    <div class="value product-quantity-old-price">
+                                    <div class="value product-quantity-old-price text-center">
                                         {set $extended_price = $model->list_price * $model->min_amount}
                                         {$extended_price|site_currency}
                                     </div>
