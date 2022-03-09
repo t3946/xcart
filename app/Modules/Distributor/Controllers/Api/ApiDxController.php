@@ -168,7 +168,16 @@ class ApiDxController extends Controller
                 }
 
                 $cells_values = array_map(static fn(array $cells) => array_filter($cells), $cells_values);
-                $cells_values = array_filter($cells_values);
+
+                $cells_reverse = array_reverse($cells_values);
+                foreach ($cells_reverse as $key => $reverse) {
+                    if (empty($reverse)) {
+                        unset ($cells_values[$key]);
+                    } else {
+                        break;
+                    }
+                }
+
                 foreach ($cells_values as $cell_values) {
                     for ($i = 0; $i < 100; $i++) {
                         $table_sheets[$t][$i][] = $cell_values[$i] ?? null;
