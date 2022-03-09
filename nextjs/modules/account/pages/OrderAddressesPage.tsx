@@ -1,16 +1,9 @@
 import React from "react";
-import cn from "classnames";
 import { useDialog } from "@modules/account/hooks/useDialog";
-import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
-import { ChangeAddress } from "@modules/account/components/orders/ChangeAddress";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
-import { useRouter } from "next/router";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
 import AddressText from "@components/common/address-text/AddressText";
-
-import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 import Styles from "@modules/account/pages/OrderAddressesPage.module.scss";
 
 interface OrderAddressesPage {
@@ -223,17 +216,6 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
           label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
         />
       )}
-
-      <BootstrapDialogHOC
-        classes={{
-          modal: [StylesAddresses.modalBody, StylesAddresses.modalWidth],
-        }}
-        show={changeShippingAddressDialog.open}
-        title={"Change address"}
-        onClose={changeShippingAddressDialog.handleClose}
-      >
-        <ChangeAddress handleClose={changeShippingAddressDialog.handleClose} />
-      </BootstrapDialogHOC>
     </div>
   );
 };

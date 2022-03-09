@@ -22,8 +22,6 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
   const accordion = useAccordion(200);
   const [showAllItems, setShowAllItems] = useState(false);
 
-  console.log(order);
-
   return (
     <div className="order-item-container">
       <div className="order-item-header-container">
