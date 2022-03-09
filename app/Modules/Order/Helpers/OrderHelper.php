@@ -224,7 +224,7 @@ class OrderHelper
             });
             foreach ($auth_transactions as $auth_tr) {
                 $amount = [
-                    'amount' => number_format($auth_tr->transaction_amount, 2),
+                    'amount' => number_format($auth_tr->transaction_amount, 2, '.', ''),
                     'currency' => $auth_tr->transaction_currency,
                 ];
                 $params = array_merge(PaymentHelper::getPaymentParams($auth_tr, $amount),
