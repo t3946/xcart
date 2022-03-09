@@ -74,8 +74,17 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
    */
   function getSelectItems(): any {
     const codes = [];
-    if (!countries) return codes;
+    const whiteListCodes = ["US", "CA"];
+
+    if (!countries) {
+      return codes;
+    }
+
     for (const country of countries) {
+      if (whiteListCodes.indexOf(country.code) === -1) {
+        continue;
+      }
+
       if (country.phone_code) {
         codes.push({
           label: country.code + " +" + country.phone_code,
