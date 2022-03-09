@@ -50,20 +50,24 @@ export const AddNewPaymentMethod: React.FC = () => {
   }
 
   return (
-    <div
-      className={
-        "d-block d-md-flex justify-content-between align-items-center gap-5"
-      }
-    >
-      <div className="mb-4 mb-md-0">{addCreditCardButton()}</div>
+    <>
+      <div
+        className={
+          "d-block d-md-flex justify-content-between align-items-center gap-5"
+        }
+      >
+        <div className="mb-4 mb-md-0">{addCreditCardButton()}</div>
 
-      <div className={"d-flex flex-column"}>
-        <p>S3 Stores Inc accepts major credit and debit cards</p>
+        <div className={"d-flex flex-column"}>
+          <p className={"fs-16 fs-md-18 fs-lg-14"}>
+            S3 Stores Inc accepts major credit and debit cards
+          </p>
 
-        <div className="d-flex gap-1 flex-wrap">
-          {paymentMethods.map((method, i) => (
-            <PaymentCardImage key={i} logo={method.logo} name={method.name} />
-          ))}
+          <div className="d-flex gap-1 flex-wrap">
+            {paymentMethods.map((method, i) => (
+              <PaymentCardImage key={i} logo={method.logo} name={method.name} />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -73,6 +77,6 @@ export const AddNewPaymentMethod: React.FC = () => {
         open={showModalAddBillingAddress}
         handleClose={() => setShowModalAddBillingAddress(false)}
       />
-    </div>
+    </>
   );
 };
