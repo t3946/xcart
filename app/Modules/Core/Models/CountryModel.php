@@ -66,7 +66,8 @@ class CountryModel extends Model
             'is_many_line_addresses' => BooleanField::class,
             'display_states' => [
                 'class' => CharField::class
-            ]
+            ],
+            'phone_code' => CharField::class,
         ];
     }
 
