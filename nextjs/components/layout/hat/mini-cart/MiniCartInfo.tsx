@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import cn from "classnames";
-import Styles from "@modules/mini-cart/components/MiniCartInfo.module.scss";
+import Styles from "@components/layout/hat/mini-cart/MiniCartInfo.module.scss";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import IconCart from "@modules/icon/components/common/cart/Cart";
 

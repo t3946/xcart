@@ -12,8 +12,9 @@ import {
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AxiosResponse } from "axios";
 import { Form, Formik } from "formik";
-import cn from "classnames";
-import Styles from "@modules/old-components/MiniCart.module.scss";
+import Checkout from "@components/common/icons/view-mode/arrow-right/Checkout";
+import Styles from "@components/layout/hat/mini-cart/MiniCartItems.module.scss";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 interface IProps {
   checkoutUrl: string;
@@ -22,7 +23,6 @@ interface IProps {
 const MiniCartItems: React.FC<IProps> = function (props) {
   const dispatch = useDispatch();
   const { checkoutUrl } = props;
-  const [changeTimer, setChangeTimer] = React.useState(null);
   const refProductList = React.useRef<HTMLDivElement>();
   const cart = useSelectorAccount((e) => e.cart);
 
@@ -176,9 +176,11 @@ const MiniCartItems: React.FC<IProps> = function (props) {
         {productsTemplate()}
       </div>
 
-      <div className="buttons">
-        <a href={checkoutUrl} className="button yellow waves waves-orange">
-          {"Checkout"}
+      <div className="buttons d-flex align-items-center justify-content-center">
+        <a href={checkoutUrl} className={"text-decoration-none"}>
+          <Button type={"button"} className={"w-auto fs-6"}>
+            Checkout <Checkout className={[Styles.checkoutIcon, "ms-2"]} />
+          </Button>
         </a>
       </div>
     </div>
@@ -186,5 +188,3 @@ const MiniCartItems: React.FC<IProps> = function (props) {
 };
 
 export default MiniCartItems;
-
-// export default MiniCartItems;

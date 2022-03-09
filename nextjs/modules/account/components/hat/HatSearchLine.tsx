@@ -5,13 +5,12 @@ import DepartmentsMenu from "./DepartmentsMenu";
 import { setDepartmentsMenuDesktopIsVisibleAction } from "@redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import HideAllMenu from "@modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
-import MiniCart from "@modules/mini-cart/components/MiniCart";
+import MiniCart from "@components/layout/hat/mini-cart/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@modules/account/components/hat/LoginButton/LoginButtonDesktop";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import LeftColumn from "@modules/layout/components/LeftColumn";
 import Triangle from "@modules/icon/components/common/triangle/Triangle";
-import StylesRotate from "@styles/modules/Rotate.module.scss";
 import Search from "./Search";
 import Styles from "@modules/account/components/hat/HatSearchLine.module.scss";
 
