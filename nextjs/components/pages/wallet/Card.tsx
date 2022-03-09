@@ -5,7 +5,6 @@ import { CardDialog } from "@modules/account/components/wallet/CardDialog";
 import { RemoveCardDialog } from "@modules/account/components/wallet/RemoveCardDialog";
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import { CardHeader } from "@modules/account/components/wallet/CardHeader";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { Card as ICard } from "@stripe/stripe-js";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import { deleteCard } from "@redux/actions/account-actions/PaymentsActions";
@@ -14,6 +13,7 @@ import AddCard from "@components/pages/wallet/dialog/AddCard";
 import LinkStyles from "@components/common/link/Link.module.scss";
 import Styles from "@components/pages/wallet/Card.module.scss";
 import cn from "classnames";
+import IconChevron from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
 
 export function addressToString(address) {
   const parts = [];
@@ -31,12 +31,13 @@ interface IProps {
   isDefault: boolean;
   changeDefaultCardId: (cardId: string) => void;
   editCard: (card: ICard) => void;
+  first: boolean;
 }
 
 const Card: React.FC<IProps> = (props) => {
   const [showAddModal, setShowAddModal] = React.useState(false);
   const dispatch = useDispatch();
-  const { card, isDefault, changeDefaultCardId, editCard } = props;
+  const { card, isDefault, changeDefaultCardId, editCard, first } = props;
   const accordion = useAccordion();
   const removeDialog = useDialog();
   const editDialog = useDialog();
@@ -81,10 +82,12 @@ const Card: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className="wallet-card-container">
+    <div className="">
       <div
         onClick={accordion.onItemClick}
-        className={`wallet-card-header row m-0`}
+        className={cn(`wallet-card-header row m-0`, {
+          "border-top-0": !first,
+        })}
       >
         <CardHeader cardLast4={card.last4} cardType={card.brand} />
         <div className="col-4 d-none d-md-block">{expTemplate()}</div>
@@ -99,10 +102,10 @@ const Card: React.FC<IProps> = (props) => {
             {isDefault ? "Default" : "Set default"}
           </div>
 
-          <div
-            className={`accordion-arrow black-arrow ${
-              accordion.open && "accordion-arrow-open"
-            }`}
+          <IconChevron
+            className={cn(Styles.chevronIcon, {
+              "accordion-arrow-open": accordion.open,
+            })}
           />
         </div>
       </div>

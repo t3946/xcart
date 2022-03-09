@@ -20,7 +20,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
 
   return (
     <div className={classnames(`col col-md-4 ps-0`, containerClass)}>
-      <div className="d-flex gap-2">
+      <div className="d-flex gap-2 align-items-center">
         <PaymentCardImage logo={cardIconPath} name={cardType} />
         <div>
           <b className="d-lg-none">{cardType.toUpperCase()}</b>

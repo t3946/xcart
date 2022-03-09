@@ -29,7 +29,9 @@ export const Wallet: React.FC<IProps> = (props) => {
       dialog.handleClickOpen;
     };
 
-    for (const card of cards) {
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+
       items.push(
         <Card
           key={`card-${card.id}`}
@@ -37,6 +39,7 @@ export const Wallet: React.FC<IProps> = (props) => {
           isDefault={card.id === defaultCardId}
           changeDefaultCardId={changeDefaultCardId}
           editCard={setEditCard}
+          first={i === 0}
         />
       );
     }
@@ -50,6 +53,7 @@ export const Wallet: React.FC<IProps> = (props) => {
         <h2 className={cn(StylesInnerPage.accountPageContainer, "mb-0")}>
           Credit and debit cards
         </h2>
+
         {cardItemsTemplate()}
       </div>
     );
