@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form } from "formik";
+import { Form, Formik } from "formik";
 import { convertDataToEditCardForm } from "../../utils/convert-data-to-edit-card-form";
 import { useDispatch } from "react-redux";
 import { changeCardHolderName } from "@redux/actions/account-actions/PaymentsActions";
@@ -9,6 +9,7 @@ import { Card as ICard } from "@stripe/stripe-js";
 import { addressToString } from "@components/pages/wallet/Card";
 import Feedback from "@modules/ui/forms/Feedback";
 import Input from "@modules/ui/forms/Input";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 interface EditCardProps {
   cardInfo: ICard;
@@ -97,21 +98,22 @@ export const EditCard: React.FC<EditCardProps> = ({
               </div>
 
               <div className="edit-card-btns">
-                <button
+                <Button
                   onClick={onCancel}
                   type={"button"}
                   disabled={isSubmitting}
-                  className="form-button account-submit-btn account-submit-btn-outline auto-width-button cancel-edit-card-btn"
+                  theme={ETheme.outlined}
+                  className="w-auto mb-3 me-md-2 mb-md-0"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   disabled={isSubmitting}
                   type={"submit"}
-                  className="form-button account-submit-btn auto-width-button"
+                  className={"w-auto"}
                 >
                   Save
-                </button>
+                </Button>
               </div>
             </div>
           </Form>
