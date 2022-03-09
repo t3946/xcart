@@ -8,7 +8,7 @@ import { EmailGroupSelect } from "@s3stores-mail/components/smart/email-group-se
 import { EmailThreadContext } from "@s3stores-mail/contexts/email-thread-context/EmailThread.context";
 import { EmailInfoContext } from "@s3stores-mail/contexts/email-info-context/EmailInfoContext";
 
-export const EmailInfoDataFooter: React.FC<any> = ({
+export const sEmailInfoDataFooter: React.FC<any> = ({
   handleReply,
   handleClick,
   handleForward,

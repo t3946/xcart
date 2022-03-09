@@ -2,9 +2,6 @@
 
 namespace Modules\Goods\Helpers;
 
-use DateTime;
-use DateTimeInterface;
-use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
 use Modules\Sites\Models\CurrencyModel;
@@ -125,6 +122,12 @@ class ApiProductHelper
                     'number' => (float)$product->list_price,
                     'formatted' => $currency->getCurrencyFormat($product->list_price),
                 ],
+
+                'currency' => [
+                    'currency' => (string)$currency,
+                    'symbol_prefix' => $currency->symbol_prefix,
+                    'after' => $currency->after,
+                ]
             ];
         }
 

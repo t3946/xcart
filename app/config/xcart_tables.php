@@ -86,7 +86,6 @@ return [
     'product_files'                           => 'xcart_product_files',
     "product_links"                           => "xcart_product_links",
     "product_memberships"                     => "xcart_product_memberships",
-    "product_reviews"                         => "xcart_product_reviews",
     "product_taxes"                           => "xcart_product_taxes",
     "product_votes"                           => "xcart_product_votes",
     "products"                                => "xcart_products",

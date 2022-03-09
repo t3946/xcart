@@ -1,0 +1,18 @@
+.form-button__outline {
+  border: rem-calc(2) solid #ffb500;
+  color: #4a4949;
+  background-color: #ffffff;
+  font-weight: normal;
+
+  &:hover, &:focus {
+    background-color: #fffaef;
+  }
+
+  &:active {
+    background-color: #fff3d7;
+  }
+
+  &:hover, &:active, &:focus {
+    color: #000000;
+  }
+}

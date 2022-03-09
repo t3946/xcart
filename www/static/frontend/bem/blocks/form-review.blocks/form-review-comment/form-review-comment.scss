@@ -1,0 +1,13 @@
+.form-review-comment {
+  font-size: rem-calc(14);
+  color: #4d4d4d;
+  line-height: 1.1;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}

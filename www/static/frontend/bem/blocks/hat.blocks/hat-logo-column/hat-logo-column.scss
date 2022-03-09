@@ -1,0 +1,5 @@
+.hat-logo-column {
+  @include breakpoint(sm down) {
+    padding-left: 0;
+  }
+}

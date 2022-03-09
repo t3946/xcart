@@ -1,0 +1,167 @@
+@import "styles/utils/Utils.module";
+
+.pageHat {
+  @include breakpoint(md) {
+    padding: 0 pxToRem(5) pxToRem(27) 0;
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(26) pxToRem(22);
+  }
+}
+
+
+.pageBody {
+  padding: 0;
+
+  @include breakpoint(md) {
+    padding: pxToRem(15) pxToRem(20) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(20) pxToRem(26) pxToRem(35);
+  }
+}
+
+
+.formContainer {
+  @include breakpoint(lg) {
+    max-width: pxToRem(600);
+  }
+}
+
+
+.button {
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    padding: 0 pxToRem(54);
+    height: pxToRem(57);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    padding: 0 pxToRem(62);
+    height: pxToRem(39);
+  }
+}
+
+.button_edit {
+  font-weight: bold;
+}
+
+.button_editPage {
+  @include breakpoint(md) {
+    font-size: pxToRem(20);
+    padding: 0 pxToRem(39);
+    height: pxToRem(48);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    padding: 0 pxToRem(62);
+    height: pxToRem(39);
+  }
+}
+
+
+.gridItem {
+  padding: pxToRem(8) pxToRem(10) pxToRem(21);
+  @include breakpoint(md) {
+    padding: pxToRem(23) pxToRem(19) pxToRem(23);
+    &:last-child {
+      padding: pxToRem(10) pxToRem(19) pxToRem(23);
+    }
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(18) pxToRem(24) pxToRem(28);
+    &:last-child {
+      padding: pxToRem(18) pxToRem(24) pxToRem(28);
+    }
+  }
+}
+
+.gridItem_small {
+  @include breakpoint(md) {
+    padding: pxToRem(10) pxToRem(21);
+  }
+}
+
+
+.grid__item {
+  margin: 0 0 pxToRem(14) 0;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  @include breakpoint(md) {
+    margin: 0;
+  }
+}
+
+
+.gridItemContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+
+  @include breakpoint(md) {
+    gap: pxToRem(5);
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+
+.gridItemContainer_small {
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(-8);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(-1);
+  }
+}
+
+
+.gridItemTitle {
+  font-weight: 700;
+  font-size: pxToRem(16);
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+}
+
+
+.gridItemCaption_small {
+  font-size: pxToRem(16);
+  line-height: pxToRem(22);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(21);
+  }
+}
+
+
+.fromInfo {
+  @include breakpoint(md) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(23);
+  }
+}

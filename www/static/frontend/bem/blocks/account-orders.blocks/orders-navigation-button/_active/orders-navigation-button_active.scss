@@ -1,0 +1,15 @@
+.orders-navigation-button_active {
+  background-color: #ffffff;
+  color: #000000;
+  cursor: default;
+  font-size: rem-calc(18);
+
+  @include breakpoint(md up) {
+    font-weight: bold;
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+    font-weight: normal;
+  }
+}

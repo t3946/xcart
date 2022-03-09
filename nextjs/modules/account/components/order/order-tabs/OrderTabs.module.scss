@@ -1,0 +1,37 @@
+@import "styles/utils/Utils.module";
+.tabs {
+  :global(.nav-link) {
+    width: pxToRem(223);
+    height: pxToRem(47);
+    border-radius: 0;
+    margin-right: pxToRem(3);
+    border: pxToRem(1) solid #c4c4c4;
+    color: #505050;
+    background-color: #e7eaeb;
+    margin-bottom: pxToRem(-2);
+    border-bottom: pxToRem(2) solid #c4c4c4;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #c4c4c4;
+      text-decoration: none;
+      border-bottom: none;
+    }
+
+    transition: background-color 0.1s;
+
+    &:global(.active) {
+      border: pxToRem(2) solid #c4c4c4;
+      background-color: #fff;
+      border-bottom: 0;
+      text-decoration: none;
+      padding-bottom: pxToRem(14);
+    }
+  }
+}
+
+.tabContent {
+  padding: 34px 58px;
+  border: 2px solid #c4c4c4;
+    border-top: 0;
+}

@@ -1,0 +1,37 @@
+@import "styles/utils/Utils.module";
+
+.row__container {
+  margin: 0;
+}
+
+.label_ext {
+  font-weight: normal;
+}
+
+.select {
+  min-width: pxToRem(115);
+
+  @include breakpoint(md) {
+    width: pxToRem(125);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(105);
+  }
+}
+
+.phone {
+  width: pxToRem(168);
+
+  @include breakpoint(md) {
+    width: pxToRem(188);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(155);
+  }
+}
+
+.feedback {
+  left: 0;
+}

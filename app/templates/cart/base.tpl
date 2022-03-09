@@ -1,17 +1,15 @@
 {extends  $.request->getIsAjax() ? "ajax.tpl" : "base.tpl"}
 
-
 {block 'schema_page_type'}itemtype="http://schema.org/CollectionPage"{/block}
 {block 'noindex'}
     <meta name="robots" content="noindex">
 {/block}
 
-
 {block "header"}
     <header class="cart-header" itemscope itemtype="http://schema.org/WPHeader">
-        <section class="logo_menu">
-            <div class="row align-justify">
-                <div class="columns shop-logo-block">
+        <section class="container">
+            <div class="logo_menu row d-flex">
+                <div class="col col-6 col-lg-4 shop-logo-block">
                     <a href="/">
                         <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg"
                              alt="{$site->company_name}" class="show-for-large logo-big">
@@ -21,13 +19,8 @@
                              class="show-for-small hide-for-large logo-small">
                     </a>
                 </div>
-                {*<div class="columns verified-secured-logo-block show-for-medium hide-for-large">
-                    <img src="/static/frontend/dist/images/logos/verified_secured_logo.svg"
-                         alt="verified&secured"
-                         class="secured-logo-big">
-                </div>*}
                 {if ($site->lang->lang_code !== 'ru')}
-                    <div class="columns s3-logo-block">
+                    <div class="col col-6 col-lg-4 s3-logo-block">
                         <div class="s3-logo-big-link logo-link">
                             <div id="calculate-shipping-target" data-uri="{$uri}"></div>
                         </div>
@@ -39,7 +32,7 @@
                         </div>
                     </div>
                 {/if}
-                <div class="columns contacts-logo-block hide-for-small show-for-large">
+                <div class="col col-lg-4 contacts-logo-block d-none d-lg-block">
                     {switch $site.code}
                     {case 'RD'}
                         <div class="after-hours active">
@@ -56,9 +49,9 @@
                         </div>
                     {default}
                         <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
-                            <div class="text-order-online">
+                            <div class="text-order-online ws-nowrap">
                                 <span class="green-circle-icon"></span>
-                                <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
+                                <span class="grey-text-label ws-nowrap">{t 'Order online or call us. Operators are standing by!'}</span>
                             </div>
                             <div class="phone">
                                 <span class="phone-number">{$config.local_phone}</span>
@@ -86,48 +79,50 @@
 
         {block "breadcrumbs"}
             {set $breadcrumbs = $.getCartBreadcrumbs}
+
             {if $breadcrumbs}
-                <div class="row cart-steps-container">
+                <div class="container">
+                    <div class="row cart-steps-container">
+                        <div class="col-auto pe-0 d-md-none">
+                            {if !$breadcrumbs->isFirstStage()}
+                                <a class="col shrink cart-steps-back d-lg-none"
+                                   href="{$breadcrumbs->getPrevStage().url}">
+                                    <span class="img">
+                                        <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg"
+                                             alt="">
+                                    </span>
+                                    <span class="text">{t 'BACK'}</span>
+                                </a>
+                            {/if}
+                        </div>
 
-                    {if !$breadcrumbs->isFirstStage()}
-                        <a class="columns shrink cart-steps-back hide-for-large"
-                           href="{$breadcrumbs->getPrevStage().url}">
-                            <span class="img">
-                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg"
-                                     alt="">
-                            </span>
-                            <span class="text">{t 'BACK'}</span>
-                        </a>
-                    {/if}
-
-                    <section class="cart-steps-section columns">
-                        <ul class="cart-steps-items no-bullet">
-                            {foreach $breadcrumbs as $key => $item}
-                                <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
-                                    {if !$item.url || $breadcrumbs->getActive() == $key}
-                                        <span class="step-link">
-                                            <span class="step-label">{$item['label']}</span>
-                                        </span>
-                                    {else}
-                                        <a href="{$item['url']}" class="step-link" rel="nofollow">
-                                            <span class="step-label">{$item['label']}</span>
-                                        </a>
-                                    {/if}
-                                    <div class="arrow-right"></div>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </section>
+                        <section class="cart-steps-section col">
+                            <ul class="cart-steps-items list-unstyled m-0">
+                                {foreach $breadcrumbs as $key => $item}
+                                    <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
+                                        {if !$item.url || $breadcrumbs->getActive() == $key}
+                                            <span class="step-link">
+                                                <span class="step-label">{$item['label']}</span>
+                                            </span>
+                                        {else}
+                                            <a href="{$item['url']}" class="step-link" rel="nofollow">
+                                                <span class="step-label">{$item['label']}</span>
+                                            </a>
+                                        {/if}
+                                        <div class="arrow-right"></div>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </section>
+                    </div>
                 </div>
             {/if}
         {/block}
-
-
     </header>
 {/block}
 
 {block "content-wrapper"}
-    <div class="cart_shipping-page default-content-page default-form">
+    <div class="cart_shipping-page default-content-page default-form container px-0">
         {block "content"}{/block}
     </div>
 {/block}

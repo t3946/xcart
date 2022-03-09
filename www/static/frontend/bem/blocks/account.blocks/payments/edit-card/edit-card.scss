@@ -1,0 +1,87 @@
+.label-card-block{
+  margin-bottom: 10px !important;
+}
+
+.edit-card-top-part{
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.address-block{
+  margin-bottom: 20px;
+}
+
+.change-address-btn{
+  font-size: 12px;
+  color: #055A93;
+  cursor: pointer;
+
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+.edit-card-from-container{
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-card-input-card-name{
+  margin-right: 40px;
+}
+
+.edit-card-select-expirations{
+ width: 50% !important;
+}
+
+.edit-card-select-expirations-months{
+  margin-right: 15px;
+}
+
+.edit-card-expirations-container{
+  display: flex;
+}
+
+.edit-card-content{
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-card-btns{
+  display: flex;
+}
+
+.cancel-edit-card-btn{
+  margin-right: 10px !important;
+}
+
+
+
+@media (max-width: 1250px) {
+  .edit-card-input-card-name{
+    margin-right: 0;
+  }
+
+  .edit-card-from-container{
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 769px) {
+  .edit-card-input-card-name{
+    margin-right: 0;
+  }
+
+  .edit-card-content, .edit-card-btns{
+    flex-direction: column;
+  }
+  .edit-card-btns{
+    margin-top: 15px;
+  }
+
+  .cancel-edit-card-btn{
+    margin-right: 0px !important;
+    margin-bottom: 10px !important;
+  }
+}

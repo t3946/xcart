@@ -1,0 +1,28 @@
+.estimate-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  text-align: center;
+  align-items: center;
+  padding: rem-calc(15) rem-calc(9);
+
+  & > *:first-child {
+    text-align: left;
+  }
+
+  & > *:last-child {
+    text-align: right;
+  }
+
+  @include breakpoint(md up) {
+    padding: rem-calc(30) rem-calc(20);
+    grid-template-columns: 4fr 2fr 2fr;
+  }
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(26) rem-calc(24);
+  }
+
+  @include breakpoint(xl up) {
+    grid-template-columns: 4fr 2fr 1fr;
+  }
+}

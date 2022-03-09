@@ -1,0 +1,14 @@
+@import "styles/utils/Utils.module";
+
+.icon {
+  width: pxToRem(24);
+  height: pxToRem(24);
+  color: #959595;
+}
+
+.listsSidebarLabelText {
+  width: 80%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

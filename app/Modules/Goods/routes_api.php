@@ -44,6 +44,11 @@ return [
         'target' => [ApiImageController::class, 'view'],
         'name' => 'image'
     ],
+    [
+        'route' => 'goods/get/{i:product_id}/',
+        'target' => [ApiProductController::class, 'getById'],
+        'name' => 'getById'
+    ],
 
     /** PRODUCT SLIDERS */
     [
@@ -85,6 +90,11 @@ return [
         'route' => 'category/{i:id}/{slug:slug}/',
         'target' => [ApiCategoriesController::class, 'actionCatalogCategory'],
         'name' => 'categoryPaginatedApi',
+    ],
+    [
+        'route' => 'category/bought-products',
+        'target' => [ApiCategoriesController::class, 'getBuyAgainProducts'],
+        'name' => 'bought-products',
     ],
     [
         'route' => 'brand/{i:id}/{slug:slug}/',

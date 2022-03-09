@@ -7,33 +7,36 @@
     'class' => 'checkout-shipping-form'
     ])}
     {set $fieldsets =  $shippingForm->createFieldsets()}
-    <section class="checkout-shipping">
+
+    <section class="checkout-shipping container">
         <div class="row">
-            <div class="columns small-12 large-6 large-collapse-right show-for-large">
+            <div class="col-lg-6 large-collapse-right d-none d-lg-block">
                 <div class="options">
                     <h2 class="title default-form-header">{t 'Shipping Address' }</h2>
                 </div>
             </div>
-            <div class="small-12 large-6 columns large-collapse-left">
+            <div class="col-12 col-lg-6 large-collapse-left">
                 <div class="mandatory">
                     {t 'The fields marked with' } <span class="required">*</span> {t 'are mandatory.' }
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="columns small-12">
+            <div class="col-12">
                 {foreach $fieldsets['shipping'] as $field}
                     {raw $field->render()}
                 {/foreach}
             </div>
         </div>
-        <div class="row show-for-large">
-            <div class="small-12 columns">
+
+        <div class="row d-none d-lg-flex">
+            <div class="col-12">
                 <div class="hr"></div>
             </div>
         </div>
+
         <div class="row">
-            <div class="columns small-12">
+            <div class="col-12">
                 <div class="contact-options">
                     <h2 class="title default-form-header">{t 'Contact Information' }</h2>
                 </div>
@@ -41,21 +44,21 @@
         </div>
 
         <div class="row">
-            <div class="columns small-12 ">
+            <div class="col-12 ">
                 {foreach $fieldsets['contact'] as $field}
                     {raw $field->render()}
                 {/foreach}
             </div>
         </div>
 
-        <div class="row show-for-large">
-            <div class="small-12 columns">
+        <div class="row d-none d-lg-flex">
+            <div class="col-12">
                 <div class="hr"></div>
             </div>
         </div>
 
         <div class="row">
-            <div class="columns small-12">
+            <div class="col-12">
                 <div class="subscription-options">
                     <h5 class="title default-form-header">{t 'Privacy Policy' }</h5>
                     <div class="private-claim">
@@ -66,7 +69,7 @@
         </div>
 
         <div class="row align-center">
-            <div class="column small-12">
+            <div class="col-12">
                 <div class="buttons text-center">
                     <button type="submit" class="button submit yellow waves waves-orange waves-effect">
                         {t 'Submit' }
@@ -76,13 +79,13 @@
         </div>
 
         <div class="row align-center">
-            <div class="column small-12">
+            <div class="col-12">
                 <div class="submit-notes text-center hint">
                     {t 'Submit and proceed to shipping & payment options.' }
                 </div>
             </div>
         </div>
-
     </section>
+
     {raw $shippingForm->renderEnd()}
 {/block}

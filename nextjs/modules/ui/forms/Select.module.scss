@@ -1,0 +1,22 @@
+.chevron {
+  &:after {
+    width: 0.75rem;
+    height: 0.5rem;
+    background: url(/static/frontend/images/icons/account/arrow-down__black.svg)
+      no-repeat 50% / cover;
+    position: absolute;
+    right: 0.75rem;
+    bottom: 50%;
+    transform: translateY(50%);
+    content: "";
+    display: block;
+    transition: 0.2s ease-in;
+    cursor: pointer;
+  }
+}
+
+.chevron_rotate {
+  &:after {
+    transform: translateY(50%) rotate(180deg);
+  }
+}

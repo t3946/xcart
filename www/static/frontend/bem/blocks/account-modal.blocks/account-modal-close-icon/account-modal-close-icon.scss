@@ -1,0 +1,12 @@
+.account-modal-close-icon {
+  color: #ffffff;
+  transition: color 0.15s ease-out;
+  height: rem-calc(24);
+  width: rem-calc(24);
+
+  @include breakpoint(sm up) {
+    color: #c4c4c4;
+    height: rem-calc(40);
+    width: rem-calc(40);
+  }
+}

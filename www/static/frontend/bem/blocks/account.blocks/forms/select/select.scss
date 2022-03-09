@@ -1,0 +1,38 @@
+.select {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.select-wrapper{
+  position: relative;
+  width: 100%;
+}
+
+.form-checkbox-container{
+  display: flex;
+  align-items: center;
+}
+
+.open{
+  .form-select-head::after {
+    transform: translateY(50%) rotate(180deg);
+  }
+
+  .form-select-list{
+    display: block;
+  }
+}
+
+.select__group-title{
+  margin-left: 15px;
+  margin-bottom: 8px;
+  margin-top: 10px;
+  list-style-type: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.select__group .form-select-item{
+  padding: 5px 35px;
+}

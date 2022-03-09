@@ -1,6 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Lazy, Scrollbar } from "swiper";
-import Image from "./components/Image";
 import SliderProducts from "@/components/Sliders/SliderProducts/SliderProducts";
 import classnames from "classnames";
 import { ImageCard } from "../../product/card/components/ImageCard";

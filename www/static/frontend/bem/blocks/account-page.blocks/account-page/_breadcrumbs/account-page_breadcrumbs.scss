@@ -1,0 +1,10 @@
+.account-page_breadcrumbs {
+  margin: rem-calc(20) 0 0 0;
+
+  @include breakpoint(md up) {
+    margin: rem-calc(20) 0 rem-calc(35) 0;
+  }
+  @include breakpoint(lg up) {
+    margin: rem-calc(20) 0;
+  }
+}

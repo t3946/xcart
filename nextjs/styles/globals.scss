@@ -1,0 +1,31 @@
+@import "@styles/old/old";
+@import "@submodules/bootstrap/dist/css/bootstrap";
+@import "@submodules/bootstrap/dist/css/bootstrap-grid";
+@import "@submodules/bootstrap/dist/css/bootstrap-utilities";
+@import "~swiper/swiper-bundle";
+@import "~cropperjs/dist/cropper";
+@import "bem";
+@import "@styles/fonts/lato";
+//@import "@styles/utils-style/utils-style";
+@import "~leaflet/dist/leaflet.css";
+
+* {
+  font-family: Lato, sans-serif;
+}
+
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.ws-nowrap {
+  white-space: nowrap;
+}

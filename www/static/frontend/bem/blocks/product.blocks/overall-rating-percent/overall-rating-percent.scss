@@ -1,0 +1,11 @@
+.overall-rating-percent {
+  flex: 0 0 rem-calc(40);
+
+  @include breakpoint(md up) {
+    flex: 0 0 rem-calc(90);
+  }
+
+  @include breakpoint(lg up) {
+    flex: 0 0 rem-calc(60);
+  }
+}

@@ -1,0 +1,16 @@
+@import "styles/utils/Utils.module";
+
+.skeletonSliderCardWrapper {
+  width: pxToRem(174);
+  padding: pxToRem(15);
+
+  @include breakpoint(md) {
+    width: pxToRem(140);
+    padding: 0;
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(172);
+    padding: 0;
+  }
+}

@@ -1,0 +1,5 @@
+.public-profile-fields-container {
+  @include breakpoint(lg up) {
+    width: rem-calc(600);
+  }
+}

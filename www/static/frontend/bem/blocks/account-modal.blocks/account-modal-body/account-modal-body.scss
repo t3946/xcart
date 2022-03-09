@@ -1,0 +1,8 @@
+.account-modal-body {
+  padding: rem-calc(16) rem-calc(20);
+  background: #ffffff;
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(20) rem-calc(24) rem-calc(36);
+  }
+}

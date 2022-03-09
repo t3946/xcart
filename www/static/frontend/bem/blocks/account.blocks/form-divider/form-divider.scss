@@ -1,0 +1,24 @@
+.form-divider{
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.form-divider__with-content {
+    border: none;
+    display: flex;
+
+    &:after, &:before {
+        content: '';
+        display: block;
+        border-bottom: 1px solid #c4c4c4;
+        flex-grow: 1;
+        position: relative;
+        transform: translateY(calc(-50% + 1px));
+    }
+}
+
+.form-divider-text {
+    padding: 0 rem-calc(20);
+    font-size: rem-calc(12);
+    font-weight: 400;
+    color: #4a4949;
+}

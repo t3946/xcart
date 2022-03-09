@@ -9,8 +9,8 @@ use Xcart\App\Module\Module;
 
 class UserModule extends Module
 {
-    public $sessionTime = 15552000;
-
+    // expiration session time(in seconds)
+    public $EXP_TIME_S = 180 * 24 * 60 * 60;
 
     public static function onApplicationRun()
     {

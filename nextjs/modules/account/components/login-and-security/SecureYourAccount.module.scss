@@ -1,0 +1,58 @@
+@import "styles/utils/Utils.module";
+
+.page__table {
+  @include breakpoint(md) {
+    margin: 0 pxToRem(-5);
+  }
+
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-25);
+  }
+}
+
+.pageTable {
+  border: 1px solid #c4c4c4;
+}
+
+.pageCaption {
+  font-size: pxToRem(14);
+  line-height: pxToRem(20);
+}
+
+.stepTip {
+  color: #959595;
+  font-size: pxToRem(14);
+  line-height: pxToRem(20);
+}
+
+.stepTitle {
+  font-size: pxToRem(18);
+  line-height: pxToRem(23);
+}
+
+.stepBody {
+  flex-direction: column;
+  gap: pxToRem(10);
+
+  @include breakpoint(lg) {
+    flex-direction: row;
+  }
+}
+
+.stepCaption {
+  font-size: pxToRem(16);
+  line-height: pxToRem(22);
+}
+
+.table_item {
+  margin: 0;
+}
+
+.tableItem {
+  border: none;
+  border-bottom: pxToRem(1) solid #c4c4c4;
+
+  &:last-child {
+    border: none;
+  }
+}

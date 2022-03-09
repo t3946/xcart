@@ -1,13 +1,7 @@
 "use strict";
 
-// import 'pace';
-// import 'modernizr';
 import $ from "jquery";
 import "jquery-form";
-//import 'mmodal';
-
-// import 'swiper';
-//import WebFont from 'webfontloader';
 import FontFaceObserver from "fontfaceobserver";
 import Waves from "node-waves";
 import whatInput from "what-input";
@@ -26,8 +20,6 @@ import "./_binds/sticky_header";
 import "./_binds/response_status_278";
 import "./_binds/endless_pagination";
 import "./_binds/click_mmodal";
-// import  "./_binds/search";
-import "./_binds/minicart";
 import "./_binds/shadow";
 import "./_binds/productSlider";
 import "./_binds/pages/category";
@@ -43,6 +35,8 @@ import "./components/Flash";
 
 import "./ext/foundation-init";
 import "../../vendors/wNumb.js";
+import "./_binds/account/login-form";
+import "./_binds/account/register-form";
 
 import sendAnalytics from "./utils/sendAnalytics";
 import LazyLoad from "vanilla-lazyload";
@@ -56,8 +50,8 @@ import LazyLoad from "vanilla-lazyload";
   window["formValidate"] = formValidate;
   window["Waves"] = Waves;
   window["FontFaceObserver"] = FontFaceObserver;
-  window["sendAnalytics"] = new sendAnalytics();
   window["noUiSlider"] = noUiSlider;
+  window["sendAnalytics"] = new sendAnalytics();
   window["LazyLoad"] = new LazyLoad({
     elements_selector: ".lazy-img, .lazy-bg",
     callback_set: function (el) {

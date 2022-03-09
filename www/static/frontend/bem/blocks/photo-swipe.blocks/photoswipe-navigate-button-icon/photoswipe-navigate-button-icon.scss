@@ -1,0 +1,26 @@
+.photoswipe-navigate-button-icon {
+  opacity: 0.5;
+  transition: opacity 0.1s linear;
+  position: absolute;
+}
+
+.photoswipe-left-arrow:hover .photoswipe-navigate-button-icon,
+.photoswipe-right-arrow:hover .photoswipe-navigate-button-icon {
+  opacity: 1;
+}
+
+.photoswipe-arrow_disabled {
+  .photoswipe-navigate-button {
+    cursor: default;
+  }
+
+  .photoswipe-navigate-button-icon {
+    opacity: 0.25;
+  }
+
+  &:hover {
+    .photoswipe-navigate-button-icon {
+      opacity: 0.25;
+    }
+  }
+}

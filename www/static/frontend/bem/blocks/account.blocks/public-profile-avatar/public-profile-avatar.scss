@@ -1,0 +1,25 @@
+.public-profile-avatar {
+    height: rem-calc(112);
+    width: rem-calc(112);
+    border-radius: rem-calc(100);
+    overflow: hidden;
+    border: rem-calc(2) solid #bfbfbf;
+    background: #bfbfbf;
+    cursor: pointer;
+
+    &:hover {
+        .public-profile-avatar_button {
+            bottom: 0;
+        }
+    }
+
+    @include breakpoint(md up) {
+        height: rem-calc(146);
+        width: rem-calc(146);
+    }
+
+    @include breakpoint(lg up) {
+        height: rem-calc(134);
+        width: rem-calc(134);
+    }
+}

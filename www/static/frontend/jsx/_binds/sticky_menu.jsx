@@ -1,77 +1,79 @@
 import isMedia from "../utils/isMedia";
 import cssFileLoaded from "../utils/cssFileLoaded";
+import throttle from "lodash/throttle";
 
 (() => {
-    console.log('st menu')
+  // После загрузки css
+  $(document).on("app.start", function () {
+    var stickyContainer = $(".sticky-menu-container");
 
-    // После загрузки css
-    $(document).on('app.start', function () {
+    // выход, если нет прилипающего меню
+    if (stickyContainer.length <= 0) {
+      return;
+    }
 
-        var stickyContainer = $('.sticky-menu-container');
+    var lastKnownScrollPosition = window.scrollY;
+    var topSticky = 0;
+    var ticking = false;
 
-        // выход, если нет прилипающего меню
-        if(stickyContainer.length <= 0){
-            return;
-        }
+    let sticky = stickyContainer;
 
-        var lastKnownScrollPosition = 0;
-        var ticking = false;
-        var containerHeightRemoved = false;
+    let processScroll = function () {
+      if (!ticking) {
+        window.requestAnimationFrame(function () {
+          checkMenuPosition();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-        let sticky = stickyContainer.find('.sticky');
+    let heightOfStickyBlock = sticky.height();
 
-        let processScroll = _.throttle(function () {
+    let initStickyMenu = function () {
+      // Выход если разрешение для мобильного устройства
+      if (isMedia("large")) {
+        stickyContainer.css({
+          height: "auto",
+          top: "-107px",
+        });
+        window.removeEventListener("scroll", processScroll);
+        return;
+      }
 
-            lastKnownScrollPosition = window.scrollY;
-            if (!ticking) {
-                window.requestAnimationFrame(function () {
-                    checkMenuPosition(lastKnownScrollPosition);
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }, 50);
+      if (heightOfStickyBlock <= 0) {
+        return;
+      }
 
-        let initStickyMenu = function () {
+      stickyContainer.css({
+        height: heightOfStickyBlock + "px",
+        top: topSticky + "px",
+      });
+      window.addEventListener("scroll", processScroll);
+    };
 
-            // Выход если разрешение для мобильного устройства
-            if (!isMedia('large')) {
-                if(!containerHeightRemoved){
-                    stickyContainer.css({
-                        'height': 'auto'
-                    });
-                    containerHeightRemoved = true;
-                }
-                return;
-            }
-            containerHeightRemoved = false;
+    let initStickyMenuOnResize = throttle(initStickyMenu, 50);
 
-            let heightOfStickyBlock = sticky.height();
-            if (heightOfStickyBlock <= 0) {
-                return;
-            }
+    function checkMenuPosition() {
+      let delta = lastKnownScrollPosition - window.scrollY;
+      if (-heightOfStickyBlock >= topSticky + delta) {
+        topSticky = -heightOfStickyBlock;
+      } else if (0 <= topSticky + delta) {
+        topSticky = 0;
+      } else {
+        topSticky += delta;
+      }
 
-            stickyContainer.css({
-                'display': 'block',
-                'height': heightOfStickyBlock + 'px'
-            });
+      stickyContainer.css({
+        display: "block",
+        height: heightOfStickyBlock + "px",
+        top: topSticky + "px",
+      });
 
-            window.addEventListener('scroll', processScroll, {'passive': true});
-        };
+      lastKnownScrollPosition = window.scrollY;
+    }
 
-        let initStickyMenuOnResize = _.throttle(initStickyMenu, 50);
-
-        function checkMenuPosition(lastKnownScrollPosition) {
-            console.log('checkMenuPosition');
-            if (lastKnownScrollPosition >= stickyContainer.offset().top) {
-                sticky[0].classList.add('menu-fixed');
-            } else {
-                sticky[0].classList.remove('menu-fixed');
-            }
-        }
-
-        cssFileLoaded('styles.css', initStickyMenu);
-        $(window).resize(initStickyMenuOnResize);
-
-    });
+    cssFileLoaded("styles.css", initStickyMenu);
+    $(window).resize(initStickyMenuOnResize);
+  });
 })();

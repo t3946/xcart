@@ -1,0 +1,29 @@
+.estimate-table-row_product {
+  grid-template-columns: 1fr;
+  padding: rem-calc(15) rem-calc(9) rem-calc(0);
+
+  &:after {
+    content: '';
+    display: block;
+    border-bottom: 1px solid #c4c4c4;
+    margin: rem-calc(15) 0 0;
+  }
+
+  @include breakpoint(md up) {
+    border-bottom: 1px solid #c4c4c4;
+    grid-template-columns: 4fr 2fr 2fr;
+    padding: rem-calc(30) rem-calc(20);
+
+    &:after {
+      display: none;
+    }
+  }
+
+  @include breakpoint(lg up) {
+    padding: rem-calc(26) rem-calc(24);
+  }
+
+  @include breakpoint(xl up) {
+    grid-template-columns: 4fr 2fr 1fr;
+  }
+}

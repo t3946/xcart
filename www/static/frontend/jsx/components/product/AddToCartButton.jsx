@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import CatalogContext from "@/components/catalog/CatalogContext";
-import { cartAdd } from "@/redusers/appCartRediser";
+import { cartAdd } from "../../redux/reduсers/appCartReducer";
 import * as preact from "preact";
 import CreateWaitButton from "@/components/AnimateWaitButton";
 import t from "@/i18n";
@@ -43,6 +43,7 @@ export default class AddToCartButton extends Component {
       "waves waves-orange",
       "waves-effect",
       "add-to-cart-button-checkout",
+      "text-decoration-none",
     ];
     const addToCartLongText = [
       "button-text",
@@ -167,7 +168,6 @@ export default class AddToCartButton extends Component {
         });
       }
 
-      console.log(this.props);
       let data = [
         {
           id: product.dataset.product,
@@ -187,6 +187,8 @@ export default class AddToCartButton extends Component {
 
       window.sendAnalytics.addToCart(product);
     }
+
+    this.props.onAddToCart && this.props.onAddToCart();
   }
 
   render() {

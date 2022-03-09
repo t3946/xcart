@@ -1,0 +1,12 @@
+.decisions-item_made {
+  background-color: #f1ffef;
+  border-color: #aee2b7;
+
+  &:hover {
+    background-color: #e4fae0;
+  }
+
+  &:active {
+    background-color: #d4f9ce;
+  }
+}

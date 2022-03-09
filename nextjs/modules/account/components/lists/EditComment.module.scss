@@ -1,0 +1,23 @@
+@import "styles/utils/Utils.module";
+
+.textarea {
+  height: pxToRem(120);
+  line-height: 1.4;
+}
+
+.imageContainer {
+  padding: pxToRem(34) 0 0 0;
+}
+
+.image {
+  max-width: 100%;
+  max-height: pxToRem(81);
+}
+
+.name {
+  font-weight: normal;
+
+  @include breakpoint(md) {
+    font-weight: bold;
+  }
+}

@@ -1,0 +1,64 @@
+.share-list-people-container{
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:last-child{
+    margin-bottom: 0;
+  }
+}
+
+.share-list-people-email{
+  color: #C4C4C4;
+}
+
+.share-list-people-left-side-container{
+  width: 60%;
+}
+
+.share-list-account-role{
+  color: #787878;
+  font-style: italic;
+  margin-right: 10px;
+}
+
+.share-list-account-role-mobile{
+  color: #055A93;
+  margin-right: 10px;
+}
+
+.share-list-mobile-menu-item{
+  padding-left: 25px;
+  position: relative;
+}
+
+.share-list-mobile-menu-item-selected{
+    &:after {
+      width: rem-calc(15);
+      height: rem-calc(10);
+      background: url("/static/frontend/images/icons/account/check-mark.svg") no-repeat center / cover;
+      position: absolute;
+      left:0;
+      bottom: 50%;
+      transform: translateY(50%);
+      content: '';
+      display: block;
+      transition: .2s ease-in;
+    }
+}
+
+.share-list-mobile-menu-item-remove{
+  &:after {
+    width: rem-calc(20);
+    height: rem-calc(20);
+    background: url("/static/frontend/images/icons/account/cross-black.svg") no-repeat center / cover;
+    position: absolute;
+    left: -5px;
+    bottom: 50%;
+    transform: translateY(50%);
+    content: '';
+    display: block;
+    transition: .2s ease-in;
+  }
+}

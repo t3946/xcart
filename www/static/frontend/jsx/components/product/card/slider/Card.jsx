@@ -1,14 +1,15 @@
 import Product from "@/components/product/card/Product";
-import ImgSlider from "./ImgSlider";
+import Price from "@/components/product/card/components/Price";
 import { Fragment } from "preact";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
-import { PriceProduct } from "../components/PriceProduct";
 
 export default class Card extends Component {
-  constructor({ product }) {
+  constructor({ product, onFlagClick, inList }) {
     super();
 
     this.product = product;
+    this.inList = inList;
+    this.onFlagClick = onFlagClick;
 
     //list of jsx img elements
     this.imgList = [];
@@ -24,7 +25,7 @@ export default class Card extends Component {
   productMainInfoBlock() {
     return (
       <a href={this.product.url} title={this.product.name}>
-        <h4 className="products-slider-slide-title" itemProp="name">
+        <h4 className="products-slider-slide-title fw-bold" itemProp="name">
           {this.product.name}
         </h4>
       </a>
@@ -35,17 +36,18 @@ export default class Card extends Component {
    * all price related elements as prices, buy button discount etc.
    */
   productPriceBlock() {
-    const { price, listPrice } = this.product;
+    const { price, listPrice, currency } = this.product;
+
     return (
       <Fragment>
         {listPrice.number > price.number && (
           <span className="products-slider-old-price">
-            <PriceProduct price={listPrice.number} />
+            <Price currency={currency} price={listPrice.number} />
           </span>
         )}
 
         <span className="products-slider-current-price">
-          <PriceProduct price={price.number} />
+          <Price currency={currency} price={price.number} />
         </span>
       </Fragment>
     );
@@ -71,6 +73,8 @@ export default class Card extends Component {
         mainInfo={this.productMainInfoBlock()}
         price={this.productPriceBlock()}
         classes={classes}
+        inList={this.inList}
+        onFlagClick={this.onFlagClick}
       />
     );
   }

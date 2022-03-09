@@ -1,0 +1,41 @@
+import React from "react";
+import cn from "classnames";
+import AccountInfo from "@modules/account/components/dashboard/AccountInfo";
+import OrderTracking from "@modules/account/components/dashboard/OrderTracking";
+import Styles from "@modules/account/components/dashboard/Dashboard.module.scss";
+import AccountNavigation from "./AccountNavigation";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import SliderProducts from "@modules/account/components/dashboard/SliderProducts/SliderProducts";
+
+const Dashboard = (props) => {
+  const user = useSelectorAccount((e) => e.user);
+
+  return (
+    <div className="mt-20 mt-md-0 pb-3">
+      <div className={cn("d-flex", "flex-dir-column", Styles.pageColumn)}>
+        {user && (
+          <>
+            <AccountInfo />
+            {props.orders?.map((order, key) => (
+              <OrderTracking orderInfo={order} key={`tracking-${key}`} />
+            ))}
+          </>
+        )}
+
+        <AccountNavigation />
+
+        {user && (
+          <SliderProducts
+            classes={{
+              container: ["d-none", "d-md-block", Styles.dashboard__slider],
+            }}
+            title="Recommended products"
+            url={"/category/featured"}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

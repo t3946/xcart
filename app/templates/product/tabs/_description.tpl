@@ -3,6 +3,7 @@
 {set $files = $model->files->all()}
 {set $is_option = $brand || $param_list || $files || $model->upc}
 <div class="row">
+    <div class="col-12 col-lg-5 block">
     {if $is_option}
     <div class="column small-12 large-5 block">
 
@@ -49,7 +50,7 @@
 
     </div>
     {/if}
-    <div class="column small-12 large-{$is_option ? 7 : 12} block">
+    <div class="col-12 col-lg-{$is_option ? 7 : 12} block">
 
         <div class="description">
             <div class="h2 title">{t 'Description'}</div>

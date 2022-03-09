@@ -1,0 +1,5 @@
+.about-us-statistic_counters {
+  @include breakpoint(md up) {
+    margin: rem-calc(60) 0 0;
+  }
+}

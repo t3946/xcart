@@ -185,7 +185,7 @@ footer {
     color: #6796b0;
     font-size: rem-calc(13);
     padding: rem-calc(5) 0;
-    height: 65px;
+    min-height: rem-calc(65);
     align-items: center;
     display: flex;
 
@@ -193,12 +193,12 @@ footer {
       font-size: rem-calc(14);
       line-height: rem-calc(60);
       padding: 0;
-      height: 48px;
+      min-height: rem-calc(48);
       display: block;
     }
 
     @include breakpoint(lg up) {
-      height: 53px;
+      min-height: rem-calc(53);
     }
 
     .copyright {

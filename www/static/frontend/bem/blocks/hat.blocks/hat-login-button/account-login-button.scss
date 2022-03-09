@@ -1,0 +1,28 @@
+.hat-login-button {
+    background: #145f8b;
+    color: #ffffff;
+    display: flex;
+    height: rem-calc(50);
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all 0.15s ease-out;
+    text-decoration: none;
+    padding: 0 rem-calc(26);
+    width: rem-calc(180);
+    cursor: pointer;
+
+    &:hover, {
+        background: #0f75b0;
+    }
+
+    &:hover, &:focus {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    &:active {
+        background: #0768a0;
+    }
+}

@@ -1,0 +1,9 @@
+.form-review-public-name-input {
+  @include breakpoint(md up) {
+    width: rem-calc(320);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(420);
+  }
+}

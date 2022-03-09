@@ -7,7 +7,7 @@
 
     {block "content-top"}
         <div class="row">
-            <div class="columns large-2 show-for-large">
+            <div class="col-2 d-none d-lg-block">
                 <div class="top-block">
 
                     {if $icon}
@@ -17,7 +17,8 @@
                     {/if}
                 </div>
             </div>
-            <div class="columns large-10">
+
+            <div class="col-12 col-lg-10">
                 {if $model->categoryid == 85722}
                     <div class="image_top christmas"></div>
                 {/if}
@@ -25,14 +26,14 @@
                     <div class="image_top new_year"></div>
                 {/if}
 
-                <h1 class="title" itemprop="name">{$model->getFrontendName()}</h1>
+                <h1 class="title fw-bold" itemprop="name">{$model->getFrontendName()}</h1>
 
                 {if $model->description}
                 <div class="description">
                     <div class="row">
-                        <div class="columns large-10 must-show-less">
+                        <div class="col-lg-10 must-show-less">
                             <div class="relative">
-                                <article class="content must-show-less" itemprop="description">
+                                <article class="content must-show-less catalog-category-description" itemprop="description">
                                     {raw $model->description}
                                 </article>
                                 <div class="gradient collapse-gradient"></div>
@@ -61,9 +62,9 @@
                                 All subdepartments
                             </div>
 
-                            <div class="row small-up-1 medium-up-2 large-up-4 sub_list">
+                            <div class="row sub_list">
                                 {foreach $subcategories as $item index=$index}
-                                    <div class="column {if $index > 11}more_items{/if}">
+                                    <div class="column {if $index > 11}more_items{/if} col-12 col-md-6 col-lg-3">
                                         <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
                                             {$item->category}
                                             {if $item->active_product_count}

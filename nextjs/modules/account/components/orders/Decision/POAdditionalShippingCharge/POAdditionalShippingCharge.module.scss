@@ -1,0 +1,53 @@
+@import "styles/utils/Utils.module";
+
+.hat {
+  padding: pxToRem(28) pxToRem(3) pxToRem(26) 0;
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    text-transform: none;
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(45) pxToRem(25) pxToRem(26);
+  }
+}
+
+.text {
+  line-height: pxToRem(22);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}
+
+.buttonLayout {
+  gap: pxToRem(14);
+  flex-direction: column;
+
+  @include breakpoint(md) {
+    gap: pxToRem(12);
+    flex-direction: row;
+  }
+}
+
+.button {
+  font-size: pxToRem(20);
+  height: pxToRem(47);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    height: pxToRem(57);
+    padding: 0 pxToRem(60);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    height: pxToRem(41);
+    padding: 0 pxToRem(33);
+  }
+}

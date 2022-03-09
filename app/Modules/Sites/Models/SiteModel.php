@@ -90,7 +90,6 @@ class SiteModel extends Model
     public static function getFields(): array
     {
         return [
-
             'images' => [
                 'class' => HasManyField::class,
                 'modelClass' => ImageSModel::class,
@@ -129,7 +128,6 @@ class SiteModel extends Model
                 'null' => false,
                 'default' => '',
             ],
-
             'orderby' => [
                 'class' => IntField::class,
                 'null' => false,
@@ -378,7 +376,11 @@ class SiteModel extends Model
                 'default' => null,
                 'link' => ['dimension_size_id' => 'dimension_id'],
                 'verboseName' => 'Dimension size'
-            ]
+            ],
+            'account_enabled' => [
+                'class' => BooleanField::class,
+                'default' => false
+            ],
         ];
     }
 

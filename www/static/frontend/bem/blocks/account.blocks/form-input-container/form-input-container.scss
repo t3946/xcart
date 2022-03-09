@@ -1,0 +1,9 @@
+.form-input-container{
+  margin-bottom: rem-calc(20);
+}
+
+@media (max-width: 1200px) {
+  .form-input-container{
+    margin-bottom: rem-calc(5);
+  }
+}

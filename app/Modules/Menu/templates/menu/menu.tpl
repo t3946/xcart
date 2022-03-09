@@ -13,7 +13,7 @@
 
     <li class="{' '|implode:$classes}">
         {if $item.url}
-            <a href="{$item.url ? $item.url : "#" }">{$item.name}</a>
+            <a href="{$item.url ? $item.url : "#" }" class="text-decoration-none">{$item.name}</a>
         {else}
             <span>{$item.name}</span>
         {/if}

@@ -1,0 +1,23 @@
+@import "styles/utils/Utils.module";
+
+$values: (
+  start: left,
+  end: right,
+  center: center,
+);
+
+@each $name, $value in $values {
+  .text-#{$name} {
+    text-align: $value !important;
+  }
+}
+
+@each $breakpoint in (sm, md, lg) {
+  @each $name, $value in $values {
+    @include breakpoint($breakpoint) {
+      .text-#{$breakpoint}-#{$name} {
+        text-align: $value !important;
+      }
+    }
+  }
+}

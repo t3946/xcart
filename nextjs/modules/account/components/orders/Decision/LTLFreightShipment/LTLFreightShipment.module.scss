@@ -1,0 +1,108 @@
+@import "styles/utils/Utils.module";
+
+.hat {
+  padding: pxToRem(27) pxToRem(1) pxToRem(16) 0;
+
+  @include breakpoint(md) {
+    padding: pxToRem(40) 0 0 pxToRem(45);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(44) pxToRem(24) pxToRem(24);
+  }
+}
+
+.header {
+  line-height: pxToRem(25);
+}
+
+.headerText_mobile_capitalized {
+  text-transform: capitalize;
+
+  @include breakpoint(md) {
+    text-transform: none;
+  }
+}
+
+.pageBody__text {
+  margin: 0 0 pxToRem(23);
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(31);
+  }
+}
+
+.pageBody__container {
+  margin: 0 0 pxToRem(28);
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(26);
+  }
+}
+
+.text {
+  line-height: pxToRem(23);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(25);
+    width: calc(100% + pxToRem(26));
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    width: auto;
+  }
+}
+
+.columnPadding {
+  padding: 0 pxToRem(10);
+
+  @include breakpoint(md) {
+    padding: 0 pxToRem(21);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+  }
+}
+
+.button {
+  font-size: pxToRem(20);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    height: pxToRem(57);
+    padding: 0 pxToRem(49);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+    height: pxToRem(41);
+    padding: 0 pxToRem(42);
+  }
+}
+
+.pageBodySubmitButtonContainer {
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(24);
+  }
+}
+
+.pageBody__submitButton {
+  margin: pxToRem(26) 0 0;
+
+  @include breakpoint(md) {
+    margin: pxToRem(42) auto;
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(42) 0;
+  }
+}
+
+.phoneLabelContainer {
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(21);
+  }
+}

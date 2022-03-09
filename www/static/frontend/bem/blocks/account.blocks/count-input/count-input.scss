@@ -1,0 +1,28 @@
+.count-input-btn{
+  padding: 2px 5px;
+  border: 1px solid #FFB400;
+  background-color: #ffeabe;
+  cursor: pointer;
+  transition: .2s  all ease-out;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+
+  &:hover{
+    background-color: #FFB400;
+  }
+}
+
+.count-input-btn__right{
+  margin-left: -1px;
+}
+
+.count-input-btn__left{
+  margin-right: -1px;
+}
+
+.count-input{
+  border: 1px solid #FFB400;
+  text-align: center;
+}

@@ -1,0 +1,7 @@
+.tsv-settings-box-content {
+  padding: rem-calc(8) rem-calc(0);
+
+  @include breakpoint(md up) {
+    padding: rem-calc(14) rem-calc(0);
+  }
+}

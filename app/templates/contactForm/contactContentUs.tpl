@@ -24,14 +24,14 @@
         </div>
         <div class="tabs-panel" id="Mail">
             <div class="row">
-                <div class="column small-12 medium-6">
+                <div class="col-12 col-md-6">
                     <strong>USA Address</strong><br/>
                     S3 Stores, Inc.<br/>
                     2885 Sanford Ave SW #12717<br/>
                     Grandville, MI 49418<br/>
                     USA
                 </div>
-                <div class="column small-12 medium-6">
+                <div class="col-12 col-md-6">
                     <strong>Canadian Address</strong><br/>
                     S3 Stores, Inc.<br/>
                     27 Joseph St.<br/>

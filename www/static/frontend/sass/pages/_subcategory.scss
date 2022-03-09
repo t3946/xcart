@@ -28,12 +28,16 @@
 
       /* Ссылка на основную категорию */
       .item-title {
-        margin: 0.125rem;
         padding: .5rem 1rem .5rem .5rem;
         background-color: #efefef;
         display: flex;
         align-items: center;
         min-height: rem-calc(44);
+        text-decoration: none;
+
+        &:active {
+          color: inherit;
+        }
 
         .image-container {
           display: block;
@@ -127,8 +131,6 @@
   @include breakpoint(large up) {
     /* Верхнее меню - все основные категории */
     .all-departments-menu {
-
-      display: flex;
       padding-bottom: 12px;
 
       /* Ссылка на основную категорию */

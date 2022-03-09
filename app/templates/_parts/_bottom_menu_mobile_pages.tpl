@@ -6,7 +6,7 @@
         {set $has_childs = ($childs|count > 0)}
 
         <li class="accordion-item" {if $has_childs }data-accordion-item{/if}>
-            <a class="accordion-title accordion-title__product" {if !$has_childs}href="{$item.link}" {/if}>
+            <a class="accordion-title accordion-title__product common-link text-decoration-none" {if !$has_childs}href="{$item.link}" {/if}>
                 <div class="row">
                     <div class="columns small-12 ">
                         <span>{$item.name}</span>
@@ -19,7 +19,7 @@
                     <ul class="no-bullet">
                         {foreach $childs as $item}
                             <li>
-                                <a href="{$item.url}">
+                                <a href="{$item.url}" class="text-decoration-none">
                                     {$item.name}
                                 </a>
                             </li>

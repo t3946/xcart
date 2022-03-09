@@ -1,0 +1,14 @@
+.decisions-list-header {
+  font-weight: bold;
+  font-size: rem-calc(22);
+  text-align: center;
+  text-transform: capitalize;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(30);
+  }
+  @include breakpoint(lg up) {
+    font-size: rem-calc(24);
+    text-align: left;
+  }
+}

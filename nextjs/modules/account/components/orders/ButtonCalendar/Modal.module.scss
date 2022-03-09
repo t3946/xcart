@@ -1,0 +1,21 @@
+@import "styles/utils/Utils.module";
+
+.header {
+  font-size: pxToRem(18);
+  font-weight: bold;
+  padding: pxToRem(4) pxToRem(20) pxToRem(20);
+}
+
+.item {
+  border-top: 1px solid #c4c4c4;
+  height: 45px;
+  padding: 0 pxToRem(20);
+
+  &:last-child {
+    border-bottom: 1px solid #c4c4c4;
+  }
+
+  &_active {
+    background: #F4F4F4;
+  }
+}

@@ -63,7 +63,7 @@ abstract class Field implements ModelFieldInterface
 
     public $formField = '\Xcart\App\Form\Fields\CharField';
 
-    protected $name;
+    public $name;
 
     protected $ownerClassName;
 

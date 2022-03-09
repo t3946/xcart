@@ -1,0 +1,130 @@
+.order-addresses{
+  border: 1px solid #C4C4C4;
+}
+
+.order-address-block{
+  padding: 20px 25px 27px;
+}
+
+.order-address-block-underline{
+  height: 1px;
+  margin: 0;
+}
+
+.order-address-block-title{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.order-address-text-block{
+  width: 45%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.address-list{
+  display: flex;
+}
+
+.order-address-text-block-label{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.order-address{
+  width: 300px;
+  height: 222px;
+  padding: 20px 24px 30px;
+  border: 1px solid #c4c4c4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.order-address-item{
+  margin-right: 26px;
+}
+
+.order-address-text{
+  max-width: 180px;
+  margin: 20px 0;
+}
+
+.order-change-address-btn{
+  padding: 0 10px;
+  font-size: 16px;
+}
+
+.order-purchase-info{
+  width: 45%;
+  margin-bottom: 20px;
+}
+
+.footer-block{
+  background-color: #F9F9F9;
+}
+
+.order-addresses-footer-info{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 1200px) {
+  .order-address-item{
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-addresses, .order-address-block, .order-address,{
+    border: 0;
+  }
+
+  .order-address{
+    width: 100%;
+    padding: 0;
+    height: auto;
+  }
+
+  .address-list{
+    flex-direction: column;
+  }
+
+  .order-address-block-title{
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 21px;
+    color: #000000;
+    width: 100%;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #F4F4F4;
+  }
+
+  .order-address-text-block{
+    width: 100%;
+  }
+
+  .footer-block{
+    background-color: inherit;
+  }
+
+  .order-addresses-footer-info{
+    flex-direction: column;
+  }
+
+  .order-purchase-info{
+    width: 100%;
+  }
+
+  .order-address-block-underline{
+    display: none;
+  }
+
+  .order-change-address-btn{
+    margin-bottom: rem-calc(30);
+  }
+}

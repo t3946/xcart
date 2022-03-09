@@ -17,6 +17,7 @@ export const CardSceletonLine: React.FC = () => {
         className={"sceleton-center-blocks-wrap"}
         justifyContent={"flex-end"}
         container
+        item={true}
         xs
       >
         <Sceleton height={25} maxWidth={"100%"} />
@@ -24,7 +25,7 @@ export const CardSceletonLine: React.FC = () => {
         <Sceleton height={35} maxWidth={"100%"} />
         <Sceleton height={7} maxWidth={70} />
       </Grid>
-      <Grid xs={2}>
+      <Grid item={true} xs={2}>
         <Sceleton margin={"0 0 20px 0"} height={70} maxWidth={"100%"} />
         <Sceleton height={40} maxWidth={"100%"} />
       </Grid>

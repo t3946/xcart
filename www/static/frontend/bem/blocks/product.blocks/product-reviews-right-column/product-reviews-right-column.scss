@@ -1,0 +1,15 @@
+.product-reviews-right-column {
+  padding: 0 rem-calc(20);
+
+  @include breakpoint(md up) {
+    padding: rem-calc(38) rem-calc(28) rem-calc(72);
+  }
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(24) 0 rem-calc(60);
+  }
+
+  @include breakpoint(xl up) {
+    padding: 0 rem-calc(24) 0 rem-calc(140);
+  }
+}

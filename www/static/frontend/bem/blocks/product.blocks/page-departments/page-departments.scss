@@ -1,0 +1,7 @@
+.page-departments {
+  overflow: hidden;
+
+  @include breakpoint(lg up) {
+    overflow: initial;
+  }
+}

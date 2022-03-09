@@ -1,0 +1,19 @@
+@mixin iconSize {
+    width: rem-calc(24);
+    height: rem-calc(25);
+
+    @include breakpoint(md up) {
+        width: rem-calc(46);
+        height: rem-calc(48);
+    }
+}
+
+.navigation-login-button {
+    @include iconSize;
+
+    cursor: pointer;
+
+    @include breakpoint(md up) {
+        background-color: #145f8b;
+    }
+}

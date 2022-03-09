@@ -1,0 +1,10 @@
+@import "styles/utils/Utils.module";
+
+.quantityGroup {
+  word-spacing: 0;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  max-width: pxToRem(126);
+}

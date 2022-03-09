@@ -1,0 +1,5 @@
+@each $value in (default, pointer) {
+  .cursor-#{$value} {
+    cursor: $value!important;
+  }
+}

@@ -1,0 +1,12 @@
+.decisions-item_required {
+  background-color: #fff7f6;
+  border-color: #ffc6c6;
+
+  &:hover {
+    background-color: #ffefec;
+  }
+
+  &:active {
+    background-color: #ffe9e5;
+  }
+}

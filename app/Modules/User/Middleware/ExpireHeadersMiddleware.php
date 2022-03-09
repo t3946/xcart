@@ -21,7 +21,13 @@ class ExpireHeadersMiddleware extends Middleware
                 return;
             }
 
-            if ($match = Xcart::app()->router->match(Xcart::app()->request->getUrl(), Xcart::app()->request->getMethod())) {
+            $url = Xcart::app()->request->getUrl();
+            $method = Xcart::app()->request->getMethod();
+            Xcart::app()->logger->debug([$url, $method]);
+            $match = Xcart::app()->router->match($url, $method);
+
+
+            if ($match) {
 
                 if (in_array($match['name'], ['api:image', 'api:image_resize'])) {
                     define('SET_EXPIRE', (new DateTime)->add(new \DateInterval('P1Y'))->getTimestamp());

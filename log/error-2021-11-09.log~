@@ -1,0 +1,25 @@
+[2021-11-09 07:04:59] error.CRITICAL: An exception occurred while executing a query: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1 {"code":500,"type":"Doctrine\\DBAL\\Exception\\SyntaxErrorException","errorCode":1064,"message":"An exception occurred while executing a query: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1","file":"/var/www/app/include/vendors/doctrine/dbal/src/Driver/API/MySQL/ExceptionConverter.php","line":84,"trace":"
+#0 /var/www/app/include/vendors/doctrine/dbal/src/Connection.php(1781): Doctrine\\DBAL\\Driver\\API\\MySQL\\ExceptionConverter->convert(Object(Doctrine\\DBAL\\Driver\\PDO\\Exception), Object(Doctrine\\DBAL\\Query))
+#1 /var/www/app/include/vendors/doctrine/dbal/src/Connection.php(1720): Doctrine\\DBAL\\Connection->handleDriverException(Object(Doctrine\\DBAL\\Driver\\PDO\\Exception), Object(Doctrine\\DBAL\\Query))
+#2 /var/www/app/include/vendors/doctrine/dbal/src/Connection.php(1068): Doctrine\\DBAL\\Connection->convertExceptionDuringQuery(Object(Doctrine\\DBAL\\Driver\\PDO\\Exception), 'SELECT  `xcart_...', Array, Array)
+#3 /var/www/app/include/Xcart/App/Orm/QuerySet.php(271): Doctrine\\DBAL\\Connection->executeQuery('SELECT  `xcart_...', Array, Array, NULL)
+#4 /var/www/app/include/Xcart/App/Orm/QuerySet.php(55): Xcart\\App\\Orm\\QuerySet->execute('SELECT  `xcart_...')
+#5 /var/www/app/include/Xcart/App/Orm/ManagerBase.php(125): Xcart\\App\\Orm\\QuerySet->all(Array)
+#6 /var/www/app/Modules/Account/Controllers/Api/OrdersApi.php(119): Xcart\\App\\Orm\\ManagerBase->all()
+#7 [internal function]: Modules\\Account\\Controllers\\Api\\OrdersApi->getOneOrder('19')
+#8 /var/www/app/include/Xcart/App/Controller/Controller.php(113): ReflectionMethod->invokeArgs(Object(Modules\\Account\\Controllers\\Api\\OrdersApi), Array)
+#9 /var/www/app/include/Xcart/App/Controller/Controller.php(67): Xcart\\App\\Controller\\Controller->runAction('getOneOrder', Array)
+#10 /var/www/app/include/Xcart/App/Application/Application.php(318): Xcart\\App\\Controller\\Controller->run('getOneOrder', Array)
+#11 /var/www/app/include/Xcart/App/Application/Application.php(245): Xcart\\App\\Application\\Application->handleWebRequest()
+#12 /var/www/app/include/Xcart/App/Application/Application.php(209): Xcart\\App\\Application\\Application->handleRequest()
+#13 /var/www/www/index.php(14): Xcart\\App\\Application\\Application->run()
+#14 {main}","script uri":"/index.php","uri":"GET http://localhost/account/api/orders/get-one-order/19","user":"172.18.0.1 [Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 YaBrowser/21.9.2.169 Yowser/2.5 Safari/537.36]"} []
+[2021-11-09 07:05:00] error.CRITICAL: Uncaught RuntimeException: Setting unknown property Modules\User\Models\UserAccount\UserModel::login in /var/www/app/include/Xcart/App/Orm/Base.php:154
+Stack trace:
+#0 /var/www/app/Modules/Mail/LogHandlers/MailHandler.php(25): Xcart\App\Orm\Base->__get('login')
+#1 /var/www/app/include/vendors/monolog/monolog/src/Monolog/Handler/MailHandler.php(53): Modules\Mail\LogHandlers\MailHandler->send('[2021-11-09 07:...', Array)
+#2 /var/www/app/include/vendors/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php(39): Monolog\Handler\MailHandler->write(Array)
+#3 /var/www/app/include/vendors/monolog/monolog/src/Monolog/Logger.php(344): Monolog\Handler\AbstractProcessingHandler->handle(Array)
+#4 /var/www/app/include/vendors/monolog/monolog/src/Monolog/Logger.php(470): Monolog\Logger->addRecord(500, 'An exception oc...', Array)
+#5 /var/www/app/include/Xcart/App/Logger/LoggerManager.php(249): Monolog\Logger->addCritical('An exception oc...', Array)
+#6 /var/www/app/include/Xcart/App/Main/ErrorHandler.php(221): X {"code":1,"file":"/var/www/app/include/Xcart/App/Orm/Base.php","line":154} []

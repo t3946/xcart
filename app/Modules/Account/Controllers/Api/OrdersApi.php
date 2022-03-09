@@ -1,0 +1,552 @@
+<?php
+
+namespace Modules\Account\Controllers\Api;
+
+use Modules\Account\Models\OrderCancelItemsModel;
+use Modules\Account\Models\OrderCancelRequestModel;
+use Modules\Account\Models\OrderProblemsModel;
+use Modules\Account\Models\OrderProblemStatusesModel;
+use Modules\Core\Models\StateModel;
+use Modules\Order\Models\OrderGroupModel;
+use Modules\Forms\Models\EmailModel;
+use Modules\Order\Models\OrderLogModel;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
+use Modules\Order\Models\RMA\ImagesModel;
+use Modules\Order\Models\RMA\RMADetailModel;
+use Modules\Order\Models\RMA\RMAModel;
+use Modules\Order\Models\RMA\RMAStatusModel;
+use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
+use Xcart\App\Form\PrepareData;
+use Xcart\App\Main\Xcart;
+
+class OrdersApi extends Controller
+{
+    private const ORDERS_TYPE_CLOSED = 'closed';
+    private const ORDER_TYPE_COMPLETED = 'completed';
+    private const ORDER_TYPE_OPEN = 'open';
+    private const ORDER_TYPE_CANCELLED = 'cancelled';
+
+    public function getOrderTaxes()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        /* @var $order OrderModel */
+        $order = OrderModel::objects()->get(['orderid' => $data['order_id']]);
+        $this->jsonResponse($order->getTaxes());
+    }
+
+    public function getOrderGroupTaxes()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        /* @var $group OrderGroupModel */
+        $group = OrderGroupModel::objects()->get(['order_group_id' => $data['order_group_id']]);
+        $this->jsonResponse($group->getTaxes());
+    }
+
+    public function getOrders($orders_type, $to_date)
+    {
+        $filter = [];
+        /** @var UserModel $user */
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
+        if ($to_date !== 'undefined') {
+            $filter = ['date__gte' => $to_date];
+        }
+
+        switch ($orders_type) {
+            case self::ORDER_TYPE_COMPLETED:
+                $filter = array_merge(
+                    $filter, [
+                    'cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+                    'dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED
+                ]);
+                break;
+            case self::ORDER_TYPE_OPEN:
+                $filter = array_merge($filter, [
+                    'cb_status__in' => [
+                        OrderStatusModel::ORDER_STATUS_AUTHORIZED,
+                        OrderStatusModel::ORDER_STATUS_COMPLETED,
+                        OrderStatusModel::ORDER_STATUS_QUEUED
+                    ],
+                    'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+                ]);
+                break;
+            case self::ORDER_TYPE_CANCELLED:
+                $filter = array_merge($filter, [
+                    'cb_status__in' => [
+                        OrderStatusModel::ORDER_STATUS_FAILED,
+                        OrderStatusModel::ORDER_STATUS_CANCELED,
+                        OrderStatusModel::ORDER_STATUS_DECLINED
+                    ],
+                ]);
+                break;
+        }
+
+        /* @var OrderModel $order_model */
+        foreach ($user->orders->filter($filter) as $order_model) {
+            $group_data = [];
+
+            foreach ($order_model->groups as $group) {
+                $ar_products = [];
+                $manufacturer = $group->manufacturer;
+
+                if (!$manufacturer) {
+                    continue;
+                }
+
+                foreach ($group->detail_models as $model) {
+                    $ar_products[] = $model->getFrontendProduct();
+                }
+
+                $group_data[] = [
+                    'manufacturer' => $manufacturer->getFrontendAddress(),
+                    'products' => $ar_products ?? [],
+                ];
+            }
+
+            $ar_data[] = [
+                'orderNumber' => $order_model->getOrderNumber(),
+                'date' => $order_model->date,
+                'total' => $order_model->total,
+                'type' => 'shipping',
+                'orderId' => $order_model->pk,
+                'groups' => $group_data,
+                'address' => $order_model->getFrontendAddress(),
+            ];
+        }
+        $this->jsonResponse($ar_data ?? []);
+    }
+
+    public function getPaymentStatusCommonName($code)
+    {
+        $payment_status = null;
+
+        switch ($code) {
+            case 'P':
+            case'AP':
+            case'CH':
+            case 'V':
+            case '3':
+                $payment_status = 'Paid';
+                break;
+
+            case'S1':
+            case'S2':
+            case'S3':
+            case'S4':
+            case'Q':
+            case'O':
+            case'IO':
+            case'I':
+                $payment_status = 'Unpaid';
+                break;
+
+            case'F':
+            case'A':
+            case'D':
+                $payment_status = 'Canceled';
+                break;
+
+            case'H':
+            case'R':
+                $payment_status = 'Refunded';
+                break;
+        }
+
+        return $payment_status;
+    }
+
+    public function getShippingStatusCommonName($code)
+    {
+        $shippingStatus = null;
+
+        switch ($code) {
+            case 'T':
+            case'K':
+            case'M':
+            case 'E':
+            case 'DP':
+                $shippingStatus = 'Ordered';
+                break;
+
+            case'C':
+            case'L':
+            case'DA':
+            case'B':
+            case'G':
+                $shippingStatus = 'Dispatched';
+                break;
+
+            case'S':
+                $shippingStatus = 'Shipped';
+                break;
+
+            case'OD':
+                $shippingStatus = 'Out for delivery';
+                break;
+
+            case'Z':
+                $shippingStatus = 'Delivered';
+                break;
+        }
+
+        return $shippingStatus;
+    }
+
+    private function getOrderGroups(OrderModel $order_model)
+    {
+        $groups = [];
+
+        foreach ($order_model->groups as $group_model) {
+            $ar_products = [];
+            $tracks = [];
+            $manufacturer = $group_model->manufacturer;
+
+            foreach ($group_model->detail_models as $model) {
+                $ar_products[] = $model->getFrontendProduct();
+            }
+
+            foreach ($group_model->trackings as $tracking_model) {
+                $carrier = $tracking_model->carrier;
+                $tracks[] = [
+                    'tracknum' => $tracking_model->tracknum,
+                    'carrier' => [
+                        'link' => $carrier->link,
+                        'name' => $carrier->carrier,
+                        'method' => $tracking_model->link->shipping,
+                    ],
+                ];
+            }
+
+            $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
+            $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+            $paymentStatus = $this->getPaymentStatusCommonName($group_model->cb_status);
+            $shippingStatus = $this->getShippingStatusCommonName($group_model->dc_status);
+
+            $groups[] = [
+                'trackings' => $tracks ?? [],
+                'products' => $ar_products ?? [],
+                'manufacturer' => $manufacturer->getFrontendAddress(),
+                'paymentStatus' => $paymentStatus,
+                'shippingStatus' => $shippingStatus,
+                'a2bStatus' => $cb_status_name,
+                'a2cStatus' => $dc_status_name,
+                'shippingGross' => $group_model->shipping_gross,
+                'totalPst' => $group_model->total_pst,
+                'totalTax' => $group_model->total_tax,
+                'totalGross' => $group_model->total_gross,
+                'statuses_history' => $group_model->statuses_history->asArray()->all(),
+            ];
+        }
+
+        return $groups;
+    }
+
+    public function getOrder($order_id)
+    {
+        /**
+         * @var $user UserModel
+         */
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
+        /** @var OrderModel $order_model */
+        $order_model = $user->orders->get(["pk" => $order_id]);
+        /** @var OrderGroupModel $group_model */
+        foreach ($order_model->groups as $group_model) {
+            $ar_products = [];
+            $tracks = [];
+            $manufacturer = $group_model->manufacturer;
+
+            foreach ($group_model->detail_models as $model) {
+                $ar_products[] = $model->getFrontendProduct();
+            }
+
+            foreach ($group_model->trackings as $tracking_model) {
+                $carrier = $tracking_model->carrier;
+                $tracks[] = [
+                    'tracknum' => $tracking_model->tracknum,
+                    'carrier' => [
+                        'link' => $carrier->link,
+                        'name' => $carrier->carrier,
+                        'method' => $tracking_model->link->shipping,
+                    ],
+                ];
+            }
+
+            $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
+            $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+            $paymentStatus = $this->getPaymentStatusCommonName($group_model->cb_status);
+            $shippingStatus = $this->getShippingStatusCommonName($group_model->dc_status);
+
+            $groups[] = [
+                'trackings' => $tracks ?? [],
+                'products' => $ar_products ?? [],
+                'manufacturer' => $manufacturer->getFrontendAddress(),
+                'paymentStatus' => $paymentStatus,
+                'shippingStatus' => $shippingStatus,
+                'a2bStatus' => $cb_status_name,
+                'a2cStatus' => $dc_status_name,
+                'shippingGross' => $group_model->shipping_gross,
+                'totalPst' => $group_model->total_pst,
+                'totalTax' => $group_model->total_tax,
+                'totalGross' => $group_model->total_gross,
+                'statuses_history' => $group_model->statuses_history->asArray()->all(),
+            ];
+        }
+
+        $log_models = $order_model->logs_model->exclude([
+            'type__in' => [
+                OrderLogModel::LOG_TYPE_CUSTOMER,
+                OrderLogModel::LOG_TYPE_XCART,
+                OrderLogModel::LOG_TYPE_SYSTEM
+            ]
+        ]);
+
+        foreach ($log_models as $log_model) {
+            $logs[] = [
+                'type' => $log_model->type,
+                'date' => $log_model->date,
+                'login' => $log_model->login,
+                'action' => $log_model->log,
+                'id' => $log_model->pk
+            ];
+        }
+
+        $transaction = $order_model->transactions[0];
+
+        if ($order_model->isPurchaseOrder() && $extra_model = $order_model->extra_model) {
+            $purchase_data = $extra_model->getFrontendPurchase();
+        }
+
+        $payment_info = [
+            'status' => $this->getPaymentStatusCommonName($order_model->cb_status),
+        ];
+
+        $unpaid_statuses = ['S1', 'S2', 'S3', 'S4', 'Q', 'O', 'IO', 'I'];
+
+        //order paid
+        if (!in_array($order_model->cb_status, $unpaid_statuses)) {
+            $payment_info['date'] = $transaction ? $transaction->date : $order_model->date;
+        }
+
+        $order = [
+            'cb_status' => $order_model->cb_status,
+            'dc_status' => $order_model->dc_status,
+            'non_us_confirmation' => $order_model->non_us_confirmation,
+            'shippingTotal' => $order_model->getShippingCost(),
+            'subtotal' => $order_model->subtotal,
+            'total' => $order_model->total,
+            'orderNumber' => $order_model->getOrderNumber(),
+            'taxes' => $order_model->getTaxes(),
+            'client' => [
+                'firstName' => $order_model->firstname,
+                'phone' => $order_model->phone,
+                'phoneExt' => $order_model->phone_ext ?: '',
+                'email' => $order_model->email,
+                'shippingName' => $order_model->s_firstname,
+                'billingName' => $order_model->b_firstname,
+                'company' => $order_model->b_company,
+            ],
+            'groups' => $groups ?? [],
+            'orderId' => $order_model->orderid,
+            'poNumber' => $order_model->po_number,
+            'address' => $order_model->getFrontendAddress(),
+            'payment' => $payment_info,
+            'logs' => $logs ?? [],
+            'emails' => [],
+            'purchase' => $purchase_data ?? null
+        ];
+        $this->jsonResponse($order);
+    }
+
+    public function sendProblemMessage()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+        $data = json_decode(file_get_contents('php://input'), true);
+        $order = OrderModel::objects()->get(["user_id" => $user->user_id, "orderid" => $data['order_id']]);
+
+        OrderProblemsModel::objects()->create([
+            "problem_text" => $data["problem_text"],
+            "status_id" => $data["status_id"],
+            "order_id" => $order->orderid,
+        ]);
+
+        $this->jsonResponse(['success']);
+    }
+
+    public function getProblemStatuses()
+    {
+        /** @var OrderProblemStatusesModel $status */
+        foreach (OrderProblemStatusesModel::objects()->all() as $status) {
+            $statuses[] = [
+                'value' => $status->pk,
+                'viewValue' => $status->status_text
+            ];
+        }
+        $this->jsonResponse($statuses ?? []);
+    }
+
+    public function openCancelItemsRequest()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if (!$user) {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        [$order, $items] = array_values(json_decode(file_get_contents('php://input'), true));
+
+        OrderCancelRequestModel::objects()->create($order);
+
+        foreach ($items as $key => $item) {
+            OrderCancelItemsModel::objects()->create($item);
+        }
+
+
+        $this->jsonResponse(['success']);
+    }
+
+    public function openRmaRequest()
+    {
+        $rma_details = [];
+
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            $this->jsonResponse('user not login', 401);
+            return;
+        }
+
+        $request_data = Xcart::app()->request->post->all();
+        if (!$request_data) {
+            $request_data = json_decode(file_get_contents("php://input"), true);
+        }
+
+        $order = $user->orders->get(['orderid' => $request_data['orderId']]);
+
+        if (!$order) {
+            $this->jsonResponse('order not found', 400);
+            return;
+        }
+
+        $items = json_decode($request_data['items'], true, 512, JSON_THROW_ON_ERROR);
+
+        foreach ($items as $item) {
+            if ((int)$item['amount'] === 0) {
+                continue;
+            }
+
+            $detail = $order->detail_models->get(['productid' => $item['productId']]);
+
+            $rma_details[] = [
+                'productid' => $detail->productid,
+                'productcode' => $detail->productcode,
+                'product' => $detail->product,
+                'amount' => $item['amount'],
+                'would_like' => $item['wouldLike'],
+                'pageUrl' => 'page url',
+                'itemid' => $detail->pk
+            ];
+        }
+
+        if (!$rma_details) {
+            $this->jsonResponse('RMA items not selected', 400);
+            return;
+        }
+
+        $rma_count = RMAModel::objects()->filter(['orderid' => $order->pk])->count();
+
+        $rma = new RMAModel([
+            'orderid' => $order->pk,
+            'zipcode' => $order->s_zipcode,
+            'email' => $user->email,
+            'order_email' => $order->email,
+            'explanation' => $request_data['rmaText'],
+            'status' => RMAStatusModel::STATUS_SUBMIT_TO_US,
+            'rma_number' => ++$rma_count,
+        ]);
+
+        if ($_FILES) {
+            $images = [];
+            $files = PrepareData::fixFiles($_FILES);
+            foreach ($files['files'] as $file) {
+                $image = new ImagesModel([
+                    'path' => $file,
+                ]);
+                $image->save();
+                $images[] = $image;
+
+            }
+            $rma->images = $images;
+        }
+
+        $rma->save();
+
+        array_map(static fn($rma_detail) => RMADetailModel::objects()->create(
+            ['rma_id' => $rma->pk] + $rma_detail
+        ), $rma_details);
+
+        $this->jsonResponse(['success']);
+    }
+
+    public function editShippingAddress()
+    {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if (!$user) {
+            $this->jsonResponse('user not login');
+            return;
+        }
+
+        [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'), true));
+        /** @var OrderModel $order_model */
+        $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
+
+        //get state name
+        $state = StateModel::objects()->get(['stateid' => $address_data['s_state']]);
+        $address_data['s_state'] = $state->code;
+
+        $order_model->setAttributes($address_data);
+        $order_model->save();
+        $transaction = $order_model->transactions[0];
+        $address = $order_model->getFrontendAddress();
+
+
+        $order = [
+            'orderNumber' => $order_model->orderid,
+            'client' => [
+                'firstName' => $order_model->firstname,
+                'phone' => $order_model->phone,
+                'phoneExt' => $order_model->phone_ext ?: '',
+                'email' => $order_model->email,
+                'shippingName' => $order_model->s_firstname,
+                'billingName' => $order_model->b_firstname,
+                'company' => $order_model->b_company,
+            ],
+            'groups' => $this->getOrderGroups($order_model),
+            'orderId' => $order_model->orderid,
+            'poNumber' => $order_model->po_number,
+            'address' => $address,
+            'payment' => [
+                'status' => $order_model->cb_status_model->name,
+                'date' => $transaction ? $transaction->date : $order_model->date,
+            ],
+            'logs' => $logs ?? [],
+            'emails' => [],
+            'purchase' => $purchase_data ?? null
+        ];
+        $this->jsonResponse($order);
+    }
+}

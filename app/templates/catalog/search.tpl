@@ -7,10 +7,10 @@
 
     {block "content-top"}
         <div class="row">
-            <div class="columns large-2 show-for-large">
+            <div class="columns large-12 show-for-large">
 
             </div>
-            <div class="columns large-10">
+            <div class="col-12 col-lg-10">
                 <div class="search-header">
                     {if $searched}
                         <h1 class="title">{t 'Showing result for'} "<span class="highlight">{$q|escape}</span>"</h1>

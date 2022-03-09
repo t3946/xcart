@@ -50,6 +50,16 @@ return array_replace_recursive([
        'blowfish_key' => '8d5db63ada15e11643a0b1c3477c2c5c',
        'blowfish' => new \ctBlowfish(),
        'sql_tbl' => include __DIR__ . DS . "xcart_tables.php",
+       'jwt_key' => 'secret-jwt-key',
+       'aws' => [
+           'sns' => [
+               'credentials' => [
+                   'key' => 'AKIA5YFRXSHY5WVBVKUT',
+                   'secret' => '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',
+               ],
+           ],
+       ],
+       'vimeo_access_token' => 'd1b90b9bc4deb327e219424ec700ff04',
    ],
    'modules' => include __DIR__ . DS . 'modules.php',
    'locale' => [
@@ -79,7 +89,7 @@ return array_replace_recursive([
                        'host' => 'redis'
                    ],
                    'driverOptions' => [
-//                       PDO::ATTR_EMULATE_PREPARES => false,
+                       PDO::ATTR_EMULATE_PREPARES => false,
                        PDO::ATTR_STRINGIFY_FETCHES => false,
 //                       PDO::ATTR_PERSISTENT => true, //broken -> https://stackoverflow.com/questions/16217426/is-it-possible-to-use-doctrine-with-persistent-pdo-connections
                    ]

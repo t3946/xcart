@@ -3,6 +3,7 @@
 namespace Modules\Order\Components;
 
 use Modules\Order\Models\OrderLogModel;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 
 class OrderLogger
@@ -24,7 +25,10 @@ class OrderLogger
     public function add(int $order_id, string $type, string $message, $login = null): void
     {
         if ($login === null) {
-            $login = Xcart::app()->user->login;
+            $user = Xcart::app()->auth->getUser();
+            if ($user instanceof UserModel) {
+                $login = Xcart::app()->auth->getUser()->login;
+            }
         }
         $this->messages[$order_id][$login][$type][] = $message;
     }

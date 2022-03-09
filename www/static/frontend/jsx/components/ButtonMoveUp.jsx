@@ -1,5 +1,4 @@
 import {h, Component, render} from 'preact';
-import _ from 'lodash';
 import ScrollMonitor from './ScrollMonitor';
 
 
@@ -35,7 +34,7 @@ export default class ButtonMoveUp extends Component {
     }
 
     render(props, state) {
-        let classString = 'button-move-up';
+        let classString = 'button-move-up text-decoration-none';
         let classStringContainer = 'button-move-up-container';
         if (props.className) {
             classStringContainer += ' ' + props.className;

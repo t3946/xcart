@@ -1,0 +1,11 @@
+.feature-rating-stars {
+  width: rem-calc(103);
+
+  @include breakpoint(md up) {
+    width: rem-calc(157);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(111);
+  }
+}

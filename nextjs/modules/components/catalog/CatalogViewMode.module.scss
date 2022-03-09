@@ -1,0 +1,26 @@
+@import "styles/utils/Utils.module";
+
+.icon {
+  width: pxToRem(18);
+  height: pxToRem(18);
+}
+
+.button {
+  color: #93a0a9;
+  display: none;
+
+  &:hover {
+    color: #677d86;
+  }
+
+  @include breakpoint(lg) {
+    display: flex;
+  }
+}
+
+.button_active {
+  color: #173444;
+  &:hover {
+    color: #173444;
+  }
+}

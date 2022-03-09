@@ -1,0 +1,27 @@
+.addToCartButton {
+  :global(.add-to-cart-link-wrapper_list) {
+    display: block;
+    width: 100%;
+    flex: 1 0;
+  }
+
+  .yellow {
+    background-color: #ffb400;
+    border: 2px solid #ffb400;
+    color: #000000;
+  }
+
+  :global(.button) {
+    border-radius: 5px;
+    min-height: 2em;
+    text-align: center;
+    padding: 0 0.1875rem;
+    min-width: 2em;
+    display: inline-block;
+  }
+
+  :global(.cart-add){
+    display: flex;
+    width: 100%;
+  }
+}

@@ -5,6 +5,7 @@ namespace Modules\User\Models;
 use Modules\User\UserModule;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BigIntField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
@@ -39,8 +40,6 @@ class SessionDataModel extends Model
             'sessid' => [
                 'class' => CharField::class,
                 'length' => 32,
-//                'null' => true,
-//                'primary' => true,
             ],
             'start' => [
                 'class' => IntField::class,
@@ -71,6 +70,10 @@ class SessionDataModel extends Model
                 'modelClass' => SurfMetaModel::class,
                 'link' => ['sessid' => 'sessid']
             ],
+
+            'user_id' => [
+                'class' => BigIntField::class,
+            ]
         ];
     }
 
@@ -78,7 +81,7 @@ class SessionDataModel extends Model
     {
         /** @var UserModule $module */
         if ($isNew && $module = Xcart::app()->getModule('User')) {
-            $owner->expiry = time() + $module->sessionTime;
+            $owner->expiry = time() + $module->EXP_TIME_S;
         }
     }
 

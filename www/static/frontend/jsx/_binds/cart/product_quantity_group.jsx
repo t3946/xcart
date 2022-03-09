@@ -1,6 +1,6 @@
 "use strict";
 
-import _ from "lodash";
+import throttle from "lodash/throttle";
 
 (() => {
   //need for prevent excess change events
@@ -77,7 +77,7 @@ import _ from "lodash";
     });
   };
 
-  let recheckActives_throttled = _.throttle(recheckActives, 20);
+  let recheckActives_throttled = throttle(recheckActives, 20);
   recheckActives = (e, params) => {
     let group = e.target.closest(".quantity-group");
 
@@ -97,20 +97,20 @@ import _ from "lodash";
       e.preventDefault();
 
       let params = getValues(e);
-      const isAdd = !!params.$this.closest(".quantity-group-btn_inc").length;
-      const step = params.$input.attr("step");
 
       // do inc
-      if (isAdd && params.val < params.max) {
-        params.val += parseInt(step - (params.val % step));
+      if (
+        params.$this.closest(".quantity-group-btn_inc").length &&
+        params.val < params.max
+      ) {
+        params.val += parseInt(params.$input.attr("step"));
       }
       // do dec
-      else if (!isAdd && params.val > params.min) {
-        if (params.val % step === 0) {
-          params.val -= step;
-        } else {
-          params.val -= parseInt(params.val % step);
-        }
+      else if (
+        params.$this.closest(".quantity-group-btn_dec").length &&
+        params.val > params.min
+      ) {
+        params.val -= parseInt(params.$input.attr("step"));
       }
       // do nothing
       else {
@@ -128,7 +128,6 @@ import _ from "lodash";
       ".quantity-group-input",
       function (e) {
         const params = getValues(e);
-        const step = Number(params.$input.attr("step"));
 
         //correct value after edition
         if (["blur", "change", "focusout"].indexOf(e.type) > -1) {
@@ -137,9 +136,6 @@ import _ from "lodash";
           }
           if (params.val < params.min) {
             params.val = params.min;
-          }
-          if (params.val % step !== 0) {
-            params.val = parseInt(params.val - (params.val % step) + step);
           }
         }
 

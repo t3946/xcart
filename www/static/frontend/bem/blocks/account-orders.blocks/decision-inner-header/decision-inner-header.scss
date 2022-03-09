@@ -1,0 +1,17 @@
+.decision-inner-header {
+  font-size: rem-calc(22);
+  padding: 0 rem-calc(9);
+  font-weight: bold;
+  text-align: center;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(30);
+    padding: 0 rem-calc(20);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(24);
+    padding: 0 rem-calc(24);
+    text-align: left;
+  }
+}

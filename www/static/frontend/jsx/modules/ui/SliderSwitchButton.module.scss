@@ -1,0 +1,101 @@
+@import "~style-modules/sass-utils.scss";
+
+@mixin slideTransition($props...) {
+  transition: 0.3s ease-out;
+  transition-property: $props;
+}
+
+
+.background {
+  width: calc(260% + 10px);
+  position: absolute;
+  height: calc(100% + 10px);
+  background: linear-gradient(-90deg, #1ca839 40%, #3691d3 60%);
+  top: rem-calc(-5);
+  z-index: 0;
+
+  @include slideTransition(left);
+}
+
+.background_enabled {
+  left: rem-calc(-137);
+}
+
+.background_disabled {
+  left: rem-calc(-3);
+}
+
+
+.caption {
+  position: absolute;
+  color: #ffffff;
+  text-transform: capitalize;
+  font-size: rem-calc(18);
+  z-index: 3;
+
+  @include slideTransition(left, right, opacity);
+}
+
+.caption_enabledActive {
+  left: rem-calc(13);
+  opacity: 1;
+}
+
+.caption_enabledInactive {
+  left: rem-calc(-37);
+  opacity: 0;
+}
+
+.caption_disabledActive {
+  right: rem-calc(13);
+  opacity: 1;
+}
+
+.caption_disabledInactive {
+  right: rem-calc(-37);
+  opacity: 0;
+}
+
+
+.ball {
+  position: absolute;
+  top: rem-calc(2);
+  display: block;
+  width: rem-calc(24);
+  height: rem-calc(24);
+  background: #ffffff;
+  border-radius: rem-calc(13);
+  z-index: 3;
+  box-shadow: 0 rem-calc(3) rem-calc(3) rem-calc(-1) rgba(0,0,0,0.38);
+
+  @include slideTransition(left);
+}
+
+.ball_enabled {
+  left: rem-calc(54);
+}
+
+.ball_disabled {
+  left: rem-calc(2);
+}
+
+
+.label {
+  position: relative;
+  display: block;
+  background: #ffffff;
+  border-radius: rem-calc(20);
+  height: rem-calc(28);
+  width: rem-calc(80);
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+
+
+.border {
+  padding: rem-calc(2);
+  display: inline-block;
+  border-radius: rem-calc(100);
+  background: linear-gradient(180deg, #cbcccb, #ececec);
+}

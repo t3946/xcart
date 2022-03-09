@@ -1,6 +1,6 @@
-import {createRef} from "preact";
+import { createRef } from "preact";
 import classnames from "classnames";
-import _ from "lodash";
+import merge from "lodash/merge";
 
 export default class QuantityGroup extends Component {
   constructor(props) {
@@ -64,21 +64,24 @@ export default class QuantityGroup extends Component {
     const $input = $(this.inputRef.current);
 
     $input.change(() => {
+      const value = parseInt($input.val());
+
       this.setState({
-        value: $input.val(),
+        value,
       });
 
-      this.props.onChange($input.val());
+      this.props.onChange(value);
     });
   }
 
-  render(props) {
+  render() {
+    const props = this.props;
     const minBorder = this.state.value === this.state.min;
     const maxBorder = this.state.value === this.state.max;
     const incIconId = minBorder ? "switcher-minus__ash" : "switcher-minus";
     const decIconId = maxBorder ? "switcher-plus__ash" : "switcher-plus";
 
-    const classes = _.merge(props.classes, {
+    const classes = merge(props.classes, {
       group: ["quantity-group"],
       dec: [
         "quantity-group-btn",
@@ -111,7 +114,7 @@ export default class QuantityGroup extends Component {
           max={this.state.max}
           data-min={this.state.min}
           step={this.state.step}
-          value={this.state.value}
+          value={props.value}
           id={"quantity-" + props.product.productid}
           autoComplete="off"
           inputMode="numeric"

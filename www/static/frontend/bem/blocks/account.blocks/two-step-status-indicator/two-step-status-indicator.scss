@@ -1,0 +1,11 @@
+.two-step-status-indicator {
+  font-size: rem-calc(16);
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(14);
+  }
+}

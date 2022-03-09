@@ -85,6 +85,7 @@
   border-top:0;
 }
 
+
 .open{
   .select__head::after {
     transform: translateY(50%) rotate(180deg);
@@ -129,4 +130,9 @@
 
 .select__group .select__item{
   padding: 5px 35px;
+}
+
+
+.select-input-error{
+  justify-content: flex-start !important;
 }

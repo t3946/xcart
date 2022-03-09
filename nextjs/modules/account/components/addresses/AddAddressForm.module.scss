@@ -1,0 +1,26 @@
+@import "styles/utils/Utils.module";
+
+.addAddressCheckbox {
+  margin-top: pxToRem(20);
+  margin-bottom: pxToRem(25);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.addAddressInputContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(17);
+    padding: 0 pxToRem(29);
+  }
+}
+
+.checboxLabel {
+  font-weight: 700;
+  font-size: 0.875rem;
+}

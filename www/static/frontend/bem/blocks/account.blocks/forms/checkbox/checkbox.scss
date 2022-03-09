@@ -1,0 +1,76 @@
+.form-checkbox {
+  position: absolute; // take it out of document flow
+  opacity: 0; // hide it
+
+  & + .checkbox-label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  & + .checkbox-label:before {
+    content: '';
+    margin-right: rem-calc(10);
+    display: inline-block;
+    vertical-align: text-top;
+    width: rem-calc(30);
+    min-width: rem-calc(30);
+    height: rem-calc(30);
+    background: #ffffff;
+    border: 1px solid #c4c4c4;
+    transition: all 0.15s ease-out;
+  }
+
+  &:hover + .checkbox-label:before {
+    background: #fffaef;
+  }
+
+  &:focus + .checkbox-label:before {
+    background: #fff3d7;
+    border-color: #f2b405;
+    box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
+  }
+
+  &:not(:checked) + .checkbox-labelbefore {
+    background: #ffffff;
+    border-color: #c4c4c4;
+    box-shadow: none;
+  }
+
+  &:hover:not(:checked) + .checkbox-label:before {
+    background: #fffaef;
+  }
+
+  &:focus:not(:checked) + .checkbox-label:before {
+    border-color: #f2b405;
+    box-shadow: 0 0 0 rem-calc(2) rgba(242, 180, 5, 0.34);
+  }
+
+  &:disabled + .checkbox-label {
+    color: #b8b8b8;
+    cursor: auto;
+  }
+
+  &:disabled + .checkbox-label:before {
+    box-shadow: none;
+    background: #ddd;
+  }
+
+  // Checkmark. Could be replaced with an image
+  &:checked + .checkbox-label:after {
+    content: '';
+    position: absolute;
+    left: rem-calc(8);
+    background: url("/static/frontend/images/icons/account/checkbox-arrow.svg") no-repeat center / cover;
+    width: rem-calc(15);
+    height: rem-calc(15);
+  }
+}
+
+.label-text{
+  font-weight: 700;
+  font-size: rem-calc(14);
+  margin-top: rem-calc(5);
+}

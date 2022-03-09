@@ -1,0 +1,8 @@
+.content-panel {
+  padding: 0 rem-calc(10);
+
+  @include breakpoint(md up) {
+    border: 1px solid #c4c4c4;
+    padding: rem-calc(20) rem-calc(23) rem-calc(35);
+  }
+}

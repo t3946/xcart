@@ -1,0 +1,15 @@
+.spoiler-icon_arrow {
+  width: rem-calc(12);
+  height: rem-calc(6);
+  font-size: rem-calc(16);
+  transform: rotate(0deg);
+  transition: all 0.2s ease;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(18);
+  }
+
+  @include breakpoint(lg up) {
+    font-size: rem-calc(16);
+  }
+}

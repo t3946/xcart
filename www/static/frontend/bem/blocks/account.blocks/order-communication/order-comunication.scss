@@ -1,0 +1,70 @@
+.customer-notes{
+  padding: rem-calc(21) rem-calc(25) rem-calc(34);
+  background-color: #FFF1BB;
+  margin-bottom: 45px;
+}
+
+.customer-notes-title{
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.customer-notes-line{
+  color: #DAC783;
+  margin: 21px 0;
+}
+
+.customer-notes-text{
+  color: #4A4949;
+}
+
+.order-communication-editor{
+  margin-top: 40px;
+  margin-bottom: 20px;
+  height: 300px;
+}
+
+.order-communication-messages{
+  margin-top: 20px;
+  margin-bottom: 52px;
+}
+
+.order-communication-attachment{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: rem-calc(150);
+  margin-left: rem-calc(25);
+  margin-bottom: rem-calc(20);
+}
+
+.order-communication-send-btn{
+  width: auto;
+  margin-left: rem-calc(25);
+  margin-top: rem-calc(31);
+}
+
+.file-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 10px 25px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 10px;
+  transition: .3s all ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .order-communication-send-btn{
+    width: 100%;
+    margin-left: 0 !important;
+  }
+
+  .customer-notes-title{
+    text-align: center;
+  }
+
+  .order-communication-attachment{
+    margin-left: 0;
+  }
+}

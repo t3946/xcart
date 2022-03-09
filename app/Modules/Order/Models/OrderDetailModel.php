@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\Order\Models;
 
 use Modules\Goods\Models\ProductModel;
@@ -8,6 +9,7 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\Fields\SerializeField;
@@ -22,7 +24,7 @@ use Xcart\OrderDetail;
  * @property OrderModel order
  * @property int orderid
  */
-class OrderDetailModel  extends Model
+class OrderDetailModel extends Model
 {
     use DataModelTrait, AutoMetaTrait;
 
@@ -83,17 +85,22 @@ class OrderDetailModel  extends Model
                 'link' => ['orderid' => 'orderid'],
                 'null' => false,
             ],
+            'amount' => [
+                'class' => IntField::class,
+            ],
         ];
     }
 
     public function getAmazonCompetitorMinPrice(): array
     {
+        $result = [];
+
         /** @var ProductModel $product */
         if ($product = $this->product_model) {
-            return $product->getAmazonArbitragePrice($this->amount);
+            $result = $product->getAmazonArbitragePrice($this->amount);
         }
 
-        return [];
+        return $result;
     }
 
     public function getOptions(): array
@@ -114,12 +121,26 @@ class OrderDetailModel  extends Model
             $url = Xcart::app()->router->url('catalog:product:view', ['id' => $this->productid, 'slug' => '']);
 
             if ($full && $site = $this->order_group->order->site) {
-                $url = '//' . $site->domain . rtrim($url, '/') .'/';
+                $url = '//' . $site->domain . rtrim($url, '/') . '/';
             }
 
             return $url;
         }
 
         return false;
+    }
+
+    public function getFrontendProduct(): array
+    {
+        $product = $this->product_model;
+        return [
+            'productId' => $product->pk,
+            'image' => (string)$product->getMainImage(),
+            'product' => $product->product,
+            'code' => $product->productcode,
+            'price' => (float)$this->price,
+            'amount' => $this->amount,
+            'url' => $product->getAbsoluteUrl()
+        ];
     }
 }

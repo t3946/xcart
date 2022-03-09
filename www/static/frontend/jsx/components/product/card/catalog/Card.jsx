@@ -1,17 +1,23 @@
 import classnames from "classnames";
-import { Fragment } from "preact";
+import { Fragment, createRef } from "preact";
+import Product from "@/components/product/card/Product";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
+import Price from "@/components/product/card/components/Price";
 import QuantityGroup from "@/components/product/card/QuantityGroup";
 import CatalogContext from "@/components/catalog/CatalogContext";
 import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
-import Product from "../Product";
-import { PriceProduct } from "../components/PriceProduct";
+import { Provider } from "react-redux";
+import Store from "../../../../redux/stores/Store";
+import Snackbar from "../../../../modules/account/components/snackbar/Snackbar";
+import { AddToListSelectOnProductPage } from "../../../../modules/account/components/lists/AddToListSelectOnProductPage";
+import React from "react";
 
 export default class Card extends Component {
   constructor(props) {
     super(props);
+    console.log("catalog card", {product: props.product})
 
     const product = (this.product = props.product);
 
@@ -286,7 +292,10 @@ export default class Card extends Component {
                 {t("List Price")}:{" "}
               </span>
               <span className="products-slider-old-price">
-                <PriceProduct price={product.listPrice.number} />
+                <Price
+                  currency={product.currency}
+                  price={product.listPrice.number}
+                />
               </span>
             </div>
           )}
@@ -296,7 +305,7 @@ export default class Card extends Component {
               {t("Price")}:{" "}
             </span>
             <span className="products-slider-current-price">
-              <PriceProduct price={product.price.number} />
+              <Price currency={product.currency} price={product.price.number} />
             </span>
           </div>
         </div>
@@ -313,9 +322,7 @@ export default class Card extends Component {
                       title={this.product.name}
                     >
                       <span className="text">
-                        {t(`See product variation`, {
-                          count: this.product.childrenNumber,
-                        })}
+                        See {this.product.childrenNumber} products variation
                       </span>
                     </a>
                   </div>
@@ -348,6 +355,7 @@ export default class Card extends Component {
                       )}
 
                       <QuantityGroup
+                        value={this.state.quantityAdd}
                         product={product}
                         classes={quantityGroupClasses}
                         onChange={(q) => {
@@ -369,6 +377,10 @@ export default class Card extends Component {
                         classes={addToCartClasses}
                         onChangeMode={this.addToCartChangeMode.bind(this)}
                         quantity={this.state.quantityAdd}
+                        onAddToCart={() => {
+                          //reset products counter to min amount
+                          this.setState({ quantityAdd: product.min_amount });
+                        }}
                       />
                     </div>
 
@@ -383,7 +395,7 @@ export default class Card extends Component {
                     >
                       <a
                         href={this.context.checkoutUrl}
-                        className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout"
+                        className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout text-decoration-none"
                         title={this.product.name}
                       >
                         {t("Checkout")}
@@ -413,7 +425,18 @@ export default class Card extends Component {
               }
             })()}
           </div>
-
+          {this.context.viewMode !== "tile" && product.avail > 0 && (
+            <Provider store={Store}>
+              <Snackbar>
+                <div className="add-to-list-on-product-list">
+                  <AddToListSelectOnProductPage
+                    product={this.product}
+                    id={"add-to-list-btn"}
+                  />
+                </div>
+              </Snackbar>
+            </Provider>
+          )}
           {this.context.viewMode === "tile" && (
             <div className={classnames(infoContainerClasses)}>
               {this.leadTime()}
@@ -448,6 +471,8 @@ export default class Card extends Component {
         mainInfo={this.productContentBlock()}
         price={this.productPriceBlock()}
         classes={classes}
+        inList={props.inList}
+        onFlagClick={props.onFlagClick}
       />
     );
   }

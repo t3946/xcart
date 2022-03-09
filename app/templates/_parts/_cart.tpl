@@ -1,4 +1,4 @@
-<div class="minicart mini-cart-container"
+<div class="minicart mini-cart-container mini-cart-container__old"
      data-quantity="{$.app->cart->getQuantity()}"
      data-cart-url="{url 'cart:list'}"
      data-checkout-url="{$.call.Modules.Order.Helpers.OrderHelper::getCheckoutUrl()}"

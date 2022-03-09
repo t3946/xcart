@@ -1,0 +1,11 @@
+.sidebar-menu-item__logout {
+  color: #9a1524;
+
+  &:hover {
+    color: #87121f;
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(49);
+  }
+}

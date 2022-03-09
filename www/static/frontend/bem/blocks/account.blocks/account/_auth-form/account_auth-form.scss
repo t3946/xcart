@@ -1,0 +1,7 @@
+.account_auth-form {
+    margin: rem-calc(18) 0 0;
+
+    @include breakpoint(md up) {
+        margin: rem-calc(34) 0 0;
+    }
+}

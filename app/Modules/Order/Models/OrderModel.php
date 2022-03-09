@@ -11,6 +11,8 @@ use Modules\Cart\Models\CartModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\FraudFAQuestionModel;
 use Modules\Core\Models\StateModel;
+use Modules\Forms\Models\EmailEntityModel;
+use Modules\Forms\Models\EmailModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
 use Modules\Order\Helpers\FraudCheckFAHelper;
 use Modules\Order\Helpers\OrderEventHelper;
@@ -75,6 +77,7 @@ use Xcart\Order;
  * @property string|int time_last_opened_or_saved
  * @property CountryModel billing_country
  * @property int storefrontid
+ * @property OrderLogModel[]|Manager logs_model
  * @property Manager|OrderTransactionModel[] transactions
  * @property mixed b_company
  * @property mixed b_firstname
@@ -141,6 +144,7 @@ class OrderModel extends Model
         /** @var SiteModel $site */
         $site = Xcart::app()->getModule('Sites')->getSite();
         $site_lang_id = $site->lang->lang_id;
+        $alias = EmailEntityModel::objects()->getTableAlias();
         return [
             'orderid' => [
                 'class' => AutoField::class,
@@ -193,6 +197,11 @@ class OrderModel extends Model
                 'class' => HasManyField::class,
                 'modelClass' => TransactionLogModel::class,
                 'link' => ['orderid' => 'orderid']
+            ],
+            'logs_model' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderLogModel::class,
+                'link' => ['orderid' => 'orderid'],
             ],
             'shipping_state' => [
                 'field' => 's_state',
@@ -398,6 +407,12 @@ class OrderModel extends Model
             'bare_fraud_score' => [
                 'class' => FloatField::class,
                 'default' => 0
+            ],
+            'email_models' => [
+                'class' => ManyToManyField::class,
+                'modelClass' => EmailModel::class,
+                'through' => EmailEntityModel::class,
+                'extra' => ["{$alias}.model" => OrderModel::class]
             ],
             'bare_fraud_score_v2' => [
                 'class' => FloatField::class,
@@ -718,6 +733,20 @@ class OrderModel extends Model
             }
         }
         return $res;
+    }
+
+    public function getFrontendAddress(): array
+    {
+        return [
+            'shippingCity' => $this->s_city,
+            'shippingState' => $this->s_state,
+            'shippingAddress' => $this->s_address,
+            'shippingZip' => $this->s_zipcode,
+            'billingCity' => $this->b_city,
+            'billingState' => $this->b_state,
+            'billingZip' => $this->b_zipcode,
+            'billingAddress' => $this->b_address
+        ];
     }
 
     public function getAddressesGeoLocation(): array

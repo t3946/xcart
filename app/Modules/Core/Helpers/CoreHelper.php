@@ -22,4 +22,12 @@ class CoreHelper
             'tag' => bin2hex($tag)
         ];
     }
+
+    public static function decryptText(string $text, string $tag): string
+    {
+        $key = '9a9f67b471242fd0539569c4984ea0d387682a0981b7562f';
+        $cipher = "aes-128-gcm";
+
+        return openssl_decrypt($text, $cipher, $key, $options=0, $key, hex2bin( $tag ));
+    }
 }

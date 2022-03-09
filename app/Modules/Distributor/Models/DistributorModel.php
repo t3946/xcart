@@ -79,6 +79,9 @@ use Xcart\Manufacturer;
  * @property float free_shipping_on_orders_over_value
  * @property int dx_leadtime_to
  * @property JsonField $feed_info
+ * @property string m_zipcode
+ * @property string m_city
+ * @property string m_address
  */
 class DistributorModel extends Model
 {
@@ -657,6 +660,10 @@ class DistributorModel extends Model
                 'modelClass' => DistributorUploadPriceModel::class,
                 'link' => ['manufacturerid' => 'manufacturer_id']
             ],
+            'm_zipcode' => [
+                'class' => CharField::class,
+                'default' => '',
+            ]
         ];
     }
 
@@ -831,6 +838,17 @@ class DistributorModel extends Model
             $result = ucfirst(strtolower($names_arrays[0]));
         }
         return $result ?? 'Supplier';
+    }
+
+    public function getFrontendAddress(): array
+    {
+        return [
+            'city' => $this->m_city,
+            'zip' => $this->m_zipcode,
+            'address' => $this->m_address,
+            'state' => $this->m_state,
+            'country' => $this->m_country
+        ];
     }
 
     public function afterSave($owner, $isNew)

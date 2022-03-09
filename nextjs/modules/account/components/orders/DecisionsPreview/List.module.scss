@@ -1,0 +1,16 @@
+@import "styles/utils/Utils.module";
+
+$items-in-viewport: 3;
+
+.decisionsListItems {
+  overflow-y: scroll;
+  max-height: pxToRem(70*$items-in-viewport);
+
+  @include breakpoint(md) {
+    max-height: pxToRem(75*$items-in-viewport);
+  }
+
+  @include breakpoint(lg) {
+    max-height: pxToRem(70*$items-in-viewport);
+  }
+}

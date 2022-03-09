@@ -1,0 +1,50 @@
+@import "styles/utils/Utils.module";
+
+.miniCart {
+}
+
+.button {
+  $bgColor: #ffb400;
+  display: block;
+  color: #0a0a0a;
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  height: pxToRem(50);
+  font-size: pxToRem(16);
+  font-weight: 700;
+  background-color: $bgColor;
+
+  &:hover {
+    background-color: darken($bgColor, 2%);
+  }
+
+  &:active {
+    background-color: darken($bgColor, 4%);
+  }
+
+  &:hover, &:focus {
+    color: currentColor;
+  }
+}
+
+$leftOffset: 3;
+$rightOffset: 8;
+
+.icon {
+  width: pxToRem(43);
+  margin: 0 pxToRem(-$rightOffset) 0 pxToRem(-$leftOffset);
+  color: #0d2431;
+}
+
+.counter {
+  font-size: pxToRem(19);
+  padding: 0 pxToRem($rightOffset) 0 pxToRem($leftOffset);
+}
+
+.counter__quantity {
+  left: pxToRem($leftOffset);
+  right: pxToRem(8);
+  top: pxToRem(-5);
+}

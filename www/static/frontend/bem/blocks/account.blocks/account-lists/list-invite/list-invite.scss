@@ -1,0 +1,82 @@
+.page-invitation-subtitle{
+  margin-left: 30px;
+  margin-bottom: 15px;
+}
+
+.page-invitation-user-profile-container{
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #C4C4C4;
+}
+
+.page-invitation-user-profile-avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.page-invitation-user-profile-name{
+  font-size: 18px;
+  line-height: 38px;
+}
+
+.edit-profile-btn{
+  border-color: #c4c4c4 !important;
+}
+
+.accept-list-btn{
+  margin-right: 15px !important;
+}
+
+.page-invitation-btns{
+  margin-top: 25px;
+  margin-left: 30px;
+}
+
+.accept-invite-btn-group{
+  display: flex;
+  width: 50%;
+  margin-top: 25px;
+}
+
+.accept-invite-btn-group-cancel{
+  width: fit-content !important;
+}
+
+.page-invitation-user-profile{
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 1400px) {
+  .accept-invite-btn-group{
+    width: 65%;
+  }
+}
+
+@media (max-width: 768px) {
+  .accept-invite-btn-group{
+    display: block;
+    width: 100%;
+  }
+
+  .accept-invite-btn-group-cancel{
+    width: 100% !important;
+  }
+
+  .page-invitation-user-profile-container{
+    flex-direction: column;
+  }
+
+  .page-invitation-user-profile{
+    flex-direction: column;
+  }
+
+  .page-invitation-user-profile-avatar{
+    width: 52px;
+    height: 52px;
+  }
+}

@@ -249,6 +249,13 @@ class OrderGroupModel extends Model
                 'class' => BooleanCharField::class,
                 'null' => false,
                 'default' => false
+            ],
+            'statuses_history' => [
+                'class' => HasManyField::class,
+                'modelClass' => OrderStatusesHistoryModel::class,
+                'link' => [
+                    'order_group_id' => 'group_id',
+                ]
             ]
         ];
     }

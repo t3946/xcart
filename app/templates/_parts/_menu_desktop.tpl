@@ -6,7 +6,7 @@
         <div class="columns large-3">
             <section class="category-menu-list-container">
                 {*<div class="bg-container">*}
-                    {*<div class="bg-color"></div>*}
+                {*<div class="bg-color"></div>*}
                 {*</div>*}
                 <div class="category-menu-list">
                     <ul class="no-bullet">
@@ -19,7 +19,7 @@
                             <li class="category-menu-item {if $submenu|count > 0}has-child{/if}" data-hover-toggle="top-csm-{$index}">
                                 <div class="item-container">
                                     <a href="{$category->getAbsoluteUrl()}">
-                                        <div>
+                                        <div class="row">
                                             <div class="column large-2">
                                                 <div class="item-image">
                                                     {*<img src="{$item.image}" alt="{$item.name}">*}

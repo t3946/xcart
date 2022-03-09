@@ -1,0 +1,100 @@
+@import "~style-modules/sass-utils";
+
+.searchIcon {
+  width: rem-calc(28);
+  height: auto;
+  color: #122933;
+
+  @include breakpoint(md up) {
+    width: rem-calc(48);
+  }
+}
+
+.navigationContainer {
+  @include breakpoint(lg up) {
+    padding: rem-calc(7) 0;
+  }
+}
+
+.menuIcon {
+  width: 1.5625rem;
+  height: 1.1875rem;
+
+  @include breakpoint(md up) {
+    width: 2.4375rem;
+    height: 1.875rem;
+  }
+}
+
+.topHeaderMenu {
+  position: relative;
+  z-index: 3;
+  min-width: rem-calc(320);
+  box-shadow: 0 1px #c4c4c4;
+
+  @include breakpoint(lg) {
+    box-shadow: none;
+  }
+}
+
+.topHeader {
+  background-color: #ffffff;
+}
+
+.header_shadowPanelVisible {
+  border-color: transparent;
+}
+
+.h100 {
+  height: 100%;
+}
+
+.cart {
+  width: rem-calc(40);
+  height: rem-calc(30);
+  position: relative;
+  color: #000000;
+
+  &:hover {
+    text-decoration: none;
+    color: #000000;
+  }
+
+  @include breakpoint(md up) {
+    width: rem-calc(63);
+    height: rem-calc(48);
+  }
+}
+
+.cartCount {
+  border-radius: rem-calc(10);
+  background: #f12d2d;
+  font-weight: 800;
+  padding: 0 rem-calc(5);
+  color: #ffffff;
+  display: inline-block;
+  position: absolute;
+  left: rem-calc(-3);
+  top: rem-calc(-1);
+  line-height: 1.2;
+  min-width: rem-calc(18);
+
+  text-align: center;
+
+  @include breakpoint(md up) {
+    min-width: 1.5em;
+  }
+}
+
+.mcCount {
+  display: inline-block;
+  padding-top: 0.12em;
+  line-height: rem-calc(14);
+  vertical-align: top;
+  font-size: 0.75em;
+
+  @include breakpoint(md up) {
+    font-size: rem-calc(19);
+    padding: rem-calc(5);
+  }
+}

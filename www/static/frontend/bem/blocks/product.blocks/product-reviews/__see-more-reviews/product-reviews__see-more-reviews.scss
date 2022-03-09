@@ -1,0 +1,7 @@
+.product-reviews__see-more-reviews {
+  margin: 0 rem-calc(-10) rem-calc(16);
+
+  @include breakpoint(md up) {
+    margin: 0;
+  }
+}

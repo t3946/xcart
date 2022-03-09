@@ -1,0 +1,15 @@
+.orders-navigation-menu-mobile-item {
+  height: rem-calc(40);
+  color: #3d3c3c;
+
+  &:hover, &:active, &:focus {
+    color: #3d3c3c;
+    background-color: rgba(196, 196, 196, 0.11);
+    text-decoration: none;
+  }
+}
+
+.orders-navigation-menu-mobile-item.active {
+  color: #000000;
+  background-color: rgba(196, 196, 196, 0.22);
+}

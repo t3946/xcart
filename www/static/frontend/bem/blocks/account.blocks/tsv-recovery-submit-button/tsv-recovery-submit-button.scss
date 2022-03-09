@@ -1,0 +1,9 @@
+.tsv-recovery-submit-button {
+  @include breakpoint(md up) {
+    width: rem-calc(180);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(170);
+  }
+}

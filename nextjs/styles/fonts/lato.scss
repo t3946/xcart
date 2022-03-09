@@ -1,0 +1,26 @@
+//basePath from next.config.d.ts
+$basePath: "/account";
+
+@font-face {
+    font-family: "Lato";
+    src: url($basePath + "/fonts/lato/Lato-Light.ttf");
+    font-style: normal;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url($basePath + "/fonts/lato/Lato-LightItalic.ttf");
+    font-style: italic;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "Lato";
+    src: url($basePath + "/fonts/lato/lato_regular.eot"); /* IE 9 Compatibility Mode */
+    src: url($basePath + "/fonts/lato/lato_regular.eot?#iefix") format("embedded-opentype"), /* IE < 9 */
+    url($basePath + "/fonts/lato/lato_regular.woff2") format("woff2"), /* Super Modern Browsers */
+    url($basePath + "/fonts/lato/lato_regular.woff") format("woff"), /* Firefox >= 3.6, any other modern browser */
+    url($basePath + "/fonts/lato/lato_regular.ttf") format("truetype"), /* Safari, Android, iOS */
+    url($basePath + "/fonts/lato/lato_regular.svg#lato_regular") format("svg"); /* Chrome < 4, Legacy iOS */
+}

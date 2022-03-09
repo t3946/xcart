@@ -8,7 +8,7 @@
 
     {block "content-top"}
         <div class="row">
-            <div class="columns large-2 show-for-large">
+            <div class="col-2 d-none d-lg-block">
                 <div class="top-block">
                     {set $image = $model->getImage()}
                     {if $image}
@@ -18,13 +18,14 @@
                     {/if}
                 </div>
             </div>
-            <div class="columns large-10">
+
+            <div class="col-12 col-lg-10">
                 <h1 class="title">{$model->brand}</h1>
 
                 {if $model->descr}
                 <div class="description show-for-medium">
                     <div class="row">
-                        <div class="columns large-10 must-show-less">
+                        <div class="col-10 must-show-less">
                             <div class="relative">
                                 <article class="content must-show-less" itemprop="description">
                                 {raw $model->descr}

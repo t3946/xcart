@@ -1,9 +1,9 @@
 <?php
 
-use Xcart\App\QueryBuilder\Expression;
+use Modules\Goods\Models\Videos\ProductsVideosModel;
+use Modules\Goods\Models\Videos\VideosModel;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\Goods\Models\ProductModel;
-use Modules\Goods\Models\ProductVideosModel;
 
 define("CIDEV_CRON_START", "CRON");
 
@@ -109,11 +109,22 @@ foreach ($product_models as $product_model){
         $video_url = $matches[2];
 
         if (!empty($video_url)) {
-            (new ProductVideosModel([
-                                        'product_id' => $product_model->productid,
-                                        'video' => $video_url,
-                                        'name' => $product_model->product
-                                    ]))->save();
+            $product_id = $product_model->productid;
+
+            $video = new VideosModel([
+                'product_id' => $product_id,
+                'video' => $video_url,
+                'name' => $product_model->product
+            ]);
+
+            $video->save();
+
+            $product_video = new ProductsVideosModel([
+                'product_id' => $product_id,
+                'video_id' => $video->video_id
+            ]);
+
+            $product_video->save();
         }
 
         $product_count++;

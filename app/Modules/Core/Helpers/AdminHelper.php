@@ -16,7 +16,7 @@ use Modules\Dashboard\Stores\OrderSearchStore;
 
 class AdminHelper
 {
-    private static function routesData()
+    public static function getRoutesMap(): array
     {
         $routes_map = [];
         $routes = Xcart::app()->router->getRoutes();
@@ -25,7 +25,12 @@ class AdminHelper
             $routes_map[$route[3]] = $route[1];
         }
 
-        StorageHelper::push($routes_map, null, 'routes');
+        return $routes_map;
+    }
+
+    public static function routesData(): void
+    {
+        StorageHelper::push(self::getRoutesMap(), null, 'routes');
     }
 
     /**

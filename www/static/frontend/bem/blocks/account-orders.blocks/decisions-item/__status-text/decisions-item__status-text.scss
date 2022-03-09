@@ -1,0 +1,7 @@
+.decisions-item__status-text {
+  margin: 0 0 0 rem-calc(10);
+
+  @include breakpoint(lg up) {
+    margin: 0 0 0 rem-calc(8);
+  }
+}

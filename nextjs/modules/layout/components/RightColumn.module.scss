@@ -1,0 +1,9 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  padding: 0 pxToRem(10);
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(12) 0 pxToRem(47);
+  }
+}

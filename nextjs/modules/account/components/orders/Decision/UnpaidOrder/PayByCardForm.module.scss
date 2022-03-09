@@ -1,0 +1,72 @@
+@import "styles/utils/Utils.module";
+@import "styles/Variables.scss";
+
+.form {
+  max-width: 100%;
+
+  @include breakpoint(lg) {
+    max-width: pxToRem(360);
+  }
+}
+
+.form__caption {
+  margin: 0 0 pxToRem(22);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(26);
+  }
+}
+
+.form__inputLabel {
+  margin: 0 0 pxToRem(7);
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(14);
+  }
+}
+
+.formInputLabel {
+  font-size: pxToRem(16);
+  line-height: pxToRem(19);
+  display: block;
+  width: auto;
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(19);
+  }
+}
+
+.formInput {
+  height: pxToRem(40);
+  padding: 0;
+
+  @include breakpoint(lg) {
+    max-width: pxToRem(360);
+  }
+}
+
+.formCaption {
+  color: #959595;
+  font-size: pxToRem(12);
+  line-height: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(14);
+    line-height: pxToRem(19);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(12);
+    line-height: pxToRem(14);
+  }
+
+  @include breakpoint(xl) {
+    white-space: nowrap;
+  }
+}

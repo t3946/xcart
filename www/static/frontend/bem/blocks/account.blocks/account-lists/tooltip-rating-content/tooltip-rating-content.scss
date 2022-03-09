@@ -1,0 +1,20 @@
+.rating-stars-tooltip {
+  width: rem-calc(352);
+}
+
+.tooltip-rating-stars-target {
+  width: rem-calc(140);
+}
+
+.see-all-ratings-text {
+  width: 100%;
+  text-align: center;
+  margin-top: rem-calc(15);
+  color: #055a93;
+  cursor: pointer;
+  transition: .3s all;
+
+  &:hover {
+    color: #072639;
+  }
+}

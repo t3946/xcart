@@ -1,0 +1,61 @@
+@import "~style-modules/sass-utils";
+
+.loginButton__sidebarItem {
+  @include breakpoint(lg up) {
+    height: rem-calc(45);
+    font-size: rem-calc(18);
+    background-color: #ffffff;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 0 rem-calc(40) 0 rem-calc(20);
+
+    &:hover,
+    &:focus {
+      background-color: #f1f1f1;
+    }
+  }
+}
+
+.button {
+  padding: 0 0 0 rem-calc(31);
+  width: rem-calc(147);
+}
+
+.button_logined {
+  padding: 0 rem-calc(15);
+  width: rem-calc(180);
+}
+
+.username {
+  flex: 1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+
+  @include breakpoint(lg up) {
+    padding: 0 rem-calc(10);
+  }
+}
+
+.arrowIcon {
+  width: rem-calc(13);
+  height: rem-calc(13);
+  transition: transform 0.2s ease-out;
+}
+
+.sidebarContainer {
+  max-height: rem-calc(500);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: rem-calc(7);
+    background-color: #f8f9fa;
+    padding: rem-calc(5);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: rem-calc(10);
+    background-color: #d9d9d9;
+  }
+}

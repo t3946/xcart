@@ -1,0 +1,111 @@
+@import "styles/utils/Utils.module";
+
+.title {
+  font-size: pxToRem(22);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(28);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(22);
+  }
+}
+
+.problemTextArea {
+  height: pxToRem(126);
+  padding: pxToRem(10) pxToRem(8) 0;
+  max-width: 100%;
+  min-width: 100%;
+
+  &::placeholder {
+    font-size: pxToRem(18);
+    line-height: 1;
+  }
+
+  @include breakpoint(md) {
+    height: pxToRem(118);
+  }
+
+  @include breakpoint(lg) {
+    height: pxToRem(104);
+    padding: pxToRem(10) pxToRem(24) 0;
+
+    &::placeholder {
+      font-size: pxToRem(16);
+      line-height: pxToRem(22);
+    }
+  }
+}
+
+.form__problemTextArea {
+  margin: pxToRem(31) 0 0;
+
+  @include breakpoint(md) {
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(35) 0 0;
+  }
+}
+
+.button {
+  font-size: pxToRem(22);
+  height: pxToRem(51);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(26);
+    height: pxToRem(57);
+    width: auto;
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    height: pxToRem(41);
+  }
+}
+
+.order__diclosure {
+  margin: 0 pxToRem(-20);
+
+  @include breakpoint(lg) {
+    margin: 0;
+  }
+}
+
+.disclosureTitle {
+  @include breakpoint(md) {
+    font-size: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(18);
+  }
+}
+
+.disclosureSubtitle {
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(27);
+  }
+}
+
+.form__table {
+  @include breakpoint(lg) {
+    margin: 0 pxToRem(-35);
+  }
+}
+
+.tableRow {
+  @include breakpoint(lg) {
+    padding: pxToRem(26) pxToRem(36);
+  }
+}
+
+.tableRow_hat {
+  padding: 0 pxToRem(36);
+}

@@ -1,0 +1,15 @@
+@import "~style-modules/sass-utils";
+
+.logoutButton {
+  color: #9a1524;
+
+  &:hover {
+    color: #87121f;
+  }
+
+  @include breakpoint(lg up) {
+    height: rem-calc(49);
+    font-weight: bold;
+    border-bottom: 1px solid #f4f4f4;
+  }
+}

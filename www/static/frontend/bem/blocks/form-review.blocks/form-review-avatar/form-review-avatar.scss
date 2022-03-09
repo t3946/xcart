@@ -1,0 +1,14 @@
+.form-review-avatar {
+  width: rem-calc(38);
+  height: rem-calc(38);
+
+  @include breakpoint(md up) {
+    width: rem-calc(46);
+    height: rem-calc(46);
+  }
+
+  @include breakpoint(lg up) {
+    width: rem-calc(34);
+    height: rem-calc(34);
+  }
+}

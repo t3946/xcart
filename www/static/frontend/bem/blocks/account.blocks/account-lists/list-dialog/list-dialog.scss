@@ -1,0 +1,33 @@
+
+.list-dialog-btns{
+  display: flex;
+  margin-top: 20px;
+}
+
+.create-list-learn-more{
+  color: #055A93;
+  cursor: pointer;
+
+  &:hover{
+    text-decoration:underline;
+  }
+}
+
+.create-list-tooltip-text{
+  padding: 0px;
+  width: 315px;
+}
+
+.list-input{
+  width: 100%
+}
+
+.create-list-learn-more{
+  width: 80px;
+}
+
+@media (max-width: 768px) {
+  .create-list-tooltip-text{
+    padding-top: 10px;
+  }
+}

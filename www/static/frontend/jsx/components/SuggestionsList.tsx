@@ -1,80 +1,80 @@
-import React, { Fragment } from "react";
-import Highlighter from "react-highlight-words";
-interface SuggestionList {
-  search: string;
-  title: string;
-  items:
-    | string[]
-    | { id: number; image: string; link: string; name: string }[]
-    | { id: number; link: string; name: string };
-  typeList: string;
-}
-export const SuggestionList: React.FC<SuggestionList> = ({
-  search,
-  title,
-  items,
-  typeList,
-}) => {
-  const regExp = new RegExp("(" + search.split(" ").join("|") + ")", "gi");
-  const getImage = (image: string) => {
-    if (image) {
-      return { backgroundImage: `url('${image}')` };
-    }
-    return {};
-  };
-  const getLink = (item) => {
-    if (title === "Search suggestions") {
-      return `/search?q=${item.replace(" ", "+")}`;
-    }
-    return item.link;
-  };
+import React from "react";
+import cn from "classnames";
 
-  const getComponent = (item: any) => {
-    switch (title) {
-      case "Search suggestions":
-        return (
-          <span
-            dangerouslySetInnerHTML={{
-              __html: item.replace(regExp, "<b>$1</b>"),
-            }}
-            className="suggestions-item-link"
-          />
-        );
-      case "Categories":
-        return (
-          <span
-            dangerouslySetInnerHTML={{
-              __html: item.name.replace(regExp, "<b>$1</b>"),
-            }}
-            className="suggestions-item-link"
-          />
-        );
-      case "Products":
-        return (
-          <div className="product-wrapper">
-            <span className="icon" style={getImage(item.image)}>
-              <span className="show-for-sr">{item.name}</span>
-            </span>
-            <span
-              className="label"
-              dangerouslySetInnerHTML={{
-                __html: item.name.replace(regExp, "<b>$1</b>"),
-              }}
-            />
-          </div>
-        );
-    }
-  };
+import Styles from "@client/jsx/components/SuggestionsList.module.scss";
+
+export interface ISuggestion {
+  searchString: string;
+  suggestions: any[];
+  title: string;
+}
+
+interface IProps {
+  suggestion: ISuggestion;
+  classes?: any;
+  renderListItem: any;
+  chooseItem?: any;
+}
+
+const SuggestionsList: React.FC<IProps> = function (props: IProps) {
+  const {
+    suggestion: { searchString, suggestions, title, type },
+    renderListItem,
+    chooseItem,
+  } = props;
+
+  function initState() {
+    const re = new RegExp("(" + searchString.split(" ").join("|") + ")", "gi");
+    return suggestions.map((item, n) => {
+      // экранирует спецсимволы если они были в строке
+      console.log("item.name", item.name);
+      return {
+        value: item.name,
+        html: renderListItem(item, re),
+      };
+    });
+  }
+
+  function items() {
+    // Добавляет в состояние найденные строки, шифрует экранированы
+    const list = initState();
+
+    // Строка, выведенная в dangerouslySetInnerHTML предварительно экранирована
+    return list.map((item, index) => {
+      const classes = [
+        "px-3",
+        "m-0",
+        Styles.item,
+        props.classes,
+        Styles["item" + index],
+      ];
+
+      return (
+        <li
+          onClick={
+            chooseItem
+              ? (e) => {
+                  chooseItem(item.value);
+                }
+              : undefined
+          }
+          className={cn(classes)}
+          key={index}
+        >
+          {item.html}
+        </li>
+      );
+    });
+  }
+
   return (
-    <div className={`${typeList} suggestions`}>
-      <div className="suggestionsTitle">{title}</div>
-      <ul>
-        {items.map((item, i) => (
-          <a className="suggestions-item-link" href={getLink(item)}>
-            <li className={"item" + i}>{getComponent(item)}</li>
-          </a>
-        ))}
+    <div className={Styles.suggestion}>
+      <div className={cn(Styles.suggestionsTitle, "text-end")}>{title}</div>
+      <ul className={cn("list-unstyled", "m-0", "pb-2", Styles.list)}>
+        {items()}
       </ul>
     </div>
   );
 };
+
+export default SuggestionsList;

@@ -1,0 +1,10 @@
+.category-menu-link__level-2 {
+  display: block;
+  font-size: rem-calc(14);
+  font-weight: bold;
+
+  &:hover {
+    background: none;
+    color: #055a93;
+  }
+}

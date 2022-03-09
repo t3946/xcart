@@ -1,0 +1,56 @@
+@import "styles/utils/Utils.module";
+
+.userIcon {
+  width: pxToRem(24);
+  height: pxToRem(25);
+
+  @include breakpoint(md) {
+    width: pxToRem(45);
+    height: pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    width: pxToRem(20);
+  }
+}
+
+.userAvatar {
+  width: auto;
+  height: auto;
+  max-height: 67%;
+  border-radius: 100px;
+
+  @include breakpoint(lg) {
+    height: pxToRem(30);
+    width: pxToRem(30);
+  }
+}
+
+.hatLoginButton {
+  $bgColor: #145f8b;
+  position: relative;
+  background-color: $bgColor;
+  color: $white;
+  height: pxToRem(50);
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.15s ease-out;
+  text-decoration: none;
+  padding: 0 pxToRem(26);
+  width: pxToRem(180);
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($bgColor, 2%);
+  }
+
+  &:active,
+  &:focus {
+    background-color: darken($bgColor, 4%);
+  }
+
+  &:hover,
+  &:focus {
+    color: $white;
+  }
+}

@@ -1,0 +1,20 @@
+@import "styles/utils/Utils.module";
+
+.timePeriod {
+  white-space: nowrap;
+}
+
+.selectTimeContainer {
+  min-width: pxToRem(150);
+}
+
+.ordersListHeader {
+  justify-content: space-between;
+  align-items: center;
+
+  @include breakpoint(md) {
+    .ordersListHeader {
+      flex-direction: column;
+    }
+  }
+}

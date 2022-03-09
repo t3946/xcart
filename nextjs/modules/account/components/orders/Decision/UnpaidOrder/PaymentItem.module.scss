@@ -1,0 +1,91 @@
+@import "styles/utils/Utils.module";
+
+.paymentItem {
+  border-bottom: 1px solid #cbcbcb;
+
+  &:nth-child(odd) {
+    background-color: #f4f4f4;
+    border: none;
+  }
+
+  @include breakpoint(sm) {
+    border: none;
+  }
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+.paymentItemGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 0 pxToRem(31);
+
+  @include breakpoint(sm) {
+    padding: 0 pxToRem(21);
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: 1fr 2fr;
+    column-gap: pxToRem(78);
+    padding: 0 pxToRem(25);
+  }
+}
+
+.paymentItemGrid_verticalLayout {
+  height: pxToRem(119);
+  row-gap: pxToRem(11);
+
+  @include breakpoint(md) {
+    height: pxToRem(126);
+  }
+
+  @include breakpoint(lg) {
+    row-gap: 0;
+    height: pxToRem(90);
+    grid-template-rows: pxToRem(90) 1fr;
+  }
+}
+
+.paymentItemCaption {
+  padding: 0 0 0 pxToRem(34);
+  font-size: pxToRem(12);
+  line-height: pxToRem(16);
+  color: #4a4949;
+
+  @include breakpoint(md) {
+    padding: 0 0 0 pxToRem(50);
+    font-size: pxToRem(18);
+    line-height: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0;
+    line-height: pxToRem(17);
+    font-size: pxToRem(14);
+  }
+}
+
+.paymentItemCaption_accent {
+  font-weight: bold;
+  margin: 0 0 pxToRem(23) 0;
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(27) 0;
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+    line-height: pxToRem(19);
+    margin: 0 0 pxToRem(31) 0;
+  }
+}
+
+.show {
+  background-color: red;
+}
+
+.kek {
+  color: black;
+}

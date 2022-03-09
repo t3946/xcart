@@ -85,14 +85,16 @@ $breakpoints: (
   small: 0,
   sm: 370px,
   ms: 640px,
-  md: 720px,
-  medium: 720px,
+  md: 768px,
+  medium: 768px,
   ml: 960px,
-  lg: 1024px,
-  large: 1024px,
+  lg: 992px,
+  large: 992px,
   xl: 1280px,
   xxl: 1400px,
   xxxl: 1620px,
+  //bootstrap v.5 breakpoints
+  bootstrap_sm: 576px,
 );
 $print-breakpoint: large;
 $breakpoint-classes: (small sm medium ml large xl);

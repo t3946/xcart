@@ -1,0 +1,12 @@
+.login-and-security-settings-item-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+
+  @include breakpoint(md up) {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

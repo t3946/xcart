@@ -1,0 +1,50 @@
+@import "styles/utils/Utils.module.scss";
+
+.departmentsMenuMobileAccordion {
+  overflow-y: auto;
+  height: 100%;
+}
+
+.menuIcon {
+  cursor: pointer;
+  width: pxToRem(41);
+  height: pxToRem(24);
+
+  @include breakpoint(md) {
+    width: pxToRem(39);
+    height: pxToRem(30);
+  }
+}
+
+.departmentsMenuMobileHat {
+  padding: 0 pxToRem(7) 0 pxToRem(20);
+  background: #1e3f51;
+  color: #90a6b1;
+  text-transform: uppercase;
+  height: pxToRem(53);
+  line-height: pxToRem(53);
+  flex-shrink: 0;
+
+  @include breakpoint(md) {
+    height: pxToRem(80);
+    line-height: pxToRem(80);
+  }
+}
+
+.departmentsMenuMobileAccordionBody {
+  //border-right: 1px solid #cbcbcb;
+  border-top: 1px solid #cbcbcb;
+}
+
+.departmentsMenuMobileAccordionHeader {
+  //border-right: 1px solid #cbcbcb;
+  border-top: 1px solid #cbcbcb;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 0;
+  height: 3.25rem;
+}
+
+.departmentsMenuMobileAccordionHeader_first {
+  border-top: 0;
+}

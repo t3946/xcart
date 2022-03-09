@@ -1,5 +1,5 @@
 
-<form action="{if $usertype ne "C"}order.php{else}rma_request.php{/if}" method="post" name="rma_request_form2_{$rma_id}" enctype="multipart/form-data">
+<form action="{if $usertype ne "C"}order.php{else}rma_request.php{/if}" method="post" name="rma_request_form2_{$rma->pk}" enctype="multipart/form-data">
 
 
 {if $usertype ne "C"}
@@ -7,19 +7,19 @@
 
 <tr>
 <td>
-<B>RMA request date:</B> {$rma_info.date|date_format:'%d-%b-%Y&nbsp; %H:%M'}
+<B>RMA request date:</B> {$rma->date|date_format:'%d-%b-%Y&nbsp; %H:%M'}
 </td>
 <td align="right">
-<B>Status:</B> {$rma_statuses[$rma_info.status].name}
+<B>Status:</B> {$rma->status_model}
 </td>
 </tr>
 
 <tr>
-<td colspan="2"><B>Zip/Postal code:</B> {$rma_info.zipcode}</td>
+<td colspan="2"><B>Zip/Postal code:</B> {$rma->zipcode}</td>
 </tr>
 
 <tr>
-<td colspan="2"><B>Email:</B> {$rma_info.email}</td>
+<td colspan="2"><B>Email:</B> {$rma->email}</td>
 </tr>
 
 </table>
@@ -35,7 +35,7 @@
 <input type="hidden" name="o" value="{$o}" />
 {/if}
 
-<input type="hidden" name="rma_id" value="{$rma_id}" />
+<input type="hidden" name="rma_id" value="{$rma->pk}" />
 
 
 <table width="98%" align="center">
@@ -56,29 +56,28 @@
   <td>{if $usertype eq "C"}I{else}You{/if} would like to</td>
 </tr>
 
-{foreach from=$v.products item=product key=prod_num}
+{foreach from=$rma->details item=rma_detail key=prod_num}
  <tr{cycle values=", class='TableSubHead'" name="cycle_`$m_id`"}>
-   <td>{$product.productcode}</td>
-   <td><a target="_blank" href="{if $usertype ne "C"}../{/if}product.php?productid={$product.productid}">{$product.product}</a></td>
-   <td align="center">
-
-<input type="hidden" name="post_rma[products][{$prod_num}][productid]" value="{$product.productid}" />
-
-{math equation="x+y" assign="mq" x=$product.amount y=1}
-<select name="post_rma[products][{$prod_num}][amount]">
-{section name=quantity loop=$mq start=0 step=1}
-<option value="{$smarty.section.quantity.index}" {if $rma_info ne "" && $rma_info.products[$prod_num].amount eq $smarty.section.quantity.index}selected="selected"{/if}>{$smarty.section.quantity.index}</option>
-{/section}
-</select>
-
+   <td>{$rma_detail->productcode}</td>
+   <td>
+       <a target="_blank" href="{$rma_detail->product_item->getAbsoluteUrl(true)}">{$rma_detail->product}</a>
    </td>
    <td align="center">
-<select name="post_rma[products][{$prod_num}][would_like]">
-<option value=""></option>
-{foreach from=$rma_would_like_variants item=v_would_like key=k_would_like}
-<option value="{$v_would_like.code}" {if $rma_info ne "" && $rma_info.products[$prod_num].would_like eq $v_would_like.code}selected="selected"{/if}>{$v_would_like.name}</option>
-{/foreach}
-</select>
+        <input type="hidden" name="post_rma[products][{$prod_num}][productid]" value="{$rma_detail->productid}" />
+
+        <select name="post_rma[products][{$prod_num}][amount]">
+            {for $amount_loop=0 to $rma_detail->amount}
+                <option value="{$amount_loop}" {if $rma_detail->amount == $amount_loop}selected="selected"{/if}>{$amount_loop}</option>
+            {/for}
+        </select>
+   </td>
+   <td align="center">
+        <select name="post_rma[products][{$prod_num}][would_like]">
+            <option value=""></option>
+            {foreach from=$rma_would_like_variants item=v_would_like key=k_would_like}
+                <option value="{$v_would_like.code}" {if $rma_detail->would_like == $v_would_like.code}selected="selected"{/if}>{$v_would_like.name}</option>
+            {/foreach}
+        </select>
    </td>
  </tr>
  {/foreach}
@@ -91,22 +90,22 @@
 
 <tr>
   <td colspan="4" align="center">
-   <textarea style="width: 99%" name="post_rma[explanation]" cols="60" rows="4">{if $rma_info ne "" && $rma_info.explanation ne ""}{$rma_info.explanation}{/if}</textarea>
+   <textarea style="width: 99%" name="post_rma[explanation]" cols="60" rows="4">{if $rma_info->explanation}{$rma_info->explanation}{/if}</textarea>
   </td>
 </tr>
 
 <tr>
   <td colspan="4">
 
-{if $rma_info.images ne ""}
-	<br />
-	<I>Uploaded images:</I><br />
+    {if $rma_info->images->count()}
+        <br />
+        <I>Uploaded images:</I><br />
 
-	{foreach from=$rma_info.images item=v_img key=k_img}
-		<a href="{if $usertype ne "C"}.{/if}{$v_img.image_path}" target="_blank">{$v_img.filename}</a><br />
-	{/foreach}
+        {foreach from=$rma_info->images item=v_img key=k_img}
+            <a href="/{$v_img->path}" target="_blank">{$v_img->path->path()}</a><br />
+        {/foreach}
 
-{/if}
+    {/if}
 
   </td>
 </tr>
@@ -126,7 +125,6 @@
 <td valign="top">
 
 <script type="text/javascript">
-<!--
         p_f_row_max_index = 1000;
 
         function p_f_add_upload_row(multi_id, rma_id) {ldelim}
@@ -135,10 +133,7 @@
                 var new_row = tr.parentNode.parentNode.insertRow(tr.rowIndex+1);
                 new_row.id = rma_id+'_p_f_upload_row_'+p_f_row_max_index;
                 var td;
-/*
-		td = new_row.insertCell(-1);
-                td.innerHTML = 'Attach file:';
-*/
+
                 td = new_row.insertCell(-1);
                 td.innerHTML = "<input type=\"file\" size=\"25\" name=\""+rma_id+"userfile_D_"+p_f_row_max_index+"\" id=\""+rma_id+"userfile_"+p_f_row_max_index+"\" />";
                 td = new_row.insertCell(-1);
@@ -150,18 +145,18 @@
                 var tr = document.getElementById(rma_id+'_p_f_upload_row_'+multi_id);
                 tr.parentNode.parentNode.deleteRow(tr.rowIndex);
         {rdelim}
--->
 </script>
 
 
  <table cellpadding="4" cellspacing="0" align="left">
 
- <tr id="{$rma_id}_p_f_upload_row_1000">
-{* <td>Attach file:</td> *}
- <td>
-<input type="file" size="25" name="{$rma_id}_userfile_D_1000" id="{$rma_id}_userfile_1000" {* style="border: solid 1px #b7b7b7;" *} />
- </td>
- <td><a href="javascript: void(0);" onclick="javascript: p_f_add_upload_row(1000, {$rma_id});"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a></td>
+ <tr id="{$rma->pk}_p_f_upload_row_1000">
+     <td>
+        <input type="file" size="25" name="{$rma->pk}_userfile_D_1000" id="{$rma->pk}_userfile_1000" {* style="border: solid 1px #b7b7b7;" *} />
+     </td>
+     <td>
+         <a href="javascript: void(0);" onclick="p_f_add_upload_row(1000, {$rma->pk});"><img src="{$ImagesDir}/plus.gif" alt="{$lng.lbl_add|escape}" /></a>
+     </td>
  </tr>
 
  </table>
@@ -177,7 +172,7 @@
 <tr>
   <td align="center" colspan="4">
 <br />
-<input type="button" value="Submit request to RMA department" onclick="javascript: submitForm(this, 'to_rma_department');" />
+<input type="button" value="Submit request to RMA department" onclick="submitForm(this, 'to_rma_department');" />
   </td>
 </tr>
 
@@ -189,7 +184,7 @@
 <br />
 <I>I will now send email to</I> <input type="text" name="post_rma[order_email]" value="{$rma_info.order_email|default:$order.email}" />
 
-{assign var="rma_form_link" value="<a href='../rma_request.php?step=2&o=`$crypt_orderid`&rma_id=`$rma_id`&prefilled=Y' target='_blank' style='color: blue;'>link</a>"}
+{assign var="rma_form_link" value="<a href='../rma_request.php?step=2&o=`$crypt_orderid`&rma_id=`$rma->pk`&prefilled=Y' target='_blank' style='color: blue;'>link</a>"}
 
 <br />
 {$lng.lbl_back_end_RMA_ending|substitute:"rma_form_link":$rma_form_link}
@@ -199,17 +194,17 @@
 <table width="100%">
 <tr>
 <td width="33%" valign="top">
-<input type="button" value="Update RMA request" onclick="javascript: submitForm(this, 'rma_update_request');" />
+<input type="button" value="Update RMA request" onclick="submitForm(this, 'rma_update_request');" />
 </td>
 
 <td width="*" align="center" valign="top">
-<input type="button" value="Send email to customer" onclick="javascript: submitForm(this, 'rma_send_email_to_customer');" {if $rma_info.status eq "3"}disabled="disabled" style="backgroud-color: #cccccc; border: solid 1px red;"{else}style="border: solid 1px green;"{/if} />
+<input type="button" value="Send email to customer" onclick="submitForm(this, 'rma_send_email_to_customer');" {if $rma_info.status eq "3"}disabled="disabled" style="backgroud-color: #cccccc; border: solid 1px red;"{else}style="border: solid 1px green;"{/if} />
 <br />
-{if $rma_info.status eq "3"}<I>Customer has already submitted this RMA request.</I>{/if}
+{if $rma->status == "3"}<I>Customer has already submitted this RMA request.</I>{/if}
 </td>
 
 <td align="right" valign="top">
-<input type="button" value="Delete RMA request" onclick="javascript: submitForm(this, 'delete_rma_request');" />
+<input type="button" value="Delete RMA request" onclick="submitForm(this, 'delete_rma_request');" />
 </td>
 </tr>
 </table>

@@ -49,20 +49,20 @@
         {raw $billingForm->renderBegin([
             'action' => $.app->router->url('checkout:options'),
             'method' => 'POST',
-            'class' => 'checkout-options-form',
+            'class' => 'checkout-options-form container',
             'validate' => 'false'
         ])}
         <section class="checkout-options">
             <div class="row">
-                <div class="columns large-4 show-for-large">
+                <div class=" col-lg-4 show-for-large">
                     <div class="options">
                         {set $lbl}{t 'Shipping Address'}{/set}
                         {include 'checkout/_address_view.tpl' info=$shipping_address header=$lbl uri='checkout:shipping'}
                     </div>
                 </div>
-                <div class="columns small-12 large-8">
+                <div class=" col-12 col-lg-8">
                     <div class="row">
-                        <div class="columns small-12">
+                        <div class=" col-12">
                             <h2 class="default-form-header">{t 'Delivery Methods' }</h2>
                         </div>
                     </div>
@@ -73,11 +73,11 @@
 
                         <div class="product-group-shipping">
                             <div class="row">
-                                <div class="columns small-12">
+                                <div class=" col-12">
 
                                     <h3 class="shipped-from">
                                         {t 'Delivery methods for' }
-                                        <a class="dashed" data-toggle="product-group-{$gi}">
+                                        <a class="dashed common-link" data-toggle="product-group-{$gi}">
                                             <span>{t 'the items' }</span>
                                         </a>
                                         {t 'shipped from warehouse in' } {$warehouse->m_city},
@@ -91,7 +91,7 @@
 
                             {if $shipping}
                                 <div class="row">
-                                    <div class="columns small-12">
+                                    <div class=" col-12">
                                         <div class="shipping-methods methods-table">
                                             {foreach $shipping as $quote first=$first}
                                                 {set $shipping_model = $quote->shipping}
@@ -125,7 +125,7 @@
                             {else}
                                 {add $phone_order_only = true}
                                 <div class="row">
-                                    <div class="columns small-12">
+                                    <div class=" col-12">
                                         <div class="no-quotes">
                                             {t "Our shipping server couldn't provide us with an accurate shipping quote. This sometimes occurs"}<br/>
                                             {t '- when the product is oversized or somehow irregular in shape or weight'}<br/>
@@ -142,7 +142,7 @@
                     {/foreach}
                     {if $order->isCanadianShipping()}
                         <div class="row">
-                            <div class="columns small-12">
+                            <div class=" col-12">
                                 <div class="non-us-disclaimer checkbox-container">
                                     <input id="non-us-disclaimer-checkbox" type="checkbox" {if $order->non_us_confirmation}checked{/if} value="Y" name="non_us_confirmation"/>
                                     <label for="non-us-disclaimer-checkbox">
@@ -156,17 +156,17 @@
             </div>
 
             <div class="row show-for-large">
-                <div class="small-12 columns">
+                <div class="col-12 ">
                     <div class="hr"></div>
                 </div>
             </div>
 
             <div class="row payment-methods-container">
-                <div class="columns large-4 show-for-large"></div>
-                <div class="columns large-8">
+                <div class=" col-lg-4 show-for-large"></div>
+                <div class=" col-lg-8">
                     <div class="row">
-                        <div class="columns small-12">
-                            <h2 class="default-form-header">{t 'Payment Methods' }</h2>
+                        <div class=" col-12">
+                            <h2 class="default-form-header fw-bold">{t 'Payment Methods' }</h2>
                         </div>
                     </div>
                     {if $payment_methods}
@@ -178,7 +178,7 @@
                                             <input {if $first || $phone_order_only || ($method->paymentid == $order->paymentid)}checked{/if}
                                                    id="payment_{$method->paymentid}" type="radio" name="payment_method" value="{$method->paymentid}"/>
                                             <label for="payment_{$method->paymentid}">
-                                                <span class="name">{$method->payment_method}</span>
+                                                <span class="name text-nowrap">{$method->payment_method}</span>
                                             </label>
                                         </div>
                                         <div class="table-cell payment-description">
@@ -192,21 +192,21 @@
                 </div>
             </div>
             {*<div class="row show-for-large">*}
-                {*<div class="small-12 columns">*}
+                {*<div class="col-12 ">*}
                     {*<div class="hr"></div>*}
                 {*</div>*}
             {*</div>*}
             <div class="row">
-                <div class="columns large-4 show-for-large"></div>
-                <div id="billing-address" class="columns large-8 billing_same_shipping">
+                <div class=" col-lg-4 show-for-large"></div>
+                <div id="billing-address" class=" col-lg-8 billing_same_shipping">
                     {set $billing_diff = $.app->request->post->get('billing_same') === '0' || $order->isBillingAddressDiff() || $.app->request->get->get('modify')}
                     <div class="row">
-                        <div class="columns small-12">
-                            <h2 class="default-form-header">{t 'Is Billing Address the same as Shipping Address?' }</h2>
+                        <div class=" col-12">
+                            <h2 class="default-form-header fw-bold">{t 'Is Billing Address the same as Shipping Address?' }</h2>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="columns small-12">
+                        <div class=" col-12">
                             <input id="biiling_yes" type="radio" onclick="hideForm()" {if !$billing_diff}checked{/if} name="billing_same" value="1"/>
                             <label for="biiling_yes">
                                 {t 'Yes' }
@@ -214,7 +214,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="columns small-12">
+                        <div class=" col-12">
                             <input id="biiling_no" type="radio" onclick="showForm()" {if $billing_diff}checked{/if} name="billing_same" value="0"/>
                             <label for="biiling_no">
                                 {t 'No' }
@@ -226,20 +226,20 @@
             </div>
 
             <div class="row">
-                <div class="columns large-4 show-for-large"></div>
-                <div class="columns small-12 large-8 billing_address_form {if !$billing_diff && !$billingForm->hasErrors()}hide{/if}">
+                <div class=" col-lg-4 show-for-large"></div>
+                <div class=" col-12 col-lg-8 billing_address_form {if !$billing_diff && !$billingForm->hasErrors()}hide{/if}">
                     <div class="billing_address_form_container">
                         {raw $billingForm->render()}
                     </div>
                 </div>
-                {*<div class="columns large-2 show-for-large"></div>*}
+                {*<div class=" col-lg-2 show-for-large"></div>*}
             </div>
 
             <div class="row billing-form-submit">
-                <div class="columns large-4 show-for-large"></div>
-                <div class="columns small-12 large-8">
+                <div class=" col-lg-4 show-for-large"></div>
+                <div class=" col-12 col-lg-8">
                     <div class="row">
-                        <div class="column small-12 align-center">
+                        <div class="column col-12 align-center">
                             <div class="buttons">
                                 <button type="submit" class="button submit yellow waves waves-orange waves-effect">
                                     {t 'Continue' }
@@ -249,7 +249,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="column small-12 align-center">
+                        <div class="column col-12 align-center">
                             <div class="submit-notes hint">
                                 {t 'Continue to the order review page' }
                             </div>

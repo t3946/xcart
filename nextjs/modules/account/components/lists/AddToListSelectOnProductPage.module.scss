@@ -1,0 +1,55 @@
+@import "styles/utils/Utils.module";
+
+.addToListLabel {
+  font-size: pxToRem(18);
+  flex: 1 0 auto;
+}
+
+.addToListHeader {
+  border-radius: 4px;
+  border: 2px solid #FFB400;
+  background: #FFFFFF;
+  height: pxToRem(50);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 5;
+  position: relative;
+}
+
+.createListButton {
+  border-top: 1px solid #c4c4c4;
+  height: pxToRem(50);
+  color: #055a93;
+  font-size: pxToRem(18);
+  background-color: #ffffff;
+  transition: background-color 0.15s ease-out;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.createListButtonIcon {
+  width: pxToRem(21);
+  height: auto;
+}
+
+.addToListArrowBlock {
+  width: pxToRem(50);
+  height: 100%;
+  border-left: 2px solid #ffb400;
+  background-color: #fff1cf;
+  color: #4a4949;
+}
+
+.addToListArrowBlockIcon {
+  width: pxToRem(18);
+  height: auto;
+  transform: rotate(180deg);
+  transition: all 0.15s linear;
+}
+
+.addToListArrowBlockIcon__flip {
+  transform: rotate(0);
+}

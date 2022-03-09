@@ -1,0 +1,83 @@
+@import "styles/utils/Utils.module";
+
+.decision__button {
+  margin: 0 0 pxToRem(32) 0;
+
+  @include breakpoint(md) {
+    margin: 0 0 pxToRem(43) 0;
+  }
+}
+
+.button {
+  width: 100%;
+  padding: pxToRem(11) 0;
+  font-size: pxToRem(20);
+  line-height: pxToRem(24);
+  height: auto;
+
+  @include breakpoint(md) {
+    padding: pxToRem(13) pxToRem(38);
+    font-size: pxToRem(26);
+    line-height: pxToRem(31);
+    width: auto;
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(10) pxToRem(30);
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+}
+
+.decision__button_cancelOrder {
+  @include breakpoint(lg) {
+    margin: pxToRem(18) pxToRem(24);
+  }
+}
+
+.decisionCaption {
+  padding: 0 pxToRem(11);
+  @include breakpoint(sm) {
+    padding: 0 pxToRem(21);
+  }
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+    line-height: pxToRem(23);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 pxToRem(25);
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+.widthMaxContent {
+  width: max-content;
+}
+
+.decision__title {
+  margin: pxToRem(26) 0 pxToRem(17);
+
+  @include breakpoint(md) {
+    margin: pxToRem(34) 0 pxToRem(21);
+  }
+
+  @include breakpoint(lg) {
+    margin: pxToRem(42) 0 pxToRem(21);
+  }
+}
+
+.decision__caption_lineIndent {
+  margin: 0 0 pxToRem(24);
+
+  @include breakpoint(lg) {
+    margin: 0 0 pxToRem(12);
+  }
+}
+
+.decision__caption_paragraphIndent {
+  margin: 0 0 pxToRem(28);
+}
+

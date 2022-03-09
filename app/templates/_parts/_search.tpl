@@ -1,4 +1,4 @@
-<div class="search-form-container">
+<div class="search-form-container search-form-container__old">
     <form action="{$.app->router->url('catalog:search')}" method="get" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
         <input type="text"
                name='q'

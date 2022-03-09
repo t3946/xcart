@@ -13,6 +13,15 @@ use Xcart\App\Orm\Fields\TimestampField;
 use Xcart\App\Orm\Fields\UnixTimestampField;
 use Xcart\App\Orm\Model;
 
+/**
+ * Class OrderLogModel
+ * @property OrderModel order
+ * @property string type
+ * @property int date
+ * @property string login
+ * @property string log
+ * @package Modules\Order\Models
+ */
 class OrderLogModel extends Model
 {
     public const LOG_TYPE_CUSTOMER = 'C';
@@ -21,12 +30,12 @@ class OrderLogModel extends Model
     public const LOG_TYPE_PAYMENT_PROCESS = 'PP';
     public const LOG_TYPE_END_LINE = 'EL';
 
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'xcart_order_logs';
     }
 
-    public static function getFields()
+    public static function getFields(): array
     {
         return [
             'id' => AutoField::class,

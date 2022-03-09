@@ -31,21 +31,6 @@ return [
                 E_USER_WARNING,
             ]
         ],
-        'db' => [
-            'connections' => [
-                'default' => [
-                    'host' => 'mysql',
-                    'dbname' => 'xcart_k',
-                    'user' => 'xcart_k',
-                    'password' => 'i250923lst',
-                    'wrapper' => false,
-                    'cache' => [
-                        'class' => RedisCache::class,
-                        'address' => 'redis'
-                    ],
-                ]
-            ],
-        ],
         'template' => [
             'forceCompile' => true,
 //            'autoReload' => true
