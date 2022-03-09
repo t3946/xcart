@@ -43,11 +43,13 @@
 
 {block "before-content"}
     {if !$.request->getIsAjax()}
-    <div class="row">
-        <div class="columns large-12">
-            {insert "base/_breadcrumbs.tpl"}
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {insert "base/_breadcrumbs.tpl"}
+                </div>
+            </div>
         </div>
-    </div>
     {/if}
 {/block}
 
@@ -157,21 +159,7 @@
                             <p>{t 'Image not available'}</p>
                         </div>
                     {/if}
-                        <div class="pinterest-bookmark" id="pinterest-bookmark">
-                            <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true"
-                               data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/">
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="column small-12 ml-6 large-6 block__title_price">
-
-                <div class="notifications show-for-ml product_notifications">
-                    <div class="row align-middle ml-collapse notifications-info">
-                        <div class="column shrink ">
-                            {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
-                        </div>
                     </div>
                 </div>
             </div>
