@@ -7,26 +7,42 @@ import { TransactionAddresses } from "@modules/account/components/wallet-transac
 import { TransactionItems } from "./TransactionItems";
 import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
-import { useSelector } from "react-redux";
-import StoreInterface from "@modules/account/ts/types/store.type";
+import cn from "classnames";
 
 interface IProps {
   order: any;
   transaction: any;
   card: any;
-  first: any;
+  header: string;
 }
 
 export const TransactionItem: React.FC<IProps> = (props) => {
-  const { order, transaction, card, first } = props;
+  const { order, card, header } = props;
   const accordion = useAccordion(500);
-  const breakpoint = useSelector((e: StoreInterface) => e.main.breakpoint);
+
+  function orderTaxesTemplate() {
+    const templates = [];
+
+    for (const taxesKey in order.taxes) {
+      const taxValue = order.taxes[taxesKey];
+
+      templates.push(
+        <div
+          className="info-item-container info-item-container-spacing tax"
+          key={`order-tax-${taxesKey}`}
+        >
+          <p className="total-text total-text-left">Total {taxesKey}:</p>
+          <p className="total-text">US$ {taxValue}</p>
+        </div>
+      );
+    }
+
+    return templates;
+  }
 
   return (
     <div className="transaction">
-      {(first || breakpoint.is768) && (
-        <div className={"transactions-completed-header"}>Completed</div>
-      )}
+      <div className={"transactions-completed-header d-md-none"}>{header}</div>
 
       <TransactionHeader
         onClick={accordion.onItemClick}
@@ -36,9 +52,9 @@ export const TransactionItem: React.FC<IProps> = (props) => {
       />
 
       <div
-        className={`transaction-body position-relative ${
-          accordion.open && "transaction-body-open"
-        }`}
+        className={cn(`transaction-body position-relative`, {
+          "border-bottom-0": !accordion.open,
+        })}
         style={{
           height: accordion.height,
         }}
@@ -48,20 +64,21 @@ export const TransactionItem: React.FC<IProps> = (props) => {
         <TransactionItemContactBlock order={order} />
         <TransactionAddresses order={order} />
         {order.extra && <PurchaseOrderInformation order={order} />}
-        <div className="transaction-checkbox">
-          <FormCheckBox
-            label={
-              "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
-            }
-            value={true}
-            name={"is_default"}
-            handleChange={() => {}}
-          />
-        </div>
+        {order.non_us_confirmation === "Y" && (
+          <div className="transaction-checkbox">
+            <FormCheckBox
+              label={
+                "I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
+              }
+              value={true}
+              name={"is_default"}
+              handleChange={() => {}}
+              disabled={true}
+            />
+          </div>
+        )}
 
-        <div className="transaction-items-label">
-          Refund issued for the following items
-        </div>
+        <div className="transaction-items-label">Products ordered</div>
         {order.groups.map((group, i) => {
           return (
             <TransactionItems
@@ -76,26 +93,21 @@ export const TransactionItem: React.FC<IProps> = (props) => {
           <div className="total-right-side total-group-right-side total-right-side">
             <div className="info-item-container info-item-container-spacing">
               <p className="total-text total-text-left"> Total Items Cost:</p>
-              <p className="total-text">US$ {order.shipping_gross}</p>
+              <p className="total-text">US$ {order.subtotal}</p>
             </div>
             <div className="info-item-container info-item-container-spacing regular">
               <p className="total-text total-text-left">
                 {" "}
                 Total Shipping Cost:
               </p>
-              <p className="total-text">US$ {order.shipping_gross}</p>
+              <p className="total-text">US$ {order.totalShipping}</p>
             </div>
-            <div className="info-item-container info-item-container-spacing tax">
-              <div className="total-text total-text-left">Total Sales Tax:</div>
-              <div className="total-text">US$ {order.total_pst}</div>
-            </div>
-            <div className="info-item-container info-item-container-spacing tax">
-              <p className="total-text total-text-left">Total VAT Tax: </p>
-              <p className="total-text">US$ {order.total_tax}</p>
-            </div>
-            <div className="info-item-container info-item-container-spacing subtotal">
+
+            {orderTaxesTemplate()}
+
+            <div className="info-item-container info-item-container-spacing subtotal fw-bold">
               <p className="total-text total-text-left">GRAND TOTAL:</p>
-              <p className="total-text">US$ {order.total_gross}</p>
+              <p className="total-text">US$ {order.total}</p>
             </div>
           </div>
         </div>

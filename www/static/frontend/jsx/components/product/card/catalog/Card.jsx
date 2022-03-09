@@ -355,6 +355,7 @@ export default class Card extends Component {
                       )}
 
                       <QuantityGroup
+                        value={this.state.quantityAdd}
                         product={product}
                         classes={quantityGroupClasses}
                         onChange={(q) => {
@@ -376,6 +377,10 @@ export default class Card extends Component {
                         classes={addToCartClasses}
                         onChangeMode={this.addToCartChangeMode.bind(this)}
                         quantity={this.state.quantityAdd}
+                        onAddToCart={() => {
+                          //reset products counter to min amount
+                          this.setState({ quantityAdd: product.min_amount });
+                        }}
                       />
                     </div>
 
@@ -390,7 +395,7 @@ export default class Card extends Component {
                     >
                       <a
                         href={this.context.checkoutUrl}
-                        className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout"
+                        className="button yellow-white waves waves-orange waves-effect add-to-cart-button-checkout text-decoration-none"
                         title={this.product.name}
                       >
                         {t("Checkout")}

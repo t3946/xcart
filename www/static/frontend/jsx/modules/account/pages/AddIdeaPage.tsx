@@ -16,18 +16,18 @@ export const AddIdeaPage: React.FC = () => {
   const lists = Store.getState().lists.lists;
 
   if (!lists) {
-    history.push(`/account/your-lists/${params.listHash}`);
+    history.push(`/shopping-lists/${params.listHash}`);
     return;
   }
 
   const onCancelClick = () => {
-    history.push(`/account/your-lists/${params.listHash}`);
+    history.push(`/shopping-lists/${params.listHash}`);
   };
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${params.listHash}`}
+        redirectUrl={`/shopping-lists/${params.listHash}`}
         label={"back"}
       />
       <div className="page-label">Add idea</div>

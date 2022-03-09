@@ -11,36 +11,41 @@ interface OrderItemProps {
 }
 
 export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
-  const orderDate = new Date(Number(order.date)).toLocaleDateString("en-EN", {
-    month: "long",
-    day: "2-digit",
-    year: "numeric",
-  });
+  const orderDate = new Date(Number(order.date * 1000)).toLocaleDateString(
+    "en-EN",
+    {
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+    }
+  );
   const accordion = useAccordion(200);
   const [showAllItems, setShowAllItems] = useState(false);
-
-  console.log(order);
 
   return (
     <div className="order-item-container">
       <div className="order-item-header-container">
         <div className="order-item-body-left-side header-left">
-          <div className="order-item-name">
-            Order # <b>{order.orderNumber}</b>
-          </div>
-          <Link
-            href={`/order/[id]/order-tracking`}
-            as={`/order/${order.orderId}/order-tracking`}
-          >
-            <a className={"text-decoration-none"}>
-              <Button
-                className={"order-details-btn w-auto"}
-                theme={ETheme.outlined}
+          <div className="row">
+            <div className="col">
+              <div className="order-item-name ws-nowrap text-center mb-3">
+                Order # <b>{order.orderNumber}</b>
+              </div>
+            </div>
+
+            <div className="col">
+              <Link
+                href={`/order/[id]/order-tracking`}
+                as={`/order/${order.orderId}/order-tracking`}
               >
-                order details
-              </Button>
-            </a>
-          </Link>
+                <a className={"text-decoration-none w-100 w-md-auto"}>
+                  <Button className={"w-100 w-md-auto"} theme={ETheme.outlined}>
+                    order details
+                  </Button>
+                </a>
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="order-item-body-right-side header-right">
           <div>
@@ -60,7 +65,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div className="order-item-body-right-side"></div>
           <div className="order-item-body-title">items ordered</div>
 
-          {order.groups[0] && (
+          {order.groups[0]?.products[0] && (
             <div className={"order-item-body-product-container"}>
               <div className="order-item-body-product-left-part">
                 <img
@@ -68,7 +73,10 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                   src={order.groups[0].products[0].image}
                 />
                 <div>
-                  <a className="order-item-body-product-name">
+                  <a
+                    href={order.groups[0].products[0].url}
+                    className="order-item-body-product-name"
+                  >
                     {order.groups[0].products[0].product}
                   </a>
                   <div className="order-item-body-product-sku">
@@ -106,7 +114,10 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
                         src={product.image}
                       />
                       <div>
-                        <a className="order-item-body-product-name">
+                        <a
+                          href={product.url}
+                          className="order-item-body-product-name"
+                        >
                           {product.product}
                         </a>
                         <div className="order-item-body-product-sku">

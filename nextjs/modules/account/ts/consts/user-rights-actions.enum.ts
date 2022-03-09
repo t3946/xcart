@@ -1,5 +1,5 @@
 export enum UserRightsActionsEnum {
   DELETE = "delete",
-  VIEW = "view",
-  EDIT = "edit",
+  VIEW = "viewer",
+  EDIT = "editor",
 }

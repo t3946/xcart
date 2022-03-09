@@ -17,6 +17,10 @@ export const phoneYupValidation = Yup.string()
   .required("Required field")
   .matches(/[(]\d{3}[)] \d{3}[-]\d{4}/, "Is not in correct format");
 
+export const phoneExtYupValidation = Yup.string()
+  .nullable()
+  .max(5, "The maximum number of characters is 5");
+
 interface IProps {
   handleChange: () => any;
   setFieldValue: (arg0: string, arg1: any) => void;
@@ -70,8 +74,17 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
    */
   function getSelectItems(): any {
     const codes = [];
-    if (!countries) return codes;
+    const whiteListCodes = ["US", "CA"];
+
+    if (!countries) {
+      return codes;
+    }
+
     for (const country of countries) {
+      if (whiteListCodes.indexOf(country.code) === -1) {
+        continue;
+      }
+
       if (country.phone_code) {
         codes.push({
           label: country.code + " +" + country.phone_code,

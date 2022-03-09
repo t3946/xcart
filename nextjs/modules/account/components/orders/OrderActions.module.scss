@@ -39,13 +39,13 @@
 }
 
 .form__problemTextArea {
-  margin: pxToRem(31) 0 pxToRem(21);
+  margin: pxToRem(31) 0 0;
 
   @include breakpoint(md) {
   }
 
   @include breakpoint(lg) {
-    margin: pxToRem(35) 0 pxToRem(15);
+    margin: pxToRem(35) 0 0;
   }
 }
 

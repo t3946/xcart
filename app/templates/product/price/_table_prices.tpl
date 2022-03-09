@@ -130,7 +130,7 @@
     {if $model->isOutOfStockFrontend()}
         <div class="notify-me-stock">
 
-            <a class="notify-me grey-border">
+            <a class="notify-me grey-border text-decoration-none">
                 <span>{t 'Notify me when product is in stock'}</span>
             </a>
             <div class="product-page-add-to-list-btn out-of-stock" data-out-of-stock="{$model->r_avail === 0 ? '1' : '0'}"></div>

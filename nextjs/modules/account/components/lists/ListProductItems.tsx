@@ -16,10 +16,24 @@ import { ListProductIdeaItem } from "@modules/account/components/lists/ListProdu
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
+import { indexOf } from "lodash";
 
 export const ListProductItems: React.FC = () => {
-  const listView: List = useSelectorAccount((state) => state.lists.listView);
-  const edit = listView.role !== UserPrivateVariantsEnum.VIEW;
+  const { listView, loading } = useSelectorAccount((state) => state.lists);
+  const userId = useSelectorAccount((e) => e.user.user_id);
+  function listIsEdit() {
+    if (listView.owner.userId === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    if (
+      listView?.users.find((user) => user.userId === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const dispatch = useDispatch();
 
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -27,7 +41,6 @@ export const ListProductItems: React.FC = () => {
     boxShadow: isDragging ? "0px 4px 5px 0px rgba(0, 0, 0, 0.25)" : "",
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
-
 
   const deleteItem = (id) => {
     dispatch(deleteProduct(id));
@@ -42,8 +55,13 @@ export const ListProductItems: React.FC = () => {
 
   const reorderProductList = (startIndex: number, endIndex: number) => {
     const reOrder = reorderMass(listView.products, startIndex, endIndex);
-    dispatch(reorderList(reOrder));
+    dispatch(reorderList(reOrder, listView?.productListId));
   };
+
+  if (loading) {
+    return <span className="ps-4">Loading..</span>;
+  }
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
@@ -53,8 +71,8 @@ export const ListProductItems: React.FC = () => {
               listView.products.map((product, index) => {
                 return (
                   <Draggable
-                    key={String(product.list_items_id)}
-                    draggableId={String(product.list_items_id)}
+                    key={`${index}_${product.list_items_id}`}
+                    draggableId={`${index}_${product.list_items_id}`}
                     index={index}
                   >
                     {(provided, snapshot) => (

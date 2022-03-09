@@ -55,16 +55,16 @@ const ShippingTable: React.FC<IProps> = (props) => {
             "col-lg-1",
             "text-start col-9 col-md me-auto",
             "col-lg-2",
-            "col-md-2",
-            "col-md-2 col-lg-1",
-            "col-4 col-md-auto text-start",
-            "col-4 col-md-auto text-start",
-            "col-4 col-md-auto",
+            "col-md-3",
+            "col-md-2 col-lg-2",
+            "col-5 col-md-auto text-start",
+            "col-2 col-md-auto text-start",
+            "col-5 col-md-auto",
           ],
         }}
         rowItemTemplates={(item) => [
           <ProductImage image={item.image} />,
-          <ProductCell name={item.product} sku={item.code} />,
+          <ProductCell name={item.product} sku={item.code} url={item.url} />,
           <span className="d-none d-lg-block">US$ {item.price}</span>,
           <>
             <span className="d-none d-lg-block">{item.amount}</span>
@@ -81,7 +81,7 @@ const ShippingTable: React.FC<IProps> = (props) => {
             US$ {(item.amount * item.price).toFixed(2)}
           </span>,
         ]}
-        rowFooterTemplate={(item) => {
+        rowFooterTemplate={(item, index) => {
           if (order.cb_status !== "P" || order.dc_status !== "Z") {
             return null;
           }
@@ -100,7 +100,7 @@ const ShippingTable: React.FC<IProps> = (props) => {
             const timeDelivered = new Date(deliveredStatus.updated).getTime();
             const dateEndReturn = new Date(timeDelivered + timeOneDay * 14);
 
-            if (dateEndReturn > new Date()) {
+            if (dateEndReturn < new Date()) {
               const date = dateEndReturn.toLocaleDateString("en-EN", {
                 month: "long",
                 day: "2-digit",
@@ -124,11 +124,13 @@ const ShippingTable: React.FC<IProps> = (props) => {
                 "mb-3",
                 "mb-md-4"
               )}
+              key={`row-item-${index}`}
             >
-              <a className={"text-decoration-none"} href={item.url}>
-                <Button className={"w-md-auto me-md-10 mb-3 mb-md-0"}>
-                  buy again
-                </Button>
+              <a
+                className={"text-decoration-none me-md-10 mb-3 mb-md-0 d-block"}
+                href={item.url}
+              >
+                <Button className={"w-md-auto"}>buy again</Button>
               </a>
 
               <Link href={`/create-review/${item.productId}`}>
@@ -146,8 +148,8 @@ const ShippingTable: React.FC<IProps> = (props) => {
       />
 
       <TableFooter
-        paymentStatus={group.a2bStatus}
-        shippingStatus={group.a2cStatus}
+        paymentStatus={group.paymentStatus}
+        shippingStatus={group.shippingStatus}
         regularShipping={group.shippingGross}
         salesTax={group.totalPst}
         vatTax={group.totalTax}

@@ -29,7 +29,7 @@ export const ListsSidebarMenu: React.FC = () => {
     <div>
       <button
         onClick={backOnAccount}
-        className="form-button__outline back-on-account-btn"
+        className="form-button__outline back-on-account-btn cursor-pointer"
       >
         <div className="back-account-btn-inner">
           <ArrowBackIcon />

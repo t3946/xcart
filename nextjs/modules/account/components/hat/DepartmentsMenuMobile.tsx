@@ -65,9 +65,10 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
     return (
       <Card.Header
         className={classnames(
-          "departments-menu-mobile-accordion-header rounded-0 d-flex justify-content-between align-items-center",
+          Styles.departmentsMenuMobileAccordionHeader,
+          "rounded-0 d-flex justify-content-between align-items-center",
           {
-            "departments-menu-mobile-accordion-header__first": index === 0,
+            [Styles.departmentsMenuMobileAccordionHeader_first]: index === 0,
           }
         )}
         onClick={decoratedOnClick}
@@ -126,9 +127,10 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
           <a className={"text-black"} href={category.url}>
             <Card.Header
               className={classnames(
-                "departments-menu-mobile-accordion-header rounded-0 d-flex justify-content-between align-items-center",
+                Styles.departmentsMenuMobileAccordionHeader,
+                "rounded-0 d-flex justify-content-between align-items-center",
                 {
-                  "departments-menu-mobile-accordion-header__first": i === 0,
+                  [Styles.departmentsMenuMobileAccordionHeader_first]: i === 0,
                 }
               )}
             >
@@ -149,7 +151,7 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
           {header}
 
           <Accordion.Collapse eventKey={i.toString()}>
-            <Card.Body className={"departments-menu-mobile-accordion-body p-0"}>
+            <Card.Body className={cn("p-0", Styles.departmentsMenuMobileAccordionBody)}>
               <ul className={"list-unstyled m-0"}>
                 {subcategoryItemsTemplate(category)}
               </ul>
@@ -167,11 +169,11 @@ const DepartmentsMenuMobile: React.FC = (): React.ReactElement => {
       <h3
         className={cn(
           Styles.departmentsMenuMobileHat,
-          "departments-menu-mobile-hat m-0 d-flex align-items-center justify-content-between"
+          "m-0 d-flex align-items-center justify-content-between"
         )}
       >
         Departments
-        <span onClick={hideMobileDepartmentsMenu}>
+        <span onClick={hideMobileDepartmentsMenu} className={"d-flex align-items-center"}>
           <TimesIcon className={Styles.menuIcon} />
         </span>
       </h3>

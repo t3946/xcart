@@ -45,6 +45,10 @@ axios.interceptors.response.use(
       window.location.href = "/account/login";
     }
 
+    if (error.response.status === 400) {
+      // window.location.reload();
+    }
+
     return Promise.reject(error).catch(() => {
       console.log("Server responded with error");
     });

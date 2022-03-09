@@ -26,7 +26,7 @@ use Xcart\App\Orm\Model;
  * @property string recipient_name
  * @property ListItemsModel[]|Manager list_items
  * @property int address_id
- * @property UserListModel[]|Manager user_list_roles
+ * @property ProductListsUserRoles[]|Manager user_list_roles
  * @property UserModel[]|Manager users
  * @property int birthday
  * @property string recipient_email
@@ -69,11 +69,11 @@ class ProductListsModel extends Model
             'users' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => UserModel::class,
-                'through' => UserListModel::class
+                'through' => ProductListsUserRoles::class
             ],
             'user_list_roles' => [
                 'class' => HasManyField::class,
-                'modelClass' => UserListModel::class,
+                'modelClass' => ProductListsUserRoles::class,
                 'link' => ['product_list_id' => 'product_list_id']
             ],
             'list_items' => [
@@ -82,6 +82,9 @@ class ProductListsModel extends Model
                 'link' => ['product_list_id' => 'product_list_id']
             ],
             'address_id' => [
+                'class' => IntField::class,
+            ],
+            'user_id' => [
                 'class' => IntField::class,
             ],
         ];
@@ -97,13 +100,14 @@ class ProductListsModel extends Model
             $users[] = [
                 'userId' => $user->user_id,
                 'role' => $user->role,
-                'listType' => $user->list_type,
-                'user' => [
-                    'email' => $user_model->email,
-                    'name' => $user_model->name,
-                ]
+                'email' => $user_model->email,
+                'name' => $user_model->public_name ?? $user_model->name,
+                'avatar_image' => $user_model->avatar_image->getValue(),
             ];
         }
+        
+        $owner = UserModel::objects()->get(['user_id' => $this->user_id]);
+
         return [
             'description' => $this->description,
             'recipientName' => $this->recipient_name,
@@ -115,6 +119,13 @@ class ProductListsModel extends Model
             'name' => $this->name,
             'products' => $products ?? [],
             'users' => $users ?? [],
+            'owner' => [
+                'userId' => $owner->user_id,
+                'role' => 'owner',
+                'email' => $owner->email,
+                'name' => $owner->public_name ?? $owner->name,
+                'avatar_image' => $owner->avatar_image->getValue(),
+            ],
         ];
     }
 }

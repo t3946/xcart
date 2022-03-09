@@ -23,7 +23,9 @@ export const AddNewPaymentMethod: React.FC = () => {
         Add a credit or debit card
       </Button>
 
-      <div>S3 Stores Inc accepts major credit and debit cards</div>
+      <div className={"fs-16 fs-md-18 fs-lg-14"}>
+        S3 Stores Inc accepts major credit and debit cards
+      </div>
 
       <CardDialog
         contentType={BillingAddressFormEnum.ADD_CARD}

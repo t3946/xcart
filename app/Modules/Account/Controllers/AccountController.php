@@ -44,6 +44,9 @@ class AccountController extends FrontendController
             "code" => strtolower($site->code),
             "shortName" => $site->short_name,
             "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
+            'account_enabled' => $site->account_enabled,
+            'logo' => $site->logo,
+            'logo_mobile' => $site->logo_mobile,
         ], null, 'site');
 
         StorageHelper::push([
@@ -57,6 +60,8 @@ class AccountController extends FrontendController
             "cidev_top_header_code" => $config['cidev_top_header_code'],
             "cidev_header_code" => $config['cidev_header_code'],
             "companyName" => $config['company_name'],
+            'logo' => (string)$site->logo,
+            'logo_mobile' => (string)$site->logo_mobile,
         ], null, 'config');
 
         StorageHelper::push([
@@ -95,27 +100,6 @@ class AccountController extends FrontendController
     public function actionIndex()
     {
         $this->display('account/base.tpl');
-    }
-
-    public function actionTSVAddNew()
-    {
-        self::actionIndex();
-    }
-
-    public function logout()
-    {
-        Xcart::app()->auth->logout(false);
-        $this->actionIndex();
-    }
-
-    public function dashboard()
-    {
-        $this->actionIndex();
-    }
-
-    public function publicProfile()
-    {
-        $this->actionIndex();
     }
 
     /**

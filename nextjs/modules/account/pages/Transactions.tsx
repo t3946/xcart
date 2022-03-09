@@ -35,7 +35,7 @@ export const Transactions: React.FC<IProps> = (props) => {
         </div>
       ) : (
         <>
-          <div className="wallet-label">
+          <div className="wallet-label fw-normal fs-6">
             Refer below for your most recent transactions.
           </div>
 

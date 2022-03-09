@@ -23,9 +23,6 @@
   }
 
   .price {
-    &:before {
-      content: ' ';
-    }
     .price-value {
       font-weight: bold;
     }

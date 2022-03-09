@@ -9,6 +9,7 @@ import { fetchListByCache } from "@redux/actions/account-actions/ListsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
 import ListsPage from "@modules/account/pages/ListsPage";
+
 const ShoppingLists: NextPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();

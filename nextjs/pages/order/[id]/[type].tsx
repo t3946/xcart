@@ -23,6 +23,7 @@ const OrderPage: NextPage = () => {
   }, []);
 
   const order: OrderView = useSelectorAccount((state) => state.orderView);
+
   if (!order) {
     return null;
   }
@@ -45,12 +46,13 @@ const OrderPage: NextPage = () => {
         return <Decision decision={order} />;
     }
   };
-
+  console.log(order);
   return (
     <PageTwoColumns>
       <OrderInfoHeader
         orderNumber={order.orderNumber}
         orderId={order.orderId}
+        orderStatus={order.cb_status}
       />
 
       {getSection()}

@@ -26,6 +26,7 @@ interface IProps {
 }
 
 const FormInputPhone: React.FC<any> = function (props: IProps) {
+  console.log("FormInputPhone");
   const {
     setFieldValue,
     handleChange,
@@ -76,6 +77,8 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
       }
     }
 
+    console.log({codes});
+
     return codes;
   }
 
@@ -113,6 +116,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
               onClick={(item) => {
                 setFieldValue(countryCodeFieldName, item.value);
                 setCountryCodeValue(item);
+                console.log({item})
               }}
               name={countryCodeFieldName}
               id={countryCodeFieldName}

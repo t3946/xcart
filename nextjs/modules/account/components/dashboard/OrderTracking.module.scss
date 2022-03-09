@@ -56,8 +56,17 @@
   }
 }
 
-.textBlue {
+.tracknumLink {
+  font-weight: bold;
   color: #055a93;
+
+  @include breakpoint(md) {
+    font-weight: normal;
+  }
+
+  @include breakpoint(lg) {
+    font-weight: bold;
+  }
 }
 
 .button {
@@ -68,8 +77,21 @@
   display: flex;
   flex-direction: column;
   gap: pxToRem(40);
+  width: 100%;
 
   @include breakpoint(md) {
     gap: pxToRem(20);
+  }
+}
+
+.tracknum {
+  font-size: pxToRem(18);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(22);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(20);
   }
 }

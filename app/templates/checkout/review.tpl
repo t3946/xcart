@@ -79,7 +79,7 @@
 
         {include "checkout/_review_info.tpl" order = $order}
 
-        <section style="background-color: #ffffff;" class="customer-notes">
+        <section style="background-color: #ffffff;" class="customer-notes p-0">
             <div class="row align-center">
                 <div class="  col-12">
                     {foreach $fieldsets['notes'] as $field}

@@ -77,7 +77,7 @@
 
                                     <h3 class="shipped-from">
                                         {t 'Delivery methods for' }
-                                        <a class="dashed" data-toggle="product-group-{$gi}">
+                                        <a class="dashed common-link" data-toggle="product-group-{$gi}">
                                             <span>{t 'the items' }</span>
                                         </a>
                                         {t 'shipped from warehouse in' } {$warehouse->m_city},
@@ -166,7 +166,7 @@
                 <div class=" col-lg-8">
                     <div class="row">
                         <div class=" col-12">
-                            <h2 class="default-form-header">{t 'Payment Methods' }</h2>
+                            <h2 class="default-form-header fw-bold">{t 'Payment Methods' }</h2>
                         </div>
                     </div>
                     {if $payment_methods}
@@ -202,7 +202,7 @@
                     {set $billing_diff = $.app->request->post->get('billing_same') === '0' || $order->isBillingAddressDiff() || $.app->request->get->get('modify')}
                     <div class="row">
                         <div class=" col-12">
-                            <h2 class="default-form-header">{t 'Is Billing Address the same as Shipping Address?' }</h2>
+                            <h2 class="default-form-header fw-bold">{t 'Is Billing Address the same as Shipping Address?' }</h2>
                         </div>
                     </div>
                     <div class="row">

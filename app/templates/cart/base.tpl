@@ -49,9 +49,9 @@
                         </div>
                     {default}
                         <div class="working-hours {if $.workingDayTimeNow}active{else}inactive{/if}">
-                            <div class="text-order-online">
+                            <div class="text-order-online ws-nowrap">
                                 <span class="green-circle-icon"></span>
-                                <span class="grey-text-label">{t 'Order online or call us. Operators are standing by!'}</span>
+                                <span class="grey-text-label ws-nowrap">{t 'Order online or call us. Operators are standing by!'}</span>
                             </div>
                             <div class="phone">
                                 <span class="phone-number">{$config.local_phone}</span>
@@ -83,36 +83,38 @@
             {if $breadcrumbs}
                 <div class="container">
                     <div class="row cart-steps-container">
-                    {if !$breadcrumbs->isFirstStage()}
-                        <a class="col shrink cart-steps-back d-lg-none"
-                           href="{$breadcrumbs->getPrevStage().url}">
-                            <span class="img">
-                                <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg"
-                                     alt="">
-                            </span>
-                            <span class="text">{t 'BACK'}</span>
-                        </a>
-                    {/if}
+                        <div class="col-auto pe-0 d-md-none">
+                            {if !$breadcrumbs->isFirstStage()}
+                                <a class="col shrink cart-steps-back d-lg-none"
+                                   href="{$breadcrumbs->getPrevStage().url}">
+                                    <span class="img">
+                                        <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg"
+                                             alt="">
+                                    </span>
+                                    <span class="text">{t 'BACK'}</span>
+                                </a>
+                            {/if}
+                        </div>
 
-                    <section class="cart-steps-section col">
-                        <ul class="cart-steps-items list-unstyled m-0">
-                            {foreach $breadcrumbs as $key => $item}
-                                <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
-                                    {if !$item.url || $breadcrumbs->getActive() == $key}
-                                        <span class="step-link">
-                                            <span class="step-label">{$item['label']}</span>
-                                        </span>
-                                    {else}
-                                        <a href="{$item['url']}" class="step-link" rel="nofollow">
-                                            <span class="step-label">{$item['label']}</span>
-                                        </a>
-                                    {/if}
-                                    <div class="arrow-right"></div>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </section>
-                </div>
+                        <section class="cart-steps-section col">
+                            <ul class="cart-steps-items list-unstyled m-0">
+                                {foreach $breadcrumbs as $key => $item}
+                                    <li class="cart-step{if $breadcrumbs->isStagePassed($key)} inactive{/if} {if $breadcrumbs->getActive() == $key} active{/if}">
+                                        {if !$item.url || $breadcrumbs->getActive() == $key}
+                                            <span class="step-link">
+                                                <span class="step-label">{$item['label']}</span>
+                                            </span>
+                                        {else}
+                                            <a href="{$item['url']}" class="step-link" rel="nofollow">
+                                                <span class="step-label">{$item['label']}</span>
+                                            </a>
+                                        {/if}
+                                        <div class="arrow-right"></div>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </section>
+                    </div>
                 </div>
             {/if}
         {/block}
@@ -120,7 +122,7 @@
 {/block}
 
 {block "content-wrapper"}
-    <div class="cart_shipping-page default-content-page default-form container">
+    <div class="cart_shipping-page default-content-page default-form container px-0">
         {block "content"}{/block}
     </div>
 {/block}

@@ -12,7 +12,6 @@ import {
 import $ from "jquery";
 import Styles from "@modules/components/catalog/ProductList.module.scss";
 
-// сколько вывести скелетов, когда нет продуктов
 const skeletonsNumber = 12;
 
 export default class ProductsList extends React.Component {
@@ -77,7 +76,7 @@ export default class ProductsList extends React.Component {
     const nextPageUrl = this.getNextPageUrl();
 
     for (let i = 0; i < skeletonsNumber; i++) {
-      this.state.items.push(1);
+      this.context.items.push(1);
     }
 
     fetch(nextPageUrl, {
@@ -89,17 +88,17 @@ export default class ProductsList extends React.Component {
       .then(
         (res) => {
           for (let i = 0; i < skeletonsNumber; i++) {
-            this.state.items.pop();
+            this.context.items.pop();
           }
 
           this.props.onEndLoading();
 
           if (this.state.nextPage === 1) {
-            this.state.items = [];
+            this.context.items = [];
           }
 
           //добавить новые продукты
-          this.state.items.push(...res.items);
+          this.context.items.push(...res.items);
 
           let nextPageUrl = null;
 
@@ -112,8 +111,9 @@ export default class ProductsList extends React.Component {
             nextPageUrl = this.getNextPageUrl();
           }
 
+          this.context.setItems(this.context.items);
+
           this.setState({
-            items: this.state.items,
             isLoaded: true,
             nextPage: this.state.nextPage,
           });
@@ -156,7 +156,7 @@ export default class ProductsList extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.sortKey !== this.props.sortKey) {
       this.state.nextPage = 1;
-      this.state.items = Array(skeletonsNumber).fill(1);
+      this.context.items = Array(skeletonsNumber).fill(1);
       if (document !== undefined) {
         this.loadData();
       }
@@ -184,13 +184,13 @@ export default class ProductsList extends React.Component {
       `${viewMode}-view`,
       `product-items__${viewMode}`,
       {
-        "padding-0": this.state.items.length === 0,
+        "padding-0": this.context.items.length === 0,
       },
     ];
 
     return (
       <div className={classnames(classes)}>
-        {this.state.items.map((item, i) => {
+        {this.context.items.map((item, i) => {
           if (item === 1) {
             if (viewMode === "tile") {
               return <CardSceletonBlock key={`skeleton-${i}`} />;

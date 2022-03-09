@@ -28,6 +28,7 @@ const HatNavigation: React.FC = () => {
   const isVisibleMenu = useSelectorAccount(
     (e) => e.departmentsMenuMobile.isVisible
   );
+  const site = useSelectorAccount((e) => e.config.site);
 
   const classes = {
     navigationContainer: ["d-flex", Styles.navigationContainer],
@@ -111,13 +112,13 @@ const HatNavigation: React.FC = () => {
               <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
                 <a href="/">
                   <img
-                    src={`/static/frontend/dist/images/logos/sites/${siteCode}/logo.svg`}
+                    src={`/${site.logo}`}
                     alt={AppData.config.companyName}
                     className="d-none d-lg-block hat-logo"
                   />
 
                   <img
-                    src={`/static/frontend/dist/images/logos/sites/${siteCode}/logo-small.svg`}
+                    src={`/${site.logo_mobile}`}
                     alt={AppData.config.companyName}
                     className="d-block d-lg-none hat-logo"
                   />

@@ -6,10 +6,20 @@ import Store from "@redux/stores/Store";
 import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
 import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import moment from "moment";
+import { useRouter } from "next/router";
+import cn from "classnames";
+
 interface OrderTrackingPage {
   order: OrderView;
 }
+
 export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
+  const router = useRouter();
+  if (["D", "A", "F"].includes(order.cb_status)) {
+    router.push(`/order/${order.orderId}/products-ordered`);
+    return null;
+  }
+
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
@@ -40,14 +50,19 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
         />
       ))}
       <div className="order-tracking-container order-tracking-footer">
-        <p>
-          <b>Payment status: </b>
-          <span>{order.payment.status}</span>
-        </p>
-        <div>
-          <b>Payment date: </b>
-          <span>{moment.unix(order.payment.date).format("LL")}</span>
-        </div>
+        {!!order.payment.status && (
+          <div className={cn({ "mb-3": !!order.payment.date })}>
+            <b>Payment status: </b>
+            <span>{order.payment.status}</span>
+          </div>
+        )}
+
+        {!!order.payment.date && (
+          <div>
+            <b>Payment date: </b>
+            <span>{moment.unix(order.payment.date).format("LL")}</span>
+          </div>
+        )}
       </div>
     </div>
   );

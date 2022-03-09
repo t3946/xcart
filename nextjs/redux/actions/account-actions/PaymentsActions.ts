@@ -63,3 +63,7 @@ export const changeCardHolderName = (payload: {
   type: "CHANGE_CARDHOLDER_NAME",
   payload,
 });
+
+export const getPaymentMethods = () => ({
+  type: "GET_PAYMENT_METHODS",
+});

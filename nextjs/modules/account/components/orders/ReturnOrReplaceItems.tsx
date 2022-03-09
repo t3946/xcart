@@ -208,7 +208,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                 }}
                 rowItemTemplates={(item) => {
                   return [
-                    <ProductCell name={item.product} sku={item.code} />,
+                    <ProductCell name={item.product} sku={item.code} url={item.url} />,
 
                     <div className="col-9 col-md-6 mx-auto">
                       <Select

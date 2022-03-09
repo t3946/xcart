@@ -5,6 +5,7 @@ import Store from "@redux/stores/Store";
 import { AnyAction } from "redux";
 import axios from "axios";
 import { List } from "@modules/account/ts/types/list.type";
+import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 const api = new ApiService();
 
@@ -86,27 +87,24 @@ function* transferProductList(action: AnyAction): Generator {
 }
 
 function* encryptUrl(action: AnyAction): Generator {
-  const result: any = yield api
-    .post<any>(
-      `/api/account/lists/get-url-encrypt`,
-      JSON.stringify({ privateType: action.privateType, hash: action.hash })
-    )
-    .then((response) => response);
-  const url = `http://${window.location.hostname}/account/shopping-lists/invite/${result.tag}/${result.text}`;
-  yield action.callback(url);
+  const { data, success } = action.payload;
+
+  axios.post<any>(`/api/account/lists/get-url-encrypt`, data).then(success);
 }
 
 function* editUserRights(action: AnyAction): Generator {
   yield api
     .post<any>(
-      `/api/lists/edit-user-rights`,
+      `/api/account/lists/edit-user-rights`,
       JSON.stringify({
         list_id: action.listId,
-        user: action.userId,
-        actionType: action.actionType,
+        user_id: action.userId,
+        action: action.actionType,
       })
     )
     .then((response) => response);
+
+  window.location.reload();
 }
 
 function* addProductOnList(action: AnyAction): Generator {
@@ -216,14 +214,30 @@ function* undoDeleteProduct(action: AnyAction): Generator {
     )
     .then((response) => response);
 }
+
 function* fetchListView(action: AnyAction): Generator {
   const listView = yield api
     .get(`/api/account/lists/get/${action.cache}`)
-    .then((res) => res);
+    .then((res: List | null) => res);
 
-  listView.listType = listView.users.find(
-    (user) => user.userId === getUser()?.user_id
-  ).listType;
+  // list removed
+  if (listView === null) {
+    yield put({
+      type: "LIST_DROP_BY_HASH",
+      hash: action.cache,
+    });
+
+    yield put({
+      type: "SET_LIST_VIEW",
+      listView: null,
+    });
+
+    return;
+  }
+
+  listView.listType = listView.users.length
+    ? ListPrivateEnum.SHARED
+    : ListPrivateEnum.PRIVATE;
 
   yield put({
     type: "SET_LIST_VIEW",

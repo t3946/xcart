@@ -5,6 +5,8 @@ namespace Modules\Reviews\Controllers\Api;
 use Modules\Account\Controllers\AccountController;
 
 use Modules\Core\Models\CountryModel;
+use Modules\Order\Models\OrderModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Reviews\Models\Images\ImagesModel;
 use Modules\Reviews\Models\Videos\VideosModel;
 use Modules\Reviews\Models\ProductReviewsModel;
@@ -42,6 +44,7 @@ class ReviewsApi extends Controller
     {
         AccountController::provideAccountData();
     }
+
     public function __construct()
     {
         $this->data = json_decode(file_get_contents('php://input'), true);
@@ -58,9 +61,9 @@ class ReviewsApi extends Controller
         ]))->save();
     }
 
-    public function getTotalRatings(): array
+    public function getTotalRatings($product_id): array
     {
-        $total_product_ratings = TotalProductRatingsModel::objects()->all(['product_id' => $this->data['productId']]);
+        $total_product_ratings = TotalProductRatingsModel::objects()->all(['product_id' => $product_id]);
         $ratings = array_map(function ($total_model) {
             $rating_model = $total_model->rating->getAttributes();
 
@@ -109,7 +112,8 @@ class ReviewsApi extends Controller
 
     public function getRatingsAction()
     {
-        $this->jsonResponse($this->getTotalRatings());
+        $product_id = $this->data['productId'];
+        $this->jsonResponse($this->getTotalRatings($product_id));
     }
 
     public function createReview()
@@ -231,6 +235,7 @@ class ReviewsApi extends Controller
             '*',
             'helpful__user_id',
             'overall_rating' => 'rating__rating',
+            'user_id' => 'user__user_id',
             'user_public_name' => 'user__public_name',
             'user_avatar' => 'user__avatar_image',
             'marked_helpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
@@ -293,6 +298,7 @@ class ReviewsApi extends Controller
         $reviews = $query_set->all();
 
         for ($i = 0; $i < count($reviews); $i++) {
+            $review = $reviews[$i];
             $reviews[$i]['marked_helpful'] = $reviews[$i]['marked_helpful'] !== 0;
             $filter = [
                 "review_id" => $reviews[$i]["product_review_id"]
@@ -300,7 +306,7 @@ class ReviewsApi extends Controller
             $images = [];
             $reviews_images = ReviewsImagesModel::objects()->select(['images__*'])->all($filter);
 
-            foreach ($reviews_images as $i => $reviews_image) {
+            foreach ($reviews_images as $_ => $reviews_image) {
                 $image_model = ImagesModel::objects()->get(["image_id" => $reviews_image->image_id]);
                 $attributes = $image_model->getAttributes();
                 $attributes['thumb'] = $image_model->path->url_thumb;
@@ -311,6 +317,24 @@ class ReviewsApi extends Controller
                 'images' =>$images,
                 'videos' => ReviewsVideosModel::objects()->select(['videos__*'])->asArray()->all($filter),
             ];
+
+            // check on purchase
+            $orders = OrderModel::objects()->all([
+                'user_id' => $review['user_id'],
+                'cb_status' => OrderStatusModel::ORDER_STATUS_COMPLETED,
+                'dc_status' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
+            ]);
+            $reviews[$i]['verified_purchase'] = false;
+
+            foreach ($orders as $_ => $order) {
+                $details = $order->detail_models;
+
+                foreach ($details as $_ => $detail) {
+                    if ($detail->productid === $product_id) {
+                        $reviews[$i]['verifiedPurchase'] = true;
+                    }
+                }
+            }
         }
 
         return $reviews;
@@ -342,7 +366,7 @@ class ReviewsApi extends Controller
         $location = GeoIpHelper::getGeoipLocation($ip)->country ?: $default_location;
 
         $this->jsonResponse([
-            'ratings' => $this->getTotalRatings(),
+            'ratings' => $this->getTotalRatings($product_id),
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
             'country' => CountryModel::objects()->get(['code' => $location])->name,
             'product' => AccountController::getProduct($this->data['productId']),

@@ -1,4 +1,5 @@
 <section class="info_tabs">
+    {set $site = $.getSite}
     <ul class="tabs" data-responsive-accordion-tabs="tabs small-accordion large-tabs" data-allow-all-closed="true" data-multi-expand="true" id="product_tabs">
         <li class="tabs-title is-active">
           <a href="#description" aria-selected="true">{t 'Description'}</a>
@@ -27,9 +28,11 @@
           <a href="#questions" aria-selected="false">{t 'Product questions'}</a>
         </li>
 
+        {if $site.account_enabled === true}
         <li class="tabs-title">
             <a href="#reviews" aria-selected="false">Customer reviews</a>
         </li>
+        {/if}
     </ul>
     <div class="tabs-content" data-tabs-content="product_tabs">
         <div class="tabs-panel is-active" id="description">
@@ -77,11 +80,13 @@
             </div>
         </div>
 
-        <div class="tabs-panel" id="reviews">
-            <div class="tab-content">
-                <div id="product-reviews-target"></div>
+        {if $site.account_enabled === true}
+            <div class="tabs-panel" id="reviews">
+                <div class="tab-content">
+                    <div id="product-reviews-target"></div>
+                </div>
             </div>
-        </div>
+        {/if}
     </div>
 
 </section>

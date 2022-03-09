@@ -64,15 +64,18 @@ export default class QuantityGroup extends Component {
     const $input = $(this.inputRef.current);
 
     $input.change(() => {
+      const value = parseInt($input.val());
+
       this.setState({
-        value: $input.val(),
+        value,
       });
 
-      this.props.onChange($input.val());
+      this.props.onChange(value);
     });
   }
 
-  render(props) {
+  render() {
+    const props = this.props;
     const minBorder = this.state.value === this.state.min;
     const maxBorder = this.state.value === this.state.max;
     const incIconId = minBorder ? "switcher-minus__ash" : "switcher-minus";
@@ -111,7 +114,7 @@ export default class QuantityGroup extends Component {
           max={this.state.max}
           data-min={this.state.min}
           step={this.state.step}
-          value={this.state.value}
+          value={props.value}
           id={"quantity-" + props.product.productid}
           autoComplete="off"
           inputMode="numeric"

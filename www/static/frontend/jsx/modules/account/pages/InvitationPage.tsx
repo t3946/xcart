@@ -43,7 +43,7 @@ export const InvitationPage: React.FC = () => {
 
   return (
     <div>
-      <MobileMenuBackBtn redirectUrl={`/account`} label={"account"} />
+      <MobileMenuBackBtn redirectUrl={`/dashboard`} label={"account"} />
       <div className="page-label">Collaboration invitation</div>
       <div className="page-invitation-subtitle">
         You have been invited to collaborate on "

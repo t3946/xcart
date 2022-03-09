@@ -6,6 +6,7 @@ use Modules\Account\Models\OrderCancelItemsModel;
 use Modules\Account\Models\OrderCancelRequestModel;
 use Modules\Account\Models\OrderProblemsModel;
 use Modules\Account\Models\OrderProblemStatusesModel;
+use Modules\Core\Models\StateModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderLogModel;
@@ -27,6 +28,22 @@ class OrdersApi extends Controller
     private const ORDER_TYPE_OPEN = 'open';
     private const ORDER_TYPE_CANCELLED = 'cancelled';
 
+    public function getOrderTaxes()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        /* @var $order OrderModel */
+        $order = OrderModel::objects()->get(['orderid' => $data['order_id']]);
+        $this->jsonResponse($order->getTaxes());
+    }
+
+    public function getOrderGroupTaxes()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        /* @var $group OrderGroupModel */
+        $group = OrderGroupModel::objects()->get(['order_group_id' => $data['order_group_id']]);
+        $this->jsonResponse($group->getTaxes());
+    }
+
     public function getOrders($orders_type, $to_date)
     {
         $filter = [];
@@ -43,12 +60,6 @@ class OrdersApi extends Controller
         }
 
         switch ($orders_type) {
-            case self::ORDERS_TYPE_CLOSED:
-                $filter = array_merge(
-                    $filter, [
-                    'cb_status' => OrderStatusModel::ORDER_STATUS_FAILED
-                ]);
-                break;
             case self::ORDER_TYPE_COMPLETED:
                 $filter = array_merge(
                     $filter, [
@@ -76,8 +87,11 @@ class OrdersApi extends Controller
                 ]);
                 break;
         }
+
+        /* @var OrderModel $order_model */
         foreach ($user->orders->filter($filter) as $order_model) {
             $group_data = [];
+
             foreach ($order_model->groups as $group) {
                 $ar_products = [];
                 $manufacturer = $group->manufacturer;
@@ -109,23 +123,89 @@ class OrdersApi extends Controller
         $this->jsonResponse($ar_data ?? []);
     }
 
-    public function getOrder($order_id)
+    public function getPaymentStatusCommonName($code)
     {
-        /**
-         * @var $user UserModel
-         */
-        $user = Xcart::app()->auth->getUser(true);
+        $payment_status = null;
 
-        if ($user->getIsGuest()) {
-            http_response_code(401);
-            return;
+        switch ($code) {
+            case 'P':
+            case'AP':
+            case'CH':
+            case 'V':
+            case '3':
+                $payment_status = 'Paid';
+                break;
+
+            case'S1':
+            case'S2':
+            case'S3':
+            case'S4':
+            case'Q':
+            case'O':
+            case'IO':
+            case'I':
+                $payment_status = 'Unpaid';
+                break;
+
+            case'F':
+            case'A':
+            case'D':
+                $payment_status = 'Canceled';
+                break;
+
+            case'H':
+            case'R':
+                $payment_status = 'Refunded';
+                break;
         }
 
-        /** @var OrderModel $order_model */
-        $order_model = $user->orders->get(["pk" => $order_id]);
-        /** @var OrderGroupModel $group_model */
+        return $payment_status;
+    }
+
+    public function getShippingStatusCommonName($code)
+    {
+        $shippingStatus = null;
+
+        switch ($code) {
+            case 'T':
+            case'K':
+            case'M':
+            case 'E':
+            case 'DP':
+                $shippingStatus = 'Ordered';
+                break;
+
+            case'C':
+            case'L':
+            case'DA':
+            case'B':
+            case'G':
+                $shippingStatus = 'Dispatched';
+                break;
+
+            case'S':
+                $shippingStatus = 'Shipped';
+                break;
+
+            case'OD':
+                $shippingStatus = 'Out for delivery';
+                break;
+
+            case'Z':
+                $shippingStatus = 'Delivered';
+                break;
+        }
+
+        return $shippingStatus;
+    }
+
+    private function getOrderGroups(OrderModel $order_model)
+    {
+        $groups = [];
+
         foreach ($order_model->groups as $group_model) {
             $ar_products = [];
+            $tracks = [];
             $manufacturer = $group_model->manufacturer;
 
             foreach ($group_model->detail_models as $model) {
@@ -146,11 +226,75 @@ class OrdersApi extends Controller
 
             $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
             $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+            $paymentStatus = $this->getPaymentStatusCommonName($group_model->cb_status);
+            $shippingStatus = $this->getShippingStatusCommonName($group_model->dc_status);
 
             $groups[] = [
                 'trackings' => $tracks ?? [],
                 'products' => $ar_products ?? [],
                 'manufacturer' => $manufacturer->getFrontendAddress(),
+                'paymentStatus' => $paymentStatus,
+                'shippingStatus' => $shippingStatus,
+                'a2bStatus' => $cb_status_name,
+                'a2cStatus' => $dc_status_name,
+                'shippingGross' => $group_model->shipping_gross,
+                'totalPst' => $group_model->total_pst,
+                'totalTax' => $group_model->total_tax,
+                'totalGross' => $group_model->total_gross,
+                'statuses_history' => $group_model->statuses_history->asArray()->all(),
+            ];
+        }
+
+        return $groups;
+    }
+
+    public function getOrder($order_id)
+    {
+        /**
+         * @var $user UserModel
+         */
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            http_response_code(401);
+            return;
+        }
+
+        /** @var OrderModel $order_model */
+        $order_model = $user->orders->get(["pk" => $order_id]);
+        /** @var OrderGroupModel $group_model */
+        foreach ($order_model->groups as $group_model) {
+            $ar_products = [];
+            $tracks = [];
+            $manufacturer = $group_model->manufacturer;
+
+            foreach ($group_model->detail_models as $model) {
+                $ar_products[] = $model->getFrontendProduct();
+            }
+
+            foreach ($group_model->trackings as $tracking_model) {
+                $carrier = $tracking_model->carrier;
+                $tracks[] = [
+                    'tracknum' => $tracking_model->tracknum,
+                    'carrier' => [
+                        'link' => $carrier->link,
+                        'name' => $carrier->carrier,
+                        'method' => $tracking_model->link->shipping,
+                    ],
+                ];
+            }
+
+            $cb_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->cb_status]);
+            $dc_status_name = (string)OrderStatusModel::objects()->get(["code" => $group_model->dc_status]);
+            $paymentStatus = $this->getPaymentStatusCommonName($group_model->cb_status);
+            $shippingStatus = $this->getShippingStatusCommonName($group_model->dc_status);
+
+            $groups[] = [
+                'trackings' => $tracks ?? [],
+                'products' => $ar_products ?? [],
+                'manufacturer' => $manufacturer->getFrontendAddress(),
+                'paymentStatus' => $paymentStatus,
+                'shippingStatus' => $shippingStatus,
                 'a2bStatus' => $cb_status_name,
                 'a2cStatus' => $dc_status_name,
                 'shippingGross' => $group_model->shipping_gross,
@@ -178,19 +322,29 @@ class OrdersApi extends Controller
                 'id' => $log_model->pk
             ];
         }
-//        $emails = EmailModel::objects()->filter(["order_models__orderid" => $order_id])->order(['-date']);
-//        /** @var EmailModel $email_model */
-//        foreach ($emails as $email_model) {
-//            $ar_emails[] = $email_model->getFrontendEmail();
-//        }
+
         $transaction = $order_model->transactions[0];
+
         if ($order_model->isPurchaseOrder() && $extra_model = $order_model->extra_model) {
             $purchase_data = $extra_model->getFrontendPurchase();
         }
+
+        $payment_info = [
+            'status' => $this->getPaymentStatusCommonName($order_model->cb_status),
+        ];
+
+        $unpaid_statuses = ['S1', 'S2', 'S3', 'S4', 'Q', 'O', 'IO', 'I'];
+
+        //order paid
+        if (!in_array($order_model->cb_status, $unpaid_statuses)) {
+            $payment_info['date'] = $transaction ? $transaction->date : $order_model->date;
+        }
+
         $order = [
             'cb_status' => $order_model->cb_status,
             'dc_status' => $order_model->dc_status,
             'non_us_confirmation' => $order_model->non_us_confirmation,
+            'shippingTotal' => $order_model->getShippingCost(),
             'subtotal' => $order_model->subtotal,
             'total' => $order_model->total,
             'orderNumber' => $order_model->getOrderNumber(),
@@ -208,10 +362,7 @@ class OrdersApi extends Controller
             'orderId' => $order_model->orderid,
             'poNumber' => $order_model->po_number,
             'address' => $order_model->getFrontendAddress(),
-            'payment' => [
-                'status' => $order_model->cb_status_model->name,
-                'date' => $transaction ? $transaction->date : $order_model->date, // TODO: Поменять на метод getFirstTransaction из master branch
-            ],
+            'payment' => $payment_info,
             'logs' => $logs ?? [],
             'emails' => [],
             'purchase' => $purchase_data ?? null
@@ -222,14 +373,14 @@ class OrdersApi extends Controller
     public function sendProblemMessage()
     {
         $user = Xcart::app()->auth->getUser(true);
-
-        if (!$user) {
-            $this->jsonResponse('user not login');
-            return;
-        }
-
         $data = json_decode(file_get_contents('php://input'), true);
-        OrderProblemsModel::objects()->create($data);
+        $order = OrderModel::objects()->get(["user_id" => $user->user_id, "orderid" => $data['order_id']]);
+
+        OrderProblemsModel::objects()->create([
+            "problem_text" => $data["problem_text"],
+            "status_id" => $data["status_id"],
+            "order_id" => $order->orderid,
+        ]);
 
         $this->jsonResponse(['success']);
     }
@@ -360,15 +511,18 @@ class OrdersApi extends Controller
         }
 
         [$order_id, $address_data] = array_values(json_decode(file_get_contents('php://input'), true));
-
         /** @var OrderModel $order_model */
         $order_model = OrderModel::objects()->get(['orderid' => $order_id]);
 
+        //get state name
+        $state = StateModel::objects()->get(['stateid' => $address_data['s_state']]);
+        $address_data['s_state'] = $state->code;
+
         $order_model->setAttributes($address_data);
-
         $order_model->save();
-
         $transaction = $order_model->transactions[0];
+        $address = $order_model->getFrontendAddress();
+
 
         $order = [
             'orderNumber' => $order_model->orderid,
@@ -381,10 +535,10 @@ class OrdersApi extends Controller
                 'billingName' => $order_model->b_firstname,
                 'company' => $order_model->b_company,
             ],
-            'groups' => $groups ?? [],
+            'groups' => $this->getOrderGroups($order_model),
             'orderId' => $order_model->orderid,
             'poNumber' => $order_model->po_number,
-            'address' => $order_model->getFrontendAddress(),
+            'address' => $address,
             'payment' => [
                 'status' => $order_model->cb_status_model->name,
                 'date' => $transaction ? $transaction->date : $order_model->date,

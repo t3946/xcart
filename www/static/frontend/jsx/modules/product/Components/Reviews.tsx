@@ -54,9 +54,9 @@ const Reviews: React.FC<any> = function (props: IProps) {
     if (reviews) {
       for (let i = 0; i < reviews.length; i++) {
         if (i + 1 === reviews.length) {
-          reviewsTemplates.push(<Review {...reviews[i]} ref={LastReviewRef} />);
+          reviewsTemplates.push(<Review review={reviews[i]} ref={LastReviewRef} />);
         } else {
-          reviewsTemplates.push(<Review {...reviews[i]} />);
+          reviewsTemplates.push(<Review review={reviews[i]} />);
         }
       }
     }
@@ -87,6 +87,9 @@ const Reviews: React.FC<any> = function (props: IProps) {
         },
 
         success(res) {
+          if (!res.reviews.length) {
+            setIsAllLoaded(true);
+          }
           setIsLoading(false);
           setCurrentPage(currentPage + 1);
 
@@ -159,7 +162,6 @@ const Reviews: React.FC<any> = function (props: IProps) {
   });
 
   function hatTemplate() {
-    console.log({totalReviews});
     if (totalReviews === 0) {
       return "No reviews";
     }

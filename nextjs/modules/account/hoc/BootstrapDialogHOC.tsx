@@ -8,7 +8,7 @@ import Arrow from "@modules/icon/components/font-awesome/arrow-left/Solid";
 
 interface BootstrapModalProps {
   show: boolean;
-  title: string;
+  title?: string;
   children: React.ReactNode;
   onClose: () => void;
   classes?: {
@@ -22,6 +22,10 @@ const BootstrapModalHOC: React.FC<BootstrapModalProps> = (
   props: BootstrapModalProps
 ) => {
   function headerTemplate(className: any) {
+    if (!props.title) {
+      return null;
+    }
+
     return (
       <h2 className={classnames("account-modal-header m-0", className)}>
         {props.title}

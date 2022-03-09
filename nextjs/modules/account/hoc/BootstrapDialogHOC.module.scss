@@ -16,8 +16,9 @@
   bottom: 0;
   
   @include breakpoint(sm) {
-    right: pxToRem(10);
+    right: pxToRem(0);
     left: initial;
+    padding: 0 pxToRem(10);
   }
 }
 

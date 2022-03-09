@@ -3,6 +3,7 @@
 div.option {
   background-color: transparent;
   line-height: 1;
+  padding: pxToRem(8) pxToRem(12);
 
   &:hover {
     background-color: #f4f4f4;
@@ -28,5 +29,7 @@ div.option_selected {
 }
 
 div.option_focus {
-  background-color: #f4f4f4;
+  @include breakpoint(lg) {
+    background-color: #f4f4f4;
+  }
 }

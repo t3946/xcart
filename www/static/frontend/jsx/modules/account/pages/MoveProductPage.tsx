@@ -19,7 +19,7 @@ export const MoveProductPage: React.FC = () => {
   const history = useHistory();
 
   if (!lists) {
-    history.push(`/account/your-lists`);
+    history.push(`/shopping-lists`);
     return;
   }
 
@@ -54,7 +54,7 @@ export const MoveProductPage: React.FC = () => {
       return;
     }
     history.push(
-      `/account/your-lists/${
+      `/shopping-lists/${
         lists.find((e) => e.product_list_id === params.listId).cache_url
       }`
     );
@@ -64,7 +64,7 @@ export const MoveProductPage: React.FC = () => {
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/account/your-lists/${list.cache_url}`}
+        redirectUrl={`/shopping-lists/${list.cache_url}`}
         label={"back"}
       />
       <div className="page-label">Move product</div>

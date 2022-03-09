@@ -26,10 +26,11 @@ export const ShareListManagePeople: React.FC<ShareListManagePeopleProps> = ({
   return (
     <React.Fragment>
       <div className="share-list-label">Manage people</div>
-      {list.users.map((item) => (
+      {[list.owner, ...list.users].map((item, i) => (
         <ShareListManagePeopleItem
           onClick={handleSelectItemCLick}
           userListInfo={item}
+          key={`ShareListManagePeopleItem-${i}`}
         />
       ))}
     </React.Fragment>

@@ -38,6 +38,7 @@
   text-decoration: none;
   padding: 0 pxToRem(26);
   width: pxToRem(180);
+  cursor: pointer;
 
   &:hover {
     background-color: darken($bgColor, 2%);

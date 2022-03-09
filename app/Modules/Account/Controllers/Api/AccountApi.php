@@ -17,6 +17,7 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\PaymentMethodModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\FrontendController;
@@ -93,6 +94,9 @@ class AccountApi extends Controller
                     'code' => strtolower($site->code),
                     'shortName' => $site->short_name,
                     'workingDayTimeNow' => WorkingTimeHelper::workingDayTimeNow(),
+                    'account_enabled' => $site->account_enabled,
+                    'logo' => (string)$site->logo,
+                    'logo_mobile' => (string)$site->logo_mobile,
                 ],
                 'google_recaptchav2_site_key' => '6LenP30eAAAAAOUcOLvofYoaPMW6lMYTsov-RJ4p',
             ],
@@ -140,5 +144,17 @@ class AccountApi extends Controller
 
         $sns->publish($args);
         http_response_code(200);
+    }
+
+    public function getPaymentMethods()
+    {
+        $site = Xcart::app()->getModule('Sites')->getSite();
+        $payment_methods = $site->payment_methods->filter(['is_active' => 1])->order(['position'])->all();
+
+        if (!$payment_methods) {
+            $payment_methods = PaymentMethodModel::objects()->asArray()->select(["logo", "name"])->all(['is_active' => 1]);
+        }
+
+        $this->jsonResponse($payment_methods);
     }
 }

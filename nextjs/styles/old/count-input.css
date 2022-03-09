@@ -1,0 +1,10 @@
+.count-input {
+    border: 1px solid #ffb400;
+    text-align: center;
+    outline: none;
+}
+
+.count-input::-webkit-inner-spin-button, .count-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

@@ -13,12 +13,13 @@ import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "@redux/reducers/appCartReducer";
 import useSnackbar from "@modules/account/hooks/useSnackbar";
-import { CountInput } from "@modules/account/components/shared/CountInput";
+import { CountGroup } from "@modules/ui/CountGroup";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cn from "classnames";
+import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
 import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -74,9 +75,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
     },
   ];
 
-  const allRatings = useSelectorAccount((e) => e.productsRatings);
-
-  const ratings = allRatings ? allRatings[productItem.productId] : undefined;
+  const ratings = productItem.product.ratings?.overall;
 
   const snackbar = useSnackbar();
 
@@ -115,6 +114,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         ),
     },
   ];
+
   return (
     <div
       className={cn(
@@ -161,22 +161,41 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           {ratings && (
             <Tooltip
               target={
-                <div className="tooltip-rating-stars-target">
-                  <RatingStars rating={3} />
+                <div className="tooltip-rating-stars-target gap-2 d-flex">
+                  <RatingStars rating={ratings.total} />
+                  <a className="d-none d-md-block">
+                    <Chevron />
+                  </a>
+                  <a
+                    className="lh-sm"
+                    href={`/product/${productItem.productId}/`}
+                  >
+                    {ratings.rates.reduce(
+                      (pv, cv) => pv + parseInt(cv.totalRates),
+                      0
+                    )}
+                  </a>
                 </div>
               }
               content={
-                <div className="rating-stars-tooltip">
+                <div className={Styles.rating}>
                   <OverallRating ratings={ratings} />
+                  <div className="text-center mt-14">
+                    <a href={`/product/${productItem.productId}/`}>
+                      See all customer reviews
+                    </a>
+                  </div>
                 </div>
               }
             />
           )}
 
           <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>${product?.price}</div>
+            <div className={Styles.productInfoPrice}>
+              ${product?.price.toFixed(2)}
+            </div>
             <div className="multiplication-symbol">X</div>
-            <CountInput
+            <CountGroup
               avail={product.avail}
               onBlur={onCountInputBlur}
               value={countProductsOnCart}

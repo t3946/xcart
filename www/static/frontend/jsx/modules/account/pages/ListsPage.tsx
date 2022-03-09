@@ -56,10 +56,7 @@ export const ListsPage: React.FC = () => {
   return (
     <div>
       {id && (
-        <MobileMenuBackBtn
-          redirectUrl={`/account/your-lists/`}
-          label={"account"}
-        />
+        <MobileMenuBackBtn redirectUrl={`/shopping-lists/`} label={"account"} />
       )}
       {!!list ? (
         breakpoints({

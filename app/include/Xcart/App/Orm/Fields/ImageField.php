@@ -288,10 +288,10 @@ class ImageField extends FileField
             if ($file instanceof File) {
                 $absPath = $this->getFilesystem()->getAdapter()->getPathPrefix() . $file->getPath();
 
-                if ($this->_original === null) {
+//                if ($this->_original === null) {
                     $this->_originalName = $absPath;
                     $this->_original = $this->getImagine()->load($file->read());
-                }
+//                }
 
                 $this->processSource($this->_original->copy(), true, [$prefix]);
             }

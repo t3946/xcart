@@ -6,11 +6,16 @@ import L from "leaflet";
 import iconFrom from "../../../../public/images/icons/account/shipping-from.png";
 import iconTo from "../../../../public/images/icons/account/shipping-to.png";
 
-function createMapIcon(icon: any, height: number, width: number) {
+function createMapIcon(
+  icon: any,
+  height: number,
+  width: number,
+  iconAnchor: L.PointExpression | undefined = undefined
+) {
   return new L.Icon({
     iconUrl: icon,
     iconRetinaUrl: icon,
-    iconAnchor: null,
+    iconAnchor: iconAnchor,
     popupAnchor: null,
     shadowSize: null,
     shadowAnchor: null,
@@ -19,7 +24,7 @@ function createMapIcon(icon: any, height: number, width: number) {
 }
 const formIcon = createMapIcon(iconFrom, 25, 30);
 
-const toIcon = createMapIcon(iconTo, 30, 40);
+const toIcon = createMapIcon(iconTo, 30, 40, [15, 40]);
 
 interface Map {
   markers: Array<[number, number]>;
@@ -32,7 +37,7 @@ const Map: React.FC<Map> = ({ markers }) => {
     <MapContainer
       bounds={markers.map((point) => point.map((item) => item))}
       zoom={4}
-      style={{ height: "374px" }}
+      style={{ height: "374px", zIndex: "1" }}
     >
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

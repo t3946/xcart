@@ -39,7 +39,7 @@ export default class ButtonMoveDown extends Component {
   }
 
   render(props, state) {
-    let classString = "button-move-down";
+    let classString = "button-move-down text-decoration-none";
     let classStringContainer = "button-move-down-container";
     if (props.className) {
       classStringContainer += " " + props.className;

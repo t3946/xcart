@@ -71,15 +71,9 @@ export const undoDeleteProduct = (
   product,
 });
 
-export const encryptUrl = (
-  privateType: ShowSharedStatusEnum,
-  hash: string,
-  callback: (url: string) => void
-): any => ({
+export const encryptUrl = (payload: any): any => ({
   type: "ENCRYPT_URL",
-  hash,
-  privateType,
-  callback,
+  payload,
 });
 
 export const editUserRights = (
@@ -151,6 +145,12 @@ export const setListView = (listView: List) => ({
   type: "SET_LIST_VIEW",
   listView,
 });
+
+export const dropByHash = (hash: List) => ({
+  type: "LIST_DROP_BY_HASH",
+  hash,
+});
+
 export const fetchListByCache = (cache: string) => ({
   type: "FETCH_LIST",
   cache,

@@ -64,3 +64,7 @@
     box-shadow: 0 0 0 pxToRem(3) color.adjust($invalid, $alpha: -0.6);
   }
 }
+
+.input_textarea {
+  line-height: initial;
+}

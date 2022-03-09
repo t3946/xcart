@@ -1,7 +1,7 @@
 ./stop.sh
 git clean -fd
-git reset --hard
-git pull origin dev
+git fetch origin dev
+git reset --hard origin/dev
 cd ./nextjs
 npx prisma generate
 npm run build

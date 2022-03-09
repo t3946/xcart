@@ -2,6 +2,7 @@ import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import FormInputPhone, {
   phoneYupValidation,
+  phoneExtYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
 import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
 import { getCountryByCode } from "@utils/Countries";
@@ -94,7 +95,7 @@ const LTLFreightShipment: React.FC = () => {
   const getValidationScheme = () => {
     const fields: Record<string, any> = {
       phone: phoneYupValidation,
-      phone_ext: Yup.string().max(4, "The maximum number of characters is 4"),
+      phone_ext: phoneExtYupValidation,
       phoneCode: Yup.string().required("Required field"),
     };
 
@@ -128,7 +129,7 @@ const LTLFreightShipment: React.FC = () => {
       ...values,
       phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
     };
-    
+
     dispatch(
       formAnswersLTLFreightShipmentAction({
         data: form,

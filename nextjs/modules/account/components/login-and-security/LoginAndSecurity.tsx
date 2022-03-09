@@ -182,6 +182,7 @@ const LoginAndSecurity = (): any => {
       footer={
         <button
           className={cn(
+            "w-md-auto",
             "form-button",
             "w-md-auto",
             "d-inline-block",

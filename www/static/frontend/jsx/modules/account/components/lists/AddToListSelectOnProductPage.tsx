@@ -36,7 +36,9 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const { name, label = "", product } = props;
   const user = useSelectorAccount((e) => e.user);
   const lists = Store.getState().lists.lists;
-  const productId = Object.keys(AppData?.products)[0];
+  const productId =
+    product?.productid ||
+    (AppData?.products && Object.keys(AppData?.products)[0]);
   const productInfo = product || AppData?.products[productId];
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);

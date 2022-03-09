@@ -19,17 +19,43 @@ import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss
 
 const ListsPage: React.FC = () => {
   const router = useRouter();
-  const lists = useSelectorAccount((state) => state.lists.lists);
-  const listView = useSelectorAccount((state) => state.lists.listView);
+  const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
-  const { role, cacheUrl, source } = useSelectorAccount(
-    (state) => state.lists.listView
-  );
-  const { cache } = router.query;
-  const edit = role !== UserPrivateVariantsEnum.VIEW;
-  const isBase = source === ListSource.Default;
+  const user = useSelectorAccount((e) => e.user);
+  const listView = useSelectorAccount((state) => state.lists.listView);
 
+  if (!user) {
+    return null;
+  }
+
+  let role, cacheUrl, source, owner, users;
+
+  if (listView) {
+    role = listView.role;
+    cacheUrl = listView.cacheUrl;
+    source = listView.source;
+    owner = listView.owner;
+    users = listView.users;
+  }
+
+  function listIsEdit() {
+    const userId = user.user_id;
+
+    if (owner?.userId === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    if (
+      users?.find((user) => user.userId === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+  const { cache } = router.query;
+  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
+  const isBase = source === ListSource.Default;
   return (
     <div>
       {lists ? (
@@ -39,7 +65,7 @@ const ListsPage: React.FC = () => {
           ) : (
             <ListMobileMenu />
           ),
-          lg: <ViewLists isShoppingList={isBase} />,
+          lg: !!listView && <ViewLists isShoppingList={isBase} />,
         })
       ) : (
         <React.Fragment>
@@ -63,20 +89,22 @@ const ListsPage: React.FC = () => {
         />
       </BootstrapDialogHOC>
 
-      <div className={StylesInnerPage.accountPageFooter}>
-        <Button
-          onClick={createIdeaDialog.handleClickOpen}
-          theme={ETheme.outlined}
-          disabled={!edit}
-          className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0", {
-            "d-none": !listView.products.length,
-          })}
-        >
-          Add idea to list
-        </Button>
-      </div>
+      {edit && listView && (
+        <div className={StylesInnerPage.accountPageFooter}>
+          <Button
+            onClick={createIdeaDialog.handleClickOpen}
+            theme={ETheme.outlined}
+            className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
+              "d-none": !cache || loading,
+              "d-lg-none": loading,
+            })}
+          >
+            Add idea to list
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
-66;
+
 export default ListsPage;

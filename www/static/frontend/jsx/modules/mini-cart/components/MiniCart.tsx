@@ -26,6 +26,9 @@ const MiniCart: React.FC = () => {
   document.addEventListener("cartCountChanged", cartCountChanged);
 
   React.useEffect(function () {
+    //load thumbs in mini cart items
+    window.LazyLoad.update();
+
     return () => {
       document.removeEventListener("cartCountChanged", cartCountChanged);
     };

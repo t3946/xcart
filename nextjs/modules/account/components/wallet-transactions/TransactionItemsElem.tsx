@@ -1,25 +1,45 @@
 import React from "react";
 
-export const TransactionItemsElem = ({ orderGroupsItemInfo, breakpoint }) => {
+export const TransactionItemsElem = ({
+  orderGroupsItemInfo,
+  breakpoint,
+  refund = false,
+}) => {
   return (
-    <div className="transaction-items-list-item">
-      <div className="transaction-items-sku-block">
+    <div className="transaction-items-list-item flex-wrap px-2 px-md-4 flex-md-nowrap">
+      <div className="col-lg-2 d-none d-lg-block text-success">
         {orderGroupsItemInfo.productcode}
       </div>
-      <div className="transaction-items-name-block">
+      <div className="col-12 col-md-6 col-lg-5">
         {orderGroupsItemInfo.product}
+        <div className="d-lg-none text-success">
+          {orderGroupsItemInfo.productcode}
+        </div>
       </div>
-      <div className="transaction-items-price-block">
+      <div className="col-md-3 col-lg-2 text-center">
         US${" "}
         {breakpoint.is768
-          ? `${orderGroupsItemInfo.price} x ${orderGroupsItemInfo.amount}`
-          : orderGroupsItemInfo.price}
+          ? `${parseFloat(orderGroupsItemInfo.price)?.toFixed(2)} x ${
+              orderGroupsItemInfo.amount
+            }`
+          : parseFloat(orderGroupsItemInfo.price)?.toFixed(2)}
+        <span className="d-none d-md-inline d-lg-none">
+          {" "}
+          x {orderGroupsItemInfo.amount}
+        </span>
       </div>
-      <div className="transaction-items-qty-block">
+      <div className="text-center d-md-none d-lg-block col-lg-1">
+        <span className="d-md-none">x </span>
         {orderGroupsItemInfo.amount}
       </div>
-      <div className="transaction-items-extended-block">
-        (US$ {orderGroupsItemInfo.price * orderGroupsItemInfo.amount})
+      <div className="col-md-3 col-lg-2 text-end">
+        {refund
+          ? `(US$ ${(
+              orderGroupsItemInfo.price * orderGroupsItemInfo.amount
+            )?.toFixed(2)})`
+          : `US$ ${(
+              orderGroupsItemInfo.price * orderGroupsItemInfo.amount
+            )?.toFixed(2)}`}
       </div>
     </div>
   );

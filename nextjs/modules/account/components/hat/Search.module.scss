@@ -77,10 +77,7 @@
 
   @include breakpoint(lg) {
     padding: 0 pxToRem(80) 0 pxToRem(10);
-    border-top: none;
-    border-bottom: 1px solid #0d2431;
-    border-left: 1px solid #0d2431;
-    border-right: 1px solid #0d2431;
+    border: 1px solid #0d2431;
   }
 }
 .buttonClear__svg {

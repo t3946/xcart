@@ -5,6 +5,7 @@ import { createRef } from "preact";
 import CatalogContext from "@modules/components/catalog/CatalogContext";
 import React from "react";
 import $ from "jquery";
+import Select from "@modules/ui/forms/select/Select";
 import Styles from "@modules/components/catalog/StateLine.module.scss";
 
 export default class StateLine extends React.Component {
@@ -46,8 +47,7 @@ export default class StateLine extends React.Component {
   }
 
   sortCatalog(e) {
-    const sortKey = e.target.value;
-
+    const sortKey = e.target.value.value;
     this.props.onSort(sortKey);
     this.setState({ sortKey });
   }
@@ -63,6 +63,7 @@ export default class StateLine extends React.Component {
         active: this.state.isOpenSortMenu,
       },
       "d-flex",
+      "w-100",
     ];
 
     return (
@@ -74,35 +75,29 @@ export default class StateLine extends React.Component {
           <span className={cn("action state-line-sort__caption", Styles.label)}>
             Sort by
           </span>
-
-          <select
-            className={cn(Styles.select)}
-            onChange={(e) => {
-              this.sortCatalog(e);
+          <Select
+            isSearchable={false}
+            clearable={false}
+            classes={{
+              indicatorSeparator: "d-none",
+              control: Styles.select,
+              menu: Styles.menu,
             }}
-          >
-            {(() => {
+            options={(() => {
               const options = [];
-
               for (const key in this.sortingOptions) {
                 const option = this.sortingOptions[key];
-
-                options.push(
-                  <option
-                    key={`sort-option${key}`}
-                    value={key}
-                    className={cn({
-                      active: key === this.props.sortKey,
-                    })}
-                  >
-                    {option}
-                  </option>
-                );
+                options.push({ value: key, label: option });
               }
-
               return options;
             })()}
-          </select>
+            name="sort"
+            value={{
+              label: this.sortingOptions[this.props.sortKey],
+              value: this.props.sortKey,
+            }}
+            onChange={this.sortCatalog.bind(this)}
+          />
         </div>
       </div>
     );
@@ -121,13 +116,13 @@ export default class StateLine extends React.Component {
     return (
       <div className={cn(stateLineClasses, "d-flex align-items-center")}>
         <div className="row flex-grow-1 m-0">
-          <div className="col-lg-3 d-none d-lg-block">
+          <div className="col-lg-3 d-none d-lg-flex align-items-center">
             <div className="page_count_wrap">
               {this.context.pager && <PageCount />}
             </div>
           </div>
           <div className="col-12 col-lg-9 justify-content-end d-flex">
-            <div className="actions d-flex">
+            <div className="actions d-flex w-100 w-md-auto">
               {this.sortingOptionsList()}
 
               <CatalogViewMode />

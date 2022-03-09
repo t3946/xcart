@@ -21,7 +21,17 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     where: {
       user_id: req.user.userId,
       cb_status: {
-        in: ["F", "P", "Z", "AP", "P", "Q", "F", "A", "D"],
+        in: ["P", "Z", "AP", "P", "Q"],
+      },
+      NOT: {
+        AND: [
+          {
+            cb_status: "P",
+          },
+          {
+            dc_status: "Z",
+          },
+        ],
       },
     },
     select: {

@@ -18,9 +18,7 @@ export const ProblemWithOrder: React.FC = () => {
   const api = new ApiService();
   const router = useRouter();
   const [statuses, setStatuses] = useState(problemsWithOrderSelectValue);
-
   const [loading, setLoading] = useState(false);
-
   const snackbar = useSnackbar();
 
   useEffect(() => {
@@ -51,13 +49,15 @@ export const ProblemWithOrder: React.FC = () => {
         formik.resetForm();
       });
   };
+
   const formik = useFormik({
     initialValues: {
       order_id: router.query.id,
-      status_id: statuses[0],
+      status_id: null,
       problem_text: "",
     },
     validationSchema: Yup.object().shape({
+      status_id: Yup.object().required("Required field").nullable(),
       problem_text: Yup.string()
         .required("Required field")
         .max(250, "Remaining: 250 characters"),
@@ -87,7 +87,11 @@ export const ProblemWithOrder: React.FC = () => {
             name="status_id"
             value={formik.values.status_id}
             onChange={formik.handleChange}
+            isInvalid={!!formik.touched.status_id && !!formik.errors.status_id}
           />
+          <Feedback type="invalid">
+            {!!formik.touched.status_id && formik.errors.status_id}
+          </Feedback>
         </div>
 
         <div className="order-problems-radios">
@@ -126,14 +130,15 @@ export const ProblemWithOrder: React.FC = () => {
         <button
           disabled={loading}
           type="submit"
-          className={cn(
+          className={cn([
             "form-button",
             "fw-bold",
             StylesOrderActions.button,
             "mx-md-auto",
             "mx-lg-0",
-            "mb-4"
-          )}
+            "mt-20",
+            "mt-15",
+          ])}
         >
           send
         </button>

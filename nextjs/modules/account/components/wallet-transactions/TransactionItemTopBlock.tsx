@@ -13,7 +13,7 @@ interface IProps {
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   const { componentRef, refund, order } = props;
 
-  const date = new Date(Number(order.date)).toLocaleDateString("en-EN", {
+  const date = new Date(Number(order.date * 1000)).toLocaleDateString("en-EN", {
     month: "long",
     day: "2-digit",
     year: "numeric",
@@ -22,51 +22,52 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   return (
     <div className="transaction-top-block-container">
       <div className="transaction-top-content-container">
-        <div className="transaction-name-block">
-          <div className="transaction-top-block-logo">
+        <div className="transaction-name-block d-flex flex-wrap flex-xl-nowrap mt-20">
+          <div className="transaction-top-block-logo m-0 order-1 order-md-0 flex-shrink-0">
             <img
               src="/static/frontend/dist/images/icons/account/s3stores-logo.svg"
               alt={""}
             />
           </div>
-          <div className="transaction-top-name-btns">
+          <div className="mb-20  mt-xl-0 order-0 transaction-top-name-btns w-100 justify-content-between flex-wrap flex-md-nowrap">
             <div className="transaction-name">
               {refund ? "REFUND" : "RECEIPT"}
-              {` # ${order.order_prefix}${order.orderid}-${order.order_type}`}
+              {` # ${order.order_prefix}${order.orderid}`}
             </div>
 
-            <div className="row">
-              <ReactToPrint
-                trigger={() => (
-                  <div className={"col-6"}>
+            <div className="d-none d-lg-flex">
+              <div className={"w-50 me-2"}>
+                <ReactToPrint
+                  trigger={() => (
                     <Button theme={ETheme.outlined}>
                       <div className="btn-entry">
                         <PrintIcon className="me-2" />
                         <div>PRINT</div>
                       </div>
                     </Button>
-                  </div>
-                )}
-                content={() => componentRef.current}
-              />
-              <ReactToPrint
-                trigger={() => (
-                  <div className={"col-6"}>
-                    <Button className={"p-0"} theme={ETheme.outlined}>
+                  )}
+                  content={() => componentRef.current}
+                />
+              </div>
+              <div className={"w-50 ms-2"}>
+                <ReactToPrint
+                  trigger={() => (
+                    <Button theme={ETheme.outlined}>
                       <div className="d-flex align-items-center">
                         <PictureAsPdfIcon className="me-2" />
                         <div>OPEN PDF</div>
                       </div>
                     </Button>
-                  </div>
-                )}
-                content={() => componentRef.current}
-              />
+                  )}
+                  content={() => componentRef.current}
+                />
+              </div>
             </div>
           </div>
         </div>
         <div className="transaction-top-info-container">
-          <div className="transaction-top-info">
+          <div className="d-none d-xl-block transaction-top-block-logo" />
+          <div className="col transaction-top-info">
             <div className="transaction-top-info-left-part">
               <div className="transaction-top-info-left-part-label">
                 S3 Stores Inc.

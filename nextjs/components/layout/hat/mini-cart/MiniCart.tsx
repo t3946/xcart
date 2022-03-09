@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import MiniCartItems from "@modules/old-components/MiniCartItems";
-import MiniCartInfo from "@modules/mini-cart/components/MiniCartInfo";
+import MiniCartItems from "@components/layout/hat/mini-cart/MiniCartItems";
+import MiniCartInfo from "@components/layout/hat/mini-cart/MiniCartInfo";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import HoverIntent from "react-hoverintent"; // из-за этого модуля пришлось установить ещё один -- babel-runtime
 import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import TransitionFade from "@modules/account/components/shared/TransitionFade";
 import hideAllMenu from "@modules/account/utils/hide-all-menu";
 import cn from "classnames";
-import Styles from "@modules/mini-cart/components/MiniCart.module.scss";
+import Styles from "@components/layout/hat/mini-cart/MiniCart.module.scss";
 
 const MiniCart: React.FC = () => {
   const cart = useSelector((e: StoreInterface) => e.cart);

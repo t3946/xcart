@@ -1,0 +1,15 @@
+@import "styles/utils/Utils.module";
+
+.link {
+  color: #055a93;
+  font-size: pxToRem(18);
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

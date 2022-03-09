@@ -10,6 +10,7 @@ import { Card as ICard } from "@stripe/stripe-js";
 import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 interface BillingAddressProps {
   cardInfo: ICard;
@@ -84,23 +85,24 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({
         />
       )}
       <div className="billing-address-butns">
-        <button
+        <Button
           type={"submit"}
           onClick={addAddress}
-          className="form-button account-submit-btn account-submit-btn-outline auto-width-button add-billing-address-btn"
+          className="w-auto mb-3 me-md-2 mb-md-0"
           disabled={submitCardFormLoading}
+          theme={ETheme.outlined}
         >
-          ADD new ADDRESS
-        </button>
-        
-        <button
+          add new address
+        </Button>
+
+        <Button
           type={"submit"}
-          className="form-button account-submit-btn auto-width-button"
+          className="w-auto"
           disabled={!value || submitCardFormLoading}
           onClick={onSubmit}
         >
           USE THIS ADDRESS
-        </button>
+        </Button>
       </div>
     </div>
   );

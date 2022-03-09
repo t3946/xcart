@@ -38,11 +38,11 @@ export const RadioBtn: React.FC<RadioBtnProps> = ({
       }
     >
       <input
-        value={radioValue}
         name={name}
         id={String(id)}
         type="radio"
         checked={groupValue === radioValue}
+        onChange={onChange}
       />
       <label htmlFor={String(id)}>{viewValue}</label>
     </div>

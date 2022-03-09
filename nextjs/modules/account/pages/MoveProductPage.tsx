@@ -47,20 +47,22 @@ export const MoveProductPage: React.FC = () => {
         label={"back"}
       />
       <div className="page-label">Move product</div>
-      {lists.map((e) => (
-        <RadioBtn
-          name="radio"
-          key={`${e.productListId}`}
-          id="radio-item-view"
-          viewValue={<div className="move-product-label">{e.name}</div>}
-          groupClasses={{
-            group: ["share-list-radio", "move-product-radio"],
-          }}
-          groupValue={productListId}
-          radioValue={e.productListId}
-          onChange={onChange}
-        />
-      ))}
+      {lists
+        .filter((item) => item.productListId !== Number(productListId))
+        .map((e) => (
+          <RadioBtn
+            name="radio"
+            key={`${e.productListId}`}
+            id="radio-item-view"
+            viewValue={<div className="move-product-label">{e.name}</div>}
+            groupClasses={{
+              group: ["share-list-radio", "move-product-radio"],
+            }}
+            groupValue={productListId}
+            radioValue={e.productListId}
+            onChange={onChange}
+          />
+        ))}
     </div>
   );
 };

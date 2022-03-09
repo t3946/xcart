@@ -1,5 +1,5 @@
 export enum UserPrivateVariantsEnum {
   OWNER = "owner",
-  VIEW = "view",
-  EDIT = "edit",
+  VIEW = "viewer",
+  EDIT = "editor",
 }

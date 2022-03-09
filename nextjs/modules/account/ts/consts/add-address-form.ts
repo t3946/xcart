@@ -1,6 +1,9 @@
 import * as Yup from "yup";
 import { getStates } from "@modules/account/utils/get-states";
-import { phoneYupValidation } from "@modules/account/components/shared/FormInputPhone";
+import {
+  phoneYupValidation,
+  phoneExtYupValidation,
+} from "@modules/account/components/shared/FormInputPhone";
 
 export const initialAddAddressFormValue = {
   country: { value: "", label: "Select country" },
@@ -30,7 +33,7 @@ export const getAddAddressFormValidationSchema = (states) =>
       .max(50, "The maximum number of characters is 50"),
     phone_numberCode: Yup.string().required("Required field"),
     phone_number: phoneYupValidation,
-    phone_ext: Yup.string().max(4, "The maximum number of characters is 4"),
+    phone_ext: phoneExtYupValidation,
     street: Yup.string()
       .required("Required field")
       .max(50, "The maximum number of characters is 50"),

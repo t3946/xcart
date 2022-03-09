@@ -20,17 +20,13 @@ interface InvitationPage {
 const api = new ApiService();
 export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
   const router = useRouter();
-
   const editProfile = () => {
     router.push("/public-profile");
   };
-
   const onCancelClick = () => {
     router.push("/");
   };
-
   const user = useSelectorAccount((state) => state.user);
-
   const onAcceptClick = async () => {
     await api
       .post(
@@ -43,14 +39,17 @@ export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
       .then((res) => res);
     await router.push("/shopping-lists");
   };
+  const avatar = user.avatar_image
+    ? `/${user.avatar_image}`
+    : "/static/frontend/images/pages/account/default-avatar.svg";
 
   return (
     <div>
       <MobileMenuBackBtn redirectUrl={`/`} label={"account"} />
       <div className="page-label">Collaboration invitation</div>
       <div className="page-invitation-subtitle">
-        You have been invited to collaborate on "
-        {`${other.listData.name} by ${other.inviteUser}`}
+        You have been invited to collaborate on <b>"{other.listData.name}"</b>{" "}
+        by {other.inviteUser}
       </div>
       <div className="page-invitation-subtitle">
         You will appear to others in the List as{" "}
@@ -58,12 +57,9 @@ export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
       </div>
       <div className="page-invitation-user-profile-container">
         <div className="page-invitation-user-profile">
-          <img
-            src="/static/frontend/images/pages/account/default-avatar.svg"
-            className="page-invitation-user-profile-avatar"
-          />
+          <img src={avatar} className="page-invitation-user-profile-avatar" />
           <div className="page-invitation-user-profile-name d-flex align-content-center">
-            {user.name}
+            {user.public_name || user.name}
           </div>
         </div>
         <Button

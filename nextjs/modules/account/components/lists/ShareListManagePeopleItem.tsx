@@ -20,24 +20,25 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   onClick,
 }) => {
   const isYourAccount = userListInfo.userId === Store.getState().user.id;
-
   const breakpoint = useBreakpoint();
-
   const mobileMenuDialog = useDialog();
+  const defaultAvatar =
+    "/static/frontend/images/pages/account/default-avatar.svg";
+  const userAvatar = userListInfo.avatar_image;
+  const avatarImage = userAvatar ? `/${userAvatar}` : defaultAvatar;
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       component: (
         <div className="d-flex align-items-center share-list-people-left-side-container">
           <img
-            src="/static/frontend/images/pages/account/default-avatar.svg"
+            src={avatarImage}
             className="page-invitation-user-profile-avatar"
+            alt={"avatar image"}
           />
           <div>
-            <div>{userListInfo.user.name}</div>
-            <div className="share-list-people-email">
-              {userListInfo.user.email}
-            </div>
+            <div>{userListInfo.name}</div>
+            <div className="share-list-people-email">{userListInfo.email}</div>
           </div>
         </div>
       ),
@@ -90,17 +91,15 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
     <div className="share-list-people-container justify-content-between">
       <div className="d-flex align-items-center share-list-people-left-side-container">
         <img
-          src="/static/frontend/images/pages/account/default-avatar.svg"
+          src={avatarImage}
           className="page-invitation-user-profile-avatar"
         />
         <div>
           <div>
-            {userListInfo.user.name}
+            {userListInfo.name}
             {isYourAccount && "(You)"}
           </div>
-          <div className="share-list-people-email">
-            {userListInfo.user.email}
-          </div>
+          <div className="share-list-people-email">{userListInfo.email}</div>
         </div>
       </div>
       {isYourAccount || UserPrivateVariantsEnum.OWNER === userListInfo.role ? (
@@ -120,12 +119,12 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
           md: (
             <ShareListManagePeopleSelect
               items={[
-                { value: UserRightsActionsEnum.EDIT, viewValue: "Edit" },
-                { value: UserRightsActionsEnum.VIEW, viewValue: "View" },
+                { value: UserRightsActionsEnum.EDIT, label: "Editor" },
+                { value: UserRightsActionsEnum.VIEW, label: "Viewer" },
               ]}
               value={{
                 value: userListInfo.role,
-                viewValue: viewUserListRight(userListInfo.role),
+                label: viewUserListRight(userListInfo.role),
               }}
               id={userListInfo.userId}
               onClick={(selectValue) =>

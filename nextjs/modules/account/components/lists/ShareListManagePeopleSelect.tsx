@@ -1,96 +1,114 @@
-import React, { useEffect, useState } from "react";
-import useCLickListener from "../../hooks/useClickListener";
-import classnames from "classnames";
+import React from "react";
+import cn from "classnames";
+import ReactSelect, { components } from "react-select";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import { SelectValue } from "@modules/account/ts/types/select-value.type";
+import SelectCheck from "@modules/icon/components/account/check/SelectCheck";
+
+import Input from "@modules/ui/forms/select/Input";
+import MenuList from "@modules/ui/forms/select/MenuList";
+import IndicatorsContainer from "@modules/ui/forms/select/IndicatorsContainer";
+import DropdownIndicator from "@modules/ui/forms/select/DropdownIndicator";
+import IndicatorSeparator from "@modules/ui/forms/select/IndicatorSeparator";
+
+import StylesOption from "@modules/ui/forms/select/Option.module.scss";
+import StylesControl from "@modules/ui/forms/select/Control.module.scss";
+import Styles from "@modules/account/components/lists/ShareListManagePeopleSelect.module.scss";
 
 interface ShareListManagePeopleSelectProps {
   items: SelectValue<UserRightsActionsEnum, string>[];
   onClick: (value: SelectValue<UserRightsActionsEnum, string>) => void;
   value: SelectValue<UserRightsActionsEnum, string>;
-  classes?: {
-    group?: string | string[];
-    input?: string | string[];
-    selectList?: string | string[];
-  };
   name: string;
-  id?: string;
 }
 
 export const ShareListManagePeopleSelect: React.FC<
   ShareListManagePeopleSelectProps
-> = ({ items, onClick, value, name, classes, id }) => {
-  const selectedItem = value;
-  const [open, setOpen] = useState(false);
+> = ({ items, onClick, value, name }) => {
+  return (
+    <ReactSelect
+      classes={{
+        indicatorSeparator: "d-none",
+        control: ["border-0", "cursor-pointer"],
+        option: [Styles.option, "ps-3"],
+        menu: "mt-0",
+      }}
+      isClearable={false}
+      isSearchable={false}
+      onChange={(newValue) => {
+        value !== newValue && onClick && onClick(newValue);
+      }}
+      value={value}
+      name={name}
+      options={items}
+      onRemove={onClick}
+      components={{
+        Option,
+        Menu,
+        MenuList,
+        Control,
+        Input,
+        IndicatorsContainer,
+        DropdownIndicator,
+        IndicatorSeparator,
+      }}
+    />
+  );
+};
 
-  const clickListener = useCLickListener(setOpen, id);
+const Menu = ({ children, ...props }) => (
+  <components.Menu
+    className={cn(Styles.menu, props.selectProps.classes?.menu)}
+    {...props}
+  >
+    {children}
+    <div
+      onClick={() =>
+        props.selectProps.onRemove({
+          value: UserRightsActionsEnum.DELETE,
+        })
+      }
+      className={cn(Styles.remove, StylesOption.option, "border-top", "ps-3")}
+    >
+      Remove
+    </div>
+  </components.Menu>
+);
 
-  useEffect(() => {
-    clickListener.startListen();
-
-    return () => {
-      clickListener.endListen();
-    };
-  });
+const Option = (props) => {
+  const { isSelected } = props;
 
   return (
-    <div
-      className={classnames(
-        `select select-send share-list-select d-flex justify-content-between align-center ${
-          open && "open"
-        }`,
-        classes?.group
-      )}
-      container
-      alignItems="center"
-      justifyContent="space-between"
+    <components.Option
+      className={cn(StylesOption.option, props.selectProps.classes?.option)}
+      {...props}
     >
-      <div
-        onClick={() => {
-          setOpen(!open);
-        }}
-        className={classnames("share-list-select-wrapper", classes?.input)}
-      >
-        <input
-          value={selectedItem.value}
-          className="select__input"
-          type="hidden"
-          name={name}
+      <div className="d-flex gap-2">
+        <SelectCheck
+          className={cn("flex-shrink-0", { "opacity-0": !isSelected })}
         />
-        <div id={id} className="share-list-select-head">
-          {selectedItem.viewValue}
-        </div>
-        {open && (
-          <ul
-            className={classnames(
-              "share-list-select-list",
-              classes?.selectList
-            )}
-          >
-            {items.map((item) => (
-              <li
-                onClick={() => onClick(item)}
-                className={`share-list-select-item ${
-                  item.value === value.value &&
-                  "share-list-select-item-selected"
-                }`}
-              >
-                {item.viewValue}
-              </li>
-            ))}
-            <li
-              onClick={() =>
-                onClick({
-                  value: UserRightsActionsEnum.DELETE,
-                })
-              }
-              className="share-list-remove-user"
-            >
-              Remove
-            </li>
-          </ul>
-        )}
+        {props.children}
       </div>
-    </div>
+    </components.Option>
+  );
+};
+
+const Control = function (props: any) {
+  const RSControl = components.Control;
+
+  return (
+    <RSControl
+      {...props}
+      className={cn(
+        "flex-nowrap",
+        StylesControl.control,
+        props.selectProps.classes?.control,
+        {
+          [Styles.control_opened]: props.menuIsOpen,
+          [StylesControl.control_valid]: props.selectProps.isValid,
+          [StylesControl.control_invalid]: props.selectProps.isInvalid,
+        }
+      )}
+    />
   );
 };

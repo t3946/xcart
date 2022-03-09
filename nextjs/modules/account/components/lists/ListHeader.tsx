@@ -26,28 +26,36 @@ interface ListHeaderProps {
 export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
   const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const list = useSelectorAccount((state) => state.lists.listView);
+  const { listView: list, loading } = useSelectorAccount(
+    (state) => state.lists
+  );
+  const userId = useSelectorAccount((e) => e.user.user_id);
+  function listIsEdit() {
+    if (list.owner.userId === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    if (
+      list?.users.find((user) => user.userId === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const manageListDialog = useDialog();
-
   const deleteListDialog = useDialog();
-
   const mobileMenuDialog = useDialog();
-
   const router = useRouter();
-
   const dispatch = useDispatch();
-
   const onRequestEnd = () => {
     deleteListDialog.handleClose();
     snackbar.show(`${list.name} list deleted successfully`);
     router.replace(`/shopping-lists/`);
   };
-  const edit = list.role !== UserPrivateVariantsEnum.VIEW;
-
   const handleDeleteList = () => {
     dispatch(deleteList(list.productListId, onRequestEnd));
   };
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
@@ -71,6 +79,10 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
   };
 
+  if (loading) {
+    return null;
+  }
+
   return (
     <div
       className={cn(
@@ -90,7 +102,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
           Styles.shoppingList__mobileHeader
         )}
       >
-        <Link href="/dashboard">
+        <Link href="/shopping-lists/">
           <a
             className={cn(
               Styles.accountButton,
@@ -102,7 +114,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
             )}
           >
             <Arrow className={cn(Styles.accountButtonIcon, "me-2")} />
-            Back to Account
+            Back
           </a>
         </Link>
       </div>
@@ -110,6 +122,8 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
         className={cn(
           "mt-20",
           "mt-md-0",
+          "col-md-12",
+          "col-lg-auto",
           "list-header-left-side",
           "justify-content-md-center",
           "justify-content-lg-start",
@@ -171,29 +185,27 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       >
         <div className="list-header-actions flex-grow-1 ms-lg-5">
           {edit && (
-            <Fragment>
-              <div
-                onClick={manageListDialog.handleClickOpen}
-                className={cn(
-                  Styles.istHeaderActions__listHeaderAction,
-                  Styles.listHeaderAction
-                )}
-              >
-                Manage list
-              </div>
-              {!isShoppingList && (
-                <div
-                  onClick={deleteListDialog.handleClickOpen}
-                  className={cn(
-                    Styles.istHeaderActions__listHeaderAction,
-                    Styles.listHeaderAction,
-                    Styles.listHeaderAction_red
-                  )}
-                >
-                  Delete list
-                </div>
+            <div
+              onClick={manageListDialog.handleClickOpen}
+              className={cn(
+                Styles.istHeaderActions__listHeaderAction,
+                Styles.listHeaderAction
               )}
-            </Fragment>
+            >
+              Manage list
+            </div>
+          )}
+          {!isShoppingList && (
+            <div
+              onClick={deleteListDialog.handleClickOpen}
+              className={cn(
+                Styles.istHeaderActions__listHeaderAction,
+                Styles.listHeaderAction,
+                Styles.listHeaderAction_red
+              )}
+            >
+              Delete list
+            </div>
           )}
         </div>
         {edit && (

@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import cn from "classnames";
 
 import Styles from "@modules/account/components/orders/OrderTrackingGroup.module.scss";
+import AddressText from "@components/common/address-text/AddressText";
 
 interface OrderTrackingGroupProps {
   orderGroupInfo: OrderGroup;
@@ -77,15 +78,18 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
             }
             title="Shipping from"
             text={
-              <>
-                {orderGroupInfo.manufacturer?.address ?? ""}
-                <br />
-                {orderGroupInfo.manufacturer?.city ?? ""}{" "}
-                {orderGroupInfo.manufacturer?.state ?? ""},{" "}
-                {orderGroupInfo.manufacturer?.zip ?? ""}
-                <br />
-                {orderGroupInfo.manufacturer?.country ?? ""}
-              </>
+              <AddressText
+                address={{
+                  city: orderGroupInfo.manufacturer?.city,
+                  state: !!orderGroupInfo.manufacturer?.state && {
+                    label: orderGroupInfo.manufacturer?.state,
+                  },
+                  zip: orderGroupInfo.manufacturer?.zip,
+                  country: !!orderGroupInfo.manufacturer?.country && {
+                    label: orderGroupInfo.manufacturer?.country,
+                  },
+                }}
+              />
             }
             onClick={() => onClickAddressCard(markersCoordinates)}
           />
@@ -93,13 +97,16 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
             logo={"/static/frontend/images/icons/account/shipping-to-icon.svg"}
             title="Shipping to"
             text={
-              <>
-                {orderItem.address.shippingAddress ?? ""}
-                <br />
-                {orderItem.address.shippingCity ?? ""}{" "}
-                {orderItem.address.shippingState ?? ""},{" "}
-                {orderItem.address.shippingZip ?? ""}
-              </>
+              <AddressText
+                address={{
+                  street: orderItem.address.shippingAddress,
+                  city: orderItem.address.shippingCity,
+                  state: !!orderItem.address.shippingState && {
+                    label: orderItem.address.shippingState,
+                  },
+                  zip: orderItem.address.shippingZip,
+                }}
+              />
             }
             onClick={() => onClickAddressCard(shippingPos)}
           />

@@ -8,8 +8,12 @@ import CatalogContext from "@modules/components/catalog/CatalogContext";
 import t from "@utils/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@modules/components/product/AddToCartButton";
-import CountInput from "@modules/account/components/shared/CountInput";
+import { CountGroup } from "@modules/ui/CountGroup";
 import React from "react";
+import LeadTimeIcon from "@modules/icon/components/account/lead-time/LeadTime";
+import OutOfStockIcon from "@modules/icon/components/account/out-of-stock/OutOfStock";
+import cn from "classnames";
+import Styles from "@modules/components/product/card/catalog/Card.module.scss";
 
 export default class Card extends React.Component {
   constructor(props) {
@@ -187,7 +191,7 @@ export default class Card extends React.Component {
     if (leadTimeMessage) {
       return (
         <div className="p-label lead-time product-card__label">
-          <i />
+          <LeadTimeIcon className={"flex-shrink-0"} width="26" height="26" />
           <div className="text">{leadTimeMessage}</div>
         </div>
       );
@@ -281,24 +285,44 @@ export default class Card extends React.Component {
       `info-container__${this.context.viewMode}`,
     ];
 
+    const classes = {
+      currentPrice: [
+        "current",
+        {
+          "mt-3":
+            this.context.viewMode === "tile" &&
+            product.listPrice.number <= product.price.number,
+        },
+      ],
+    };
+
+    function oldPriceTemplate() {
+      if (product.listPrice.number > product.price.number) {
+        // this.context.viewMode
+        return (
+          <div className="old w-100">
+            <span className={classnames(priceCaptionClasses)}>
+              {t("List Price")}:{" "}
+            </span>
+            <span className="products-slider-old-price">
+              <Price
+                currency={product.currency}
+                price={product.listPrice.number}
+              />
+            </span>
+          </div>
+        );
+      }
+
+      return null;
+    }
+
     return (
       <Fragment>
         <div className={classnames(containerClasses)}>
-          {product.listPrice.number > product.price.number && (
-            <div className="old">
-              <span className={classnames(priceCaptionClasses)}>
-                {t("List Price")}:{" "}
-              </span>
-              <span className="products-slider-old-price">
-                <Price
-                  currency={product.currency}
-                  price={product.listPrice.number}
-                />
-              </span>
-            </div>
-          )}
+          {oldPriceTemplate()}
 
-          <div className="current">
+          <div className={cn(classes.currentPrice)}>
             <span className={classnames(priceCaptionClasses)}>
               {t("Price")}:{" "}
             </span>
@@ -352,17 +376,23 @@ export default class Card extends React.Component {
                         </label>
                       )}
 
-                      <CountInput
-                        className={quantityGroupClasses}
-                        minAmount={this.product.minAmount}
+                      <CountGroup
                         value={this.state.quantityAdd}
-                        onChange={(value) => {
-                          this.setState({ quantityAdd: value });
+                        minAmount={product.min_amount}
+                        multOrderQuantity={product.mult_order_quantity}
+                        onChange={(q) => {
+                          this.setState({ quantityAdd: q });
                         }}
-                        multOrderQuantity={
-                          this.product.mult_order_quantity === "Y"
-                        }
-                        avail={this.product.r_avail}
+                        onBlur={() => {
+                          if (product.mult_order_quantity) {
+                            this.setState((prevstate) => ({
+                              quantityAdd:
+                                Math.ceil(
+                                  prevstate.quantityAdd / product.min_amount
+                                ) * product.min_amount,
+                            }));
+                          }
+                        }}
                       />
                     </div>
 
@@ -406,7 +436,11 @@ export default class Card extends React.Component {
                 return (
                   <div className={classnames(infoContainerClasses)}>
                     <div className="p-label out-of-stock product-card__label">
-                      <i />
+                      <OutOfStockIcon
+                        className={"flex-shrink-0"}
+                        width="26"
+                        height="26"
+                      />
                       <span className="text p-label-text_out-of-stock">
                         {t("Out of stock")}
                       </span>
@@ -440,7 +474,9 @@ export default class Card extends React.Component {
     const classes = this.props.classes ?? { product: [] };
     const self = this;
 
-    classes.product.push("catalog-product", "item");
+    classes.product.push("catalog-product", "item", {
+      [Styles.item_border]: this.context.viewMode === "list",
+    });
     classes.image = {
       link: `product-image__catalog-${self.context.viewMode} product-image-link`,
       container: [

@@ -38,10 +38,9 @@ export const MovedProductPlaceholder: React.FC<
           <img
             src={"/static/frontend/images/icons/account/check-mark-green.svg"}
           />
-          <div className="moved-product-label">Moved to</div>
+          <div className="moved-product-label">Moved to </div>
         </div>
-
-        <div className="list-name" onClick={redirectFromNewList}>
+        <div className="list-name w-auto ms-1" onClick={redirectFromNewList}>
           {label}
         </div>
       </div>

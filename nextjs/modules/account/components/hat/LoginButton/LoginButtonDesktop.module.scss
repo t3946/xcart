@@ -13,6 +13,10 @@
 .dropdown {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-top: none;
+
+  @include breakpoint(lg) {
+    border: none;
+  }
 }
 
 .username {

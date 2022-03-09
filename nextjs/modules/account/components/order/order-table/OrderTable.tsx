@@ -68,6 +68,7 @@ const OrderTable: React.FC<IProps> = (props) => {
             [Styles[`header_theme_${theme}`]]: theme,
           }
         )}
+        key={"hat-row"}
       >
         <div className={cn(Styles.rowItems, "h-100")}>
           {rowTemplate(header, "header")}
@@ -76,11 +77,18 @@ const OrderTable: React.FC<IProps> = (props) => {
 
       {itemList.map((item, index) => (
         <div className={cn(Styles.row)} key={`row-${index}`}>
-          <div className={cn(Styles.rowItems, Styles.rowItems_data, classes?.row, classes?.rowItem)}>
+          <div
+            className={cn(
+              Styles.rowItems,
+              Styles.rowItems_data,
+              classes?.row,
+              classes?.rowItem
+            )}
+          >
             {rowTemplate(item, "item")}
           </div>
 
-          {rowFooterTemplate && rowFooterTemplate(items[index])}
+          {rowFooterTemplate && rowFooterTemplate(items[index], index)}
         </div>
       ))}
     </div>

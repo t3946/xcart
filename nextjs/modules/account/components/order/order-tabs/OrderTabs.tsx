@@ -13,6 +13,8 @@ import Styles from "@modules/account/components/order/order-tabs/OrderTabs.modul
 export const OrderTabs: React.FC = (props) => {
   const { orderItem } = props;
   const [tab, setTab] = React.useState("home");
+  const orderedStatuses = ["T", "K", "M", "E", "DP"];
+  const isOrdered = orderedStatuses.indexOf(orderItem.cb_status) !== -1;
 
   const getTabClasses = (key: string) => {
     return cn({ [Styles.tab_active]: key === tab });
@@ -38,7 +40,7 @@ export const OrderTabs: React.FC = (props) => {
         </div>
       </Tab>
 
-      {orderReturnProducts.length > 0 && (
+      {orderReturnProducts.length > 0 && isOrdered && (
         <Tab
           tabClassName={getTabClasses("profile")}
           eventKey="profile"

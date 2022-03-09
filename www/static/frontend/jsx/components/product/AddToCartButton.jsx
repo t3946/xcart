@@ -43,6 +43,7 @@ export default class AddToCartButton extends Component {
       "waves waves-orange",
       "waves-effect",
       "add-to-cart-button-checkout",
+      "text-decoration-none",
     ];
     const addToCartLongText = [
       "button-text",
@@ -158,8 +159,6 @@ export default class AddToCartButton extends Component {
       let opt = [];
       let values = $(form).serializeArray();
 
-      console.log(values);
-
       for (let oneValue of values) {
         let valueParts = oneValue.value.split("_");
         let identifiersParts = valueParts[0].split("-");
@@ -169,7 +168,6 @@ export default class AddToCartButton extends Component {
         });
       }
 
-      console.log(this.props);
       let data = [
         {
           id: product.dataset.product,
@@ -189,6 +187,8 @@ export default class AddToCartButton extends Component {
 
       window.sendAnalytics.addToCart(product);
     }
+
+    this.props.onAddToCart && this.props.onAddToCart();
   }
 
   render() {

@@ -6,7 +6,7 @@ use Modules\Account\Models\AddressesModel;
 use Modules\Account\Models\CreditCardsModel;
 use Modules\Account\Models\ProductListsModel;
 use Modules\Account\Models\TransactionsModel;
-use Modules\Account\Models\UserListModel;
+use Modules\Account\Models\ProductListsUserRoles;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Helpers\PasswordHelper;
 use Modules\User\Models\FingerprintModel;
@@ -130,7 +130,7 @@ class UserModel extends Model
             'lists' => [
                 'class' => ManyToManyField::class,
                 'modelClass' => ProductListsModel::class,
-                'through' => UserListModel::class
+                'through' => ProductListsUserRoles::class
             ],
             'decisions_required_count' => [
                 'class' => IntField::class,

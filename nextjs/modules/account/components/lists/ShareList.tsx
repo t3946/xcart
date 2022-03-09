@@ -5,6 +5,7 @@ import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
+import { AxiosResponse } from "axios";
 
 interface ShareList {
   onClose: () => void;
@@ -13,29 +14,48 @@ interface ShareList {
 
 export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
   const snackbar = useSnackbar();
-
   const dispatch = useDispatch();
+  const [showSharedStatus, setShowSharedStatus] = React.useState(
+    ShowSharedStatusEnum.VIEW
+  );
 
-  const encodeUrl = (type: ShowSharedStatusEnum) => {
-    dispatch(encryptUrl(type, cache, onUrlEncoded));
-  };
+  const [sharedLink, setSharedLink] = React.useState("");
 
-  const onUrlEncoded = (url: string) => {
-    navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        onClose();
-        snackbar.show(`Url copied`);
+  React.useEffect(() => {
+    setSharedLink("");
+    dispatch(
+      encryptUrl({
+        data: {
+          hash: cache,
+          role: showSharedStatus,
+        },
+        success(res: AxiosResponse) {
+          const { tag, text } = res.data;
+          const url = `http://${window.location.hostname}/account/shopping-lists/invite/${tag}/${text}`;
+          setSharedLink(url);
+        },
       })
-      .catch(() => {
-        onClose();
-        snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
-      });
+    );
+  }, [showSharedStatus]);
+
+  const onCopyLink = (result: boolean) => {
+    if (result) {
+      onClose();
+      snackbar.show(`Url copied`);
+    } else {
+      onClose();
+      snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);
+    }
   };
 
   return (
     <div>
-      <ShareListInviteSection onCopyLinkFunc={encodeUrl} />
+      <ShareListInviteSection
+        showSharedStatus={showSharedStatus}
+        sharedLink={sharedLink}
+        setShowSharedStatus={setShowSharedStatus}
+        onCopyLinkFunc={onCopyLink}
+      />
       <hr className="share-list-center-line" />
       <ShareListManagePeople closeDialog={onClose} id={cache} />
     </div>

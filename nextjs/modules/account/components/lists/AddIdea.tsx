@@ -77,9 +77,9 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
           </div>
         </div>
 
-        <p>Save an idea. Shop for it later.</p>
+        <p className={"my-4"}>Save an idea. Shop for it later.</p>
         <SubmitCancelButtonsGroup
-          submitText="Confirm"
+          submitText="save"
           cancelText="Cancel"
           onCancel={onCancelBtnClick}
           groupAdvancedClasses={"manage-list-btns"}
