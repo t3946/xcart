@@ -198,8 +198,6 @@ services:
     user: "node"
     working_dir: /home/node/app/nextjs
     tty: true
-    ports:
-      - "8080:3000"
     networks:
       - frontend
     #environment:
@@ -214,8 +212,6 @@ services:
     user: "node"
     working_dir: /home/node/app/nextjs
     tty: true
-    ports:
-      - "8081:3001"
     networks:
       - frontend
     #environment:
