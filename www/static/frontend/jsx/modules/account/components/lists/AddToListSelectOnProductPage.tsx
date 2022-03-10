@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
 import classnames from "classnames";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 import {
   addProduct,
@@ -19,6 +19,7 @@ import AppData from "@client/jsx/utils/AppData";
 import Medium from "@client/modules/icon/components/account/chevron-down/Medium";
 import StyleUtils from "@client/style-modules/style-utils.module.scss";
 import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
+import StoreInterface from "@client/modules/account/ts/types/store.type";
 
 interface IProps {
   items: List[];
@@ -46,9 +47,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const addProductDialog = useDialog();
   const clickListener = useCLickListener(() => setOpen(false));
   const buttonRef = React.useRef<HTMLDivElement>(null);
-
   const dispatch = useDispatch();
-
   const showAddProductContent = (listId) => {
     addProductDialog.handleClickOpen();
   };
@@ -75,7 +74,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
 
     setSelectedList(lists.find((e) => e.productListId === listId));
   };
-
   const onCreateList = (listInfo: List): void => {
     setSelectedList(listInfo);
     createListDialog.handleClose();
@@ -88,7 +86,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
 
   useEffect(() => {
     clickListener.startListen();
-    dispatch(getLists());
+    account_enabled && dispatch(getLists());
     return () => {
       clickListener.endListen();
     };
@@ -142,6 +140,10 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       StyleUtils.cursorPointer,
     ],
   };
+
+
+  const account_enabled = useSelector((e: StoreInterface) => e.site.account_enabled);
+  console.log({account_enabled});
 
   if (!user) return null;
 

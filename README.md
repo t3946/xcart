@@ -19,6 +19,7 @@
 Перейти в `/nextjs/submodules/bootstrap`
 
 Выполнить
+- `npm i`
 - `npm run css-compile`
 
 ### Старая часть
@@ -32,6 +33,7 @@
 Перейти в `/www/static/local_modules/bootstrap`
 
 Выполнить
+- `npm i`
 - `npm run css-compile`
 #### Клиентская часть
 Перейти в `/www/static`

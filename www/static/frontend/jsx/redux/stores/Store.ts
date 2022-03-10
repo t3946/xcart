@@ -81,8 +81,13 @@ const Store: ReduxStore<StoreInterface> = createStore(
 
 sagaMiddleware.run(accountRootSaga);
 
-axios.get("/api-client/user/info").then(({ data: user }) => {
-  Store.dispatch(userSetAction(user));
-});
+const thisWindow: any = window;
+const appData = thisWindow.appData;
+
+if (appData.site.account_enabled) {
+    axios.get("/api-client/user/info").then(({ data: user }) => {
+        Store.dispatch(userSetAction(user));
+    });
+}
 
 export default Store;
