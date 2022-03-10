@@ -445,8 +445,6 @@ class Router
 
             $routesFile = Paths::file($item['path'], 'php');
 
-            Xcart::app()->logger->debug($routesFile);
-
             if (!$routesFile) {
                 return;
             }
