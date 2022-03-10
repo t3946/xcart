@@ -1,5 +1,5 @@
 import React from "react";
-import classnames from "classnames";
+import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import PaymentCardImage from "@components/common/payment-card-image/PaymentCardImage";
 
@@ -19,11 +19,11 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   );
 
   return (
-    <div className={classnames(`col col-md-4 ps-0`, containerClass)}>
-      <div className="d-flex gap-2 align-items-center">
+    <div className={cn(containerClass)}>
+      <div className="d-flex align-items-center">
         <PaymentCardImage logo={cardIconPath} name={cardType} />
-        <div>
-          <b className="d-lg-none">{cardType.toUpperCase()}</b>
+        <div className={"ms-4"}>
+          <b className="d-block d-lg-none">{cardType.toUpperCase()}</b>
           <span className="d-none d-lg-inline-block">{cardType}</span>{" "}
           <span className="d-inline-block">ending in {cardLast4}</span>
         </div>

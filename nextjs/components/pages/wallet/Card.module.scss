@@ -17,7 +17,7 @@
 
 .editRemoveButtonsGroup {
 
-  @include breakpoint(lg) {
+  @include breakpoint(xxl) {
     display: grid;
     grid-column-gap: pxToRem(12);
     grid-template-columns: repeat(2, 50%);
@@ -27,3 +27,117 @@
 .chevronIcon {
   transition: all 0.1s linear;
 }
+
+.walletCardHeader {
+  border: 1px solid #c4c4c4;
+  padding: pxToRem(15) pxToRem(10);
+  cursor: pointer;
+  display: grid;
+  grid-gap: pxToRem(16);
+  background: #F4F4F4;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "headerCardName headerCardChevron";
+
+  @include breakpoint(md) {
+    background: transparent;
+    padding: pxToRem(7) pxToRem(25);
+    grid-template-columns: 250px 250px 1fr auto;
+    grid-template-areas: "headerCardName headerCardExp headerCardDefault headerCardChevron";
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: 200px 200px 1fr auto;
+  }
+
+  @include breakpoint(xxl) {
+    grid-template-columns: 300px 300px 240px 1fr;
+    grid-template-rows: auto;
+  }
+}
+
+.headerCardName {
+  grid-area: "headerCardName";
+}
+
+.headerCardExp {
+  grid-area: "headerCardExp";
+}
+
+.headerCardDefault {
+  grid-area: "headerCardDefault";
+}
+
+.headerCardChevron {
+  grid-area: "headerCardChevron";
+}
+
+.walletCardHeaderFirst {
+  border-top: 1px solid #c4c4c4;
+}
+
+.cardDetailsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "nameOnCard expDate" "address address" "editRemoveMobile setDefault";
+  grid-gap: pxToRem(16);
+
+  @include breakpoint(md) {
+    grid-template-columns: 250px 250px 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "nameOnCard address editRemoveDesktop";
+  }
+
+  @include breakpoint(lg) {
+    grid-template-columns: 200px 200px 1fr;
+  }
+
+  @include breakpoint(xxl) {
+    grid-template-columns: 300px 300px 240px 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "nameOnCard address editRemoveDesktop";
+  }
+}
+
+.nameOnCard {
+  grid-area: nameOnCard;
+}
+
+.address {
+  grid-area: address;
+}
+
+.editRemoveDesktop {
+  grid-area: editRemoveDesktop;
+  display: none;
+
+  @include breakpoint(md) {
+    display: block;
+  }
+}
+
+.editRemoveMobile {
+  grid-area: editRemoveMobile;
+
+  @include breakpoint(md) {
+    display: none;
+  }
+}
+
+.setDefault {
+  grid-area: setDefault;
+
+  @include breakpoint(md) {
+    display: none;
+  }
+}
+
+.expDate{
+  grid-area: expDate;
+
+  @include breakpoint(md) {
+    display: none;
+  }
+}
+
+

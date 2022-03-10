@@ -14,6 +14,7 @@ import LinkStyles from "@components/common/link/Link.module.scss";
 import Styles from "@components/pages/wallet/Card.module.scss";
 import cn from "classnames";
 import IconChevron from "@modules/icon/components/account/chevron-down/AccountSidebarMobileDesktop";
+import IconChevronTablet from "@modules/icon/components/account/chevron-down/AccountSidebarTablet";
 
 export function addressToString(address) {
   const parts = [];
@@ -75,7 +76,9 @@ const Card: React.FC<IProps> = (props) => {
 
     return (
       <div className="wallet-card-billing">
-        <div className="wallet-card-content-label">Billing address</div>
+        <div className="wallet-card-content-label fs-16 fs-md-18 fs-lg-14">
+          Billing address
+        </div>
         <div>{addressToString(card.metadata.address)}</div>
       </div>
     );
@@ -85,14 +88,19 @@ const Card: React.FC<IProps> = (props) => {
     <div className="">
       <div
         onClick={accordion.onItemClick}
-        className={cn(`wallet-card-header row m-0`, {
+        className={cn(Styles.walletCardHeader, {
           "border-top-0": !first,
         })}
       >
-        <CardHeader cardLast4={card.last4} cardType={card.brand} />
-        <div className="col-4 d-none d-md-block">{expTemplate()}</div>
+        <div className="headerCardName">
+          <CardHeader cardLast4={card.last4} cardType={card.brand} />
+        </div>
 
-        <div className="col-4 d-flex align-items-center justify-content-end justify-content-md-between pe-0">
+        <div className="headerCardExp d-none d-md-flex align-items-center">
+          {expTemplate()}
+        </div>
+
+        <div className="headerCardDefault d-none d-md-flex align-items-center">
           <div
             className={`wallet-header-default-block ${
               isDefault && "wallet-header-default-block_is-default"
@@ -101,14 +109,27 @@ const Card: React.FC<IProps> = (props) => {
           >
             {isDefault ? "Default" : "Set default"}
           </div>
+        </div>
 
+        <div
+          className={cn(
+            Styles.headerCardChevron,
+            "text-end d-flex align-items-center justify-content-end"
+          )}
+        >
           <IconChevron
-            className={cn(Styles.chevronIcon, {
+            className={cn("d-none", "d-lg-block", Styles.chevronIcon, {
+              "accordion-arrow-open": accordion.open,
+            })}
+          />
+          <IconChevronTablet
+            className={cn("d-lg-none", Styles.chevronIcon, {
               "accordion-arrow-open": accordion.open,
             })}
           />
         </div>
       </div>
+
       <div
         style={{
           height: accordion.height,
@@ -117,20 +138,26 @@ const Card: React.FC<IProps> = (props) => {
         className="wallet-card-content-container"
       >
         <div className={cn(Styles.walletCardContent)}>
-          <div className="row">
-            <div className="col-12 col-md-4">
+          <div className={Styles.cardDetailsContainer}>
+            <div className={Styles.nameOnCard}>
               {card.metadata?.cardHolderName && (
-                <div className="wallet-card-content-label">Name on card</div>
+                <div className="wallet-card-content-label fs-16 fs-md-18 fs-lg-14">
+                  Name on card
+                </div>
               )}
               <div>{card.metadata.cardHolderName}</div>
             </div>
 
-            <div className="col-12 col-md-4">{billingAddressTemplate()}</div>
+            <div className={cn(Styles.expDate, "text-end", "text-md-start")}>
+              {expTemplate()}
+            </div>
 
-            <div className="d-none d-md-block col-md-4">
+            <div className={Styles.address}>{billingAddressTemplate()}</div>
+
+            <div className={Styles.editRemoveDesktop}>
               <div className={cn(Styles.editRemoveButtonsGroup, "w-100")}>
                 <Button
-                  className={"w-100 mb-10 mb-lg-0 p-0"}
+                  className={"w-100 mb-10 mb-xxl-0 p-0"}
                   onClick={() => editCard(card)}
                 >
                   Edit
@@ -146,33 +173,29 @@ const Card: React.FC<IProps> = (props) => {
               </div>
             </div>
 
-            <div className="col d-md-none">
-              <div className="row">
-                <div className="col-7">
-                  <span
-                    className={cn(LinkStyles.link)}
-                    onClick={() => editCard(card)}
-                  >
-                    Edit
-                  </span>{" "}
-                  {" | "}
-                  <span className={cn(LinkStyles.link)} onClick={removeCard}>
-                    Remove
-                  </span>
-                </div>
+            <div className={Styles.editRemoveMobile}>
+              <span
+                className={cn(LinkStyles.link)}
+                onClick={() => editCard(card)}
+              >
+                Edit
+              </span>{" "}
+              {" | "}
+              <span className={cn(LinkStyles.link)} onClick={removeCard}>
+                Remove
+              </span>
+            </div>
 
-                <div className="col-5 text-end">
-                  <div
-                    className={cn(LinkStyles.link, {
-                      [Styles.link_default]: isDefault,
-                    })}
-                    onClick={(e: any) => {
-                      !isDefault && changeDefaultCard(e);
-                    }}
-                  >
-                    {isDefault ? "Default" : "Set default"}
-                  </div>
-                </div>
+            <div className={cn(Styles.setDefault, "text-end", "text-md-start")}>
+              <div
+                className={cn(LinkStyles.link, {
+                  [Styles.link_default]: isDefault,
+                })}
+                onClick={(e: any) => {
+                  !isDefault && changeDefaultCard(e);
+                }}
+              >
+                {isDefault ? "Default" : "Set default"}
               </div>
             </div>
           </div>
