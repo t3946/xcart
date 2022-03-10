@@ -45,8 +45,8 @@ class AccountController extends FrontendController
             "shortName" => $site->short_name,
             "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
             'account_enabled' => $site->account_enabled,
-            'logo' => $site->logo,
-            'logo_mobile' => $site->logo_mobile,
+            'logo' => (string) ($site->logo ?? ''),
+            'logo_mobile' => (string) ($site->logo_mobile ?? ''),
         ], null, 'site');
 
         StorageHelper::push([
@@ -60,8 +60,8 @@ class AccountController extends FrontendController
             "cidev_top_header_code" => $config['cidev_top_header_code'],
             "cidev_header_code" => $config['cidev_header_code'],
             "companyName" => $config['company_name'],
-            'logo' => (string)$site->logo,
-            'logo_mobile' => (string)$site->logo_mobile,
+            'logo' => (string) ($site->logo ?? ''),
+            'logo_mobile' => (string) ($site->logo_mobile ?? ''),
         ], null, 'config');
 
         StorageHelper::push([
