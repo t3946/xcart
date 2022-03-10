@@ -14,7 +14,7 @@ class FrontendController extends Controller
 
     public function beforeAction($action, $params)
     {
-        //AccountController::provideAccountData();
+        AccountController::provideAccountData();
     }
 
     protected function getUser(): UserModel
