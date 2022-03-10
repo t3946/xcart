@@ -454,6 +454,10 @@ class AccountListsApi extends Controller
 
     public function actionGetLists(): void
     {
+        if (!$this->checkRightsUser()) {
+            return;
+        }
+
         $user = Xcart::app()->auth->getUser(true);
         $lists_data = [];
 
