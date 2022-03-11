@@ -1,25 +1,28 @@
 import React from "react";
 import Link from "next/link";
-import {useDispatch} from "react-redux";
-import {Form, Formik} from "formik";
-import {Form as RBForm} from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { Form, Formik } from "formik";
+import { Form as RBForm } from "react-bootstrap";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import * as yup from "yup";
-import {savePublicProfileAction, setAlertAction} from "@redux/actions/account-actions/ProfileActions";
+import {
+  savePublicProfileAction,
+  setAlertAction,
+} from "@redux/actions/account-actions/ProfileActions";
 import classnames from "classnames";
 import TimesLightIcon from "@modules/components/icons/font-awesome/times/TimesLightIcon";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import Alert from "@modules/account/components/shared/Alert";
-import {userSetAction} from "@redux/actions/account-actions/UserActions";
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import AvatarEditor from "@modules/account/components/public-profile/AvatarEditor";
 import dataURItoBlob from "@utils/dataURItoBlob";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import Button, {ETheme} from "@modules/ui/forms/Button";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 const PublicProfile = (): any => {
   const router = useRouter();
@@ -103,7 +106,6 @@ const PublicProfile = (): any => {
           setShow(true);
           user.public_name = values.publicName;
           user.location = values.location;
-          console.log("img: ", res.avatarUrl);
           dispatch(userSetAction({ ...user, avatar_image: res.avatarUrl }));
 
           dispatch(
@@ -325,7 +327,9 @@ const PublicProfile = (): any => {
                         isValid={touched.publicName && !errors.publicName}
                         autoComplete={"off"}
                       />
-                      <Feedback type="invalid">{errors.publicName}</Feedback>
+                      {!!touched.publicName && !!errors.publicName && (
+                        <Feedback type="invalid">{errors.publicName}</Feedback>
+                      )}
                     </div>
                   </RBForm.Group>
 
@@ -348,7 +352,9 @@ const PublicProfile = (): any => {
                         isValid={touched.location && !errors.location}
                         autoComplete={"off"}
                       />
-                      <Feedback type="invalid">{errors.location}</Feedback>
+                      {!!touched.location && !!errors.location && (
+                        <Feedback type="invalid">{errors.location}</Feedback>
+                      )}
                     </div>
                   </RBForm.Group>
 
