@@ -137,7 +137,7 @@ services:
     environment:
       SERVICE_NAME: app
       SERVICE_TAGS: dev
-      PHP_OPCACHE_VALIDATE_TIMESTAMPS: 0
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
     working_dir: /var/www
     volumes:
       - ./:/var/www
@@ -145,6 +145,7 @@ services:
       - /mnt/disk2/files/files/:/var/www/www/files
       - /mnt/disk2/files/product_files/:/var/www/www/product_files
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/php/fpm.ini:/usr/local/etc/php-fpm.d/www.conf
       - ./docker/php/prod.ini:/usr/local/etc/php/conf.d/prod.ini
       - ./docker/php/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
       - ./docker/php/sendmail.ini:/usr/local/etc/php/conf.d/mail.ini
@@ -198,8 +199,6 @@ services:
     user: "node"
     working_dir: /home/node/app/nextjs
     tty: true
-    ports:
-      - "8080:3000"
     networks:
       - frontend
     #environment:
@@ -214,8 +213,6 @@ services:
     user: "node"
     working_dir: /home/node/app/nextjs
     tty: true
-    ports:
-      - "8081:3001"
     networks:
       - frontend
     #environment:
