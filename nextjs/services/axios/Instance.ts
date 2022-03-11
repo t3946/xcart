@@ -15,8 +15,14 @@ export const getInstance = function (req?: IncomingMessage) {
     cookie = sessionCookieMatches[0];
   }
 
+  let baseURL = "https://" + req?.headers.host;
+
+  if (process.env.NODE_ENV === "development") {
+    baseURL = "http://nginx";
+  }
+
   return axios.create({
-    baseURL: process.env.BASE_URL_NGINX,
+    baseURL,
     headers: {
       Cookie: cookie,
     },

@@ -1,8 +1,14 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 const getInitialState = async function (req: any) {
+  let baseURL = `${process.env.PROTOCOL}://${req?.headers.host}`;
+
+  if (process.env.NODE_ENV === "development") {
+    baseURL = "http://nginx";
+  }
+
   const params: AxiosRequestConfig = {
-    baseURL: process.env.BASE_URL_NGINX,
+    baseURL,
   };
 
   if (req.headers.cookie) {

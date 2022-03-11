@@ -32,6 +32,9 @@ class TSVApi extends Controller
 
     public function checkCode()
     {
+
+        Xcart::app()->logger->debug("checkCode");
+
         $data = json_decode(file_get_contents('php://input'), true);
         $g = new GoogleAuthenticator();
         $check_result = false;

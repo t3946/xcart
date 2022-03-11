@@ -8,12 +8,11 @@ const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 const axios = require("axios");
 const mail = require("../../services/mail");
-const AxiosInstance = axios.create({
-  baseURL: process.env.BASE_URL_NGINX,
-});
+const AxiosInstance = axios.create();
 const apiTwoStepVerification = require("./TwoStepVerification");
 const apiStripe = require("./stripe/Stripe");
 const stripeService = require("../../services/stripe");
+const getBaseUrl = require("../../utils/getBaseUrl");
 
 app.use("/stripe", isAuthMiddleware, apiStripe);
 app.use("/tsv", apiTwoStepVerification);
@@ -203,7 +202,7 @@ app.post("/send-login-otp", async function (req, res) {
     },
   });
 
-  await AxiosInstance.post("/api/account/send-sms", {
+  await AxiosInstance.post(getBaseUrl(req) + `/api/account/send-sms`, {
     phone: user.phone,
     message: "This is your One Time Password: " + otp.one_time_password,
   });
@@ -235,7 +234,7 @@ app.post("/send-otp", async function (req, res) {
   }
 
   await AxiosInstance.post(
-    "/api/account/reset-password/send-one-time-password",
+    getBaseUrl(req) + `/api/account/reset-password/send-one-time-password`,
     {
       login: req.body.login,
     }
@@ -245,20 +244,26 @@ app.post("/send-otp", async function (req, res) {
 });
 
 app.post("/verify-otp", async function (req, res) {
-  AxiosInstance.post("/api/account/reset-password/verify-one-time-password", {
-    login: req.body.login,
-    otp: req.body.otp,
-  }).then((apiRes) => {
+  AxiosInstance.post(
+    getBaseUrl(req) + `/api/account/reset-password/verify-one-time-password`,
+    {
+      login: req.body.login,
+      otp: req.body.otp,
+    }
+  ).then((apiRes) => {
     res.json(apiRes.data);
   });
 });
 
 app.post("/reset-password", async function (req, res) {
-  AxiosInstance.post("/api/account/reset-password/reset-password", {
-    resetPasswordToken: req.body.resetPasswordToken,
-    login: req.body.login,
-    password: await passwordUtils.encryptPassword(req.body.password),
-  }).then(() => {
+  AxiosInstance.post(
+    getBaseUrl(req) + `/api/account/reset-password/reset-password`,
+    {
+      resetPasswordToken: req.body.resetPasswordToken,
+      login: req.body.login,
+      password: await passwordUtils.encryptPassword(req.body.password),
+    }
+  ).then(() => {
     res.sendStatus(200);
   });
 });
@@ -524,9 +529,12 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
 
   for (const order of orders) {
     //get order taxes
-    await AxiosInstance.post("/api/account/orders/get-order-taxes", {
-      order_id: order.orderid,
-    }).then((res) => {
+    await AxiosInstance.post(
+      getBaseUrl(req) + `/api/account/orders/get-order-taxes`,
+      {
+        order_id: order.orderid,
+      }
+    ).then((res) => {
       order.taxes = res.data;
     });
 
@@ -546,9 +554,12 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
       totalShipping = totalShipping + parseFloat(group.shipping_gross);
 
       //get order group taxes
-      await AxiosInstance.post("/api/account/orders/get-order-group-taxes", {
-        order_group_id: group.order_group_id,
-      }).then((res) => {
+      await AxiosInstance.post(
+        getBaseUrl(req) + `/api/account/orders/get-order-group-taxes`,
+        {
+          order_group_id: group.order_group_id,
+        }
+      ).then((res) => {
         group.taxes = res.data;
       });
       group.paymentStatus = getPaymentStatusCommonName(group.cb_status);
@@ -610,7 +621,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
     const poStatuses = [ORDER_STATUS_UNPAID_PO, ORDER_STATUS_INCOMPLETE_PO];
 
     if (poStatuses.indexOf(order.cb_status) !== -1) {
-      await AxiosInstance.post("/api/get-extra", {
+      await AxiosInstance.post(getBaseUrl(req) + `/api/get-extra`, {
         order_id: order.orderid,
       }).then((res) => {
         order.extra = res.data;

@@ -161,7 +161,7 @@ module.exports = function (passport) {
       switch (method) {
         case "authenticator_app":
           await axios
-            .post(process.env.BASE_URL_NGINX + "/api/account/tsv/check-code", {
+            .post(req.headers.origin + "/api/account/tsv/check-code", {
               code: req.body.code,
               userId: user.user_id,
             })

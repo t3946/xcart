@@ -3,15 +3,13 @@ const isAuthMiddleware = require("../middleware/isAuth");
 const axios = require("axios");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
+const getBaseUrl = require("../utils/getBaseUrl");
 
 app.get("/get/:type/:date", isAuthMiddleware, async (req, res) => {
   const { type, date } = req.params;
   const userId = req.user.userId;
   const orders = await axios
-    .get(
-      process.env.BASE_URL_NGINX +
-        `/api/account/orders/get/${userId}/${type}/${date}`
-    )
+    .get(getBaseUrl(req) + `/api/account/orders/get/${userId}/${type}/${date}`)
     .then((response) => response.data);
   res.json(orders);
 });

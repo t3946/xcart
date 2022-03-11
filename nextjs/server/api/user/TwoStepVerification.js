@@ -1,36 +1,36 @@
 const api = require("express")();
 const isAuthMiddleware = require("../../middleware/isAuth");
 const axios = require("axios");
-const AxiosInstance = axios.create({
-  baseURL: process.env.BASE_URL_NGINX,
-});
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
+const getBaseUrl = require("../../utils/getBaseUrl");
 
 api.post("/confirm-device", isAuthMiddleware, async (req, res) => {
-  await AxiosInstance.post("/api/account/tsv/check-code", {
-    code: req.body.code,
-    secret: req.body.secret,
-  }).then(async (innerRes) => {
-    const { checkResult } = innerRes.data;
+  await axios
+    .post(getBaseUrl(req) + `/api/account/tsv/check-code`, {
+      code: req.body.code,
+      secret: req.body.secret,
+    })
+    .then(async (innerRes) => {
+      const { checkResult } = innerRes.data;
 
-    if (innerRes.data.checkResult === false) {
-      res.json({ checkResult });
-      return;
-    }
+      if (innerRes.data.checkResult === false) {
+        res.json({ checkResult });
+        return;
+      }
 
-    await prisma.xcart_authenticators.create({
-      data: { secret: req.body.secret, user_id: req.user.userId },
+      await prisma.xcart_authenticators.create({
+        data: { secret: req.body.secret, user_id: req.user.userId },
+      });
+
+      const user = await prisma.xcart_users.findUnique({
+        where: { user_id: req.user.userId },
+      });
+
+      delete user.password;
+
+      res.json({ checkResult, user });
     });
-
-    const user = await prisma.xcart_users.findUnique({
-      where: { user_id: req.user.userId },
-    });
-
-    delete user.password;
-
-    res.json({ checkResult, user });
-  });
 });
 
 api.get("/generate", isAuthMiddleware, async function (req, res) {
@@ -38,12 +38,14 @@ api.get("/generate", isAuthMiddleware, async function (req, res) {
     where: { user_id: req.user.userId },
   });
 
-  await AxiosInstance.post("/api/account/tsv/generate", {
-    accountName: user.email,
-  }).then((apiRes) => {
-    res.json(apiRes.data);
-    res.send();
-  });
+  await axios
+    .post(getBaseUrl(req) + `/api/account/tsv/generate`, {
+      accountName: user.email,
+    })
+    .then((apiRes) => {
+      res.json(apiRes.data);
+      res.send();
+    });
 });
 
 api.post("/disable", isAuthMiddleware, async function (req, res) {
