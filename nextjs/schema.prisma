@@ -5862,8 +5862,6 @@ model xcart_user_filter_link {
 model xcart_users {
   user_id                  BigInt                           @id @default(autoincrement()) @db.UnsignedBigInt
   name                     String                           @db.VarChar(64)
-  rate_us                  Int?                             @db.UnsignedTinyInt
-  experience_comment       String?                          @db.MediumText
   email                    String?                          @unique(map: "xcart_users_email_uindex") @db.VarChar(128)
   password                 String?                          @db.VarChar(64)
   phone                    String?                          @unique(map: "xcart_users_phone_uindex") @db.VarChar(32)
