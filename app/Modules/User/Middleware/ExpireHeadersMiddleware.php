@@ -23,7 +23,6 @@ class ExpireHeadersMiddleware extends Middleware
 
             $url = Xcart::app()->request->getUrl();
             $method = Xcart::app()->request->getMethod();
-            Xcart::app()->logger->debug([$url, $method]);
             $match = Xcart::app()->router->match($url, $method);
 
 
