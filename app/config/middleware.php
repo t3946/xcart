@@ -21,9 +21,9 @@ return [
     'CouponCodeMiddleware' => [
         'class' => CouponCodeMiddleware::class
     ],
-    'BotsMiddleware' => [
-        'class' => BotsMiddleware::class,
-    ],
+//    'BotsMiddleware' => [
+//        'class' => BotsMiddleware::class,
+//    ],
     'ReferrerSearch' => [
         'class' => ReferrerSearchMiddleware::class
     ],

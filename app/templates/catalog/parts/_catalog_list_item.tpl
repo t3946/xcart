@@ -197,7 +197,7 @@
                         </div>
 
                         <div class="cart_add cart_buttons">
-                            {include "product/parts/_add_to_cart.tpl" type="catalog"}
+                            {include "product/parts/_add_to_cart.tpl" type="catalog" model=$item}
 
                         </div>
 

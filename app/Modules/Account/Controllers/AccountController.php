@@ -108,6 +108,9 @@ class AccountController extends FrontendController
     public static function getProduct($product_id): array
     {
         $product = ProductModel::objects()->get(['productid' => $product_id]);
+        if ($product === null) {
+            return [];
+        }
         $attributes = $product->getAttributes();
         $image = $product->getMainImage();
         $image_url = (string)$image;
