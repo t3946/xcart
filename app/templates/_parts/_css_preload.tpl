@@ -21,11 +21,9 @@
         "
 >
 
-{if constant('APP_LOCAL')}
-    <link rel="stylesheet"
-          href="{$uri}/static/frontend/dist/css/bem.css?v={mt_rand(0, 1000)}"
-    >
-{/if}
+<link rel="stylesheet"
+      href="{$uri}/static/frontend/dist/css/bem.css?v={mt_rand(0, 1000)}"
+>
 
 <noscript>
     <link rel="stylesheet"
