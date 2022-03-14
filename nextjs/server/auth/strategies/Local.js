@@ -8,6 +8,7 @@ const strategyOptions = {
 };
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
+const getBaseUrl = require("../../utils/getBaseUrl");
 
 module.exports = function (passport) {
   passport.use(
@@ -161,7 +162,7 @@ module.exports = function (passport) {
       switch (method) {
         case "authenticator_app":
           await axios
-            .post(req.headers.origin + "/api/account/tsv/check-code", {
+            .post(getBaseUrl(req) + "/api/account/tsv/check-code", {
               code: req.body.code,
               userId: user.user_id,
             })
