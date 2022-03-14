@@ -15,10 +15,15 @@ export const getInstance = function (req?: IncomingMessage) {
     cookie = sessionCookieMatches[0];
   }
 
-  let baseURL = "https://" + req?.headers.host;
+  let baseURL;
 
-  if (process.env.NODE_ENV === "development") {
-    baseURL = "http://nginx";
+  switch (process.env.API_URL) {
+    case "dynamic":
+      baseURL = `${process.env.PROTOCOL}://${req?.headers.host}`;
+      break;
+    case "static":
+      baseURL = "http://nginx";
+      break;
   }
 
   return axios.create({
