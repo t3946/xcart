@@ -47,7 +47,7 @@ class UserModel extends Model
      */
     public static function getUserByLogin(string $login): ?ModelInterface
     {
-        return self::objects()->get(new QOr(['email' => $login, 'phone' => $login]));
+        return self::objects()->get([new QOr(['email' => $login, 'phone' => $login])]);
     }
 
     public static function tableName()
