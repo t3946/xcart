@@ -187,7 +187,7 @@ if ($REQUEST_METHOD === 'POST' && !($mode === 'unlock_order' || $mode === 'unloc
 
             $underReviewUsers = explode(',', $config['Under_review_users']);
             if ($orderModel->fraud_status === $config['Risk_Score_Threshold_status'] &&
-                !in_array(Xcart::app()->user->id, $underReviewUsers, true)) {
+                !in_array(Xcart::app()->user->id, $underReviewUsers)) {
                 $log .= "<br/>fraud_status: {$fraud_status_name} -> {$fraud_statuses[$config['Risk_Score_Threshold_status']]}";
                 $new_fraud_status = $config['Risk_Score_Threshold_status'];
             }
