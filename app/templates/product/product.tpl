@@ -139,8 +139,8 @@
                                             data-thumb="{$image->getCdnURL('thumb')}"
                                             data-preview="{$image->getCdnURL('preview')}"
                                             data-id="{$image->pk}"
-                                            data-width="{$image->getAttribute('image_x')}"
-                                            data-height="{$image->getAttribute('image_y')}"
+                                            data-width="{$image->getAttribute('width')}"
+                                            data-height="{$image->getAttribute('height')}"
                                             type="image">
                                     </option>
                                 {/if}
