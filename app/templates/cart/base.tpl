@@ -83,9 +83,9 @@
             {if $breadcrumbs}
                 <div class="container">
                     <div class="row cart-steps-container">
-                        <div class="col-auto pe-0 d-md-none">
-                            {if !$breadcrumbs->isFirstStage()}
-                                <a class="col shrink cart-steps-back d-lg-none"
+                        {if !$breadcrumbs->isFirstStage()}
+                            <div class="col-auto pe-0 d-md-none">
+                                <a class="cart-steps-back d-block"
                                    href="{$breadcrumbs->getPrevStage().url}">
                                     <span class="img">
                                         <img src="{$uri}/static/frontend/dist/images/icons/cart/arrow_left_shop_more.svg"
@@ -93,8 +93,8 @@
                                     </span>
                                     <span class="text">{t 'BACK'}</span>
                                 </a>
-                            {/if}
-                        </div>
+                            </div>
+                        {/if}
 
                         <section class="cart-steps-section col">
                             <ul class="cart-steps-items list-unstyled m-0">
