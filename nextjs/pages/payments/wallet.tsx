@@ -2,6 +2,9 @@ import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import { Wallet } from "@components/pages/wallet/Wallet";
 import { getInstance } from "@services/axios/Instance";
+import loadStripe from "@utils/loadStripe";
+const stripePromise = loadStripe();
+import { Elements } from "@stripe/react-stripe-js";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
@@ -37,7 +40,9 @@ export async function getServerSideProps(ctx: Record<any, any>) {
 function WalletPage(props: Record<any, any>) {
   return (
     <PageTwoColumns>
-      <Wallet {...props} />
+      <Elements stripe={stripePromise}>
+        <Wallet {...props} />
+      </Elements>
     </PageTwoColumns>
   );
 }
