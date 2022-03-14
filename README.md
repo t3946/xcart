@@ -35,16 +35,17 @@
 Выполнить
 - `npm i`
 - `npm run css-compile`
+
 #### Клиентская часть
 Перейти в `/www/static`
 Выполнить
 - `npm run gulp frontend:bem`
-- `npm run gulp build:frontend [NODE_ENV=production]`
+- `npm run gulp build:frontend`
 
 #### Админская часть
 Перейти в `/dev/www/static`
 Выполнить
-- `npm run gulp build:backend [NODE_ENV=production]`
+- `npm run gulp build:backend`
 
 ## Mindy framework engine
 
