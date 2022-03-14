@@ -78,7 +78,7 @@ export const departmentsMenuDesktop = {
 
 export const TSV = appData?.tsv || null;
 
-export const cartInitialValue = appData.cart;
+export const cartInitialValue = appData.cart || null;
 
 const solved = appData.decisions?.solved || [];
 const notSolved = appData.decisions?.notSolved || [];
@@ -115,8 +115,8 @@ export const photoswipeInitialValue = {
   ownerId: null,
 };
 
-export const configInitialValue = appData.config;
-export const siteInitialValue = appData.site;
+export const configInitialValue = appData.config || null;
+export const siteInitialValue = appData.site || null;
 
 const storeInitialValue = {
   main: accountMainStoreInitialValue,
