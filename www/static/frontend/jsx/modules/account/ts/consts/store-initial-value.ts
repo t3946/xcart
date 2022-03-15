@@ -31,7 +31,7 @@ export const accountListsInitialValue = {
   listLoading: false,
 };
 
-export const accountUserInitialValue = null;
+export const accountUserInitialValue = appData.user || null;
 
 export const accountLoginAndSecurityValue = {
   alert: null,

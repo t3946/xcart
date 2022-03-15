@@ -12,7 +12,6 @@ import { useDialog } from "@client/modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
 import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import { List } from "@client/modules/account/ts/types/list.type";
 import Styles from "@client/modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
 import AppData from "@client/jsx/utils/AppData";
@@ -83,9 +82,11 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       )
     );
   };
+  const account_enabled = useSelector((e: StoreInterface) => e.site.account_enabled);
 
   useEffect(() => {
     clickListener.startListen();
+
     account_enabled && user && dispatch(getLists());
     return () => {
       clickListener.endListen();
@@ -140,9 +141,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       StyleUtils.cursorPointer,
     ],
   };
-
-
-  const account_enabled = useSelector((e: StoreInterface) => e.site.account_enabled);
 
   if (!user) return null;
 

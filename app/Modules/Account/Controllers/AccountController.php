@@ -2,6 +2,7 @@
 
 namespace Modules\Account\Controllers;
 
+use Modules\Account\Controllers\Api\AccountListsApi;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
@@ -78,6 +79,13 @@ class AccountController extends FrontendController
         StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
         StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
+
+        $user = Xcart::app()->getUser(true)->getAttributes();
+        unset($user['password']);
+        unset($user['access_token']);
+        $user['lists'] = AccountListsApi::getLists($user['user_id']);
+
+        StorageHelper::push($user, null, 'user');
 
         AdminHelper::routesData();
     }
