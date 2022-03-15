@@ -12,7 +12,7 @@ class ConvertPasswordsCommand extends Command
     {
         $i = 0;
 
-        while ($users = UserModel::objects()->paginate(++$i, 100)->all()) {
+        while ($users = UserModel::objects()->filter(['password__startswith' => 'B-'])->paginate(1, 100)->all()) {
             foreach ($users as $user) {
                 
                 $old = text_decrypt($user->password);
