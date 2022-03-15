@@ -18,7 +18,6 @@ const TSVRecovery: React.FC<any> = function () {
   const router = useRouter();
   const inputFileRef = React.useRef<HTMLInputElement>();
   const [files, setFiles] = React.useState<File[]>([]);
-
   const accessFileFormats = [
     "image/jpg",
     "image/jpeg",
@@ -27,14 +26,11 @@ const TSVRecovery: React.FC<any> = function () {
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ];
-
   const maxFileSizeMB = 10;
-
   const initialValues = {
     file: [],
   };
   const snackbar = useSnackbar();
-
   const validationSchema = yup.object().shape({
     file: yup
       .mixed()
@@ -52,6 +48,7 @@ const TSVRecovery: React.FC<any> = function () {
 
   function submit(values: any, actions: FormikHelpers<any>) {
     if (!files.length) {
+      actions.setSubmitting(false);
       actions.setFieldError("file", "Need to upload a document");
       return;
     }
