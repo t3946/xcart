@@ -4,8 +4,6 @@ use Modules\User\Models\UserModel;
 
 if ( !defined('XCART_SESSION_START') ) { header("Location: ../"); die("Access denied"); }
 
-x_load('cart','category','crypt','mail','user');
-
 $page = "on_registration";
 x_session_register ("intershipper_recalc");
 x_session_unregister("secure_oid");
@@ -212,7 +210,7 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		$antibot_err = false;
 		$ups_worked = false;
 	}
-	$fillerror = (empty($uname) || !empty($error) || empty($passwd1) || empty($passwd2) || ($passwd1 != $passwd2) || strlen($passwd1) > 64 || strlen($passwd2) > 64);
+	$fillerror = (empty($uname) || !empty($error) || ($passwd1 != $passwd2) || strlen($passwd1) > 64 || strlen($passwd2) > 64);
 	if (!$fillerror) {
 		if ($default_fields['b_country']['avail'] != 'Y') {
 			$b_country = $config['General']['default_country'];
@@ -297,7 +295,10 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		#
 		# Fields filled without errors. User registered successfully
 		#
-		$crypted = addslashes(text_crypt($passwd1));
+		if (!empty($passwd1)) {
+			$crypted = password_hash($passwd1, PASSWORD_DEFAULT, []);
+		}
+
 
 		if ($default_fields['s_state']['avail'] == 'Y' && $default_fields['s_country']['avail'] == 'Y') {
 			if (is_array($states) && !func_check_state($states, stripslashes($s_state), $s_country) && $s_display_states) {
@@ -438,7 +439,9 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		# Update/Insert user info
 		#
 		$profile_values = array();
-		$profile_values['password'] = $crypted;
+		if (isset($crypted)) {
+			$profile_values['password'] = $crypted;
+		}
 		$profile_values['password_hint'] = $password_hint;
 		$profile_values['password_hint_answer'] = $password_hint_answer;
 		$profile_values['title'] = $title;
@@ -475,10 +478,10 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 		$profile_values['card_number'] = addslashes(text_crypt(@$card_number));
 		$profile_values['card_expire'] = $card_expire;
 		$profile_values['card_cvv2'] = $card_cvv2;
-		$profile_values['pending_membershipid'] = $pending_membershipid;
+		$profile_values['pending_membershipid'] = $pending_membershipid ?? 0;
 		$profile_values['ssn'] = $ssn;
 		$profile_values['parent'] = $parent;
-		$profile_values['pending_plan_id'] = $pending_plan_id;
+		$profile_values['pending_plan_id'] = $pending_plan_id ?? 0;
 		$profile_values['show_events'] = (!empty($show_events) ? $show_events : 0);
 
 #
@@ -582,7 +585,8 @@ if ($REQUEST_METHOD == 'POST' && isset($_POST['usertype'])) {
 			#
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			if ($current_area=="A" || ($active_modules["Simple_Mode"] && $current_area=="P")) {
-# END: random:1073746882_1073747063 [2008 Dec 24 16:25] 
+# END: random:1073746882_1073747063 [2008 Dec 24 16:25]
+				$membershipid = $membershipid ?: 0;
 				db_query("UPDATE $sql_tbl[customers] SET membershipid = '$membershipid' WHERE login='$login' AND usertype='$login_type'");
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 			}

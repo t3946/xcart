@@ -125,7 +125,7 @@ $login_type = $_GET['usertype'];
 #
 # Where to forward <form action
 #
-$smarty->assign("register_script_name",(($config["Security"]["use_https_login"]=="Y")?$xcart_catalogs_secure['admin']."/":"")."user_modify.php");
+$smarty->assign("register_script_name","/admin/user_modify.php");
 
 # START: random:1073746882_1073747063 [2008 Dec 24 16:25] 
 if ($active_modules['Manufacturers'] && $login_type == 'P') {

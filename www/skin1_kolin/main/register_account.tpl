@@ -166,17 +166,15 @@
 
 <tr>
 <td align="right">{$lng.lbl_password}</td>
-<td><font class="Star">*</font></td>
-<td nowrap="nowrap"><input type="password" id="passwd1" name="passwd1" size="32" maxlength="64" value="{$userinfo.passwd1}" />
-{if $reg_error ne "" and $userinfo.passwd1 eq ""}<font class="Star">&lt;&lt;</font>{/if} 
+<td></td>
+<td nowrap="nowrap"><input type="password" id="passwd1" name="passwd1" size="32" maxlength="64" value="" />
 </td>
 </tr>
 
 <tr>
 <td align="right">{$lng.lbl_confirm_password}</td>
-<td class="Star">*</td>
-<td nowrap="nowrap"><input type="password" id="passwd2" name="passwd2" size="32" maxlength="64" value="{$userinfo.passwd2}" />
-{if $reg_error ne "" and $userinfo.passwd2 eq ""}<font class="Star">&lt;&lt;</font>{/if} 
+<td></td>
+<td nowrap="nowrap"><input type="password" id="passwd2" name="passwd2" size="32" maxlength="64" value="" />
 </td>
 </tr>
 

@@ -21,7 +21,7 @@ function checkRequired(lFields, id) {
 			continue;
 
 		var obj = _getById(lFields[x][0]);
-		if ((obj.type == 'text' || obj.type == 'password' || obj.type == 'textarea') && !obj.value.search(/^[\s]*$/gi) || (obj.nodeName == 'SELECT' && obj.value == 'not_selected')) {
+		if ((obj.type == 'text' ||  obj.type == 'textarea') && !obj.value.search(/^[\s]*$/gi) || (obj.nodeName == 'SELECT' && obj.value == 'not_selected')) {
 			if (lbl_required_field_is_empty != '') {
 				alert(substitute(lbl_required_field_is_empty, 'field', lFields[x][1]));
 			} else {
