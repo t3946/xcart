@@ -38,7 +38,7 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
       xcart_order_groups: {
         where: {
           cb_status: {
-            in: ["AP", "P", "Q", "O", "I"],
+            in: ["AP", "P", "Q", "IO", "O"],
           },
         },
         select: {
