@@ -11,10 +11,10 @@
             <div class="logo_menu row d-flex">
                 <div class="col col-6 col-lg-4 shop-logo-block">
                     <a href="/">
-                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo.svg"
+                        <img src="/{$site->logo}"
                              alt="{$site->company_name}" class="show-for-large logo-big">
 
-                        <img src="{$uri}/static/frontend/dist/images/logos/sites/{$site->code|lower}/logo-small.svg"
+                        <img src="/{$site->logo_mobile}"
                              alt="{$site->company_name}"
                              class="show-for-small hide-for-large logo-small">
                     </a>
