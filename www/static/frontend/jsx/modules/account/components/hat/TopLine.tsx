@@ -2,7 +2,7 @@ import React from "react";
 import CallAfterHours from "./CallAfterHours";
 import CallInHours from "./CallInHours";
 
-const TopLine = (props) => {
+const TopLine = () => {
   //информация о том в какие часы лучше звонить
   function callHoursTemplate() {
     if (appData.site.workingDayTimeNow) {
@@ -19,9 +19,11 @@ const TopLine = (props) => {
           <div className="col-sm-4 d-flex">
             <span className="top-line-site-name">{appData.site.shortName}</span>
           </div>
+
           <div className="col-sm-8">
             <div className="align-items-start call_lang d-flex justify-content-end">
               {callHoursTemplate()}
+
               <a href="#" className="top-line-lang-icon top-line_lang-icon"></a>
             </div>
           </div>

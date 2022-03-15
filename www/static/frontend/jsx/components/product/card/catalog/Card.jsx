@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import { Fragment, createRef } from "preact";
+import {Fragment, createRef} from "preact";
 import Product from "@/components/product/card/Product";
 import ImgCatalog from "@/components/product/card/catalog/ImgCatalog";
 import Price from "@/components/product/card/components/Price";
@@ -8,17 +8,15 @@ import CatalogContext from "@/components/catalog/CatalogContext";
 import t from "@/i18n";
 import Highlighter from "react-highlight-words";
 import AddToCartButton from "@/components/product/AddToCartButton";
-import { Provider } from "react-redux";
+import {Provider} from "react-redux";
 import Store from "../../../../redux/stores/Store";
 import Snackbar from "../../../../modules/account/components/snackbar/Snackbar";
-import { AddToListSelectOnProductPage } from "../../../../modules/account/components/lists/AddToListSelectOnProductPage";
+import {AddToListSelectOnProductPage} from "../../../../modules/account/components/lists/AddToListSelectOnProductPage";
 import React from "react";
 
 export default class Card extends Component {
   constructor(props) {
     super(props);
-    console.log("catalog card", {product: props.product})
-
     const product = (this.product = props.product);
 
     //list of jsx img elements
@@ -30,7 +28,7 @@ export default class Card extends Component {
     };
 
     for (let i = 0; product.images && i < product.images.length; i++) {
-      this.imgList.push(<ImgCatalog image={product.images[i]} />);
+      this.imgList.push(<ImgCatalog image={product.images[i]}/>);
     }
   }
 
@@ -185,17 +183,17 @@ export default class Card extends Component {
     if (days) {
       leadTimeMessage = t(
         "Lead time for this product is %count% business days",
-        { count: days }
+        {count: days}
       );
     }
 
     if (leadTimeMessage) {
       return (
         <div className="p-label lead-time product-card__label">
-          <i />
+          <i/>
           <div
             className="text"
-            dangerouslySetInnerHTML={{ __html: leadTimeMessage }}
+            dangerouslySetInnerHTML={{__html: leadTimeMessage}}
           />
         </div>
       );
@@ -207,7 +205,7 @@ export default class Card extends Component {
       if (this.product.mult_order_quantity === "Y") {
         return (
           <div className="multiply-quantity icon info padding product-card__label">
-            <i />
+            <i/>
             <span className="text">
               Order in multiples of {this.product.min_amount} items
             </span>
@@ -216,7 +214,7 @@ export default class Card extends Component {
       } else {
         return (
           <div className="p-label last-items product-card__label">
-            <i className="least-items-icon" />
+            <i className="least-items-icon"/>
             <span className="text">
               Order at least {this.product.min_amount} items
             </span>
@@ -238,7 +236,7 @@ export default class Card extends Component {
   productPriceBlock() {
     const product = this.product;
 
-    const quantityGroupClasses = { group: [] };
+    const quantityGroupClasses = {group: []};
     const addToCartClasses = {
       mainWrapper: ["add-to-cart-button_catalog"],
       button: ["add-to-cart-button-add__catalog"],
@@ -305,7 +303,7 @@ export default class Card extends Component {
               {t("Price")}:{" "}
             </span>
             <span className="products-slider-current-price">
-              <Price currency={product.currency} price={product.price.number} />
+              <Price currency={product.currency} price={product.price.number}/>
             </span>
           </div>
         </div>
@@ -359,7 +357,7 @@ export default class Card extends Component {
                         product={product}
                         classes={quantityGroupClasses}
                         onChange={(q) => {
-                          this.setState({ quantityAdd: q });
+                          this.setState({quantityAdd: q});
                         }}
                       />
                     </div>
@@ -379,7 +377,7 @@ export default class Card extends Component {
                         quantity={this.state.quantityAdd}
                         onAddToCart={() => {
                           //reset products counter to min amount
-                          this.setState({ quantityAdd: product.min_amount });
+                          this.setState({quantityAdd: product.min_amount});
                         }}
                       />
                     </div>
@@ -407,7 +405,7 @@ export default class Card extends Component {
                 return (
                   <div className={classnames(infoContainerClasses)}>
                     <div className="p-label out-of-stock product-card__label">
-                      <i />
+                      <i/>
                       <span className="text p-label-text_out-of-stock">
                         {t("Out of stock")}
                       </span>
@@ -450,7 +448,7 @@ export default class Card extends Component {
   }
 
   render(props) {
-    const classes = props.classes ?? { product: [] };
+    const classes = props.classes ?? {product: []};
     const self = this;
 
     classes.product.push("catalog-product", "item");

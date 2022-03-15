@@ -77,25 +77,6 @@ export const Map: React.FC<MapProps> = ({ markers, setMap, width, map }) => {
   }, [breakpoint, map]);
 
   return (
-    <div>
-      <MapContainer
-        whenCreated={setMap}
-        center={[
-          (Number(markers[0][0]) + Number(markers[1][0])) / 2,
-          (Number(markers[0][1]) + Number(markers[1][1])) / 2,
-        ]}
-        zoom={1}
-        style={{ height: "374px" }}
-      >
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-        />
-        {markers[0] &&
-          markers.map((position, index) => (
-            <Marker icon={!index ? toIcon : formIcon} position={position} />
-          ))}
-      </MapContainer>
-    </div>
+    <div></div>
   );
 };
