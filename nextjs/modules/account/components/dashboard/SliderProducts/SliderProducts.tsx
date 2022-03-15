@@ -100,6 +100,10 @@ const SliderProducts: React.FC<any> = function (props) {
     return slides;
   }
 
+  if (isAllLoaded && items.length === 0) {
+    return null;
+  }
+
   return (
     <div className={cn(classes?.container)}>
       <div className="d-flex justify-content-center align-items-center mb-14">
