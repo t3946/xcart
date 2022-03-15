@@ -116,7 +116,7 @@ class AccountApi extends Controller
         $orderid = $data['orderid'];
         $order = OrderModel::objects()->get(["orderid" => $orderid]);
         $hash = OrderHelper::getOrderHash([$order->orderid, $order->s_zipcode, $order->email]);
-        $url = "/convert/pdf?orderid={$orderid}&p={$hash}&mode=print";
+        $url = "/convert/pdf/?orderid={$orderid}&p={$hash}&mode=print";
 
         $this->jsonResponse($url);
     }
