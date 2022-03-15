@@ -167,7 +167,7 @@
                                     <b>{t 'warehouse subtotal'}</b>:
                                 </div>
                                 <div class="table-column extended_remove format_price">
-                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="wh_{$gi}_subtotal subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
+                                    {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="wh_{$gi}_subtotal" var-group-subtotal>{$site_currency->getCurrencyFormat($group.subtotal)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                                 </div>
                             </div>
 
@@ -198,7 +198,7 @@
                 <div class="memo_subtotal">
                     <div class="grand-subtotal">
                         {t 'Subtotal'}:
-                        <div class="subtotal">
+                        <div class="ms-3 ws-nowrap">
                             {$site_currency->symbol_prefix}{if !$site_currency->after}{$site_currency}{/if} <span class="cart_subtotal" var-cart-subtotal>{$site_currency->getCurrencyFormat($total)}</span>{if $site_currency->after}&nbsp;{$site_currency}{/if}
                         </div>
                     </div>
