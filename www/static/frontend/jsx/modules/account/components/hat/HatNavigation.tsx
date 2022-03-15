@@ -19,6 +19,7 @@ import Styles from "@client/jsx/modules/account/components/hat/HatNavigation.mod
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
   const cart = useSelector((e: StoreInterface) => e.cart);
+  const accountEnabled = useSelector((e: StoreInterface) => e.site.account_enabled);
   const isVisibleShadowPanel = useSelector(
     (e: StoreInterface) => e.shadowPanel.isVisible
   );
@@ -138,9 +139,9 @@ const HatNavigation = (): any => {
                     <Search className={Styles.searchIcon} />
                   </a>
 
-                  <div className="hat-navigation-item-wrapper">
+                  {accountEnabled && <div className="hat-navigation-item-wrapper">
                     <LoginButton />
-                  </div>
+                  </div>}
 
                   <div className="hat-navigation-item-wrapper p-md-0 ms-md-20">
                     <a
