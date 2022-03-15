@@ -58,7 +58,7 @@ const SliderProducts: React.FC<any> = function (props) {
       .then((res) => res.json())
       .then((res) => {
         // if all product was loaded then disable this function
-        if (res.pager.currentPage === res.pager.pagesCount) {
+        if (res.pager.currentPage >= res.pager.pagesCount) {
           setIsAllLoaded(true);
         }
 
