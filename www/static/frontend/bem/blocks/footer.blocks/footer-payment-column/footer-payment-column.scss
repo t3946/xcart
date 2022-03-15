@@ -1,10 +1,7 @@
 .footer-payment-column {
-  padding: 0 rem-calc(10) 0 rem-calc(10);
-
   @include breakpoint(md up) {
     padding: 0 0 0 rem-calc(10);
   }
-
 
   @include breakpoint(lg up) {
     padding: 0 rem-calc(20);
