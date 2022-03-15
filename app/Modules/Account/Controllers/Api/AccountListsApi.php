@@ -452,6 +452,27 @@ class AccountListsApi extends Controller
         }
     }
 
+    public static function getLists($user_id): array {
+        $lists_data = [];
+
+        //select self lists
+        $lists = ProductListsModel::objects()->all(["user_id" => $user_id]);
+
+        foreach ($lists as $_ => $list) {
+            $lists_data[] = $list->getFrontendData();
+        }
+
+        //select foreign lists
+        $roles = ProductListsUserRoles::objects()->all(["user_id" => $user_id]);
+
+        foreach ($roles as $_ => $role) {
+            $list = ProductListsModel::objects()->get(["product_list_id" => $role->product_list_id]);
+            $lists_data[] = $list->getFrontendData();
+        }
+
+        return $lists_data;
+    }
+
     public function actionGetLists(): void
     {
         if (!$this->checkRightsUser()) {
@@ -459,24 +480,7 @@ class AccountListsApi extends Controller
         }
 
         $user = Xcart::app()->auth->getUser(true);
-        $lists_data = [];
-
-        //select self lists
-        $lists = ProductListsModel::objects()->all(["user_id" => $user->user_id]);
-
-        foreach ($lists as $_ => $list) {
-            $lists_data[] = $list->getFrontendData();
-        }
-
-        //select foreign lists
-        $roles = ProductListsUserRoles::objects()->all(["user_id" => $user->user_id]);
-
-        foreach ($roles as $_ => $role) {
-            $list = ProductListsModel::objects()->get(["product_list_id" => $role->product_list_id]);
-            $lists_data[] = $list->getFrontendData();
-        }
-
-        $this->jsonResponse($lists_data);
+        $this->jsonResponse(self::getLists($user->user_id));
     }
 
     public function listInvite(string $tag, string $code)
