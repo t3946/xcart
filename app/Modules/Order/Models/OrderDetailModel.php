@@ -87,6 +87,7 @@ class OrderDetailModel extends Model
             ],
             'amount' => [
                 'class' => IntField::class,
+                'default' => 0,
             ],
         ];
     }

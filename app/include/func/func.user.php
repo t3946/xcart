@@ -91,9 +91,6 @@ function func_userinfo($user, $usertype, $need_password=false, $need_cc=false, $
 	global $active_modules;
 	global $store_cc, $store_cvv2;
 
-	if ($need_password || $need_cc)
-		x_load('crypt');
-
 	if (is_null($profile_area) || empty($profile_area))
 		$profile_area = $usertype;
 
@@ -110,16 +107,6 @@ function func_userinfo($user, $usertype, $need_password=false, $need_cc=false, $
 		$userinfo['title'] = func_get_title($userinfo['titleid']);
 		$userinfo['b_title'] = func_get_title($userinfo['b_titleid']);
 		$userinfo['s_title'] = func_get_title($userinfo['s_titleid']);
-	}
-
-	if ($need_password) {
-		$userinfo["passwd1"] = $userinfo["passwd2"] = $userinfo["password"] = text_decrypt($userinfo["password"]);
-		if (is_null($userinfo["password"])) {
-			x_log_flag("log_decrypt_errors", "DECRYPT", "Could not decrypt password for the user ".$userinfo['login'], true);
-
-		} elseif ($userinfo["password"] !== false) {
-			$userinfo["passwd1"] = $userinfo["passwd2"] = stripslashes($userinfo["password"]);
-		}
 	}
 
 	if ($store_cc && $need_cc) {

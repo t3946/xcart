@@ -9,5 +9,6 @@ docker-compose exec node /bin/bash -c "cd ./submodules/bootstrap; npm i; npm run
 docker-compose exec node /bin/bash -c "cd ../www/static/local_modules/bootstrap; npm i; npm run css-compile"
 docker-compose exec node npm run build
 docker-compose exec node /bin/bash -c "cd ../www/static; npm run gulp frontend:bem"
+docker-compose exec node /bin/bash -c "cd ../www/static; npm run gulp client:bem:css"
 docker-compose exec node /bin/bash -c "cd ../www/static; npm run gulp build:frontend"
 docker-compose exec node /bin/bash -c "cd ../www/static; npm run gulp build:backend"
