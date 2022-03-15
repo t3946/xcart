@@ -80,12 +80,15 @@ class AccountController extends FrontendController
 
         StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
 
-        $user = Xcart::app()->getUser(true)->getAttributes();
-        unset($user['password']);
-        unset($user['access_token']);
-        $user['lists'] = AccountListsApi::getLists($user['user_id']);
+        $user = Xcart::app()->getUser(true);
 
-        StorageHelper::push($user, null, 'user');
+        if ($user->getIsGuest() === false) {
+            unset($user->password);
+            unset($user->access_token);
+            $user['lists'] = AccountListsApi::getLists($user->user_id);
+
+            StorageHelper::push($user, null, 'user');
+        }
 
         AdminHelper::routesData();
     }
