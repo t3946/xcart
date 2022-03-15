@@ -2,7 +2,6 @@
 
 namespace Modules\Goods\Controllers\Api;
 
-use DateTime;
 use Modules\Goods\Controllers\AbstractCatalogController;
 use Modules\Goods\Helpers\ApiProductHelper;
 use Modules\Goods\Helpers\ProductFilterHelper;
@@ -10,11 +9,8 @@ use Modules\Goods\Helpers\ProductSortHelper;
 use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
-use Modules\Goods\Models\ProductImageModel;
 use Modules\Goods\Models\ProductModel;
-use Modules\Sites\Models\CurrencyModel;
 use Modules\User\Models\SurfMetaModel;
-use Xcart\App\Exceptions\UnknownPropertyException;
 use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
@@ -172,7 +168,7 @@ class ApiCategoriesController extends AbstractCatalogController
         $products = $pager->paginate();
 
         $this->jsonResponse([
-            'items' => $this->getProductData($products),
+            'items' => ApiProductHelper::getProductData($products),
             'pager' => [
                 'pageSize' => $pager->getPageSize(),
                 'currentPage' => $pager->getPage(),

@@ -311,8 +311,6 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
   delete user.password;
 
   res.json({ user });
-
-  res.sendStatus(200);
 });
 
 app.post("/change-phone", isAuthMiddleware, async function (req, res) {
@@ -356,7 +354,6 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
   delete user.password;
 
   res.json({ user });
-  res.sendStatus(200);
 });
 
 app.post("/change-password", isAuthMiddleware, async function (req, res) {

@@ -38,7 +38,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
     overall: 0,
     headLine: "",
     textBody: "",
-    publicName: user.public_name,
+    publicName: user.public_name || user.name,
     videoLink: "",
     files: null,
   };
