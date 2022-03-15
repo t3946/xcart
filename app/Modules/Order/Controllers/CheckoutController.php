@@ -3,6 +3,7 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
+use Modules\Account\Controllers\AccountController;
 use Modules\Core\Models\CountryLangsModel;
 use Modules\User\Helpers\SurfingHelper;
 use Modules\User\Models\SurfPathModel;
@@ -143,6 +144,8 @@ class CheckoutController extends FrontendController
         if ($action !== 'actionComplete' && !Xcart::app()->request->getIsAjax() && !Xcart::app()->cart->isValid()) {
             $this->redirect('cart:list');
         }
+
+        AccountController::provideAccountData();
     }
 
     protected function getOrder(): OrderModel
