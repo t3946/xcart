@@ -25,7 +25,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
   const defaultAvatar =
     "/static/frontend/images/pages/account/default-avatar.svg";
   const userAvatar = userListInfo.avatar_image;
-  const avatarImage = userAvatar ? `/${userAvatar}` : defaultAvatar;
+  const avatarImage = userAvatar || defaultAvatar;
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {

@@ -58,7 +58,7 @@ class VideosModel extends Model
                 'class' => FileField::class,
                 'null' => false,
                 'required' => false,
-                'adapterName' => 'www',
+                'adapterName' => 's3',
                 'uploadTo' => static::getUploadPath() . '/%Y/%m/%d',
                 'maxSize' => static::getMaxUploadSizeMB() . 'M',
             ],

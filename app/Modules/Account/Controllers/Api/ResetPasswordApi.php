@@ -78,10 +78,6 @@ class ResetPasswordApi extends Controller
             ];
 
             $sns->publish($args);
-            Xcart::app()->logger->debug([
-                "message" => $message,
-                "PhoneNumber" => $user->phone,
-            ]);
         }
 
         $this->jsonResponse(["otp" => $otp->toArray(), "result" => $result]);

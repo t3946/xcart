@@ -83,11 +83,13 @@ class AccountController extends FrontendController
         $user = Xcart::app()->getUser(true);
 
         if ($user->getIsGuest() === false) {
-            unset($user->password);
-            unset($user->access_token);
-            $user['lists'] = AccountListsApi::getLists($user->user_id);
+            $attributes = $user->getAttributes();
+            unset($attributes['password']);
+            unset($attributes['access_token']);
+            $attributes['lists'] = AccountListsApi::getLists($user['user_id']);
+            $attributes['avatar_image'] = $user->avatar_image->getUrl();
 
-            StorageHelper::push($user, null, 'user');
+            StorageHelper::push($attributes, null, 'user');
         }
 
         AdminHelper::routesData();

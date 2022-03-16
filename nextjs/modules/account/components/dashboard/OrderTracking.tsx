@@ -88,13 +88,13 @@ const OrderTracking: React.FC<IProps> = ({ orderInfo }) => {
               "mt-lg-14"
             )}
           >
-            <Link href={invoiceUrl}>
-              <a
-                className={cn(Styles.textBlue, "d-block float-right d-md-none")}
-              >
-                Invoice
-              </a>
-            </Link>
+            <a
+              href={invoiceUrl}
+              target={"_blank"}
+              className={cn(Styles.textBlue, "d-block float-right d-md-none")}
+            >
+              Invoice
+            </a>
           </div>
           <div className={Styles.trackingList}>
             {orderInfo.groups.map((group, i) => (

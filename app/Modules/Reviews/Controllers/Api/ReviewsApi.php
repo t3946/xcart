@@ -120,7 +120,7 @@ class ReviewsApi extends Controller
     {
         /**
          * @var $user UserModel
-        */
+         */
         $user = Xcart::app()->getUser(true);
 
         if ($user->getIsGuest()) {
@@ -237,7 +237,6 @@ class ReviewsApi extends Controller
             'overall_rating' => 'rating__rating',
             'user_id' => 'user__user_id',
             'user_public_name' => 'user__public_name',
-            'user_avatar' => 'user__avatar_image',
             'marked_helpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
             'created_timestamp' => 'UNIX_TIMESTAMP(created)',
             //_no_distinct need for generate join
@@ -303,19 +302,31 @@ class ReviewsApi extends Controller
             $filter = [
                 "review_id" => $reviews[$i]["product_review_id"]
             ];
+
             $images = [];
             $reviews_images = ReviewsImagesModel::objects()->select(['images__*'])->all($filter);
 
             foreach ($reviews_images as $_ => $reviews_image) {
                 $image_model = ImagesModel::objects()->get(["image_id" => $reviews_image->image_id]);
                 $attributes = $image_model->getAttributes();
+                $attributes['path'] = $image_model->path->getUrl();
                 $attributes['thumb'] = $image_model->path->url_thumb;
                 $images[] = $attributes;
             }
 
+            $videos = [];
+            $videos_models = ReviewsVideosModel::objects()->select(['videos__*'])->all($filter);
+
+            foreach ($videos_models as $_ => $link_model) {
+                $video_model = VideosModel::objects()->get(["video_id" => $link_model->video_id]);
+                $attributes = $video_model->getAttributes();
+                $attributes['video'] = $video_model->video->getUrl();
+                $videos[] = $attributes;
+            }
+
             $reviews[$i]['files'] = [
-                'images' =>$images,
-                'videos' => ReviewsVideosModel::objects()->select(['videos__*'])->asArray()->all($filter),
+                'images' => $images,
+                'videos' => $videos,
             ];
 
             // check on purchase
@@ -335,6 +346,11 @@ class ReviewsApi extends Controller
                     }
                 }
             }
+
+            /* @var \Modules\User\Models\UserAccount\UserModel $user */
+            $user_id = $reviews[$i]['user_id'];
+            $user = \Modules\User\Models\UserAccount\UserModel::objects()->get(["user_id" => $user_id]);
+            $reviews[$i]['user_avatar'] = $user->avatar_image->getUrl();
         }
 
         return $reviews;

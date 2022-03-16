@@ -43,7 +43,7 @@ const MenuMobile: React.FC = () => {
     if (user && user.avatar_image) {
       return (
         <img
-          src={`/${user.avatar_image}`}
+          src={user.avatar_image}
           className={"mobile-menu-avatar"}
           alt=""
         />

@@ -35,6 +35,8 @@ app.post("/login", function (req, res) {
 
       await setSessionCookie(res, params);
 
+      result.user.avatar_image =
+        "https://i1.s3stores.com/" + result.user.avatar_image;
       res.json({ user: result.user });
     });
   })(req, res);
@@ -48,6 +50,8 @@ app.get("/info", isAuthMiddleware, async (req, res) => {
   });
 
   delete user.password;
+
+  user.avatar_image = "https://i1.s3stores.com/" + user.avatar_image;
 
   res.json(user);
 });

@@ -82,7 +82,7 @@ const Review: React.FC<IProps> = function (props: IProps) {
     <div className={"reviews__review review"}>
       <div>
         <img
-          src={"/" + props.review.user_avatar}
+          src={props.review.user_avatar}
           alt={props.review.user_public_name}
           width={32}
           height={32}
