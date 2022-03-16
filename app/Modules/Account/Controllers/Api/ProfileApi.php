@@ -39,7 +39,7 @@ class ProfileApi extends Controller
                 $avatar_image = $avatar_image;
             }
 
-            $this->jsonResponse(["avatarUrl" => $avatar_image]);
+            $this->jsonResponse(["avatarUrl" => $user->avatar_image->getUrl()]);
         } else {
             $this->jsonResponse(["errors" => $form->getErrors()]);
         }

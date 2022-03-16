@@ -207,7 +207,7 @@ const PublicProfile = (): any => {
       <>
         <img
           className={classnames(classes.image)}
-          src={`/${getAvatarUrl()}`}
+          src={getAvatarUrl()}
           alt="avatar"
           ref={imageRef}
         />

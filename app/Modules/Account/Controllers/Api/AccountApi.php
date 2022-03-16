@@ -71,7 +71,9 @@ class AccountApi extends Controller
         if ($user->getIsGuest()) {
             $user = null;
         } else {
-            $user = $user->toArray();
+            $attributes = $user->toArray();
+            $attributes['avatar_image'] = $user->avatar_image->getUrl();
+            $user = $attributes;
         }
 
         $stripeSettings = ProcessorModel::objects()->asArray()->get(['processor_name' => 'Stripe']);

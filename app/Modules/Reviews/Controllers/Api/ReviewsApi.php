@@ -120,7 +120,7 @@ class ReviewsApi extends Controller
     {
         /**
          * @var $user UserModel
-        */
+         */
         $user = Xcart::app()->getUser(true);
 
         if ($user->getIsGuest()) {
@@ -237,7 +237,6 @@ class ReviewsApi extends Controller
             'overall_rating' => 'rating__rating',
             'user_id' => 'user__user_id',
             'user_public_name' => 'user__public_name',
-            'user_avatar' => 'user__avatar_image',
             'marked_helpful' => new Expression("IF($ratings_alias.user_id, true, false)"),
             'created_timestamp' => 'UNIX_TIMESTAMP(created)',
             //_no_distinct need for generate join
@@ -347,6 +346,11 @@ class ReviewsApi extends Controller
                     }
                 }
             }
+
+            /* @var \Modules\User\Models\UserAccount\UserModel $user */
+            $user_id = $reviews[$i]['user_id'];
+            $user = \Modules\User\Models\UserAccount\UserModel::objects()->get(["user_id" => $user_id]);
+            $reviews[$i]['user_avatar'] = $user->avatar_image->getUrl();
         }
 
         return $reviews;

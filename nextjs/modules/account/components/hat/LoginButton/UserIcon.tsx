@@ -17,7 +17,7 @@ const UserIcon: React.FC = () => {
   return (
     <img
       className={classnames(Styles.userAvatar, "flex-shrink-0")}
-      src={`/${avatarUrl}`}
+      src={avatarUrl}
       alt="avatar"
     />
   );

@@ -479,7 +479,6 @@ class AccountListsApi extends Controller
             return;
         }
 
-
         $user = Xcart::app()->auth->getUser(true);
 
         if ($user->getIsGuest()) {
@@ -496,7 +495,6 @@ class AccountListsApi extends Controller
         }
 
         [$user_id, $role, $hash] = explode('/', CoreHelper::decryptText($code, $tag));
-        Xcart::app()->logger->debug([$user_id, $role, $hash]);
         $list = ProductListsModel::objects()->get(['cache_url' => $hash]);
 
         //list no found

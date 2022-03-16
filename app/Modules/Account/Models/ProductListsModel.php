@@ -102,7 +102,7 @@ class ProductListsModel extends Model
                 'role' => $user->role,
                 'email' => $user_model->email,
                 'name' => $user_model->public_name ?? $user_model->name,
-                'avatar_image' => $user_model->avatar_image->getValue(),
+                'avatar_image' => $user_model->avatar_image->getUrl(),
             ];
         }
         
@@ -124,7 +124,7 @@ class ProductListsModel extends Model
                 'role' => 'owner',
                 'email' => $owner->email,
                 'name' => $owner->public_name ?? $owner->name,
-                'avatar_image' => $owner->avatar_image->getValue(),
+                'avatar_image' => $owner->avatar_image->getUrl(),
             ],
         ];
     }
