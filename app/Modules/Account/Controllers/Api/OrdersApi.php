@@ -72,7 +72,9 @@ class OrdersApi extends Controller
                     'cb_status__in' => [
                         OrderStatusModel::ORDER_STATUS_AUTHORIZED,
                         OrderStatusModel::ORDER_STATUS_COMPLETED,
-                        OrderStatusModel::ORDER_STATUS_QUEUED
+                        OrderStatusModel::ORDER_STATUS_QUEUED,
+                        OrderStatusModel::ORDER_STATUS_UNPAID_PO,
+                        OrderStatusModel::ORDER_STATUS_INCOMPLETE_PO,
                     ],
                     'dc_status__isnt' => OrderStatusModel::ORDER_DC_STATUS_DELIVERED,
                 ]);
