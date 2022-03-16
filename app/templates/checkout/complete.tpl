@@ -407,6 +407,7 @@
     <script>
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ ecommerce: null });
+{*        {if $order->cb_status !== Modules\Order\Models\OrderStatusModel::ORDER_STATUS_QUEUED}*}
         window.dataLayer.push({
             'event': 'purchase',
             'ecommerce': {
@@ -417,6 +418,8 @@
                         'revenue': '{$order->total|number_format:2:'.':''}', // Total transaction value (incl. tax and shipping)
                         'tax':0,
                         'shipping': '{$order->shipping_cost|number_format:2:'.':''}',
+                        'email': '{$order->email|escape:'js'}',
+                        'phone': '{$order->phone|escape:'js'}',
                     },
                     'products': [
                         {foreach $order->detail_models as $detail}
@@ -438,6 +441,8 @@
                 }
             }
         });
+{*        {/if}*}
+
     </script>
     {parent}
 {/block}
