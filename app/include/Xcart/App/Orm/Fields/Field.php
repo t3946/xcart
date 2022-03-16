@@ -238,7 +238,7 @@ abstract class Field implements ModelFieldInterface
 
     public function __toString()
     {
-        return $this->toText();
+        return (string)$this->toText();
     }
 
     /**
