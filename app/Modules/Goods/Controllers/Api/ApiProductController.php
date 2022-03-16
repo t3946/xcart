@@ -3,6 +3,7 @@
 namespace Modules\Goods\Controllers\Api;
 
 use Modules\Goods\Models\ProductImageModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Orm\QuerySet;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QOr;
@@ -16,7 +17,7 @@ use Modules\Goods\Models\VerificationStatusModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Xcart\App\Main\Xcart;
 
-class ApiProductController extends AbstractCatalogController
+class ApiProductController extends Controller
 {
     private const PRIVATE_KEY = 'y5gzWWCcqyVVQByEzG/mRApTaW6l1tvq2ngOb5b3qeA=';
     private const PUBLIC_KEY = '2r7bQsPMLds=';

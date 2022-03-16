@@ -37,7 +37,7 @@ class ProductVerificationHelper
                 [
                     'verification_note' => $note,
                     'product' => $model,
-                    'username' => Xcart::app()->getUser()->login,
+                    'user' => Xcart::app()->getUser(),
                     'oldstatusid' => $old_status->statusid,
                     'newstatusid' => $status->statusid
                 ]
