@@ -624,7 +624,7 @@ class CheckoutController extends FrontendController
                         $site = $app->getModule('Sites')->getSite();
 
                         $poModel = $poModel ?? new PurchaseOrderModel([
-                                'login' => $app->user->login,
+//                                'login' => $app->user->login,
                                 'PO_number' => $checkoutReviewForm->getField('po_number')->getValue(),
                                 'storefront_id' => $site->storefrontid,
                                 'received_by' => 'website',
@@ -652,7 +652,7 @@ class CheckoutController extends FrontendController
                                 'resource_type' => 'purchase_orders',
                                 'resource_id' => $poModel->po_id,
                                 'type' => 'C',
-                                'login' => $app->user->login,
+//                                'login' => $app->user->login,
                                 'log' => $message
                             ]))->save();
                         }
