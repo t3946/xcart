@@ -22,7 +22,13 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
                   Shipped with {track.carrier.name} {track.carrier.method}
                 </div>
                 Tracking number:{" "}
-                <span className="order-tracking-number">{track.tracknum}</span>
+                <a
+                  href={track.carrier.link}
+                  target={"_blank"}
+                  className="order-tracking-number"
+                >
+                  {track.tracknum}
+                </a>
               </div>
             ))}
           </div>
