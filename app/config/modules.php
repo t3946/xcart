@@ -10,7 +10,6 @@ return [
     'Menu',
     'Slider',
     'Mail',
-    'Demo',
     'Dashboard',
     'Distributor',
     'Goods',
