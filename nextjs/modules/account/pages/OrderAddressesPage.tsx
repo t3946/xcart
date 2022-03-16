@@ -5,6 +5,9 @@ import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
 import AddressText from "@components/common/address-text/AddressText";
 import Styles from "@modules/account/pages/OrderAddressesPage.module.scss";
+import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
+import { ChangeAddress } from "@modules/account/components/orders/ChangeAddress";
+import StylesAddresses from "@modules/account/pages/Addresses.module.scss";
 
 interface OrderAddressesPage {
   orderItem: OrderView;
@@ -216,6 +219,17 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
           label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
         />
       )}
+
+      <BootstrapDialogHOC
+        classes={{
+          modal: [StylesAddresses.modalBody, StylesAddresses.modalWidth],
+        }}
+        show={changeShippingAddressDialog.open}
+        title={"Change address"}
+        onClose={changeShippingAddressDialog.handleClose}
+      >
+        <ChangeAddress handleClose={changeShippingAddressDialog.handleClose} />
+      </BootstrapDialogHOC>
     </div>
   );
 };
