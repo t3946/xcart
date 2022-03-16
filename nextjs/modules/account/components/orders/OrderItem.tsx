@@ -22,6 +22,11 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
   const accordion = useAccordion(200);
   const [showAllItems, setShowAllItems] = useState(false);
 
+  let totalProducts = 0;
+  for (const group of order.groups) {
+    totalProducts += (group.products && group.products?.length) || 0;
+  }
+
   return (
     <div className="order-item-container">
       <div className="order-item-header-container">
@@ -134,7 +139,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             })}
           </div>
 
-          {order.groups.length > 1 && (
+          {totalProducts > 1 && (
             <button
               onClick={() => {
                 accordion.onItemClick();
