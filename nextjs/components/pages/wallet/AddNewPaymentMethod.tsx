@@ -17,7 +17,6 @@ export const AddNewPaymentMethod: React.FC = () => {
       return acceptable.indexOf(elem.name) !== -1;
     }
   );
-  console.log({ paymentMethods });
   const dispatch = useDispatch();
 
   React.useEffect(() => {

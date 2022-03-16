@@ -34,9 +34,7 @@ function MyApp({ Component, pageProps, state }) {
     <Provider store={store}>
       <SSRProvider>
         <MainComponent>
-
-            <Component {...pageProps} />
-
+          <Component {...pageProps} />
         </MainComponent>
       </SSRProvider>
     </Provider>
