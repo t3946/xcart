@@ -5,6 +5,7 @@ namespace Modules\Order\Helpers;
 
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Payment\Gateways\Gateway;
+use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 
 class OrderTransactionHelper
@@ -44,7 +45,9 @@ class OrderTransactionHelper
         }
 
         if ($params['mode'] !== 'lookup') {
-            $response['login'] = Xcart::app()->user->login;
+            if (Xcart::app()->user instanceof UserModel) {
+                $response['login'] = Xcart::app()->user->login;
+            }
         }
 
         if (isset($result['capture_id'])) {
@@ -83,7 +86,7 @@ class OrderTransactionHelper
             if ($gw->$method($params)) {
                 if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)) {
                     /** @var OrderTransactionModel $model */
-                    list($model) = OrderTransactionModel::objects()->getOrNew(
+                    [$model] = OrderTransactionModel::objects()->getOrNew(
                         [
                             'transaction_id' => $result['transaction_id'],
                             'orderid' => $params['order']->orderid
