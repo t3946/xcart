@@ -21,9 +21,10 @@ class MailHandler extends MonologMailHandler
             $login = '';
             $session = Xcart::app()->request->session;
 
-            if ($session) {
-                if (Xcart::app()->db->getConnection()) {
-                    $login = Xcart::app()->user->login;
+            if ($session && Xcart::app()->db->getConnection()) {
+                $user = Xcart::app()->getUser();
+                if ($user instanceof UserModel) {
+                    $login = $user->login;
                 }
             }
 

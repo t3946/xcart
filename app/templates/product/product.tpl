@@ -115,9 +115,9 @@
                             <div class="product-slider-images-skeleton-wrapper d-none d-lg-block">
                                 <div class="sceleton product-slider-images-skeleton-arrow"></div>
 
-                                {for $i=1 to=5}
+                                {foreach 1..5}
                                     <div class="sceleton product-slider-images-skeleton-thumb product-slider-skeleton-wrapper__thumb"></div>
-                                {/for}
+                                {/foreach}
 
                                 <div class="sceleton product-slider-images-skeleton-arrow"></div>
                             </div>

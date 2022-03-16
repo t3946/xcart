@@ -89,10 +89,10 @@ class MailboxForwardingModel extends Model
 
     public function getImagePath(): string
     {
-        return "https://i1.s3stores.com/{$this->image_path->getValue()}";
+        return $this->image_path->getUrl();
     }
     public function getFilePath(): string
     {
-        return "https://i1.s3stores.com/{$this->file->getValue()}";
+        return $this->file->getUrl();
     }
 }
