@@ -159,7 +159,11 @@
                             <p>{t 'Image not available'}</p>
                         </div>
                     {/if}
-
+                    </div>
+                    <div class="pinterest-bookmark" id="pinterest-bookmark">
+                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true"
+                           data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/">
+                        </a>
                     </div>
                 </div>
             </div>
