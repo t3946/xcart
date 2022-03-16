@@ -1,5 +1,5 @@
 const gulp = require("gulp");
-const sass = require("gulp-sass");
+const sass = require('gulp-sass')(require('sass'));
 const frontend = require("../../../config/gulp.frontend");
 const inlineImage = require("gulp-inline-image");
 const { default: GulpAssets } = require("../../../GulpAssets");
