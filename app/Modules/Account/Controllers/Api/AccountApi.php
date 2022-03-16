@@ -109,6 +109,8 @@ class AccountApi extends Controller
             'countries' => AccountController::getCountryPhoneCodes(),
         ];
 
+        Xcart::app()->logger->debug($initial_data);
+
         $this->jsonResponse($initial_data);
     }
 
@@ -151,7 +153,7 @@ class AccountApi extends Controller
     public function getPaymentMethods()
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
-        $payment_methods = $site->payment_methods->filter(['is_active' => 1])->order(['position'])->all();
+        $payment_methods = $site->payment_methods->asArray()->filter(['is_active' => 1])->order(['position'])->all();
 
         if (!$payment_methods) {
             $payment_methods = PaymentMethodModel::objects()->asArray()->select(["logo", "name"])->all(['is_active' => 1]);

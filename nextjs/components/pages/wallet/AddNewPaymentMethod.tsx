@@ -10,7 +10,14 @@ import Link from "next/link";
 
 export const AddNewPaymentMethod: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);
-  const paymentMethods = useSelectorAccount((e) => e.payments.methods);
+  const paymentMethods = useSelectorAccount((e) => e.payments.methods).filter(
+    (elem) => {
+      const acceptable = ["Visa", "MasterCard", "Amex", "JCB", "UnionPay"];
+
+      return acceptable.indexOf(elem.name) !== -1;
+    }
+  );
+  console.log({ paymentMethods });
   const dispatch = useDispatch();
 
   React.useEffect(() => {
