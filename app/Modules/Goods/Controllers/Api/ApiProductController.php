@@ -17,7 +17,7 @@ use Modules\Goods\Models\VerificationStatusModel;
 use Modules\Shipping\Helpers\ShippingHelper;
 use Xcart\App\Main\Xcart;
 
-class ApiProductController extends Controller
+class ApiProductController extends AbstractCatalogController
 {
     private const PRIVATE_KEY = 'y5gzWWCcqyVVQByEzG/mRApTaW6l1tvq2ngOb5b3qeA=';
     private const PUBLIC_KEY = '2r7bQsPMLds=';
@@ -104,28 +104,6 @@ class ApiProductController extends Controller
         }
 
 
-        $this->jsonResponse($result);
-    }
-
-    public function verify(): void
-    {
-        /** @var ProductModel $product */
-        /** @var VerificationStatusModel $status */
-
-        $result = ['result' => false];
-        $post = $this->getRequest()->post;
-
-        $product_id = $post->get('product_id');
-        $status_id = $post->get('status_id');
-        $note_text = $post->get('note_text') ?? '';
-
-        $product = ProductModel::objects()->get(['productid' => $product_id]);
-        $status = VerificationStatusModel::objects()->get(['statusid' => $status_id]);
-
-        if ($product && $status) {
-            ProductVerificationHelper::changeVerificationStatus($product, $status, $note_text);
-            $result = ['result' => true];
-        }
         $this->jsonResponse($result);
     }
 

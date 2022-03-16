@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Brand\Controllers\DefaultController;
+use Modules\Goods\Controllers\Api\ApiAdminController;
 use Modules\Goods\Controllers\Api\ApiAnalyticController;
 use Modules\Goods\Controllers\Api\ApiImageController;
 use Modules\Goods\Controllers\Api\ApiProductController;
@@ -21,7 +22,7 @@ return [
     ],
     [
         'route' => 'products/verify',
-        'target' => [ApiProductController::class, 'verify'],
+        'target' => [ApiAdminController::class, 'verify'],
         'name' => 'verify'
     ],
     [
