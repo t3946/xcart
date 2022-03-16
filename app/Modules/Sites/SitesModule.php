@@ -40,15 +40,14 @@ class SitesModule extends Module
      */
     public function getSite($default = true)
     {
-        if (!$this->_site && Xcart::app()->getIsWebMode() && !$this->_default_site) { //@TODO: remove for future
+        if (!$this->_site && Xcart::app()->getIsWebMode()) {
             $this->setSite(CurrentSiteHelper::check(Xcart::app()->request));
         }
 
-        if (!$this->_site) {
-            $this->initDefaultSite();
-        }
-
         if ($default) {
+            if (!$this->_site) {
+                $this->initDefaultSite();
+            }
             return $this->_site = $this->_site ?: $this->_default_site;
         }
 

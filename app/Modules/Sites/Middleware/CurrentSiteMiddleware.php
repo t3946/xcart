@@ -27,8 +27,6 @@ class CurrentSiteMiddleware extends Middleware
             $sitesModule->setSite($model);
         }
 
-//        $domain = SiteModel::objects()->filter(['code' => 'AR'])->valuesList(['domain'], true);
-//        $domain = $domain[0];
         $domain = 'www.artistsupplysource.com';
 
         defined('DEFAULT_SF_DOMAIN') ?: define('DEFAULT_SF_DOMAIN', $domain);
@@ -37,7 +35,7 @@ class CurrentSiteMiddleware extends Middleware
             define('MAIN_SF_DOMAIN', LOCAL_SF_DOMAIN) :
             define('MAIN_SF_DOMAIN', $domain));
 
-        if (!$sitesModule->getSite()->isWork()) {
+        if (!$sitesModule->getSite(false) || !$sitesModule->getSite(false)->isWork()) {
             $request->redirect('http://www.s3stores.com', [], 301);
         }
     }
