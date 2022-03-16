@@ -303,19 +303,31 @@ class ReviewsApi extends Controller
             $filter = [
                 "review_id" => $reviews[$i]["product_review_id"]
             ];
+
             $images = [];
             $reviews_images = ReviewsImagesModel::objects()->select(['images__*'])->all($filter);
 
             foreach ($reviews_images as $_ => $reviews_image) {
                 $image_model = ImagesModel::objects()->get(["image_id" => $reviews_image->image_id]);
                 $attributes = $image_model->getAttributes();
+                $attributes['path'] = $image_model->path->getUrl();
                 $attributes['thumb'] = $image_model->path->url_thumb;
                 $images[] = $attributes;
             }
 
+            $videos = [];
+            $videos_models = ReviewsVideosModel::objects()->select(['videos__*'])->all($filter);
+
+            foreach ($videos_models as $_ => $link_model) {
+                $video_model = VideosModel::objects()->get(["video_id" => $link_model->video_id]);
+                $attributes = $video_model->getAttributes();
+                $attributes['video'] = $video_model->video->getUrl();
+                $videos[] = $attributes;
+            }
+
             $reviews[$i]['files'] = [
-                'images' =>$images,
-                'videos' => ReviewsVideosModel::objects()->select(['videos__*'])->asArray()->all($filter),
+                'images' => $images,
+                'videos' => $videos,
             ];
 
             // check on purchase

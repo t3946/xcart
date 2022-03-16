@@ -4,7 +4,6 @@ namespace Modules\Images\Models;
 
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DateTimeField;
-use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
@@ -55,7 +54,7 @@ class ImagesModel extends Model
                 'class' => ImageField::class,
                 'required' => false,
                 'null' => true,
-                'adapterName' => 'www',
+                'adapterName' => 's3',
                 'uploadTo' => rtrim(static::getUploadPath(), '/') . '/%Y/%m/%d',
                 'maxSize' => static::getMaxUploadSizeMB() . 'M',
                 'sizes' => [

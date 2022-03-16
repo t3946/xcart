@@ -23,9 +23,9 @@ const Video = function (video: Record<any, any>): string {
       case VideoProvider.Local:
         return `
         <video width=${VIDEO_WIDTH} height=${VIDEO_HEIGHT} controls="controls" poster="video/duel.jpg" autoplay="autoplay">
-          <source src="/${video.video}" type='video/ogg; codecs="theora, vorbis"'>
-          <source src="/${video.video}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
-          <source src="/${video.video}" type='video/webm; codecs="vp8, vorbis"'>
+          <source src="${video.video}" type='video/ogg; codecs="theora, vorbis"'>
+          <source src="${video.video}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+          <source src="${video.video}" type='video/webm; codecs="vp8, vorbis"'>
           Your browse do not support this video.
         </video>`;
     }
