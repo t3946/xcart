@@ -279,7 +279,7 @@ class OrdersApi extends Controller
                 $tracks[] = [
                     'tracknum' => $tracking_model->tracknum,
                     'carrier' => [
-                        'link' => $carrier->link,
+                        'link' => str_replace('{{tracknum}}', $tracking_model->tracknum, $carrier->link),
                         'name' => $carrier->carrier,
                         'method' => $tracking_model->link->shipping,
                     ],

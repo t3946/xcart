@@ -87,7 +87,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   useEffect(() => {
     clickListener.startListen();
 
-    account_enabled && user && dispatch(getLists());
+    // account_enabled && user && dispatch(getLists());
     return () => {
       clickListener.endListen();
     };
