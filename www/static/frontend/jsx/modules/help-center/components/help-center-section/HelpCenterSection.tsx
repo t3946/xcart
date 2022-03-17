@@ -12,7 +12,7 @@ const HelpCenterSection: React.FC<HelpSectionItemDto> = ({ title, items }) => {
         return (
           <div key={id}>
             <Accordion lastChild={lastChild} text={section.question}>
-              <span>{section.answer}</span>
+              <span dangerouslySetInnerHTML={{__html: section.answer}}></span>
               <SwitchFormForType type={section?.form_type} />
             </Accordion>
           </div>

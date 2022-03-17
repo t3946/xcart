@@ -23,30 +23,32 @@ const NavigateMenuRoutes: React.FC = () => {
     <BrowserRouter>
       <img src="/static/frontend/dist/images/page-bg/help-center-header.png" />
       {menuItems ? (
-        <div className="row">
-          <div className="help-wrap">
-            <NavigateMenu menuItems={menuItems} />
-            <Switch>
-              {menuItems.map((item, id) => {
-                const route = id === 0 ? "/help/" : `/help/${item.menu_id}`;
-                return (
-                  <Route
-                    exact={true}
-                    key={item.menu_id}
-                    path={route}
-                    component={() => {
-                      return (
-                        <HelpCenterSection
-                          items={item.items}
-                          menu_id={item.menu_id}
-                          title={item.title}
-                        />
-                      );
-                    }}
-                  />
-                );
-              })}
-            </Switch>
+        <div className="container">
+          <div className="row">
+            <div className="help-wrap">
+              <NavigateMenu menuItems={menuItems} />
+              <Switch>
+                {menuItems.map((item, id) => {
+                  const route = id === 0 ? "/help/" : `/help/${item.menu_id}`;
+                  return (
+                    <Route
+                      exact={true}
+                      key={item.menu_id}
+                      path={route}
+                      component={() => {
+                        return (
+                          <HelpCenterSection
+                            items={item.items}
+                            menu_id={item.menu_id}
+                            title={item.title}
+                          />
+                        );
+                      }}
+                    />
+                  );
+                })}
+              </Switch>
+            </div>
           </div>
         </div>
       ) : null}
