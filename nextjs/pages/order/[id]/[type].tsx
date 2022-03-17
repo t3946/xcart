@@ -1,5 +1,5 @@
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import { OrderInfoHeader } from "@modules/account/components/orders/OrderInfoHeader";
 import { OrderTrackingPage } from "@modules/account/pages/OrderTrackingPage";
 import { OrderLogPage } from "@modules/account/pages/OrderLogPage";

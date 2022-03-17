@@ -2,7 +2,6 @@ import React from "react";
 import { BillingAddressFormEnum } from "@modules/account/ts/consts/billing-address-form-types";
 import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
-import Button, { ETheme } from "@modules/ui/forms/Button";
 import AddCardForm from "@modules/account/components/wallet/AddCardForm";
 
 interface IProps {

@@ -12,7 +12,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
     .then((res) => {
       orders = res.data;
     })
-    .catch((err) => {
+    .catch(() => {
       orders = [];
     });
 

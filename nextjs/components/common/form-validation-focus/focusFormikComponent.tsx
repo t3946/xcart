@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useFormikContext } from "formik";
 
 const ErrorFocus = () => {
@@ -6,7 +6,8 @@ const ErrorFocus = () => {
 
   useEffect(() => {
     if (isSubmitting && !isValidating) {
-      let keys = Object.keys(errors);
+      const keys = Object.keys(errors);
+
       if (keys.length > 0) {
         const selector = `[name=${keys[0]}]`;
         console.log("selectpr:", selector);

@@ -37,6 +37,9 @@ module.exports = withImages(
 
       return _merge(config, extendConfig);
     },
+    images: {
+      disableStaticImages: true
+    },
     basePath: "/account",
     typescript: {
       // !! WARN !!
