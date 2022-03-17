@@ -1,5 +1,5 @@
 import React from "react";
-
+import Image from "next/image";
 import Styles from "@components/common/payment-card-image/PaymentCardImage.module.scss";
 
 interface IProps {
@@ -8,7 +8,7 @@ interface IProps {
 }
 
 const PaymentCardImage: React.FC<IProps> = ({ logo, name }) => {
-  return <img src={`/${logo}`} className={Styles.image} alt={name} />;
+  return <Image src={`/${logo}`} className={Styles.image} alt={name} />;
 };
 
 export default PaymentCardImage;

@@ -7,7 +7,6 @@ import Card from "@components/pages/wallet/Card";
 import { changeDefaultCard } from "@redux/actions/account-actions/PaymentsActions";
 import { useDispatch } from "react-redux";
 import { AxiosResponse } from "axios";
-import { CardItemDto } from "@modules/account/ts/types/wallet.type";
 import cn from "classnames";
 import EditPaymentMethod from "@components/pages/wallet/dialog/EditPaymentMethod";
 
@@ -24,10 +23,6 @@ export const Wallet: React.FC<IProps> = (props) => {
 
   function cardItemsTemplate() {
     const items = [];
-
-    const openCardDialog = (cardInfo: CardItemDto, dialog, path) => {
-      dialog.handleClickOpen;
-    };
 
     for (let i = 0; i < cards.length; i++) {
       const card = cards[i];

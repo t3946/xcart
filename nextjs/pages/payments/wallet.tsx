@@ -16,7 +16,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
     .then((res) => {
       cards = res.data.data;
     })
-    .catch((err) => {
+    .catch(() => {
       cards = [];
     });
 
@@ -25,7 +25,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
     .then((res) => {
       defaultCardId = res.data.default_source;
     })
-    .catch((err) => {
+    .catch(() => {
       defaultCardId = null;
     });
 
