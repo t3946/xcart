@@ -24,7 +24,7 @@ function* editEmail(action: AnyAction) {
   yield axios.post("/api-client/user/change-email", data).then((res) => {
     success(res);
 
-    complete();
+    complete && complete();
 
     return res;
   });
