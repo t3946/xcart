@@ -4,6 +4,7 @@
 namespace Modules\Help\Forms;
 
 
+use Modules\Editor\Fields\EditorField;
 use Modules\Help\Models\HelpMenuContentModel;
 use Xcart\App\Form\ModelForm;
 
@@ -22,5 +23,17 @@ class HelpItemsForm extends ModelForm
             'question',
             'answer',
         ]];
+    }
+
+    public function getFields()
+    {
+        return [
+            'answer' => [
+                'class' => EditorField::class,
+                'html' => [
+                    'class' => 'tinymce-field',
+                ],
+            ],
+        ];
     }
 }
