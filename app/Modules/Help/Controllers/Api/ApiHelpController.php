@@ -19,8 +19,12 @@ class ApiHelpController extends Controller
              $menu_items[] = $menu_item;
          }
 
+         $menu_base = $menu->getAttributes();
+         $menu_base['icon'] = $menu->icon->getUrl();
+         $menu_base['active_icon'] = $menu->active_icon->getUrl();
+
         $menus[] = array_merge(
-            $menu->getAttributes(), [
+            $menu_base, [
             'items' => $menu_items
         ]);
      }
