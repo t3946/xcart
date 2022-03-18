@@ -79,14 +79,18 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
               <p className="total-text  total-text-left">
                 Shipping Cost Refund:{" "}
               </p>
-              <p className="total-text">(US$ {order.totalShipping})</p>
+              <p className="total-text">
+                (US$ {parseFloat(order.totalShipping).toFixed(2)})
+              </p>
             </div>
 
             {orderTaxesTemplate()}
 
             <div className="info-item-container info-item-container-spacing subtotal">
               <p className="total-text total-text-left">Total Refund: </p>
-              <p className="total-text">(US$ {order.total})</p>
+              <p className="total-text">
+                (US$ {parseFloat(order.total).toFixed(2)})
+              </p>
             </div>
           </div>
         </div>

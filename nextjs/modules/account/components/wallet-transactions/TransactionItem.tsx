@@ -93,21 +93,22 @@ export const TransactionItem: React.FC<IProps> = (props) => {
           <div className="total-right-side total-group-right-side total-right-side">
             <div className="info-item-container info-item-container-spacing">
               <p className="total-text total-text-left"> Total Items Cost:</p>
-              <p className="total-text">US$ {order.subtotal}</p>
+              <p className="total-text">
+                US$ {parseFloat(order.subtotal).toFixed(2)}
+              </p>
             </div>
             <div className="info-item-container info-item-container-spacing regular">
-              <p className="total-text total-text-left">
-                {" "}
-                Total Shipping Cost:
+              <p className="total-text total-text-left">Total Shipping Cost:</p>
+              <p className="total-text">
+                US$ {parseFloat(order.totalShipping).toFixed(2)}
               </p>
-              <p className="total-text">US$ {order.totalShipping}</p>
             </div>
 
             {orderTaxesTemplate()}
 
             <div className="info-item-container info-item-container-spacing subtotal fw-bold">
               <p className="total-text total-text-left">GRAND TOTAL:</p>
-              <p className="total-text">US$ {order.total}</p>
+              <p className="total-text">US$ {parseFloat(order.total).toFixed(2)}</p>
             </div>
           </div>
         </div>
