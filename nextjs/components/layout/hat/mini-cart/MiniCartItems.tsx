@@ -15,7 +15,6 @@ import { Form, Formik } from "formik";
 import Checkout from "@components/common/icons/view-mode/arrow-right/Checkout";
 import Styles from "@components/layout/hat/mini-cart/MiniCartItems.module.scss";
 import Button from "@modules/ui/forms/Button";
-import Image from "next/image";
 
 interface IProps {
   checkoutUrl: string;
@@ -29,7 +28,7 @@ const MiniCartItems: React.FC<IProps> = function (props) {
 
   function renderImage(item: any) {
     if (item.image) {
-      return <Image src={item.image} alt={item.name} itemProp="image" />;
+      return <img src={item.image} alt={item.name} itemProp="image" />;
     }
 
     return (
