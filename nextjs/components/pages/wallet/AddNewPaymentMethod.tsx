@@ -12,7 +12,14 @@ export const AddNewPaymentMethod: React.FC = () => {
   const user = useSelectorAccount((e) => e.user);
   const paymentMethods = useSelectorAccount((e) => e.payments.methods).filter(
     (elem) => {
-      const acceptable = ["Visa", "MasterCard", "Amex", "JCB", "UnionPay"];
+      const acceptable = [
+        "Visa",
+        "MasterCard",
+        "Amex",
+        "JCB",
+        "Union Pay",
+        "Discover",
+      ];
 
       return acceptable.indexOf(elem.name) !== -1;
     }
@@ -71,7 +78,12 @@ export const AddNewPaymentMethod: React.FC = () => {
 
           <div className="d-flex gap-1 flex-wrap">
             {paymentMethods.map((method, i) => (
-              <PaymentCardImage key={i} logo={method.logo} name={method.name} />
+              <PaymentCardImage
+                key={i}
+                logo={method.logo}
+                name={method.name}
+                title={method.name}
+              />
             ))}
           </div>
         </div>
