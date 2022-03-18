@@ -1000,6 +1000,7 @@ model sites_corporate {
   sites_bank_account               sites_bank_account[]
   sites_share_holder               sites_share_holder[]
   sites_tax_return                 sites_tax_return[]
+  xcart_storefronts                xcart_storefronts[]
 }
 
 model sites_corporate_storefronts {
@@ -1108,11 +1109,12 @@ model total_product_ratings {
 }
 
 model translate_language {
-  lang_id      Int    @id @default(autoincrement()) @db.UnsignedMediumInt
-  lang_code    String @unique(map: "lang_code") @default("") @db.Char(2)
-  name         String @default("") @db.VarChar(64)
-  status       Int    @default(1) @db.UnsignedTinyInt
-  country_code String @db.Char(2)
+  lang_id             Int                   @id @default(autoincrement()) @db.UnsignedMediumInt
+  lang_code           String                @unique(map: "lang_code") @default("") @db.Char(2)
+  name                String                @default("") @db.VarChar(64)
+  status              Int                   @default(1) @db.UnsignedTinyInt
+  country_code        String                @db.Char(2)
+  xcart_country_langs xcart_country_langs[]
 }
 
 model xcart_Telephone_area_codes {
@@ -1432,6 +1434,7 @@ model xcart_categories {
   lft                                Int?
   rgt                                Int?
   xcart_products_categories          xcart_products_categories[]
+  xcart_storefronts                  xcart_storefronts?
   xcart_supplier_feeds               xcart_supplier_feeds[]
 
   @@unique([categoryid, avail, storefrontid], map: "opt-T")
@@ -1894,6 +1897,7 @@ model xcart_countries {
   phone_code                         Int?                                 @unique(map: "xcart_countries_phone_code_uindex") @db.UnsignedInt
   account_addresses                  account_addresses[]
   xcart_amazon_fulfillment_locations xcart_amazon_fulfillment_locations[]
+  xcart_storefronts                  xcart_storefronts[]
 
   @@index([fedex_zone], map: "fedex_zone")
   @@index([name], map: "name")
@@ -3924,6 +3928,7 @@ model xcart_orders {
   track_sms                                Int                                  @default(0) @db.TinyInt
   billing_same_shipping                    Int                                  @default(1) @db.TinyInt
   is_new_checkout                          Int                                  @default(0) @db.UnsignedTinyInt
+  bare_fraud_score_v2                      Float?                               @db.Float
   xcart_storefronts                        xcart_storefronts                    @relation(fields: [storefrontid], references: [storefrontid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_orders_xcart_storefronts")
   xcart_users                              xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_orders_xcart_users_user_id_fk")
   account_decisions                        account_decisions[]
@@ -4947,72 +4952,77 @@ model xcart_referers {
 }
 
 model xcart_refund_groups {
-  orderid                         Int     @default(0)
-  manufacturerid                  Int     @default(0)
-  shippingid                      Int     @default(0)
-  shipping                        String  @default("") @db.VarChar(255)
-  tracking                        String  @db.Text
-  total_net                       Decimal @default(0.00) @db.Decimal(12, 2)
-  total_gst                       Decimal @default(0.00) @db.Decimal(12, 2)
-  total_pst                       Decimal @default(0.00) @db.Decimal(12, 2)
-  total_gross                     Decimal @default(0.00) @db.Decimal(12, 2)
-  shipping_net                    Decimal @default(0.00) @db.Decimal(12, 2)
-  shipping_gst                    Decimal @default(0.00) @db.Decimal(12, 2)
-  shipping_pst                    Decimal @default(0.00) @db.Decimal(12, 2)
-  shipping_gross                  Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting                      String  @db.Text
-  ref_ship                        Decimal @db.Decimal(12, 2)
-  extra_data                      String  @db.Text
-  notify_status                   String  @default("Q") @db.Char(1)
-  accounting_net_0                Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gst_0                Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_pst_0                Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gross_0              Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_0             String  @default("") @db.Char(1)
-  accounting_net_1_cost_to_us     Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gst_1_cost_to_us     Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_pst_1_cost_to_us     Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gross_1_cost_to_us   Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_1_cost_to_us  String  @default("") @db.Char(1)
-  accounting_net_2_shipping       Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gst_2_shipping       Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_pst_2_shipping       Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gross_2_shipping     Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_2_shipping    String  @default("") @db.Char(1)
-  accounting_net_3_ref_to_cust    Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gst_3_ref_to_cust    Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_pst_3_ref_to_cust    Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gross_3_ref_to_cust  Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_3_ref_to_cust String  @default("") @db.Char(1)
-  accounting_net_4_ref_to_us      Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gst_4_ref_to_us      Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_pst_4_ref_to_us      Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gross_4_ref_to_us    Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_4_ref_to_us   String  @default("") @db.Char(1)
-  accounting_net_5_profit         Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gst_5_profit         Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_pst_5_profit         Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_gross_5_profit       Decimal @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_5_profit      String  @default("") @db.Char(1)
-  OLD_accounting                  String  @db.Text
-  refund_reason                   String  @db.Text
+  refund_group_id                 Int                       @id @default(autoincrement()) @db.UnsignedInt
+  orderid                         Int                       @default(0)
+  manufacturerid                  Int                       @default(0)
+  shippingid                      Int                       @default(0)
+  shipping                        String                    @default("") @db.VarChar(255)
+  tracking                        String                    @db.Text
+  total_net                       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  total_gst                       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  total_pst                       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  total_gross                     Decimal                   @default(0.00) @db.Decimal(12, 2)
+  shipping_net                    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  shipping_gst                    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  shipping_pst                    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  shipping_gross                  Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting                      String                    @db.Text
+  ref_ship                        Decimal                   @db.Decimal(12, 2)
+  extra_data                      String                    @db.Text
+  notify_status                   String                    @default("Q") @db.Char(1)
+  accounting_net_0                Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gst_0                Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_pst_0                Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gross_0              Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_filled_0             String                    @default("") @db.Char(1)
+  accounting_net_1_cost_to_us     Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gst_1_cost_to_us     Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_pst_1_cost_to_us     Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gross_1_cost_to_us   Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_filled_1_cost_to_us  String                    @default("") @db.Char(1)
+  accounting_net_2_shipping       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gst_2_shipping       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_pst_2_shipping       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gross_2_shipping     Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_filled_2_shipping    String                    @default("") @db.Char(1)
+  accounting_net_3_ref_to_cust    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gst_3_ref_to_cust    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_pst_3_ref_to_cust    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gross_3_ref_to_cust  Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_filled_3_ref_to_cust String                    @default("") @db.Char(1)
+  accounting_net_4_ref_to_us      Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gst_4_ref_to_us      Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_pst_4_ref_to_us      Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gross_4_ref_to_us    Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_filled_4_ref_to_us   String                    @default("") @db.Char(1)
+  accounting_net_5_profit         Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gst_5_profit         Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_pst_5_profit         Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_gross_5_profit       Decimal                   @default(0.00) @db.Decimal(12, 2)
+  accounting_filled_5_profit      String                    @default("") @db.Char(1)
+  OLD_accounting                  String                    @db.Text
+  refund_reason                   String                    @db.Text
+  xcart_orders                    xcart_orders              @relation(fields: [orderid], references: [orderid], map: "FK_xcart_refund_groups_xcart_orders")
+  xcart_refunded_products         xcart_refunded_products[]
 
-  xcart_orders                    xcart_orders @relation(fields: [orderid], references: [orderid], map: "FK_xcart_refund_groups_xcart_orders")
-
-  @@id([orderid, manufacturerid])
+  @@unique([orderid, manufacturerid], map: "UK_refund_group_order_manufacturer")
 }
 
 model xcart_refunded_products {
-  productid      Int
-  orderid        Int
-  manufacturerid Int
-  provider       String  @default("") @db.VarChar(32)
-  ref_price      Decimal @default(0.00) @db.Decimal(12, 2)
-  ref_qty        Int
-  extra_data     String  @db.Text
-  itemid         Int     @default(0)
+  refund_product_id   Int                  @id @default(autoincrement()) @db.UnsignedInt
+  productid           Int
+  orderid             Int
+  manufacturerid      Int
+  provider            String               @default("") @db.VarChar(32)
+  ref_price           Decimal              @default(0.00) @db.Decimal(12, 2)
+  ref_qty             Int
+  extra_data          String               @db.Text
+  itemid              Int                  @default(0)
+  refund_group_id     Int?                 @db.UnsignedInt
+  xcart_refund_groups xcart_refund_groups? @relation(fields: [refund_group_id], references: [refund_group_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_refunded_products_xcart_refund_groups_refund_group_id_fk")
 
-  @@id([productid, orderid, itemid])
+  @@unique([productid, orderid, itemid], map: "uk_refund_product_order")
+  @@index([refund_group_id], map: "xcart_refunded_products_xcart_refund_groups_refund_group_id_fk")
 }
 
 model xcart_register_field_values {
@@ -5555,41 +5565,49 @@ model xcart_storefront_links {
 }
 
 model xcart_storefronts {
-  storefrontid                  Int                        @id @default(autoincrement())
-  code                          String                     @default("") @db.VarChar(10)
-  domain                        String                     @default("") @db.VarChar(64)
-  short_name                    String                     @default("") @db.VarChar(64)
-  prefix                        String                     @default("") @db.VarChar(8)
-  status                        String                     @default("D") @db.Char(1)
+  storefrontid                  Int                                @id @default(autoincrement())
+  code                          String                             @unique(map: "code") @default("") @db.VarChar(10)
+  domain                        String                             @default("") @db.VarChar(64)
+  short_name                    String                             @default("") @db.VarChar(64)
+  prefix                        String                             @default("") @db.VarChar(8)
+  status                        String                             @default("D") @db.Char(1)
   orderby                       Int
-  currency_id                   Int?                       @db.UnsignedMediumInt
-  company_name                  String?                    @db.VarChar(255)
-  company_website               String?                    @db.VarChar(255)
-  local_phone                   String?                    @db.VarChar(255)
-  fax_number                    String?                    @db.VarChar(255)
-  CDN_domain                    String?                    @db.VarChar(255)
-  lang_id                       Int?                       @db.UnsignedMediumInt
+  currency_id                   Int?                               @db.UnsignedMediumInt
+  company_name                  String?                            @db.VarChar(255)
+  company_website               String?                            @db.VarChar(255)
+  local_phone                   String?                            @db.VarChar(255)
+  fax_number                    String?                            @db.VarChar(255)
+  CDN_domain                    String?                            @db.VarChar(255)
+  lang_id                       Int?                               @db.UnsignedMediumInt
   start_year                    Int?
-  Enable_surf_stats             Int                        @default(0) @db.TinyInt
-  country                       String?                    @db.Char(2)
-  cidev_header_code             String?                    @db.VarChar(255)
-  shop_closed_method            String?                    @db.VarChar(255)
-  customer_service_working_time String?                    @db.VarChar(255)
-  shop_closed                   Int                        @default(0) @db.TinyInt
-  cidev_top_header_code         String?                    @db.VarChar(64)
-  opt_order_prefix              String?                    @db.VarChar(8)
-  newsletter_email              String?                    @db.VarChar(64)
-  search_all_website_show       Int                        @default(0) @db.TinyInt
-  Enable_CDN                    Int                        @default(1) @db.TinyInt
-  Google_Trusted_Store_ID       String?                    @db.VarChar(255)
-  flat_shipping_enabled         Int                        @default(0) @db.TinyInt
-  file_edit_image_favicon       String?                    @db.VarChar(512)
-  show_full_state_country       Int?                       @default(0) @db.TinyInt
-  logo                          String?                    @db.VarChar(255)
-  logo_mobile                   String?                    @db.VarChar(255)
-  base_category_id              Int?
-  account_enabled               Int                        @default(0) @db.TinyInt
-  xcart_currencies              xcart_currencies?          @relation(fields: [currency_id], references: [currency_id], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_currencies")
+  Enable_surf_stats             Int                                @default(0) @db.TinyInt
+  country                       String?                            @db.Char(2)
+  cidev_header_code             String?                            @db.VarChar(255)
+  shop_closed_method            String?                            @db.VarChar(255)
+  customer_service_working_time String?                            @db.VarChar(255)
+  shop_closed                   Int                                @default(0) @db.TinyInt
+  cidev_top_header_code         String?                            @db.VarChar(64)
+  opt_order_prefix              String?                            @db.VarChar(8)
+  newsletter_email              String?                            @db.VarChar(64)
+  search_all_website_show       Int                                @default(0) @db.TinyInt
+  Enable_CDN                    Int                                @default(1) @db.TinyInt
+  Google_Trusted_Store_ID       String?                            @db.VarChar(255)
+  flat_shipping_enabled         Int                                @default(0) @db.TinyInt
+  file_edit_image_favicon       String?                            @db.VarChar(512)
+  show_full_state_country       Int?                               @default(0) @db.TinyInt
+  logo                          String?                            @db.VarChar(255)
+  logo_mobile                   String?                            @db.VarChar(255)
+  base_category_id              Int?                               @unique(map: "base_category_id")
+  dimension_weight              xcart_storefronts_dimension_weight @default(lbs)
+  dimension_size                xcart_storefronts_dimension_size   @default(EMPTY_ENUM_VALUE)
+  corporation_id                Int?                               @db.UnsignedInt
+  dimension_weight_id           Int?
+  dimension_size_id             Int?
+  account_enabled               Int                                @default(0) @db.TinyInt
+  xcart_categories              xcart_categories?                  @relation(fields: [base_category_id], references: [categoryid], map: "FK_xcart_storefronts_xcart_categories")
+  sites_corporate               sites_corporate?                   @relation(fields: [corporation_id], references: [id], map: "FK_xcart_storefronts_sites_corporate")
+  xcart_countries               xcart_countries?                   @relation(fields: [country], references: [code], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_countries")
+  xcart_currencies              xcart_currencies?                  @relation(fields: [currency_id], references: [currency_id], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_currencies")
   core_static_notification      core_static_notification[]
   sites_payment_methods         sites_payment_methods[]
   xcart_manufacturers_site      xcart_manufacturers_site[]
@@ -5600,6 +5618,8 @@ model xcart_storefronts {
   xcart_sites_menu              xcart_sites_menu[]
   xcart_vrs                     xcart_vrs[]
 
+  @@index([corporation_id], map: "FK_xcart_storefronts_sites_corporate")
+  @@index([country], map: "FK_xcart_storefronts_xcart_countries")
   @@index([currency_id], map: "FK_xcart_storefronts_xcart_currencies")
   @@index([domain, short_name], map: "domain")
 }
@@ -6138,6 +6158,23 @@ model product_list_user_roles {
   @@index([user_id], map: "FK_account_user_list_xcart_users")
 }
 
+model xcart_country_langs {
+  country_lang_id    Int                 @id @default(autoincrement())
+  country_code       String?             @db.Char(2)
+  lang_id            Int?                @db.UnsignedMediumInt
+  value              String              @default("") @db.VarChar(255)
+  translate_language translate_language? @relation(fields: [lang_id], references: [lang_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_country_langs_translate_language")
+
+  @@index([lang_id], map: "FK_xcart_country_langs_translate_language")
+}
+
+model xcart_dimensions {
+  dimension_id Int                    @id @default(autoincrement())
+  name         String                 @default("") @db.VarChar(50)
+  value        String                 @default("") @db.VarChar(50)
+  type         xcart_dimensions_type?
+}
+
 enum account_list_items_priority {
   lwst
   low
@@ -6667,4 +6704,19 @@ enum xcart_users_tsv_preferred_method {
 enum product_list_user_roles_role {
   viewer
   editor
+}
+
+enum xcart_dimensions_type {
+  size
+  weight
+}
+
+enum xcart_storefronts_dimension_weight {
+  kg
+  lbs
+}
+
+enum xcart_storefronts_dimension_size {
+  cm
+  EMPTY_ENUM_VALUE @map("")
 }
