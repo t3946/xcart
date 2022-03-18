@@ -113,7 +113,11 @@ export class AddToCartButton {
         .find(".text, .wait-text")
         .remove();
       this.$checkoutButton.addClass(checkoutButtonComplexClass);
-      this.$noAccountMessage.show();
+
+      if (!appData.user) {
+        this.$noAccountMessage.show();
+      }
+
       this.$buttonWrapper.show();
 
       if (AddToCartButton.isCategoryPage()) {
