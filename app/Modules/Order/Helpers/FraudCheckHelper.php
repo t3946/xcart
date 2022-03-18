@@ -921,8 +921,7 @@ class FraudCheckHelper
         $url = 'https://www.melissa.com/v2/lookups/addresscheck/address/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         //throw new \Exception('Melissa has no answer');
@@ -939,8 +938,7 @@ class FraudCheckHelper
         $url = 'https://www.melissa.com/v2/lookups/phonecheck/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         //throw new \Exception('Melissa has no answer');
@@ -957,8 +955,7 @@ class FraudCheckHelper
         $url = 'https://www.melissa.com/v2/lookups/personator/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         //throw new \Exception('Melissa has no answer');
@@ -975,7 +972,7 @@ class FraudCheckHelper
         $url = 'https://www.melissa.com/v2/lookups/iplocation/ip/';
         if ($response = $client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
+                $res = reset($res['Records']);
                 return $res;
             }
         }

@@ -2,6 +2,7 @@
 
 namespace Modules\Core\Commands;
 
+use Modules\Order\Helpers\FraudCheckHelper;
 use Modules\User\Models\UserModel;
 use Xcart\App\Commands\Command;
 

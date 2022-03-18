@@ -98,8 +98,7 @@ class MelissaAPI
         $url = 'https://www.melissa.com/v2/lookups/phonecheck/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         return null;
@@ -115,8 +114,7 @@ class MelissaAPI
         $url = 'https://www.melissa.com/v2/lookups/personator/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         return null;
@@ -133,8 +131,7 @@ class MelissaAPI
         $url = 'https://www.melissa.com/v2/lookups/addresscheck/address/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         return null;
@@ -156,8 +153,7 @@ class MelissaAPI
         $url = 'https://www.melissa.com/v2/lookups/personator/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         return null;
@@ -173,8 +169,7 @@ class MelissaAPI
         $url = 'https://www.melissa.com/v2/lookups/iplocation/ip/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         //throw new \Exception('Melissa has no answer');
@@ -192,8 +187,7 @@ class MelissaAPI
         $url = 'https://www.melissa.com/v2/lookups/property/';
         if ($response = $this->client->request('GET', $url, ['query' => $params])) {
             if ($res = json_decode($response->getBody(), true)) {
-                $res = reset($res);
-                return $res;
+                return reset($res['Records']);
             }
         }
         return null;
