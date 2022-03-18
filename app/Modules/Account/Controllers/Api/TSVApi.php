@@ -19,6 +19,12 @@ class TSVApi extends Controller
     */
     public function generate()
     {
+        $request = $this->getRequest();
+
+        if (!$request->getIsAjax()) {
+            $this->error(404);
+        }
+
         $data = json_decode(file_get_contents('php://input'), true);
         $secret = (new GoogleAuthenticator())->generateSecret();
         $site = Xcart::app()->getModule('Sites')->getSite();

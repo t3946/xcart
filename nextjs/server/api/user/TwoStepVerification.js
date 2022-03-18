@@ -39,9 +39,17 @@ api.get("/generate", isAuthMiddleware, async function (req, res) {
   });
 
   await axios
-    .post(getBaseUrl(req) + `/api/account/tsv/generate`, {
-      accountName: user.email,
-    })
+    .post(
+      getBaseUrl(req) + `/api/account/tsv/generate`,
+      {
+        accountName: user.email,
+      },
+      {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      }
+    )
     .then((apiRes) => {
       res.json(apiRes.data);
       res.send();
@@ -83,7 +91,6 @@ api.get("/enable", isAuthMiddleware, async function (req, res) {
   });
 
   if (user.tsv_preferred_method === "na") {
-    console.log("na");
     await prisma.xcart_users.update({
       where: { user_id: req.user.userId },
       data: {

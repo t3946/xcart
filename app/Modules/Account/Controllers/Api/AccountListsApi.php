@@ -70,6 +70,12 @@ class AccountListsApi extends Controller
 
     public function reorderProducts()
     {
+        $request = $this->getRequest();
+
+        if (!$request->getIsAjax()) {
+            $this->error(404);
+        }
+
         $user = Xcart::app()->auth->getUser(true);
         $data = json_decode(file_get_contents('php://input'), true);
         $list = ProductListsModel::objects()->get(['product_list_id' => $data['productListId']]);
