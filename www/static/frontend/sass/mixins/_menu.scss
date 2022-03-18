@@ -32,7 +32,7 @@
     width: $width;
     height: $height;
     transition: all .4s;
-    margin-top: floor($height / 2.1) * -1;
+    margin-top: floor(calc($height / 2.1)) * -1;
     margin-left: $width;
     top: 50%;
   }

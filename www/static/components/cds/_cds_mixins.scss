@@ -135,8 +135,8 @@
 
   // Down
   @if $direction == down {
-    border-left: $width/2 solid transparent;
-    border-right: $width/2 solid transparent;
+    border-left: calc($width / 2) solid transparent;
+    border-right: calc($width / 2) solid transparent;
     border-top: $height solid $color;
   }
 
