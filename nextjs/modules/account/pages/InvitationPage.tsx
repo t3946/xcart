@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { useDispatch } from "react-redux";
 import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
@@ -8,6 +7,8 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import { ApiService } from "@modules/shared/services/api.service";
+import getStoreUrl from "@utils/getStoreUrl";
+
 interface InvitationPage {
   inviteUser: string;
   type: UserPrivateVariantsEnum;
@@ -17,7 +18,9 @@ interface InvitationPage {
     cacheUrl: string;
   };
 }
+
 const api = new ApiService();
+
 export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
   const router = useRouter();
   const editProfile = () => {
@@ -39,8 +42,9 @@ export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
       .then((res) => res);
     await router.push("/shopping-lists");
   };
+
   const avatar = user.avatar_image
-    ? `/${user.avatar_image}`
+    ? getStoreUrl(user.avatar_image)
     : "/static/frontend/images/pages/account/default-avatar.svg";
 
   return (

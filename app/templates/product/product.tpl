@@ -88,7 +88,7 @@
                             </span>
                         </div>
 
-                        <div class="col shrink notifications product_notifications">
+                        <div class="col shrink notifications product_notifications mb-lg-0">
                             <div class="notifications-info small-collapse">
                                 <div class="d-flex">
                                     {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}

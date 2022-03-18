@@ -23,6 +23,7 @@ import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import { useRouter } from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Button, { ETheme } from "@modules/ui/forms/Button";
+import getStoreUrl from "@utils/getStoreUrl";
 
 const PublicProfile = (): any => {
   const router = useRouter();
@@ -54,7 +55,7 @@ const PublicProfile = (): any => {
   const initialValues = {
     publicName: user.public_name || "",
     location: user.location || "",
-    avatar_image: user.avatar_image,
+    avatar_image: getStoreUrl(user.avatar_image),
   };
 
   const nameRegex = /^[A-Za-z][A-Za-z0-9 .\-']+$/;
@@ -144,11 +145,11 @@ const PublicProfile = (): any => {
    * get current selected image url
    */
   function getAvatarUrl(): string {
-    if (isRemoveAvatar === true) {
+    if (isRemoveAvatar) {
       return DEFAULT_AVATAR_IMAGE;
     }
 
-    return user.avatar_image || DEFAULT_AVATAR_IMAGE;
+    return getStoreUrl(user.avatar_image) || DEFAULT_AVATAR_IMAGE;
   }
 
   function beforePageTemplate() {
