@@ -19,27 +19,15 @@ function* editName(action: AnyAction) {
 }
 
 function* editEmail(action: AnyAction) {
-  const { data, success, complete } = action.payload;
+  const { data, success } = action.payload;
 
-  yield axios.post("/api-client/user/change-email", data).then((res) => {
-    success(res);
-
-    complete && complete();
-
-    return res;
-  });
+  yield axios.post("/api-client/user/change-email", data).then(success);
 }
 
 function* editPhone(action: AnyAction) {
-  const { data, success, complete } = action.payload;
+  const { data, success } = action.payload;
 
-  yield axios.post<any>("/api-client/user/change-phone", data).then((res) => {
-    success(res);
-
-    complete();
-
-    return res;
-  });
+  yield axios.post("/api-client/user/change-phone", data).then(success);
 }
 
 function* changePassword(action: AnyAction) {

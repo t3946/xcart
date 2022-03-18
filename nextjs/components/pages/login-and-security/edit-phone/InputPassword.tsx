@@ -7,22 +7,24 @@ import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
-import styles from "@modules/account/components/login-and-security/FormEditUserEmail.module.scss";
+import styles from "@components/pages/login-and-security/edit-phone/EditPhone.module.scss";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import * as yup from "yup";
 import {
   setAlertAction,
-  editEmailAction,
+  editPhoneAction,
 } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
+
 interface IProps {
-  newEmail: string;
+  newPhone: string;
+  setStep: any;
 }
 
 const InputPassword: React.FC<IProps> = function (props: IProps) {
-  const { newEmail } = props;
+  const { newPhone, setStep } = props;
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -35,12 +37,12 @@ const InputPassword: React.FC<IProps> = function (props: IProps) {
 
     const data = {
       password: values.password,
-      email: newEmail,
-      step: "change-email",
+      phone: newPhone,
+      step: "change-phone",
     };
 
     dispatch(
-      editEmailAction({
+      editPhoneAction({
         data,
 
         success(res: any) {
@@ -79,7 +81,7 @@ const InputPassword: React.FC<IProps> = function (props: IProps) {
         return (
           <Form>
             <InnerPage
-              header={"Change your email address"}
+              header={"Change your phone address"}
               headerClasses={"text-center text-lg-start"}
               bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
               footer={
@@ -97,16 +99,22 @@ const InputPassword: React.FC<IProps> = function (props: IProps) {
               }
             >
               <div className="px-10 px-md-0">
-                <p className={cn("form-info", styles.currentEmailText, "mb-0")}>
-                  New email address: <b>{newEmail}</b>
+                <p className={cn("form-info", styles.currentPhoneText, "mb-0")}>
+                  New phone number:{" "}
+                  <b
+                    className={"cursor-pointer"}
+                    onClick={() => setStep("send-otp")}
+                  >
+                    {newPhone}
+                  </b>
                 </p>
 
                 <p className="form-info">
-                  Input account password for change email.
+                  Input account password for change phone.
                 </p>
 
                 <RBForm.Group
-                  controlId={"EditUserEmail"}
+                  controlId={"EditUserPhone"}
                   className={cn("row", StylesLoginAndSecurity.formContainer)}
                 >
                   <div

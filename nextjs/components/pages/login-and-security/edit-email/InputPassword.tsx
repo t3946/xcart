@@ -7,39 +7,38 @@ import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
-import styles from "@modules/account/components/login-and-security/FormEditUserEmail.module.scss";
+import styles from "@components/pages/login-and-security/edit-email/EditEmail.module.scss";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import * as yup from "yup";
-import { editEmailAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
+import {
+  setAlertAction,
+  editEmailAction,
+} from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-
+import { userSetAction } from "@redux/actions/account-actions/UserActions";
 interface IProps {
   newEmail: string;
-  secret: string;
-  setStep: any;
 }
 
-const InputOTP: React.FC<IProps> = function (props: IProps) {
-  const { newEmail, setStep, secret } = props;
+const InputPassword: React.FC<IProps> = function (props: IProps) {
+  const { newEmail } = props;
   const router = useRouter();
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
-    code: yup.string().required("Required field"),
+    password: yup.string().required("Required field"),
   });
 
   function submit(values: any, actions: any) {
     actions.setSubmitting(true);
 
     const data = {
-      token: values.code,
-      secret,
-      step: "check-otp",
+      password: values.password,
       email: newEmail,
+      step: "change-email",
     };
 
-    console.log({ data });
     dispatch(
       editEmailAction({
         data,
@@ -48,18 +47,26 @@ const InputOTP: React.FC<IProps> = function (props: IProps) {
           actions.setSubmitting(false);
 
           if (res.data.error) {
-            actions.setErrors({ code: res.data.error });
+            actions.setErrors({ password: res.data.error });
             return;
           }
 
-          setStep("change-email");
+          dispatch(userSetAction(res.data.user));
+          router.push("/login-and-security");
+
+          dispatch(
+            setAlertAction({
+              variant: "success",
+              message: "You have successfully modified your account!",
+            })
+          );
         },
       })
     );
   }
 
   const initialValues = {
-    code: "",
+    password: "",
   };
 
   return (
@@ -72,7 +79,7 @@ const InputOTP: React.FC<IProps> = function (props: IProps) {
         return (
           <Form>
             <InnerPage
-              header={"Input one time password"}
+              header={"Change your email address"}
               headerClasses={"text-center text-lg-start"}
               bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
               footer={
@@ -83,21 +90,19 @@ const InputOTP: React.FC<IProps> = function (props: IProps) {
                   groupAdvancedClasses={
                     "d-md-flex justify-content-center justify-content-lg-start"
                   }
-                  cancelText={"back"}
                   onCancel={() => {
-                    setStep("send-otp");
+                    router.push("/login-and-security");
                   }}
                 />
               }
             >
               <div className="px-10 px-md-0">
                 <p className={cn("form-info", styles.currentEmailText, "mb-0")}>
-                  New email address will:{" "}
-                  <b onClick={() => setStep("change-email")}>{newEmail}</b>
+                  New email address: <b>{newEmail}</b>
                 </p>
 
                 <p className="form-info">
-                  We have sent you otp. You must type it in field below.
+                  Input account password for change email.
                 </p>
 
                 <RBForm.Group
@@ -109,21 +114,21 @@ const InputOTP: React.FC<IProps> = function (props: IProps) {
                       "col-12 col-md-6 col-lg-6 mb-10 mb-md-0 d-flex align-items-center justify-content-md-end justify-content-lg-start"
                     }
                   >
-                    <Label>OTP</Label>
+                    <Label>Password</Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
                     <Input
-                      type="text"
-                      name="code"
-                      value={values.code}
+                      type="password"
+                      name="password"
+                      value={values.password}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      isInvalid={!!touched.code && !!errors.code}
-                      isValid={touched.code && !errors.code}
+                      isInvalid={!!touched.password && !!errors.password}
+                      isValid={touched.password && !errors.password}
                     />
                     <Feedback className="position-absolute" type="invalid">
-                      {touched.code && errors.code}
+                      {touched.password && errors.password}
                     </Feedback>
                   </div>
                 </RBForm.Group>
@@ -136,4 +141,4 @@ const InputOTP: React.FC<IProps> = function (props: IProps) {
   );
 };
 
-export default InputOTP;
+export default InputPassword;

@@ -7,65 +7,57 @@ import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
-import styles from "@modules/account/components/login-and-security/FormEditUserEmail.module.scss";
+import styles from "@components/pages/login-and-security/edit-email/EditEmail.module.scss";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import * as yup from "yup";
-import {
-  editEmailAction,
-  setAlertAction,
-} from "@redux/actions/account-actions/LoginAndSecurityActions";
-import { userSetAction } from "@redux/actions/account-actions/UserActions";
-import { useRouter } from "next/router";
+import { editEmailAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import { useDispatch } from "react-redux";
 
 interface IProps {
-  currentEmail: string;
+  newEmail: string;
+  secret: string;
   setStep: any;
-  setSecret: any;
-  setNewEmail: any;
 }
 
-const InputEmail: React.FC<IProps> = function (props: IProps) {
-  const { currentEmail, setStep, setSecret, setNewEmail } = props;
-  const router = useRouter();
+const InputOTP: React.FC<IProps> = function (props: IProps) {
+  const { newEmail, setStep, secret } = props;
   const dispatch = useDispatch();
 
   const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required("Email is a required field")
-      .email("Email must be a valid email"),
+    code: yup.string().required("Required field"),
   });
 
   function submit(values: any, actions: any) {
     actions.setSubmitting(true);
 
     const data = {
-      email: values.email,
-      step: "send-otp",
+      token: values.code,
+      secret,
+      step: "check-otp",
+      email: newEmail,
     };
 
+    console.log({ data });
     dispatch(
       editEmailAction({
         data,
 
         success(res: any) {
           actions.setSubmitting(false);
+
           if (res.data.error) {
-            actions.setErrors({ email: res.data.error });
+            actions.setErrors({ code: res.data.error });
             return;
           }
 
-          setSecret(res.data.secret);
-          setStep("check-otp");
-          setNewEmail(data.email);
+          setStep("change-email");
         },
       })
     );
   }
 
   const initialValues = {
-    email: currentEmail,
+    code: "",
   };
 
   return (
@@ -78,7 +70,7 @@ const InputEmail: React.FC<IProps> = function (props: IProps) {
         return (
           <Form>
             <InnerPage
-              header={"Change your email address"}
+              header={"Input one time password"}
               headerClasses={"text-center text-lg-start"}
               bodyClasses={["content-panel", StylesLoginAndSecurity.pageBody]}
               footer={
@@ -89,21 +81,21 @@ const InputEmail: React.FC<IProps> = function (props: IProps) {
                   groupAdvancedClasses={
                     "d-md-flex justify-content-center justify-content-lg-start"
                   }
+                  cancelText={"back"}
                   onCancel={() => {
-                    router.push("/login-and-security");
+                    setStep("send-otp");
                   }}
                 />
               }
             >
               <div className="px-10 px-md-0">
                 <p className={cn("form-info", styles.currentEmailText, "mb-0")}>
-                  Current email address: <b>{currentEmail}</b>
+                  New email address will:{" "}
+                  <b onClick={() => setStep("change-email")}>{newEmail}</b>
                 </p>
 
                 <p className="form-info">
-                  Enter the new email address you would like to associate with
-                  your account below. We will send a One Time Password (OTP) to
-                  that address.
+                  We have sent you otp. You must type it in field below.
                 </p>
 
                 <RBForm.Group
@@ -115,21 +107,21 @@ const InputEmail: React.FC<IProps> = function (props: IProps) {
                       "col-12 col-md-6 col-lg-6 mb-10 mb-md-0 d-flex align-items-center justify-content-md-end justify-content-lg-start"
                     }
                   >
-                    <Label>New Email Address</Label>
+                    <Label>OTP</Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
                     <Input
                       type="text"
-                      name="email"
-                      value={values.email}
+                      name="code"
+                      value={values.code}
                       onChange={handleChange}
                       disabled={isSubmitting}
-                      isInvalid={!!touched.email && !!errors.email}
-                      isValid={touched.email && !errors.email}
+                      isInvalid={!!touched.code && !!errors.code}
+                      isValid={touched.code && !errors.code}
                     />
                     <Feedback className="position-absolute" type="invalid">
-                      {touched.email && errors.email}
+                      {touched.code && errors.code}
                     </Feedback>
                   </div>
                 </RBForm.Group>
@@ -142,4 +134,4 @@ const InputEmail: React.FC<IProps> = function (props: IProps) {
   );
 };
 
-export default InputEmail;
+export default InputOTP;

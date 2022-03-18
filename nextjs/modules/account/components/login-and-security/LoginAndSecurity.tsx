@@ -2,7 +2,6 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import classnames from "classnames";
-import { getCountryByCode } from "@utils/Countries";
 import Alert from "@modules/account/components/shared/Alert";
 import { setAlertAction } from "@redux/actions/account-actions/LoginAndSecurityActions";
 import InnerPage from "@components/common/inner-page/InnerPage";
@@ -23,7 +22,6 @@ const LoginAndSecurity = (): any => {
   const breakpoint = useBreakpoint();
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
-  const countries = useSelectorAccount((e) => e.countries);
   const alert = useSelectorAccount((e) => e.loginAndSecurity.alert);
   const [show, setShow] = React.useState(alert !== null);
   const ALERT_SHOW_TIME_MS = 3000;

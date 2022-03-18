@@ -1,0 +1,7 @@
+@import "styles/utils/Utils.module";
+
+.currentPhoneText {
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
+  }
+}

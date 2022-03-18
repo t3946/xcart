@@ -1,13 +1,13 @@
 import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
-import FormEditUserPhone from "@modules/account/components/login-and-security/FormEditUserPhone";
+import EditPhone from "@components/pages/login-and-security/edit-phone/EditPhone";
 
-const EditPhone: React.FC = function () {
+const EditPhonePage: React.FC = function () {
   return (
     <PageTwoColumns>
-      <FormEditUserPhone />
+      <EditPhone />
     </PageTwoColumns>
   );
 };
 
-export default EditPhone;
+export default EditPhonePage;

@@ -1,13 +1,13 @@
 import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
-import FormEditUserEmail from "@modules/account/components/login-and-security/FormEditUserEmail";
+import EditEmail from "@components/pages/login-and-security/edit-email/EditEmail";
 
-const EditEmail: React.FC = function () {
+const EditEmailPage: React.FC = function () {
   return (
     <PageTwoColumns>
-      <FormEditUserEmail />
+      <EditEmail />
     </PageTwoColumns>
   );
 };
 
-export default EditEmail;
+export default EditEmailPage;

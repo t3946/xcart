@@ -1,10 +1,10 @@
 import React from "react";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import InputEmail from "@modules/account/components/login-and-security/change-email/InputEmail";
-import InputOTP from "@modules/account/components/login-and-security/change-email/InputOTP";
-import InputPassword from "@modules/account/components/login-and-security/change-email/InputPassword";
+import InputEmail from "@components/pages/login-and-security/edit-email/InputEmail";
+import InputOTP from "@components/pages/login-and-security/edit-email/InputOTP";
+import InputPassword from "@components/pages/login-and-security/edit-email/InputPassword";
 
-const FormEditUserEmail = (): any => {
+const EditEmail = (): any => {
   const user = useSelectorAccount((e) => e.user);
   const [step, setStep] = React.useState("send-otp");
   const [secret, setSecret] = React.useState("");
@@ -34,4 +34,4 @@ const FormEditUserEmail = (): any => {
   );
 };
 
-export default FormEditUserEmail;
+export default EditEmail;

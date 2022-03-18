@@ -384,46 +384,81 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
 });
 
 app.post("/change-phone", isAuthMiddleware, async function (req, res) {
-  //check phone
-  const phone = req.body.phone;
-
-  const userWithEqualPhone = await prisma.xcart_users.findUnique({
+  const userWithNewPhone = await prisma.xcart_users.findUnique({
     where: {
-      phone,
+      phone: req.body.phone,
     },
   });
 
-  if (userWithEqualPhone) {
-    res.json({ errors: { phone: "This phone already exits" } });
+  if (userWithNewPhone) {
+    res.json({ error: "Such phone already used" });
     return;
   }
 
-  const countryCode = parseInt(phone.slice(1, -10));
-  const country = await prisma.xcart_countries.findUnique({
-    where: {
-      phone_code: countryCode,
-    },
-  });
+  switch (req.body.step) {
+    case "send-otp":
+      const secret = authenticator.generateSecret();
+      const token = authenticator.generate(secret);
 
-  await prisma.xcart_users.update({
-    where: {
-      user_id: req.user.userId,
-    },
-    data: {
-      phone,
-      phone_country_code: country.code,
-    },
-  });
+      res.json({
+        secret,
+      });
 
-  const user = await prisma.xcart_users.findUnique({
-    where: {
-      user_id: req.user.userId,
-    },
-  });
+      await AxiosInstance.post(getBaseUrl(req) + `/api/account/send-sms`, {
+        phone: req.body.phone,
+        message: "This is your One Time Password: " + token,
+      });
 
-  delete user.password;
+      break;
 
-  res.json({ user });
+    case "check-otp":
+      const result = authenticator.check(req.body.token, req.body.secret);
+
+      if (result) {
+        res.sendStatus(200);
+        return;
+      }
+
+      res.json({ error: "Invalid OTP. Please check your code and try again." });
+      break;
+
+    case "change-phone":
+      let user = await prisma.xcart_users.findUnique({
+        where: {
+          user_id: req.user.userId,
+        },
+      });
+
+      const isPasswordsMatch = await passwordUtils.comparePassword(
+        req.body.password,
+        user.password
+      );
+
+      if (!isPasswordsMatch) {
+        res.json({ error: "Your password is incorrect" });
+        return;
+      }
+
+      await prisma.xcart_users.update({
+        where: {
+          user_id: req.user.userId,
+        },
+        data: {
+          phone: req.body.phone,
+        },
+      });
+
+      user = await prisma.xcart_users.findUnique({
+        where: {
+          user_id: req.user.userId,
+        },
+      });
+
+      user.avatar_image = "https://i1.s3stores.com/" + user.avatar_image;
+      res.json({ user });
+
+      break;
+  }
 });
 
 app.post("/change-password", isAuthMiddleware, async function (req, res) {
