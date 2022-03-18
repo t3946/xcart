@@ -2,30 +2,44 @@ import React from "react";
 import { TransactionItem } from "./TransactionItem";
 import { TransactionItemRefund } from "./TransactionItemRefund";
 
-function isCompleted(transaction: any) {
-  if (
-    transaction.type === "refund" &&
-    transaction.transaction_status === "refunded"
-  ) {
-    return true;
+function getGroup(transaction: any): string | null {
+  switch (transaction.type) {
+    case "authorization":
+      switch (transaction.transaction_status) {
+        case "declined":
+        case "failed":
+        case "expired":
+          return "failed";
+        case "captured":
+        case "partially_captured":
+          return "settled";
+        case "voided":
+          return "cancelled";
+        case "authorized":
+          return "pending";
+        case "pending":
+          return null;
+      }
+      break;
+    case "capture":
+      switch (transaction.transaction_status) {
+        case "completed":
+          return "settled";
+        case "refunded":
+          return "refunded";
+        case "partially_refunded":
+          return "partially_refunded";
+      }
+      break;
+    case "refund":
+      switch (transaction.transaction_status) {
+        case "completed":
+        case "refunded":
+          return "refund";
+      }
+      break;
   }
-
-  if (
-    transaction.type === "authorization" &&
-    (transaction.transaction_status === "captured" ||
-      transaction.transaction_status === "voided")
-  ) {
-    return true;
-  }
-
-  if (
-    transaction.type === "capture" &&
-    transaction.transaction_status === "completed"
-  ) {
-    return true;
-  }
-
-  return false;
+  return null;
 }
 
 interface IProps {
@@ -38,9 +52,23 @@ export const TransactionsList: React.FC<IProps> = (props) => {
 
   function getTransactionsTemplates() {
     const groups: any = {
-      completed: [],
+      refund: [],
+      refunded: [],
+      partially_refunded: [],
+      settled: [],
       pending: [],
       cancelled: [],
+      failed: [],
+    };
+
+    const groupTitles: any = {
+      refund: "Refund",
+      refunded: "Fully refunded",
+      partially_refunded: "Partially refunded",
+      settled: "Settled",
+      pending: "Pending",
+      cancelled: "Canceled",
+      failed: "Failed",
     };
 
     for (const order of orders) {
@@ -51,31 +79,11 @@ export const TransactionsList: React.FC<IProps> = (props) => {
             ? TransactionItemRefund
             : TransactionItem;
         const card = null;
-
-        if (isCompleted(transaction)) {
-          groups.completed.push(
+        const group = getGroup(transaction);
+        if (group !== null) {
+          groups[group].push(
             <Item
-              header={"Completed"}
-              order={order}
-              transaction={transaction}
-              card={card}
-              key={`transaction-${transaction.id}`}
-            />
-          );
-        } else if (transaction.transaction_status === "pending") {
-          groups.pending.push(
-            <Item
-              header={"Pending"}
-              order={order}
-              transaction={transaction}
-              card={card}
-              key={`transaction-${transaction.id}`}
-            />
-          );
-        } else {
-          groups.cancelled.push(
-            <Item
-              header={"Cancelled"}
+              header={groupTitles[group]}
               order={order}
               transaction={transaction}
               card={card}
@@ -88,12 +96,12 @@ export const TransactionsList: React.FC<IProps> = (props) => {
 
     return (
       <div>
-        {groups.completed.length > 0 && (
+        {groups.settled.length > 0 && (
           <>
             <div className={"transactions-completed-header d-none d-md-block"}>
-              Completed
+              Settled
             </div>
-            <div>{groups.completed}</div>
+            <div>{groups.settled}</div>
           </>
         )}
 
@@ -112,6 +120,42 @@ export const TransactionsList: React.FC<IProps> = (props) => {
               Cancelled
             </div>
             <div>{groups.cancelled}</div>
+          </>
+        )}
+
+        {groups.partially_refunded.length > 0 && (
+          <>
+            <div className={"transactions-completed-header d-none d-md-block"}>
+              Partially refunded
+            </div>
+            <div>{groups.partially_refunded}</div>
+          </>
+        )}
+
+        {groups.refunded.length > 0 && (
+          <>
+            <div className={"transactions-completed-header d-none d-md-block"}>
+              Fully refunded
+            </div>
+            <div>{groups.refunded}</div>
+          </>
+        )}
+
+        {groups.refund.length > 0 && (
+          <>
+            <div className={"transactions-completed-header d-none d-md-block"}>
+              Refund
+            </div>
+            <div>{groups.refund}</div>
+          </>
+        )}
+
+        {groups.failed.length > 0 && (
+          <>
+            <div className={"transactions-completed-header d-none d-md-block"}>
+              Failed
+            </div>
+            <div>{groups.failed}</div>
           </>
         )}
       </div>

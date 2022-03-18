@@ -9,6 +9,7 @@ export const TransactionHeader = ({
   onClick,
   refund = undefined,
   order,
+  transaction,
   card,
 }) => {
   const date = new Date(Number(order.date * 1000)).toLocaleDateString("en-EN", {
@@ -48,9 +49,7 @@ export const TransactionHeader = ({
             refund && "transactions-header-price-refund"
           }`}
         >
-          {refund
-            ? `(US$ ${parseFloat(order.total).toFixed(2)})`
-            : `US$ ${parseFloat(order.total).toFixed(2)}`}
+          US$ {parseFloat(transaction.transaction_amount).toFixed(2)}
         </div>
         <div className="transactions-header-arrow">
           <ChevronIcon

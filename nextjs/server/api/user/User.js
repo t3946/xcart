@@ -617,6 +617,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
           paymentid: true,
           cb_status: true,
           xcart_order_transactions: true,
+          xcart_refund_groups: true,
           phone: true,
           email: true,
           firstname: true,

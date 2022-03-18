@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export const TransactionItem: React.FC<IProps> = (props) => {
-  const { order, card, header } = props;
+  const { order, card, header, transaction } = props;
   const accordion = useAccordion(500);
 
   function orderTaxesTemplate() {
@@ -49,6 +49,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
         open={accordion.open}
         card={card}
         order={order}
+        transaction={transaction}
       />
 
       <div

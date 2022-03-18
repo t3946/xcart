@@ -3935,6 +3935,7 @@ model xcart_orders {
   xcart_order_groups                       xcart_order_groups[]
   xcart_order_transactions                 xcart_order_transactions[]
   xcart_po_pipeline                        xcart_po_pipeline[]
+  xcart_refund_groups                      xcart_refund_groups[]
 
   @@id([orderid, date])
   @@index([amazon_fulfillment_channel, orderid, date], map: "amazon_fulfillment_channel")
@@ -4995,6 +4996,8 @@ model xcart_refund_groups {
   accounting_filled_5_profit      String  @default("") @db.Char(1)
   OLD_accounting                  String  @db.Text
   refund_reason                   String  @db.Text
+
+  xcart_orders                    xcart_orders @relation(fields: [orderid], references: [orderid], map: "FK_xcart_refund_groups_xcart_orders")
 
   @@id([orderid, manufacturerid])
 }
