@@ -50,3 +50,4 @@ node_modules
 /docker/certbot/
 notes.md
 /home/falcon/xcart/nextjs/out/
+/nextjs/next-env.d.ts
