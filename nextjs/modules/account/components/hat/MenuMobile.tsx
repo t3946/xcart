@@ -5,6 +5,7 @@ import SidebarMenu from "@modules/account/components/sidebar-menu/SideBarMenu";
 import Link from "next/link";
 import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import getStoreUrl from "@utils/getStoreUrl";
 
 const MenuMobile: React.FC = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const MenuMobile: React.FC = () => {
     if (user && user.avatar_image) {
       return (
         <img
-          src={user.avatar_image}
+          src={getStoreUrl(user.avatar_image)}
           className={"mobile-menu-avatar"}
           alt=""
         />

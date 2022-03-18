@@ -33,13 +33,7 @@ class ProfileApi extends Controller
 
         if ($form->isValid()) {
             $form->save();
-            $avatar_image = $form->getInstance()->getAttributes()["avatar_image"];
-
-            if ($avatar_image) {
-                $avatar_image = $avatar_image;
-            }
-
-            $this->jsonResponse(["avatarUrl" => $user->avatar_image->getUrl()]);
+            $this->jsonResponse(["avatarUrl" => (string)$user->avatar_image]);
         } else {
             $this->jsonResponse(["errors" => $form->getErrors()]);
         }

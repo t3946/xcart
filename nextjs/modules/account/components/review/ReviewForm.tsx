@@ -15,12 +15,12 @@ import {
 import Files from "@modules/account/components/review/Files";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
-import AppData from "@utils/AppData";
 import Styles from "@modules/account/components/review/ReviewForm.module.scss";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import Label from "@modules/ui/forms/Label";
 import Textarea from "@modules/ui/forms/Textarea";
+import getStoreUrl from "@utils/getStoreUrl";
 
 interface IProps {
   product: number;
@@ -104,7 +104,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
     if (user && user.avatar_image) {
       return (
         <img
-          src={`/${user.avatar_image}`}
+          src={getStoreUrl(user.avatar_image)}
           className={"mobile-menu-avatar form-review-avatar"}
           alt={""}
         />
