@@ -279,8 +279,7 @@ class CheckoutController extends FrontendController
                     's_city' => $user_address->city,
                     'firstname' => $user->name,
                     'email' => $user->email,
-                    'phone' => $user_address->phone_number,
-                    'phone_ext' => $user_address->phone_ext,
+                    'phone' => $user->phone,
                 ];
             }
         }
