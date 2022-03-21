@@ -7,11 +7,13 @@ datasource db {
   url      = env("DB_URL")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model a_coeff {
-  id                 Int     @id @default(autoincrement()) @db.UnsignedInt
   manufacturerid     Int     @default(0)
   d_shiiping_a_coeff Decimal @default(0.00) @db.Decimal(12, 2)
   d_shipping_b_coeff Decimal @default(1.00) @db.Decimal(12, 2)
+
+  @@ignore
 }
 
 model account_addresses {
@@ -60,17 +62,15 @@ model account_credit_cards {
 }
 
 model account_decisions {
-  decision_id              Int                        @id @default(autoincrement()) @db.UnsignedInt
-  type                     String                     @db.VarChar(63)
-  solved                   Int                        @default(0) @db.UnsignedTinyInt
-  options                  Json?
-  order_id                 Int
-  order_number             String?                    @db.VarChar(31)
-  created                  DateTime?                  @default(now()) @db.DateTime(0)
-  updated                  DateTime?                  @default(now()) @db.DateTime(0)
-  xcart_orders             xcart_orders               @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
-  decision_licenses        decision_licenses[]
-  decisions_customer_files decisions_customer_files[] @ignore
+  decision_id  Int          @id @default(autoincrement()) @db.UnsignedInt
+  type         String       @db.VarChar(63)
+  solved       Int          @default(0) @db.UnsignedTinyInt
+  options      Json?
+  order_id     Int
+  order_number String?      @db.VarChar(31)
+  created      DateTime?    @default(now()) @db.DateTime(0)
+  updated      DateTime?    @default(now()) @db.DateTime(0)
+  xcart_orders xcart_orders @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
 
   @@index([order_id], map: "account_decision_xcart_orders_orderid_fk")
 }
@@ -337,14 +337,6 @@ model anveo_calls_listens {
   @@index([call_id], map: "FK_anveo_calls_listens_anveo_calls")
 }
 
-model area_codes {
-  id    Int     @id @default(autoincrement()) @db.UnsignedInt
-  code  String? @db.VarChar(50)
-  state String? @db.VarChar(50)
-  c1    String? @db.VarChar(50)
-  c2    String? @db.VarChar(50)
-}
-
 model cart_cart {
   id         Int      @id @default(autoincrement()) @db.UnsignedInt
   data       String?  @db.LongText
@@ -381,29 +373,6 @@ model cart_coupon_restriction {
   data      String? @db.Text
 }
 
-model cat_categories {
-  id              Int     @id @default(autoincrement()) @db.UnsignedInt
-  categoryid      Int     @default(0) @db.UnsignedInt
-  parent_category Int     @default(0) @db.UnsignedInt
-  products_count  Int     @default(0) @db.UnsignedInt
-  newpath1        BigInt? @db.UnsignedBigInt
-  newpath2        BigInt? @db.UnsignedBigInt
-  clevel          BigInt? @db.UnsignedBigInt
-
-  @@index([categoryid], map: "idx_categoryid")
-  @@index([categoryid, parent_category], map: "idx_categoryid_parent_category")
-}
-
-model cat_options {
-  id            Int     @id @default(autoincrement())
-  productoption String? @db.VarChar(100)
-  productid     Int?
-  option_no     Int?
-
-  @@index([productoption], map: "idxOption")
-  @@index([productoption], map: "idx_Option")
-}
-
 model cidev_aaj_units {
   uom        String @db.VarChar(50)
   supplierid String @default("") @db.VarChar(50)
@@ -414,8 +383,8 @@ model cidev_aaj_units {
   @@index([uom], map: "idx_uom")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model cidev_amazon_shipping_rates {
-  id                Int      @id @default(autoincrement()) @db.UnsignedInt
   tier              String?  @default("") @db.Char(100)
   delivery          String?  @default("") @db.Char(100)
   shippingid        Int?
@@ -428,6 +397,8 @@ model cidev_amazon_shipping_rates {
   wrange3           Decimal? @default(0.00) @db.Decimal(18, 2)
   wrange3_l1        Decimal? @default(0.00) @db.Decimal(18, 2)
   dunnage           Decimal? @default(0.10) @db.Decimal(18, 2)
+
+  @@ignore
 }
 
 model collaborative_fitering {
@@ -469,35 +440,6 @@ model core_static_notification {
   @@index([storefront_id], map: "FK_core_static_notification_xcart_storefronts")
 }
 
-model customer_files {
-  file_id                  Int                        @id @default(autoincrement()) @db.UnsignedInt
-  path                     String?                    @db.VarChar(255)
-  original_name            String?                    @db.VarChar(255)
-  created                  DateTime?                  @default(now()) @db.DateTime(0)
-  decisions_customer_files decisions_customer_files[] @ignore
-}
-
-model decision_licenses {
-  decision_license_id Int               @id @default(autoincrement()) @db.UnsignedInt
-  decision_id         Int               @db.UnsignedInt
-  path                String            @db.VarChar(255)
-  account_decisions   account_decisions @relation(fields: [decision_id], references: [decision_id], onDelete: Cascade, onUpdate: NoAction, map: "decision_licenses_account_decisions_decision_id_fk")
-
-  @@index([decision_id], map: "decision_licenses_account_decisions_decision_id_fk")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model decisions_customer_files {
-  decision_id       Int?               @db.UnsignedInt
-  file_id           Int?               @db.UnsignedInt
-  account_decisions account_decisions? @relation(fields: [decision_id], references: [decision_id], onDelete: Cascade, onUpdate: NoAction, map: "decisions_files_account_decisions_decision_id_fk")
-  customer_files    customer_files?    @relation(fields: [file_id], references: [file_id], onDelete: Cascade, onUpdate: NoAction, map: "decisions_customer_files_customer_files_file_id_fk")
-
-  @@index([file_id], map: "decisions_customer_files_customer_files_file_id_fk")
-  @@index([decision_id], map: "decisions_files_account_decisions_decision_id_fk")
-  @@ignore
-}
-
 model faxes_fax {
   id           Int           @id @default(autoincrement())
   fax_id       Int           @unique(map: "fax_id")
@@ -515,26 +457,27 @@ model faxes_fax {
 }
 
 model forms_email {
-  id                     Int                      @id @default(autoincrement()) @db.UnsignedInt
-  message_id             String                   @unique(map: "message_id") @db.VarChar(50)
-  thread_id              String?                  @db.VarChar(50)
-  subject                String?                  @db.MediumText
-  snippet                String?                  @db.MediumText
-  type                   forms_email_type         @default(inbox)
-  from_address           String?                  @db.VarChar(255)
-  delivered_to_address   String?                  @db.VarChar(255)
-  to_address             String?                  @db.MediumText
-  reply_to               String?                  @db.VarChar(255)
-  date                   DateTime                 @db.DateTime(0)
-  account_id             Int                      @db.UnsignedInt
-  contains_action        Int                      @default(0) @db.UnsignedTinyInt
-  original_sender        String?                  @db.VarChar(255)
-  forms_email_action     forms_email_action?
-  forms_email_attachment forms_email_attachment[]
-  forms_email_body       forms_email_body?
-  forms_email_favorite   forms_email_favorite[]
-  forms_email_label      forms_email_label[]
-  forms_email_user       forms_email_user[]
+  id                      Int                       @id @default(autoincrement()) @db.UnsignedInt
+  message_id              String                    @unique(map: "message_id") @db.VarChar(50)
+  thread_id               String?                   @db.VarChar(50)
+  subject                 String?                   @db.VarChar(1024)
+  snippet                 String?                   @db.VarChar(1024)
+  type                    forms_email_type          @default(inbox)
+  from_address            String?                   @db.VarChar(255)
+  delivered_to_address    String?                   @db.VarChar(255)
+  to_address              String?                   @db.MediumText
+  reply_to                String?                   @db.VarChar(255)
+  date                    DateTime                  @db.DateTime(0)
+  account_id              Int                       @db.UnsignedInt
+  contains_action         Int                       @default(0) @db.UnsignedTinyInt
+  original_sender         String?                   @db.VarChar(255)
+  forms_email_action      forms_email_action?
+  forms_email_actions_log forms_email_actions_log[] @ignore
+  forms_email_attachment  forms_email_attachment[]  @ignore
+  forms_email_body        forms_email_body?
+  forms_email_favorite    forms_email_favorite[]
+  forms_email_label       forms_email_label[]
+  forms_email_user        forms_email_user[]
 
   @@index([date], map: "date")
   @@index([thread_id], map: "thread_id")
@@ -550,14 +493,16 @@ model forms_email_action {
   @@index([user_id], map: "FK_forms_email_action_xcart_customers")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model forms_email_attachment {
-  id          Int         @id @default(autoincrement()) @db.UnsignedInt
   email_id    Int         @db.UnsignedInt
   attachment  String?     @db.VarChar(1024)
   filename    String?     @db.VarChar(255)
+  cid         String?     @db.VarChar(50)
   forms_email forms_email @relation(fields: [email_id], references: [id], onDelete: Cascade, map: "FK_forms_email_attachment_forms_email")
 
   @@index([email_id], map: "FK_forms_email_attachment_forms_email")
+  @@ignore
 }
 
 model forms_email_body {
@@ -645,6 +590,8 @@ model google_products {
   product_id      Int                              @id
   shopping_status google_products_shopping_status?
   xcart_products  xcart_products                   @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "FK_google_products_xcart_products")
+
+  @@index([shopping_status], map: "shopping_status")
 }
 
 model google_products_stats {
@@ -721,6 +668,8 @@ model order_extra {
   payment_operator_id Int?
   purchase_order      String? @db.Text
   ip                  String? @db.VarChar(255)
+  longitude           String? @db.VarChar(155)
+  latitude            String? @db.VarChar(155)
 }
 
 model orders_calls {
@@ -738,8 +687,10 @@ model pages_info_block {
   id      Int     @id @default(autoincrement()) @db.UnsignedInt
   name    String  @db.VarChar(255)
   text    String? @db.Text
-  tag     String  @unique(map: "key") @db.VarChar(255)
+  tag     String  @db.VarChar(255)
   lang_id Int     @default(1) @db.UnsignedMediumInt
+
+  @@unique([tag, lang_id], map: "key")
 }
 
 model pages_page {
@@ -780,64 +731,6 @@ model payment_methods {
   is_active             Int                     @default(1) @db.TinyInt
   position              Int                     @default(0) @db.UnsignedMediumInt
   sites_payment_methods sites_payment_methods[]
-}
-
-model pb_GoogleAdwordsStats {
-  id          Int       @id @default(autoincrement())
-  g_date      DateTime? @db.Date
-  cost        Decimal?  @db.Decimal(12, 2)
-  clicks      Int?
-  impressions Int?
-  conversions Int?
-  ctr         Decimal?  @db.Decimal(12, 2)
-
-  @@index([g_date], map: "idx_gdate")
-}
-
-model pb_activeproducts {
-  productid       Int       @id
-  netincome1      Decimal?  @db.Decimal(12, 2)
-  netincome0      Decimal?  @db.Decimal(12, 2)
-  saleamount1     Int?
-  saleamount0     Int?
-  minprice        Decimal?  @db.Decimal(12, 2)
-  currentprice    Decimal?  @db.Decimal(12, 2)
-  oldprice        Decimal?  @db.Decimal(12, 2)
-  nextpricestep   Decimal?  @db.Decimal(12, 2)
-  pricedelta      Decimal?  @db.Decimal(12, 2)
-  nextprice       Decimal?  @db.Decimal(12, 2)
-  pricedelta_mult Decimal?  @db.Decimal(12, 2)
-  mapprice        Decimal?  @db.Decimal(12, 2)
-  cost_to_us      Decimal?  @db.Decimal(12, 2)
-  list_price      Decimal?  @db.Decimal(12, 2)
-  update_date     DateTime? @default(now()) @db.Timestamp(0)
-}
-
-model pb_debuglog {
-  id      Int     @id @default(autoincrement())
-  message String? @db.VarChar(1000)
-}
-
-model pb_excluded_products {
-  productid Int @id
-}
-
-model pb_history {
-  id                       Int       @id @default(autoincrement()) @db.UnsignedInt
-  productid                Int?      @db.UnsignedMediumInt
-  pb_datetime              DateTime? @db.DateTime(0)
-  pb_reason                Int?
-  price_old                Decimal?  @db.Decimal(12, 2)
-  price_new                Decimal?  @db.Decimal(12, 2)
-  last_sales_performance   String?   @db.VarChar(60)
-  price_map                Decimal?  @db.Decimal(12, 2)
-  cost_to_us               Decimal?  @db.Decimal(12, 2)
-  dx_price_multiplier      Decimal?  @db.Decimal(6, 2)
-  product_price_multiplier Decimal?  @db.Decimal(6, 2)
-
-  @@index([productid, id], map: "idxPRODUCTID_ID")
-  @@index([pb_datetime], map: "pb_datetime")
-  @@index([productid], map: "productid")
 }
 
 model products_sf_moves {
@@ -1109,12 +1002,13 @@ model total_product_ratings {
 }
 
 model translate_language {
-  lang_id             Int                   @id @default(autoincrement()) @db.UnsignedMediumInt
-  lang_code           String                @unique(map: "lang_code") @default("") @db.Char(2)
-  name                String                @default("") @db.VarChar(64)
-  status              Int                   @default(1) @db.UnsignedTinyInt
-  country_code        String                @db.Char(2)
-  xcart_country_langs xcart_country_langs[]
+  lang_id                          Int                                @id @default(autoincrement()) @db.UnsignedMediumInt
+  lang_code                        String                             @unique(map: "lang_code") @default("") @db.Char(2)
+  name                             String                             @default("") @db.VarChar(64)
+  status                           Int                                @default(1) @db.UnsignedTinyInt
+  country_code                     String                             @db.Char(2)
+  xcart_country_langs              xcart_country_langs[]
+  xcart_order_status_notifications xcart_order_status_notifications[]
 }
 
 model xcart_Telephone_area_codes {
@@ -1177,8 +1071,8 @@ model xcart_amazon_fulfillment_locations {
   address                                                                 String?                               @db.VarChar(255)
   xcart_countries                                                         xcart_countries                       @relation(fields: [country], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_countries")
   xcart_states                                                            xcart_states?                         @relation(fields: [state], references: [stateid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_states")
-  xcart_zip_xcart_amazon_fulfillment_locations_zipcodeToxcart_zip         xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcodeToxcart_zip", fields: [zipcode], references: [zip], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip")
-  xcart_zip_xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip", fields: [zipcode, country], references: [zip, country], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip_country")
+  xcart_zip_xcart_amazon_fulfillment_locations_zipcodeToxcart_zip         xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcodeToxcart_zip", fields: [zipcode], references: [zip], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip") @ignore
+  xcart_zip_xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip xcart_zip                             @relation("xcart_amazon_fulfillment_locations_zipcode_countryToxcart_zip", fields: [zipcode, country], references: [zip, country], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_amazon_fulfillment_locations_xcart_zip_country") @ignore
   xcart_amazon_list_inbound_shipments                                     xcart_amazon_list_inbound_shipments[]
 
   @@index([country], map: "FK_xcart_amazon_fulfillment_locations_xcart_countries")
@@ -1239,9 +1133,9 @@ model xcart_attention_tags_values {
   status      String  @default("") @db.VarChar(255)
   active      String  @default("Y") @db.Char(1)
   events      Boolean @default(false)
-  orderby     Int     @default(0)
+  orderby     Int     @default(0) @db.UnsignedInt
   color       String  @default("#F4CCCC") @db.VarChar(7)
-  description String  @db.MediumText
+  description String  @default("") @db.VarChar(512)
 
   @@index([status_id, active, orderby], map: "idxStatusId_Active")
 }
@@ -1394,7 +1288,7 @@ model xcart_categories {
   parentid                           Int                         @default(0)
   categoryid_path                    String                      @default("") @db.VarChar(255)
   category                           String                      @default("") @db.VarChar(255)
-  description                        String                      @db.MediumText
+  description                        String?                     @db.MediumText
   meta_descr                         String                      @default("") @db.VarChar(255)
   avail                              String                      @default("Y") @db.Char(1)
   views_stats                        Int                         @default(0)
@@ -1402,7 +1296,7 @@ model xcart_categories {
   threshold_bestsellers              Int                         @default(1)
   product_count                      Int                         @default(0)
   meta_keywords                      String                      @default("") @db.VarChar(255)
-  is_bold                            String                      @default("Y") @db.Char(1)
+  is_bold                            String?                     @default("Y") @db.Char(1)
   storefrontid                       Int                         @default(0)
   linked_out_category_id_1           Int                         @default(0)
   linked_out_category_id_2           Int                         @default(0)
@@ -1421,8 +1315,8 @@ model xcart_categories {
   pc_category_weight                 Decimal                     @default(0.00000000) @db.Decimal(18, 8)
   pc_z                               Decimal                     @default(0.00000000) @db.Decimal(18, 8)
   SEO_category_name                  String                      @default("") @db.VarChar(600)
-  google_product_category            String                      @db.VarChar(300)
-  SEO_h2                             String                      @db.MediumText
+  google_product_category            String                      @default("") @db.VarChar(300)
+  SEO_h2                             String?                     @db.MediumText
   prevent_index_products             String                      @default("N") @db.Char(1)
   prevent_index_category_page        String                      @default("N") @db.Char(1)
   global_product_count               Int                         @default(0)
@@ -1433,6 +1327,8 @@ model xcart_categories {
   level                              Int?
   lft                                Int?
   rgt                                Int?
+  icon_path                          String?                     @db.VarChar(255)
+  picture_path                       String?                     @db.VarChar(255)
   xcart_products_categories          xcart_products_categories[]
   xcart_storefronts                  xcart_storefronts?
   xcart_supplier_feeds               xcart_supplier_feeds[]
@@ -1549,6 +1445,8 @@ model xcart_checks_deposited_orders {
   amount              Decimal @default(0.00) @db.Decimal(12, 2)
   notes               String  @default("") @db.VarChar(255)
   date_added          Int     @default(0)
+
+  @@index([orderid], map: "orderid")
 }
 
 model xcart_cidev_amazon_fba_products {
@@ -1631,35 +1529,39 @@ model xcart_cidev_daily_fba_stats {
 }
 
 model xcart_cidev_filter_products {
-  fv_id     Int @default(0) @db.UnsignedInt
-  productid Int @default(0) @db.UnsignedInt
-  is_feed   Int @default(0) @db.UnsignedTinyInt
+  fv_id                     Int
+  productid                 Int
+  is_feed                   Int                       @default(0) @db.UnsignedTinyInt
+  xcart_cidev_filter_values xcart_cidev_filter_values @relation(fields: [fv_id], references: [fv_id], onDelete: Cascade, map: "FK_xcart_cidev_filter_products_xcart_cidev_filter_values")
+  xcart_products            xcart_products            @relation(fields: [productid], references: [productid], onDelete: Cascade, map: "FK_xcart_cidev_filter_products_xcart_products")
 
   @@id([productid, fv_id])
   @@index([fv_id], map: "fv_id")
-  @@index([productid, is_feed], map: "productid_is_feed")
 }
 
 model xcart_cidev_filter_values {
-  fv_id       Int    @id @default(autoincrement())
-  f_id        Int    @default(0)
-  fv_name     String @default("") @db.VarChar(512)
-  fv_order_by Int    @default(10)
-  fv_active   String @default("Y") @db.Char(1)
+  fv_id                       Int                           @id @default(autoincrement())
+  f_id                        Int
+  fv_name                     String                        @default("") @db.VarChar(768)
+  fv_order_by                 Int                           @default(10)
+  fv_active                   String                        @default("Y") @db.Char(1)
+  xcart_cidev_filters         xcart_cidev_filters           @relation(fields: [f_id], references: [f_id], onDelete: Cascade, map: "FK_xcart_cidev_filter_values_xcart_cidev_filters")
+  xcart_cidev_filter_products xcart_cidev_filter_products[]
 
-  @@unique([fv_name, f_id], map: "FilterType-ValueName")
-  @@index([f_id], map: "f_id")
+  @@unique([f_id, fv_name], map: "FilterType-ValueName")
   @@index([fv_order_by, fv_name], map: "fv_aon")
 }
 
 model xcart_cidev_filters {
-  f_id         Int    @id @default(autoincrement())
-  f_name       String @default("") @db.VarChar(128)
-  f_order_by   Int    @default(10)
-  f_active     String @default("Y") @db.Char(1)
-  storefrontid Int    @default(0)
+  f_id                      Int                         @id @default(autoincrement())
+  f_name                    String                      @default("") @db.VarChar(128)
+  f_order_by                Int                         @default(10)
+  f_active                  String                      @default("Y") @db.Char(1)
+  storefrontid              Int                         @default(0)
+  xcart_cidev_filter_values xcart_cidev_filter_values[]
 
   @@unique([f_name, storefrontid], map: "f_name")
+  @@index([f_active, storefrontid, f_order_by, f_name], map: "f_active")
   @@index([f_order_by, f_name], map: "f_aon")
 }
 
@@ -1686,9 +1588,10 @@ model xcart_cidev_google_product_taxonomy {
 
 model xcart_cidev_issues_processing_rules {
   issue_id                       Int                                                  @id @default(autoincrement())
-  issue_name                     String                                               @db.VarChar(200)
+  issue_description              String?                                              @db.VarChar(512)
   issue_gmc_id                   String                                               @unique(map: "issue_gms_id") @db.VarChar(50)
   issue_processing               xcart_cidev_issues_processing_rules_issue_processing @default(manual)
+  servability                    String?                                              @db.VarChar(50)
   xcart_cidev_gmc_quality_issues xcart_cidev_gmc_quality_issues[]
 }
 
@@ -1755,16 +1658,18 @@ model xcart_cidev_surf_path {
   meta_id               Int                   @default(0) @db.UnsignedInt
   xcart_cidev_surf_meta xcart_cidev_surf_meta @relation(fields: [meta_id], references: [id], onDelete: Cascade, map: "FK_xcart_cidev_surf_path_xcart_cidev_surf_meta")
 
-  @@index([meta_id, position, resource_id, resource_type], map: "meta_id")
+  @@index([meta_id, position, resource_id], map: "meta_id")
   @@index([resource_id, resource_type], map: "resource_id_type")
   @@index([resource_type], map: "resource_type")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_cidev_updated_amazon_orders {
-  id         Int  @id @default(autoincrement()) @db.UnsignedInt
   orderid    Int?
   type       Int?
   time_stamp Int?
+
+  @@ignore
 }
 
 model xcart_cidev_updated_products {
@@ -1845,7 +1750,7 @@ model xcart_config {
   value      String             @db.MediumText
   category   String             @default("") @db.VarChar(32)
   orderby    Int                @default(0)
-  type       xcart_config_type? @default(text)
+  type       xcart_config_type?
   defvalue   String             @db.MediumText
   variants   String             @db.MediumText
   validation String             @default("") @db.VarChar(255)
@@ -1885,19 +1790,23 @@ model xcart_counties {
 }
 
 model xcart_countries {
-  code                               String                               @id @default("") @db.Char(2)
-  code_A3                            String                               @default("") @db.Char(3)
-  code_N3                            Int                                  @default(0)
-  region                             String                               @default("") @db.Char(2)
-  charset                            String                               @default("iso-8859-1") @db.VarChar(32)
-  active                             String                               @default("Y") @db.Char(1)
-  fedex_zone                         String                               @default("") @db.Char(1)
-  display_states                     String                               @default("Y") @db.Char(1)
-  name                               String?                              @db.VarChar(255)
-  phone_code                         Int?                                 @unique(map: "xcart_countries_phone_code_uindex") @db.UnsignedInt
-  account_addresses                  account_addresses[]
-  xcart_amazon_fulfillment_locations xcart_amazon_fulfillment_locations[]
-  xcart_storefronts                  xcart_storefronts[]
+  code                                                    String                               @unique(map: "country_code") @default("") @db.Char(2)
+  code_A3                                                 String                               @default("") @db.Char(3)
+  code_N3                                                 Int                                  @default(0)
+  region                                                  String                               @default("") @db.Char(2)
+  charset                                                 String                               @default("iso-8859-1") @db.VarChar(32)
+  active                                                  String                               @default("Y") @db.Char(1)
+  fedex_zone                                              String                               @default("") @db.Char(1)
+  display_states                                          String                               @default("Y") @db.Char(1)
+  name                                                    String?                              @db.VarChar(255)
+  is_many_line_addresses                                  Boolean?                             @default(false)
+  phone_code                                              Int?                                 @db.UnsignedInt
+  country_id                                              Int                                  @id @default(autoincrement()) @db.UnsignedInt
+  account_addresses                                       account_addresses[]
+  xcart_amazon_fulfillment_locations                      xcart_amazon_fulfillment_locations[]
+  xcart_orders_xcart_countriesToxcart_orders_b_country_id xcart_orders[]                       @relation("xcart_countriesToxcart_orders_b_country_id")
+  xcart_orders_xcart_countriesToxcart_orders_s_country_id xcart_orders[]                       @relation("xcart_countriesToxcart_orders_s_country_id")
+  xcart_storefronts                                       xcart_storefronts[]
 
   @@index([fedex_zone], map: "fedex_zone")
   @@index([name], map: "name")
@@ -1928,75 +1837,80 @@ model xcart_currencies {
 }
 
 model xcart_customers {
-  id                          Int                     @id @default(autoincrement()) @db.UnsignedInt
-  login                       String                  @unique(map: "login_UNIQUE") @default("") @db.VarChar(32)
-  usertype                    String                  @default("") @db.Char(1)
-  password                    String                  @default("") @db.VarChar(255)
-  password_hint               String                  @default("") @db.VarChar(128)
-  password_hint_answer        String                  @default("") @db.VarChar(128)
-  b_title                     String                  @default("") @db.VarChar(32)
-  b_firstname                 String                  @default("") @db.VarChar(128)
-  b_lastname                  String                  @default("") @db.VarChar(128)
-  b_address                   String                  @default("") @db.VarChar(64)
-  b_city                      String                  @default("") @db.VarChar(64)
-  b_county                    String                  @default("") @db.VarChar(32)
-  b_state                     String                  @default("") @db.VarChar(32)
-  b_country                   String                  @default("") @db.Char(2)
-  b_zipcode                   String                  @default("") @db.VarChar(32)
-  title                       String                  @default("") @db.VarChar(32)
-  firstname                   String                  @default("") @db.VarChar(128)
-  lastname                    String                  @default("") @db.VarChar(128)
-  company                     String                  @default("") @db.VarChar(255)
-  s_title                     String                  @default("") @db.VarChar(32)
-  s_firstname                 String                  @default("") @db.VarChar(128)
-  s_lastname                  String                  @default("") @db.VarChar(128)
-  s_address                   String                  @default("") @db.VarChar(255)
-  s_city                      String                  @default("") @db.VarChar(255)
-  s_county                    String                  @default("") @db.VarChar(32)
-  s_state                     String                  @default("") @db.VarChar(32)
-  s_country                   String                  @default("") @db.Char(2)
-  s_zipcode                   String                  @default("") @db.VarChar(32)
-  email                       String                  @default("") @db.VarChar(128)
-  phone                       String                  @default("") @db.VarChar(32)
-  fax                         String                  @default("") @db.VarChar(32)
-  url                         String                  @default("") @db.VarChar(128)
-  card_name                   String                  @default("") @db.VarChar(255)
-  card_type                   String                  @default("") @db.VarChar(16)
-  card_number                 String                  @default("") @db.VarChar(128)
-  card_expire                 String                  @default("") @db.VarChar(4)
-  card_cvv2                   String                  @default("") @db.VarChar(64)
-  last_login                  Int                     @default(0)
-  first_login                 Int                     @default(0)
-  status                      String                  @default("Y") @db.Char(1)
-  referer                     String                  @default("") @db.VarChar(255)
-  ssn                         String                  @default("") @db.VarChar(32)
-  language                    String                  @default("US") @db.Char(2)
-  cart                        String                  @db.LongText
-  change_password             String                  @default("N") @db.Char(1)
-  parent                      String                  @default("") @db.VarChar(32)
-  pending_plan_id             Int                     @default(0)
-  activity                    String                  @default("Y") @db.Char(1)
-  membershipid                Int                     @default(0)
-  pending_membershipid        Int                     @default(0)
-  tax_number                  String                  @default("") @db.VarChar(50)
-  tax_exempt                  String                  @default("N") @db.Char(1)
-  last_message                String                  @default("N") @db.Char(1)
-  manufacturerids             String                  @db.MediumText
-  phone_ext                   String                  @default("") @db.VarChar(32)
-  position                    String                  @default("") @db.VarChar(128)
-  pbx_extension               String                  @default("") @db.VarChar(128)
-  allow_operate_as_membership String?                 @db.VarChar(30)
-  cart_number                 Int                     @default(0)
-  show_events                 Boolean                 @default(false)
-  show_events_min_date        DateTime?               @db.Date
-  parent_user_id              Int?                    @db.UnsignedInt
-  xcart_customers             xcart_customers?        @relation("xcart_customersToxcart_customers_parent_user_id", fields: [parent_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_customers_xcart_customers")
-  forms_email_action          forms_email_action[]
-  forms_email_favorite        forms_email_favorite[]
-  forms_email_user            forms_email_user[]
-  xcart_cidev_surf_meta       xcart_cidev_surf_meta[]
-  other_xcart_customers       xcart_customers[]       @relation("xcart_customersToxcart_customers_parent_user_id")
-  xcart_vrs                   xcart_vrs[]
+  id                                Int                                 @id @default(autoincrement()) @db.UnsignedInt
+  login                             String                              @unique(map: "login_UNIQUE") @default("") @db.VarChar(32)
+  usertype                          String                              @default("") @db.Char(1)
+  password                          String                              @default("") @db.VarChar(255)
+  password_hint                     String                              @default("") @db.VarChar(128)
+  password_hint_answer              String                              @default("") @db.VarChar(128)
+  b_title                           String                              @default("") @db.VarChar(32)
+  b_firstname                       String                              @default("") @db.VarChar(128)
+  b_lastname                        String                              @default("") @db.VarChar(128)
+  b_address                         String                              @default("") @db.VarChar(64)
+  b_city                            String                              @default("") @db.VarChar(64)
+  b_county                          String                              @default("") @db.VarChar(32)
+  b_state                           String                              @default("") @db.VarChar(32)
+  b_country                         String                              @default("") @db.Char(2)
+  b_zipcode                         String                              @default("") @db.VarChar(32)
+  title                             String                              @default("") @db.VarChar(32)
+  firstname                         String                              @default("") @db.VarChar(128)
+  lastname                          String                              @default("") @db.VarChar(128)
+  company                           String                              @default("") @db.VarChar(255)
+  s_title                           String                              @default("") @db.VarChar(32)
+  s_firstname                       String                              @default("") @db.VarChar(128)
+  s_lastname                        String                              @default("") @db.VarChar(128)
+  s_address                         String                              @default("") @db.VarChar(255)
+  s_city                            String                              @default("") @db.VarChar(255)
+  s_county                          String                              @default("") @db.VarChar(32)
+  s_state                           String                              @default("") @db.VarChar(32)
+  s_country                         String                              @default("") @db.Char(2)
+  s_zipcode                         String                              @default("") @db.VarChar(32)
+  email                             String                              @default("") @db.VarChar(128)
+  phone                             String                              @default("") @db.VarChar(32)
+  fax                               String                              @default("") @db.VarChar(32)
+  url                               String                              @default("") @db.VarChar(128)
+  card_name                         String                              @default("") @db.VarChar(255)
+  card_type                         String                              @default("") @db.VarChar(16)
+  card_number                       String                              @default("") @db.VarChar(128)
+  card_expire                       String                              @default("") @db.VarChar(4)
+  card_cvv2                         String                              @default("") @db.VarChar(64)
+  last_login                        Int                                 @default(0)
+  first_login                       Int                                 @default(0)
+  status                            String                              @default("Y") @db.Char(1)
+  referer                           String                              @default("") @db.VarChar(255)
+  ssn                               String                              @default("") @db.VarChar(32)
+  language                          String                              @default("US") @db.Char(2)
+  cart                              String                              @default("") @db.VarChar(255)
+  change_password                   String                              @default("N") @db.Char(1)
+  parent                            String                              @default("") @db.VarChar(32)
+  pending_plan_id                   Int                                 @default(0)
+  activity                          String                              @default("Y") @db.Char(1)
+  membershipid                      Int                                 @default(0)
+  pending_membershipid              Int                                 @default(0)
+  tax_number                        String                              @default("") @db.VarChar(50)
+  tax_exempt                        String                              @default("N") @db.Char(1)
+  last_message                      String                              @default("N") @db.Char(1)
+  manufacturerids                   String                              @default("") @db.VarChar(255)
+  phone_ext                         String                              @default("") @db.VarChar(32)
+  position                          String                              @default("") @db.VarChar(128)
+  pbx_extension                     String                              @default("") @db.VarChar(128)
+  allow_operate_as_membership       String?                             @db.VarChar(30)
+  cart_number                       Int                                 @default(0)
+  show_events                       Boolean                             @default(false)
+  show_events_min_date              DateTime?                           @db.Date
+  parent_user_id                    Int?                                @db.UnsignedInt
+  xcart_customers                   xcart_customers?                    @relation("xcart_customersToxcart_customers_parent_user_id", fields: [parent_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_customers_xcart_customers")
+  forms_email_action                forms_email_action[]
+  forms_email_actions_log           forms_email_actions_log[]           @ignore
+  forms_email_favorite              forms_email_favorite[]
+  forms_email_user                  forms_email_user[]
+  vrs_helper_messages               vrs_helper_messages[]
+  xcart_cidev_surf_meta             xcart_cidev_surf_meta[]
+  other_xcart_customers             xcart_customers[]                   @relation("xcart_customersToxcart_customers_parent_user_id")
+  xcart_history_data                xcart_history_data[]
+  xcart_k                           xcart_k[]
+  xcart_manufacturers_upload_prices xcart_manufacturers_upload_prices[]
+  xcart_products                    xcart_products[]
 
   @@index([parent_user_id], map: "FK_xcart_customers_xcart_customers")
   @@index([cart_number], map: "cart_number")
@@ -2360,57 +2274,71 @@ model xcart_fedex_zips {
   @@index([zip_zone], map: "zip_zone")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_attention_tag_statuses {
-  id        Int @id @default(autoincrement()) @db.UnsignedInt
   fid       Int @default(0)
   status_id Int @default(0)
 
   @@index([fid], map: "idxfid")
   @@index([status_id], map: "idxstatus")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_distributors {
-  id             Int @id @default(autoincrement()) @db.UnsignedInt
   fid            Int @default(0)
   manufacturerid Int @default(0)
+
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_fraud_statuses {
-  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   fid          Int
   fraud_status String @default("") @db.VarChar(1)
 
   @@index([fid], map: "idx_fid")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_po_statuses {
-  id     Int                                    @id @default(autoincrement()) @db.UnsignedInt
   fid    Int
   status xcart_filter_preset_po_statuses_status
+
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_product_question_statuses {
-  id        Int    @id @default(autoincrement()) @db.UnsignedInt
   fid       Int
   pq_status String @default("") @db.VarChar(32)
+
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_ship_to_country {
-  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   fid          Int
   country_code String @default("") @db.VarChar(32)
+
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_statuses {
-  id     Int    @id @default(autoincrement()) @db.UnsignedInt
   fid    Int
   status String @default("") @db.VarChar(2)
+
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_filter_preset_storefronts {
-  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   fid          Int
   storefrontid String @default("0") @db.VarChar(32)
+
+  @@ignore
 }
 
 model xcart_filter_presets {
@@ -2562,13 +2490,17 @@ model xcart_help_menu_items {
 }
 
 model xcart_history_data {
-  resourceid    Int
-  resource_type xcart_history_data_resource_type
-  changedate    DateTime                         @db.DateTime(0)
-  fieldname     xcart_history_data_fieldname
-  value         String                           @db.VarChar(100)
+  resourceid      Int
+  resource_type   xcart_history_data_resource_type
+  changedate      DateTime                         @db.DateTime(0)
+  fieldname       xcart_history_data_fieldname
+  old_value       String?                          @db.VarChar(100)
+  value           String                           @db.VarChar(100)
+  user_id         Int?                             @db.UnsignedInt
+  xcart_customers xcart_customers?                 @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "FK_xcart_history_data_xcart_customers")
 
   @@id([resourceid, resource_type, fieldname, changedate])
+  @@index([user_id], map: "FK_xcart_history_data_xcart_customers")
 }
 
 model xcart_images {
@@ -2963,8 +2895,8 @@ model xcart_mailchimp_newslists {
   storefrontid Int
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_manufacturer_feed_fields {
-  id             Int    @id @default(autoincrement()) @db.UnsignedInt
   feed_id        Int?   @default(0)
   manufacturerid Int?   @default(0)
   field_name     String @default("") @db.VarChar(100)
@@ -2973,18 +2905,19 @@ model xcart_manufacturer_feed_fields {
 
   @@unique([feed_id, manufacturerid, field_name], map: "f_m_fn")
   @@index([manufacturerid], map: "manufacturerid")
+  @@ignore
 }
 
 model xcart_manufacturers {
   manufacturerid                                                                                                     Int                                                     @id @default(autoincrement())
   manufacturer                                                                                                       String                                                  @default("") @db.VarChar(255)
   url                                                                                                                String                                                  @default("") @db.VarChar(255)
-  descr                                                                                                              String                                                  @db.MediumText
+  descr                                                                                                              String?                                                 @db.MediumText
   orderby                                                                                                            Int                                                     @default(0)
   provider                                                                                                           String                                                  @default("") @db.VarChar(32)
   avail                                                                                                              String                                                  @default("Y") @db.Char(1)
-  manufact_text_displayed                                                                                            String                                                  @db.MediumText
-  mess_body                                                                                                          String                                                  @db.MediumText
+  manufact_text_displayed                                                                                            String?                                                 @db.MediumText
+  mess_body                                                                                                          String?                                                 @db.Text
   email                                                                                                              String                                                  @default("") @db.VarChar(128)
   submit_to_operator                                                                                                 String                                                  @default("through_distributor_website") @db.VarChar(64)
   m_address                                                                                                          String                                                  @default("") @db.VarChar(64)
@@ -2993,7 +2926,7 @@ model xcart_manufacturers {
   m_country                                                                                                          String                                                  @default("US") @db.Char(2)
   m_state                                                                                                            String                                                  @default("NY") @db.VarChar(32)
   m_zipcode                                                                                                          String                                                  @default("") @db.VarChar(32)
-  cart_manufact_text_displayed                                                                                       String                                                  @db.MediumText
+  cart_manufact_text_displayed                                                                                       String?                                                 @db.MediumText
   code                                                                                                               String                                                  @unique(map: "code") @default("") @db.VarChar(10)
   catalog_sku                                                                                                        String                                                  @default("") @db.VarChar(32)
   catalog_price                                                                                                      String                                                  @default("") @db.VarChar(16)
@@ -3032,7 +2965,7 @@ model xcart_manufacturers {
   d_password                                                                                                         String                                                  @default("") @db.VarChar(255)
   d_submit_to_order_entry_operator                                                                                   String                                                  @default("") @db.Char(1)
   d_order_entry_operator_email                                                                                       String                                                  @default("") @db.VarChar(255)
-  d_instructions_to_order_entry_operator                                                                             String                                                  @db.MediumText
+  d_instructions_to_order_entry_operator                                                                             String?                                                 @db.MediumText
   d_tax_policy_in_states                                                                                             String                                                  @default("") @db.VarChar(255)
   d_warranty_starts_when_order_is                                                                                    String                                                  @default("") @db.VarChar(255)
   d_warranty_last_day                                                                                                String                                                  @default("") @db.VarChar(255)
@@ -3055,7 +2988,7 @@ model xcart_manufacturers {
   d_invoices_mailed_to_our                                                                                           String                                                  @default("") @db.VarChar(255)
   d_availability_must_be_checked                                                                                     xcart_manufacturers_d_availability_must_be_checked      @default(N)
   d_send_to_email_14                                                                                                 String                                                  @default("") @db.VarChar(255)
-  d_message_body_14                                                                                                  String                                                  @db.MediumText
+  d_message_body_14                                                                                                  String?                                                 @db.MediumText
   d_email_subject_14                                                                                                 String                                                  @default("") @db.VarChar(255)
   d_link_to_order_distributors_website                                                                               String                                                  @default("") @db.VarChar(255)
   d_sec14_show_header                                                                                                String                                                  @default("Y") @db.Char(1)
@@ -3082,8 +3015,8 @@ model xcart_manufacturers {
   d_feed_procedure_id                                                                                                String                                                  @default("") @db.VarChar(255)
   d_product_management_team_email                                                                                    String                                                  @default("") @db.VarChar(255)
   d_most_recent_feed_updation_date                                                                                   String                                                  @default("") @db.VarChar(255)
-  d_distributor_return_policy                                                                                        String                                                  @db.MediumText
-  product_feeds_comments                                                                                             String                                                  @db.MediumText
+  d_distributor_return_policy                                                                                        String?                                                 @db.MediumText
+  product_feeds_comments                                                                                             String?                                                 @db.MediumText
   d_last_feed_rows_processed                                                                                         String                                                  @default("") @db.VarChar(255)
   d_validation_threshold                                                                                             String                                                  @default("") @db.VarChar(255)
   supplier_products_price_multiplier                                                                                 Decimal                                                 @default(1.00) @db.Decimal(12, 2)
@@ -3100,7 +3033,7 @@ model xcart_manufacturers {
   USE_MY_TRUCKING_ACCOUNT_functionality                                                                              String                                                  @default("N") @db.Char(1)
   allow_pre_orders                                                                                                   String                                                  @default("") @db.Char(1)
   amazon_leadtimetoship                                                                                              Int                                                     @default(7)
-  d_dispatch_instructions                                                                                            String                                                  @db.MediumText
+  d_dispatch_instructions                                                                                            String?                                                 @db.MediumText
   add_ca_status_id                                                                                                   Int                                                     @default(0)
   warehouse_pickups_are_allowed                                                                                      String                                                  @default("N") @db.Char(1)
   d_product_questions_send_to_name                                                                                   String                                                  @default("") @db.VarChar(255)
@@ -3162,18 +3095,28 @@ model xcart_manufacturers {
   d_frontend_return_policy                                                                                           String?                                                 @db.MediumText
   created_at                                                                                                         DateTime?                                               @default(now()) @db.Timestamp(0)
   is_moderated                                                                                                       Int?                                                    @default(0) @db.UnsignedTinyInt
+  expertise                                                                                                          Int                                                     @default(0) @db.TinyInt
+  total_products                                                                                                     Int                                                     @default(0) @db.UnsignedMediumInt
+  active_products                                                                                                    Int                                                     @default(0) @db.UnsignedMediumInt
+  ads_products                                                                                                       Int                                                     @default(0) @db.UnsignedMediumInt
+  disable_check_images_link                                                                                          Int                                                     @default(0) @db.TinyInt
+  feed_info                                                                                                          Json?
   xcart_currencies                                                                                                   xcart_currencies                                        @relation(fields: [d_currency], references: [currency_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_manufacturers_xcart_currencies")
   xcart_templates_for_communication_xcart_manufacturers_order_entry_template_idToxcart_templates_for_communication   xcart_templates_for_communication?                      @relation("xcart_manufacturers_order_entry_template_idToxcart_templates_for_communication", fields: [order_entry_template_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_manufacturers_xcart_templates_for_communication_2")
   xcart_templates_for_communication_xcart_manufacturers_order_submit_template_idToxcart_templates_for_communication  xcart_templates_for_communication?                      @relation("xcart_manufacturers_order_submit_template_idToxcart_templates_for_communication", fields: [order_submit_template_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_manufacturers_xcart_templates_for_communication_3")
   xcart_templates_for_communication_xcart_manufacturers_request_avail_template_idToxcart_templates_for_communication xcart_templates_for_communication?                      @relation("xcart_manufacturers_request_avail_template_idToxcart_templates_for_communication", fields: [request_avail_template_id], references: [id], onDelete: NoAction, map: "FK_xcart_manufacturers_xcart_templates_for_communication")
   amazon_reorder_batch_data                                                                                          amazon_reorder_batch_data[]
+  xcart_column_table_save                                                                                            xcart_column_table_save[]
   xcart_distributor_contacts                                                                                         xcart_distributor_contacts[]
   xcart_distributor_tabs                                                                                             xcart_distributor_tabs[]
   xcart_distributor_taxes                                                                                            xcart_distributor_taxes[]
   xcart_manufacturers_carrier                                                                                        xcart_manufacturers_carrier[]
   xcart_manufacturers_site                                                                                           xcart_manufacturers_site[]
+  xcart_manufacturers_upload_prices                                                                                  xcart_manufacturers_upload_prices[]
+  xcart_order_groups                                                                                                 xcart_order_groups[]
   xcart_products                                                                                                     xcart_products[]
   xcart_reconciliation_manufacturers                                                                                 xcart_reconciliation_manufacturers[]
+  xcart_shipping_rates                                                                                               xcart_shipping_rates[]
 
   @@index([d_currency], map: "FK_xcart_manufacturers_xcart_currencies")
   @@index([request_avail_template_id], map: "FK_xcart_manufacturers_xcart_templates_for_communication")
@@ -3430,6 +3373,7 @@ model xcart_order_details {
   amazon_shipping           Decimal?                              @db.Decimal(12, 2)
   xcart_order_groups        xcart_order_groups?                   @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_details_xcart_order_groups")
   xcart_orders              xcart_orders                          @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "FK_xcart_order_details_xcart_orders")
+  xcart_refunded_products   xcart_refunded_products[]
 
   @@unique([orderid, productcode], map: "orderid_productcode")
   @@index([order_group_id], map: "FK_xcart_order_details_xcart_order_groups")
@@ -3481,53 +3425,57 @@ model xcart_order_fraud_statuses {
 }
 
 model xcart_order_group_invoices {
-  orderid                                Int       @default(0)
-  manufacturerid                         Int       @default(0)
-  invoice_number                         Int       @default(0)
-  invoice_received                       String    @default("N") @db.Char(1)
-  cost_to_us_for_products_charged        Decimal   @default(0.00) @db.Decimal(12, 2)
-  tax_charged_except_HST                 Decimal   @default(0.00) @db.Decimal(12, 2)
-  products_total                         Decimal   @default(0.00) @db.Decimal(12, 2)
-  shipping_charged                       Decimal   @default(0.00) @db.Decimal(12, 2)
-  drop_ship_fee_charged                  Decimal   @default(0.00) @db.Decimal(12, 2)
-  shipping_total                         Decimal   @default(0.00) @db.Decimal(12, 2)
-  HST_charged                            Decimal   @default(0.00) @db.Decimal(12, 2)
-  invoice_total                          Decimal   @default(0.00) @db.Decimal(12, 2)
-  extra_items_on_invoice                 String    @default("N") @db.Char(1)
-  items_shipped_to_wrong_address         String    @default("N") @db.Char(1)
-  status                                 String    @default("A") @db.Char(1)
-  part_of_total_transaction_in_amount_of Decimal   @default(0.00) @db.Decimal(12, 2)
-  reconciliation_id                      Int       @default(0)
-  created_at                             DateTime? @default(now()) @db.Timestamp(0)
-  invoice_date                           DateTime? @db.Date
-  payment_due_date                       DateTime? @db.Date
-  update_date                            DateTime? @db.DateTime(0)
-  dx_invoice_number                      String?   @db.VarChar(255)
+  invoice_id                             Int                                   @id @default(autoincrement()) @db.UnsignedInt
+  orderid                                Int                                   @default(0)
+  manufacturerid                         Int                                   @default(0)
+  invoice_number                         Int                                   @default(0)
+  invoice_received                       String                                @default("N") @db.Char(1)
+  cost_to_us_for_products_charged        Decimal                               @default(0.00) @db.Decimal(12, 2)
+  tax_charged_except_HST                 Decimal                               @default(0.00) @db.Decimal(12, 2)
+  products_total                         Decimal                               @default(0.00) @db.Decimal(12, 2)
+  shipping_charged                       Decimal                               @default(0.00) @db.Decimal(12, 2)
+  drop_ship_fee_charged                  Decimal                               @default(0.00) @db.Decimal(12, 2)
+  shipping_total                         Decimal                               @default(0.00) @db.Decimal(12, 2)
+  HST_charged                            Decimal                               @default(0.00) @db.Decimal(12, 2)
+  invoice_total                          Decimal                               @default(0.00) @db.Decimal(12, 2)
+  dx_credit                              Decimal                               @default(0.00) @db.Decimal(12, 2)
+  extra_items_on_invoice                 String                                @default("N") @db.Char(1)
+  items_shipped_to_wrong_address         String                                @default("N") @db.Char(1)
+  status                                 String                                @default("A") @db.Char(1)
+  part_of_total_transaction_in_amount_of Decimal                               @default(0.00) @db.Decimal(12, 2)
+  reconciliation_id                      Int                                   @default(0)
+  created_at                             DateTime?                             @default(now()) @db.Timestamp(0)
+  invoice_date                           DateTime?                             @db.Date
+  payment_due_date                       DateTime?                             @db.Date
+  update_date                            DateTime?                             @db.DateTime(0)
+  dx_invoice_number                      String?                               @db.VarChar(255)
+  xcart_order_group_invoices_products    xcart_order_group_invoices_products[]
 
-  @@id([orderid, manufacturerid, invoice_number])
+  @@unique([orderid, manufacturerid, invoice_number], map: "orderid_manufacturerid_invoice_number")
   @@index([manufacturerid], map: "manufacturerid")
-  @@index([orderid], map: "orderid")
   @@index([reconciliation_id], map: "reconciliation_id")
 }
 
 model xcart_order_group_invoices_products {
-  orderid         Int      @default(0)
-  manufacturerid  Int      @default(0)
-  invoice_number  Int      @default(0)
-  itemid          Int      @default(0)
-  item_string     String   @default("") @db.VarChar(255)
-  item_type       Int      @default(0) @db.TinyInt
-  unit_cost       Decimal  @default(0.000) @db.Decimal(12, 3)
-  qty_inv         Int      @default(0)
-  unit_cost_total Decimal  @default(0.00) @db.Decimal(12, 2)
-  customer_id     Int?
-  product_id      Int?
-  updated_at      DateTime @default(now()) @db.Timestamp(0)
+  invoice_detail_id          Int                         @id @default(autoincrement()) @db.UnsignedInt
+  invoice_id                 Int?                        @db.UnsignedInt
+  orderid                    Int                         @default(0)
+  manufacturerid             Int                         @default(0)
+  invoice_number             Int                         @default(0)
+  itemid                     Int                         @default(0)
+  item_string                String                      @default("") @db.VarChar(255)
+  item_type                  Int                         @default(0) @db.TinyInt
+  unit_cost                  Decimal                     @default(0.000) @db.Decimal(12, 3)
+  qty_inv                    Int                         @default(0)
+  unit_cost_total            Decimal                     @default(0.00) @db.Decimal(12, 2)
+  customer_id                Int?
+  product_id                 Int?
+  updated_at                 DateTime                    @default(now()) @db.Timestamp(0)
+  xcart_order_group_invoices xcart_order_group_invoices? @relation(fields: [invoice_id], references: [invoice_id], onDelete: Cascade, map: "FK_xcart_order_group_invoices_products_invoices")
 
-  @@id([orderid, manufacturerid, invoice_number, itemid, item_string])
+  @@unique([invoice_id, itemid, item_string], map: "orderid_manufacturerid_invoice_number_itemid_item_string")
   @@index([itemid], map: "itemid")
   @@index([manufacturerid], map: "manufacturerid")
-  @@index([orderid], map: "orderid")
 }
 
 model xcart_order_group_memos {
@@ -3652,10 +3600,13 @@ model xcart_order_groups {
   distributor_price_multiplier                                            Decimal                                          @default(1.00) @db.Decimal(12, 2)
   dispatched_by_amazon                                                    xcart_order_groups_dispatched_by_amazon?         @default(N)
   voided_reason                                                           String?                                          @db.VarChar(255)
+  voided_reason_id                                                        Int?                                             @db.UnsignedInt
   xcart_order_statuses_xcart_order_groups_bd_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_bd_statusToxcart_order_statuses", fields: [bd_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK3_order_groups_bd_status")
   xcart_order_statuses_xcart_order_groups_cb_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_cb_statusToxcart_order_statuses", fields: [cb_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK1_order_groups_cb_status")
   xcart_order_statuses_xcart_order_groups_dc_statusToxcart_order_statuses xcart_order_statuses?                            @relation("xcart_order_groups_dc_statusToxcart_order_statuses", fields: [dc_status], references: [code], onDelete: NoAction, onUpdate: NoAction, map: "FK2_order_groups_dc_status")
-  xcart_orders                                                            xcart_orders?                                    @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "FK_xcart_order_groups_xcart_orders")
+  xcart_manufacturers                                                     xcart_manufacturers                              @relation(fields: [manufacturerid], references: [manufacturerid], onDelete: NoAction, map: "FK_xcart_order_groups_xcart_manufacturers")
+  xcart_orders                                                            xcart_orders?                                    @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "xcart_order_groups_xcart_orders_orderid_fk")
+  xcart_order_voided_reasons                                              xcart_order_voided_reasons?                      @relation(fields: [voided_reason_id], references: [reason_id], onDelete: NoAction, map: "FK_xcart_order_groups_xcart_order_voided_reasons")
   xcart_order_details                                                     xcart_order_details[]
   xcart_order_statuses_history                                            xcart_order_statuses_history[]
   xcart_order_tracking                                                    xcart_order_tracking[]
@@ -3663,6 +3614,7 @@ model xcart_order_groups {
   @@unique([orderid, manufacturerid], map: "orderid_manufacturerid")
   @@index([dc_status], map: "FK2_order_groups_dc_status")
   @@index([bd_status], map: "FK3_order_groups_bd_status")
+  @@index([voided_reason_id], map: "FK_xcart_order_groups_xcart_order_voided_reasons")
   @@index([cb_status, dc_status], map: "cb_status_dc_status")
   @@index([orderid, cb_status], map: "idx_orderid_cb")
   @@index([manufacturerid], map: "manufacturerid")
@@ -3701,13 +3653,19 @@ model xcart_order_status_availability {
 }
 
 model xcart_order_status_notifications {
-  code                        String @id @default("") @db.VarChar(2)
-  customer_subject            String @default("") @db.VarChar(255)
-  copy_subject                String @default("") @db.VarChar(255)
-  email_body                  String @db.Text
-  enabled                     String @default("Y") @db.Char(1)
-  customer_attach_pdf_invoice String @default("") @db.Char(1)
-  admin_attach_pdf_invoice    String @default("") @db.Char(1)
+  notification_id             Int                 @id @default(autoincrement()) @db.UnsignedInt
+  code                        String              @default("") @db.VarChar(2)
+  customer_subject            String              @default("") @db.VarChar(255)
+  copy_subject                String              @default("") @db.VarChar(255)
+  email_body                  String              @db.MediumText
+  enabled                     String              @default("Y") @db.Char(1)
+  customer_attach_pdf_invoice String              @default("") @db.Char(1)
+  admin_attach_pdf_invoice    String              @default("") @db.Char(1)
+  lang_id                     Int?                @db.UnsignedMediumInt
+  translate_language          translate_language? @relation(fields: [lang_id], references: [lang_id], onDelete: NoAction, map: "FK_xcart_order_status_notifications_translate_language")
+
+  @@unique([code, lang_id], map: "code_lang_id")
+  @@index([lang_id], map: "FK_xcart_order_status_notifications_translate_language")
 }
 
 model xcart_order_statuses {
@@ -3722,6 +3680,8 @@ model xcart_order_statuses {
   xcart_order_groups_xcart_order_groups_dc_statusToxcart_order_statuses                                       xcart_order_groups[]              @relation("xcart_order_groups_dc_statusToxcart_order_statuses")
   xcart_order_status_availability_xcart_order_status_availability_destination_status_idToxcart_order_statuses xcart_order_status_availability[] @relation("xcart_order_status_availability_destination_status_idToxcart_order_statuses")
   xcart_order_status_availability_xcart_order_status_availability_source_status_idToxcart_order_statuses      xcart_order_status_availability[] @relation("xcart_order_status_availability_source_status_idToxcart_order_statuses")
+  xcart_orders_xcart_order_statusesToxcart_orders_cb_status_id                                                xcart_orders[]                    @relation("xcart_order_statusesToxcart_orders_cb_status_id")
+  xcart_orders_xcart_order_statusesToxcart_orders_dc_status_id                                                xcart_orders[]                    @relation("xcart_order_statusesToxcart_orders_dc_status_id")
 
   @@index([orderby], map: "orderby")
   @@index([type], map: "type2")
@@ -3733,7 +3693,7 @@ model xcart_order_statuses_history {
   status             String?             @db.VarChar(31)
   old_status         String?             @db.VarChar(31)
   updated            DateTime?           @default(now()) @db.Timestamp(0)
-  xcart_order_groups xcart_order_groups? @relation(fields: [group_id], references: [order_group_id], onDelete: NoAction, onUpdate: NoAction, map: "adshf9h9h2934f")
+  xcart_order_groups xcart_order_groups? @relation(fields: [group_id], references: [order_group_id], onDelete: Cascade, map: "adshf9h9h2934f")
 
   @@index([group_id], map: "adshf9h9h2934f")
 }
@@ -3758,23 +3718,22 @@ model xcart_order_tracking {
 }
 
 model xcart_order_transactions {
-  id                     Int                            @id @default(autoincrement())
-  orderid                Int                            @default(0)
-  paymentid              Int                            @default(0)
-  transaction_id         String                         @default("") @db.VarChar(64)
-  type                   xcart_order_transactions_type?
-  transaction_status     String                         @default("") @db.VarChar(32)
-  transaction_currency   String                         @default("USD") @db.VarChar(3)
-  transaction_amount     Decimal                        @default(0.00) @db.Decimal(12, 2)
-  transaction_fee        Decimal?                       @db.Decimal(12, 2)
-  date                   Int                            @default(0)
-  login                  String                         @default("") @db.VarChar(50)
-  transaction_response   String?                        @db.MediumText
-  manual_transaction     String                         @default("") @db.Char(1)
-  parent_id              Int?
-  parent_transaction_id  String?                        @db.VarChar(64)
-  xcart_orders           xcart_orders                   @relation(fields: [orderid], references: [orderid], onDelete: NoAction, onUpdate: NoAction, map: "xcart_order_transactions_xcart_orders_orderid_fk")
-  xcart_transaction_logs xcart_transaction_logs[]
+  id                    Int                            @id @default(autoincrement())
+  orderid               Int?
+  paymentid             Int                            @default(0)
+  transaction_id        String                         @default("") @db.VarChar(64)
+  type                  xcart_order_transactions_type?
+  transaction_status    String                         @default("") @db.VarChar(32)
+  transaction_currency  String                         @default("USD") @db.VarChar(3)
+  transaction_amount    Decimal                        @default(0.00) @db.Decimal(12, 2)
+  transaction_fee       Decimal?                       @db.Decimal(12, 2)
+  date                  Int                            @default(0)
+  login                 String                         @default("") @db.VarChar(50)
+  transaction_response  String?                        @db.MediumText
+  manual_transaction    String                         @default("") @db.Char(1)
+  parent_id             Int?
+  parent_transaction_id String?                        @db.VarChar(64)
+  xcart_orders          xcart_orders?                  @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "xcart_order_transactions_xcart_orders_orderid_fk")
 
   @@unique([transaction_id, orderid], map: "transaction_id")
   @@index([parent_id], map: "FK_xcart_order_transactions_xcart_order_transactions")
@@ -3800,149 +3759,163 @@ model xcart_order_user_actives_last {
 }
 
 model xcart_orders {
-  orderid                                  Int                                  @default(autoincrement())
-  user_id                                  BigInt?                              @db.UnsignedBigInt
-  order_prefix                             String                               @db.VarChar(50)
-  order_type                               xcart_orders_order_type              @default(XCART)
-  login                                    String                               @default("") @db.VarChar(32)
-  membership                               String                               @default("") @db.VarChar(255)
-  total                                    Decimal                              @default(0.00) @db.Decimal(12, 2)
-  giftcert_discount                        Decimal                              @default(0.00) @db.Decimal(12, 2)
-  giftcert_ids                             String                               @db.MediumText
-  subtotal                                 Decimal                              @default(0.00) @db.Decimal(12, 2)
-  discount                                 Decimal                              @default(0.00) @db.Decimal(12, 2)
-  coupon                                   String                               @default("") @db.VarChar(32)
-  coupon_discount                          Decimal                              @default(0.00) @db.Decimal(12, 2)
-  shippingid                               String                               @db.MediumText
-  tracking                                 String                               @db.MediumText
-  shipping_cost                            Decimal                              @default(0.00) @db.Decimal(12, 2)
-  shipping_costs                           String                               @db.MediumText
-  tax                                      Decimal                              @default(0.00) @db.Decimal(12, 2)
-  taxes_applied                            String                               @db.MediumText
-  date                                     Int                                  @default(0)
-  cb_status                                String?                              @db.Char(2)
-  dc_status                                String?                              @db.Char(2)
-  bd_status                                String?                              @db.Char(2)
-  c2a_status                               String?                              @db.Char(2)
-  a2c_status                               String?                              @db.Char(2)
-  a2b_status                               String?                              @db.Char(2)
-  d2a_status                               String?                              @db.Char(2)
-  payment_method                           String                               @default("") @db.VarChar(64)
-  flag                                     String                               @default("N") @db.Char(1)
-  notes                                    String                               @db.MediumText
-  details                                  String                               @db.MediumText
-  customer_notes                           String                               @db.MediumText
-  customer                                 String                               @default("") @db.VarChar(32)
-  title                                    String                               @default("") @db.VarChar(32)
-  firstname                                String                               @default("") @db.VarChar(255)
-  lastname                                 String                               @default("") @db.VarChar(32)
-  company                                  String                               @default("") @db.VarChar(255)
-  b_title                                  String                               @default("") @db.VarChar(32)
-  b_firstname                              String                               @default("") @db.VarChar(128)
-  b_lastname                               String                               @default("") @db.VarChar(128)
-  b_full_address                           String?                              @db.VarChar(256)
-  b_address                                String                               @default("") @db.VarChar(128)
-  b_city                                   String                               @default("") @db.VarChar(180)
-  b_county                                 String                               @default("") @db.VarChar(32)
-  b_state                                  String                               @default("") @db.VarChar(32)
-  b_country                                String                               @default("") @db.VarChar(50)
-  b_zipcode                                String                               @default("") @db.VarChar(32)
-  s_title                                  String                               @default("") @db.VarChar(32)
-  s_firstname                              String                               @default("") @db.VarChar(128)
-  s_lastname                               String                               @default("") @db.VarChar(128)
-  s_full_address                           String?                              @db.VarChar(256)
-  s_address                                String                               @default("") @db.VarChar(128)
-  s_city                                   String                               @default("") @db.VarChar(180)
-  s_county                                 String                               @default("") @db.VarChar(32)
-  s_state                                  String                               @default("") @db.VarChar(32)
-  s_country                                String                               @default("") @db.VarChar(50)
-  s_zipcode                                String                               @default("") @db.VarChar(32)
-  phone                                    String                               @default("") @db.VarChar(32)
-  fax                                      String                               @default("") @db.VarChar(32)
-  url                                      String                               @default("") @db.VarChar(32)
-  email                                    String                               @default("") @db.VarChar(128)
-  language                                 String                               @default("US") @db.Char(2)
-  clickid                                  Int                                  @default(0)
-  extra                                    String                               @db.MediumText
-  membershipid                             Int                                  @default(0)
-  paymentid                                Int                                  @default(0)
-  payment_surcharge                        Decimal                              @default(0.00) @db.Decimal(12, 2)
-  tax_number                               String                               @default("") @db.VarChar(50)
-  tax_exempt                               String                               @default("N") @db.Char(1)
-  shipping_groups                          String                               @db.MediumText
-  storefrontid                             Int                                  @default(0)
-  phone_ext                                String                               @default("") @db.VarChar(32)
-  orig_po                                  String                               @default("") @db.VarChar(255)
-  ca_status                                String                               @default("") @db.Char(1)
-  po_number                                String                               @default("") @db.VarChar(255)
-  fraud_status                             String                               @default("N") @db.Char(1)
-  overall_fraud_score                      Decimal                              @default(0.00) @db.Decimal(12, 2)
-  bare_fraud_score                         Decimal                              @default(0.00) @db.Decimal(12, 2)
-  vt_paymentid                             Int                                  @default(0)
-  transaction_id_link                      String                               @default("") @db.VarChar(255)
-  avs_code                                 String                               @default("") @db.VarChar(3)
-  otrs_ticket                              String                               @default("") @db.VarChar(255)
-  login_last_opened_or_saved               String                               @default("") @db.VarChar(32)
-  time_last_opened_or_saved                Int                                  @default(0)
-  note_is_taken_care_of                    String                               @default("N") @db.Char(1)
-  tracking_all_filled                      String                               @default("N") @db.Char(1)
-  thankyou_for_order_email_sent            String                               @default("N") @db.Char(1)
-  tracking_fill_time                       Int                                  @default(0)
-  cloned_from                              Int                                  @default(0)
-  sessid                                   String                               @default("") @db.VarChar(40)
-  total_shipping_charge_on_orig_po         Decimal                              @default(0.00) @db.Decimal(12, 2)
-  po_issued_to                             String                               @default("") @db.Char(1)
-  non_us_confirmation                      String                               @default("N") @db.Char(1)
-  cloned_by                                String                               @default("") @db.VarChar(32)
-  alt_items                                String                               @default("") @db.VarChar(500)
-  amazonorderid                            String                               @default("") @db.VarChar(32)
-  product_question_status_id               Int                                  @default(0)
-  amazon_fulfillment_channel               String                               @default("") @db.Char(10)
-  quantity_decreased                       String                               @default("N") @db.Char(1)
-  is_mobile_checkout                       String                               @default("N") @db.Char(1)
-  currency                                 String                               @default("USD") @db.VarChar(3)
-  unfreeze_cb_status                       String                               @default("") @db.Char(1)
-  cart_number                              Int?                                 @db.UnsignedInt
-  shipping_total_net                       Decimal?                             @db.Decimal(12, 2)
-  shipping_total_gst                       Decimal?                             @db.Decimal(12, 2)
-  shipping_total_pst                       Decimal?                             @db.Decimal(12, 2)
-  shipping_total_gross                     Decimal?                             @db.Decimal(12, 2)
-  product_total_net                        Decimal?                             @db.Decimal(12, 2)
-  product_total_gst                        Decimal?                             @db.Decimal(12, 2)
-  product_total_pst                        Decimal?                             @db.Decimal(12, 2)
-  product_total_gross                      Decimal?                             @db.Decimal(12, 2)
-  total_net                                Decimal?                             @db.Decimal(12, 2)
-  total_gst                                Decimal?                             @db.Decimal(12, 2)
-  total_pst                                Decimal?                             @db.Decimal(12, 2)
-  total_gross                              Decimal?                             @db.Decimal(12, 2)
-  tax_info_display_taxed_order_totals      String?                              @db.Char(1)
-  tax_info_display_cart_products_tax_rates String?                              @db.Char(1)
-  tax_info_taxed_subtotal                  Decimal?                             @db.Decimal(12, 2)
-  tax_info_taxed_discounted_subtotal       Decimal?                             @db.Decimal(12, 2)
-  tax_info_taxed_shipping                  Decimal?                             @db.Decimal(12, 2)
-  b_company                                String?                              @db.VarChar(255)
-  s_company                                String?                              @db.VarChar(255)
-  vn_status                                String                               @default("NS") @db.Char(2)
-  referer_id                               Int?
-  amazon_purchase_date                     DateTime?                            @db.DateTime(0)
-  track_sms                                Int                                  @default(0) @db.TinyInt
-  billing_same_shipping                    Int                                  @default(1) @db.TinyInt
-  is_new_checkout                          Int                                  @default(0) @db.UnsignedTinyInt
-  bare_fraud_score_v2                      Float?                               @db.Float
-  xcart_storefronts                        xcart_storefronts                    @relation(fields: [storefrontid], references: [storefrontid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_orders_xcart_storefronts")
-  xcart_users                              xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_orders_xcart_users_user_id_fk")
-  account_decisions                        account_decisions[]
-  account_order_cancel_requests            account_order_cancel_requests[]
-  account_transactions                     account_transactions[]
-  faxes_fax                                faxes_fax[]
-  xcart_amazon_list_inbound_shipments      xcart_amazon_list_inbound_shipments?
-  xcart_order_details                      xcart_order_details[]
-  xcart_order_groups                       xcart_order_groups[]
-  xcart_order_transactions                 xcart_order_transactions[]
-  xcart_po_pipeline                        xcart_po_pipeline[]
-  xcart_refund_groups                      xcart_refund_groups[]
+  orderid                                                              Int                                  @id @default(autoincrement())
+  user_id                                                              BigInt?                              @db.UnsignedBigInt
+  order_prefix                                                         String                               @db.VarChar(50)
+  order_type                                                           xcart_orders_order_type              @default(XCART)
+  login                                                                String                               @default("") @db.VarChar(32)
+  membership                                                           String                               @default("") @db.VarChar(255)
+  total                                                                Decimal                              @default(0.00) @db.Decimal(12, 2)
+  giftcert_discount                                                    Decimal                              @default(0.00) @db.Decimal(12, 2)
+  giftcert_ids                                                         String                               @db.MediumText
+  subtotal                                                             Decimal                              @default(0.00) @db.Decimal(12, 2)
+  discount                                                             Decimal                              @default(0.00) @db.Decimal(12, 2)
+  coupon                                                               String                               @default("") @db.VarChar(32)
+  coupon_discount                                                      Decimal                              @default(0.00) @db.Decimal(12, 2)
+  shippingid                                                           String                               @db.MediumText
+  tracking                                                             String                               @db.MediumText
+  shipping_cost                                                        Decimal                              @default(0.00) @db.Decimal(12, 2)
+  shipping_costs                                                       String                               @db.MediumText
+  tax                                                                  Decimal                              @default(0.00) @db.Decimal(12, 2)
+  taxes_applied                                                        String                               @db.MediumText
+  date                                                                 Int                                  @default(0)
+  cb_status                                                            String?                              @db.Char(2)
+  dc_status                                                            String?                              @db.Char(2)
+  bd_status                                                            String?                              @db.Char(2)
+  c2a_status                                                           String?                              @db.Char(2)
+  a2c_status                                                           String?                              @db.Char(2)
+  a2b_status                                                           String?                              @db.Char(2)
+  d2a_status                                                           String?                              @db.Char(2)
+  payment_method                                                       String                               @default("") @db.VarChar(64)
+  flag                                                                 String                               @default("N") @db.Char(1)
+  notes                                                                String                               @db.MediumText
+  details                                                              String                               @db.MediumText
+  customer_notes                                                       String                               @db.MediumText
+  customer                                                             String                               @default("") @db.VarChar(32)
+  title                                                                String                               @default("") @db.VarChar(32)
+  firstname                                                            String                               @default("") @db.VarChar(255)
+  lastname                                                             String                               @default("") @db.VarChar(32)
+  company                                                              String                               @default("") @db.VarChar(255)
+  b_title                                                              String                               @default("") @db.VarChar(32)
+  b_firstname                                                          String                               @default("") @db.VarChar(128)
+  b_lastname                                                           String                               @default("") @db.VarChar(128)
+  b_full_address                                                       String?                              @db.VarChar(256)
+  b_address                                                            String                               @default("") @db.VarChar(128)
+  b_city                                                               String                               @default("") @db.VarChar(180)
+  b_county                                                             String                               @default("") @db.VarChar(32)
+  b_state                                                              String                               @default("") @db.VarChar(32)
+  b_country                                                            String                               @default("") @db.VarChar(50)
+  b_zipcode                                                            String                               @default("") @db.VarChar(32)
+  s_title                                                              String                               @default("") @db.VarChar(32)
+  s_firstname                                                          String                               @default("") @db.VarChar(128)
+  s_lastname                                                           String                               @default("") @db.VarChar(128)
+  s_full_address                                                       String?                              @db.VarChar(256)
+  s_address                                                            String                               @default("") @db.VarChar(128)
+  s_city                                                               String                               @default("") @db.VarChar(180)
+  s_county                                                             String                               @default("") @db.VarChar(32)
+  s_state                                                              String                               @default("") @db.VarChar(32)
+  s_country                                                            String                               @default("") @db.VarChar(50)
+  s_zipcode                                                            String                               @default("") @db.VarChar(32)
+  phone                                                                String                               @default("") @db.VarChar(32)
+  fax                                                                  String                               @default("") @db.VarChar(32)
+  url                                                                  String                               @default("") @db.VarChar(32)
+  email                                                                String                               @default("") @db.VarChar(128)
+  language                                                             String                               @default("US") @db.Char(2)
+  clickid                                                              Int                                  @default(0)
+  extra                                                                String                               @db.MediumText
+  membershipid                                                         Int                                  @default(0)
+  paymentid                                                            Int                                  @default(0)
+  payment_surcharge                                                    Decimal                              @default(0.00) @db.Decimal(12, 2)
+  tax_number                                                           String                               @default("") @db.VarChar(50)
+  tax_exempt                                                           String                               @default("N") @db.Char(1)
+  shipping_groups                                                      String                               @db.MediumText
+  storefrontid                                                         Int                                  @default(0)
+  phone_ext                                                            String                               @default("") @db.VarChar(32)
+  orig_po                                                              String                               @default("") @db.VarChar(255)
+  ca_status                                                            String                               @default("") @db.Char(1)
+  po_number                                                            String                               @default("") @db.VarChar(255)
+  fraud_status                                                         String                               @default("N") @db.Char(1)
+  overall_fraud_score                                                  Decimal                              @default(0.00) @db.Decimal(12, 2)
+  bare_fraud_score                                                     Decimal                              @default(0.00) @db.Decimal(12, 2)
+  bare_fraud_score_v2                                                  Float?                               @db.Float
+  vt_paymentid                                                         Int                                  @default(0)
+  transaction_id_link                                                  String                               @default("") @db.VarChar(255)
+  avs_code                                                             String                               @default("") @db.VarChar(3)
+  otrs_ticket                                                          String                               @default("") @db.VarChar(255)
+  login_last_opened_or_saved                                           String                               @default("") @db.VarChar(32)
+  time_last_opened_or_saved                                            Int                                  @default(0)
+  note_is_taken_care_of                                                String                               @default("N") @db.Char(1)
+  tracking_all_filled                                                  String                               @default("N") @db.Char(1)
+  thankyou_for_order_email_sent                                        String                               @default("N") @db.Char(1)
+  tracking_fill_time                                                   Int                                  @default(0)
+  cloned_from                                                          Int                                  @default(0)
+  sessid                                                               String                               @default("") @db.VarChar(40)
+  total_shipping_charge_on_orig_po                                     Decimal                              @default(0.00) @db.Decimal(12, 2)
+  po_issued_to                                                         String                               @default("") @db.Char(1)
+  non_us_confirmation                                                  String                               @default("N") @db.Char(1)
+  cloned_by                                                            String                               @default("") @db.VarChar(32)
+  alt_items                                                            String                               @default("") @db.VarChar(500)
+  amazonorderid                                                        String                               @default("") @db.VarChar(32)
+  product_question_status_id                                           Int                                  @default(0)
+  amazon_fulfillment_channel                                           String                               @default("") @db.Char(10)
+  quantity_decreased                                                   String                               @default("N") @db.Char(1)
+  is_mobile_checkout                                                   String                               @default("N") @db.Char(1)
+  currency                                                             String                               @default("USD") @db.VarChar(3)
+  unfreeze_cb_status                                                   String                               @default("") @db.Char(1)
+  cart_number                                                          Int?                                 @db.UnsignedInt
+  shipping_total_net                                                   Decimal?                             @db.Decimal(12, 2)
+  shipping_total_gst                                                   Decimal?                             @db.Decimal(12, 2)
+  shipping_total_pst                                                   Decimal?                             @db.Decimal(12, 2)
+  shipping_total_gross                                                 Decimal?                             @db.Decimal(12, 2)
+  product_total_net                                                    Decimal?                             @db.Decimal(12, 2)
+  product_total_gst                                                    Decimal?                             @db.Decimal(12, 2)
+  product_total_pst                                                    Decimal?                             @db.Decimal(12, 2)
+  product_total_gross                                                  Decimal?                             @db.Decimal(12, 2)
+  total_net                                                            Decimal?                             @db.Decimal(12, 2)
+  total_gst                                                            Decimal?                             @db.Decimal(12, 2)
+  total_pst                                                            Decimal?                             @db.Decimal(12, 2)
+  total_gross                                                          Decimal?                             @db.Decimal(12, 2)
+  tax_info_display_taxed_order_totals                                  String?                              @db.Char(1)
+  tax_info_display_cart_products_tax_rates                             String?                              @db.Char(1)
+  tax_info_taxed_subtotal                                              Decimal?                             @db.Decimal(12, 2)
+  tax_info_taxed_discounted_subtotal                                   Decimal?                             @db.Decimal(12, 2)
+  tax_info_taxed_shipping                                              Decimal?                             @db.Decimal(12, 2)
+  b_company                                                            String?                              @db.VarChar(255)
+  s_company                                                            String?                              @db.VarChar(255)
+  vn_status                                                            String                               @default("NS") @db.Char(2)
+  referer_id                                                           Int?
+  amazon_purchase_date                                                 DateTime?                            @db.DateTime(0)
+  track_sms                                                            Int                                  @default(0) @db.TinyInt
+  billing_same_shipping                                                Int                                  @default(1) @db.TinyInt
+  is_new_checkout                                                      Int                                  @default(0) @db.UnsignedTinyInt
+  s_state_id                                                           Int?
+  b_state_id                                                           Int?
+  s_country_id                                                         Int?                                 @db.UnsignedInt
+  b_country_id                                                         Int?                                 @db.UnsignedInt
+  cb_status_id                                                         Int?                                 @db.UnsignedInt
+  dc_status_id                                                         Int?                                 @db.UnsignedInt
+  xcart_countries_xcart_countriesToxcart_orders_b_country_id           xcart_countries?                     @relation("xcart_countriesToxcart_orders_b_country_id", fields: [b_country_id], references: [country_id], onDelete: Restrict, map: "xcart_orders_xcart_countries_country_id_fk_b_country_id")
+  xcart_states_xcart_orders_b_state_idToxcart_states                   xcart_states?                        @relation("xcart_orders_b_state_idToxcart_states", fields: [b_state_id], references: [stateid], onDelete: Restrict, map: "xcart_orders_xcart_states_state_id_fk_b_state_id")
+  xcart_order_statuses_xcart_order_statusesToxcart_orders_cb_status_id xcart_order_statuses?                @relation("xcart_order_statusesToxcart_orders_cb_status_id", fields: [cb_status_id], references: [status_id], onDelete: Restrict, map: "xcart_orders_xcart_countries_county_id_fk_cb_status_id")
+  xcart_order_statuses_xcart_order_statusesToxcart_orders_dc_status_id xcart_order_statuses?                @relation("xcart_order_statusesToxcart_orders_dc_status_id", fields: [dc_status_id], references: [status_id], onDelete: Restrict, map: "xcart_orders_xcart_countries_county_id_fk_dc_status_id")
+  xcart_countries_xcart_countriesToxcart_orders_s_country_id           xcart_countries?                     @relation("xcart_countriesToxcart_orders_s_country_id", fields: [s_country_id], references: [country_id], onDelete: Restrict, map: "xcart_orders_xcart_countries_country_id_fk_s_country_id")
+  xcart_states_xcart_orders_s_state_idToxcart_states                   xcart_states?                        @relation("xcart_orders_s_state_idToxcart_states", fields: [s_state_id], references: [stateid], onDelete: Restrict, map: "xcart_orders_xcart_states_state_id_fk_s_state_id")
+  xcart_storefronts                                                    xcart_storefronts                    @relation(fields: [storefrontid], references: [storefrontid], map: "FK_xcart_orders_xcart_storefronts")
+  xcart_users                                                          xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: Restrict, map: "FK_xcart_orders_xcart_users")
+  account_decisions                                                    account_decisions[]
+  account_order_cancel_requests                                        account_order_cancel_requests[]
+  account_transactions                                                 account_transactions[]
+  faxes_fax                                                            faxes_fax[]
+  xcart_amazon_list_inbound_shipments                                  xcart_amazon_list_inbound_shipments?
+  xcart_order_address_geolocation                                      xcart_order_address_geolocation[]
+  xcart_order_details                                                  xcart_order_details[]
+  xcart_order_fa_fraud_checks                                          xcart_order_fa_fraud_checks[]
+  xcart_order_groups                                                   xcart_order_groups[]
+  xcart_order_transactions                                             xcart_order_transactions[]
+  xcart_po_pipeline                                                    xcart_po_pipeline[]
+  xcart_refund_groups                                                  xcart_refund_groups[]
 
-  @@id([orderid, date])
+  @@index([user_id], map: "FK_xcart_orders_xcart_users")
   @@index([amazon_fulfillment_channel, orderid, date], map: "amazon_fulfillment_channel")
   @@index([cart_number], map: "cart_number")
   @@index([fraud_status], map: "fraud_status")
@@ -3955,7 +3928,12 @@ model xcart_orders {
   @@index([date], map: "order_date")
   @@index([order_type], map: "order_type")
   @@index([storefrontid], map: "storefrontid")
-  @@index([user_id], map: "xcart_orders_xcart_users_user_id_fk")
+  @@index([b_country_id], map: "xcart_orders_xcart_countries_country_id_fk_b_country_id")
+  @@index([s_country_id], map: "xcart_orders_xcart_countries_country_id_fk_s_country_id")
+  @@index([cb_status_id], map: "xcart_orders_xcart_countries_county_id_fk_cb_status_id")
+  @@index([dc_status_id], map: "xcart_orders_xcart_countries_county_id_fk_dc_status_id")
+  @@index([b_state_id], map: "xcart_orders_xcart_states_state_id_fk_b_state_id")
+  @@index([s_state_id], map: "xcart_orders_xcart_states_state_id_fk_s_state_id")
 }
 
 model xcart_orders_additional_tags {
@@ -4115,8 +4093,8 @@ model xcart_partner_tier_commissions {
   commission Decimal @default(0.00) @db.Decimal(12, 2)
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_partner_views {
-  id        Int    @id @default(autoincrement()) @db.UnsignedInt
   login     String @default("") @db.VarChar(32)
   add_date  Int    @default(0)
   class     String @default("") @db.Char(1)
@@ -4124,6 +4102,7 @@ model xcart_partner_views {
   productid Int    @default(0)
 
   @@index([login], map: "login")
+  @@ignore
 }
 
 model xcart_payment_methods {
@@ -4176,6 +4155,7 @@ model xcart_payment_processor {
   transaction_link String  @default("") @db.VarChar(255)
   param01          String? @db.VarChar(255)
   param02          String? @db.VarChar(255)
+  param03          String? @db.VarChar(255)
   test_mode        String  @default("N") @db.Char(1)
 }
 
@@ -4273,7 +4253,7 @@ model xcart_pricing {
   priceid        Int            @id @default(autoincrement())
   productid      Int            @default(0)
   quantity       Int            @default(0)
-  price          Decimal?       @db.Decimal(12, 2)
+  price          Decimal?       @default(0.00) @db.Decimal(12, 2)
   variantid      Int            @default(0)
   membershipid   Int            @default(0) @db.MediumInt
   xcart_products xcart_products @relation(fields: [productid], references: [productid], onDelete: Cascade, map: "FK_xcart_pricing_xcart_products")
@@ -4298,14 +4278,14 @@ model xcart_product_bookmarks {
 }
 
 model xcart_product_files {
-  description String @db.VarChar(255)
-  filename    String @db.VarChar(512)
+  fileid      Int     @id @default(autoincrement())
+  description String? @db.VarChar(255)
+  filename    String  @db.VarChar(512)
   orderby     Int
   productid   Int
   filesize    Int
-  avail       String @default("Y") @db.Char(1)
+  avail       String  @default("Y") @db.Char(1)
   date        Int
-  fileid      Int    @id @default(autoincrement())
 
   @@index([avail], map: "avail")
   @@index([productid], map: "productid")
@@ -4323,14 +4303,16 @@ model xcart_product_htmlshot {
 }
 
 model xcart_product_images {
-  image_id      Int       @id @default(autoincrement()) @db.UnsignedInt
-  path          String    @db.VarChar(255)
-  width         Int?      @db.UnsignedSmallInt
-  height        Int?      @db.UnsignedSmallInt
-  hash          String    @unique(map: "hash") @db.VarChar(50)
-  created_at    DateTime? @default(now()) @db.Timestamp(0)
-  is_downloaded Int?      @default(0) @db.UnsignedTinyInt
-  is_manual     Int       @default(0) @db.UnsignedTinyInt
+  image_id                  Int                         @id @default(autoincrement()) @db.UnsignedInt
+  path                      String?                     @db.VarChar(255)
+  width                     Int?                        @db.UnsignedSmallInt
+  height                    Int?                        @db.UnsignedSmallInt
+  hash                      String?                     @unique(map: "hash") @db.VarChar(50)
+  created_at                DateTime?                   @default(now()) @db.Timestamp(0)
+  is_downloaded             Int?                        @default(0) @db.UnsignedTinyInt
+  is_manual                 Int                         @default(0) @db.UnsignedTinyInt
+  xcart_product_image_links xcart_product_image_links[]
+  xcart_products_images     xcart_products_images[]
 }
 
 model xcart_product_links {
@@ -4467,8 +4449,8 @@ model xcart_product_taxes {
   @@id([productid, taxid])
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_product_verification_history {
-  id                                                                                                                      Int                                 @id @default(autoincrement()) @db.UnsignedInt
   productid                                                                                                               Int
   verification_note                                                                                                       String                              @db.Text
   timestamp                                                                                                               Int
@@ -4482,14 +4464,15 @@ model xcart_product_verification_history {
   @@index([productid], map: "fk_xcart_verification_history_xcart_product_st_idx2")
   @@index([oldstatusid], map: "fk_xcart_verification_history_xcart_product_verification_st_idx")
   @@index([newstatusid], map: "fk_xcart_verification_history_xcart_product_verification_st_idx1")
+  @@ignore
 }
 
 model xcart_product_verification_statuses {
   statusid                                                                                                               Int                                  @id @default(autoincrement())
   name                                                                                                                   String                               @db.VarChar(255)
   orderby                                                                                                                Int                                  @default(10)
-  xcart_product_verification_history_xcart_product_verification_history_newstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_newstatusidToxcart_product_verification_statuses")
-  xcart_product_verification_history_xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses")
+  xcart_product_verification_history_xcart_product_verification_history_newstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_newstatusidToxcart_product_verification_statuses") @ignore
+  xcart_product_verification_history_xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses xcart_product_verification_history[] @relation("xcart_product_verification_history_oldstatusidToxcart_product_verification_statuses") @ignore
 }
 
 model xcart_product_videos {
@@ -4565,8 +4548,9 @@ model xcart_products {
   map_price                                  Decimal                                     @default(0.00) @db.Decimal(12, 2)
   mult_order_quantity                        String                                      @default("N") @db.Char(1)
   new_map_price                              Decimal                                     @default(0.00) @db.Decimal(12, 2)
+  lock_map_price                             Int                                         @default(0) @db.TinyInt
   warning_code                               Int?                                        @default(0) @db.MediumInt
-  eta_date_mm_dd_yyyy                        Int?                                        @db.UnsignedInt
+  eta_date_mm_dd_yyyy                        Int?                                        @default(0) @db.UnsignedInt
   lead_time_message                          String                                      @default("") @db.VarChar(255)
   similar_cron_generated_flag                String                                      @default("Y") @db.Char(1)
   similar_productids                         String                                      @default("") @db.VarChar(255)
@@ -4620,12 +4604,13 @@ model xcart_products {
   group_mask                                 String?                                     @db.VarChar(255)
   group_order                                Int                                         @default(255) @db.UnsignedTinyInt
   shipping_calc_disabled                     Int                                         @default(0) @db.UnsignedTinyInt
-  in_stock                                   Int?                                        @db.TinyInt
   hash_product                               String?                                     @db.VarChar(50)
-  total_reviews                              Int?                                        @default(0) @db.UnsignedSmallInt
   is_group_root                              Int                                         @default(0) @db.UnsignedTinyInt
   last_modify_id                             Int?                                        @db.UnsignedInt
+  total_reviews                              Int?                                        @default(0) @db.UnsignedSmallInt
+  in_stock                                   Int?                                        @db.UnsignedTinyInt
   xcart_brands                               xcart_brands?                               @relation(fields: [brandid], references: [brandid], map: "FK_xcart_products_xcart_brands")
+  xcart_customers                            xcart_customers?                            @relation(fields: [last_modify_id], references: [id], map: "FK_xcart_products_xcart_customers")
   xcart_manufacturers                        xcart_manufacturers                         @relation(fields: [manufacturerid], references: [manufacturerid], onDelete: Cascade, map: "FK_xcart_products_xcart_manufacturers")
   amazon_inventory_queue                     amazon_inventory_queue?
   amazon_price_queue                         amazon_price_queue?
@@ -4633,22 +4618,26 @@ model xcart_products {
   collaborative_fitering                     collaborative_fitering[]
   google_products                            google_products?
   total_product_ratings                      total_product_ratings[]
+  total_product_reviews                      total_product_reviews?                      @ignore
+  xcart_cidev_filter_products                xcart_cidev_filter_products[]
   xcart_external_verification_products_queue xcart_external_verification_products_queue?
   xcart_images_D                             xcart_images_D[]
   xcart_pricing                              xcart_pricing[]
   xcart_product_options                      xcart_product_options[]
   xcart_product_question                     xcart_product_question[]
   xcart_product_reviews                      xcart_product_reviews[]
-  xcart_product_verification_history         xcart_product_verification_history[]
+  xcart_product_verification_history         xcart_product_verification_history[]        @ignore
   xcart_products_categories                  xcart_products_categories[]
   xcart_products_hard_resell                 xcart_products_hard_resell?
+  xcart_products_images                      xcart_products_images[]
   xcart_products_sf                          xcart_products_sf[]
   xcart_products_showed                      xcart_products_showed?
-  xcart_products_videos                      xcart_products_videos[]
+  xcart_products_videos                      xcart_products_videos[]                     @ignore
 
   @@index([ASIN], map: "ASIN")
+  @@index([last_modify_id], map: "FK_xcart_products_xcart_customers")
   @@index([manufacturerid], map: "FK_xcart_products_xcart_manufacturers")
-  @@index([forsale, add_date], map: "add_date")
+  @@index([add_date, forsale], map: "add_date")
   @@index([amazon_verified], map: "amazon_verified")
   @@index([avail], map: "avail")
   @@index([brandid, forsale], map: "brand_forsale")
@@ -4660,9 +4649,11 @@ model xcart_products {
   @@index([forsale, productid], map: "idxPRODUCTID_FORSALE")
   @@index([forsale, group_root, productid], map: "idx__FORSALE_GROOT_ID")
   @@index([in_stock], map: "in_stock")
+  @@index([is_group_root], map: "is_group_root")
   @@index([pc_classify_status, forsale], map: "pc_classify_status")
   @@index([r_avail], map: "r_avail")
   @@index([supplier_internal_product_id], map: "supplier_internal_product_id")
+  @@index([upc], map: "upc")
 }
 
 model xcart_products_amazon_rates {
@@ -4729,11 +4720,11 @@ model xcart_products_categories {
   xcart_products   xcart_products   @relation(fields: [productid], references: [productid], onDelete: Cascade, map: "FK_xcart_products_categories_xcart_products")
 
   @@id([categoryid, productid])
+  @@unique([productid, categoryid], map: "productid_categoryid")
   @@index([categoryid, main], map: "categoryid")
   @@index([main], map: "main")
   @@index([categoryid, orderby], map: "orderby")
   @@index([productid, main], map: "productid")
-  @@index([productid, categoryid], map: "productid_categoryid")
 }
 
 model xcart_products_disabled_marketplaces {
@@ -4770,12 +4761,16 @@ model xcart_products_hard_resell {
 }
 
 model xcart_products_images {
-  product_id Int
-  image_id   Int
-  is_active  Int @default(1) @db.UnsignedTinyInt
-  order_by   Int @default(0) @db.UnsignedInt
+  product_id           Int
+  image_id             Int                  @db.UnsignedInt
+  is_active            Int                  @default(1) @db.UnsignedTinyInt
+  order_by             Int                  @default(0) @db.UnsignedInt
+  xcart_product_images xcart_product_images @relation(fields: [image_id], references: [image_id], onDelete: Cascade, map: "FK_xcart_products_images_xcart_product_images")
+  xcart_products       xcart_products       @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "FK_xcart_products_images_xcart_products")
 
   @@id([product_id, image_id])
+  @@index([image_id], map: "FK_xcart_products_images_xcart_product_images")
+  @@index([product_id, is_active, order_by], map: "product_id_is_active_order_by")
 }
 
 model xcart_products_lng {
@@ -4820,8 +4815,8 @@ model xcart_products_upc_changes {
   last_date     DateTime @default(now()) @db.Timestamp(0)
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_products_videos {
-  id             Int            @id @default(autoincrement()) @db.UnsignedInt
   product_id     Int
   video_id       Int            @db.UnsignedInt
   xcart_products xcart_products @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "products_videos_xcart_products_productid_fk")
@@ -4829,6 +4824,7 @@ model xcart_products_videos {
 
   @@index([product_id], map: "products_videos_xcart_products_productid_fk")
   @@index([video_id], map: "xcart_products_videos_xcart_videos_video_id_fk")
+  @@ignore
 }
 
 model xcart_quick_flags {
@@ -4967,7 +4963,7 @@ model xcart_refund_groups {
   shipping_pst                    Decimal                   @default(0.00) @db.Decimal(12, 2)
   shipping_gross                  Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting                      String                    @db.Text
-  ref_ship                        Decimal                   @db.Decimal(12, 2)
+  ref_ship                        Decimal                   @default(0.00) @db.Decimal(12, 2)
   extra_data                      String                    @db.Text
   notify_status                   String                    @default("Q") @db.Char(1)
   accounting_net_0                Decimal                   @default(0.00) @db.Decimal(12, 2)
@@ -4979,27 +4975,27 @@ model xcart_refund_groups {
   accounting_gst_1_cost_to_us     Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_pst_1_cost_to_us     Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gross_1_cost_to_us   Decimal                   @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_1_cost_to_us  String                    @default("") @db.Char(1)
+  accounting_filled_1_cost_to_us  String?                   @db.Char(1)
   accounting_net_2_shipping       Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gst_2_shipping       Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_pst_2_shipping       Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gross_2_shipping     Decimal                   @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_2_shipping    String                    @default("") @db.Char(1)
+  accounting_filled_2_shipping    String?                   @db.Char(1)
   accounting_net_3_ref_to_cust    Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gst_3_ref_to_cust    Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_pst_3_ref_to_cust    Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gross_3_ref_to_cust  Decimal                   @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_3_ref_to_cust String                    @default("") @db.Char(1)
+  accounting_filled_3_ref_to_cust String?                   @db.Char(1)
   accounting_net_4_ref_to_us      Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gst_4_ref_to_us      Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_pst_4_ref_to_us      Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gross_4_ref_to_us    Decimal                   @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_4_ref_to_us   String                    @default("") @db.Char(1)
+  accounting_filled_4_ref_to_us   String?                   @db.Char(1)
   accounting_net_5_profit         Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gst_5_profit         Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_pst_5_profit         Decimal                   @default(0.00) @db.Decimal(12, 2)
   accounting_gross_5_profit       Decimal                   @default(0.00) @db.Decimal(12, 2)
-  accounting_filled_5_profit      String                    @default("") @db.Char(1)
+  accounting_filled_5_profit      String?                   @db.Char(1)
   OLD_accounting                  String                    @db.Text
   refund_reason                   String                    @db.Text
   xcart_orders                    xcart_orders              @relation(fields: [orderid], references: [orderid], map: "FK_xcart_refund_groups_xcart_orders")
@@ -5016,12 +5012,14 @@ model xcart_refunded_products {
   provider            String               @default("") @db.VarChar(32)
   ref_price           Decimal              @default(0.00) @db.Decimal(12, 2)
   ref_qty             Int
-  extra_data          String               @db.Text
-  itemid              Int                  @default(0)
+  extra_data          String               @db.MediumText
+  itemid              Int?
   refund_group_id     Int?                 @db.UnsignedInt
+  xcart_order_details xcart_order_details? @relation(fields: [itemid], references: [itemid], onDelete: Cascade, map: "xcart_refunded_products_xcart_order_details_itemid_fk")
   xcart_refund_groups xcart_refund_groups? @relation(fields: [refund_group_id], references: [refund_group_id], onDelete: NoAction, onUpdate: NoAction, map: "xcart_refunded_products_xcart_refund_groups_refund_group_id_fk")
 
   @@unique([productid, orderid, itemid], map: "uk_refund_product_order")
+  @@index([itemid], map: "xcart_refunded_products_xcart_order_details_itemid_fk")
   @@index([refund_group_id], map: "xcart_refunded_products_xcart_refund_groups_refund_group_id_fk")
 }
 
@@ -5118,8 +5116,8 @@ model xcart_reviews_videos {
   @@index([video_id], map: "xcart_reviews_videos_xcart_videos_video_id_fk")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_rma_details {
-  id          Int    @id @default(autoincrement()) @db.UnsignedInt
   rma_id      Int    @default(0)
   productid   Int    @default(0)
   itemid      Int    @default(0)
@@ -5129,13 +5127,6 @@ model xcart_rma_details {
   would_like  String @default("O") @db.Char(1)
 
   @@index([rma_id], map: "rma_id")
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model xcart_rma_images {
-  rma_id   Int?
-  image_id Int?
-
   @@ignore
 }
 
@@ -5229,16 +5220,14 @@ model xcart_sessions_data {
   data                   String                   @db.MediumText
   cart_number            Int                      @default(0)
   id                     Int                      @unique(map: "id") @default(autoincrement()) @db.UnsignedInt
-  new_column             Int?
-  user_id                BigInt?                  @db.UnsignedBigInt
-  xcart_users            xcart_users?             @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "xcart_sessions_data_xcart_users_user_id_fk")
+  user_id                Int?
   collaborative_fitering collaborative_fitering[]
   xcart_cidev_surf_meta  xcart_cidev_surf_meta?
 
   @@index([cart_number], map: "cart_number")
   @@index([expiry], map: "e")
   @@index([start], map: "s")
-  @@index([user_id], map: "xcart_sessions_data_xcart_users_user_id_fk")
+  @@index([user_id], map: "user_id")
 }
 
 model xcart_setup_images {
@@ -5251,27 +5240,30 @@ model xcart_setup_images {
 }
 
 model xcart_shipping {
-  shippingid        Int      @id @default(autoincrement())
-  shipping          String   @default("") @db.VarChar(128)
-  frontend_name     String   @default("") @db.VarChar(255)
-  shipping_time     String   @default("") @db.VarChar(128)
-  destination       String   @default("I") @db.Char(1)
-  code              String   @default("") @db.VarChar(32)
-  subcode           String   @default("") @db.VarChar(32)
-  orderby           Int      @default(0)
-  active            String   @default("Y") @db.Char(1)
-  intershipper_code String   @default("") @db.VarChar(32)
-  weight_min        Decimal  @default(0.00) @db.Decimal(12, 2)
-  weight_limit      Decimal  @default(0.00) @db.Decimal(12, 2)
-  service_code      Int      @default(0)
-  is_cod            String   @default("") @db.Char(1)
-  is_new            String   @default("") @db.Char(1)
-  vol_threshold     Decimal  @default(0.00) @db.Decimal(12, 2)
-  dim_factor        Decimal  @default(0.00) @db.Decimal(12, 2)
-  important         Boolean? @default(false)
-  days_min          Int      @default(255) @db.UnsignedTinyInt
-  days_max          Int      @default(255) @db.UnsignedTinyInt
-  is_free_shipping  Int      @default(0) @db.UnsignedTinyInt
+  shippingid             Int                     @id @default(autoincrement())
+  shipping               String                  @default("") @db.VarChar(128)
+  frontend_name          String                  @default("") @db.VarChar(255)
+  shipping_time          String                  @default("") @db.VarChar(128)
+  destination            String                  @default("I") @db.Char(1)
+  code                   String?                 @db.VarChar(32)
+  subcode                String                  @default("") @db.VarChar(32)
+  orderby                Int                     @default(0)
+  active                 String                  @default("Y") @db.Char(1)
+  intershipper_code      String                  @default("") @db.VarChar(32)
+  weight_min             Decimal                 @default(0.00) @db.Decimal(12, 2)
+  weight_limit           Decimal                 @default(0.00) @db.Decimal(12, 2)
+  service_code           Int                     @default(0)
+  is_cod                 String                  @default("") @db.Char(1)
+  is_new                 String                  @default("") @db.Char(1)
+  vol_threshold          Decimal                 @default(0.00) @db.Decimal(12, 2)
+  dim_factor             Decimal                 @default(0.00) @db.Decimal(12, 2)
+  important              Boolean?                @default(false)
+  days_min               Int                     @default(255) @db.UnsignedTinyInt
+  days_max               Int                     @default(255) @db.UnsignedTinyInt
+  is_free_shipping       Int                     @default(0) @db.UnsignedTinyInt
+  carrier_id             Int?                    @db.UnsignedInt
+  xcart_shipping_carrier xcart_shipping_carrier? @relation(fields: [code], references: [carrier_code], onDelete: Cascade, map: "FK_xcart_shipping_xcart_shipping_carrier")
+  xcart_shipping_rates   xcart_shipping_rates[]
 
   @@index([code], map: "code")
   @@index([orderby], map: "orderby")
@@ -5326,9 +5318,12 @@ model xcart_shipping_cache_quotes {
 }
 
 model xcart_shipping_carrier {
-  carrier_code   String @id @db.VarChar(32)
-  priority       Int    @default(1) @db.UnsignedTinyInt
-  cache_lifetime Int    @db.UnsignedSmallInt
+  carrier_id     Int              @id @default(autoincrement()) @db.UnsignedInt
+  carrier_code   String           @unique(map: "carrier_code") @db.VarChar(32)
+  priority       Int              @default(1) @db.UnsignedTinyInt
+  cache_lifetime Int              @default(0) @db.UnsignedSmallInt
+  name           String?          @db.VarChar(255)
+  xcart_shipping xcart_shipping[]
 
   @@index([priority], map: "priority")
 }
@@ -5413,6 +5408,9 @@ model xcart_shipping_rates {
   real_drop_ship_fee          Decimal                       @default(0.00) @db.Decimal(12, 2)
   min_shipping_charge         Decimal                       @default(0.00) @db.Decimal(12, 2)
   max_shipping_charge         Decimal                       @default(999999.99) @db.Decimal(12, 2)
+  xcart_manufacturers         xcart_manufacturers           @relation(fields: [manufacturerid], references: [manufacturerid], onDelete: Cascade, map: "FK_xcart_shipping_rates_xcart_manufacturers")
+  xcart_shipping              xcart_shipping                @relation(fields: [shippingid], references: [shippingid], onDelete: NoAction, map: "FK_xcart_shipping_rates_xcart_shipping")
+  xcart_zones                 xcart_zones                   @relation(fields: [zoneid], references: [zoneid], onDelete: Cascade, map: "FK_xcart_shipping_rates_xcart_zones")
   xcart_shipping_cache_quotes xcart_shipping_cache_quotes[]
 
   @@index([zoneid, manufacturerid], map: "idx_zoneid_manuf")
@@ -5434,18 +5432,20 @@ model xcart_sitemap_extra {
 }
 
 model xcart_states {
-  stateid                            Int                                  @id @default(autoincrement())
-  state                              String                               @default("") @db.VarChar(100)
-  code                               String                               @default("") @db.VarChar(20)
-  country_code                       String                               @default("") @db.Char(2)
-  base_state_zipcode                 String                               @default("") @db.VarChar(32)
-  est_time_offset                    Int                                  @default(0)
-  phone                              String                               @default("") @db.VarChar(32)
-  timezone                           String                               @default("") @db.VarChar(100)
-  population                         Int?
-  account_addresses                  account_addresses[]
-  xcart_amazon_fulfillment_locations xcart_amazon_fulfillment_locations[]
-  xcart_zip                          xcart_zip[]
+  stateid                                            Int                                  @id @default(autoincrement())
+  state                                              String                               @default("") @db.VarChar(100)
+  code                                               String                               @default("") @db.VarChar(20)
+  country_code                                       String                               @default("") @db.Char(2)
+  base_state_zipcode                                 String                               @default("") @db.VarChar(32)
+  est_time_offset                                    Int                                  @default(0)
+  phone                                              String                               @default("") @db.VarChar(32)
+  timezone                                           String                               @default("") @db.VarChar(100)
+  population                                         Int?
+  account_addresses                                  account_addresses[]
+  xcart_amazon_fulfillment_locations                 xcart_amazon_fulfillment_locations[]
+  xcart_orders_xcart_orders_b_state_idToxcart_states xcart_orders[]                       @relation("xcart_orders_b_state_idToxcart_states")
+  xcart_orders_xcart_orders_s_state_idToxcart_states xcart_orders[]                       @relation("xcart_orders_s_state_idToxcart_states")
+  xcart_zip                                          xcart_zip[]                          @ignore
 
   @@unique([country_code, code], map: "code")
   @@unique([state, country_code], map: "state")
@@ -5501,17 +5501,18 @@ model xcart_stats_pages {
   @@index([page], map: "page")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_pages_paths {
-  id   Int    @id @default(autoincrement()) @db.UnsignedInt
   path String @default("") @db.VarChar(255)
   date Int    @default(0)
 
   @@index([date], map: "counter")
   @@index([path], map: "path")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_pages_views {
-  id       Int @id @default(autoincrement()) @db.UnsignedInt
   pageid   Int @default(0)
   time_avg Int @default(0)
   date     Int @default(0)
@@ -5519,10 +5520,11 @@ model xcart_stats_pages_views {
   @@index([date], map: "date")
   @@index([pageid], map: "pageid")
   @@index([time_avg], map: "time_avg")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_search {
-  id           Int    @id @default(autoincrement()) @db.UnsignedInt
   search       String @default("") @db.VarChar(255)
   date         Int    @default(0)
   storefrontid Int    @default(0)
@@ -5530,17 +5532,19 @@ model xcart_stats_search {
   @@index([date], map: "date")
   @@index([search], map: "search")
   @@index([storefrontid], map: "storefrontid")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_stats_shop {
-  stats_id Int    @id @default(autoincrement()) @db.UnsignedInt
-  id       Int    @default(0)
-  action   String @default("V") @db.Char(1)
-  date     Int    @default(0)
+  id     Int    @default(0)
+  action String @default("V") @db.Char(1)
+  date   Int    @default(0)
 
   @@index([action], map: "action")
   @@index([date], map: "date")
   @@index([id], map: "id")
+  @@ignore
 }
 
 model xcart_stop_list {
@@ -5558,10 +5562,12 @@ model xcart_stop_list {
   @@index([ip], map: "ip")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_storefront_links {
-  id          Int @id @default(autoincrement()) @db.UnsignedInt
   storefront1 Int
   storefront2 Int
+
+  @@ignore
 }
 
 model xcart_storefronts {
@@ -5610,13 +5616,13 @@ model xcart_storefronts {
   xcart_currencies              xcart_currencies?                  @relation(fields: [currency_id], references: [currency_id], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_currencies")
   core_static_notification      core_static_notification[]
   sites_payment_methods         sites_payment_methods[]
+  xcart_k                       xcart_k[]
   xcart_manufacturers_site      xcart_manufacturers_site[]
   xcart_orders                  xcart_orders[]
   xcart_products_sf             xcart_products_sf[]
   xcart_site_socials            xcart_site_socials[]
   xcart_sites_addresses         xcart_sites_addresses[]
   xcart_sites_menu              xcart_sites_menu[]
-  xcart_vrs                     xcart_vrs[]
 
   @@index([corporation_id], map: "FK_xcart_storefronts_sites_corporate")
   @@index([country], map: "FK_xcart_storefronts_xcart_countries")
@@ -5713,13 +5719,13 @@ model xcart_supplier_feeds {
   dont_update_fields                   String?                           @db.Text
   xcart_categories                     xcart_categories?                 @relation(fields: [storefront_id, base_category_id], references: [storefrontid, categoryid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_supplier_feeds_xcart_categories")
 
+  @@unique([manufacturerid, storefront_id], map: "manufacturerid_storefront_id")
   @@index([storefront_id, base_category_id], map: "FK_xcart_supplier_feeds_xcart_categories")
-  @@index([manufacturerid], map: "manufacturerid")
   @@index([process_time], map: "process_time")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_supplier_product_feeds {
-  id                                      Int     @id @default(autoincrement()) @db.UnsignedInt
   manufacturerid                          Int     @default(0)
   storefrontid                            Int     @default(0)
   enabled_feed                            String  @default("N") @db.Char(1)
@@ -5742,6 +5748,7 @@ model xcart_supplier_product_feeds {
 
   @@index([manufacturerid], map: "manufacturerid")
   @@index([storefrontid], map: "storefrontid")
+  @@ignore
 }
 
 model xcart_tax_rate_memberships {
@@ -5786,13 +5793,15 @@ model xcart_taxes {
 model xcart_templates_categories {
   id                                Int                                 @id @default(autoincrement()) @db.UnsignedInt
   name                              String                              @default("") @db.VarChar(255)
-  pos                               Int                                 @default(0) @db.UnsignedInt
+  pos                               Int                                 @default(10000) @db.UnsignedInt
   root                              Int?                                @db.UnsignedInt
   level                             Int?                                @db.UnsignedInt
   lft                               Int?                                @db.UnsignedInt
   rgt                               Int?                                @db.UnsignedInt
   parent_id                         Int?                                @db.UnsignedInt
   xcart_templates_for_communication xcart_templates_for_communication[]
+
+  @@index([pos], map: "pos")
 }
 
 model xcart_templates_for_communication {
@@ -5840,7 +5849,7 @@ model xcart_tracking_links {
   shipping                 String                 @default("") @db.VarChar(128)
   OLD_link_DELETE_IN_MONTH String                 @default("") @db.VarChar(255)
   orderby                  Int                    @default(0)
-  carrier_id               Int                    @default(0)
+  carrier_id               Int
   xcart_order_tracking     xcart_order_tracking[]
 }
 
@@ -5856,21 +5865,20 @@ model xcart_tracking_links_carrier {
 }
 
 model xcart_transaction_logs {
-  id                       Int                       @id @default(autoincrement())
-  order_transaction_id     Int?
-  orderid                  Int                       @default(0)
-  paymentid                Int                       @default(0)
-  transaction_id           String                    @default("") @db.VarChar(64)
-  transaction_status       String                    @default("") @db.VarChar(32)
-  transaction_currency     String                    @default("USD") @db.VarChar(3)
-  transaction_total        Decimal                   @default(0.00) @db.Decimal(12, 2)
-  date                     Int                       @default(0)
-  login                    String                    @default("") @db.VarChar(50)
-  transaction_log          String                    @db.MediumText
-  xcart_order_transactions xcart_order_transactions? @relation(fields: [order_transaction_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_xcart_transaction_logs_xcart_order_transactions")
+  id                   Int     @id @default(autoincrement())
+  order_transaction_id Int?
+  orderid              Int     @default(0)
+  paymentid            Int     @default(0)
+  transaction_id       String  @default("") @db.VarChar(64)
+  transaction_status   String  @default("") @db.VarChar(32)
+  transaction_currency String  @default("USD") @db.VarChar(3)
+  transaction_total    Decimal @default(0.00) @db.Decimal(12, 2)
+  date                 Int     @default(0)
+  login                String? @db.VarChar(32)
+  transaction_log      String  @db.MediumText
 
   @@index([order_transaction_id], map: "FK_xcart_transaction_logs_xcart_order_transactions")
-  @@index([orderid], map: "orderid")
+  @@index([orderid, date], map: "orderid")
 }
 
 model xcart_user_filter_link {
@@ -5911,7 +5919,6 @@ model xcart_users {
   xcart_one_time_passwords xcart_one_time_passwords[]
   xcart_orders             xcart_orders[]
   xcart_product_reviews    xcart_product_reviews[]
-  xcart_sessions_data      xcart_sessions_data[]
 
   @@index([avatar_image], map: "xcart_users_xcart_user_images_id_fk")
 }
@@ -5954,30 +5961,25 @@ model xcart_videos {
   provider              String?                 @db.VarChar(31)
   image_1               String?                 @db.VarChar(255)
   image_2               String?                 @db.VarChar(255)
-  xcart_products_videos xcart_products_videos[]
+  xcart_products_videos xcart_products_videos[] @ignore
   xcart_reviews_videos  xcart_reviews_videos[]
 }
 
 model xcart_vrs {
-  vrs_id            Int               @id @default(autoincrement()) @db.UnsignedMediumInt
-  site_id           Int
-  company           String            @default("") @db.VarChar(255)
-  link_website      String            @default("") @db.VarChar(255)
-  last_action       String            @default("") @db.VarChar(255)
-  status            Int?              @db.UnsignedTinyInt
-  date              DateTime?         @db.Date
-  email             String            @default("") @db.VarChar(255)
-  telephone         String            @default("") @db.VarChar(255)
-  login             String            @default("") @db.VarChar(255)
-  password          String            @default("") @db.VarChar(255)
-  comment           String            @default("") @db.VarChar(255)
-  created_at        DateTime?         @default(now()) @db.Timestamp(0)
-  user_id           Int?              @db.UnsignedInt
-  xcart_storefronts xcart_storefronts @relation(fields: [site_id], references: [storefrontid], onDelete: Cascade, map: "FK_xcart_vrs_xcart_storefronts")
-  xcart_customers   xcart_customers?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_vrs_xcart_customers")
-
-  @@index([user_id], map: "FK_xcart_vrs_xcart_customers")
-  @@index([site_id], map: "FK_xcart_vrs_xcart_storefronts")
+  vrs_id       Int       @id @default(autoincrement()) @db.UnsignedMediumInt
+  site_id      Int
+  company      String    @default("") @db.VarChar(255)
+  link_website String    @default("") @db.VarChar(255)
+  last_action  String    @default("") @db.VarChar(255)
+  status       Int?      @db.UnsignedTinyInt
+  date         DateTime? @db.Date
+  email        String    @default("") @db.VarChar(255)
+  telephone    String    @default("") @db.VarChar(255)
+  login        String    @default("") @db.VarChar(255)
+  password     String    @default("") @db.VarChar(255)
+  comment      String    @default("") @db.VarChar(255)
+  created_at   DateTime? @default(now()) @db.Timestamp(0)
+  user_id      Int?      @db.UnsignedInt
 }
 
 model xcart_wishlist {
@@ -6010,8 +6012,8 @@ model xcart_xmlmap_lastmod {
   @@unique([id, type], map: "it")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_zip {
-  id                                                                                               Int                                  @id @default(autoincrement()) @db.UnsignedInt
   zip                                                                                              String                               @db.VarChar(20)
   country                                                                                          String                               @db.Char(2)
   city                                                                                             String                               @db.VarChar(180)
@@ -6024,6 +6026,7 @@ model xcart_zip {
   @@index([country, state], map: "FK_xcart_zip_xcart_states")
   @@index([city], map: "city")
   @@index([zip, country], map: "zip_country")
+  @@ignore
 }
 
 model xcart_zip_code_info {
@@ -6047,11 +6050,12 @@ model xcart_zip_code_info {
   @@index([primary_city], map: "primary_city")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model xcart_zip_code_info_helper {
-  id Int @id @default(autoincrement()) @db.UnsignedInt
-  n  Int
+  n Int
 
   @@index([n], map: "idx_n")
+  @@ignore
 }
 
 model xcart_zone_element {
@@ -6064,19 +6068,13 @@ model xcart_zone_element {
 }
 
 model xcart_zones {
-  zoneid     Int    @id @default(autoincrement())
-  zone_name  String @default("") @db.VarChar(255)
-  zone_cache String @default("") @db.VarChar(255)
-  provider   String @default("") @db.VarChar(32)
+  zoneid               Int                    @id @default(autoincrement())
+  zone_name            String                 @default("") @db.VarChar(255)
+  zone_cache           String                 @default("") @db.VarChar(255)
+  provider             String                 @default("") @db.VarChar(32)
+  xcart_shipping_rates xcart_shipping_rates[]
 
   @@index([zone_name, provider], map: "zone_name")
-}
-
-model tsv_recovery {
-  tsv_recovery_id Int       @id @default(autoincrement()) @db.UnsignedInt
-  user_id         BigInt    @db.UnsignedBigInt
-  document_path   String    @db.VarChar(255)
-  created         DateTime? @default(now()) @db.DateTime(0)
 }
 
 model xcart_site_addresses {
@@ -6175,6 +6173,332 @@ model xcart_dimensions {
   type         xcart_dimensions_type?
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model forms_email_actions_log {
+  email_id        Int             @db.UnsignedInt
+  user_id         Int             @db.UnsignedInt
+  action_value    Int?            @db.TinyInt
+  date            DateTime        @default(now()) @db.Timestamp(0)
+  forms_email     forms_email     @relation(fields: [email_id], references: [id], onDelete: Cascade, map: "FK_forms_email_actions_log_forms_email")
+  xcart_customers xcart_customers @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "FK_forms_email_actions_log_xcart_customers")
+
+  @@index([email_id], map: "email_id")
+  @@index([user_id], map: "user_id")
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model review_images {
+  review_id  BigInt? @db.UnsignedBigInt
+  image_path String? @db.VarChar(128)
+  width      Int?    @db.UnsignedSmallInt
+  height     Int?    @db.UnsignedSmallInt
+
+  @@index([review_id], map: "review_images_product_reviews_product_review_id_fk")
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model total_product_reviews {
+  product_id     Int?            @unique(map: "total_product_reviews_xcart_products_productid_fk")
+  total          Int?            @db.UnsignedInt
+  xcart_products xcart_products? @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "total_product_reviews_xcart_products_productid_fk")
+
+  @@ignore
+}
+
+model vrs_helper_messages {
+  message_id      Int             @id @default(autoincrement()) @db.UnsignedInt
+  user_id         Int             @db.UnsignedInt
+  site_id         Int             @db.UnsignedInt
+  date            DateTime?       @default(now()) @db.Timestamp(0)
+  message_text    String?         @db.LongText
+  status          String?         @db.VarChar(50)
+  vrs_sites       vrs_sites       @relation(fields: [site_id], references: [site_id], onDelete: Cascade, map: "FK_vrs_helper_messages_vrs_sites")
+  xcart_customers xcart_customers @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "FK_vrs_helper_messages_xcart_customers")
+
+  @@index([site_id], map: "FK_vrs_helper_messages_vrs_sites")
+  @@index([user_id], map: "user_id")
+}
+
+model vrs_sites {
+  site_id             Int                   @id @default(autoincrement()) @db.UnsignedInt
+  domain              String?               @unique(map: "domain") @db.VarChar(255)
+  status              String?               @default("visited") @db.VarChar(50)
+  vrs_helper_messages vrs_helper_messages[]
+}
+
+model xcart_clean_urls {
+  clean_url     String @default("") @db.VarChar(767)
+  resource_type String @default("") @db.Char(1)
+  resource_id   Int    @default(0)
+  mtime         Int    @default(0)
+
+  @@id([resource_id, resource_type])
+  @@index([clean_url], map: "clean_url")
+}
+
+model xcart_column_table_save {
+  id                  Int                  @id @default(autoincrement())
+  num_column          Int                  @default(0)
+  option_name         String?              @db.VarChar(255)
+  manufacturer_id     Int?
+  num_table           Int?
+  is_for_sale_value   Int                  @default(0) @db.TinyInt
+  xcart_manufacturers xcart_manufacturers? @relation(fields: [manufacturer_id], references: [manufacturerid], onDelete: NoAction, onUpdate: NoAction, map: "FK__xcart_manufacturers")
+
+  @@index([manufacturer_id], map: "FK__xcart_manufacturers")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model xcart_customers_back {
+  id                          Int       @default(0) @db.UnsignedInt
+  login                       String    @default("") @db.VarChar(32)
+  usertype                    String    @default("") @db.Char(1)
+  password                    String    @default("") @db.VarChar(255)
+  password_hint               String    @default("") @db.VarChar(128)
+  password_hint_answer        String    @default("") @db.VarChar(128)
+  b_title                     String    @default("") @db.VarChar(32)
+  b_firstname                 String    @default("") @db.VarChar(128)
+  b_lastname                  String    @default("") @db.VarChar(128)
+  b_address                   String    @default("") @db.VarChar(64)
+  b_city                      String    @default("") @db.VarChar(64)
+  b_county                    String    @default("") @db.VarChar(32)
+  b_state                     String    @default("") @db.VarChar(32)
+  b_country                   String    @default("") @db.Char(2)
+  b_zipcode                   String    @default("") @db.VarChar(32)
+  title                       String    @default("") @db.VarChar(32)
+  firstname                   String    @default("") @db.VarChar(128)
+  lastname                    String    @default("") @db.VarChar(128)
+  company                     String    @default("") @db.VarChar(255)
+  s_title                     String    @default("") @db.VarChar(32)
+  s_firstname                 String    @default("") @db.VarChar(128)
+  s_lastname                  String    @default("") @db.VarChar(128)
+  s_address                   String    @default("") @db.VarChar(255)
+  s_city                      String    @default("") @db.VarChar(255)
+  s_county                    String    @default("") @db.VarChar(32)
+  s_state                     String    @default("") @db.VarChar(32)
+  s_country                   String    @default("") @db.Char(2)
+  s_zipcode                   String    @default("") @db.VarChar(32)
+  email                       String    @default("") @db.VarChar(128)
+  phone                       String    @default("") @db.VarChar(32)
+  fax                         String    @default("") @db.VarChar(32)
+  url                         String    @default("") @db.VarChar(128)
+  card_name                   String    @default("") @db.VarChar(255)
+  card_type                   String    @default("") @db.VarChar(16)
+  card_number                 String    @default("") @db.VarChar(128)
+  card_expire                 String    @default("") @db.VarChar(4)
+  card_cvv2                   String    @default("") @db.VarChar(64)
+  last_login                  Int       @default(0)
+  first_login                 Int       @default(0)
+  status                      String    @default("Y") @db.Char(1)
+  referer                     String    @default("") @db.VarChar(255)
+  ssn                         String    @default("") @db.VarChar(32)
+  language                    String    @default("US") @db.Char(2)
+  cart                        String    @default("") @db.VarChar(255)
+  change_password             String    @default("N") @db.Char(1)
+  parent                      String    @default("") @db.VarChar(32)
+  pending_plan_id             Int       @default(0)
+  activity                    String    @default("Y") @db.Char(1)
+  membershipid                Int       @default(0)
+  pending_membershipid        Int       @default(0)
+  tax_number                  String    @default("") @db.VarChar(50)
+  tax_exempt                  String    @default("N") @db.Char(1)
+  last_message                String    @default("N") @db.Char(1)
+  manufacturerids             String    @default("") @db.VarChar(255)
+  phone_ext                   String    @default("") @db.VarChar(32)
+  position                    String    @default("") @db.VarChar(128)
+  pbx_extension               String    @default("") @db.VarChar(128)
+  allow_operate_as_membership String?   @db.VarChar(30)
+  cart_number                 Int       @default(0)
+  show_events                 Boolean   @default(false)
+  show_events_min_date        DateTime? @db.Date
+  parent_user_id              Int?      @db.UnsignedInt
+
+  @@ignore
+}
+
+model xcart_fraud_base_questions {
+  question_id                 Int                                @id @default(autoincrement())
+  question_code               String                             @unique(map: "question_code") @default("") @db.VarChar(255)
+  orderby                     Int                                @default(0)
+  question_template_body      String?                            @db.MediumText
+  auto                        String                             @default("") @db.Char(1)
+  weight                      Decimal?                           @db.Decimal(6, 2)
+  active                      xcart_fraud_base_questions_active?
+  type                        xcart_fraud_base_questions_type?
+  avail                       Int?                               @default(1) @db.TinyInt
+  xcart_order_fraud_checks_v2 xcart_order_fraud_checks_v2[]
+
+  @@index([question_id, orderby, auto], map: "idx_id_orderby_auto")
+}
+
+model xcart_fraud_columns {
+  fraud_id                                                                        Int                       @id @default(autoincrement())
+  code                                                                            String?                   @default("") @db.VarChar(100)
+  name                                                                            String?                   @default("") @db.VarChar(100)
+  type                                                                            xcart_fraud_columns_type?
+  frontend_provider                                                               String?                   @db.VarChar(50)
+  inferred_from                                                                   String?                   @db.VarChar(50)
+  source_type                                                                     String?                   @db.VarChar(50)
+  is_melissa_data                                                                 Boolean?
+  description                                                                     String?                   @db.VarChar(255)
+  frontend_type                                                                   String?                   @db.VarChar(50)
+  xcart_fraud_fa_question_xcart_fraud_columnsToxcart_fraud_fa_question_f_fraud_id xcart_fraud_fa_question[] @relation("xcart_fraud_columnsToxcart_fraud_fa_question_f_fraud_id")
+  xcart_fraud_fa_question_xcart_fraud_columnsToxcart_fraud_fa_question_t_fraud_id xcart_fraud_fa_question[] @relation("xcart_fraud_columnsToxcart_fraud_fa_question_t_fraud_id")
+}
+
+model xcart_fraud_fa_question {
+  question_id                                                                 Int                           @id @default(autoincrement())
+  f_fraud_id                                                                  Int                           @default(0)
+  t_fraud_id                                                                  Int                           @default(0)
+  weight                                                                      Float?                        @default(0) @db.Float
+  type                                                                        xcart_fraud_fa_question_type?
+  template                                                                    String?                       @db.MediumText
+  order_by                                                                    Int?
+  xcart_fraud_columns_xcart_fraud_columnsToxcart_fraud_fa_question_f_fraud_id xcart_fraud_columns           @relation("xcart_fraud_columnsToxcart_fraud_fa_question_f_fraud_id", fields: [f_fraud_id], references: [fraud_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_fraud_check_new_xcart_fraud_columns")
+  xcart_fraud_columns_xcart_fraud_columnsToxcart_fraud_fa_question_t_fraud_id xcart_fraud_columns           @relation("xcart_fraud_columnsToxcart_fraud_fa_question_t_fraud_id", fields: [t_fraud_id], references: [fraud_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_fraud_check_new_xcart_fraud_columns_2")
+
+  @@index([t_fraud_id], map: "FK_xcart_fraud_check_new_xcart_fraud_columns_2")
+  @@index([f_fraud_id], map: "f_fraud_id")
+  @@index([order_by], map: "order_by")
+}
+
+model xcart_k {
+  vrs_id            Int               @id @default(autoincrement()) @db.UnsignedMediumInt
+  site_id           Int
+  company           String            @default("") @db.VarChar(255)
+  link_website      String            @default("") @db.VarChar(255)
+  last_action       String            @default("") @db.VarChar(255)
+  status            Int?              @db.UnsignedTinyInt
+  date              DateTime?         @db.Date
+  email             String            @default("") @db.VarChar(255)
+  telephone         String            @default("") @db.VarChar(255)
+  login             String            @default("") @db.VarChar(255)
+  password          String            @default("") @db.VarChar(255)
+  comment           String            @default("") @db.VarChar(255)
+  created_at        DateTime?         @default(now()) @db.Timestamp(0)
+  user_id           Int?              @db.UnsignedInt
+  xcart_storefronts xcart_storefronts @relation(fields: [site_id], references: [storefrontid], onDelete: Cascade, map: "FK_xcart_vrs_xcart_storefronts")
+  xcart_customers   xcart_customers?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_vrs_xcart_customers")
+
+  @@index([user_id], map: "FK_xcart_vrs_xcart_customers")
+  @@index([site_id], map: "FK_xcart_vrs_xcart_storefronts")
+}
+
+model xcart_mailboxforwarding {
+  mail_id    Int                             @id @default(autoincrement())
+  image_path String?                         @default("") @db.VarChar(255)
+  status     String?                         @default("") @db.VarChar(100)
+  type       String?                         @default("") @db.VarChar(255)
+  file       String?                         @default("") @db.VarChar(255)
+  date       DateTime?                       @db.Date
+  unique_id  Int?
+  weight     Float?                          @db.Float
+  source     xcart_mailboxforwarding_source? @default(auto)
+}
+
+model xcart_manufacturers_upload_prices {
+  upload_id           Int                                       @id @default(autoincrement())
+  manufacturer_id     Int?
+  date                DateTime?                                 @db.DateTime(0)
+  count_rows          Int?
+  user_id             Int?                                      @db.UnsignedInt
+  file_path           String?                                   @db.VarChar(250)
+  file_name           String?                                   @db.VarChar(255)
+  status              xcart_manufacturers_upload_prices_status? @default(In_process)
+  xcart_manufacturers xcart_manufacturers?                      @relation(fields: [manufacturer_id], references: [manufacturerid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_manufacturers_upload_file_xcart_manufacturers")
+  xcart_customers     xcart_customers?                          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK__xcart_customers")
+
+  @@index([user_id], map: "FK__xcart_customers")
+  @@index([manufacturer_id], map: "FK_xcart_manufacturers_upload_file_xcart_manufacturers")
+}
+
+model xcart_order_address_geolocation {
+  geolocation_id             Int                         @id @default(autoincrement())
+  order_id                   Int?
+  address_type_id            Int?
+  longitude                  Float?                      @db.Float
+  latitude                   Float?                      @db.Float
+  xcart_order_addresses_type xcart_order_addresses_type? @relation(fields: [address_type_id], references: [address_type_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_order_address_geolocation_xcart_order_addresses_type")
+  xcart_orders               xcart_orders?               @relation(fields: [order_id], references: [orderid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_order_address_geolocation_xcart_orders")
+
+  @@index([address_type_id], map: "FK_xcart_order_address_geolocation_xcart_order_addresses_type")
+  @@index([order_id], map: "FK_xcart_order_address_geolocation_xcart_orders")
+}
+
+model xcart_order_addresses_type {
+  address_type_id                 Int                               @id @default(autoincrement())
+  name                            String?                           @db.VarChar(150)
+  code                            String?                           @db.VarChar(50)
+  icon                            String?                           @db.VarChar(50)
+  xcart_order_address_geolocation xcart_order_address_geolocation[]
+}
+
+model xcart_order_fa_fraud_checks {
+  id              Int           @id @default(autoincrement())
+  order_id        Int?
+  question_id     Int?
+  outcome         Decimal?      @default(0.00) @db.Decimal(6, 2)
+  fraud_score     Decimal?      @db.Decimal(6, 2)
+  additional_info String?       @db.LongText
+  xcart_orders    xcart_orders? @relation(fields: [order_id], references: [orderid], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_order_fa_fraud_checks_xcart_orders")
+
+  @@index([question_id], map: "FK_xcart_order_fa_fraud_checks_xcart_fraud_fa_question")
+  @@index([order_id], map: "FK_xcart_order_fa_fraud_checks_xcart_orders")
+}
+
+model xcart_order_fraud_checks_v2 {
+  id                         Int                                      @id @default(autoincrement())
+  order_id                   Int                                      @default(0)
+  question_id                Int?
+  manual_action              String                                   @default("") @db.Char(1)
+  fraud_score                Decimal                                  @default(0.00) @db.Decimal(6, 2)
+  fraud_result               xcart_order_fraud_checks_v2_fraud_result @default(positive)
+  additional_info            String?                                  @db.LongText
+  outcome                    Decimal?                                 @db.Decimal(6, 2)
+  xcart_fraud_base_questions xcart_fraud_base_questions?              @relation(fields: [question_id], references: [question_id], onDelete: Cascade, map: "FK_xcart_order_fraud_checks_xcart_fraud_check")
+
+  @@index([question_id], map: "FK_xcart_order_fraud_checks_xcart_fraud_check")
+  @@index([order_id], map: "idx_orderid")
+}
+
+model xcart_order_voided_reasons {
+  reason_id          Int                  @id @default(autoincrement()) @db.UnsignedInt
+  name               String               @db.VarChar(255)
+  pos                Int                  @default(100000) @db.UnsignedMediumInt
+  root               Int?                 @db.UnsignedInt
+  level              Int?                 @db.UnsignedInt
+  lft                Int?                 @db.UnsignedInt
+  rgt                Int?                 @db.UnsignedInt
+  parent_id          Int?                 @db.UnsignedInt
+  xcart_order_groups xcart_order_groups[]
+}
+
+model xcart_product_image_links {
+  image_link_id        Int                   @id @default(autoincrement()) @db.UnsignedInt
+  hash                 String                @db.VarChar(50)
+  image_id             Int?                  @db.UnsignedInt
+  url                  String?               @db.VarChar(2000)
+  created_at           DateTime              @default(now()) @db.Timestamp(0)
+  xcart_product_images xcart_product_images? @relation(fields: [image_id], references: [image_id], onDelete: Cascade, map: "FK_xcart_product_image_links_xcart_product_images")
+
+  @@unique([hash, image_id], map: "hash")
+  @@index([image_id], map: "FK_xcart_product_image_links_xcart_product_images")
+  @@index([created_at], map: "created_at")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model xcart_product_tmp {
+  productid        Int     @default(0)
+  brandid          Int?
+  fulldescr        String  @db.MediumText
+  brand_normalized Boolean @default(false)
+  new_map_price    Decimal @default(0.00) @db.Decimal(12, 2)
+
+  @@ignore
+}
+
 enum account_list_items_priority {
   lwst
   low
@@ -6255,6 +6579,7 @@ enum forms_label_type {
 enum google_products_shopping_status {
   approved
   disapproved
+  pending
 }
 
 enum products_sf_moves_resource_type {
@@ -6364,6 +6689,7 @@ enum xcart_config_type {
   separator
   selector
   multiselector
+  tinymce
 }
 
 enum xcart_external_verification_batches_batch_status {
@@ -6673,6 +6999,7 @@ enum xcart_storefronts_config_type {
   separator
   selector
   multiselector
+  tinymce
 }
 
 enum xcart_supplier_feeds_new_cron {
@@ -6719,4 +7046,43 @@ enum xcart_storefronts_dimension_weight {
 enum xcart_storefronts_dimension_size {
   cm
   EMPTY_ENUM_VALUE @map("")
+}
+
+enum xcart_fraud_base_questions_active {
+  Y
+  N
+}
+
+enum xcart_fraud_base_questions_type {
+  diagonal
+  red_flags
+  pay_pal
+  stripe
+  general_payment
+}
+
+enum xcart_fraud_columns_type {
+  full_name
+  address
+}
+
+enum xcart_fraud_fa_question_type {
+  full_name
+  address
+}
+
+enum xcart_mailboxforwarding_source {
+  manual
+  auto
+}
+
+enum xcart_manufacturers_upload_prices_status {
+  In_process @map("In process")
+  Success
+  Error
+}
+
+enum xcart_order_fraud_checks_v2_fraud_result {
+  positive
+  negative
 }
