@@ -4,7 +4,6 @@ import InnerPage from "@components/common/inner-page/InnerPage";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { Form as RBForm } from "react-bootstrap";
 import Label from "@modules/ui/forms/Label";
-import Feedback from "@modules/ui/forms/Feedback";
 import cn from "classnames";
 import StylesLoginAndSecurity from "@modules/account/components/login-and-security/LoginAndSecurity.module.scss";
 import * as yup from "yup";
@@ -26,7 +25,7 @@ interface IProps {
 }
 
 const InputPhone: React.FC<IProps> = function (props: IProps) {
-  const { currentPhone, setStep, setSecret, setNewPhone } = props;
+  const { setStep, setSecret, setNewPhone } = props;
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
