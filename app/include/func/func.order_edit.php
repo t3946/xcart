@@ -2,6 +2,7 @@
 
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
+use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -1072,7 +1073,7 @@ function func_add_refund_group($group)
         $query_data['extra_data']['apply_per_trans'] = $group['apply_per_trans'];
         $query_data['extra_data']                    = serialize($query_data['extra_data']);
 
-        $query_data['shippingid'] = $group['shippingid'];
+        $query_data['shippingid'] = $group['shippingid'] ?? 0;
         $query_data['shipping']   = $group['shipping'];
         $query_data['accounting'] = '';
         $query_data['OLD_accounting'] = '';
@@ -1323,6 +1324,8 @@ function func_update_refunded_products($products, $orderid)
                         continue;
                     }
 
+                    $refund_group = OrderGroupRefundModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $mid]);
+
                     $where = 'manufacturerid = "' . $mid . '" AND orderid = "' . $orderid . '"' . ' AND productid = "' . $pid . '" AND itemid = "' . $itemid . '"';
 
                     $query_data = func_query_first('SELECT * FROM ' . $sql_tbl['refunded_products'] . ' WHERE ' . $where);
@@ -1349,8 +1352,6 @@ function func_update_refunded_products($products, $orderid)
 
                         $c_login = func_query_first_cell('SELECT login FROM ' . $sql_tbl['orders']
                                                          . ' WHERE orderid = ' . $orderid);
-
-                        x_load('taxes');
 
                         $query_data['extra_data'] = unserialize($query_data['extra_data']);
 
@@ -1395,6 +1396,8 @@ function func_update_refunded_products($products, $orderid)
                                 );
                             }
                         }
+
+                        $query_data['refund_group_id'] = $refund_group->pk;
 
                         func_array2update('refunded_products', $query_data, $where);
                     }

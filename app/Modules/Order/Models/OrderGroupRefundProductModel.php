@@ -6,6 +6,7 @@ namespace Modules\Order\Models;
 
 use Modules\Goods\Models\ProductModel;
 use Xcart\App\Orm\AutoMetaTrait;
+use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Model;
@@ -22,6 +23,13 @@ class OrderGroupRefundProductModel extends Model
     public static function getFields()
     {
         return [
+            'refund_product_id' => AutoField::class,
+            'refund_group' => [
+                'field' => 'refund_group_id',
+                'class' => ForeignField::class,
+                'modelClass' => OrderGroupRefundModel::class,
+                'link' => ['refund_group_id' => 'refund_group_id']
+            ],
             'product' => [
                 'field' => 'productid',
                 'class' => ForeignField::class,
