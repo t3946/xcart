@@ -29,7 +29,9 @@ const EditEmail = (): any => {
         <InputOTP setStep={setStep} secret={secret} newPhone={newPhone} />
       )}
 
-      {step === "change-phone" && <InputPassword newPhone={newPhone} setStep={setStep} />}
+      {step === "change-phone" && (
+        <InputPassword newPhone={newPhone} setStep={setStep} />
+      )}
     </div>
   );
 };
