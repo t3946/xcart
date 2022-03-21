@@ -277,11 +277,13 @@ class CheckoutController extends FrontendController
                     's_zipcode' => $user_address->zip,
                     's_state' => $user_address->state_model->code,
                     's_city' => $user_address->city,
-                    'firstname' => $user->name,
-                    'email' => $user->email,
-                    'phone' => $user->phone,
                 ];
             }
+            $form_data += [
+                'firstname' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone
+            ];
         }
 
         if ($order) {
