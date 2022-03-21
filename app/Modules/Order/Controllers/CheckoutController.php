@@ -145,7 +145,7 @@ class CheckoutController extends FrontendController
             $this->redirect('cart:list');
         }
 
-        AccountController::provideAccountData();
+        parent::beforeAction($action, $params);
     }
 
     protected function getOrder(): OrderModel
@@ -170,7 +170,7 @@ class CheckoutController extends FrontendController
         $app = Xcart::app();
         $site = $app->getModule('Sites')->getSite();
         $cart = $app->cart;
-        $shipping = null;
+        $user = Xcart::app()->getUser(true);
         $shippingForm = new ShippingForm();
 
         if ($site && $app->request->getIsPost()) {
@@ -262,8 +262,35 @@ class CheckoutController extends FrontendController
 
         $order = $order ?? OrderModel::objects()->get(['cart_number' => $cart_number]);
 
-        if ($order && !$app->request->getIsPost()) {
-            $shippingForm->setAttributes($order->getAttributes());
+        $form_data = [];
+
+        if ($user->getIsGuest() === false) {
+
+            $user_address = $user->addresses->get(['address_type'=> 'shipping', 'is_default' => true]);
+
+            if ($user_address) {
+                $form_data = [
+                    's_firstname' => $user_address->full_name,
+                    's_address' => $user_address->street,
+                    's_address_2' => $user_address->detailed,
+                    's_country' => $user_address->country,
+                    's_zipcode' => $user_address->zip,
+                    's_state' => $user_address->state_model->code,
+                    's_city' => $user_address->city,
+                    'firstname' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user_address->phone_number,
+                    'phone_ext' => $user_address->phone_ext,
+                ];
+            }
+        }
+
+        if ($order) {
+            $form_data = $order->getAttributes();
+        }
+
+        if ($form_data && !$app->request->getIsPost()) {
+            $shippingForm->setAttributes($form_data);
         }
 
         $this->display('checkout/shipping.tpl', [
