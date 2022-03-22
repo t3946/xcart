@@ -693,21 +693,9 @@ if ($REQUEST_METHOD === 'POST')
                 if ($newproductModel = ProductModel::objects()->get(['productcode' => trim($sku)])) {
                     $newproductid = $newproductModel->productid;
                 }
-                if (!$newproductModel) {
-                    $_tmp = func_query_first("SELECT productid, variantid FROM $sql_tbl[variants] WHERE productcode='" . trim($sku) . "'");
-                    if (!empty($_tmp)) {
-                        $newproductid = $_tmp['productid'];
-                        $newvariantid = $_tmp['variantid'];
-                    }
-                    if (empty($newproductid)) {
-                        continue;
-                    }
-                }
 
                 global $add_from_order_edit;
                 $add_from_order_edit = true;
-
-                $prd = func_select_product($newproductid, $customer_membershipid, false, false, true);
 
                 if (!empty($order['shipping_groups'][$prd['manufacturerid']]['cb_status']) &&
                     in_array($order['shipping_groups'][$prd['manufacturerid']]['cb_status'], ['P', '3', 'V', 'H', 'R'], true))
@@ -727,8 +715,10 @@ if ($REQUEST_METHOD === 'POST')
                     continue;
                 }
 
-                if (!empty($prd))
+                if ($newproductModel)
                 {
+                    $prd = $newproductModel->getAttributes();
+
                     $log = "<b>Add product:</b> {$sku} x {$amount}";
                     OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);
 

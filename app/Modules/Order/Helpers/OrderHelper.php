@@ -4,8 +4,10 @@ namespace Modules\Order\Helpers;
 
 use DateTime;
 use GuzzleHttp\Client;
+use Modules\Account\Models\AddressesModel;
 use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Models\VoidedReasonModel;
+use Modules\User\Models\UserAccount\UserModel as AccountUserModel;
 use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\QueryBuilder\Q\QAnd;
 use Xcart\App\QueryBuilder\Q\QAndNot;
@@ -683,6 +685,35 @@ HTML;
             $product = $detail->product_model;
             $product->r_avail -= $detail->amount;
             $product->save(['r_avail']);
+        }
+    }
+
+    public static function createUserShippingAddress(OrderModel $order, AccountUserModel $user = null): void
+    {
+        if ($user === null || $user->getIsGuest() === true) {
+            return;
+        }
+
+        if ($user->addresses->filter(['address_type' => 'shipping', 'is_default' => true])->count() === 0) {
+
+            [$shipping] = $order->getAddressInfo();
+
+            $data = [
+                'full_name' => $order->s_firstname,
+                'country_id' => $order->s_country_id,
+                'street' => $shipping['address'][0],
+                'detailed' => $shipping['address'][1],
+                'city' => $order->s_city,
+                'state' => $order->s_state_id,
+                'zip' => $order->s_zipcode,
+                'phone_number' => $order->phone,
+                'phone_ext' => $order->phone_ext,
+                'address_type' => 'shipping',
+                'is_default' => true,
+                'user_id' => $user->pk
+            ];
+
+            AddressesModel::objects()->create($data);
         }
     }
 }

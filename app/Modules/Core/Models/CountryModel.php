@@ -44,9 +44,9 @@ class CountryModel extends Model
     public static function getFields()
     {
         return [
+            'country_id' => AutoField::class,
             'code' => [
                 'class' => CharField::class,
-                'primary' => true,
             ],
             'zone_element' => [
                 'class' => HasManyField::class,

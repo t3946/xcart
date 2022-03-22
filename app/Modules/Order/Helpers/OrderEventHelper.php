@@ -198,6 +198,8 @@ class OrderEventHelper
         $model->updateVerificationStatus();
 
         OrderHelper::decreaseOrderProductsQuantity($model);
+
+        OrderHelper::createUserShippingAddress($model, Xcart::app()->getUser(true));
     }
 
     public static function orderShippedEvent(OrderModel $model): void
