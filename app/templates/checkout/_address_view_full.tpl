@@ -22,7 +22,7 @@
 </div>
 <div class="row country">
     <div class="info-title col-6">{t 'Country:' }</div>
-    <div class="col info-text">{$info['country']->countryNameBySite()}</div>
+    <div class="col info-text">{if $info['country']}{$info['country']->countryNameBySite()}{/if}</div>
 </div>
 <div class="row zip">
     <div class=" info-title col-6">{t 'Zip/Postal code:' }</div>
