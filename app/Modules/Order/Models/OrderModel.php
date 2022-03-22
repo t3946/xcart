@@ -204,38 +204,28 @@ class OrderModel extends Model
                 'link' => ['orderid' => 'orderid'],
             ],
             'shipping_state' => [
-                'field' => 's_state',
+                'field' => 's_state_id',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
-                'sqlType' => Types::STRING,
-                'link' => [
-                    's_state' => 'code',
-                    's_country' => 'country_code'
-                ]
+                'link' => ['s_state_id' => 'stateid']
             ],
             'shipping_country' => [
-                'field' => 's_country',
+                'field' => 's_country_id',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
-                'sqlType' => Types::STRING,
-                'link' => ['s_country' => 'code']
+                'link' => ['s_country_id' => 'country_id']
             ],
             'billing_state' => [
-                'field' => 'b_state',
+                'field' => 'b_state_id',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
-                'sqlType' => Types::STRING,
-                'link' => [
-                    'b_state' => 'code',
-                    'b_country' => 'country_code'
-                ]
+                'link' => ['b_state_id' => 'stateid']
             ],
             'billing_country' => [
-                'field' => 'b_country',
+                'field' => 'b_country_id',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
-                'sqlType' => Types::STRING,
-                'link' => ['b_country' => 'code']
+                'link' => ['b_country_id' => 'country_id']
             ],
             'cb_status_model' => [
                 'field' => 'cb_status',

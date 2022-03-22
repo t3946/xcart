@@ -33,11 +33,10 @@ class AddressesModel extends Model
                 'class' => CharField::class,
             ],
             'country_model' => [
-                'field' => 'country',
+                'field' => 'country_id',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
-                'sqlType' => Types::STRING,
-                'link' => ['country' => 'code'],
+                'link' => ['country_id' => 'country_id'],
             ],
             'phone_number' => [
                 'class' => CharField::class,

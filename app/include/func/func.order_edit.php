@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Core\Models\CountryModel;
+use Modules\Core\Models\StateModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupModel;
 use Modules\Order\Models\OrderGroupRefundModel;
@@ -424,6 +426,31 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
 
     ];
 
+    if (isset ($userinfo["s_country"])) {
+        $country_model = CountryModel::objects()->get(['code' => $userinfo["s_country"]]);
+        if ($country_model) {
+            $query_data['s_country_id'] = $country_model->pk;
+        }
+    }
+    if (isset ($userinfo["b_country"])) {
+        $country_model = CountryModel::objects()->get(['code' => $userinfo["b_country"]]);
+        if ($country_model) {
+            $query_data['b_country_id'] = $country_model->pk;
+        }
+    }
+    if (isset ($userinfo["s_state"], $userinfo["s_country"])) {
+        $state_model = StateModel::objects()->get(['code' => $userinfo["s_state"], 'country_code' => $userinfo["s_country"]]);
+        if ($state_model) {
+            $query_data['s_state_id'] = $state_model->pk;
+        }
+    }
+    if (isset ($userinfo["b_state"], $userinfo["b_country"])) {
+        $state_model = StateModel::objects()->get(['code' => $userinfo["b_state"], 'country_code' => $userinfo["b_country"]]);
+        if ($state_model) {
+            $query_data['b_state_id'] = $state_model->pk;
+        }
+    }
+
     if (empty($extra['additional_fields'])) {
         $extra['additional_fields'] = $userinfo["additional_fields"];
     }
@@ -454,26 +481,6 @@ function func_oe_update_order($cart, $shipping_groups, $old_products = "")
                     OrderLogModel::LOG_TYPE_XCART,
                     "$field_in_db: $current -> $userinfo[$field_in_db]"
                 );
-            }
-        }
-
-        if (!empty($userinfo)) {
-            if ($user_model = UserModel::objects()->get(['login' => $userinfo['login']])) {
-                $user_model->setAttributes([
-                    'b_city'      => $userinfo['b_city'],
-                    'b_firstname' => $userinfo['b_firstname'],
-                    'b_address'   => $userinfo['b_address'],
-                    'b_state'     => $userinfo['b_state'],
-                    'b_country'   => $userinfo['b_country'],
-                    'b_zipcode'   => $userinfo['b_zipcode'],
-                    's_address'   => $userinfo['s_address'],
-                    's_firstname' => $userinfo['s_firstname'],
-                    's_city'      => $userinfo['s_city'],
-                    's_state'     => $userinfo['s_state'],
-                    's_country'   => $userinfo['s_country'],
-                    's_zipcode'   => $userinfo['s_zipcode'],
-                ]);
-                $user_model->save();
             }
         }
 

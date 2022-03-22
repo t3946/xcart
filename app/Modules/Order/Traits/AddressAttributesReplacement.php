@@ -41,6 +41,7 @@ trait AddressAttributesReplacement
                     'code' => $t_data[$replacement . 'state'],
                     'country_code' => $t_data[$replacement . 'country']])) {
                     $t_data[$replacement . 'state'] = $sModel->state;
+                    $t_data[$replacement.'state_id'] = $sModel->pk;
                     $state_f = $this->getField($replacement . 'state');
                     $state_f->setAttributes(array_merge($state_f->getAttributes(), ['data-code' => $sModel->code ?? '']));
                 }
@@ -50,6 +51,7 @@ trait AddressAttributesReplacement
                 /** @var CountryModel $cModel */
                 if ($cModel = CountryModel::objects()->get(['code' => $t_data[$replacement . 'country']])) {
                     $t_data[$replacement . 'country'] = $cModel->countryNameBySite();
+                    $t_data[$replacement.'country_id'] = $cModel->pk;
                     $country_f = $this->getField($replacement . 'country');
                     $country_f->setAttributes(array_merge($country_f->getAttributes(), ['data-code' => $cModel->code ?? '']));
                 }
@@ -86,7 +88,8 @@ trait AddressAttributesReplacement
 
                 /** @var CountryLangsModel $cModel */
                 if ($cModel = CountryLangsModel::objects()->get($filter)) {
-                    $data[$replacement . 'country'] = $cModel->country_code;
+                    $data[$replacement . 'country'] = $cModel->country->code;
+                    $data[$replacement . 'country_id'] = $cModel->country_id;
                 }
             }
 
@@ -97,6 +100,7 @@ trait AddressAttributesReplacement
                     'country_code' => $data[$replacement . 'country']
                 ])) {
                     $data[$replacement . 'state'] = $sModel->code;
+                    $data[$replacement . 'state_id'] = $sModel->pk;
                 }
             }
 

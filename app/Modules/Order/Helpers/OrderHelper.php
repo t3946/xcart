@@ -700,11 +700,11 @@ HTML;
 
             $data = [
                 'full_name' => $order->s_firstname,
-                'country' => $order->s_country,
+                'country_id' => $order->s_country_id,
                 'street' => $shipping['address'][0],
                 'detailed' => $shipping['address'][1],
                 'city' => $order->s_city,
-                'state' => $order->shipping_state->pk,
+                'state' => $order->s_state_id,
                 'zip' => $order->s_zipcode,
                 'phone_number' => $order->phone,
                 'phone_ext' => $order->phone_ext,

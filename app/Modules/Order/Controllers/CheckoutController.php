@@ -273,9 +273,11 @@ class CheckoutController extends FrontendController
                     's_firstname' => $user_address->full_name,
                     's_address' => $user_address->street,
                     's_address_2' => $user_address->detailed,
-                    's_country' => $user_address->country,
+                    's_country' => $user_address->country->code,
+                    's_country_id' => $user_address->country->pk,
                     's_zipcode' => $user_address->zip,
                     's_state' => $user_address->state_model->code,
+                    's_state_id' => $user_address->state_model->pk,
                     's_city' => $user_address->city,
                 ];
             }
@@ -309,19 +311,19 @@ class CheckoutController extends FrontendController
 
             /** @var SiteModel $site */
             $site = Xcart::app()->getModule('Sites')->getSite();
-            $filter = ['lang_id' => $site->lang->lang_id, 'value__contains' => $search];
+            $filter = ['lang_id' => $site->lang->lang_id, 'value__startswith' => $search];
             if (array_key_exists(strtoupper($search), CountryModel::$codes)) {
-                $filter = ['country_code' => CountryModel::$codes[strtoupper($search)], 'lang_id' => $site->lang->lang_id];
+                $filter = ['country__code' => CountryModel::$codes[strtoupper($search)], 'lang_id' => $site->lang->lang_id];
             }
 
             /** @var CountryLangsModel[] $countries */
             $countries = CountryLangsModel::objects()->filter($filter)->limit(10)
-                ->order([new Expression("FIELD(country_code, 'US', 'CA') DESC, country_code")])->all();
+                ->order(['country_lang_id'])->all();
 
             foreach ($countries as $country) {
                 $ar_countries[] = [
                     'name' => $country->value,
-                    'code' => $country->country_code
+                    'code' => $country->country->code
                 ];
             }
         }
@@ -369,7 +371,7 @@ class CheckoutController extends FrontendController
 
         if ($search = Xcart::app()->request->get->get('search')) {
             $states = StateModel::objects()
-                ->filter(array_merge(['state__contains' => $search],$filter ?? []))
+                ->filter(array_merge(['state__startswith' => $search],$filter ?? []))
                 ->limit(10)
                 ->order([new Expression("(CASE WHEN state LIKE '{$search}%' THEN 1 ELSE 2 END)"), 'state'])
                 ->valuesList(['state', 'code'], false);
@@ -533,7 +535,9 @@ class CheckoutController extends FrontendController
                     'b_company' => $order->s_company,
                     'b_city' => $order->s_city,
                     'b_state' => $order->s_state,
+                    'b_state_id' => $order->s_state_id,
                     'b_country' => $order->s_country,
+                    'b_country_id' => $order->s_country_id,
                     'b_zipcode' => $order->s_zipcode,
                 ]);
             }

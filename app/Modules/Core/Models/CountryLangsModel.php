@@ -15,6 +15,7 @@ use Xcart\App\Orm\Model;
  * @property LanguageModel lang
  * @property int lang_id
  * @property string value
+ * @property int $country_id
  */
 class CountryLangsModel extends Model
 {
@@ -29,10 +30,9 @@ class CountryLangsModel extends Model
             'country_lang_id' => AutoField::class,
             'country' => [
                 'class' => ForeignField::class,
-                'field' => 'country_code',
+                'field' => 'country_id',
                 'modelClass' => CountryModel::class,
-                'link' => ['country_code' => 'code'],
-                'sqlType' => Types::STRING,
+                'link' => ['country_id' => 'country_id'],
             ],
             'lang' => [
                 'field' => 'lang_id',
