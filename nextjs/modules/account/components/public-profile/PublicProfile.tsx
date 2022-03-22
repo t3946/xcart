@@ -46,7 +46,7 @@ const PublicProfile = (): any => {
   const maxMB = 10;
   const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
   const DEFAULT_AVATAR_IMAGE =
-    "static/frontend/images/pages/account/default-avatar.svg";
+    "/static/frontend/images/pages/account/default-avatar.svg";
   const [isRemoveAvatar, setIsRemoveAvatar] = React.useState(false);
   const [avatarRaw, setAvatarRaw] = React.useState("");
   const [isOpenAvatarEditor, setIsOpenAvatarEditor] = React.useState(false);
@@ -68,8 +68,7 @@ const PublicProfile = (): any => {
       .string()
       .matches(nameRegex, "Incorrect name")
       .min(3, "Public name must be at least 3 characters")
-      .max(32, "Public name must be at most 32 characters")
-      .required("Public name is a required field"),
+      .max(32, "Public name must be at most 32 characters"),
     location: yup.string(),
     avatar_image: yup
       .mixed()
@@ -149,7 +148,7 @@ const PublicProfile = (): any => {
       return DEFAULT_AVATAR_IMAGE;
     }
 
-    return getStoreUrl(user.avatar_image) || DEFAULT_AVATAR_IMAGE;
+    return user.avatar_image && getStoreUrl(user.avatar_image) || DEFAULT_AVATAR_IMAGE;
   }
 
   function beforePageTemplate() {
@@ -190,7 +189,7 @@ const PublicProfile = (): any => {
   function avatarImageTemplate() {
     const classes = {
       image: [
-        "public-profile-avatar-image",
+          "public-profile-avatar-image",
         {
           "d-none": isOpenAvatarEditor,
         },

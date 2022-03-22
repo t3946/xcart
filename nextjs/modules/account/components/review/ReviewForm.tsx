@@ -21,6 +21,7 @@ import Feedback from "@modules/ui/forms/Feedback";
 import Label from "@modules/ui/forms/Label";
 import Textarea from "@modules/ui/forms/Textarea";
 import getStoreUrl from "@utils/getStoreUrl";
+import { DEFAULT_ATTRIBUTE } from "@mui/system/cssVars/getInitColorSchemeScript";
 
 interface IProps {
   product: number;
@@ -38,7 +39,7 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
     overall: 0,
     headLine: "",
     textBody: "",
-    publicName: user.public_name || user.name,
+    publicName: user.public_name || "S3 Stores Customer",
     videoLink: "",
     files: null,
   };
@@ -101,23 +102,21 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
   });
 
   function userAvatarTemplate() {
-    if (user && user.avatar_image) {
+    if (user) {
+      const DEFAULT_AVATAR_IMAGE =
+        "/static/frontend/images/pages/account/default-avatar.svg";
+      const avatar =
+        (user.avatar_image && getStoreUrl(user.avatar_image)) ||
+        DEFAULT_AVATAR_IMAGE;
+
       return (
         <img
-          src={getStoreUrl(user.avatar_image)}
+          src={avatar}
           className={"mobile-menu-avatar form-review-avatar"}
           alt={""}
         />
       );
     }
-
-    return (
-      <i
-        className={
-          "mobile-menu-sign-in-icon navigation-login-button__not-logged common-icon form-review-avatar"
-        }
-      />
-    );
   }
 
   function submit(values, actions) {

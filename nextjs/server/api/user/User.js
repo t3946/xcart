@@ -19,12 +19,12 @@ app.use("/stripe", isAuthMiddleware, apiStripe);
 app.use("/tsv", apiTwoStepVerification);
 
 app.post("/login", function (req, res) {
-  passport.authenticate("local", {session: false}, async (error, result) => {
+  passport.authenticate("local", { session: false }, async (error, result) => {
     if (!result) {
-      return res.send({error});
+      return res.send({ error });
     }
 
-    req.login(result.user, {session: false}, async (err) => {
+    req.login(result.user, { session: false }, async (err) => {
       if (err) {
         return res.send(err);
       }
@@ -36,7 +36,7 @@ app.post("/login", function (req, res) {
 
       await setSessionCookie(res, params);
 
-      res.json({user: result.user});
+      res.json({ user: result.user });
     });
   })(req, res);
 });
@@ -96,12 +96,12 @@ app.post("/check-login", async function (req, res) {
       email: user.email,
     });
   } else {
-    res.json({error: "User not found", user: req.body});
+    res.json({ error: "User not found", user: req.body });
   }
 });
 
 app.post("/create", async function (req, res) {
-  const {email, name, password} = req.body;
+  const { email, name, password } = req.body;
   let users = await prisma.xcart_users.findMany({
     where: {
       email,
@@ -109,7 +109,7 @@ app.post("/create", async function (req, res) {
   });
 
   if (users.length) {
-    res.json({error: {email: "This email already registered"}});
+    res.json({ error: { email: "This email already registered" } });
   } else {
     const user = await prisma.xcart_users.create({
       data: {
@@ -120,10 +120,10 @@ app.post("/create", async function (req, res) {
       },
     });
 
-    await setSessionCookie(res, {userId: user.user_id});
+    await setSessionCookie(res, { userId: user.user_id });
 
     delete user.password;
-    res.json({user});
+    res.json({ user });
   }
 });
 
@@ -212,7 +212,7 @@ app.post("/send-login-otp", async function (req, res) {
   otp.leftTimeS = Math.ceil(
     (parseInt(otp.expired) - new Date().getTime()) / 1000
   );
-  res.json({otp});
+  res.json({ otp });
 });
 
 app.post("/send-otp", async function (req, res) {
@@ -230,7 +230,7 @@ app.post("/send-otp", async function (req, res) {
   });
 
   if (!user) {
-    res.json({error: {login: "User not found"}});
+    res.json({ error: { login: "User not found" } });
     return;
   }
 
@@ -287,10 +287,7 @@ app.post("/change-name", isAuthMiddleware, async function (req, res) {
 
   delete user.password;
 
-  res.json({user});
-
-  res.clearCookie("session");
-  res.sendStatus(200);
+  res.json({ user });
 });
 
 app.post("/change-email", isAuthMiddleware, async function (req, res) {
@@ -301,7 +298,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
   });
 
   if (userWithNewEmail) {
-    res.json({error: "Such email already used"});
+    res.json({ error: "Such email already used" });
     return;
   }
 
@@ -336,7 +333,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
         return;
       }
 
-      res.json({error: "Invalid OTP. Please check your code and try again."});
+      res.json({ error: "Invalid OTP. Please check your code and try again." });
       break;
 
     case "change-email":
@@ -352,7 +349,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
       );
 
       if (!isPasswordsMatch) {
-        res.json({error: "Your password is incorrect"});
+        res.json({ error: "Your password is incorrect" });
         return;
       }
 
@@ -371,7 +368,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
         },
       });
 
-      res.json({user});
+      res.json({ user });
 
       break;
   }
@@ -385,7 +382,7 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
   });
 
   if (userWithNewPhone) {
-    res.json({error: "Such phone already used"});
+    res.json({ error: "Such phone already used" });
     return;
   }
 
@@ -413,7 +410,7 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
         return;
       }
 
-      res.json({error: "Invalid OTP. Please check your code and try again."});
+      res.json({ error: "Invalid OTP. Please check your code and try again." });
       break;
 
     case "change-phone":
@@ -429,7 +426,7 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
       );
 
       if (!isPasswordsMatch) {
-        res.json({error: "Your password is incorrect"});
+        res.json({ error: "Your password is incorrect" });
         return;
       }
 
@@ -448,14 +445,14 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
         },
       });
 
-      res.json({user});
+      res.json({ user });
 
       break;
   }
 });
 
 app.post("/change-password", isAuthMiddleware, async function (req, res) {
-  const {oldPassword, newPassword} = req.body;
+  const { oldPassword, newPassword } = req.body;
   const user = await prisma.xcart_users.findUnique({
     where: {
       user_id: req.user.userId,
@@ -468,7 +465,7 @@ app.post("/change-password", isAuthMiddleware, async function (req, res) {
   );
 
   if (!isPasswordsMatch) {
-    res.json({errors: {oldPassword: "Wrong password"}});
+    res.json({ errors: { oldPassword: "Wrong password" } });
     return;
   }
 

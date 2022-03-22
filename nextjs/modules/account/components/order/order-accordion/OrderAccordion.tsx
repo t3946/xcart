@@ -60,6 +60,9 @@ const OrderAccordion: React.FC<IProps> = (props) => {
       setActiveKey(key);
     }
   };
+  const orderedStatuses = ["T", "K", "M", "E", "DP"];
+  const isOrdered = orderedStatuses.indexOf(orderItem.cb_status) !== -1;
+
   return (
     <Accordion className={Styles.page__accordion} activeKey={activeKey}>
       <div
@@ -75,7 +78,7 @@ const OrderAccordion: React.FC<IProps> = (props) => {
         <ProblemWithOrder />
       </Accordion.Collapse>
 
-      {orderReturnProducts.length > 0 && (
+      {orderReturnProducts.length > 0 && isOrdered && (
         <>
           <div
             onClick={() => changeAccordion("return")}

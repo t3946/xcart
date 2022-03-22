@@ -350,7 +350,15 @@ class ReviewsApi extends Controller
             /* @var \Modules\User\Models\UserAccount\UserModel $user */
             $user_id = $reviews[$i]['user_id'];
             $user = \Modules\User\Models\UserAccount\UserModel::objects()->get(["user_id" => $user_id]);
-            $reviews[$i]['user_avatar'] = $user->avatar_image->getUrl();
+            if ($user->avatar_image->getUrl()) {
+                $reviews[$i]['user_avatar'] = $user->avatar_image->getUrl();
+            } else {
+                $reviews[$i]['user_avatar'] = "/static/frontend/images/pages/account/default-avatar.svg";
+            }
+
+            if (!$reviews[$i]['user_public_name']) {
+                $reviews[$i]['user_public_name'] = 'S3 Stores Customer';
+            }
         }
 
         return $reviews;

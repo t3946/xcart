@@ -35,7 +35,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
         { to: "/account/orders/open-orders", label: "Open orders" },
         { to: "/account/orders/canceled-orders", label: "Cancelled orders" },
         { to: "/account/orders/completed-orders", label: "Completed orders" },
-        { to: route("account:orders"), label: "Buy again" },
+        { to: "/account/orders/buy-again", label: "Buy again" },
       ],
     },
     {
