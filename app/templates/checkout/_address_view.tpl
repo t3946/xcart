@@ -8,7 +8,7 @@
         {/if}
         <li>{$info['city']}</li>
         <li>{$info['state']}</li>
-        <li>{$info['country']->countryNameBySite()}</li>
+        <li>{if $info['country']}{$info['country']->countryNameBySite()}{/if}</li>
         <li>{$info['zipcode']}</li>
     </ul>
 
