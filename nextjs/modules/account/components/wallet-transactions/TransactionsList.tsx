@@ -80,6 +80,7 @@ export const TransactionsList: React.FC<IProps> = (props) => {
             : TransactionItem;
         const card = null;
         const group = getGroup(transaction);
+
         if (group !== null) {
           groups[group].push(
             <Item

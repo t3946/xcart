@@ -28,11 +28,15 @@ export const TransactionItemsListTotal = (props) => {
       <div className="total-left-side">
         <div className="info-item-container">
           <p className="label-info-item right-part">Payment status:</p>
-          <p className="left-part">{group.paymentStatus}</p>
+          <p className="left-part">
+            {group.cb_status_rel.xcart_order_human_readable_statuses.name}
+          </p>
         </div>
         <div className="info-item-container">
           <p className="label-info-item right-part">Shipping status:</p>
-          <p className="left-part">{group.shippingStatus}</p>
+          <p className="left-part">
+            {group.dc_status_rel.xcart_order_human_readable_statuses.name}
+          </p>
         </div>
       </div>
       <div className="total-group-right-side">

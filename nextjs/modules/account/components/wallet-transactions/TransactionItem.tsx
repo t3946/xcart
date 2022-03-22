@@ -80,7 +80,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
         )}
 
         <div className="transaction-items-label">Products ordered</div>
-        {order.groups.map((group, i) => {
+        {order.xcart_order_groups.map((group, i) => {
           return (
             <TransactionItems
               group={group}
@@ -101,7 +101,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
             <div className="info-item-container info-item-container-spacing regular">
               <p className="total-text total-text-left">Total Shipping Cost:</p>
               <p className="total-text">
-                US$ {parseFloat(order.totalShipping).toFixed(2)}
+                US$ {parseFloat(order.shipping_cost).toFixed(2)}
               </p>
             </div>
 

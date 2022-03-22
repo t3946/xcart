@@ -22,7 +22,7 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
           key={`order-tax-${taxesKey}`}
         >
           <p className="total-text total-text-left">Total {taxesKey}:</p>
-          <p className="total-text">(US$ {taxValue})</p>
+          <p className="total-text">(US$ {taxValue.toFixed(2)})</p>
         </div>
       );
     }
@@ -62,7 +62,7 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
         <div className="transaction-items-label">
           Refund issued for the following items
         </div>
-        {order.groups.map((group, i) => {
+        {order.xcart_refund_groups.map((group, i) => {
           return (
             <TransactionItems
               refund={true}
@@ -80,7 +80,7 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
                 Shipping Cost Refund:{" "}
               </p>
               <p className="total-text">
-                (US$ {parseFloat(order.totalShipping).toFixed(2)})
+                (US$ {parseFloat(order.shipping_cost).toFixed(2)})
               </p>
             </div>
 

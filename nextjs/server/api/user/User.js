@@ -19,12 +19,12 @@ app.use("/stripe", isAuthMiddleware, apiStripe);
 app.use("/tsv", apiTwoStepVerification);
 
 app.post("/login", function (req, res) {
-  passport.authenticate("local", { session: false }, async (error, result) => {
+  passport.authenticate("local", {session: false}, async (error, result) => {
     if (!result) {
-      return res.send({ error });
+      return res.send({error});
     }
 
-    req.login(result.user, { session: false }, async (err) => {
+    req.login(result.user, {session: false}, async (err) => {
       if (err) {
         return res.send(err);
       }
@@ -36,7 +36,7 @@ app.post("/login", function (req, res) {
 
       await setSessionCookie(res, params);
 
-      res.json({ user: result.user });
+      res.json({user: result.user});
     });
   })(req, res);
 });
@@ -96,12 +96,12 @@ app.post("/check-login", async function (req, res) {
       email: user.email,
     });
   } else {
-    res.json({ error: "User not found", user: req.body });
+    res.json({error: "User not found", user: req.body});
   }
 });
 
 app.post("/create", async function (req, res) {
-  const { email, name, password } = req.body;
+  const {email, name, password} = req.body;
   let users = await prisma.xcart_users.findMany({
     where: {
       email,
@@ -109,7 +109,7 @@ app.post("/create", async function (req, res) {
   });
 
   if (users.length) {
-    res.json({ error: { email: "This email already registered" } });
+    res.json({error: {email: "This email already registered"}});
   } else {
     const user = await prisma.xcart_users.create({
       data: {
@@ -120,10 +120,10 @@ app.post("/create", async function (req, res) {
       },
     });
 
-    await setSessionCookie(res, { userId: user.user_id });
+    await setSessionCookie(res, {userId: user.user_id});
 
     delete user.password;
-    res.json({ user });
+    res.json({user});
   }
 });
 
@@ -212,7 +212,7 @@ app.post("/send-login-otp", async function (req, res) {
   otp.leftTimeS = Math.ceil(
     (parseInt(otp.expired) - new Date().getTime()) / 1000
   );
-  res.json({ otp });
+  res.json({otp});
 });
 
 app.post("/send-otp", async function (req, res) {
@@ -230,7 +230,7 @@ app.post("/send-otp", async function (req, res) {
   });
 
   if (!user) {
-    res.json({ error: { login: "User not found" } });
+    res.json({error: {login: "User not found"}});
     return;
   }
 
@@ -287,7 +287,7 @@ app.post("/change-name", isAuthMiddleware, async function (req, res) {
 
   delete user.password;
 
-  res.json({ user });
+  res.json({user});
 
   res.clearCookie("session");
   res.sendStatus(200);
@@ -301,7 +301,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
   });
 
   if (userWithNewEmail) {
-    res.json({ error: "Such email already used" });
+    res.json({error: "Such email already used"});
     return;
   }
 
@@ -336,7 +336,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
         return;
       }
 
-      res.json({ error: "Invalid OTP. Please check your code and try again." });
+      res.json({error: "Invalid OTP. Please check your code and try again."});
       break;
 
     case "change-email":
@@ -352,7 +352,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
       );
 
       if (!isPasswordsMatch) {
-        res.json({ error: "Your password is incorrect" });
+        res.json({error: "Your password is incorrect"});
         return;
       }
 
@@ -371,7 +371,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
         },
       });
 
-      res.json({ user });
+      res.json({user});
 
       break;
   }
@@ -385,7 +385,7 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
   });
 
   if (userWithNewPhone) {
-    res.json({ error: "Such phone already used" });
+    res.json({error: "Such phone already used"});
     return;
   }
 
@@ -413,7 +413,7 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
         return;
       }
 
-      res.json({ error: "Invalid OTP. Please check your code and try again." });
+      res.json({error: "Invalid OTP. Please check your code and try again."});
       break;
 
     case "change-phone":
@@ -429,7 +429,7 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
       );
 
       if (!isPasswordsMatch) {
-        res.json({ error: "Your password is incorrect" });
+        res.json({error: "Your password is incorrect"});
         return;
       }
 
@@ -448,14 +448,14 @@ app.post("/change-phone", isAuthMiddleware, async function (req, res) {
         },
       });
 
-      res.json({ user });
+      res.json({user});
 
       break;
   }
 });
 
 app.post("/change-password", isAuthMiddleware, async function (req, res) {
-  const { oldPassword, newPassword } = req.body;
+  const {oldPassword, newPassword} = req.body;
   const user = await prisma.xcart_users.findUnique({
     where: {
       user_id: req.user.userId,
@@ -468,7 +468,7 @@ app.post("/change-password", isAuthMiddleware, async function (req, res) {
   );
 
   if (!isPasswordsMatch) {
-    res.json({ errors: { oldPassword: "Wrong password" } });
+    res.json({errors: {oldPassword: "Wrong password"}});
     return;
   }
 
@@ -578,6 +578,36 @@ function getShippingStatusCommonName(code) {
   return shippingStatus;
 }
 
+function countGroupTaxes(group) {
+  const taxes = [];
+
+  for (const groupTax of group.tax_rates) {
+    const tax = groupTax.tax_rate.tax.tax_name;
+
+    if (taxes[tax]) {
+      taxes[tax] = 0;
+    }
+
+    taxes[tax] += groupTax.value;
+  }
+
+  return taxes;
+}
+
+function countOrderTaxes(groups) {
+  const taxes = [];
+
+  for (group of groups) {
+    const groupTaxes = countGroupTaxes(group);
+
+    for (const taxName in groupTaxes) {
+      taxes[taxName] += groupTaxes[taxName];
+    }
+  }
+
+  return taxes;
+}
+
 app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const data = await prisma.xcart_users.findUnique({
     where: {
@@ -609,13 +639,96 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
           payment_method: true,
           paymentid: true,
           cb_status: true,
-          xcart_order_transactions: true,
-          xcart_refund_groups: true,
+          shipping_cost: true,
+          xcart_order_transactions: {
+            select: {
+              transaction_amount: true,
+              type: true,
+              transaction_status: true,
+            },
+          },
           phone: true,
           email: true,
           firstname: true,
           lastname: true,
           non_us_confirmation: true,
+          xcart_refund_groups: {
+            select: {
+              xcart_refunded_products: {
+                select: {
+                  ref_price: true,
+                  ref_qty: true,
+                  xcart_order_details: {
+                    select: {
+                      itemid: true,
+                      productcode: true,
+                      product: true,
+                      price: true,
+                      amount: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          xcart_order_groups: {
+            select: {
+              total_gross: true,
+              xcart_order_details: {
+                select: {
+                  itemid: true,
+                  productcode: true,
+                  product: true,
+                  price: true,
+                  amount: true,
+                },
+              },
+              xcart_shipping: {
+                select: {
+                  shipping: true,
+                },
+              },
+              xcart_order_group_taxes: {
+                select: {
+                  value: true,
+                  xcart_tax_rates: {
+                    select: {
+                      xcart_taxes: {
+                        select: {
+                          tax_name: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              cb_status_rel: {
+                select: {
+                  xcart_order_human_readable_statuses: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+              dc_status_rel: {
+                select: {
+                  xcart_order_human_readable_statuses: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          xcart_states_xcart_orders_b_state_idToxcart_states: true,
+          xcart_states_xcart_orders_s_state_idToxcart_states: true,
+          xcart_countries_xcart_countriesToxcart_orders_b_country_id: true,
+          xcart_countries_xcart_countriesToxcart_orders_s_country_id: true,
+          xcart_order_statuses_xcart_order_statusesToxcart_orders_cb_status_id: true,
+          xcart_order_statuses_xcart_order_statusesToxcart_orders_dc_status_id: true,
+          order_extra: true,
         },
       },
     },
@@ -624,105 +737,51 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const cards = (await stripeService.getSources(req.user.userId)).data;
 
   for (const order of orders) {
-    //get order taxes
-    await AxiosInstance.post(
-      getBaseUrl(req) + `/api/account/orders/get-order-taxes`,
-      {
-        order_id: order.orderid,
+    for (const group of order.xcart_refund_groups) {
+      group.xcart_order_details = [];
+
+      for (const refundedProduct of group.xcart_refunded_products) {
+        refundedProduct.xcart_order_details.price = refundedProduct.ref_price;
+        refundedProduct.xcart_order_details.amount = refundedProduct.ref_qty;
+        group.xcart_order_details.push(refundedProduct.xcart_order_details);
       }
-    ).then((res) => {
-      order.taxes = res.data;
-    });
 
-    order.groups = await prisma.xcart_order_groups.findMany({
-      where: {
-        orderid: order.orderid,
-      },
-      include: {
-        xcart_order_details: true,
-      },
-    });
+      delete group.xcart_refunded_products;
+    }
 
-    const deliveryMethods = [];
     let totalShipping = 0;
-
-    for (const group of order.groups) {
+    order.taxes = {};
+    for (const group of order.xcart_order_groups) {
       totalShipping = totalShipping + parseFloat(group.shipping_gross);
-
-      //get order group taxes
-      await AxiosInstance.post(
-        getBaseUrl(req) + `/api/account/orders/get-order-group-taxes`,
-        {
-          order_group_id: group.order_group_id,
-        }
-      ).then((res) => {
-        group.taxes = res.data;
-      });
       group.paymentStatus = getPaymentStatusCommonName(group.cb_status);
       group.shippingStatus = getShippingStatusCommonName(group.dc_status);
 
-      if (!group.shippingid) {
-        continue;
-      }
+      //count taxes
+      for (const tax of group.xcart_order_group_taxes) {
+        const value = parseFloat(tax.value);
+        const name = tax.xcart_tax_rates.xcart_taxes.tax_name;
 
-      const shippingName = (
-        await prisma.xcart_shipping.findUnique({
-          where: { shippingid: group.shippingid },
-        })
-      ).shipping;
+        if (!order.taxes[name]) {
+          order.taxes[name] = 0;
+        }
 
-      if (deliveryMethods.indexOf(shippingName) === -1) {
-        deliveryMethods.push(shippingName);
+        order.taxes[name] += value;
       }
     }
 
-    order.totalShipping = totalShipping.toFixed(2);
-    order.deliveryMethods = deliveryMethods.join(", ");
-
-    order.status = await prisma.xcart_order_statuses.findFirst({
-      where: {
-        code: order.cb_status,
-      },
-      select: {
-        name: true,
-      },
-    });
-
-    order.s_state = (
-      await prisma.xcart_states.findFirst({
-        where: { code: order.s_state, country_code: order.s_country },
-      })
-    )?.state;
-
-    order.b_state = (
-      await prisma.xcart_states.findFirst({
-        where: { code: order.b_state, country_code: order.b_country },
-      })
-    )?.state;
-
-    order.s_country = (
-      await prisma.xcart_countries.findFirst({
-        where: { code: order.s_country },
-      })
-    )?.name;
-
-    order.b_country = (
-      await prisma.xcart_countries.findFirst({
-        where: { code: order.b_country },
-      })
-    )?.name;
-
-    const ORDER_STATUS_UNPAID_PO = "O";
-    const ORDER_STATUS_INCOMPLETE_PO = "IO";
-    const poStatuses = [ORDER_STATUS_UNPAID_PO, ORDER_STATUS_INCOMPLETE_PO];
-
-    if (poStatuses.indexOf(order.cb_status) !== -1) {
-      await AxiosInstance.post(getBaseUrl(req) + `/api/get-extra`, {
-        order_id: order.orderid,
-      }).then((res) => {
-        order.extra = res.data;
-      });
-    }
+    order.status = {
+      name: order
+        .xcart_order_statuses_xcart_order_statusesToxcart_orders_cb_status_id
+        ?.name,
+    };
+    order.s_state =
+      order.xcart_states_xcart_orders_s_state_idToxcart_states?.state;
+    order.b_state =
+      order.xcart_states_xcart_orders_b_state_idToxcart_states?.state;
+    order.s_country =
+      order.xcart_countries_xcart_countriesToxcart_orders_s_country_id?.name;
+    order.b_country =
+      order.xcart_countries_xcart_countriesToxcart_orders_b_country_id?.name;
   }
 
   res.json({
