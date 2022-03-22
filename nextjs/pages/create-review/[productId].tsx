@@ -17,6 +17,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const instance = getInstance(ctx.req);
   const productId = ctx.query.productId;
   let product;
+  let isUserCanWrite = true;
 
   await instance
     .post("/api-client/product/get", { productId })
@@ -24,15 +25,35 @@ export async function getServerSideProps(ctx: NextPageContext) {
       product = res.data;
     });
 
+  await instance
+    .post("/api-client/review/get-current-user-comment", { productId })
+    .then((res: AxiosResponse) => {
+      if (res.data.review) {
+        isUserCanWrite = false;
+      }
+    });
+
   return {
     props: {
       product,
+      isUserCanWrite,
     },
   };
 }
 
 const CreateReviewPage = (props: any) => {
-  const { product } = props;
+  const { product, isUserCanWrite } = props;
+
+  // if (!isUserCanWrite) {
+  //   return (
+  //     <PageTwoColumns>
+  //       <p>
+  //         You already write review to this product. Every user can write only
+  //         one review.
+  //       </p>
+  //     </PageTwoColumns>
+  //   );
+  // }
 
   return (
     <PageTwoColumns>

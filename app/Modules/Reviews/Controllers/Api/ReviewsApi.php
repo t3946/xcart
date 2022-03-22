@@ -127,6 +127,17 @@ class ReviewsApi extends Controller
             http_response_code(401);
         }
 
+        // если у пользователя уже есть отзыв, он не может создать ещё один
+        $review = ProductReviewsModel::objects()->get([
+            'product_id' => $_POST['productId'],
+            'user_id' => $user->user_id,
+        ]);
+
+        if ($review) {
+            $this->jsonResponse(["error" => "user can't create review"]);
+            return;
+        }
+
         $review_data = [
             'header' => $_POST['header'],
             'body' => $_POST['body'],
@@ -388,12 +399,15 @@ class ReviewsApi extends Controller
         $ip = Xcart::app()->request->getUserIP();
         $default_location = 'US';
         $location = GeoIpHelper::getGeoipLocation($ip)->country ?: $default_location;
+        $user = Xcart::app()->getUser(true);
+        $user_review = ProductReviewsModel::objects()->get(['user_id' => $user->user_id, 'product_id' => $product_id]);
 
         $this->jsonResponse([
             'ratings' => $this->getTotalRatings($product_id),
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
             'country' => CountryModel::objects()->get(['code' => $location])->name,
             'product' => AccountController::getProduct($this->data['productId']),
+            'canWriteReview' => $user_review ? false : true,
         ]);
     }
 

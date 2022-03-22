@@ -1,5 +1,6 @@
 const isAuthMiddleware = require("../middleware/isAuth");
 const mail = require("../services/mail");
+const getBaseUrl = require("../utils/getBaseUrl");
 const app = require("express")();
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
@@ -29,4 +30,20 @@ app.post("/report-abuse", isAuthMiddleware, async function (req, res) {
     res.sendStatus(200);
   });
 });
+
+app.post(
+  "/get-current-user-comment",
+  isAuthMiddleware,
+  async function (req, res) {
+    const review = await prisma.xcart_product_reviews.findFirst({
+      where: {
+        user_id: req.user.userId,
+        product_id: req.body.reviewId,
+      },
+    });
+
+    res.json({ review });
+  }
+);
+
 module.exports = app;

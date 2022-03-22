@@ -57,7 +57,8 @@ const ProductReviews: React.FC = function () {
   );
 
   const ratings = useSelectorAccount((e) => e.productsRatings)[productId];
-  const user = useSelectorAccount((e) => e.user);
+  const isUserCanWriteReview = useSelectorAccount((e) => e.productPage.isUserCanWriteReview);
+
 
   let totalRatingsNumber = 0;
 
@@ -133,6 +134,10 @@ const ProductReviews: React.FC = function () {
   }
 
   function writeAReviewTemplate() {
+    if (!isUserCanWriteReview) {
+      return null;
+    }
+
     return (
       <>
         <div className="product-reviews__divider reviews-divider reviews-divider_theme_dark" />

@@ -42,6 +42,7 @@ import MobileSearchReducer from "@client/jsx/redux/reduсers/MobileSearchReducer
 import SuggestionReducer from "@client/jsx/redux/reduсers/SuggestionReducer";
 import ConfigReducer from "@client/jsx/redux/reduсers/account/ConfigReducer";
 import SiteReducer from "@client/jsx/redux/reduсers/account/SiteReducer";
+import ProductPageReducer from "@client/jsx/redux/reduсers/ProductPageReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -74,6 +75,7 @@ const Store: ReduxStore<StoreInterface> = createStore(
     decisions: DecisionsReducer,
     config: ConfigReducer,
     site: SiteReducer,
+    productPage: ProductPageReducer,
   }),
   storeInitialValue,
   composeWithDevTools(applyMiddleware(sagaMiddleware))

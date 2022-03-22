@@ -28,6 +28,11 @@ function* getProductRatingsAndReviews(action): Generator {
     type: "SET_PRODUCT",
     product: res.product,
   });
+
+  yield put({
+    type: "SET_IS_USER_CAN_WRITE_REVIEW",
+    isUserCanWriteReview: res.canWriteReview,
+  });
 }
 
 function* markHelpful(action): Generator {
