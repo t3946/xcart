@@ -88,7 +88,7 @@
                             </span>
                         </div>
 
-                        <div class="col shrink notifications product_notifications mb-lg-0">
+                        <div class="col shrink notifications product_notifications d-lg-none justify-content-end d-flex">
                             <div class="notifications-info small-collapse">
                                 <div class="d-flex">
                                     {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
@@ -169,6 +169,12 @@
             </div>
 
             <div class="col block__title_price">
+                <div class="notifications-info small-collapse mb-lg-3 d-none d-lg-block">
+                    <div class="d-flex">
+                        {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
+                    </div>
+                </div>
+
                 <div id="product-labels-target"></div>
 
                 {if $model->descr}
