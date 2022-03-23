@@ -60,7 +60,8 @@ export const AddAddressForm: React.FC<any> = ({
     onCancelClick();
     snackbar.show(`${!addressInfo ? "Address added!" : "Address edit!"}`);
   };
-  const submitForm = () => {
+
+  function submit() {
     const phoneCode = getCountryByCode(
       formik.values.phone_numberCode,
       countries
@@ -77,14 +78,17 @@ export const AddAddressForm: React.FC<any> = ({
       state: formik.values.state.value || null,
     };
 
+    delete data.state;
     delete data.country;
+    delete data.phone_numberCode;
+    data.is_default = data.is_default ? 1 : 0;
 
     if (addressInfo) {
       dispatch(editAddress(data, onPended));
     } else {
       dispatch(addAddress(data, onPended, user.userId));
     }
-  };
+  }
 
   if (addressInfo) {
     const country = getCountryById(countries, addressInfo.country_id);
@@ -121,7 +125,7 @@ export const AddAddressForm: React.FC<any> = ({
   const formik = useFormik({
     initialValues,
     validationSchema: getAddAddressFormValidationSchema(states),
-    onSubmit: submitForm,
+    onSubmit: submit,
   });
   const selectOptionsCountry = [];
 

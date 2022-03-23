@@ -51,12 +51,6 @@ return [
     ],
 
     [
-        'route' => '/addresses',
-        'path' => 'Modules.Account.routes.routes_addresses_api',
-        'namespace' => 'addresses',
-    ],
-
-    [
         'route' => '/wallet',
         'path' => 'Modules.Account.routes.routes_wallet_api',
         'namespace' => 'wallet',

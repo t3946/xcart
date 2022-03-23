@@ -60,6 +60,24 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
     return phone || "No phone";
   }
 
+  function changeShippingAddressButtonTemplate() {
+    if (
+      orderItem.dc_status === "Z" ||
+      ["AP", "P", "Q", "O", "IO"].indexOf(orderItem.cb_status) === -1
+    ) {
+      return null;
+    }
+
+    return (
+      <button
+        onClick={changeShippingAddressDialog.handleClickOpen}
+        className="form-button order-change-address-btn"
+      >
+        Change shipping address
+      </button>
+    );
+  }
+
   const gridItems = [
     <div>
       <div className="order-address-block-title">Contact information</div>
@@ -93,14 +111,8 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
             </div>
             <div className="order-address-text">{shippingAddress()}</div>
           </div>
-          {orderItem.dc_status === "T" && (
-            <button
-              onClick={changeShippingAddressDialog.handleClickOpen}
-              className="form-button order-change-address-btn"
-            >
-              Change shipping address
-            </button>
-          )}
+
+          {changeShippingAddressButtonTemplate()}
         </div>
       </div>
       <div className={Styles.orderAddressItem}>

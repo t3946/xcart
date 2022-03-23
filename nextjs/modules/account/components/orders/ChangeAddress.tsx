@@ -29,23 +29,17 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
     dispatch(getAddresses(userId));
     dispatch(getTerritory());
   }, []);
-
   const addresses = useSelectorAccount((e) =>
     e.addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.SHIPPING
     )
   );
-
   const initialValues = {
     address: "",
   };
-
   const [isAddingAddress, setIsAddingAddress] = useState(false);
-
   const apiService = new ApiService();
-
   const breakpoint = useBreakpoint();
-
   const router = useRouter();
   const urlParams = router.query;
 
@@ -53,9 +47,11 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
     values: Record<any, any>,
     { setSubmitting }: FormikHelpers<any>
   ) => {
-    const address = Store.getState().addresses.addressesList.find(
+    const address = addresses.find(
       (address) => address.address_id === parseInt(values.address)
     );
+
+    console.log("onChangeAddress", { address });
 
     dispatch(
       editShippingAddress({
@@ -65,17 +61,17 @@ export const ChangeAddress: React.FC<ChangeAddressProps> = ({
             s_address: address.street,
             s_city: address.city,
             s_full_address:
-              address.country.value +
+              address.country.name +
               " " +
-              address.state.value +
+              address.state.code +
               " " +
               address.zip +
               " " +
               address.street,
             s_firstname: address.full_name,
             s_zipcode: address.zip,
-            s_state: address.state.value,
-            s_country: address.country.value,
+            s_state: address.state.code,
+            s_country: address.country.code,
           },
         },
         success(response) {
