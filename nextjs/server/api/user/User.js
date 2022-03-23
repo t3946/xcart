@@ -312,7 +312,7 @@ app.post("/change-email", isAuthMiddleware, async function (req, res) {
       });
 
       const data = {
-        from: process.env.SMTP_USER,
+        from: process.env.EMAIL_FROM,
         to: req.body.email,
         subject: "Change email otp",
         text: `Change email otp: ${token}`,
@@ -491,7 +491,7 @@ app.post("/send-feedback", isAuthMiddleware, async function (req, res) {
   });
 
   const data = {
-    from: process.env.SMTP_USER,
+    from: process.env.EMAIL_FROM,
     to: user.email,
     subject: "Feedback from " + user.name,
     text: req.body.message,

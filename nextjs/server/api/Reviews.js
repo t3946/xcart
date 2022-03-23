@@ -19,7 +19,7 @@ app.post("/report-abuse", isAuthMiddleware, async function (req, res) {
   });
 
   const data = {
-    from: process.env.SMTP_USER,
+    from: process.env.EMAIL_FROM,
     to: "helpdesk@s3stores.com",
     subject: "Review abuse from " + user.name,
     text: `Abuse on review with id(${review.product_review_id}) from user with id(${user.user_id})`,
