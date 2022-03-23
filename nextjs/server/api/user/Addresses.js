@@ -16,6 +16,13 @@ api.get("/get", isAuthMiddleware, async (req, res) => {
           name: true,
         },
       },
+      state: {
+        select: {
+          code: true,
+          stateid: true,
+          state: true,
+        },
+      },
     },
   });
 
