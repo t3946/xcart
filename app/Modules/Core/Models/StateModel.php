@@ -5,6 +5,7 @@ namespace Modules\Core\Models;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -44,6 +45,12 @@ class StateModel extends Model
                 'field' => 'country_code',
                 'class' => CharField::class
             ],
+            'country_model' => [
+                'field' => 'country_id',
+                'class' => ForeignField::class,
+                'modelClass' => CountryModel::class,
+                'link' => ['country_id' => 'country_id']
+            ]
         ];
     }
 
