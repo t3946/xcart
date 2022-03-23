@@ -13,6 +13,7 @@ use Xcart\App\Orm\Model;
 /**
  * @method static Manager active($instance = null)
  * @method static Manager ordered($instance = null)
+ * @property string $status
  */
 class AttentionTagModel extends Model
 {

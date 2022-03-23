@@ -10,6 +10,8 @@ use Modules\Order\Forms\PurchasingManagerForm;
 use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderTagEventHelper;
+use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
@@ -398,20 +400,10 @@ if ($REQUEST_METHOD === 'POST')
                 /** @var OrderGroupModel $orderGroupModel */
                 $orderGroupModel = OrderGroupModel::objects()->get(['manufacturerid' => $m_id, 'orderid' => $orderid]);
                 $cart_tmp['order_group_id'] = $orderGroupModel->order_group_id;
-                if (func_check_comma_in_field($orderid, $v['shipping_cost_net'], 'shipping_cost_net')) {
-                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
-                    $top_message['type']      = 'I';
-                    $section_name_top_message = $top_message;
-                    x_session_save('section_name_top_message');
-                    break;
-                }
-                if (func_check_comma_in_field($orderid, $v['actual_shipping_cost_net'], 'actual_shipping_cost_net')) {
-                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
-                    $top_message['type']      = 'I';
-                    $section_name_top_message = $top_message;
-                    x_session_save('section_name_top_message');
-                    break;
-                }
+
+                $v['shipping_cost_net'] = str_replace(',','',$v['shipping_cost_net']);
+
+                $v['actual_shipping_cost_net'] = str_replace(',','',$v['actual_shipping_cost_net']);
 
                 ### LOG: START
                 $log  = '';
@@ -675,14 +667,8 @@ if ($REQUEST_METHOD === 'POST')
                 if (empty($sku)) {
                     continue;
                 }
-                if (func_check_comma_in_field($orderid, $add_amount[$kkk], 'add_amount'))
-                {
-                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
-                    $top_message['type']      = 'I';
-                    $section_name_top_message = $top_message;
-                    x_session_save('section_name_top_message');
-                    break;
-                }
+
+                $add_amount[$kkk] = str_replace(',','',$add_amount[$kkk]);
 
                 $amount = intval($add_amount[$kkk]);
 
@@ -756,7 +742,7 @@ if ($REQUEST_METHOD === 'POST')
                         }
                         else {
                             $prd['extra_data']['product_options'] = func_get_default_options($newproductid, $amount, $customer_membershipid);
-                            list($variant, $product_options_result) = func_get_product_options_data($newproductid, $prd['extra_data']['product_options'], $customer_membershipid);
+                            [$variant, $product_options_result] = func_get_product_options_data($newproductid, $prd['extra_data']['product_options'], $customer_membershipid);
                         }
                         $surcharge              = 0;
                         $prd['product_options'] = $product_options_result;
@@ -821,13 +807,7 @@ if ($REQUEST_METHOD === 'POST')
                 foreach ($add_additional_fee_name as $k => $v) {
                     $v = trim($v);
                     if (!empty($v)) {
-                        if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'add_additional_fee_value')) {
-                            $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
-                            $top_message['type']      = 'I';
-                            $section_name_top_message = $top_message;
-                            x_session_save('section_name_top_message');
-                            break;
-                        }
+                        $add_additional_fee_value[$k] = str_replace(',','',$add_additional_fee_value[$k]);
                         $add_price                                  = price_format($add_additional_fee_value[$k]);
                         $additional_fee_row['additional_fee_name']  = $v;
                         $additional_fee_row['additional_fee_value'] = $add_price;
@@ -857,14 +837,7 @@ if ($REQUEST_METHOD === 'POST')
         {
             foreach ($edit_additional_fee_name as $k => $v)
             {
-                if (func_check_comma_in_field($orderid, $add_additional_fee_value[$k], 'additional_fee_value'))
-                {
-                    $top_message['content'] .= func_get_langvar_by_name('lbl_error_comma_in_number');
-                    $top_message['type']      = 'I';
-                    $section_name_top_message = $top_message;
-                    x_session_save('section_name_top_message');
-                    break;
-                }
+                $add_additional_fee_value[$k] = str_replace(',','',$add_additional_fee_value[$k]);
 
                 $add_price                                  = price_format($v['additional_fee_value']);
                 $additional_fee_row['additional_fee_name']  = $v['additional_fee_name'];
@@ -1126,7 +1099,7 @@ if ($REQUEST_METHOD === 'POST')
 
                 $update = [];
 
-                $update                  = func_add_accounting_fields($update, '', '', '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
+                $update                  = func_add_accounting_fields($update, [], null, '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
                 $update['profit_margin'] = $order['shipping_groups'][$m_id]['profit_margin'];
 
                 if (isset($v['paymentid'])) {
@@ -1437,13 +1410,9 @@ if ($REQUEST_METHOD === 'POST')
                         $group_memos             = [];
 
                         $ref_to_us_HST = $memo_data["ref_to_us_HST"];
-                        if (func_check_comma_in_field($orderid, $ref_to_us_HST, 'ref_to_us_HST')) {
-                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"]      = "I";
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-                            break;
-                        }
+
+                        $ref_to_us_HST = str_replace(',','',$ref_to_us_HST);
+
                         $SUM_ref_to_us_HST += $ref_to_us_HST;
 
                         if ($ref_to_us_HST != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_HST"]) {
@@ -1454,13 +1423,8 @@ if ($REQUEST_METHOD === 'POST')
 
                         $ref_to_us_total = $memo_data["ref_to_us_total"];
 
-                        if (func_check_comma_in_field($orderid, $ref_to_us_total, 'ref_to_us_total')) {
-                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"]      = "I";
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-                            break;
-                        }
+                        $ref_to_us_total = str_replace(',','',$ref_to_us_total);
+
                         $SUM_ref_to_us_total += $ref_to_us_total;
 
                         if ($ref_to_us_total != $order["shipping_groups"][$certain_mid]["memos"][$memo_number]["ref_to_us_total"]) {
@@ -1537,13 +1501,7 @@ if ($REQUEST_METHOD === 'POST')
                         if (!empty($invoice_data["unit_cost"]) && is_array($invoice_data["unit_cost"])) {
                             foreach ($invoice_data["unit_cost"] as $itemid => $unit_cost) {
 
-                                if (func_check_comma_in_field($orderid, $unit_cost, 'invoice_unit_cost')) {
-                                    $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                                    $top_message["type"]      = "I";
-                                    $section_name_top_message = $top_message;
-                                    x_session_save("section_name_top_message");
-                                    break;
-                                }
+                                $unit_cost = str_replace(',','',$unit_cost);
 
                                 $invoices_products = [];
 
@@ -1556,21 +1514,21 @@ if ($REQUEST_METHOD === 'POST')
                                     $update_invoices_table_flag = true;
 
                                     $log .= "<br />invoice_number-" . $invoice_number . ": unit_cost: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["unit_cost"] . " -> " . $unit_cost;
-                                    if ($unit_cost < $order['shipping_groups'][$m_id]["products"][$itemid]["cost_to_us"] && !empty($config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"])) {
-                                        $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"] . "'");
-                                        if (empty($status_id)) {
-                                            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent( $config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"],  $orderid, false);
 
-                                            $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Unit_cost_LT_Cost_to_us"]]["status"];
-                                        }
+                                    if ($unit_cost < $order['shipping_groups'][$m_id]["products"][$itemid]["cost_to_us"]) {
+                                        OrderHelper::setOrderTag(
+                                            $orderid,
+                                            $config['Attention_tags_invoices']['tag_for_Unit_cost_LT_Cost_to_us'],
+                                            true
+                                        );
                                     }
 
-                                    if ($unit_cost > $order['shipping_groups'][$m_id]["products"][$itemid]["cost_to_us"] && !empty($config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"])) {
-                                        $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"] . "'");
-                                        if (empty($status_id)) {
-                                            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent( $config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"], $orderid, false);
-                                            $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Unit_cost_GT_Cost_to_us"]]["status"];
-                                        }
+                                    if ($unit_cost > $order['shipping_groups'][$m_id]["products"][$itemid]["cost_to_us"]) {
+                                        OrderHelper::setOrderTag(
+                                            $orderid,
+                                            $config['Attention_tags_invoices']['tag_for_Unit_cost_GT_Cost_to_us'],
+                                            true
+                                        );
                                     }
                                 }
 
@@ -1579,6 +1537,7 @@ if ($REQUEST_METHOD === 'POST')
 
                                     $update_invoices_table_flag = true;
                                     $log .= "<br />invoice_number-" . $invoice_number . ": qty_inv: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["qty_inv"] . " -> " . $qty_inv;
+
                                     if (!empty($config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"])) {
                                         $ref_qty = 0;
                                         if (!empty($order["refund_groups"][$m_id]["products"][$itemid]["ref_qty"])) {
@@ -1592,13 +1551,12 @@ if ($REQUEST_METHOD === 'POST')
                                             $sum_qty_inv_for_certain_product += $v_tmp["qty_inv"][$itemid];
                                         }
 
-                                        if ($qty_disp != $sum_qty_inv_for_certain_product) {
-                                            $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"] . "'");
-                                            if (empty($status_id)) {
-                                                Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"],  $orderid, false);
-
-                                                $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched"]]["status"];
-                                            }
+                                        if ((int)$qty_disp !== (int)$sum_qty_inv_for_certain_product) {
+                                            OrderHelper::setOrderTag(
+                                                $orderid,
+                                                $config['Attention_tags_invoices']['tag_for_Qty_invoiced_NOT_EQ_Qty_dispatched'],
+                                                true
+                                            );
                                         }
                                     }
                                 }
@@ -1673,13 +1631,12 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "<br />invoice_number-" . $invoice_number . ": tax_charged_except_HST: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["tax_charged_except_HST"] . " -> " . $tax_charged_except_HST;
                             $update_invoices_table_flag = true;
 
-                            if ($tax_charged_except_HST > 0 && !empty($config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"])) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"],  $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Tax_charged_except_HST_GT_0"]]["status"];
-                                }
+                            if ($tax_charged_except_HST > 0) {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_Tax_charged_except_HST_GT_0'],
+                                    true
+                                );
                             }
                         }
 
@@ -1689,13 +1646,12 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "<br />invoice_number-" . $invoice_number . ": extra_items_on_invoice: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["extra_items_on_invoice"] . " -> " . $invoice_data["extra_items_on_invoice"];
                             $update_invoices_table_flag = true;
 
-                            if ($invoice_data["extra_items_on_invoice"] == "Y" && !empty($config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"])) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"],  $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_extra_items_on_invoice"]]["status"];
-                                }
+                            if ($invoice_data["extra_items_on_invoice"] == "Y") {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_extra_items_on_invoice'],
+                                    true
+                                );
                             }
                         }
 
@@ -1705,13 +1661,12 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "<br />invoice_number-" . $invoice_number . ": items_shipped_to_wrong_address: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["items_shipped_to_wrong_address"] . " -> " . $invoice_data["items_shipped_to_wrong_address"];
                             $update_invoices_table_flag = true;
 
-                            if ($invoice_data["items_shipped_to_wrong_address"] == "Y" && !empty($config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"])) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"],  $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_items_shipped_to_wrong_address"]]["status"];
-                                }
+                            if ($invoice_data["items_shipped_to_wrong_address"] === 'Y') {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_items_shipped_to_wrong_address'],
+                                    true
+                                );
                             }
                         }
 
@@ -1720,13 +1675,7 @@ if ($REQUEST_METHOD === 'POST')
 
                         $shipping_charged = $invoice_data["shipping_charged"];
 
-                        if (func_check_comma_in_field($orderid, $shipping_charged, 'shipping_charged')) {
-                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"]      = "I";
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-                            break;
-                        }
+                        $shipping_charged = str_replace(',','',$shipping_charged);
 
                         $SUM_shipping_charged += $shipping_charged;
 
@@ -1735,34 +1684,27 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "<br />invoice_number-" . $invoice_number . ": shipping_charged: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["shipping_charged"] . " -> " . $shipping_charged;
                             $update_invoices_table_flag = true;
 
-                            if ($shipping_charged > $order['shipping_groups'][$m_id]["actual_shipping_cost"]["net"] && !empty($config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"]) && $order['shipping_groups'][$m_id]["actual_shipping_cost"]["net"] > 0) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"], $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Shipping_charged_GT_Shipping_quoted_by_distr"]]["status"];
-                                }
+                            if ($shipping_charged > $order['shipping_groups'][$m_id]["actual_shipping_cost"]["net"] && $order['shipping_groups'][$m_id]["actual_shipping_cost"]["net"] > 0) {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_Shipping_charged_GT_Shipping_quoted_by_distr'],
+                                    true
+                                );
                             }
 
-                            if ($shipping_charged == 0 && !empty($config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"])) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"], $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Shipping_charged_EQ_0"]]["status"];
-                                }
+                            if ($shipping_charged == 0) {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_Shipping_charged_EQ_0'],
+                                    true
+                                );
                             }
                         }
 
                         $drop_ship_fee_charged = $invoice_data["drop_ship_fee_charged"];
 
-                        if (func_check_comma_in_field($orderid, $drop_ship_fee_charged, 'drop_ship_fee_charged')) {
-                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"]      = "I";
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-                            break;
-                        }
+                        $drop_ship_fee_charged = str_replace(',','',$drop_ship_fee_charged);
+
                         $SUM_drop_ship_fee_charged += $drop_ship_fee_charged;
 
                         if ($drop_ship_fee_charged != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["drop_ship_fee_charged"]) {
@@ -1770,13 +1712,12 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "<br />invoice_number-" . $invoice_number . ": drop_ship_fee_charged: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["drop_ship_fee_charged"] . " -> " . $drop_ship_fee_charged;
                             $update_invoices_table_flag = true;
 
-                            if ($drop_ship_fee_charged > $order['shipping_groups'][$m_id]["all_distributor_info"]["d_drop_ship_fee_in_us"] && !empty($config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"])) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"], $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart"]]["status"];
-                                }
+                            if ($drop_ship_fee_charged > $order['shipping_groups'][$m_id]["all_distributor_info"]["d_drop_ship_fee_in_us"]) {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart'],
+                                    true
+                                );
                             }
                         }
 
@@ -1784,13 +1725,8 @@ if ($REQUEST_METHOD === 'POST')
                         $group_invoices["shipping_total"] = $shipping_total;
 
                         $HST_charged = $invoice_data["HST_charged"];
-                        if (func_check_comma_in_field($orderid, $HST_charged, 'HST_charged')) {
-                            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                            $top_message["type"]      = "I";
-                            $section_name_top_message = $top_message;
-                            x_session_save("section_name_top_message");
-                            break;
-                        }
+
+                        $HST_charged = str_replace(',','',$HST_charged);
 
                         $SUM_HST_charged += $HST_charged;
 
@@ -1799,13 +1735,12 @@ if ($REQUEST_METHOD === 'POST')
                             $log .= "<br />invoice_number-" . $invoice_number . ": HST_charged: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["HST_charged"] . " -> " . $HST_charged;
                             $update_invoices_table_flag = true;
 
-                            if ($HST_charged > 0 && !empty($config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"])) {
-                                $status_id = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"] . "'");
-                                if (empty($status_id)) {
-                                    Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"], $orderid, false);
-
-                                    $log .= "<br />Attention tag added: " . $attention_tags_values[$config["Attention_tags_invoices"]["tag_for_HST_charged_GT_0"]]["status"];
-                                }
+                            if ($HST_charged > 0) {
+                                OrderHelper::setOrderTag(
+                                    $orderid,
+                                    $config['Attention_tags_invoices']['tag_for_HST_charged_GT_0'],
+                                    true
+                                );
                             }
                         }
 
@@ -1889,7 +1824,7 @@ if ($REQUEST_METHOD === 'POST')
 
                 $update['profit_margin'] = $order['shipping_groups'][$m_id]['profit_margin'];
 
-                $update = func_add_accounting_fields($update, '', '', '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
+                $update = func_add_accounting_fields($update, [], null, '', "order_groups", $order['shipping_groups'][$m_id]['accounting']);
 
                 if ($log !== "<B>" . $order["shipping_groups"][$certain_mid]["code"] . "</B>:") {
                     OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, $log);

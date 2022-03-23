@@ -421,13 +421,17 @@ HTML;
 
     public static function setOrderTag($orderId, $tagId, $isLog = true): ?AttentionTagModel
     {
+        if (!$tagId) {
+            return null;
+        }
         /** @var AttentionTagModel $model */
         $model = AttentionTagModel::objects()->get(['status_id' => $tagId]);
 
         if ($model) {
             [, $created] = OrderAdditionalTagLinkModel::objects()->getOrCreate(['status_id' => $tagId, 'orderid' => $orderId]);
-            $message = "Attention tag added: " . $model->status;
             if ($isLog && $created) {
+                $message = "Attention tag added: " . $model->status;
+
                 OrderLogModel::createLog(
                     $orderId,
                     OrderLogModel::LOG_TYPE_XCART,
@@ -437,6 +441,28 @@ HTML;
             }
         }
         return null;
+    }
+
+    public static function unsetOrderTag($orderId, $tagId, $isLog = true): void
+    {
+        if (!$tagId) {
+            return;
+        }
+        /** @var AttentionTagModel $model */
+        $model = AttentionTagModel::objects()->get(['status_id' => $tagId]);
+
+        if ($model) {
+            OrderAdditionalTagLinkModel::objects()->delete(['status_id' => $tagId, 'orderid' => $orderId]);
+            if ($isLog) {
+                $message = "'$model->status' attention tag has been removed";
+
+                OrderLogModel::createLog(
+                    $orderId,
+                    OrderLogModel::LOG_TYPE_XCART,
+                    $message
+                );
+            }
+        }
     }
 
     public static function changeOrderStatus(OrderModel $order, $value, $status = 'cb', $sendNotification = false): void

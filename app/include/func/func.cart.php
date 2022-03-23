@@ -620,7 +620,7 @@ function func_calculate($cart, $products, $login, $login_type, $paymentid=NULL) 
 	}
 	$return['whole_taxes'] = $result['whole_taxes'];
 
-    $return ["shipping_cost"] = array_sum($return ["shipping_costs"]);
+    $return ["shipping_cost"] = array_sum($return ["shipping_costs"] ?? []);
 
 	return $return;
 }

@@ -5,6 +5,7 @@ use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\TemplateModel;
 use Modules\Order\Helpers\OrderHelper;
+use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\SiteModel;
@@ -95,16 +96,7 @@ if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
         \Xcart\App\Main\Xcart::app()->mail->raw('helpdesk@s3stores.com', $subject, $body, $headers);
     }
 
-    $additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[templates_for_communication] WHERE id='$template_id'");
-
-    if ($additional_tag_status > 0) {
-
-        $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$additional_tag_status'");
-
-        if (empty($is_such_additional_tag_status)) {
-            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($additional_tag_status, $orderid);
-        }
-    }
+    OrderTagEventHelper::orderTagEvent($template_model->status_id, $orderid, true);
 
     $top_message = array(
         'content' => 'EMAIL SENT. OK.',

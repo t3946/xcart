@@ -51,11 +51,15 @@ class OrderGroupRefundProductModel extends Model
 
     public function getRestockingFee()
     {
-        if (($detail = $this->getOrderDetail()) && !$order_price = $detail->price) {
+        $detail = $this->getOrderDetail();
+
+        if (!$detail || !$detail->price) {
             return 0;
         }
+
         $refund_price = $this->ref_price;
-        return round((1 - $refund_price / $order_price) * 100);
+
+        return round((1 - $refund_price / $detail->price) * 100);
     }
 
     public function getSubtotal(): float

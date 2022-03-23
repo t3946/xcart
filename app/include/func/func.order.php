@@ -3993,7 +3993,7 @@ function func_make_accounting($orderid = '', $manufacturerid = '', $group = "", 
     return $accounting;
 }
 
-function func_add_accounting_fields($query_data, $group = '', $orderid = '', $manufacturerid = '', $tbl = "order_groups", $accounting_arr = '')
+function func_add_accounting_fields($query_data, array $group = [], $orderid = null, $manufacturerid = '', $tbl = "order_groups", $accounting_arr = '')
 {
     global $sql_tbl;
 

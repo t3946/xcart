@@ -3,95 +3,66 @@
 namespace Modules\Order\Controllers\Admin;
 
 use Modules\Admin\Controllers\BackendController;
+use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
-use Modules\Order\Models\OrderLogModel;
+use Modules\Order\Models\AttentionTagModel;
+use Modules\Order\Models\AttentionTagUserModel;
 use Xcart\App\Main\Xcart;
 
 class ApiTagsController extends BackendController
 {
-    public function actionAdd($order_id, $status_id)
+    public function actionAdd($order_id, $status_id): void
     {
         $login = Xcart::app()->getUser()->login;
 
-        $status_name = func_query_first_cell("SELECT status FROM xcart_attention_tags_values WHERE status_id='$status_id'");
-        $allowed_logins = func_query("SELECT login FROM xcart_attention_tags_values_logins WHERE status_id='$status_id' AND action='set'");
-        $allowed_to_set_flag = false;
+        /** @var AttentionTagModel $status */
+        $status = AttentionTagModel::objects()->get(['status_id' => $status_id]);
 
-        if (!empty($allowed_logins) && is_array($allowed_logins))
-        {
-            foreach ($allowed_logins as $k => $v)
-            {
-                if ($v['login'] === $login || $v['login'] === '_ANY_') {
-                    $allowed_to_set_flag = true;
-                    break;
-                }
-            }
-        }
+        $allowed_to_set_flag = AttentionTagUserModel::objects()->filter(
+                ['status_id' => $status_id, 'action' => 'set', 'login__in' => [$login, '_ANY_']]
+            )->count() > 0;
 
         if ($allowed_to_set_flag) {
-            $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM xcart_orders_additional_tags WHERE orderid='$order_id' AND status_id='$status_id'");
+            OrderTagEventHelper::orderTagEvent($status_id, $order_id, true);
 
-            if (empty($is_such_additional_tag_status) && $allowed_to_set_flag) {
+            $this->jsonResponse([
+                'content' => 'Attention tag has been added!',
+                'type' => 'success',
+            ]);
 
-                OrderTagEventHelper::orderTagEvent($status_id, $order_id);
-
-                $this->jsonResponse([
-                    'content' => 'Attention tag has been added!',
-                    'type' => 'success',
-                ]);
-
-                die();
-            }
+            die();
         }
 
         $this->jsonResponse([
-            'content' => "You cannot add the '{$status_name}' tag.",
+            'content' => "You cannot add the '$status->status' tag.",
             'type' => 'error',
         ]);
     }
 
-    public function actionDel($order_id, $status_id)
+    public function actionDel($order_id, $status_id): void
     {
         $login = Xcart::app()->getUser()->login;
 
-        $status_name = func_query_first_cell("SELECT status FROM xcart_attention_tags_values WHERE status_id='$status_id'");
-        $allowed_logins = func_query("SELECT login FROM xcart_attention_tags_values_logins WHERE status_id='$status_id' AND action='unset'");
-        $allowed_to_unset_flag = false;
+        /** @var AttentionTagModel $status */
+        $status = AttentionTagModel::objects()->get(['status_id' => $status_id]);
 
-        if (!empty($allowed_logins) && is_array($allowed_logins))
-        {
-            foreach ($allowed_logins as $k => $v)
-            {
-                if ($v['login'] == $login || $v['login'] === '_ANY_') {
-                    $allowed_to_unset_flag = true;
-                    break;
-                }
-            }
-        }
+        $allowed_to_unset_flag = AttentionTagUserModel::objects()->filter(
+                ['status_id' => $status_id, 'action' => 'unset', 'login__in' => [$login, '_ANY_']]
+            )->count() > 0;
 
         if ($allowed_to_unset_flag) {
-            $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM xcart_orders_additional_tags WHERE orderid='$order_id' AND status_id='$status_id'");
+            OrderHelper::unsetOrderTag($order_id, $status_id, true);
 
-            if (!empty($is_such_additional_tag_status) && $allowed_to_unset_flag) {
+            $this->jsonResponse([
+                'content' => 'Attn tag has been removed',
+                'type' => 'success',
+            ]);
 
-
-                db_query("DELETE FROM xcart_orders_additional_tags WHERE status_id='$status_id' AND orderid='$order_id'");
-
-
-                $log = "'" . $status_name . "' attention tag has been removed";
-                OrderLogModel::createLog($order_id, OrderLogModel::LOG_TYPE_XCART, $log);
-
-                $this->jsonResponse([
-                    'content' => 'Attn tag has been removed',
-                    'type' => 'success',
-                ]);
-
-                die();
-            }
+            die();
         }
 
         $this->jsonResponse([
-            'content' => "You cannot remove the '{$status_name}' tag.",
+            'content' => "You cannot remove the '$status->status' tag.",
             'type' => 'error',
         ]);
     }
