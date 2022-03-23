@@ -7,10 +7,13 @@ export const AddressList = ({ addresses }: Record<any, any>): any => {
   const loading = useSelector((e: any) => e.addresses.loading);
   return (
     <React.Fragment>
-      {addresses.map((e) => {
+      {addresses.map((address) => {
         return (
-          <LoadingContainer key={e.address_id} loading={loading}>
-            <AddressItem addressInfo={e} defaultItem={e.is_default} />
+          <LoadingContainer key={address.address_id} loading={loading}>
+            <AddressItem
+              addressInfo={address}
+              defaultItem={address.is_default}
+            />
           </LoadingContainer>
         );
       })}

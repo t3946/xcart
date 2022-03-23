@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Select from "@modules/ui/forms/select/Select";
 import FormInputPhone from "@modules/account/components/shared/FormInputPhone";
 import { getCountryByCode } from "@utils/Countries";
@@ -10,14 +10,10 @@ import {
 import { getStates } from "@modules/account/utils/get-states";
 import { useDispatch } from "react-redux";
 import { getTerritory } from "@redux/actions/account-actions/MainActions";
-import { WalletCardsDialogContext } from "@modules/account/contexts/WalletCardsDialogContext";
 import FormGroup from "@modules/ui/forms/FormGroup";
 import Input from "@modules/ui/forms/Input";
 import Button, { ETheme } from "@modules/ui/forms/Button";
-import {
-  addAddress,
-  editAddress,
-} from "@redux/actions/account-actions/AddressActions";
+import { addAddress } from "@redux/actions/account-actions/AddressActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import ErrorFocus from "@components/common/form-validation-focus/focusFormikComponent";
 
@@ -29,8 +25,6 @@ interface IProps {
 export const AddBillingAddressForm: React.FC<IProps> = (props) => {
   const { onCancel, onSubmitted } = props;
   const dispatch = useDispatch();
-  const context = useContext(WalletCardsDialogContext);
-  const countryPhoneCodes = useSelectorAccount((e) => e.main.countries);
   const countries = useSelectorAccount((e) => e.countries);
   const states = useSelectorAccount((e) => e.main.states);
   const user = useSelectorAccount((e) => e.user);
@@ -50,17 +44,27 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
         /[+()\-\s]/gim,
         ""
       )}`,
-      country: values.country.value,
-      state: values.state.value,
+      country_id: values.country.value,
+      state_id: values.state.value,
       address_type: "billing",
     };
 
     dispatch(addAddress(newAddress, onSubmitted, user.userId));
   };
 
+  const selectOptionsCountry: any = [];
+
+  for (const country of countries) {
+    selectOptionsCountry.push({
+      value: country.country_id,
+      label: country.name,
+    });
+  }
+
   return (
     <div className="billing-address-container px-3">
       <div className="dialog-title">Add a billing address</div>
+
       <Formik
         initialValues={initialAddAddressFormValue}
         onSubmit={onSubmit}
@@ -72,9 +76,10 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
           values,
           touched,
           handleChange,
-          handleBlur,
           isSubmitting,
         }) => {
+          console.log({ values });
+
           return (
             <Form className="your-order-form" encType="multipart/form-data">
               <ErrorFocus />
@@ -83,7 +88,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                   <Select
                     name="country"
                     clearable={false}
-                    options={countryPhoneCodes}
+                    options={selectOptionsCountry}
                     value={values.country}
                     onChange={(e) => {
                       setFieldValue("country", e.target.value);
@@ -185,7 +190,7 @@ export const AddBillingAddressForm: React.FC<IProps> = (props) => {
                   />
                 }
                 label="State/Province"
-                error={!!touched.state && errors.state}
+                error={!!touched.state && !!errors.state}
               />
 
               <FormGroup

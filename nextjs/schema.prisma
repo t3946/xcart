@@ -19,7 +19,6 @@ model a_coeff {
 model account_addresses {
   address_id                                                    Int                     @id @default(autoincrement()) @db.UnsignedInt
   full_name                                                     String                  @db.VarChar(50)
-  country                                                       String                  @db.Char(2)
   country_id                                                    Int?                    @db.UnsignedInt
   phone_number                                                  String                  @db.VarChar(50)
   street                                                        String                  @db.VarChar(50)
@@ -32,8 +31,7 @@ model account_addresses {
   user_id                                                       BigInt                  @db.UnsignedBigInt
   address_type                                                  String?                 @default("shipping") @db.Char(50)
   phone_ext                                                     String?                 @db.VarChar(10)
-  xcart_countries                                               xcart_countries         @relation(fields: [country], references: [code], onDelete: Cascade, map: "FK_account_addresses_xcart_countries")
-  xcart_countries_account_addresses_country_idToxcart_countries xcart_countries?        @relation("account_addresses_country_idToxcart_countries", fields: [country_id], references: [country_id], onDelete: Cascade, map: "FK_account_addresses_xcart_countries_2")
+  country                                                       xcart_countries?        @relation("account_addresses_country_idToxcart_countries", fields: [country_id], references: [country_id], onDelete: Cascade, map: "FK_account_addresses_xcart_countries_2")
   account_delivery_types                                        account_delivery_types? @relation(fields: [delivery_type_id], references: [delivery_type_id], onDelete: Cascade, map: "FK_account_addresses_account_delivery_types")
   xcart_states                                                  xcart_states?           @relation(fields: [state], references: [stateid], onDelete: Cascade, map: "FK_account_addresses_xcart_states")
   xcart_users                                                   xcart_users             @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_addresses_xcart_users")
@@ -41,7 +39,6 @@ model account_addresses {
   account_product_lists                                         account_product_lists[]
 
   @@index([delivery_type_id], map: "FK_account_addresses_account_delivery_types")
-  @@index([country], map: "FK_account_addresses_xcart_countries")
   @@index([country_id], map: "FK_account_addresses_xcart_countries_2")
   @@index([state], map: "FK_account_addresses_xcart_states")
   @@index([user_id], map: "FK_account_addresses_xcart_users")
@@ -1807,7 +1804,6 @@ model xcart_countries {
   is_many_line_addresses                                          Boolean?                             @default(false)
   phone_code                                                      Int?                                 @db.UnsignedInt
   country_id                                                      Int                                  @id @default(autoincrement()) @db.UnsignedInt
-  account_addresses                                               account_addresses[]
   account_addresses_account_addresses_country_idToxcart_countries account_addresses[]                  @relation("account_addresses_country_idToxcart_countries")
   xcart_amazon_fulfillment_locations                              xcart_amazon_fulfillment_locations[]
   xcart_country_langs                                             xcart_country_langs[]
@@ -4456,8 +4452,8 @@ model xcart_product_reviews {
   xcart_reviews_images xcart_reviews_images[]
   xcart_reviews_videos xcart_reviews_videos[]
 
+  @@unique([user_id, product_id], map: "xcart_product_reviews_user_id_product_id_uindex")
   @@index([product_id], map: "product_reviews_xcart_products_productid_fk2")
-  @@index([user_id], map: "product_reviews_xcart_users_user_id_fk2")
 }
 
 model xcart_product_taxes {

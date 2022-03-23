@@ -23,69 +23,114 @@ import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import ErrorFocus from "@components/common/form-validation-focus/focusFormikHook";
 
+function getCountryById(countries: any, countryId: number) {
+  for (const country of countries) {
+    if (country.country_id === countryId) {
+      return country;
+    }
+  }
+
+  return null;
+}
+
+function getStateById(states: any, stateId: number) {
+  for (const state of states) {
+    if (state.value === stateId) {
+      return state;
+    }
+  }
+
+  return null;
+}
+
 export const AddAddressForm: React.FC<any> = ({
   addressInfo = undefined,
   onCancelClick = undefined,
   children,
 }) => {
   const dispatch = useDispatch();
-  const phoneCodes = useSelectorAccount((e) => e.main.countries);
   const countries = useSelectorAccount((e) => e.countries);
   const states = useSelectorAccount((e) => e.main.states);
   const snackbar = useSnackbar();
   const user = useSelectorAccount((e) => e.user);
-
   const addressFormLoading = useSelectorAccount(
     (e: any) => e.addresses.addressFormLoading
   );
-
   const onPended = () => {
     onCancelClick();
     snackbar.show(`${!addressInfo ? "Address added!" : "Address edit!"}`);
   };
-
   const submitForm = () => {
     const phoneCode = getCountryByCode(
       formik.values.phone_numberCode,
       countries
     ).phone_code;
-    const newAddress = {
+    const data = {
       ...formik.values,
       phone_number: `+${phoneCode}${formik.values.phone_number.replace(
         /[+()\-\s]/gim,
         ""
       )}`,
 
-      country: formik.values.country.value,
+      country_id: formik.values.country.value,
+      state_id: formik.values.state.value,
       state: formik.values.state.value || null,
     };
 
-    if (addressInfo) {
-      dispatch(editAddress(newAddress, onPended));
-      return;
-    }
+    delete data.country;
 
-    dispatch(addAddress(newAddress, onPended, user.userId));
+    if (addressInfo) {
+      dispatch(editAddress(data, onPended));
+    } else {
+      dispatch(addAddress(data, onPended, user.userId));
+    }
   };
 
+  if (addressInfo) {
+    const country = getCountryById(countries, addressInfo.country_id);
+
+    addressInfo.country = {
+      value: country.country_id,
+      label: country.name,
+    };
+
+    if (addressInfo.state_id) {
+      const state = getStateById(states, addressInfo.state_id);
+
+      console.log({state})
+
+      addressInfo.state = {
+        value: state.value,
+        label: state.label,
+      };
+    }
+  }
+
+  const initialValues =
+    (addressInfo && {
+      ...addressInfo,
+      detailed: addressInfo.detailed ?? "",
+      phone_numberCode: getPhoneCountryCode(
+        addressInfo.phone_number,
+        countries
+      ),
+      phone_number: formatPhone(addressInfo.phone_number),
+      // country: getCountryById(addressInfo.),
+    }) ||
+    initialAddAddressFormValue;
   const formik = useFormik({
-    initialValues:
-      (addressInfo && {
-        ...addressInfo,
-        detailed: addressInfo.detailed ?? "",
-        state: addressInfo.state.value
-          ? addressInfo.state
-          : { value: undefined, label: "" },
-        phone_numberCode: getPhoneCountryCode(
-          addressInfo.phone_number,
-          countries
-        ),
-        phone_number: formatPhone(addressInfo.phone_number),
-      }) ||
-      initialAddAddressFormValue,
+    initialValues,
     validationSchema: getAddAddressFormValidationSchema(states),
     onSubmit: submitForm,
   });
+  const selectOptionsCountry = [];
+
+  for (const country of countries) {
+    selectOptionsCountry.push({
+      value: country.country_id,
+      label: country.name,
+    });
+  }
 
   return (
     <div>
@@ -107,7 +152,7 @@ export const AddAddressForm: React.FC<any> = ({
                   indicatorSeparator: "d-none",
                   valueContainer: "ps-0",
                 }}
-                options={phoneCodes}
+                options={selectOptionsCountry}
                 value={formik.values.country}
                 isValid={!!formik.touched.country && !formik.errors.country}
                 isInvalid={!!formik.touched.country && !!formik.errors.country}
@@ -119,7 +164,6 @@ export const AddAddressForm: React.FC<any> = ({
                   );
                   formik.setFieldValue("country", e.target.value);
                 }}
-                name={"country"}
               />
 
               {!!formik.touched.country && !!formik.errors.country && (
@@ -198,6 +242,7 @@ export const AddAddressForm: React.FC<any> = ({
           component={
             <div>
               <Select
+                name={"state"}
                 clearable={false}
                 classes={{
                   indicatorSeparator: "d-none",
@@ -211,7 +256,6 @@ export const AddAddressForm: React.FC<any> = ({
                   formik.setFieldValue("state", e.target.value);
                   delete formik.errors.state;
                 }}
-                name={"state"}
               />
               {!!formik.touched.state && !!formik.errors.state && (
                 <Feedback className="position-absolute d-block" type="invalid">

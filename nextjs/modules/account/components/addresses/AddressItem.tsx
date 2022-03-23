@@ -29,7 +29,6 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
   addressInfo,
 }) => {
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
   const snackbar = useSnackbar();
   const editAddressDialog = useDialog();
   const deleteAddressDialog = useDialog();
@@ -96,7 +95,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
         <div className="address-text address-text-address">
           <AddressText address={addressInfo} />
         </div>
-        <div className="address-text">{addressInfo.country.viewValue}</div>
+        <div className="address-text">{addressInfo.country?.name}</div>
         <div>
           <span className="address-text">Phone number:</span>
           <span className="address-text">

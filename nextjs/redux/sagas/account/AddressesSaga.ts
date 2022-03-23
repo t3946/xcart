@@ -2,25 +2,22 @@ import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@modules/shared/services/api.service";
 import { AnyAction } from "redux";
-import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 import Store from "@redux/stores/Store";
+import axios from "axios";
 
 const api = new ApiService();
 
-function* getAddresses(action): Generator {
-  const result: any = yield api
-    .post<any>(`/api/account/addresses/get-addresses`, action.userId)
-    .then((response) => response)
-    .catch((error) => console.log(error));
+function* getAddresses(): Generator {
+  let addresses = null;
 
-  try {
-    yield put({
-      type: "SET_ADDRESSES",
-      addresses: result,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  yield axios.get<any>(`/api-client/user/address/get`).then((res) => {
+    addresses = res.data.addresses;
+  });
+
+  yield put({
+    type: "SET_ADDRESSES",
+    addresses: addresses,
+  });
 }
 
 function* changeDefaultAddress(action: AnyAction): Generator {

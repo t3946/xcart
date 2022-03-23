@@ -47,6 +47,7 @@ class AccountApi extends Controller
             $states[$key]['value'] = $state->stateid;
             $states[$key]['label'] = $state->state_name;
             $states[$key]['countryCode'] = $state->model_country_code;
+            $states[$key]['country_id'] = $state->country_id;
         }
         return $states;
     }

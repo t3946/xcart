@@ -54,10 +54,10 @@ class AddressesModel extends Model
                 'class' => CharField::class,
             ],
             'state_model' => [
-                'field' => 'state',
+                'field' => 'state_id',
                 'class' => ForeignField::class,
                 'modelClass' => StateModel::class,
-                'link' => ['state' => 'stateid'],
+                'link' => ['state_id' => 'stateid'],
             ],
             'zip' => [
                 'class' => CharField::class,

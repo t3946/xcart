@@ -26,6 +26,7 @@ class AccountController extends FrontendController
 
         foreach ($countries as $country) {
             $codes[] = [
+                "country_id" => $country->country_id,
                 "name" => $country->name,
                 "code" => $country->code,
                 "phone_code" => $country->phone_code,
