@@ -14,6 +14,7 @@
 
 namespace Modules\Admin\Forms;
 
+use Xcart\App\Orm\ModelInterface;
 use Xcart\App\QueryBuilder\Q\QOr;
 use Modules\User\Models\UserModel;
 use Modules\User\UserModule;
@@ -28,12 +29,12 @@ class LoginForm extends Form
     {
         return [
             'login' => [
-                'class' => CharField::className(),
+                'class' => CharField::class,
                 'label' => 'Login or Email',
                 'required' => true
             ],
             'password' => [
-                'class' => PasswordField::className(),
+                'class' => PasswordField::class,
                 'label' => 'Password',
                 'required' => true
             ]
@@ -75,8 +76,8 @@ class LoginForm extends Form
         Xcart::app()->request->cookie->add($session_key, $session_id);
     }
 
-    public function getUser($login)
+    public function getUser($login): ?ModelInterface
     {
-        return UserModel::objects()->filter([ new QOr(['login' => $login, 'email' => $login])])->get();
+        return UserModel::objects()->filter([ new QOr(['login' => $login, 'email' => $login]), 'status' => 'Y'])->get();
     }
 }
