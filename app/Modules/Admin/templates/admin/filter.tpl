@@ -7,7 +7,7 @@
 {block 'content'}
     {smarty_admin_block name='Filter'}
         <div class="{block 'page_class'}create{/block}">
-            <form action="{$.request->getUrl()}" enctype="multipart/form-data" method="get">
+            <form enctype="multipart/form-data" method="get">
                 <div class="form-data">
                     {include 'admin/form/_form.tpl'}
                     <div class="row" style="margin-top: 15px;">
