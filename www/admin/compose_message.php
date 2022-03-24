@@ -177,7 +177,6 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
     ]);
 
     $to = '';
-    $attach_pdf_invoice = $v['attach_pdf_invoice'];
 
     if ($department === 'customer') {
         $to = $userinfo['email'];
@@ -217,7 +216,7 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
                 $vv['__shipto_full_table__'],
                 $vv['__items_table__'],
                 $vv['__items_table__'],
-                $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
+                $dx->d_our_dealer_account_n ?: 'S3 Stores, Inc.'
             ], $body);
 
             $subject = str_replace(['{{shipto}}', '{{shipto_full_address}}', '{{items}}', '{{items_quantity_only}}', '{{dealer_account_number}}'], [
@@ -225,7 +224,7 @@ if (!empty($mnfs) && is_array($mnfs) && !empty($products) && is_array($products)
                 $vv['__shipto_full_table__'],
                 $vv['__items_table__'],
                 $vv['__items_table__'],
-                $v['dealer_account_number'] ?: 'S3 Stores, Inc.'
+                $dx->d_our_dealer_account_n ?: 'S3 Stores, Inc.'
             ], $subject);
 
             $body = str_replace('{{distributorcontactname}}', $vv['d_contact_name_for_templates'], $body);
