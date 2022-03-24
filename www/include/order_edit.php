@@ -1830,7 +1830,11 @@ if ($REQUEST_METHOD === 'POST')
 
                 func_log_order_groups($update, $orderid, $m_id, 'X', $login);
 
-                func_array2update("order_groups", $update, "orderid='$orderid' AND manufacturerid='$m_id'");
+                $group_update = OrderGroupModel::objects()->get(['orderid' => $orderid, 'manufacturerid' => $m_id]);
+                if ($group_update) {
+                    $group_update->setAttributes($update);
+                    $group_update->save();
+                }
 
                 if ($mode == "table_accounting_apply") {
                     // Change the order group status
