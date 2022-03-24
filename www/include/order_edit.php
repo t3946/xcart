@@ -10,8 +10,6 @@ use Modules\Order\Forms\PurchasingManagerForm;
 use Modules\Order\Helpers\OrderAnalyticsHelper;
 use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Helpers\OrderTagEventHelper;
-use Modules\Order\Models\OrderAdditionalTagLinkModel;
 use Modules\Order\Models\OrderExtraModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
 use Modules\Order\Models\OrderGroupInvoiceProductModel;
@@ -21,8 +19,8 @@ use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Xcart\App\Main\Xcart;
-use Xcart\OrderGroupInvoices;
 use Xcart\Manufacturer;
+use Xcart\OrderGroupInvoices;
 use Xcart\Product;
 use Xcart\Shipping;
 
@@ -1501,11 +1499,11 @@ if ($REQUEST_METHOD === 'POST')
                         if (!empty($invoice_data["unit_cost"]) && is_array($invoice_data["unit_cost"])) {
                             foreach ($invoice_data["unit_cost"] as $itemid => $unit_cost) {
 
-                                $unit_cost = str_replace(',','',$unit_cost);
+                                $unit_cost = (float)str_replace(',','',$unit_cost);
 
                                 $invoices_products = [];
 
-                                $qty_inv         = $invoice_data["qty_inv"][$itemid];
+                                $qty_inv         = (int)$invoice_data["qty_inv"][$itemid] ?? 0;
                                 $unit_cost_total = price_format($qty_inv * $unit_cost);
 
                                 if ($unit_cost != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["products"][$itemid]["unit_cost"]) {
@@ -1548,7 +1546,7 @@ if ($REQUEST_METHOD === 'POST')
 
                                         $sum_qty_inv_for_certain_product = 0;
                                         foreach ($manufacturer_invoices_data[$certain_mid] as $k_tmp => $v_tmp) {
-                                            $sum_qty_inv_for_certain_product += $v_tmp["qty_inv"][$itemid];
+                                            $sum_qty_inv_for_certain_product += (int)$v_tmp["qty_inv"][$itemid];
                                         }
 
                                         if ((int)$qty_disp !== (int)$sum_qty_inv_for_certain_product) {
@@ -1675,7 +1673,7 @@ if ($REQUEST_METHOD === 'POST')
 
                         $shipping_charged = $invoice_data["shipping_charged"];
 
-                        $shipping_charged = str_replace(',','',$shipping_charged);
+                        $shipping_charged = (float) str_replace(',','',$shipping_charged);
 
                         $SUM_shipping_charged += $shipping_charged;
 
@@ -1703,7 +1701,7 @@ if ($REQUEST_METHOD === 'POST')
 
                         $drop_ship_fee_charged = $invoice_data["drop_ship_fee_charged"];
 
-                        $drop_ship_fee_charged = str_replace(',','',$drop_ship_fee_charged);
+                        $drop_ship_fee_charged = (float) str_replace(',','',$drop_ship_fee_charged);
 
                         $SUM_drop_ship_fee_charged += $drop_ship_fee_charged;
 
@@ -1726,7 +1724,7 @@ if ($REQUEST_METHOD === 'POST')
 
                         $HST_charged = $invoice_data["HST_charged"];
 
-                        $HST_charged = str_replace(',','',$HST_charged);
+                        $HST_charged = (float) str_replace(',','',$HST_charged);
 
                         $SUM_HST_charged += $HST_charged;
 

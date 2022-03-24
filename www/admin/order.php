@@ -914,9 +914,10 @@ if ($REQUEST_METHOD === "POST") {
                 {
                     foreach ($v_part_of_total_transaction_in_amount as $invoice_number => $v)
                     {
+                        $v = (float)$v;
                         $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
-                        $new_part_of_total_transaction_in_amount_of     = price_format($v);
+                        $new_part_of_total_transaction_in_amount_of     = $v;
                         $current_part_of_total_transaction_in_amount_of = func_query_first_cell("SELECT part_of_total_transaction_in_amount_of FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
 
                         if ($current_part_of_total_transaction_in_amount_of != $new_part_of_total_transaction_in_amount_of) {
