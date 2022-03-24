@@ -101,8 +101,6 @@ export const AddAddressForm: React.FC<any> = ({
     if (addressInfo.state_id) {
       const state = getStateById(states, addressInfo.state_id);
 
-      console.log({state})
-
       addressInfo.state = {
         value: state.value,
         label: state.label,

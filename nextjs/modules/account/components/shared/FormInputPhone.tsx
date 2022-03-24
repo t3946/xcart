@@ -56,6 +56,7 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
   const CodeFieldName = name + "Code";
   const ExtFieldName = "phone_ext";
   const phoneMask = "(999) 999-9999";
+  const phoneExtMask = "99999";
   const placeholder = "(___) ___-____";
   let initialCountryCode;
 
@@ -176,16 +177,16 @@ const FormInputPhone: React.FC<any> = function (props: IProps) {
           <span className="d-none d-md-inline">ext</span>
         </Label>
 
-        <Input
-          type="text"
+        <MaskedInput
+          type={"text"}
           name={ExtFieldName}
           value={values[ExtFieldName]}
           onChange={handleChange}
-          disabled={disabled}
-          autoComplete={"off"}
           placeholder="12345"
           isValid={!!(touched[ExtFieldName] && !errors[ExtFieldName])}
           isInvalid={!!(touched[ExtFieldName] && errors[ExtFieldName])}
+          mask={phoneExtMask}
+          disabled={disabled}
         />
       </RBForm.Group>
     </div>
