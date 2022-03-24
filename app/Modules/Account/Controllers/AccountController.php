@@ -40,8 +40,6 @@ class AccountController extends FrontendController
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        StorageHelper::push(MenuLibrary::getData("main-menu"), null, 'mainMenu');
-
         StorageHelper::push([
             "code" => strtolower($site->code),
             "shortName" => $site->short_name,
@@ -49,6 +47,11 @@ class AccountController extends FrontendController
             'account_enabled' => $site->account_enabled,
             'logo' => (string) ($site->logo ?? ''),
             'logo_mobile' => (string) ($site->logo_mobile ?? ''),
+            'templates' => [
+                "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
+            ],
+            'mainMenu' => MenuLibrary::getData("main-menu"),
+            'time' => time(),
         ], null, 'site');
 
         StorageHelper::push([
@@ -66,9 +69,6 @@ class AccountController extends FrontendController
             'logo_mobile' => (string) ($site->logo_mobile ?? ''),
         ], null, 'config');
 
-        StorageHelper::push([
-            "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
-        ], null, 'templates');
 
         StorageHelper::push([
             'desktop' => GoodsMenuLibrary::toArrayDesktop(),
@@ -77,6 +77,7 @@ class AccountController extends FrontendController
 
         StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 
+        StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
         StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
         StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');

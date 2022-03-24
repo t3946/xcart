@@ -8,7 +8,6 @@ import DepartmentsMenuMobile from "@client/modules/account/components/hat/Depart
 import HatSearchLine from "@client/modules/account/components/hat/HatSearchLine";
 import PhotoSwipeContainer from "@client/jsx/modules/product/Components/PhotoSwipe/PhotoSwipeContainer";
 import MenuMobile from "@client/modules/account/components/hat/MenuMobile";
-import { route } from "@client/jsx/utils/AppData";
 
 $(() => {
   const target = document.getElementById("header-target");

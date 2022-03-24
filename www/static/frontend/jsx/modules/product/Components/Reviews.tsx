@@ -4,24 +4,24 @@ import Review from "@client/modules/product/Components/Review/Review";
 import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
 import ReviewSkeleton from "@client/modules/product/Components/Review/ReviewSkeleton";
-import appData from "@client/jsx/utils/AppData";
 import {
   getReviewsAction,
   addReviewsAction,
   clearReviewsAction,
 } from "@client/jsx/redux/actions/ProductActions";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
-import AppData from "@client/jsx/utils/AppData";
 import classnames from "classnames";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   productId: number;
 }
 
 const Reviews: React.FC<any> = function (props: IProps) {
+  const site = useSelectorAccount((e) => e.site);
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
-  const totalReviews = AppData.products[props.productId].total_reviews || 0;
+  const totalReviews = site.product_info?.product?.total_reviews || 0;
   const ReviewsContainerRef = React.useRef<any>();
   const { reviews, country } =
     useSelector((e: StoreInterface) => e.productsReviews)[props.productId] ||
@@ -30,8 +30,13 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const [currentPage, setCurrentPage] = React.useState(0);
   const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === 0);
   const [isLoading, setIsLoading] = React.useState(false);
-  const orders = appData.reviews.orders;
-  const [sort, setSort] = React.useState(orders[0]);
+  const orders = site?.reviews?.orders || null;
+
+  const [sort, setSort] = React.useState(orders ? orders[0] : {
+    previewValue: "Most recent",
+    viewValue: "Most recent",
+    value: "most-recent",
+  });
   const breakpoint = useBreakpoint();
   const [isIntersecting, setIsIntersecting] = React.useState(false);
 

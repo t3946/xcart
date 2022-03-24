@@ -2,7 +2,6 @@ import React from "react";
 import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
 import { SideBarMenuItem } from "./SideBarMenuItem";
 import { useSelector } from "react-redux";
-import { route } from "@client/jsx/utils/AppData";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import StoreInterface from "@client/modules/account/ts/types/store.type";

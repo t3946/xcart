@@ -27,7 +27,6 @@ const SuggestionsList: React.FC<IProps> = function (props: IProps) {
     const re = new RegExp("(" + searchString.split(" ").join("|") + ")", "gi");
     return suggestions.map((item, n) => {
       // экранирует спецсимволы если они были в строке
-      console.log("item.name", item.name);
       return {
         value: item.name,
         html: renderListItem(item, re),

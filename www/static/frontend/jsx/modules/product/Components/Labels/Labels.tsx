@@ -1,10 +1,10 @@
 import React from "react";
-import AppData from "@client/jsx/utils/AppData";
 import Label, {
   EType,
   IProps as ILabelProps,
 } from "@client/jsx/modules/product/Components/Labels/Label";
 import Styles from "@client/jsx/modules/product/Components/Labels/Labels.module.scss";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 function formatDate(time: number): string {
   const date = new Date(time);
@@ -19,7 +19,8 @@ function formatDate(time: number): string {
  * parse product info and get list of product labels
  */
 function getLabelsData(): ILabelProps[] {
-  const { product, distributor, brand, flags } = AppData.product_info;
+  const site = useSelectorAccount((e) => e.site);
+  const { product, distributor, brand, flags } = site.product_info;
   const fill = true;
   const labelListData: ILabelProps[] = [];
 
@@ -31,7 +32,7 @@ function getLabelsData(): ILabelProps[] {
     if (fill) {
       if (
         product.eta_date_mm_dd_yyyy !== 0 &&
-        product.eta_date_mm_dd_yyyy > AppData.server.time
+        product.eta_date_mm_dd_yyyy > site.time
       ) {
         const date = formatDate(product.eta_date_mm_dd_yyyy * 1000);
         const text = `Expected availability: ${date}`;
@@ -58,7 +59,7 @@ function getLabelsData(): ILabelProps[] {
 
       if (
         product.eta_date_mm_dd_yyyy !== 0 &&
-        product.eta_date_mm_dd_yyyy > AppData.server.time
+        product.eta_date_mm_dd_yyyy > site.time
       ) {
         let text;
 
@@ -151,7 +152,7 @@ function getLabelsData(): ILabelProps[] {
 
     if (
       product.eta_date_mm_dd_yyyy !== 0 &&
-      product.eta_date_mm_dd_yyyy > AppData.server.time
+      product.eta_date_mm_dd_yyyy > site.time
     ) {
       let text;
 

@@ -34,6 +34,17 @@ return [
     ],
 
     [
+        'route' => '/get-site-data',
+        'target' => [AccountApi::class, 'getSiteDataAction'],
+        'name' => 'get-site-data'
+    ],
+
+    [
+        'route' => '/get-product-info',
+        'target' => [AccountApi::class, 'getProductInfo'],
+        'name' => 'get-product-info'
+    ],
+    [
         'route' => '/lists',
         'path' => 'Modules.Account.routes.routes_lists_api',
         'namespace' => 'lists',

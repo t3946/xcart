@@ -14,49 +14,4 @@ class ReviewsModule extends Module
     public const MAX_VIDEOS_SIZE_MB = 100;
     public const IMAGES_UPLOAD_TO = 'reviews/images';
     public const VIDEOS_UPLOAD_TO = 'reviews/videos';
-
-    static function onApplicationRun()
-    {
-        StorageHelper::push([
-            [
-                'previewValue' => 'Most recent',
-                'viewValue' => 'Most recent',
-                'value' => ReviewsApi::SORT_NEW,
-            ],
-            [
-                'previewValue' => 'Top reviews',
-                'viewValue' => 'Top reviews',
-                'value' => ReviewsApi::SORT_TOP,
-            ],
-            [
-                'previewValue' => 'With images',
-                'viewValue' => 'With images',
-                'value' => ReviewsApi::SORT_HAS_IMAGES,
-            ],
-            [
-                'previewValue' => 'With videos',
-                'viewValue' => 'With videos',
-                'value' => ReviewsApi::SORT_HAS_VIDEOS,
-            ],
-        ], 'orders', 'reviews');
-
-        StorageHelper::push([
-            'maxImageSizeMB' => self::MAX_IMAGE_SIZE_MB,
-            'maxVideoSizeMB' => self::MAX_VIDEOS_SIZE_MB,
-            'maxAttachments' => self::MAX_ATTACHMENTS_NUMBER,
-        ], 'limits', 'reviews');
-
-        $ratings_models = RatingsModel::objects()->asArray()->all();
-        $ratings = ['overall' => null, 'features' => []];
-
-        foreach ($ratings_models as $i => $model) {
-            if ($model['slug'] === 'overall') {
-                $ratings['overall'] = $model;
-            } else {
-                $ratings['features'][] = $model;
-            }
-        }
-
-        StorageHelper::push($ratings, 'ratings', 'ratings');
-    }
 }

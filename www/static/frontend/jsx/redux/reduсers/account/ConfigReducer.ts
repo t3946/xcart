@@ -6,6 +6,8 @@ const ConfigReducer = (
   action: AnyAction
 ): Record<any, any>[] => {
   switch (action.type) {
+    case "CONFIG_SET":
+      return {...action.config};
     default:
       return store;
   }

@@ -1,6 +1,5 @@
 import "regenerator-runtime/runtime";
 import axios from "axios";
-import { userSetAction } from "@client/jsx/redux/actions/account-actions/UserActions";
 
 import {
   applyMiddleware,
@@ -10,7 +9,6 @@ import {
 } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
-import storeInitialValue from "../../modules/account/ts/consts/store-initial-value";
 import StoreInterface from "@client/jsx/modules/account/ts/types/store.type";
 import accountRootSaga from "../sagas/account/MainSaga";
 
@@ -22,7 +20,6 @@ import MenuReducer from "../reduсers/account/MenuReducer";
 import UserReducer from "../reduсers/account/UserReduсer";
 import BreadcrumbsReducer from "../reduсers/account/BreadcrumbsReducer";
 import ShadowPanelReducer from "@client/jsx/redux/reduсers/account/ShadowPanelReducer";
-import CountriesReducer from "@client/jsx/redux/reduсers/account/CountriesReducer";
 import ListsReducer from "@client/jsx/redux/reduсers/account/ListsReducer";
 import DepartmentsMenuReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuReducer";
 import DepartmentsMenuMobileReducer from "@client/jsx/redux/reduсers/account/DepartmentsMenuMobileReducer";
@@ -37,7 +34,6 @@ import RatingsReducer from "@client/jsx/redux/reduсers/RatingsReducer";
 import ReviewsReducer from "@client/jsx/redux/reduсers/ReviewsReducer";
 import ProductReducer from "@client/jsx/redux/reduсers/ProductReducer";
 import PhotoSwipeReducer from "@client/jsx/redux/reduсers/PhotoSwipeReducer";
-import DecisionsReducer from "@client/jsx/redux/reduсers/account/DecisionsReducer";
 import MobileSearchReducer from "@client/jsx/redux/reduсers/MobileSearchReducer";
 import SuggestionReducer from "@client/jsx/redux/reduсers/SuggestionReducer";
 import ConfigReducer from "@client/jsx/redux/reduсers/account/ConfigReducer";
@@ -55,7 +51,6 @@ const Store: ReduxStore<StoreInterface> = createStore(
     user: UserReducer,
     breadcrumbs: BreadcrumbsReducer,
     shadowPanel: ShadowPanelReducer,
-    countries: CountriesReducer,
     lists: ListsReducer,
     searchMobile: MobileSearchReducer,
     suggestion: SuggestionReducer,
@@ -72,15 +67,74 @@ const Store: ReduxStore<StoreInterface> = createStore(
     productsReviews: ReviewsReducer,
     product: ProductReducer,
     photoswipe: PhotoSwipeReducer,
-    decisions: DecisionsReducer,
     config: ConfigReducer,
     site: SiteReducer,
     productPage: ProductPageReducer,
   }),
-  storeInitialValue,
+  {},
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
 sagaMiddleware.run(accountRootSaga);
+
+axios.get("/api/account/get-site-data").then(async (res) => {
+    const initialState = res.data;
+
+    if (initialState.user) {
+        Store.dispatch({
+            type: "USER_SET",
+            user: initialState.user,
+        });
+
+        Store.dispatch({
+            type: "SET_LISTS",
+            lists: initialState.user.lists,
+        });
+    }
+
+    Store.dispatch({
+        type: "DEPARTMENTS_MENU_SET",
+        departmentsMenu: initialState.departmentsMenu,
+    });
+
+    Store.dispatch({
+        type: "CART_SET",
+        cart: initialState.cart,
+    });
+
+    Store.dispatch({
+        type: "SITE_SET",
+        site: initialState.site,
+    });
+
+    Store.dispatch({
+        type: "CONFIG_SET",
+        config: initialState.config,
+    });
+
+    const pathname = document.location.pathname;
+
+    // product page
+    if (pathname.search(/^\/product\/\d+?\//) !== -1) {
+        const productId = document.location.pathname.match(/^\/product\/(\d+?)\//)[1];
+        let productInfo = null;
+        let reviews = null;
+
+        await axios.post("/api/account/get-product-info", {productId })
+          .then((res) => {
+              productInfo = res.data.productInfo;
+              reviews = res.data.reviews;
+          });
+
+        Store.dispatch({
+            type: "PRODUCT_INFO_SET",
+            productInfo: productInfo,
+        });
+        Store.dispatch({
+            type: "REVIEWS_SETTINGS_SET",
+            reviews: reviews,
+        });
+    }
+});
 
 export default Store;

@@ -6,6 +6,8 @@ const CartReducer = (
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {
+    case "CART_SET":
+      return { ...action.cart };
     case "CART_SET_QUANTITY":
       store.quantity = action.quantity;
       return { ...store };

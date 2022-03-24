@@ -1,5 +1,4 @@
 import React from "react";
-import { route } from "@client/jsx/utils/AppData";
 import cn from "classnames";
 import TransitionFade from "@client/modules/account/components/shared/TransitionFade";
 import { useSelector } from "react-redux";
@@ -14,7 +13,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
   const [selectedCategory, setSelectedCategory] = React.useState<Record<
     any,
     any
-  > | null>(null);
+    > | null>(null);
   const [isMouseOverMenuItem, setIsMouseOverMenuItem] = React.useState(false);
   const [isMouseOverCategoryDetails, setIsMouseOverCategoryDetails] =
     React.useState(false);
@@ -146,9 +145,9 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
         Styles.categoryMenuLink_topLevel,
         {
           [Styles.categoryMenuLink_selected]:
-            selectedCategory !== null &&
-            category.id === selectedCategory.id &&
-            (isMouseOverMenuItem || isMouseOverCategoryDetails),
+          selectedCategory !== null &&
+          category.id === selectedCategory.id &&
+          (isMouseOverMenuItem || isMouseOverCategoryDetails),
         },
       ];
 
@@ -187,7 +186,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
     return (
       <div className={Styles.categoryViewAll}>
         <a
-          href={`${route("catalog:list")}#id${selectedCategory.id}`}
+          href={`/categories/#id${selectedCategory.id}`}
           className={Styles.categoryViewAllLink}
         >
           <ViewAllDepartmentsIcon className={Styles.categoryViewAllLinkIcon} />
@@ -219,7 +218,7 @@ const DepartmentsMenu = (props: Record<any, any>): any => {
 
                 <div className={cn(Styles.viewAllContainer)}>
                   <a
-                    href={route("catalog:list")}
+                    href={"/categories/"}
                     className={cn(Styles.viewAll)}
                   >
                     <ViewAllDepartmentsIcon

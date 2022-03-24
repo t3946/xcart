@@ -1,6 +1,7 @@
 import CreateWaitButton from "@/components/AnimateWaitButton";
 import { cartAdd } from "../../redux/reduсers/appCartReducer";
 import Storage from "@/utils/localStorage/storage";
+import Store from "../../redux/stores/Store";
 
 const SIMPLE_MODE = 1;
 const COMPLEX_MODE = 2;
@@ -114,7 +115,8 @@ export class AddToCartButton {
         .remove();
       this.$checkoutButton.addClass(checkoutButtonComplexClass);
 
-      if (!appData.user) {
+
+      if (!Store.getState().user) {
         this.$noAccountMessage.show();
       }
 

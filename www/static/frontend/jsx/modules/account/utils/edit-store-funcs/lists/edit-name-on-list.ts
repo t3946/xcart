@@ -1,5 +1,5 @@
+// @ts-ignore
 import { GetListAndProductIndexes } from "@client/modules/account/utils/edit-store-funcs/lists/get-product";
-import { IndexesValues } from "@client/modules/account/ts/types/get-indexes-values";
 
 export function editNameOnList(
   lists: Array<any>,
@@ -9,7 +9,7 @@ export function editNameOnList(
 ): Array<any> {
   const mass = lists;
 
-  const indexes: IndexesValues = GetListAndProductIndexes(
+  const indexes = GetListAndProductIndexes(
     mass,
     listId,
     product_id

@@ -7,19 +7,20 @@ import { toggleSearchIsVisibleAction } from "@client/jsx/redux/actions/MobileSea
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
-import AppData from "@client/jsx/utils/AppData";
 import Search from "@client/modules/icon/components/account/search/Search";
 import MenuIcon from "@client/jsx/modules/icon/components/menu/Menu";
 import TimesIcon from "@client/jsx/modules/icon/components/font-awesome/times/Light";
 import IconCart from "@client/jsx/modules/icon/components/common/cart/Cart";
 import cn from "classnames";
-
 import Styles from "@client/jsx/modules/account/components/hat/HatNavigation.module.scss";
 
 const HatNavigation = (): any => {
   const dispatch = useDispatch();
   const cart = useSelector((e: StoreInterface) => e.cart);
   const accountEnabled = useSelector((e: StoreInterface) => e.site.account_enabled);
+  const config = useSelector((e: StoreInterface) => e.config);
+  const mainMenu = useSelector((e: StoreInterface) => e.site.mainMenu);
+  const templates = useSelector((e: StoreInterface) => e.site.templates);
   const isVisibleShadowPanel = useSelector(
     (e: StoreInterface) => e.shadowPanel.isVisible
   );
@@ -40,7 +41,7 @@ const HatNavigation = (): any => {
 
   function mainMenuTemplate() {
     const items = [];
-    const menu = AppData.mainMenu;
+    const menu = mainMenu;
 
     for (let i = 0; i < menu.length; i++) {
       const item = menu[i];
@@ -77,7 +78,7 @@ const HatNavigation = (): any => {
       >
         <div
           dangerouslySetInnerHTML={{
-            __html: AppData.templates.renderStaticNotifications,
+            __html: templates.renderStaticNotifications,
           }}
         />
 
@@ -102,14 +103,14 @@ const HatNavigation = (): any => {
               <div className="col-4 col-md-2 col-lg-3 d-flex align-items-center hat-logo-column">
                 <a href="/">
                   <img
-                    src={`/${AppData.config.logo}`}
-                    alt={AppData.config.companyName}
+                    src={`/${config.logo}`}
+                    alt={config.companyName}
                     className="d-none d-lg-block hat-logo"
                   />
 
                   <img
-                    src={`/${AppData.config.logo_mobile}`}
-                    alt={AppData.config.companyName}
+                    src={`/${config.logo_mobile}`}
+                    alt={config.companyName}
                     className="d-block d-lg-none hat-logo"
                   />
                 </a>

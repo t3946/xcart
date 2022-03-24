@@ -1,6 +1,6 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
-import { ApiService } from "../../../modules/shared/services/api.service";
+import { ApiService } from "@client/modules/shared/services/api.service";
 
 const api = new ApiService();
 

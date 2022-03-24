@@ -161,6 +161,10 @@ interface StoreInterface {
     };
   };
   routes: Record<string, string>;
+  mainMenu: any;
+  config: any;
+  templates: any;
+  site: any;
 }
 
 export default StoreInterface;

@@ -1,7 +1,6 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import { ApiService } from "@client/modules/shared/services/api.service";
-import { route } from "@client/jsx/utils/AppData";
 
 const api = new ApiService();
 
@@ -9,7 +8,7 @@ function* getProductRatingsAndReviews(action): Generator {
   const { data } = action.payload;
 
   const res: any = yield api.post<any>(
-    route("reviews:api:get-ratings-and-reviews"),
+   "/reviews/api/get-ratings-and-reviews",
     JSON.stringify(data)
   );
 
@@ -39,7 +38,7 @@ function* markHelpful(action): Generator {
   const { data, success } = action.payload;
 
   yield api
-    .post<any>(route("reviews:api:mark-helpful"), JSON.stringify(data))
+    .post<any>("/reviews/api/mark-helpful", JSON.stringify(data))
     .then(function (res) {
       success(res);
     });
@@ -55,7 +54,7 @@ function* unmarkHelpful(action): Generator {
   const { data, success } = action.payload;
 
   yield api
-    .post<any>(route("reviews:api:unmark-helpful"), JSON.stringify(data))
+    .post<any>("/reviews/api/unmark-helpful", JSON.stringify(data))
     .then(function (res) {
       success(res);
     });
@@ -71,7 +70,7 @@ function* getReviews(action): Generator {
   const { data, success } = action.payload;
 
   yield api
-    .post<any>(route("reviews:api:get-reviews"), JSON.stringify(data))
+    .post<any>("/reviews/api/get-reviews", JSON.stringify(data))
     .then(function (res) {
       success(res);
     });

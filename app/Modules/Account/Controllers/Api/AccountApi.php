@@ -10,12 +10,16 @@ use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
+use Modules\Goods\Models\ProductModel;
 use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Payment\Models\ProcessorModel;
+use Modules\Reviews\Controllers\Api\ReviewsApi;
+use Modules\Reviews\Models\RatingsModel;
+use Modules\Reviews\ReviewsModule;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\Sites\Models\PaymentMethodModel;
 use Modules\User\Models\UserAccount\UserModel;
@@ -162,5 +166,74 @@ class AccountApi extends Controller
         }
 
         $this->jsonResponse($payment_methods);
+    }
+
+    // получить данные для клиентской части старого сайта
+    public function getSiteDataAction() {
+        AccountController::provideAccountData();
+        $this->jsonResponse(StorageHelper::getStorage());
+    }
+
+    public function getProductInfo() {
+        $data = json_decode(file_get_contents("php://input"));
+        $product = ProductModel::objects()->get(['productid' => $data->productId]);
+        $ratings_models = RatingsModel::objects()->asArray()->all();
+        $ratings = ['overall' => null, 'features' => []];
+
+        foreach ($ratings_models as $i => $model) {
+            if ($model['slug'] === 'overall') {
+                $ratings['overall'] = $model;
+            } else {
+                $ratings['features'][] = $model;
+            }
+        }
+
+        StorageHelper::push($ratings, 'ratings', 'ratings');
+
+        $this->jsonResponse([
+            'product_info' => [
+                'product' => $product->getAttributes(),
+                'image' => (string)$product->getMainImage(),
+                'brand' => $product->brand,
+                'distributor' => $product->distributor,
+                'flags' => [
+                    'isGroupRoot' => $product->isGroupRoot(),
+                    'isOutOfStockFrontend' => $product->isOutOfStockFrontend(),
+                    'isFreeShipping' => $product->isFreeShipping(),
+                    'isFlatRate' => $product->isFlatRate(),
+                    'isEarlyChildhoodResources' => $product->manufacturerid === 85,
+                ],
+            ],
+
+            'reviews' => [
+                'orders' => [
+                    [
+                        'previewValue' => 'Most recent',
+                        'viewValue' => 'Most recent',
+                        'value' => ReviewsApi::SORT_NEW,
+                    ],
+                    [
+                        'previewValue' => 'Top reviews',
+                        'viewValue' => 'Top reviews',
+                        'value' => ReviewsApi::SORT_TOP,
+                    ],
+                    [
+                        'previewValue' => 'With images',
+                        'viewValue' => 'With images',
+                        'value' => ReviewsApi::SORT_HAS_IMAGES,
+                    ],
+                    [
+                        'previewValue' => 'With videos',
+                        'viewValue' => 'With videos',
+                        'value' => ReviewsApi::SORT_HAS_VIDEOS,
+                    ],
+                ],
+                'limits' => [
+                    'maxImageSizeMB' => ReviewsModule::MAX_IMAGE_SIZE_MB,
+                    'maxVideoSizeMB' => ReviewsModule::MAX_VIDEOS_SIZE_MB,
+                    'maxAttachments' => ReviewsModule::MAX_ATTACHMENTS_NUMBER,
+                ]
+            ]
+        ]);
     }
 }

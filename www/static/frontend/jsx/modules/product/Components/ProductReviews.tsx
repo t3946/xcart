@@ -7,12 +7,12 @@ import { Collapse } from "react-bootstrap";
 import classnames from "classnames";
 import RatingStars from "@client/jsx/modules/shared/components/ratings/RatingStars";
 import Reviews from "@client/modules/product/Components/Reviews";
-import AppData, { route } from "@client/jsx/utils/AppData";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 const WriteAReviewButton: React.FC = function () {
   const user = useSelectorAccount((e) => e.user);
-  const productId = AppData.product_info.product.productid;
+  const product_info = useSelectorAccount((e) => e.site.product_info);
+  const productId = product_info?.product.productid;
   const href = user
     ? `/account/create-review/${productId}`
     : "/account/login?page=" +

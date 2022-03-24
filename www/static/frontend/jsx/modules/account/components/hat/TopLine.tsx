@@ -1,11 +1,15 @@
 import React from "react";
 import CallAfterHours from "./CallAfterHours";
 import CallInHours from "./CallInHours";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+// import useSelectorA from "react-redux";
 
 const TopLine = () => {
+  const site = useSelectorAccount((e) => e.site);
+
   //информация о том в какие часы лучше звонить
   function callHoursTemplate() {
-    if (appData.site.workingDayTimeNow) {
+    if (site.workingDayTimeNow) {
       return <CallAfterHours />;
     } else {
       return <CallInHours />;
@@ -17,7 +21,7 @@ const TopLine = () => {
       <div className="container">
         <div className="row">
           <div className="col-sm-4 d-flex">
-            <span className="top-line-site-name">{appData.site.shortName}</span>
+            <span className="top-line-site-name">{site.shortName}</span>
           </div>
 
           <div className="col-sm-8">

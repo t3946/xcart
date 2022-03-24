@@ -5,7 +5,6 @@ import SidebarMenu from "@client/jsx/modules/account/components/sidebar-menu/Sid
 import { Link } from "react-router-dom";
 import { hideAllMenu } from "@client/jsx/redux/actions/account-actions/MenuActions";
 import { StoreDto } from "@s3stores-mail/ts/types";
-import { route } from "@client/jsx/utils/AppData";
 
 interface IProps {
   isStatic: boolean;

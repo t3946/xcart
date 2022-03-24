@@ -1,9 +1,5 @@
 import { ordersHeaderSelectValues } from "@client/modules/account/ts/consts/orders-header-select-values";
 
-const thisWindow: any = window;
-
-const appData = thisWindow.appData;
-
 export const accountMainStoreInitialValue = {
   countries: [],
   states: [],
@@ -27,11 +23,11 @@ export const accountMenuInitialValue = {
 };
 
 export const accountListsInitialValue = {
-  lists: appData.user ? appData.user.lists : [],
+  lists: [],
   listLoading: false,
 };
 
-export const accountUserInitialValue = appData.user || null;
+export const accountUserInitialValue = null;
 
 export const accountLoginAndSecurityValue = {
   alert: null,
@@ -64,9 +60,7 @@ export const shadowPanelInitialValue = {
   isVisible: false,
 };
 
-export const countries = appData.countries || [];
-
-export const departmentsMenu = appData.departmentsMenu || [];
+export const departmentsMenu = {desktop: [], mobile: []};
 
 export const departmentsMenuMobile = {
   isVisible: false,
@@ -76,22 +70,9 @@ export const departmentsMenuDesktop = {
   isVisible: false,
 };
 
-export const TSV = appData?.tsv || null;
-
-export const cartInitialValue = appData.cart || null;
-
-const solved = appData.decisions?.solved || [];
-const notSolved = appData.decisions?.notSolved || [];
-
-export const decisions = {
-  solved: {
-    pagination_offset: solved.length,
-    decisions: solved,
-  },
-  notSolved: {
-    pagination_offset: notSolved.length,
-    decisions: notSolved,
-  },
+export const cartInitialValue = {
+  quantity: 0,
+  checkoutUrl: "",
 };
 
 export const miniCartInitialValue = {
@@ -115,8 +96,12 @@ export const photoswipeInitialValue = {
   ownerId: null,
 };
 
-export const configInitialValue = appData.config || null;
-export const siteInitialValue = appData.site || null;
+export const configInitialValue = {};
+export const siteInitialValue = {
+  mainMenu: [],
+  templates: {},
+  product_info: {},
+};
 
 const storeInitialValue = {
   main: accountMainStoreInitialValue,
@@ -134,7 +119,6 @@ const storeInitialValue = {
   productsReviews: productsReviewsInitialValue,
   product: null,
   photoswipe: photoswipeInitialValue,
-  decisions,
   config: configInitialValue,
   site: siteInitialValue
 };

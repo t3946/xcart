@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from "react-redux";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 import {
   addProduct,
-  getLists,
 } from "@client/jsx/redux/actions/account-actions/ListsActions";
 import Store from "@client/jsx/redux/stores/Store";
 import { useDialog } from "@client/modules/account/hooks/useDialog";
@@ -14,7 +13,6 @@ import { AddProductToList } from "@client/modules/account/components/lists/AddPr
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
 import { List } from "@client/modules/account/ts/types/list.type";
 import Styles from "@client/modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
-import AppData from "@client/jsx/utils/AppData";
 import Medium from "@client/modules/icon/components/account/chevron-down/Medium";
 import StyleUtils from "@client/style-modules/style-utils.module.scss";
 import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
@@ -33,13 +31,12 @@ interface IProps {
 export const AddToListSelectOnProductPage: React.FC<IProps> = (
   props: IProps
 ) => {
-  const { name, label = "", product } = props;
+  const { name, label = "" } = props;
   const user = useSelectorAccount((e) => e.user);
+  const site = useSelectorAccount((e) => e.site);
   const lists = Store.getState().lists.lists;
-  const productId =
-    product?.productid ||
-    (AppData?.products && Object.keys(AppData?.products)[0]);
-  const productInfo = product || AppData?.products[productId];
+  const productInfo = site.product_info?.product || {};
+  const productId = productInfo?.productid;
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
   const [isAlreadyInList, setIsAlreadyInList] = useState(false);

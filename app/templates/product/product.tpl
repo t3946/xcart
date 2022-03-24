@@ -169,9 +169,9 @@
             </div>
 
             <div class="col block__title_price">
-                <div class="notifications-info small-collapse mb-lg-3 d-none d-lg-block">
+                <div class="notifications-info small-collapse d-none d-lg-block">
                     <div class="d-flex">
-                        {include "product/messages/_messages.tpl" model=$model fill=true class="product_label"}
+                        {include "product/messages/_messages.tpl" model=$model fill=true class="product_label mb-lg-3"}
                     </div>
                 </div>
 

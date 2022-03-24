@@ -187,20 +187,6 @@ class DefaultController extends FrontendController
         }
 
         StorageHelper::push([
-            'product' => $model->getAttributes(),
-            'image' => (string) $model->getMainImage(),
-            'brand' => $model->brand,
-            'distributor' => $model->distributor,
-            'flags' => [
-                'isGroupRoot' => $model->isGroupRoot(),
-                'isOutOfStockFrontend' => $model->isOutOfStockFrontend(),
-                'isFreeShipping' => $model->isFreeShipping(),
-                'isFlatRate' => $model->isFlatRate(),
-                'isEarlyChildhoodResources' => $model->manufacturerid === 85,
-            ],
-        ], null, 'product_info');
-
-        StorageHelper::push([
             'time' => time(),
         ], null, 'server');
 

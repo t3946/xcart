@@ -6,6 +6,8 @@ const DepartmentsMenuReducer = (
   action: AnyAction
 ): Record<any, any>[] => {
   switch (action.type) {
+    case "DEPARTMENTS_MENU_SET":
+      return {...action.departmentsMenu};
     default:
       return store;
   }

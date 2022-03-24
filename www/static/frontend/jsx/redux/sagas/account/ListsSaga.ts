@@ -4,7 +4,6 @@ import Store from "@client/jsx/redux/stores/Store";
 import { AnyAction } from "redux";
 import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/lists/edit-name-on-list";
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
-import { route } from "@client/jsx/utils/AppData";
 import axiosInstance from "@client/jsx/utils/axiosInstance";
 
 const getUser = () => {
@@ -35,34 +34,6 @@ function* createList(action: AnyAction): Generator {
   });
 
   yield action.callback(result);
-}
-
-function* reorderList(action: AnyAction): Generator {
-  yield axiosInstance
-    .post<any>(route("account:axiosInstance:reorder-list"), {
-      productIds: action.listIds.map((e) => {
-        return e.product_id;
-      }),
-      product_list_id: action.product_list_id,
-    })
-    .then((response) => response.data);
-}
-
-function* deleteList(action: AnyAction): Generator {
-  yield axiosInstance
-    .post<any>(route("account:axiosInstance:delete-list"), action.listId)
-    .then((response) => response.data);
-
-  yield action.callback();
-
-  yield put({
-    type: "SET_LISTS",
-    lists: Store.getState().lists.lists.filter((e) => {
-      if (e.product_list_id !== action.listId) {
-        return e;
-      }
-    }),
-  });
 }
 
 function* moveProduct(action: AnyAction): Generator {
@@ -231,8 +202,6 @@ function* undoDeleteProduct(action: AnyAction): Generator {
 export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("GET_LISTS", getLists);
   yield takeLatest("CREATE_LIST", createList);
-  yield takeLatest("REORDER_LIST", reorderList);
-  yield takeLatest("DELETE_LIST", deleteList);
   yield takeLatest("MOVE_PRODUCT", moveProduct);
   yield takeLatest("ENCRYPT_URL", encryptUrl);
   yield takeLatest("ACCEPT_INVITE", acceptInvite);
