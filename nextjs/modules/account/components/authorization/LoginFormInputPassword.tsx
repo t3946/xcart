@@ -242,7 +242,7 @@ const LoginFormInputPassword = function (props: IProps): any {
                 sign-in
               </button>
 
-              <RBForm.Group className={"mb-0 px-12 px-sm-0"}>
+              <RBForm.Group className={"mb-0 px-12 px-sm-0 d-flex align-items-center"}>
                 <input
                   name="rememberMe"
                   onChange={handleChange}
@@ -260,35 +260,36 @@ const LoginFormInputPassword = function (props: IProps): any {
                 >
                   <div className={cn(Styles.authFormInfo, "auth-form-info")}>
                     Keep me signed in.{" "}
-                    <Tooltip
-                      overlay={
-                        <div>
-                          <h2 className="common-tooltip-header">
-                            "Keep Me Signed In" Checkbox
-                          </h2>
-
-                          <p className={"text-align--left auth-form-info"}>
-                            Choosing "Keep me signed in" reduces the number of
-                            times you're asked to Sign-In on this device.
-                          </p>
-
-                          <p className={"text-align--left auth-form-info mb-0"}>
-                            To keep your account secure, use this option only on
-                            your personal devices.
-                          </p>
-                        </div>
-                      }
-                    >
-                      <span className={"common-link"}>
-                        Details
-                        <FontAwesomeIcon
-                          className={"ms-1"}
-                          icon={faQuestionCircle}
-                        />
-                      </span>
-                    </Tooltip>
                   </div>
                 </RBForm.Label>
+
+                <Tooltip
+                  overlay={
+                    <div>
+                      <h2 className="common-tooltip-header">
+                        "Keep Me Signed In" Checkbox
+                      </h2>
+
+                      <p className={"text-align--left auth-form-info"}>
+                        Choosing "Keep me signed in" reduces the number of times
+                        you're asked to Sign-In on this device.
+                      </p>
+
+                      <p className={"text-align--left auth-form-info mb-0"}>
+                        To keep your account secure, use this option only on
+                        your personal devices.
+                      </p>
+                    </div>
+                  }
+                >
+                  <span className={"common-link ms-2"}>
+                    Details
+                    <FontAwesomeIcon
+                      className={"ms-1"}
+                      icon={faQuestionCircle}
+                    />
+                  </span>
+                </Tooltip>
               </RBForm.Group>
             </Form>
           );
