@@ -400,7 +400,12 @@ class ReviewsApi extends Controller
         $default_location = 'US';
         $location = GeoIpHelper::getGeoipLocation($ip)->country ?: $default_location;
         $user = Xcart::app()->getUser(true);
-        $user_review = ProductReviewsModel::objects()->get(['user_id' => $user->user_id, 'product_id' => $product_id]);
+
+        if ($user->getIsGuest() === false) {
+            $user_review = ProductReviewsModel::objects()->get(['user_id' => $user->user_id, 'product_id' => $product_id]);
+        } else {
+            $user_review = null;
+        }
 
         $this->jsonResponse([
             'ratings' => $this->getTotalRatings($product_id),
