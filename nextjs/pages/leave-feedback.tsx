@@ -3,6 +3,7 @@ import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import LeaveFeedback from "@modules/account/components/leave-feedback/LeaveFeedback";
 import { useRouter } from "next/router";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Head from "next/head";
 
 const LeaveFeedbackPage: React.FC<any> = function () {
   const router = useRouter();
@@ -16,6 +17,9 @@ const LeaveFeedbackPage: React.FC<any> = function () {
 
   return (
     <PageTwoColumns>
+      <Head>
+        <title>Leave feedback</title>
+      </Head>
       <LeaveFeedback />
     </PageTwoColumns>
   );
