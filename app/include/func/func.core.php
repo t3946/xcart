@@ -3621,21 +3621,6 @@ if (!function_exists("array_column")) {
         return array_map(function ($element) use ($column_name) { return $element[$column_name]; }, $array);
     }
 }
-function func_check_comma_in_field($orderid, $value, $sFieldName)
-{
-    if (strpos($value, ',') !== false) {
-        OrderLogModel::createLog(
-            $orderid,
-            OrderLogModel::LOG_TYPE_XCART,
-            "Comma in field <b>$sFieldName</b>: $value",
-            'OTRS'
-        );
-
-        return true;
-    }
-
-    return false;
-}
 
 function file_get_filename_curl($url)
 {

@@ -11,6 +11,7 @@ use Modules\Order\Helpers\OrderGroupHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Helpers\OrderLogHelper;
+use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\GroundMapModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderGroupInvoiceModel;
@@ -552,13 +553,7 @@ if ($REQUEST_METHOD === "POST" && $mode === "create_rma_request" && !empty($orde
     db_query("INSERT INTO $sql_tbl[rmas] (orderid, zipcode, email, date, status, rma_number) VALUES ('$orderid', '" . $order_data["order"]["s_zipcode"] . "', '" . $order_data["order"]["email"] . "', '" . time() . "', '2', '$rma_number')");
     $rma_id = db_insert_id();
 
-    if (!empty($config["RMA_options"]["RMA_Attention_tag"])) {
-
-        $is_such_tag_in_db = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='" . $config["RMA_options"]["RMA_Attention_tag"] . "'");
-        if (empty($is_such_tag_in_db)) {
-            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($config["RMA_options"]["RMA_Attention_tag"], $orderid);
-        }
-    }
+   OrderTagEventHelper::orderTagEvent($config["RMA_options"]["RMA_Attention_tag"], $orderid);
 
     func_header_location("order.php?orderid=" . $orderid . "&target_rma=" . $rma_id . "&tab=y#main_order_tabs-RMA");
 }
@@ -919,9 +914,10 @@ if ($REQUEST_METHOD === "POST") {
                 {
                     foreach ($v_part_of_total_transaction_in_amount as $invoice_number => $v)
                     {
+                        $v = (float)$v;
                         $code = func_query_first_cell("SELECT code FROM $sql_tbl[manufacturers] WHERE manufacturerid='$manufacturerid'");
 
-                        $new_part_of_total_transaction_in_amount_of     = price_format($v);
+                        $new_part_of_total_transaction_in_amount_of     = $v;
                         $current_part_of_total_transaction_in_amount_of = func_query_first_cell("SELECT part_of_total_transaction_in_amount_of FROM $sql_tbl[order_group_invoices] WHERE orderid='$orderid' AND manufacturerid='$manufacturerid' AND invoice_number='$invoice_number'");
 
                         if ($current_part_of_total_transaction_in_amount_of != $new_part_of_total_transaction_in_amount_of) {
@@ -978,75 +974,7 @@ if ($REQUEST_METHOD === "POST") {
         $section_name = "main_order_tabs-accounting";
         x_session_save("section_name");
     }
-    elseif ($mode === "add_additional_tag" && isset($additional_tag_status)) {
 
-        $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$additional_tag_status'");
-        $allowed_logins = func_query("SELECT login FROM $sql_tbl[attention_tags_values_logins] WHERE status_id='$additional_tag_status' AND action='set'");
-        $allowed_to_set_flag = false;
-
-        if (!empty($allowed_logins) && is_array($allowed_logins))
-        {
-            foreach ($allowed_logins as $k => $v)
-            {
-                if ($v["login"] == $login || $v["login"] === "_ANY_") {
-                    $allowed_to_set_flag = true;
-                    break;
-                }
-            }
-        }
-
-        if (!$allowed_to_set_flag) {
-            $top_message["content"] = "You cannot add the '" . $status_name . "' tag.";
-            $top_message["type"]    = "W";
-            func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-order_details");
-        }
-
-        $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$additional_tag_status'");
-
-        if (empty($is_such_additional_tag_status) && $allowed_to_set_flag) {
-            Modules\Order\Helpers\OrderTagEventHelper::orderTagEvent($additional_tag_status, $orderid);
-
-            $top_message["content"] = "Done.";
-            $top_message["type"]    = "I";
-            func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-order_details");
-        }
-    }
-    elseif ($mode === "del_additional_tag" && !empty($del_status_id)) {
-
-        $status_name = func_query_first_cell("SELECT status FROM $sql_tbl[attention_tags_values] WHERE status_id='$del_status_id'");
-        $allowed_logins = func_query("SELECT login FROM $sql_tbl[attention_tags_values_logins] WHERE status_id='$del_status_id' AND action='unset'");
-        $allowed_to_unset_flag = false;
-
-        if (!empty($allowed_logins) && is_array($allowed_logins))
-        {
-            foreach ($allowed_logins as $k => $v)
-            {
-                if ($v["login"] == $login || $v["login"] === "_ANY_") {
-                    $allowed_to_unset_flag = true;
-                    break;
-                }
-            }
-        }
-
-        if (!$allowed_to_unset_flag) {
-            $top_message["content"] = "You cannot remove the '" . $status_name . "' tag.";
-            $top_message["type"]    = "W";
-            func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-order_details");
-        }
-
-        $is_such_additional_tag_status = func_query_first_cell("SELECT status_id FROM $sql_tbl[orders_additional_tags] WHERE orderid='$orderid' AND status_id='$del_status_id'");
-
-        if (!empty($is_such_additional_tag_status) && $allowed_to_unset_flag) {
-
-            db_query("DELETE FROM $sql_tbl[orders_additional_tags] WHERE status_id='$del_status_id' AND orderid='$orderid'");
-
-            OrderLogModel::createLog($orderid, OrderLogModel::LOG_TYPE_XCART, "'$status_name' attention tag removed");
-
-            $top_message["content"] = "Done.";
-            $top_message["type"]    = "I";
-            func_header_location("order.php?orderid=" . $orderid . "#main_order_tabs-order_details");
-        }
-    }
 } //if ($REQUEST_METHOD == "POST")
 
 if ($mode === "update" && $user_account["flag"] !== "FS")
@@ -1941,19 +1869,13 @@ elseif ($mode === 'mode_info_request_survey') {
     $log = "";
 
     if (isset($actual_shipping_net)) {
-        if (func_check_comma_in_field($orderid, $actual_shipping_net, 'stock_request_shipping_cost')) {
-            $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-            $top_message["type"]      = "I";
-            $section_name_top_message = $top_message;
-            x_session_save("section_name_top_message");
-            unset($actual_shipping_net);
-        }
-        else {
-            OrderGroupModel::objects()
-                ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
-                ->setAttribute('stock_request_shipping_cost', $actual_shipping_net)
-                ->save();
-        }
+        $actual_shipping_net = str_replace(',','',$actual_shipping_net);
+
+        OrderGroupModel::objects()
+            ->get(['orderid' => $orderid, 'manufacturerid' => $mnf_id])
+            ->setAttribute('stock_request_shipping_cost', $actual_shipping_net)
+            ->save();
+
     }
 
     if (!empty($actual_shipping_net)) {
@@ -2248,15 +2170,9 @@ elseif ($mode === 'mode_info_request_survey') {
 
     if (!empty($cost_to_us) && is_array($cost_to_us)) {
         foreach ($cost_to_us as $k => $v) {
-            if (func_check_comma_in_field($orderid, $v, 'item_cost_to_us')) {
-                $top_message["content"] .= func_get_langvar_by_name("lbl_error_comma_in_number");
-                $top_message["type"]      = "I";
-                $section_name_top_message = $top_message;
-                x_session_save("section_name_top_message");
-                break;
-            }
+            $v = str_replace(',','',$v);
             $v = trim($v);
-            if ($v != "") {
+            if ($v) {
                 $v = str_replace([",", " "], [".", ""], $v);
                 $order_detail_model = OrderDetailModel::objects()->get(['orderid' => $orderid, 'productid' => $k]);
                 $current_item_cost_to_us = $order_detail_model->item_cost_to_us;
