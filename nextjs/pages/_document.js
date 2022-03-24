@@ -15,6 +15,8 @@ class MyDocument extends Document {
 
   render() {
     const json = JSON.stringify(this.props.head.initialState);
+    const favicon =
+      "/" + this.props.head.initialState.config.site.file_edit_image_favicon;
 
     function createMarkup() {
       return { __html: `window.__PRELOADED_STATE__ = ${json};` };
@@ -29,6 +31,8 @@ class MyDocument extends Document {
             async
             defer
           />
+
+          <link rel="shortcut icon" href={favicon} type="image/x-icon" />
         </Head>
         <body>
           <Main />
