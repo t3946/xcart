@@ -3,7 +3,6 @@ namespace Xcart\External_Marketplaces;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\Models\UpdatedProductModel;
 use Modules\Sites\Models\SiteMarketplaceModel;
-use Xcart\Connection;
 use Xcart\Data;
 
 abstract class StoreFrontMarketPlace extends Data
@@ -131,9 +130,8 @@ abstract class StoreFrontMarketPlace extends Data
     public static function getMarketPlacesByStoreFront($iStoreFrontId)
     {
         $aMP = [];
-        $aMarketPlaces = SiteMarketplaceModel::objects()->filter(['storefront_id' => $iStoreFrontId])->valuesList(['marketplace_id'], true);
-        foreach ($aMarketPlaces as $aMarketPlaceId) {
-            $aMP[] = ExternalMarketPlace::getExternalMarketPlace($aMarketPlaceId['marketplace_id'], $iStoreFrontId);
+        foreach (SiteMarketplaceModel::objects()->filter(['storefront_id' => $iStoreFrontId]) as $aMarketPlace) {
+            $aMP[] = ExternalMarketPlace::getExternalMarketPlace($aMarketPlace->marketplace_id, $iStoreFrontId);
         }
         return $aMP;
     }
@@ -190,7 +188,7 @@ abstract class StoreFrontMarketPlace extends Data
     {
         foreach ($products as $item) {
             /** @var UpdatedProductModel $model */
-            list($model) = UpdatedProductModel::objects()->getOrNew([
+            [$model] = UpdatedProductModel::objects()->getOrNew([
                 'resourceid' => $item['productid'],
                 'type' => $mode
             ]);
