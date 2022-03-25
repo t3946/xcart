@@ -85,16 +85,16 @@ api.post("/remove", isAuthMiddleware, async (req, res) => {
 });
 
 api.post("/create", isAuthMiddleware, async (req, res) => {
+  if (req.body.address.is_default) {
+    await setAddressAsDefault(req.user.user_id, 0);
+  }
+
   const address = await prisma.account_addresses.create({
     data: {
       ...req.body.address,
       user_id: req.user.userId,
     },
   });
-
-  if (address.is_default) {
-    await setAddressAsDefault(req.user.user_id, address.address_id);
-  }
 
   res.json({ address });
 });
