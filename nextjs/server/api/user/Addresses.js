@@ -4,13 +4,13 @@ const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 
 async function setAddressAsDefault(userId, addressId) {
-  //reset old default
   await prisma.account_addresses.updateMany({
     where: {
       user_id: userId,
+      is_default: 1,
     },
     data: {
-      is_default: 0,
+      is_default: null,
     },
   });
 
@@ -93,6 +93,7 @@ api.post("/create", isAuthMiddleware, async (req, res) => {
     data: {
       ...req.body.address,
       user_id: req.user.userId,
+      is_default: req.body.address.is_default ? 1 : null,
     },
   });
 
@@ -100,10 +101,15 @@ api.post("/create", isAuthMiddleware, async (req, res) => {
 });
 
 api.post("/edit", isAuthMiddleware, async (req, res) => {
+  if (req.body.address.is_default) {
+    await setAddressAsDefault(req.user.user_id, 0);
+  }
+
   const address = await prisma.account_addresses.updateMany({
     data: {
       ...req.body.address,
       user_id: req.user.userId,
+      is_default: req.body.address.is_default ? 1 : null,
     },
     where: {
       address_id: req.body.address.address_id,

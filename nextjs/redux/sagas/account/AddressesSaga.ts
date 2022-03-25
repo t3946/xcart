@@ -13,7 +13,7 @@ function* getAddresses(): Generator {
 
   yield put({
     type: "SET_ADDRESSES",
-    addresses: addresses,
+    addresses,
   });
 }
 
@@ -105,18 +105,27 @@ function* addAddress(action: AnyAction): Generator {
 
 function* editAddress(action: AnyAction): Generator {
   const addresses: any = Store.getState().addresses.addressesList;
+  const newAddresses = [];
 
   for (const address of addresses) {
     if (address.address_id === action.address.address_id) {
       for (const key in address) {
         address[key] = action.address[key];
       }
+    } else if (action.address.is_default) {
+      address.is_default = null;
+    }
+
+    if (address.is_default) {
+      newAddresses.unshift(address);
+    } else {
+      newAddresses.push(address);
     }
   }
 
   yield put({
     type: "SET_ADDRESSES",
-    addresses,
+    addresses: newAddresses,
   });
 
   yield action.onPendingEnd();
