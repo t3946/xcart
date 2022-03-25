@@ -22,7 +22,7 @@ const HatNavigation: React.FC = () => {
   const isVisibleShadowPanel = useSelectorAccount(
     (e) => e.shadowPanel.isVisible
   );
-  const siteCode = useSelectorAccount((e) => e.config.site.code);
+  const config = useSelectorAccount((e) => e.config);
   const [headerStyles, headerRef] = useStickyHeader();
   const cart = useSelectorAccount((e) => e.cart);
   const isVisibleMenu = useSelectorAccount(
@@ -113,13 +113,13 @@ const HatNavigation: React.FC = () => {
                 <a href="/">
                   <img
                     src={`/${site.logo}`}
-                    alt={AppData.config.companyName}
+                    alt={config.companyName}
                     className="d-none d-lg-block hat-logo"
                   />
 
                   <img
                     src={`/${site.logo_mobile}`}
-                    alt={AppData.config.companyName}
+                    alt={config.companyName}
                     className="d-block d-lg-none hat-logo"
                   />
                 </a>
