@@ -12,6 +12,7 @@ import {
 import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@client/jsx/modules/account/hooks/useBreakpoint";
 import Styles from "@client/jsx/modules/account/components/hat/Search.module.scss";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 const searchUrl = "/search";
 const timeout = 700;
@@ -44,8 +45,8 @@ const Search: React.FC = () => {
   const breakpoint = useBreakpoint();
   const timerRef = React.useRef<NodeJS.Timeout>();
   const dispatch = useDispatch();
-  const placeholder = "Search art supply items, brands and categories";
-
+  const site = useSelectorAccount((e) => e.site);
+  const placeholder = site?.cidev_header_code;
   const suggests = useSelector((e: StoreInterface) => e.suggestion);
 
   const isVisibleSearchMobile = useSelector(

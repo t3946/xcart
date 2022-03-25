@@ -47,6 +47,7 @@ class AccountController extends FrontendController
             'account_enabled' => $site->account_enabled,
             'logo' => (string) ($site->logo ?? ''),
             'logo_mobile' => (string) ($site->logo_mobile ?? ''),
+            'cidev_header_code' => $site->cidev_header_code,
             'templates' => [
                 "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
             ],
