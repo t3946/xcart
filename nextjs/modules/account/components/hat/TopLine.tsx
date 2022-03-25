@@ -15,9 +15,9 @@ const TopLine: React.FC = () => {
           <div className="col-sm-8">
             <div className="align-items-start call_lang d-flex justify-content-end">
               {config.site.workingDayTimeNow ? (
-                <CallAfterHours />
-              ) : (
                 <CallInHours />
+              ) : (
+                <CallAfterHours />
               )}
               <a href="#" className="top-line-lang-icon top-line_lang-icon"></a>
             </div>

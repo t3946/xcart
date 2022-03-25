@@ -2,7 +2,6 @@ import React from "react";
 import CallAfterHours from "./CallAfterHours";
 import CallInHours from "./CallInHours";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
-// import useSelectorA from "react-redux";
 
 const TopLine = () => {
   const site = useSelectorAccount((e) => e.site);
@@ -10,9 +9,9 @@ const TopLine = () => {
   //информация о том в какие часы лучше звонить
   function callHoursTemplate() {
     if (site.workingDayTimeNow) {
-      return <CallAfterHours />;
-    } else {
       return <CallInHours />;
+    } else {
+      return <CallAfterHours />;
     }
   }
 
