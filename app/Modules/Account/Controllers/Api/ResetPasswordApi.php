@@ -32,7 +32,7 @@ class ResetPasswordApi extends Controller
         return [$otp, $is_new];
     }
 
-    public function sendEmail($user): void
+    public function sendEmail($user, $from): void
     {
         [$otp, $is_new] = self::getOneTimePassword($user->user_id);
 
@@ -42,7 +42,7 @@ class ResetPasswordApi extends Controller
                 'Password Assistance OTP',
                 'Your reset password OTP is: ' . $otp->one_time_password,
                 [
-                    'from' => 'helpdesk@s3stores.com',
+                    'from' => $from,
                 ]
             );
         }
@@ -85,16 +85,16 @@ class ResetPasswordApi extends Controller
 
     public function sendOneTimePassword(): void
     {
-        $login = json_decode(file_get_contents('php://input'), true)['login'];
-        $user = UserModel::getUserByLogin($login);
+        $data = json_decode(file_get_contents('php://input'));
+        $user = UserModel::getUserByLogin($data->login);
 
         if ($user === null) {
             $this->jsonResponse(['errors' => ['login' => ['User not found']]]);
             return;
         }
 
-        if ($login === $user->email) {
-            $this->sendEmail($user);
+        if ($data->login === $user->email) {
+            $this->sendEmail($user, $data->from);
         } elseif ($login === $user->phone) {
             $this->sendSMS($user);
         }

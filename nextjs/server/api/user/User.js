@@ -240,6 +240,7 @@ app.post("/send-otp", async function (req, res) {
     getBaseUrl(req) + `/api/account/reset-password/send-one-time-password`,
     {
       login: req.body.login,
+      from: process.env.EMAIL_FROM,
     }
   ).then((phpRes) => {
     res.json(phpRes.data);
