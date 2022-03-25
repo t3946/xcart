@@ -27,7 +27,6 @@ const hashSum = require("gulp-hashsum");
 const babel = require("gulp-babel");
 const imagemin = require("gulp-imagemin");
 const rimraf = require("gulp-rimraf");
-const argv = require("yargs").argv;
 require("./gulp/tasks");
 
 const spawn = require("child_process").spawn;
@@ -121,12 +120,6 @@ gulp.task("frontend:jsx", function (done) {
     "./config/webpack.frontend.js",
   ];
 
-  if (argv.mode) {
-    args.push(`--mode=${argv.mode}`);
-  } else {
-    args.push("--mode=development");
-  }
-
   const cmd = spawn("node", args, { stdio: "inherit" });
   const src = frontend.src.jsx;
   const dst = frontend.dst.js;
@@ -143,12 +136,6 @@ gulp.task("watch:frontend:jsx", function (done) {
 
   args.push("--progress");
   args.push("-w");
-
-  if (argv.mode) {
-    args.push(`--mode=${argv.mode}`);
-  } else {
-    args.push("--mode=development");
-  }
 
   const cmd = spawn("node", args, { stdio: "inherit" });
   const src = frontend.src.jsx;
@@ -179,6 +166,7 @@ gulp.task("frontend:images", function () {
   if (GulpAssets.isProduction() && frontend.config.compress) {
     pipe = pipe.pipe(imagemin(frontend.config.imagemin || {}));
   }
+
   return pipe.pipe(gulp.dest(frontend.dst.images));
 });
 
@@ -221,21 +209,14 @@ gulp.task("watch:frontend:scripts", function (done) {
     "./config/webpack.frontend.js",
   ];
 
-  GulpAssets.isProduction() && args.push("-p");
-
   args.push("--progress");
   args.push("-w");
-
-  if (argv.mode) {
-    args.push(`--mode=${argv.mode}`);
-  } else {
-    args.push("--mode=development");
-  }
 
   const cmd = spawn("node", args, { stdio: "inherit" });
 
   //count hash for bundle
   const webpackBundle = frontend.dst.jsx + "/main.js";
+
   gulp.watch(webpackBundle, function (done) {
     gulp.src(webpackBundle, { allowEmpty: true }).pipe(
       hashSum({

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "gulp": "gulp",
-    "production": "NODE_ENV=production",
+    "production": "NODE_ENV=production gulp",
     "watch": "gulp watch",
     "watch-backend": "gulp watch:backend",
     "webpack:frontend": "webpack --config ./config/webpack.frontend.js ",

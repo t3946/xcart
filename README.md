@@ -39,13 +39,15 @@
 #### Клиентская часть
 Перейти в `/www/static`
 Выполнить
-- `npx gulp frontend:bem [--mode=<production|development>]`
-- `npx gulp build:frontend [--mode=<production|development>]`
+- `npx gulp frontend:bem`
+- `npx gulp build:frontend`
 
 #### Админская часть
 Перейти в `/dev/www/static`
 Выполнить
-- `npx gulp build:backend [--mode=<production|development>]`
+- `npx gulp build:backend`
+
+Для production установить переменную среды NODE_ENV=production
 
 ## Mindy framework engine
 
