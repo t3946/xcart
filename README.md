@@ -39,13 +39,13 @@
 #### Клиентская часть
 Перейти в `/www/static`
 Выполнить
-- `npm run gulp frontend:bem`
-- `npm run gulp build:frontend`
+- `gulp frontend:bem [--mode=<production|development>]`
+- `gulp build:frontend [--mode=<production|development>]`
 
 #### Админская часть
 Перейти в `/dev/www/static`
 Выполнить
-- `npm run gulp build:backend`
+- `gulp build:backend [--mode=<production|development>]`
 
 ## Mindy framework engine
 

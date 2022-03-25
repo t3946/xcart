@@ -51,10 +51,6 @@ exports["default"] = {
     });
   },
 
-  isProduction: function () {
-    return process.env.NODE_ENV === "production";
-  },
-
   buildJsx: function (src, dst, cmd, done) {
     gulp
       .src(src)

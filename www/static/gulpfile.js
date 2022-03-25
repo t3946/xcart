@@ -121,8 +121,6 @@ gulp.task("frontend:jsx", function (done) {
     "./config/webpack.frontend.js",
   ];
 
-  GulpAssets.isProduction() && args.push("-p");
-
   if (argv.mode) {
     args.push(`--mode=${argv.mode}`);
   } else {
@@ -143,7 +141,6 @@ gulp.task("watch:frontend:jsx", function (done) {
     "./config/webpack.frontend.js",
   ];
 
-  GulpAssets.isProduction() && args.push("-p");
   args.push("--progress");
   args.push("-w");
 
