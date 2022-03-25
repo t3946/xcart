@@ -1,5 +1,5 @@
 import React from "react";
-import classnames from "classnames";
+import cn from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import DepartmentsMenu from "./DepartmentsMenu";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
@@ -13,6 +13,7 @@ import Search from "@client/jsx/modules/account/components/hat/Search";
 import Triangle from "@client/jsx/modules/icon/components/common/triangle/Triangle";
 
 import Styles from "@client/jsx/modules/account/components/hat/HatSearchLine.module.scss";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   isStatic?: boolean;
@@ -29,6 +30,7 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
   );
   const [departmentsMenuButtonHover, setDepartmentsMenuButtonHover] =
     React.useState(false);
+  const site = useSelectorAccount((e) => e.site);
 
   function openDepartmentsMenu() {
     HideAllMenu(dispatch);
@@ -43,10 +45,16 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
     setDepartmentsMenuButtonHover(false);
   }
 
+  console.log({site})
+
+  const classes = {
+    container: ["desktop_menu_search_cart", {"skeleton-box": site.account_enabled === undefined}],
+  }
+
   return (
     <div
       id="search_container"
-      className="desktop_menu_search_cart"
+      className={cn(classes.container)}
       data-toggler="show-for-large"
     >
       <DepartmentsMenu
@@ -71,9 +79,9 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
             timeout={250}
           >
             <div className="account-page-left-column col pe-0 d-none d-lg-block">
-              <div className={classnames([Styles.categoryMenuContainer])}>
+              <div className={cn([Styles.categoryMenuContainer])}>
                 <div
-                  className={classnames(
+                  className={cn(
                     Styles.categoryMenu,
                     "category-menu__new d-flex align-items-center justify-content-center",
                     {
@@ -83,7 +91,7 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
                 >
                   <span className={Styles.categoryMenuTitle}>Departments</span>
 
-                  <span className={classnames("ms-2", Styles.triangleIcon)}>
+                  <span className={cn("ms-2", Styles.triangleIcon)}>
                     <Triangle />
                   </span>
                 </div>
@@ -95,7 +103,7 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
             <Search />
 
             <div
-              className={classnames(
+              className={cn(
                 [
                   "d-none",
                   "search-line_buttons",
