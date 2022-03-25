@@ -6,6 +6,7 @@ import { resetPasswordAction } from "@redux/actions/account-actions/ResetPasswor
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cn from "classnames";
+import Feedback from "@modules/ui/forms/Feedback";
 
 import StylesLoginForm from "@modules/account/components/authorization/LoginForm.module.scss";
 import Styles from "@modules/account/components/password-assistance/ChangePasswordForm.module.scss";
@@ -126,9 +127,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
                   </RBForm.Text>
                 )}
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.password}
-                </RBForm.Control.Feedback>
+                <Feedback type="invalid">{errors.password}</Feedback>
               </RBForm.Group>
 
               <RBForm.Group controlId="ChangePasswordConfirmPassword">
@@ -148,9 +147,7 @@ const ChangePasswordForm: React.FC<any> = function (props: IProps) {
                   isValid={touched.confirmPassword && !errors.confirmPassword}
                 />
 
-                <RBForm.Control.Feedback type="invalid">
-                  {errors.confirmPassword}
-                </RBForm.Control.Feedback>
+                <Feedback type="invalid">{errors.confirmPassword}</Feedback>
               </RBForm.Group>
             </div>
 
