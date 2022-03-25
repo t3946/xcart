@@ -141,6 +141,7 @@ gulp.task("watch:frontend:jsx", function (done) {
     "./config/webpack.frontend.js",
   ];
 
+  GulpAssets.isProduction() && args.push("-p");
   args.push("--progress");
   args.push("-w");
 
