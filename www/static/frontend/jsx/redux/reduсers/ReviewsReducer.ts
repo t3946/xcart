@@ -7,22 +7,6 @@ const ReviewsReducer = (
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {
-    case "SET_HELPFUL":
-      for (const product_id in store) {
-        const reviews = store[product_id].reviews;
-
-        for (let i = 0; i < reviews.length; i++) {
-          const reviewId = parseInt(reviews[i].product_review_id);
-
-          if (reviewId === action.reviewId) {
-            reviews[i].marked_helpful = action.helpful;
-            return { ...store };
-          }
-        }
-      }
-
-      return { ...store };
-
     case "ADD_REVIEWS":
       const { productId, reviews, country } = action.payload;
 

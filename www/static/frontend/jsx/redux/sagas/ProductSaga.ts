@@ -19,10 +19,14 @@ function* getProductRatingsAndReviews(action): Generator {
   });
 
   yield put({
-    type: "SET_PRODUCT_REVIEWS_ORDERS",
+    type: "PRODUCT_PAGE_SET_REVIEWS",
     reviews: res.reviews,
   });
 
+  yield put({
+    type: "PRODUCT_PAGE_SET_COUNTRY",
+    country: res.country,
+  });
   yield put({
     type: "SET_PRODUCT",
     product: res.product,

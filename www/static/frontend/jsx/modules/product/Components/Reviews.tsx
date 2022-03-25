@@ -1,8 +1,7 @@
 import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
 import React from "react";
 import Review from "@client/modules/product/Components/Review/Review";
-import { useDispatch, useSelector } from "react-redux";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import { useDispatch } from "react-redux";
 import ReviewSkeleton from "@client/modules/product/Components/Review/ReviewSkeleton";
 import {
   getReviewsAction,
@@ -23,9 +22,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const LastReviewRef = React.useRef<any>();
   const totalReviews = site.product_info?.product?.total_reviews || 0;
   const ReviewsContainerRef = React.useRef<any>();
-  const { reviews, country } =
-    useSelector((e: StoreInterface) => e.productsReviews)[props.productId] ||
-    {};
+  const {reviews, country} = useSelectorAccount((e)=> e.productPage);
   const reviewsPerOnePage = 3;
   const [currentPage, setCurrentPage] = React.useState(0);
   const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === 0);

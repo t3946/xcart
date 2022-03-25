@@ -8,7 +8,7 @@ import {
   Store as ReduxStore,
 } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { composeWithDevTools } from "redux-devtools-extension";
+import {composeWithDevTools} from "redux-devtools-extension";
 import StoreInterface from "@client/jsx/modules/account/ts/types/store.type";
 import accountRootSaga from "../sagas/account/MainSaga";
 
@@ -78,63 +78,63 @@ const Store: ReduxStore<StoreInterface> = createStore(
 sagaMiddleware.run(accountRootSaga);
 
 axios.get("/api/account/get-site-data").then(async (res) => {
-    const initialState = res.data;
+  const initialState = res.data;
 
-    if (initialState.user) {
-        Store.dispatch({
-            type: "USER_SET",
-            user: initialState.user,
-        });
-
-        Store.dispatch({
-            type: "SET_LISTS",
-            lists: initialState.user.lists,
-        });
-    }
-
+  if (initialState.user) {
     Store.dispatch({
-        type: "DEPARTMENTS_MENU_SET",
-        departmentsMenu: initialState.departmentsMenu,
+      type: "USER_SET",
+      user: initialState.user,
     });
 
     Store.dispatch({
-        type: "CART_SET",
-        cart: initialState.cart,
+      type: "SET_LISTS",
+      lists: initialState.user.lists,
     });
+  }
+
+  Store.dispatch({
+    type: "DEPARTMENTS_MENU_SET",
+    departmentsMenu: initialState.departmentsMenu,
+  });
+
+  Store.dispatch({
+    type: "CART_SET",
+    cart: initialState.cart,
+  });
+
+  Store.dispatch({
+    type: "SITE_SET",
+    site: initialState.site,
+  });
+
+  Store.dispatch({
+    type: "CONFIG_SET",
+    config: initialState.config,
+  });
+
+  const pathname = document.location.pathname;
+
+  // product page
+  if (pathname.search(/^\/product\/\d+?\//) !== -1) {
+    const productId = document.location.pathname.match(/^\/product\/(\d+?)\//)[1];
+    let productInfo = null;
+    let reviews = null;
+
+    await axios.post("/api/account/get-product-info", {productId})
+      .then((res) => {
+        productInfo = res.data.product_info;
+        reviews = res.data.reviews;
+      });
 
     Store.dispatch({
-        type: "SITE_SET",
-        site: initialState.site,
+      type: "PRODUCT_INFO_SET",
+      productInfo,
     });
-
     Store.dispatch({
-        type: "CONFIG_SET",
-        config: initialState.config,
+      type: "REVIEWS_SETTINGS_SET",
+      reviews,
     });
-
-    const pathname = document.location.pathname;
-
-    // product page
-    if (pathname.search(/^\/product\/\d+?\//) !== -1) {
-        const productId = document.location.pathname.match(/^\/product\/(\d+?)\//)[1];
-        let productInfo = null;
-        let reviews = null;
-
-        await axios.post("/api/account/get-product-info", {productId })
-          .then((res) => {
-              productInfo = res.data.productInfo;
-              reviews = res.data.reviews;
-          });
-
-        Store.dispatch({
-            type: "PRODUCT_INFO_SET",
-            productInfo: productInfo,
-        });
-        Store.dispatch({
-            type: "REVIEWS_SETTINGS_SET",
-            reviews: reviews,
-        });
-    }
+  }
 });
 
 export default Store;

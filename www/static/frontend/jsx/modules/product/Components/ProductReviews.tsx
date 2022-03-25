@@ -11,8 +11,8 @@ import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount
 
 const WriteAReviewButton: React.FC = function () {
   const user = useSelectorAccount((e) => e.user);
-  const product_info = useSelectorAccount((e) => e.site.product_info);
-  const productId = product_info?.product.productid;
+  const product = useSelectorAccount((e) => e.product);
+  const productId = product.productid;
   const href = user
     ? `/account/create-review/${productId}`
     : "/account/login?page=" +
