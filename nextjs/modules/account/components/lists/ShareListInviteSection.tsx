@@ -29,7 +29,7 @@ export const ShareListInviteSection: React.FC<IProps> = ({
           <div>
             <div className="share-list-radio-title">Viewer</div>
             <div className="share-list-radio-subtitle">
-              Anyone with a link can view your list without making edits
+              Without making any changes
             </div>
           </div>
         }

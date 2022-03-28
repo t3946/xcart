@@ -42,18 +42,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
 }
 
 const CreateReviewPage = (props: any) => {
-  const { product, isUserCanWrite } = props;
-
-  // if (!isUserCanWrite) {
-  //   return (
-  //     <PageTwoColumns>
-  //       <p>
-  //         You already write review to this product. Every user can write only
-  //         one review.
-  //       </p>
-  //     </PageTwoColumns>
-  //   );
-  // }
+  const { product } = props;
 
   return (
     <PageTwoColumns>

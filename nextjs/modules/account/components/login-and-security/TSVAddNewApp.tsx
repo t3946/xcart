@@ -83,7 +83,7 @@ const TSVAddNewApp = (props: IProps): any => {
         <h2>Authenticator App</h2>
 
         <p>
-          Generate OTP using an application. No network connectivity required.
+          Generate OTP using an application. No network connection required.
         </p>
 
         <p>

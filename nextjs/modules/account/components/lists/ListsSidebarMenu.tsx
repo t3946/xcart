@@ -33,7 +33,7 @@ export const ListsSidebarMenu: React.FC = () => {
       >
         <div className="back-account-btn-inner">
           <ArrowBackIcon />
-          <div>Back on account</div>
+          <div>Back to account</div>
         </div>
       </button>
       <div className="lists-sidebar-label">Shopping Lists</div>

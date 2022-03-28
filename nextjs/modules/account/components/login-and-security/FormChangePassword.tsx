@@ -52,7 +52,7 @@ const FormChangePassword = (): any => {
           dispatch(
             setAlertAction({
               variant: "success",
-              message: "You have successfully modified your account!",
+              message: "Your account was successfully modified",
             })
           );
         },

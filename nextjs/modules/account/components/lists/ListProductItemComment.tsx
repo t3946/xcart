@@ -71,7 +71,7 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
           </div>
         </div>
         <div className={"d-flex"}>
-          <div className="list-product-item-comment-param">Has:</div>
+          <div className="list-product-item-comment-param">Have:</div>
           <div className="list-product-item-comment-param-value">
             {info.has}
           </div>

@@ -134,7 +134,7 @@ export const EditComment = ({ onCloseClick, listId, list_items_id, info }) => {
                 "me-lg-0"
               )}
             >
-              <Label>Needs</Label>
+              <Label>Need</Label>
               <Input
                 type="number"
                 name="needs"
@@ -155,7 +155,7 @@ export const EditComment = ({ onCloseClick, listId, list_items_id, info }) => {
                 "edit-comment-input-text-field-needs-container"
               )}
             >
-              <Label>Has</Label>
+              <Label>Have</Label>
               <Input
                 type="number"
                 name="has"

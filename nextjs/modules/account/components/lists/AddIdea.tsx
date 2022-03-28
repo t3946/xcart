@@ -47,7 +47,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
 
   const onAddingEnd = (idea: ListItem) => {
     onCancelBtnClick();
-    snackbar.show(`${formik.values.name} idea added successfully`);
+    snackbar.show(`"${formik.values.name}" idea added successfully`);
   };
 
   const formik = useFormik({

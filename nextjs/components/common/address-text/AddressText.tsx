@@ -18,14 +18,30 @@ interface IProps {
 }
 
 const AddressText: React.FC<IProps> = ({ address }) => {
+  const lines: any = [];
+  let row: any = [];
+
+  address.street && row.push(address.street);
+  address.detailed && row.push(address.detailed);
+  lines.push(row);
+
+  row = [];
+  address.city && row.push(address.city);
+  address.state && row.push(address.state.state);
+  row.push(address.zip);
+  lines.push(row);
+
+  row = [];
+  address.country && row.push(address.country.label);
+  lines.push(row);
+
   return (
     <>
-      {!!address.street && `${address.street},`} {address.detailed ?? ""}
+      {lines[0].join(", ")}
       <br />
-      {!!address.city && `${address.city},`}{" "}
-      {!!address.state && address.state.label} {address.zip}
+      {lines[1].join(", ")}
       <br />
-      {!!address.country && address.country.label}
+      {lines[2].join(", ")}
     </>
   );
 };

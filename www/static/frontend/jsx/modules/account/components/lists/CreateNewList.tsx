@@ -87,9 +87,8 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
       {isViewingInfo ? (
         <div>
           <div className="create-list-tooltip-text">
-            Lists replaces wish lists and shopping lists, creating one place for
-            all your lists. You can also share your lists with others by
-            inviting them after you've created a list.
+            Use Shopping lists to save items for later. You can also share your
+            lists with others by inviting them to view or edit your lists.
           </div>
           <button
             onClick={() => setIsViewingInfo(false)}
@@ -144,9 +143,8 @@ export const CreateNewList: React.FC<CreateNewListProps> = ({
         onClose={learnMoreDialog.handleClose}
       >
         <div className="create-list-tooltip-text">
-          Lists replaces wish lists and shopping lists, creating one place for
-          all your lists. You can also share your lists with others by inviting
-          them after you've created a list.
+          Use Shopping lists to save items for later. You can also share your
+          lists with others by inviting them to view or edit your lists.
         </div>
       </BootstrapDialogHOC>
     </div>

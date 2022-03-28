@@ -15,7 +15,7 @@ export const DeleteAddress: React.FC<DeleteAddressProps> = ({
   const loading = useSelector((e: AccountStore) => e.addresses.loading);
   return (
     <div>
-      <p>Are you sure you want to delete this address</p>
+      <p>Are you sure you want to delete this address?</p>
       <SubmitCancelButtonsGroup
         submitText="Confirm"
         cancelText="Cancel"

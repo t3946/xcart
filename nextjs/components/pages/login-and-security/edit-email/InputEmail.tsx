@@ -92,14 +92,9 @@ const InputEmail: React.FC<IProps> = function (props: IProps) {
               }
             >
               <div className="px-10 px-md-0">
-                <p className={cn("form-info", styles.currentEmailText, "mb-0")}>
-                  Current email address: <b>{currentEmail}</b>
-                </p>
-
                 <p className="form-info">
-                  Enter the new email address you would like to associate with
-                  your account below. We will send a One Time Password (OTP) to
-                  that address.
+                  Please enter a new email address you want to use with your
+                  account, to which an OTP, or One Time Password, will be sent.
                 </p>
 
                 <RBForm.Group
@@ -111,7 +106,7 @@ const InputEmail: React.FC<IProps> = function (props: IProps) {
                       "col-12 col-md-6 col-lg-6 mb-10 mb-md-0 d-flex align-items-center justify-content-md-end justify-content-lg-start"
                     }
                   >
-                    <Label>New Email Address</Label>
+                    <Label>Email Address</Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>

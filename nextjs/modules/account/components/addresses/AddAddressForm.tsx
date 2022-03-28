@@ -2,7 +2,7 @@ import React from "react";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
-import {useSnackbar} from "@modules/account/hooks/useSnackbar";
+import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import Address from "@components/common/forms/Address";
 
 export const AddAddressForm: React.FC<any> = ({
@@ -13,7 +13,13 @@ export const AddAddressForm: React.FC<any> = ({
 
   function onSubmitted() {
     onCancelClick();
-    snackbar.show(`${!addressInfo ? "Address added!" : "Address edit!"}`);
+    snackbar.show(
+      `${
+        !addressInfo
+          ? "New address successfully added"
+          : "Address successfully updated"
+      }`
+    );
   }
 
   function footerTemplate(isSubmitting: boolean) {

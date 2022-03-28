@@ -125,7 +125,7 @@ const InputPhone: React.FC<IProps> = function (props: IProps) {
                       "col-12 col-md-6 col-lg-6 mb-10 mb-md-0 d-flex align-items-center justify-content-md-end justify-content-lg-start"
                     }
                   >
-                    <Label>New phone number</Label>
+                    <Label>Phone number</Label>
                   </div>
 
                   <div className={"col-12 col-md-6 col-lg-6"}>
@@ -143,11 +143,9 @@ const InputPhone: React.FC<IProps> = function (props: IProps) {
                   </div>
                 </RBForm.Group>
                 <p className="form-info mt-4 mb-0">
-                  By enrolling a mobile phone number, you consent to receive
-                  automated text messages from or on behalf of S3 Stores related
-                  to account management and security. Remove your number in{" "}
-                  <b>Login & Security</b> to cancel. Message and data rates may
-                  apply.
+                  Please provide your phone number to receive calls from S3
+                  Stores Customer Service and speed up your order shipment in
+                  case of any issues.
                 </p>
               </div>
             </InnerPage>

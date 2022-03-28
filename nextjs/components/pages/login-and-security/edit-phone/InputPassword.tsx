@@ -59,7 +59,7 @@ const InputPassword: React.FC<IProps> = function (props: IProps) {
           dispatch(
             setAlertAction({
               variant: "success",
-              message: "You have successfully modified your account!",
+              message: "Your account was successfully modified",
             })
           );
         },

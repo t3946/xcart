@@ -1,14 +1,17 @@
 import React from "react";
-import {Form, Formik} from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import appData from "@utils/AppData";
 import SelectRating from "@modules/account/components/review/SelectRating";
-import {Form as RBForm} from "react-bootstrap";
+import { Form as RBForm } from "react-bootstrap";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import cn from "classnames";
-import {createReviewAction, getVideoHeaderAction,} from "@redux/actions/account-actions/ReviewActions";
+import {
+  createReviewAction,
+  getVideoHeaderAction,
+} from "@redux/actions/account-actions/ReviewActions";
 import Files from "@modules/account/components/review/Files";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
@@ -17,7 +20,6 @@ import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import Label from "@modules/ui/forms/Label";
 import Textarea from "@modules/ui/forms/Textarea";
-import getStoreUrl from "@utils/getStoreUrl";
 
 interface IProps {
   product: number;
@@ -96,24 +98,6 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
     initialValues[e.slug] = 0;
     validationSchema[e.slug] = yup.number();
   });
-
-  function userAvatarTemplate() {
-    if (user) {
-      const DEFAULT_AVATAR_IMAGE =
-        "/static/frontend/images/pages/account/default-avatar.svg";
-      const avatar =
-        (user.avatar_image && getStoreUrl(user.avatar_image)) ||
-        DEFAULT_AVATAR_IMAGE;
-
-      return (
-        <img
-          src={avatar}
-          className={"mobile-menu-avatar form-review-avatar"}
-          alt={""}
-        />
-      );
-    }
-  }
 
   function submit(values, actions) {
     const data = new FormData();
@@ -272,19 +256,23 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       "align-items-center d-flex form-review-product-image-container justify-content-center form-review__image"
                     }
                   >
-                    <img
-                      className={"form-review-product-image"}
-                      src={product.image}
-                      alt={product.product}
-                      width={"100"}
-                      height={"100"}
-                    />
+                    <a href={`/product/${product.productid}/`}>
+                      <img
+                        className={"form-review-product-image"}
+                        src={product.image}
+                        alt={product.product}
+                        width={"100"}
+                        height={"100"}
+                      />
+                    </a>
                   </div>
 
                   <div>
                     <p className={"form-review-product-name m-0"}>
-                      {product.group_mask}
-                      {product.product}
+                      <a href={`/product/${product.productid}/`}>
+                        {product.group_mask}
+                        {product.product}
+                      </a>
                     </p>
 
                     <div className="d-md-none mt-2">
@@ -441,35 +429,6 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   {!!touched.textBody && !!errors.textBody && (
                     <Feedback type="invalid">{errors.textBody}</Feedback>
                   )}
-
-                  <h2
-                    className={
-                      "account-inner-page-header-2 mt-3 mt-md-4 mt-lg-20"
-                    }
-                  >
-                    Choose your public name
-                  </h2>
-
-                  <p className="mb-3 form-review-comment">
-                    This is how you’ll appear to other customers
-                  </p>
-
-                  <div className="d-flex align-items-center">
-                    {userAvatarTemplate()}
-
-                    <input
-                      type={"text"}
-                      className={
-                        "form-input ms-3 ms-md-20 ms-lg-2 form-review-public-name-input"
-                      }
-                      value={values.publicName}
-                      disabled
-                    />
-                  </div>
-
-                  <p className="mb-0 mt-2 form-review-comment">
-                    Don’t worry, you can always change this on your profile
-                  </p>
                 </div>
               </InnerPage>
             </Form>

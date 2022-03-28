@@ -197,7 +197,7 @@ const ProductReviews: React.FC = function () {
                 To calculate the overall star rating and percentage breakdown by
                 star, we don’t use a simple average. Instead, our system
                 considers things like how recent a review is and if the reviewer
-                bought the item on S3 stores. It also analyzes reviews to verify
+                bought the item on S3 Stores. It also analyzes reviews to verify
                 trustworthiness.
               </p>
             </Collapse>

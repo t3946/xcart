@@ -11,7 +11,7 @@ function Home() {
     router.push(user ? "/dashboard" : "/login");
   });
 
-  const greetings = user ? "Welcome to your account!" : "Please sign in!";
+  const greetings = user ? "Welcome to your account" : "Please sign in";
 
   return <PageTwoColumns>{greetings}</PageTwoColumns>;
 }

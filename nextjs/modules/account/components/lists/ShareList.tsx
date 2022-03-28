@@ -41,7 +41,7 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
   const onCopyLink = (result: boolean) => {
     if (result) {
       onClose();
-      snackbar.show(`Url copied`);
+      snackbar.show(`Link copied`);
     } else {
       onClose();
       snackbar.show(`Something went wrong`, 3000, VariantsEnum.error);

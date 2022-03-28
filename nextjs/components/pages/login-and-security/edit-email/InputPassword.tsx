@@ -57,7 +57,7 @@ const InputPassword: React.FC<IProps> = function (props: IProps) {
           dispatch(
             setAlertAction({
               variant: "success",
-              message: "You have successfully modified your account!",
+              message: "Your account was successfully modified",
             })
           );
         },
@@ -97,10 +97,6 @@ const InputPassword: React.FC<IProps> = function (props: IProps) {
               }
             >
               <div className="px-10 px-md-0">
-                <p className={cn("form-info", styles.currentEmailText, "mb-0")}>
-                  New email address: <b>{newEmail}</b>
-                </p>
-
                 <p className="form-info">
                   Input account password for change email.
                 </p>

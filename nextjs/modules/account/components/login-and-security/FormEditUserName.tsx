@@ -35,7 +35,7 @@ const FormEditUserName = (): any => {
           dispatch(
             setAlertAction({
               variant: "success",
-              message: "You have successfully modified your account!",
+              message: "Your account was successfully modified",
             })
           );
         },
@@ -94,9 +94,9 @@ const FormEditUserName = (): any => {
             >
               <div className="px-10 px-md-0">
                 <p className="form-info">
-                  If you want to change the name associated with your S3 Stores
-                  customer account, you may do so below. Be sure to click the{" "}
-                  <b>Save Changes</b> button when you are done.
+                  Here you can change the name associated with your S3 Stores
+                  customer account. Please be sure to click the{" "}
+                  <b>Save Changes</b> button once you’ve completed your updates.
                 </p>
 
                 <RBForm.Group
@@ -113,7 +113,7 @@ const FormEditUserName = (): any => {
                         "mb-10 mb-md-0 d-md-flex align-items-center justify-content-end justify-content-lg-start"
                       }
                     >
-                      New Full Name
+                      Full Name
                     </Label>
                   </div>
 

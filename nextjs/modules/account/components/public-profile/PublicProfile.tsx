@@ -111,7 +111,7 @@ const PublicProfile = (): any => {
           dispatch(
             setAlertAction({
               variant: "success",
-              message: "Public profile was updated",
+              message: "Public profile was successfully updated",
             })
           );
 

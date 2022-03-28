@@ -48,7 +48,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
     dispatch(
       removeAddress(addressInfo.address_id, () => {
         editAddressDialog.handleClose();
-        onPended("The address has been successfully delete");
+        onPended("Address successfully deleted");
       })
     );
   };
