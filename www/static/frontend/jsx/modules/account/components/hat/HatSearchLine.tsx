@@ -1,11 +1,13 @@
 import React from "react";
 import cn from "classnames";
-import { useSelector, useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import DepartmentsMenu from "./DepartmentsMenu";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
-import { setDepartmentsMenuDesktopIsVisibleAction } from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
+import {
+  setDepartmentsMenuDesktopIsVisibleAction
+} from "@client/jsx/redux/actions/account-actions/DepartmentsMenuDesktopActions";
 import HideAllMenu from "@client/modules/account/utils/hide-all-menu";
-import { setVisibleShadowPanelAction } from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
+import {setVisibleShadowPanelAction} from "@client/jsx/redux/actions/account-actions/ShadowPanelActions";
 import MiniCart from "@client/jsx/modules/mini-cart/components/MiniCart";
 import HoverIntent from "react-hoverintent";
 import LoginButtonDesktop from "@client/jsx/modules/account/components/hat/LoginButton/LoginButtonDesktop";
@@ -44,8 +46,6 @@ const HatSearchLine: React.FC<IProps> = (props: IProps): any => {
     dispatch(setDepartmentsMenuDesktopIsVisibleAction(false));
     setDepartmentsMenuButtonHover(false);
   }
-
-  console.log({site})
 
   const classes = {
     container: ["desktop_menu_search_cart", {"skeleton-box": site.account_enabled === undefined}],
