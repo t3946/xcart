@@ -1,19 +1,15 @@
 import React from "react";
-import { useSnackbar } from "@modules/account/hooks/useSnackbar";
-import { useDispatch } from "react-redux";
-import {
-  changeDefaultAddress,
-  removeAddress,
-} from "@redux/actions/account-actions/AddressActions";
-import { AddEditBtnsBlock } from "../shared/AddEditBtnsBlock";
+import {useSnackbar} from "@modules/account/hooks/useSnackbar";
+import {useDispatch} from "react-redux";
+import {changeDefaultAddress, removeAddress,} from "@redux/actions/account-actions/AddressActions";
+import {AddEditBtnsBlock} from "../shared/AddEditBtnsBlock";
 import Store from "@redux/stores/Store";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
-import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
-import { useDialog } from "@modules/account/hooks/useDialog";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { DeleteAddress } from "@modules/account/components/addresses/DeleteAddress";
+import {AddAddressForm} from "@modules/account/components/addresses/AddAddressForm";
+import {useDialog} from "@modules/account/hooks/useDialog";
+import {DeleteAddress} from "@modules/account/components/addresses/DeleteAddress";
 import cn from "classnames";
-import { formatPhone } from "@utils/phoneNumber";
+import {formatPhone} from "@utils/phoneNumber";
 import AddressText from "@components/common/address-text/AddressText";
 
 import StylesAddresses from "@modules/account/pages/Addresses.module.scss";

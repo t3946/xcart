@@ -20,18 +20,13 @@ export const removeAddress = (id: number, callback: () => void): any => ({
   callback,
 });
 
-export const addAddress = (
-  address: any,
-  onPendingEnd,
-  userId: number
-): any => ({
+export const addAddress = (address: any, onPendingEnd: any): any => ({
   type: "ADD_ADDRESS",
   address,
   onPendingEnd,
-  userId,
 });
 
-export const editAddress = (address: any, onPendingEnd): any => ({
+export const editAddress = (address: any, onPendingEnd: any): any => ({
   type: "EDIT_ADDRESS",
   address,
   onPendingEnd,

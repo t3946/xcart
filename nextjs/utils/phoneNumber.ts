@@ -1,9 +1,6 @@
-import { getCountryByPhoneCode } from "@utils/Countries";
+import {getCountryByPhoneCode} from "@utils/Countries";
 
-export function formatPhone(
-  phone: string,
-  addCode = false
-): string | undefined {
+export function formatPhone(phone: string, addCode = false): string {
   const onlyDigitsPhone = phone.replace(/\D/g, "");
 
   const number = onlyDigitsPhone.slice(
@@ -23,6 +20,8 @@ export function formatPhone(
       return formattedNumber;
     }
   }
+
+  return "";
 }
 
 export function getPhoneCountryCode(phone: string, countries: any): string {

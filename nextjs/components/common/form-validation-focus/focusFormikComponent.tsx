@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useFormikContext } from "formik";
+import {useEffect} from "react";
+import {useFormikContext} from "formik";
 
 const ErrorFocus = () => {
   const { errors, isSubmitting, isValidating } = useFormikContext();
@@ -10,9 +10,8 @@ const ErrorFocus = () => {
 
       if (keys.length > 0) {
         const selector = `[name=${keys[0]}]`;
-        console.log("selectpr:", selector);
         const errorElement = document.querySelector(selector) as HTMLElement;
-        console.log(errorElement);
+
         if (errorElement) {
           errorElement.focus();
         }
