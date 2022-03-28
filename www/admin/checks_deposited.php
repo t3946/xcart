@@ -1,6 +1,5 @@
 <?php
 
-use Modules\Amazon\Models\AmazonReorderBatchModel;
 use Modules\Order\Models\OrderLogModel;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Pagination\DataSource\QuerySetDataSource;
@@ -211,7 +210,7 @@ if ($REQUEST_METHOD === 'POST') {
 
                                 func_recalculate_accounting($group);
                                 $update['profit_margin'] = $group['profit_margin'];
-                                $update = func_add_accounting_fields($update, '', '', '', 'order_groups', $group['accounting']);
+                                $update = func_add_accounting_fields($update, [], null, '', 'order_groups', $group['accounting']);
                                 func_log_order_groups($update, $v['orderid'], $m_id, 'X', $login);
                                 func_array2update('order_groups', $update, "orderid={$v['orderid']} AND manufacturerid={$m_id}");
                                 unset($update);
