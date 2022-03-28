@@ -43,7 +43,7 @@ class ExternalMarketPlace extends Data
     public static function getExternalMarketPlace($iMarketPlaceId, $iStoreFrontId)
     {
         $oProcessor = null;
-        global $xcart_dir, $sql_tbl;
+        global $sql_tbl;
         self::$sql_tbl = $sql_tbl;
         $aMarketPlace = func_query_first("SELECT * FROM " . self::$sql_tbl['products_external_marketplaces'] . " WHERE id = $iMarketPlaceId");
         if (!empty($aMarketPlace)) {

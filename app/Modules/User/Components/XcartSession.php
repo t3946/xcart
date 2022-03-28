@@ -297,7 +297,7 @@ class XcartSession extends Session
 
     public function gc($limit = 1)
     {
-        SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit($limit)->delete();
+        //SessionDataModel::objects()->filter(['expiry__lt' => time()])->limit($limit)->delete();
     }
 
     public function startValidate()
