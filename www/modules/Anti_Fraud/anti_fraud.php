@@ -94,7 +94,7 @@ else {
 		$added_data['completed_orders'] = '1';
 	}
 
-	# Has cancelled orders
+	# Has canceled orders
 	if (func_query_first_cell("SELECT COUNT(*) FROM $sql_tbl[orders]"
         . " WHERE cb_status IN ('D','F') AND login = '$userinfo[login]'") > 0) {
 		$multi = $multi * 1.5;

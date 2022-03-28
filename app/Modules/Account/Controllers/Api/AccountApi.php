@@ -9,7 +9,6 @@ use Modules\Account\Controllers\AccountController;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
-use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Goods\Models\ProductModel;
 use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
@@ -22,9 +21,7 @@ use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\ReviewsModule;
 use Modules\Sites\Helpers\StorageHelper;
 use Modules\Sites\Models\PaymentMethodModel;
-use Modules\User\Models\UserAccount\UserModel;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
 
 class AccountApi extends Controller
@@ -175,6 +172,11 @@ class AccountApi extends Controller
     }
 
     public function getProductInfo() {
+        if ($this->getRequest()->getIsAjax()) {
+            http_response_code(404);
+            return;
+        }
+
         $data = json_decode(file_get_contents("php://input"));
         $product = ProductModel::objects()->get(['productid' => $data->productId]);
         $ratings_models = RatingsModel::objects()->asArray()->all();

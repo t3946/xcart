@@ -1,14 +1,14 @@
 import React from "react";
 import cn from "classnames";
 import Select from "@modules/ui/forms/select/Select";
-import { fillArrayItemsOnOrderActions } from "@modules/account/utils/fill-array-items-order-actions";
-import { returnSelectValues } from "@modules/account/ts/consts/order-actions-select.const";
-import { useSnackbar, VariantsEnum } from "@modules/account/hooks/useSnackbar";
-import { Formik, Form, FormikHelpers } from "formik";
+import {fillArrayItemsOnOrderActions} from "@modules/account/utils/fill-array-items-order-actions";
+import {returnSelectValues} from "@modules/account/ts/consts/order-actions-select.const";
+import {useSnackbar, VariantsEnum} from "@modules/account/hooks/useSnackbar";
+import {Form, Formik, FormikHelpers} from "formik";
 import * as Yup from "yup";
-import { OrderView } from "@modules/account/ts/types/order/order-view.types";
-import { openRMARequest } from "@redux/actions/account-actions/OrdersActions";
-import { useDispatch } from "react-redux";
+import {OrderView} from "@modules/account/ts/types/order/order-view.types";
+import {openRMARequest} from "@redux/actions/account-actions/OrdersActions";
+import {useDispatch} from "react-redux";
 import UploadFile from "@modules/ui/UploadFile";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
@@ -123,7 +123,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
       };
     });
 
-    console.log({items})
+    console.log({ items });
 
     fd.append("items", JSON.stringify(items));
 
@@ -208,7 +208,11 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                 }}
                 rowItemTemplates={(item) => {
                   return [
-                    <ProductCell name={item.product} sku={item.code} url={item.url} />,
+                    <ProductCell
+                      name={item.product}
+                      sku={item.code}
+                      url={item.url}
+                    />,
 
                     <div className="col-9 col-md-6 mx-auto">
                       <Select
@@ -344,7 +348,7 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                       "mb-lg-1"
                     )}
                   >
-                    Disclosure
+                    Disclaimer
                   </div>
                   <div
                     className={cn(
@@ -352,13 +356,17 @@ export const ReturnOrReplaceItems: React.FC<IProps> = (props: IProps) => {
                       StylesOrderActions.disclosureSubtitle
                     )}
                   >
-                    <div>
-                      1. Do not send the product back. Wait for the RMA form.
-                    </div>
-                    <div>
-                      2. We can’T guarantee successful resolution of your
-                      request.
-                    </div>
+                    <ol>
+                      <li>
+                        Please do not send the product back until you receive
+                        the RMA authorization.
+                      </li>
+                      <li>
+                        Our RMA department will work with the warehouse to solve
+                        your problem but we can’t guarantee a successful
+                        resolution.
+                      </li>
+                    </ol>
                     <div>
                       Our RMA department will work with the warehouse to resolve
                       your problem.

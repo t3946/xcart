@@ -88,7 +88,7 @@ export const staticRoutes = [
   },
 
   {
-    name: "Cancelled orders",
+    name: "Canceled orders",
     path: "/account/orders/canceled-orders",
   },
 

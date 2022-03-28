@@ -6,19 +6,7 @@ import LoadMore from "@modules/components/catalog/LoadMore";
 import Storage from "@utils/localStorage/storage";
 import $ from "jquery";
 import React from "react";
-import NoItems from "@modules/account/components/common/NoItems";
-//
-// interface IProps {
-//   catalogUrl: string;
-//   checkoutUrl: string;
-//   hide_sort: boolean;
-//   searchText: string;
-//   sortingKey: string;
-//   sortingOptions: Record<any, any>;
-// }
-
-// сколько вывести скелетов, когда нет продуктов
-const skeletonsNumber = 12;
+import NoItems from "@modules/components/catalog/NoItems";
 
 export default class Catalog extends React.Component {
   constructor(props) {
@@ -192,26 +180,30 @@ export default class Catalog extends React.Component {
   }
 
   render() {
-    return (
-      <div className="catalog">
-        <CatalogContext.Provider
-          value={{ ...this.state, setItems: this.setItems }}
-        >
-          {this.printStateLine()}
+    if (this.state.loaded === true && this.state.items.length === 0) {
+      return (
+        <div className="catalog">
+          <CatalogContext.Provider
+            value={{ ...this.state, setItems: this.setItems }}
+          >
+            {this.printStateLine()}
 
-          <ProductsList
-            ref={this.productList}
-            catalogUrl={this.state.baseUrl}
-            onBeginLoading={this.onBeginLoading}
-            onEndLoading={this.onEndLoading}
-            isLoading={this.state.isLoading}
-            sortKey={this.state.sortKey}
-            searchText={this.props.searchText}
-          />
+            <ProductsList
+              ref={this.productList}
+              catalogUrl={this.state.baseUrl}
+              onBeginLoading={this.onBeginLoading}
+              onEndLoading={this.onEndLoading}
+              isLoading={this.state.isLoading}
+              sortKey={this.state.sortKey}
+              searchText={this.props.searchText}
+            />
 
-          {this.loadMoreButtonTemplate()}
-        </CatalogContext.Provider>
-      </div>
-    );
+            {this.loadMoreButtonTemplate()}
+          </CatalogContext.Provider>
+        </div>
+      );
+    } else {
+      return <NoItems />;
+    }
   }
 }

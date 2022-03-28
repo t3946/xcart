@@ -486,11 +486,6 @@ class AccountListsApi extends Controller
         }
 
         $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            $this->jsonResponse([$user->user_id]);
-        }
-
         $this->jsonResponse(self::getLists($user->user_id));
     }
 

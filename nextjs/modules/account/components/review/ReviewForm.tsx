@@ -1,17 +1,14 @@
 import React from "react";
-import { Formik, Form } from "formik";
+import {Form, Formik} from "formik";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import appData from "@utils/AppData";
 import SelectRating from "@modules/account/components/review/SelectRating";
-import { Form as RBForm } from "react-bootstrap";
+import {Form as RBForm} from "react-bootstrap";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import cn from "classnames";
-import {
-  createReviewAction,
-  getVideoHeaderAction,
-} from "@redux/actions/account-actions/ReviewActions";
+import {createReviewAction, getVideoHeaderAction,} from "@redux/actions/account-actions/ReviewActions";
 import Files from "@modules/account/components/review/Files";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
@@ -21,7 +18,6 @@ import Feedback from "@modules/ui/forms/Feedback";
 import Label from "@modules/ui/forms/Label";
 import Textarea from "@modules/ui/forms/Textarea";
 import getStoreUrl from "@utils/getStoreUrl";
-import { DEFAULT_ATTRIBUTE } from "@mui/system/cssVars/getInitColorSchemeScript";
 
 interface IProps {
   product: number;
@@ -372,13 +368,8 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                   >
                     <RBForm.Label>
                       <h2 className={"account-inner-page-header-2 mb-1"}>
-                        Link on video
+                        Link to a video
                       </h2>
-
-                      <p className={"form-review-comment"}>
-                        You can add video by link. Just past link on video in
-                        field below.
-                      </p>
                     </RBForm.Label>
 
                     <Input

@@ -3,6 +3,7 @@ import cn from "classnames";
 import RectangularButton from "@modules/account/components/common/RectangularButton";
 import Styles from "@modules/account/components/dashboard/AccountNavigation.module.scss";
 import Link from "next/link";
+
 interface ItemProps {
   img: string;
   title: string;
@@ -115,14 +116,14 @@ const AccountNavigation: React.FC = () => {
       img: "loginAndSecurity",
       background: "rgba(11, 125, 201, 0.59)",
       title: "Login & security",
-      caption: "Manage, add, or remove your profile for public viewing",
+      caption: "Edit login, name, and mobile number",
       url: "/login-and-security",
     },
     {
       img: "publicProfile",
       background: "rgba(132, 29, 140, 0.59)",
       title: "Public profile",
-      caption: "Manage, add, or remove your profile for public viewing",
+      caption: "Manage your public name and image",
       url: "/public-profile",
     },
   ];

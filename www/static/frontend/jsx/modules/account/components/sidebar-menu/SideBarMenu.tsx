@@ -1,7 +1,7 @@
 import React from "react";
-import { SideBarMenuAccordion } from "./SideBarMenuAccordIon";
-import { SideBarMenuItem } from "./SideBarMenuItem";
-import { useSelector } from "react-redux";
+import {SideBarMenuAccordion} from "./SideBarMenuAccordIon";
+import {SideBarMenuItem} from "./SideBarMenuItem";
+import {useSelector} from "react-redux";
 import LogoutButton from "@client/modules/account/components/sidebar-menu/LogoutButton";
 import useBreakpoint from "@client/modules/account/hooks/useBreakpoint";
 import StoreInterface from "@client/modules/account/ts/types/store.type";
@@ -32,7 +32,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
         //   badge: user?.decisions_required_count || 0,
         // },
         { to: "/account/orders/open-orders", label: "Open orders" },
-        { to: "/account/orders/canceled-orders", label: "Cancelled orders" },
+        { to: "/account/orders/canceled-orders", label: "Canceled orders" },
         { to: "/account/orders/completed-orders", label: "Completed orders" },
         { to: "/account/orders/buy-again", label: "Buy again" },
       ],

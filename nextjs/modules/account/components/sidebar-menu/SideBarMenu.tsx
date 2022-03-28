@@ -1,14 +1,14 @@
 import React from "react";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import Item from "@modules/account/components/sidebar-menu/Item";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesItem from "@modules/account/components/sidebar-menu/Item.module.scss";
 import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordion";
 import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.scss";
-import { useDispatch } from "react-redux";
-import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
-import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
+import {useDispatch} from "react-redux";
+import {setMenuItemsAction} from "@redux/actions/account-actions/SideBarMenuActions";
+import {hideAllMenu} from "@redux/actions/account-actions/MenuActions";
 import Head from "next/head";
 
 const classes = {
@@ -39,7 +39,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
         //   badge: user?.decisions_required_count || 0,
         // },
         { to: "/orders/open-orders", label: "Open orders" },
-        { to: "/orders/canceled-orders", label: "Cancelled orders" },
+        { to: "/orders/canceled-orders", label: "Canceled orders" },
         { to: "/orders/completed-orders", label: "Completed orders" },
         { to: "/orders/buy-again", label: "Buy again" },
       ],
