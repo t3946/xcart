@@ -172,7 +172,7 @@ class AccountApi extends Controller
     }
 
     public function getProductInfo() {
-        if ($this->getRequest()->getIsAjax()) {
+        if (!$this->getRequest()->getIsAjax()) {
             http_response_code(404);
             return;
         }
