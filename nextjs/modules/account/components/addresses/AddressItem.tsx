@@ -88,10 +88,9 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
         >
           {addressInfo.full_name}
         </div>
-        <div className="address-text address-text-address">
+        <div className="address-text">
           <AddressText address={addressInfo} />
         </div>
-        <div className="address-text">{addressInfo.country?.name}</div>
         <div>
           <span className="address-text">Phone number:</span>
           <span className="address-text">

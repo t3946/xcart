@@ -32,16 +32,16 @@ const AddressText: React.FC<IProps> = ({ address }) => {
   lines.push(row);
 
   row = [];
-  address.country && row.push(address.country.label);
+  address.country && row.push(address.country.name);
   lines.push(row);
 
   return (
     <>
-      {lines[0].join(", ")}
+      <span>{lines[0].join(", ").toUpperCase()}</span>
       <br />
-      {lines[1].join(", ")}
+      <span>{lines[1].join(", ").toUpperCase()}</span>
       <br />
-      {lines[2].join(", ")}
+      <span>{lines[2].join(", ")}</span>
     </>
   );
 };

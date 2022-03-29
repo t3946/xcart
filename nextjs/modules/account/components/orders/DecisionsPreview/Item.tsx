@@ -30,7 +30,7 @@ const Item = React.forwardRef(function (props: IProps, ref: any) {
     "additional-shipping-charge": { shortName: "ASC", longName: "" },
     "additional-information-required": { shortName: "AIR", longName: "" },
   };
-  const { shortName, longName } = shortcutsMap[decision.type];
+  const { shortName, longName } = shortcutsMap[decision.type.slug];
 
   const classes = {
     container: [

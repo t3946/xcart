@@ -1,6 +1,5 @@
 const isAuthMiddleware = require("../middleware/isAuth");
 const mail = require("../services/mail");
-const getBaseUrl = require("../utils/getBaseUrl");
 const app = require("express")();
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();

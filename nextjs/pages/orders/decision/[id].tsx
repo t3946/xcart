@@ -1,7 +1,7 @@
 import * as React from "react";
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import Decision from "@modules/account/components/orders/Decision/Decision";
-import { getInstance } from "@services/axios/Instance";
+import {getInstance} from "@services/axios/Instance";
 
 export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
@@ -9,7 +9,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   let decision = null;
 
   await instance
-    .post("/api-client/decisions/get", {
+    .post("/api-client/user/decisions/get", {
       decisionId,
     })
     .then((res: any) => {

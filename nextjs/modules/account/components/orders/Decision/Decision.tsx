@@ -22,7 +22,7 @@ import POAdditionalInformationRequired
 import StreetAddressRequired
   from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired";
 import {useDispatch} from "react-redux";
-import {resetAction,} from "@redux/actions/account-actions/DecisionsActions";
+import {resetAction} from "@redux/actions/account-actions/DecisionsActions";
 import {userSetAction} from "@redux/actions/account-actions/UserActions";
 import {useRouter} from "next/router";
 import {AxiosResponse} from "axios";
@@ -60,7 +60,7 @@ const Decision: React.FC<IProps> = (props) => {
     "additional-shipping-charge": AdditionalShippingCharge,
     "additional-information-required": POAdditionalInformationRequired,
   };
-  const DecisionComponents: React.FC<any> = components[decision.type];
+  const DecisionComponents: React.FC<any> = components[decision.type.slug];
   return (
     <div>
       <h1 className={"text-center fw-bold decision-header decision__header"}>

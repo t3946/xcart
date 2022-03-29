@@ -1,20 +1,21 @@
 import React from "react";
 import CardOr from "@modules/ui/CardOr";
-import { Formik, Form, FormikHelpers } from "formik";
+import {Form, Formik, FormikHelpers} from "formik";
 import Styles from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck.module.scss";
 import cn from "classnames";
-import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
-import { useDispatch, useSelector } from "react-redux";
+import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import {useDispatch, useSelector} from "react-redux";
 import Alert from "@modules/account/components/shared/Alert";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
+import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { AxiosResponse } from "axios";
+import {AxiosResponse} from "axios";
+import AddressText from "@components/common/address-text/AddressText";
 
 interface IProps {
   decision: any;
@@ -43,7 +44,7 @@ const SendingCheck: React.FC<IProps> = (props) => {
           {corporation}
         </b>
         <br />
-        {address}
+        <AddressText address={address} />
       </div>
     );
   };

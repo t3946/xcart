@@ -1,7 +1,6 @@
 const express = require("express");
-const isAuthMiddleware = require("../middleware/isAuth");
+const isAuthMiddleware = require("../../middleware/isAuth");
 const PrismaClient = require("@prisma/client").PrismaClient;
-const addressToString = require("../utils/addressToString");
 const prisma = new PrismaClient();
 const app = express();
 
@@ -21,6 +20,9 @@ app.get("/get-initial-state", isAuthMiddleware, async function (req, res) {
     skip,
     take,
     ...queryOptions,
+    include: {
+      type: true,
+    },
   });
   const solvedTotal = await prisma.account_decisions.count(queryOptions);
 
@@ -29,6 +31,9 @@ app.get("/get-initial-state", isAuthMiddleware, async function (req, res) {
     skip,
     take,
     ...queryOptions,
+    include: {
+      type: true,
+    },
   });
   const notSolvedTotal = await prisma.account_decisions.count(queryOptions);
 
@@ -59,6 +64,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
           dc_status: true,
         },
       },
+      type: true,
     },
   });
 
@@ -72,31 +78,35 @@ app.post("/create", isAuthMiddleware, async function (req, res) {
       orderid: order_id,
     },
   });
+  const decisionType = await prisma.decision_types.findFirst({
+    where: {
+      slug: type,
+    },
+  });
+
   const options = {};
 
   switch (type) {
     case "po-send-check":
-      const { addresses: addressesIDs } = req.body;
-      const addresses = [];
-
-      for (const addressesID of addressesIDs) {
-        const address = await prisma.account_addresses.findUnique({
-          where: {
-            address_id: addressesID,
+      const addresses = await prisma.account_addresses.findMany({
+        where: {
+          address_id: {
+            in: req.body.addresses,
           },
-        });
-
-        addresses.push(addressToString(address));
-      }
+        },
+        include: {
+          country: true,
+          state: true,
+        },
+      });
 
       options.addresses = addresses;
-
       break;
   }
 
   const decision = await prisma.account_decisions.create({
     data: {
-      type,
+      decision_type_id: decisionType.decision_type_id,
       order_id,
       order_number: [order.order_prefix, order.orderid].join(""),
       options,
@@ -117,6 +127,9 @@ app.post("/get-list", isAuthMiddleware, async function (req, res) {
       order: {
         user_id: req.user.userId,
       },
+    },
+    include: {
+      type: true,
     },
   });
 

@@ -1,7 +1,7 @@
-import { takeLatest } from "redux-saga/effects";
-import { SagaIterator } from "redux-saga";
-import { ApiService } from "@modules/shared/services/api.service";
-import { route } from "@utils/AppData";
+import {takeLatest} from "redux-saga/effects";
+import {SagaIterator} from "redux-saga";
+import {ApiService} from "@modules/shared/services/api.service";
+import {route} from "@utils/AppData";
 import axios from "axios";
 
 const api = new ApiService();
@@ -15,7 +15,7 @@ function* solveDecision(action: any): Generator {
 function* getDecisions(action: any): Generator {
   const { success, data } = action.payload;
 
-  yield axios.post("/api-client/decisions/get-list", data).then(success);
+  yield axios.post("/api-client/user/decisions/get-list", data).then(success);
 }
 
 function* getEtaProductsDecision(action): Generator {
@@ -67,6 +67,7 @@ function* cancelOrderDecision(action): Generator {
       success(res);
     });
 }
+
 function* checkSentDecision(action): Generator {
   const { success, data } = action.payload;
 

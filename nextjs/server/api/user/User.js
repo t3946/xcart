@@ -11,6 +11,7 @@ const mail = require("../../services/mail");
 const AxiosInstance = axios.create();
 const apiTwoStepVerification = require("./TwoStepVerification");
 const apiAddresses = require("./Addresses");
+const apiDecisions = require("./Decisions");
 const apiStripe = require("./stripe/Stripe");
 const stripeService = require("../../services/stripe");
 const getBaseUrl = require("../../utils/getBaseUrl");
@@ -19,6 +20,7 @@ const authenticator = require("../../utils/otpAuthenticator");
 app.use("/stripe", isAuthMiddleware, apiStripe);
 app.use("/tsv", apiTwoStepVerification);
 app.use("/address", apiAddresses);
+app.use("/decisions", apiDecisions);
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (error, result) => {
