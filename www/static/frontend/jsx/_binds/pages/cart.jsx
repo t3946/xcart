@@ -38,15 +38,25 @@ import Pace from "pace-js";
         let whs = page_cart.querySelectorAll(".warehouse_subtotal");
 
         for (let i = 0; whs.length > i; ++i) {
-          let wh = whs[i];
-          wh.querySelector(".subtotal").innerHTML = toLocaleCurrency(
-            subtotals.wh[wh.dataset.wh]
+          const wh = whs[i];
+          const dataWh = wh.getAttribute("data-wh");
+          const subtotal = wh.querySelector(`.wh_${dataWh}_subtotal`);
+
+          if (subtotal) {
+            subtotal.innerHTML = toLocaleCurrency(
+              subtotals.wh[wh.dataset.wh]
+            );
+          }
+        }
+
+        const subtotal = page_cart.querySelector(".cart_subtotal");
+
+        if (subtotal) {
+          subtotal.innerHTML = toLocaleCurrency(
+            subtotals.cart
           );
         }
 
-        page_cart.querySelector(".cart_subtotal").innerHTML = toLocaleCurrency(
-          subtotals.cart
-        );
         page_cart.dataset.total = subtotals.cart;
         page_cart.dataset.quantity = fullquantity;
       }
