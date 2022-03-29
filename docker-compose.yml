@@ -201,8 +201,8 @@ services:
     tty: true
     networks:
       - frontend
-#    environment:
-#      - NODE_ENV=production
+    environment:
+      - NODE_ENV=production
     volumes:
       - ./:/home/node/app
     command: npm run start
@@ -215,8 +215,8 @@ services:
     tty: true
     networks:
       - frontend
-#    environment:
-#      - NODE_ENV=production
+    environment:
+      - NODE_ENV=production
     volumes:
       - ./:/home/node/app
     command: npm run prod-server
