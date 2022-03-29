@@ -11,7 +11,7 @@ module.exports = {
         imagemin.gifsicle({
             interlaced: true
         }),
-        imagemin.jpegtran({
+        imagemin.mozjpeg({
             progressive: true,
             optimize: true,
         }),
@@ -21,23 +21,7 @@ module.exports = {
             colorTypeReduction: true,
             paletteReduction: true,
             buffer: true
-        }),
-        imagemin.svgo({plugins: [{
-            removeViewBox: false,
-            removeComments: true,
-            removeMetadata: true,
-            removeUselessDefs: true,
-            removeDimensions: true,
-            removeEditorsNSData: true,
-            removeEmptyAttrs: true,
-            removeHiddenElems: true,
-            removeEmptyContainers: true,
-            cleanupEnableBackground: true,
-            cleanupIDs: true,
-            minifyStyles: true,
-            collapseGroups: true,
-            convertPathData: true
-        }]})
+        })
     ],
     cssnano: {
         preset: ['default'],
