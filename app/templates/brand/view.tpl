@@ -47,15 +47,49 @@
                     <a href="#subdepartmens" class="hide-for-large mmodal sub-dep_button">
                         See departments
                     </a>
-                    <div class="show-for-large" >
+                    <div class="d-none d-lg-block">
                         <div id="subdepartmens">
                             <div class="block-title show-for-modal">
                                 All departments
                             </div>
 
-                            <div class="row small-up-1 medium-up-2 large-up-4 sub_list" id="sub_list">
+                            <div class="row sub_list g-0" id="sub_list">
                                 {foreach $categories as $item index=$index}
-                                    <div class="column {if $index > 11}more_items{/if}">
+
+                                    <div class="column {if $index > 11}more_items{/if} col-1 col-md-2 col-lg-4">
+                                        <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
+                                            {$item->category}
+                                            {if $item->active_product_count}
+                                                <span class="count">
+                                                    ({$item->active_product_count})
+                                                </span>
+                                            {/if}
+                                        </a>
+                                    </div>
+
+                                    <div class="column {if $index > 11}more_items{/if} col-1 col-md-2 col-lg-4">
+                                        <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
+                                            {$item->category}
+                                            {if $item->active_product_count}
+                                                <span class="count">
+                                                    ({$item->active_product_count})
+                                                </span>
+                                            {/if}
+                                        </a>
+                                    </div>
+
+                                    <div class="column {if $index > 11}more_items{/if} col-1 col-md-2 col-lg-4">
+                                        <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
+                                            {$item->category}
+                                            {if $item->active_product_count}
+                                                <span class="count">
+                                                    ({$item->active_product_count})
+                                                </span>
+                                            {/if}
+                                        </a>
+                                    </div>
+
+                                    <div class="column {if $index > 11}more_items{/if} col-1 col-md-2 col-lg-4">
                                         <a href="{$item->getAbsoluteUrl()}" class="subcategory_item">
                                             {$item->category}
                                             {if $item->active_product_count}
