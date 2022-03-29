@@ -14,11 +14,11 @@ const Navigation: React.FC<IProps> = ({ orderId, orderStatus }) => {
   const router = useRouter();
   const user = useSelectorAccount((e: StoreInterface) => e.user);
   const menu = [
-    {
-      text: "Decisions required",
-      path: "/orders/decisions-required",
-      badge: user?.decisions_required_count || 0,
-    },
+    // {
+    //   text: "Decisions required",
+    //   path: "/orders/decisions-required",
+    //   badge: user?.decisions_required_count || 0,
+    // },
     {
       text: "Order tracking",
       path: `/order/${orderId}/order-tracking`,
