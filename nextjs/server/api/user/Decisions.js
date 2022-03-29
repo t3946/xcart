@@ -149,4 +149,60 @@ app.post("/set-all-not-solved", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
+app.post("/solve", isAuthMiddleware, async function (req, res) {
+  const decision = await prisma.account_decisions.findUnique({
+    where: {
+      decision_id: req.body.decision_id,
+    },
+    include: {
+      type: true,
+    },
+  });
+
+  switch (decision.type.slug) {
+    case "po-send-check":
+      decision.solved = true;
+      decision.options.address = req.body.address;
+
+      await prisma.account_decisions.updateMany({
+        data: {
+          solved: 1,
+          options: decision.options,
+        },
+        where: {
+          decision_id: req.body.decision_id,
+        },
+      });
+
+      break;
+
+    case "estimated-time-arrival":
+      const { advice, comment } = req.body;
+
+      await prisma.account_decisions.updateMany({
+        data: {
+          solved: 1,
+          options: { advice, comment },
+        },
+        where: {
+          decision_id: req.body.decision_id,
+        },
+      });
+
+      break;
+
+    case "ach-payment-required":
+
+      break;
+  }
+
+  const user = await prisma.xcart_users.findUnique({
+    where: {
+      user_id: req.user.userId,
+    },
+  });
+
+  res.json({ user });
+});
+
 module.exports = app;

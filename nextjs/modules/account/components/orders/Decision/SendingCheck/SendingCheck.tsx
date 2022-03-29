@@ -75,7 +75,7 @@ const SendingCheck: React.FC<IProps> = (props) => {
       solveDecisionAction({
         data: {
           decision_id: decision.decision_id,
-          address: values.address,
+          address: parseInt(values.address),
         },
         success(res: AxiosResponse) {
           onChange(res);
@@ -139,8 +139,8 @@ const SendingCheck: React.FC<IProps> = (props) => {
                     card: [Styles.decisionCardBody],
                   }}
                   radioButtons={{
-                    valueFirst: 0,
-                    valueSecond: 1,
+                    valueFirst: "0",
+                    valueSecond: "1",
                     name: "address",
                     checkedValue: values.address,
                     disabled: isSubmitting,

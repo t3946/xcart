@@ -9,7 +9,7 @@ const api = new ApiService();
 function* solveDecision(action: any): Generator {
   const { success, data } = action.payload;
 
-  yield axios.post("/order/api/decisions/solve", data).then(success);
+  yield axios.post("/api-client/user/decisions/solve", data).then(success);
 }
 
 function* getDecisions(action: any): Generator {
