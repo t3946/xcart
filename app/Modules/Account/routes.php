@@ -129,16 +129,6 @@ return [
         'target' => [AccountController::class, 'actionIndex'],
         'name' => 'order-change-address'
     ],
-    [
-        'route' => '/orders/open-orders/decisions-required',
-        'target' => [AccountController::class, 'actionIndex'],
-        'name' => 'account:order-decisions-required',
-    ],
-    [
-        'route' => '/decision/{*:decision_id}',
-        'target' => [AccountController::class, 'actionDecisionEdit'],
-        'name' => 'order-make-decision',
-    ],
 
     [
         'route' => '/register',

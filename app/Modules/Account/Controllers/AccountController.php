@@ -7,14 +7,13 @@ use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 use Modules\Main\Helpers\WorkingTimeHelper;
 use Modules\Menu\TemplateLibraries\MenuLibrary;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Helpers\StorageHelper;
 use Xcart\App\Controller\FrontendController;
 use Xcart\App\Main\Xcart;
-use Modules\Goods\TemplateLibraries\MenuLibrary as GoodsMenuLibrary;
 
 class AccountController extends FrontendController
 {
@@ -150,20 +149,6 @@ class AccountController extends FrontendController
 
         $product = $this->getProduct($product_id);
         StorageHelper::push($product, 'product', 'review');
-        $this->actionIndex();
-    }
-
-    public function actionDecisionEdit(): void
-    {
-        $user = Xcart::app()->auth->getUser(true);
-
-        if ($user->getIsGuest()) {
-            $this->actionIndex();
-        }
-
-        $stripeSettings = ProcessorModel::objects()->asArray()->get(['processor_name' => 'Stripe']);
-        StorageHelper::push($stripeSettings['param01'], 'publicKey', 'stripeSettings');
-
         $this->actionIndex();
     }
 }

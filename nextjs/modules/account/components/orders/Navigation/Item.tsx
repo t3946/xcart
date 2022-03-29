@@ -48,7 +48,7 @@ const Item: React.FC<IProps> = (props: IProps) => {
   }
 
   return (
-    <Link href={`/order/${orderId}/${path}`}>
+    <Link href={path}>
       <a className={classnames(classes.button)}>
         <span className={classnames(classes.text)}>
           {text}

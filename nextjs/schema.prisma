@@ -74,7 +74,7 @@ model account_decisions {
   order_number String?      @db.VarChar(31)
   created      DateTime?    @default(now()) @db.DateTime(0)
   updated      DateTime?    @default(now()) @db.DateTime(0)
-  xcart_orders xcart_orders @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
+  order xcart_orders @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
 
   @@index([order_id], map: "account_decision_xcart_orders_orderid_fk")
 }

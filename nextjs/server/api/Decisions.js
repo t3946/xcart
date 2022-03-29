@@ -10,7 +10,7 @@ app.get("/get-initial-state", isAuthMiddleware, async function (req, res) {
   const { skip, take } = req.body;
   const queryOptions = {
     where: {
-      xcart_orders: {
+      order: {
         user_id: req.user.userId,
       },
     },
@@ -51,6 +51,14 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
   const decision = await prisma.account_decisions.findUnique({
     where: {
       decision_id: decisionId,
+    },
+    include: {
+      order: {
+        select: {
+          cb_status: true,
+          dc_status: true,
+        },
+      },
     },
   });
 
@@ -106,7 +114,7 @@ app.post("/get-list", isAuthMiddleware, async function (req, res) {
     take,
     where: {
       solved,
-      xcart_orders: {
+      order: {
         user_id: req.user.userId,
       },
     },
