@@ -2,12 +2,12 @@
 
 namespace Modules\Order\Controllers\Api;
 
-use Modules\Order\Helpers\OrderHelper;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderModel;
-use Mpdf\Mpdf;
 use Xcart\App\Controller\Controller;
-use Xcart\App\Main\Xcart;
+use Xcart\App\Helpers\Paths;
 
 class InvoiceConventerController extends Controller
 {
@@ -25,14 +25,23 @@ class InvoiceConventerController extends Controller
             $hash = $order_model->getOrderHash();
 
             if ($slug === $hash) {
-            $string = '<html lang="en">
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />';
 
-                $mpdf = new Mpdf();
+                $options = new Options();
+                $options->setIsFontSubsettingEnabled(true);
+                $options->setIsRemoteEnabled(true);
+                $options->setIsHtml5ParserEnabled(true);
+
+                $dompdf = new Dompdf($options);
+
+                $dompdf->setBasePath(Paths::get('www.static.frontend.dist.css.fonts'));
+
                 $html_invoice = OrderInvoiceHelper::getInvoiceHtml($order_model, "mail/invoice_pdf.tpl", $mode);
-                $html_invoice = $string . $html_invoice;
-                $mpdf->WriteHTML($html_invoice);
-                $mpdf->Output();
+
+                $dompdf->loadHtml($string . $html_invoice);
+
+                $dompdf->render();
+
+                $dompdf->stream();
             }
         }
 

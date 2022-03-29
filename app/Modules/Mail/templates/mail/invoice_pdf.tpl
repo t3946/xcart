@@ -445,12 +445,6 @@
     {/if}
 
     <tr>
-        <td colspan="2">
-            <hr style="width:600px; margin: 0; border: 0 none; border-bottom: 1px solid #999999;">
-        </td>
-    </tr>
-
-    <tr>
         <td align="right" width="100%" bgcolor="#cccccc" height="25"><b>{t 'Grand Total'}:</b>&nbsp;
         </td>
         <td align="right" bgcolor="#cccccc" height="25" nowrap="nowrap">
@@ -462,7 +456,7 @@
 
 {if $this_is_printable_version != "Y"}
     {if $order->customer_notes && $ref_notify != 'Y'}
-        <table cellspacing="0" cellpadding="0" width="600" bgcolor="#ffffff">
+        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff">
             <tr>
                 <td>
                     <br/>
@@ -483,7 +477,7 @@
     {/if}
 
     {if $retrieve != "Y" && $order->groups->count()}
-        <table cellspacing="0" cellpadding="0" width="600" bgcolor="#ffffff">
+        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#ffffff">
             <tr>
                 <td align="center"><br/><br/><span style="FONT-SIZE:12px"></span>
                 </td>
