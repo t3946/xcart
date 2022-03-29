@@ -1,12 +1,7 @@
 import "regenerator-runtime/runtime";
 import axios from "axios";
 
-import {
-  applyMiddleware,
-  combineReducers,
-  createStore,
-  Store as ReduxStore,
-} from "redux";
+import {applyMiddleware, combineReducers, createStore, Store as ReduxStore,} from "redux";
 import createSagaMiddleware from "redux-saga";
 import {composeWithDevTools} from "redux-devtools-extension";
 import StoreInterface from "@client/jsx/modules/account/ts/types/store.type";
@@ -115,12 +110,16 @@ axios.get("/api/account/get-site-data").then(async (res) => {
   const pathname = document.location.pathname;
 
   // product page
-  if (pathname.search(/^\/product\/\d+?\//) !== -1) {
-    const productId = document.location.pathname.match(/^\/product\/(\d+?)\//)[1];
+  if (pathname.search(/^\/product\/\d+/) !== -1) {
+    const productId = document.location.pathname.match(/^\/product\/(\d+)/)[1];
     let productInfo = null;
     let reviews = null;
 
-    await axios.post("/api/account/get-product-info", {productId})
+    await axios.post("/api/account/get-product-info", {productId}, {
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    })
       .then((res) => {
         productInfo = res.data.product_info;
         reviews = res.data.reviews;
