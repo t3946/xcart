@@ -26,6 +26,7 @@
     text-decoration: none;
     background-color: #f09e05;
   }
+
   &:hover:disabled {
     background-color: #ffb426;
   }
@@ -80,7 +81,10 @@
     color: #000000;
   }
 
-  &:disabled {
+  &:disabled,
+  &:hover:disabled,
+  &:active:disabled,
+  &:focus:disabled, {
     opacity: 0.6;
     cursor: default;
     background-color: #ffffff;
@@ -133,7 +137,10 @@
     border-color: #c4c4c4;
   }
 
-  &:disabled {
+  &:disabled,
+  &:hover:disabled,
+  &:active:disabled,
+  &:focus:disabled, {
     border: pxToRem(1) solid #c4c4c4;
     background-color: #f4f4f4;
     color: #4a4949;
@@ -170,7 +177,10 @@
     border-color: #c4c4c4;
   }
 
-  &:disabled {
+  &:disabled,
+  &:hover:disabled,
+  &:active:disabled,
+  &:focus:disabled, {
     border: pxToRem(2) solid #c4c4c4;
     background-color: #ffffff;
     color: #4a4949;
