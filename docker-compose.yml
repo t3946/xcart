@@ -74,7 +74,7 @@ services:
 
   backup:
     container_name: backup
-    image: databack/mysql-backup
+    image: databack/mysql-backup:master
     restart: always
     networks:
       - backend
