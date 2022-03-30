@@ -88,6 +88,7 @@ services:
       DB_DUMP_BEGIN: 0600
       DB_SERVER: mysql
       DB_PORT: 3306
+      DB_DUMP_BY_SCHEMA: true
       DB_NAMES_EXCLUDE: information_schema mysql sys performance_schema
       MYSQLDUMP_OPTS: --single-transaction --routines --triggers --events
       AWS_ACCESS_KEY_ID: AKIAJPPHD4UZNVAWOBZQ
