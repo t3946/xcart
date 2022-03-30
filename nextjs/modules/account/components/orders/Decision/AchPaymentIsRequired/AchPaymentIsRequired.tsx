@@ -1,22 +1,31 @@
 import React from "react";
 import cn from "classnames";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { sentAchTransferAction } from "@redux/actions/account-actions/DecisionsActions";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
+import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import Styles from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired.module.scss";
+import {AxiosResponse} from "axios";
+import DecisionsInterface from "@modules/account/ts/types/decision";
+import Button from "@modules/ui/forms/Button";
 
-const AchPaymentIsRequired: React.FC = () => {
+interface IProps {
+  onChange: (res: AxiosResponse) => any;
+  decision: DecisionsInterface;
+}
+
+const AchPaymentIsRequired: React.FC<IProps> = (props) => {
+  const { onChange, decision } = props;
   const mockData = {
     bank: {
       name: "Evolve Bank & Trust",
@@ -91,6 +100,7 @@ const AchPaymentIsRequired: React.FC = () => {
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
+
   if (alert) {
     breakpoint({
       xs: function () {
@@ -107,17 +117,13 @@ const AchPaymentIsRequired: React.FC = () => {
   const iSentAchTransferHandler = () => {
     setDisabled(true);
     dispatch(
-      sentAchTransferAction({
-        data: {},
+      solveDecisionAction({
+        data: {
+          decision_id: decision.decision_id,
+        },
         success(res) {
           setShow(true);
-          dispatch(
-            setAlertAction({
-              variant: "decisionSuccess",
-              message: `Upon confirming the receipt of the funds we'll ship your order.
-              Thank you for your business!`,
-            })
-          );
+          onChange(res);
         },
       })
     );
@@ -130,7 +136,6 @@ const AchPaymentIsRequired: React.FC = () => {
               Thank you for your business!`,
       })
     );
-    //
   };
 
   return (
@@ -173,18 +178,18 @@ const AchPaymentIsRequired: React.FC = () => {
               </p>
 
               <div className={cn("ps-3", "ps-lg-0")}>
-                <button
+                <Button
                   className={cn(
-                    "form-button w-md-auto",
+                    "w-md-auto",
                     "mx-md-auto",
                     "mx-lg-0",
                     Styles.button
                   )}
                   onClick={iSentAchTransferHandler}
-                  disabled={disabled}
+                  disabled={disabled || !!decision.solved}
                 >
                   i sent ach transfer
-                </button>
+                </Button>
               </div>
             </>
           }

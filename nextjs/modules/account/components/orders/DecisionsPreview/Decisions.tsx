@@ -1,6 +1,6 @@
 import React from "react";
 import List from "@modules/account/components/orders/DecisionsPreview/List";
-import { Row } from "react-bootstrap";
+import {Row} from "react-bootstrap";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
 import NoItems from "@modules/account/components/common/NoItems";
@@ -34,6 +34,10 @@ const Decisions: React.FC = function () {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { total, items } = decisions[key];
+
+    if (items.length === 0) {
+      continue;
+    }
 
     lists.push(
       <div key={key}>

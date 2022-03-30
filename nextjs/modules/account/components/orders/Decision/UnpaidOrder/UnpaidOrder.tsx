@@ -4,17 +4,17 @@ import paymentItemStyles from "@modules/account/components/orders/Decision/Unpai
 import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
 import cn from "classnames";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import { Formik, Form } from "formik";
+import {Form, Formik} from "formik";
 import * as yup from "yup";
-import PayByCardForm from "@modules/account/components/orders/Decision/UnpaidOrder/PayByCardForm";
-import { CardElement } from "@stripe/react-stripe-js";
+import {CardElement} from "@stripe/react-stripe-js";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import {
-  payOrderByCardAction,
   cancelOrderAction,
   payOrderByPaypalAction,
+  solveDecisionAction,
 } from "@redux/actions/account-actions/DecisionsActions";
+import AddCreditCardButton from "@components/pages/wallet/AddCreditCardButton";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;
@@ -86,8 +86,9 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
       };
 
       dispatch(
-        payOrderByCardAction({
+        solveDecisionAction({
           data: form,
+
           success(res) {
             setTimeout(function () {
               actions.setSubmitting(false);
@@ -184,20 +185,7 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
                     caption:
                       "Secure Visa, MasterCard, and AmEx payment through our secure server.",
                     value: "debit",
-                    template: (
-                      <PayByCardForm
-                        isSubmitting={isSubmitting}
-                        errors={errors}
-                        setErrors={setErrors}
-                        values={values}
-                        touched={touched}
-                        onChange={handleChange}
-                        onStripeInit={(stripe, elements) => {
-                          setStripe(stripe);
-                          setElements(elements);
-                        }}
-                      />
-                    ),
+                    template: <AddCreditCardButton classes={{button: "w-auto"}} />,
                   },
                   {
                     label: "Pay by PayPal Balance",

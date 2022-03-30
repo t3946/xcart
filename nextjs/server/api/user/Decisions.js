@@ -192,6 +192,14 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "ach-payment-required":
+      await prisma.account_decisions.updateMany({
+        data: {
+          solved: 1,
+        },
+        where: {
+          decision_id: req.body.decision_id,
+        },
+      });
 
       break;
   }

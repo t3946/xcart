@@ -39,7 +39,7 @@ const Item: React.FC<IProps> = (props: IProps) => {
       <span className={classnames(classes.button)}>
         <span className={classnames(classes.text)}>
           {text}
-          {badge && (
+          {!!badge && (
             <Badge className={classnames(classes.badge)} text={badge} />
           )}
         </span>
@@ -52,7 +52,7 @@ const Item: React.FC<IProps> = (props: IProps) => {
       <a className={classnames(classes.button)}>
         <span className={classnames(classes.text)}>
           {text}
-          {badge && (
+          {!!badge && (
             <Badge className={classnames(classes.badge)} text={badge} />
           )}
         </span>

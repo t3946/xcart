@@ -26,6 +26,9 @@
     text-decoration: none;
     background-color: #f09e05;
   }
+  &:hover:disabled {
+    background-color: #ffb426;
+  }
 
   &:focus {
     background-color: #f09e05;
