@@ -5,17 +5,16 @@ namespace Modules\Payment\Gateways;
 
 use DateInterval;
 use DateTime;
-use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Stores\OrderTransactionStore;
 
-class BluePay extends Gateway
+class BluePay extends AbstractGateway
 {
-    public static function getProcessorName()
+    public static function getProcessorName(): string
     {
         return 'BluePay';
     }
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -29,7 +28,7 @@ class BluePay extends Gateway
         return [];
     }
 
-    public function refund($params)
+    public function refund($params): bool
     {
         $this->result = $this->gateway
             ->setToken($params['transactionReference'])
@@ -40,7 +39,7 @@ class BluePay extends Gateway
         return $res;
     }
 
-    public function void($params)
+    public function void($params): bool
     {
         $params['amount'] = str_replace(',', '', $params['amount']);
         $this->result = $this->gateway
@@ -53,7 +52,7 @@ class BluePay extends Gateway
         return $res;
     }
 
-    public function lookup($params)
+    public function lookup($params): bool
     {
         $params['transID'] = $params['transactionReference'];
         $params['reportStart'] = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
@@ -65,7 +64,7 @@ class BluePay extends Gateway
 
     }
 
-    public function authorize($params)
+    public function authorize($params): bool
     {
 
         $this->result = $this->gateway
@@ -77,7 +76,7 @@ class BluePay extends Gateway
         return $res;
     }
 
-    public function capture($params)
+    public function capture($params): bool
     {
         $this->result = $this->gateway
             ->setToken($params['transactionReference'])
@@ -109,27 +108,27 @@ class BluePay extends Gateway
      * @param $params
      * @return bool
      */
-    public function reauthorize($params)
+    public function reauthorize($params): bool
     {
-        // TODO: Implement reauthorize() method.
+        return true;
     }
 
     /**
      * @param $params
      * @return bool
      */
-    public function purchase($params)
+    public function purchase($params): bool
     {
-        // TODO: Implement purchase() method.
+        return true;
     }
 
     /**
      * @param $params
      * @return bool
      */
-    public function complete($params)
+    public function complete($params): bool
     {
-        // TODO: Implement complete() method.
+        return true;
     }
 
 }

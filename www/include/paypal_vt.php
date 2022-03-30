@@ -1,4 +1,5 @@
 <?php
+
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderLogModel;
@@ -7,7 +8,7 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderTransactionStore;
-use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Gateways\AbstractGateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 
@@ -84,7 +85,7 @@ if ($REQUEST_METHOD == "POST" && !empty($orderid) && in_array($mode, array_keys(
         }
 
         try {
-            if ($gw = Gateway::getGateway($pmModel->processor)) {
+            if ($gw = AbstractGateway::getGateway($pmModel->processor)) {
 
                 if ($gw->$method($params)) {
 

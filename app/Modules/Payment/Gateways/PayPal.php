@@ -7,9 +7,9 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
-class PayPal extends Gateway
+class PayPal extends AbstractGateway
 {
-    public static function getProcessorName()
+    public static function getProcessorName(): string
     {
         return 'PayPal';
     }
@@ -19,7 +19,7 @@ class PayPal extends Gateway
         return true;
     }
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -113,10 +113,8 @@ class PayPal extends Gateway
         }*/
         $data = $this->result->getData();
         if (!$state && ($state = $data['state'])) {
-            $statuses = array_map(function ($a) {
-                return $a['status'];
-            }, OrderTransactionStore::$gatewayMethods);
-            if (!in_array($state, $statuses)) {
+            $statuses = array_map(static fn($a) => $a['status'], OrderTransactionStore::$gatewayMethods);
+            if (!in_array($state, $statuses, true)) {
                 switch ($data['intent']) {
                     case 'authorize':
                         return OrderTransactionModel::STATUS_AUTHORIZED;
@@ -138,7 +136,7 @@ class PayPal extends Gateway
      * @param $params
      * @return bool
      */
-    public function reauthorize($params)
+    public function reauthorize($params): bool
     {
         $this->result = $this->gateway
             ->reauthorize($params)
@@ -156,7 +154,7 @@ class PayPal extends Gateway
 
     }
 
-    public function complete($params)
+    public function complete($params): bool
     {
         $this->result = $this->gateway->completePurchase($params)->send();
 

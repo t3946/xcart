@@ -10,7 +10,7 @@ use Modules\Payment\Models\ProcessorModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
 
-class Sberbank extends Gateway
+class Sberbank extends AbstractGateway
 {
     public static function getProcessorName(): string
     {
@@ -20,7 +20,7 @@ class Sberbank extends Gateway
     /**
      * @throws Exception
      */
-    public function success($params)
+    public function success($params): bool
     {
         $transaction_id = $params['mdOrder'];
         /** @var OrderTransactionModel txn */
@@ -60,10 +60,10 @@ class Sberbank extends Gateway
                 }
             }
         }
-        parent::success($params);
+       return parent::success($params);
     }
 
-    public function refund($params)
+    public function refund($params): bool
     {
         $transaction_id = $params['orderTransaction']->transaction_id;
         /** @var ProcessorModel $processor_model */
@@ -76,7 +76,7 @@ class Sberbank extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function void($params)
+    public function void($params): bool
     {
         $transaction_id = $params['orderTransaction']->transaction_id;
         /** @var ProcessorModel $processor_model */
@@ -91,7 +91,7 @@ class Sberbank extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function capture($params)
+    public function capture($params): bool
     {
         $transaction_id = $params['orderTransaction']->transaction_id;
         /** @var ProcessorModel $processor_model */
@@ -104,7 +104,7 @@ class Sberbank extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function authorize($params)
+    public function authorize($params): bool
     {
         /** @var ProcessorModel $processor_model */
         $processor_model = $params['processor_model'];
@@ -121,33 +121,30 @@ class Sberbank extends Gateway
                 'dynamicCallbackUrl' => $params['notifyUrl']
             ]
         )->setTwoStage(true)->setUserName($params['processor_model']->param01)->setPassword($params['processor_model']->param02)->send();
+
+        return $this->result->isSuccessful();
     }
 
-    public function reauthorize($params)
+    public function reauthorize($params): bool
     {
-        // TODO: Implement reauthorize() method.
+        return true;
     }
 
-    public function purchase($params)
+    public function purchase($params): bool
     {
         $this->authorize($params);
         return $this->result->isSuccessful();
     }
 
-    public function getLinkByMode(string $mode)
+    public function getLinkByMode(string $mode): array
     {
         switch ($mode) {
-            case 'refund':
-            case 'void':
-                return [];
             case 'success':
                 return [
                     ['rel' => 'capture', 'method' => 'POST'],
                     ['rel' => 'void', 'method' => 'POST'],
                     ['rel' => 'reauthorize', 'method' => 'POST']
                 ];
-            case 'authorization':
-                return null;
             case 'capture':
                 return [
                     [
@@ -155,12 +152,14 @@ class Sberbank extends Gateway
                         'method' => 'POST'
                     ],
                 ];
+            default:
+                return [];
         }
     }
 
-    public function complete($params)
+    public function complete($params): bool
     {
-        // TODO: Implement complete() method.
+        return true;
     }
 
     public function getState($mode)
@@ -172,8 +171,8 @@ class Sberbank extends Gateway
         return $method['status'] ?? OrderTransactionModel::STATUS_FAILED;
     }
 
-    public function lookup($params)
+    public function lookup($params): bool
     {
-        // TODO: Implement lookup() method.
+        return true;
     }
 }

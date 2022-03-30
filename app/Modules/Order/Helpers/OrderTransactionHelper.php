@@ -4,7 +4,7 @@ namespace Modules\Order\Helpers;
 
 
 use Modules\Order\Models\OrderTransactionModel;
-use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Gateways\AbstractGateway;
 use Modules\User\Models\UserModel;
 use Xcart\App\Main\Xcart;
 
@@ -12,7 +12,7 @@ class OrderTransactionHelper
 {
 
     /**
-     * @param Gateway $gw
+     * @param AbstractGateway $gw
      * @param array $params
      * @return array
      */
@@ -82,7 +82,7 @@ class OrderTransactionHelper
 
         $params['mode'] = $method;
 
-        if ($gw = Gateway::getGateway($params['processor'])) {
+        if ($gw = AbstractGateway::getGateway($params['processor'])) {
             if ($gw->$method($params)) {
                 if ($result = OrderTransactionHelper::prepareOrderTransaction($gw, $params)) {
                     /** @var OrderTransactionModel $model */
@@ -150,7 +150,7 @@ class OrderTransactionHelper
                 $value = $model->getAvailAmount();
 
                 if ($value < $model->transaction_amount &&
-                    ($gateway = Gateway::getGateway($model->payment_method_model->processor)) &&
+                    ($gateway = AbstractGateway::getGateway($model->payment_method_model->processor)) &&
                     !$gateway::isPartiallyCaptureEnabled()) {
                     $value = 0;
                 }
@@ -178,7 +178,7 @@ class OrderTransactionHelper
         $result = true;
 
         foreach ($models as $model) {
-            $result = $result & Gateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled();
+            $result = $result & AbstractGateway::getGateway($model->payment_method_model->processor)->isPartiallyCaptureEnabled();
         }
         return $result;
     }

@@ -16,10 +16,11 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderStore;
-use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Gateways\AbstractGateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
+
 use function json_decode;
 
 class PaymentController extends Controller
@@ -30,7 +31,7 @@ class PaymentController extends Controller
     public function process($gateway): void
     {
         /** @var ProcessorModel $pm */
-        if (($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) && $gw = Gateway::getGateway($pm)) {
+        if (($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) && $gw = AbstractGateway::getGateway($pm)) {
 
             /** @var OrderModel $order */
             $order = OrderHelper::getCartOrder();
@@ -106,7 +107,7 @@ class PaymentController extends Controller
 
         /** @var ProcessorModel $pm */
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
-            if ($gw = Gateway::getGateway($pm)) {
+            if ($gw = AbstractGateway::getGateway($pm)) {
                 try {
                     $gw->success($params);
 

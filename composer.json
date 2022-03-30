@@ -10,6 +10,8 @@
         "ext-mbstring": "*",
         "ext-redis": "*",
         "ext-soap": "*",
+        "ext-simplexml": "*",
+        "ext-openssl": "*",
         "aftership/aftership-php-sdk": "^5.1",
         "aveiv/open-exchange-rates-api": "^1.2",
         "aws/aws-sdk-php": "^3.0",
@@ -60,7 +62,8 @@
         "symfony/validator": "^3.0",
         "theiconic/php-ga-measurement-protocol": "^2.7",
         "tinymce/tinymce": "^5.3",
-        "true/punycode": "^2.1"
+        "true/punycode": "^2.1",
+        "zek/omnipay-coinbase": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -72,7 +75,9 @@
             "Omnipay\\PayPal\\" : "app/Modules/Payment/Gateways/Omnipay/PayPal",
             "Omnipay\\Xpay\\" : "app/Modules/Payment/Gateways/Omnipay/Xpay",
             "Omnipay\\Stripe\\" : "app/Modules/Payment/Gateways/Omnipay/Stripe",
-            "Omnipay\\Sberbank\\" : "app/Modules/Payment/Gateways/Omnipay/Sberbank"
+            "Omnipay\\Sberbank\\" : "app/Modules/Payment/Gateways/Omnipay/Sberbank",
+            "Omnipay\\Offline\\" : "app/Modules/Payment/Gateways/Omnipay/Offline",
+            "Omnipay\\Coinbase\\" : "app/Modules/Payment/Gateways/Omnipay/Coinbase"
         },
         "classmap": [
             "app/include/vendors/caponica/amazon-mws-complete/src/AmazonPhpClientLibrary/FBAOutboundServiceMWS",
