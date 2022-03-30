@@ -23,9 +23,7 @@ import StreetAddressRequired
   from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired";
 import {useDispatch} from "react-redux";
 import {resetAction} from "@redux/actions/account-actions/DecisionsActions";
-import {userSetAction} from "@redux/actions/account-actions/UserActions";
 import {useRouter} from "next/router";
-import {AxiosResponse} from "axios";
 
 interface IProps {
   decision: Record<any, any>;
@@ -36,11 +34,8 @@ const Decision: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const { decision } = props;
 
-  async function onChangeDecision(res: AxiosResponse) {
-    const { user } = res.data;
-
+  async function onChangeDecision() {
     dispatch(resetAction());
-    dispatch(userSetAction(user));
 
     await router.push("/orders/decisions-required");
   }

@@ -15,13 +15,13 @@ class CustomerFilesModel extends Model
 
     public static function tableName()
     {
-        return 'customer_files';
+        return 'user_files';
     }
 
     public static function getFields()
     {
         return [
-            'file_id' => [
+            'user_file_id' => [
                 'class' => IntField::class,
             ],
 
@@ -29,7 +29,7 @@ class CustomerFilesModel extends Model
                 'class' => FileField::class,
                 'required' => false,
                 'null' => true,
-                'adapterName' => 'www',
+                'adapterName' => 's3',
                 'uploadTo' => rtrim(self::UPLOAD_PATH, '/') . '/%Y/%m/%d',
                 'maxSize' => self::UPLOAD_MAX_SIZE . 'M',
             ],
@@ -40,6 +40,7 @@ class CustomerFilesModel extends Model
 
             'created' => [
                 'class' => DateTimeField::class,
+                'autoNowAdd' => true,
             ],
         ];
     }

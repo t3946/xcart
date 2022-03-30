@@ -112,8 +112,6 @@ class AccountApi extends Controller
             'countries' => AccountController::getCountryPhoneCodes(),
         ];
 
-        Xcart::app()->logger->debug($initial_data);
-
         $this->jsonResponse($initial_data);
     }
 

@@ -3,14 +3,17 @@
 namespace Modules\Order\Models\Decisions;
 
 use Modules\Order\Models\OrderModel;
+use Xcart\App\Orm\Fields\AutoField;
+use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\AutoField;
-use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Model;
 
+/**
+ * @property bool $solved
+ */
 class DecisionModel extends Model
 {
     public static function tableName()

@@ -2,9 +2,6 @@
 
 namespace Modules\Order\Models\Decisions;
 
-use Xcart\App\Orm\Fields\CharField;
-use Xcart\App\Orm\Fields\DateTimeField;
-use Xcart\App\Orm\Fields\FileField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Model;
 
@@ -12,7 +9,7 @@ class DecisionsCustomerFiles extends Model
 {
     public static function tableName()
     {
-        return 'decisions_customer_files';
+        return 'decisions_user_files';
     }
 
     public static function getFields()
@@ -21,7 +18,7 @@ class DecisionsCustomerFiles extends Model
             'decision_id' => [
                 'class' => IntField::class,
             ],
-            'file_id' => [
+            'user_file_id' => [
                 'class' => IntField::class,
             ],
         ];

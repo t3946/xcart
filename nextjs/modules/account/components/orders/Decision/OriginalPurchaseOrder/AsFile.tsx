@@ -1,14 +1,15 @@
 import React from "react";
 import UploadFile from "@modules/ui/UploadFile";
-import { Formik, Form } from "formik";
+import {Form, Formik} from "formik";
 import * as yup from "yup";
 import cn from "classnames";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
-import Styles from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder.module.scss";
-import { useDispatch } from "react-redux";
-import { uploadOriginalPurchaseOrderAction } from "@redux/actions/account-actions/DecisionsActions";
+import Styles
+  from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder.module.scss";
+import {useDispatch} from "react-redux";
 import DecisionsInterface from "@modules/account/ts/types/decision";
+import {iSentOriginalPurchaseOrderViaFaxAction} from "@redux/actions/account-actions/DecisionsActions";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;
@@ -16,7 +17,7 @@ interface IProps {
 }
 
 const AsFile: React.FC<IProps> = (props: IProps) => {
-  const { onChange, decision } = props;
+  const { decision, onChange } = props;
   const [files, setFiles] = React.useState<File[]>([]);
   const dispatch = useDispatch();
   const inputFileRef = React.useRef<HTMLInputElement>();
@@ -46,17 +47,17 @@ const AsFile: React.FC<IProps> = (props: IProps) => {
   });
   const submit = ({ setSubmitting }) => {
     const formData = new FormData();
+
+    formData.append("decision_id", decision.decision_id);
+
     for (let i = 0; i < files.length; i++) {
       formData.append(`files[${i}]`, files[i]);
     }
 
     dispatch(
-      uploadOriginalPurchaseOrderAction({
+      iSentOriginalPurchaseOrderViaFaxAction({
         data: formData,
-        success(res: DecisionsInterface) {
-          onChange(res);
-          setTimeout(() => setSubmitting(false), 2000);
-        },
+        success: onChange,
       })
     );
   };
@@ -76,7 +77,6 @@ const AsFile: React.FC<IProps> = (props: IProps) => {
             ref={inputFileRef}
             formats={SUPPORTED_FORMATS}
             maxSize={maxMB}
-            multiple
             name="file"
             onChange={handleChange}
             error={errors.file}

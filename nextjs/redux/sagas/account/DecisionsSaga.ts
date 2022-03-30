@@ -78,11 +78,11 @@ function* checkSentDecision(action): Generator {
     });
 }
 
-function* iSentOriginalPurchaseOrderViaFaxDecision(action): Generator {
+function* solveSUP(action: any): Generator {
   const { success, data } = action.payload;
 
   yield api
-    .post<any>(route("order:api:make-license"), data)
+    .post<any>("/order/api/decisions/solve-sup", data)
     .then(function (res) {
       success(res);
     });
@@ -182,10 +182,7 @@ export default function* ratingsActionWatcher(): SagaIterator {
     "UPLOAD_ORIGINAL_PURCHASE_ORDER_DECISION",
     uploadOriginalPurchaseorderDecision
   );
-  yield takeLatest(
-    "I_SENT_ORIGINAL_PURCHASE_ORDER_VIA_FAX_DECISION",
-    iSentOriginalPurchaseOrderViaFaxDecision
-  );
+  yield takeLatest("I_SENT_ORIGINAL_PURCHASE_ORDER_VIA_FAX_DECISION", solveSUP);
   yield takeLatest("SENT_ACH_TRANSFER_DECISION", sentAchTransferDecision);
   yield takeLatest("PAY_ORDER_BY_CARD_DECISION", payOrderByCardDecision);
   yield takeLatest("PAY_ORDER_BY_PAYPAL_DECISION", payOrderByPaypalDecision);

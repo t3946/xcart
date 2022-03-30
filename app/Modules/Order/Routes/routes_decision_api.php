@@ -24,6 +24,12 @@ return [
     ],
 
     [
+        'route' => '/solve-sup',
+        'target' => [ DecisionController::class, 'solveSUP' ],
+        'name' => 'solve-sup',
+    ],
+
+    [
         'route' => '/get',
         'target' => [ DecisionController::class, 'getDecisionsAction' ],
         'name' => 'decisions_get',

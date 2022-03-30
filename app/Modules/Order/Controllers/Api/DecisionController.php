@@ -3,16 +3,16 @@
 namespace Modules\Order\Controllers\Api;
 
 use Modules\Goods\Models\ProductModel;
-use Modules\Order\Models\Decisions\DecisionModel;
+use Modules\Order\Forms\Decision\LicenseRequiredForm;
+use Modules\Order\Models\Decisions\CustomerFilesModel;
 use Modules\Order\Models\Decisions\DecisionLicenseModel;
+use Modules\Order\Models\Decisions\DecisionModel;
+use Modules\Order\Models\Decisions\DecisionsCustomerFiles;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Controller\Controller;
-use Modules\Order\Models\Decisions\CustomerFilesModel;
-use Modules\Order\Models\Decisions\DecisionsCustomerFiles;
-use Modules\Order\Forms\Decision\LicenseRequiredForm;
 use Xcart\App\Main\Xcart;
 
 class DecisionController extends Controller
@@ -239,6 +239,42 @@ class DecisionController extends Controller
             'notSolved' => DecisionController::getDecisions($user['user_id'], 0, self::LIMIT_SELECT_DECISIONS, 0, ['-created']),
             'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
         ]);
+    }
+
+    public function solveSUP() {
+        /**
+         * @var $decision DecisionModel
+        */
+        $decision = DecisionModel::objects()->get(['decision_id' => $_POST['decision_id']]);
+
+        if ($decision->solved === true) {
+            http_response_code(403);
+            return;
+        }
+
+        $uploaded_file = new UploadedFile(
+            $_FILES['files']['tmp_name'][0],
+            $_FILES['files']['name'][0],
+            $_FILES['files']['type'][0],
+            (int)$_FILES['files']['size'][0],
+            (int)$_FILES['files']['error'][0],
+        );
+
+        $file = new CustomerFilesModel([
+            'path' => $uploaded_file,
+            'original_name' => $_FILES['files']['name'][0],
+        ]);
+        $file->save();
+
+        $link = new DecisionsCustomerFiles([
+            "user_file_id" => $file->pk,
+            "decision_id" => $_POST['decision_id'],
+        ]);
+        $link->save();
+
+        $decision->save();
+        $decision->setAttribute('solved', '1');
+        $decision->update();
     }
 
     //solve payment required
