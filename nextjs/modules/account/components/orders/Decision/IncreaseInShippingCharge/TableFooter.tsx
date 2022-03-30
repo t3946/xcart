@@ -1,6 +1,8 @@
 import React from "react";
 import cn from "classnames";
-import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Styles
+  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import {getTaxesGroup} from "@utils/countTaxesOrder";
 
 interface IProps {
   paymentStatus: string;
@@ -9,13 +11,47 @@ interface IProps {
   salesTax: number;
   vatTax: number;
   subtotal: number;
+  order: any;
+  group: any;
 }
 
 const TableFooter: React.FC<IProps> = (props) => {
-  const { paymentStatus, shippingStatus, regularShipping, subtotal } = props;
+  const {
+    paymentStatus,
+    shippingStatus,
+    regularShipping,
+    subtotal,
+    group,
+    order,
+  } = props;
 
-  const salesTax = parseFloat(props.salesTax);
-  const vatTax = parseFloat(props.vatTax);
+  function taxesTemplate() {
+    const taxes = getTaxesGroup(group);
+    const templates = [];
+
+    for (const name in taxes) {
+      const value = taxes[name];
+
+      templates.push(
+        <>
+          <span
+            className={cn([
+              Styles.tableFooterShippingSubtotalTax,
+              Styles.tableFooterShippingSubtotal__tax,
+            ])}
+          >
+            {name}:
+          </span>
+
+          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
+            US$ {value.toFixed(2)}
+          </span>
+        </>
+      );
+    }
+
+    return templates;
+  }
 
   return (
     <div
@@ -79,34 +115,7 @@ const TableFooter: React.FC<IProps> = (props) => {
           </>
         )}
 
-        {!!salesTax && (
-          <span
-            className={cn([
-              Styles.tableFooterShippingSubtotalTax,
-              Styles.tableFooterShippingSubtotal__tax,
-            ])}
-          >
-            Sales Tax:
-          </span>
-        )}
-
-        {!!salesTax && (
-          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-            US$ {salesTax.toFixed(2)}
-          </span>
-        )}
-
-        {!!vatTax && (
-          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-            VAT Tax:
-          </span>
-        )}
-
-        {!!vatTax && (
-          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-            US$ {vatTax.toFixed(2)}
-          </span>
-        )}
+        {taxesTemplate()}
 
         <span
           className={cn([

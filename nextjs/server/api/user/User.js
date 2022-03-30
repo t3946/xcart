@@ -673,10 +673,10 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
               },
             },
           },
-          xcart_order_groups: {
+          groups: {
             select: {
               total_gross: true,
-              xcart_order_details: {
+              details: {
                 select: {
                   itemid: true,
                   productcode: true,
@@ -739,13 +739,13 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const cards = (await stripeService.getSources(req.user.userId)).data;
 
   for (const order of orders) {
-    for (const group of order.xcart_refund_groups) {
-      group.xcart_order_details = [];
+    for (const group of order.groups) {
+      group.details = [];
 
       for (const refundedProduct of group.xcart_refunded_products) {
-        refundedProduct.xcart_order_details.price = refundedProduct.ref_price;
-        refundedProduct.xcart_order_details.amount = refundedProduct.ref_qty;
-        group.xcart_order_details.push(refundedProduct.xcart_order_details);
+        refundedProduct.details.price = refundedProduct.ref_price;
+        refundedProduct.details.amount = refundedProduct.ref_qty;
+        group.details.push(refundedProduct.details);
       }
 
       delete group.xcart_refunded_products;

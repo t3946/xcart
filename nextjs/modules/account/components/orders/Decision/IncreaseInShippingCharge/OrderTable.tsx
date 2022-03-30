@@ -1,34 +1,18 @@
 import React from "react";
-import { Accordion } from "react-bootstrap";
+import {Accordion} from "react-bootstrap";
 import Plus from "@modules/icon/components/font-awesome/plus/Regular";
 import Minus from "@modules/icon/components/font-awesome/minus/Regular";
 import ChevronDown from "@modules/icon/components/font-awesome/chevron-down/Regular";
 import cn from "classnames";
 import ShippingTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/ShippingTable";
-import GrandTotalProductOrdered from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered";
+import GrandTotalProductOrdered
+  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered";
 
-import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Styles
+  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
 
 interface IProps {
-  order: {
-    city: string;
-    state: string;
-    country: string;
-    regularShipping: number;
-    salesTax: number;
-    vatTax: number;
-    subtotal: number;
-    paymentStatus: string;
-    shippingStatus: string;
-    items: {
-      name: string;
-      sku: string;
-      price: number;
-      amount: number;
-      total?: number;
-      image: string;
-    }[];
-  }[];
+  order: any;
 }
 
 const OrderTable: React.FC<IProps> = (props: IProps) => {
@@ -93,7 +77,7 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
       <Accordion.Collapse eventKey="true">
         <div>
           {order.groups.map((group) => (
-            <ShippingTable group={group} />
+            <ShippingTable group={group} order={order} />
           ))}
         </div>
       </Accordion.Collapse>

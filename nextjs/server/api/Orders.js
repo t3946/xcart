@@ -35,7 +35,7 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     select: {
       order_prefix: true,
       orderid: true,
-      xcart_order_groups: {
+      groups: {
         where: {
           cb_status: {
             in: ["AP", "P", "Q", "IO", "O"],
@@ -62,8 +62,6 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
 
   // rename some fields
   for (const i in orders) {
-    orders[i].groups = orders[i].xcart_order_groups;
-    delete orders[i].xcart_order_groups;
     const groups = orders[i].groups;
 
     for (const group of groups) {

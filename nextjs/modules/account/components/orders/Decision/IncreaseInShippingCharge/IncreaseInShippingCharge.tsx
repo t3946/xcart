@@ -2,21 +2,22 @@ import React from "react";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import OrderTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/OrderTable";
 import cn from "classnames";
-import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Styles
+  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
 import {
   approveIncreaseInShippingChargeAction,
   cancelOrderAction,
 } from "@redux/actions/account-actions/DecisionsActions";
 import Alert from "@modules/account/components/shared/Alert";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
+import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
-import { useDispatch, useSelector } from "react-redux";
+import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
+import {useDispatch, useSelector} from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 
 interface IProps {
@@ -123,7 +124,7 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
           >
             Total Shipping Cost was adjusted on the PO you've submitted to us:
           </p>
-          <OrderTable order={decision} />
+          <OrderTable order={decision.order} />
           <p
             className={cn([
               Styles.decisionText,

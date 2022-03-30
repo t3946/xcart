@@ -47,7 +47,7 @@
   }
 }
 
-.totalTableShippingCost_highlite {
+.totalTableShippingCost_highlight {
   &:after {
     content: "";
     position: absolute;
@@ -70,7 +70,7 @@
   }
 }
 
-.totalTableShippingCostLabel_highlite {
+.totalTableShippingCostLabel_highlight {
   &:after {
     left: pxToRem(-5);
     border-right: none;
@@ -85,7 +85,7 @@
   }
 }
 
-.totalTableShippingCostValue_highlite {
+.totalTableShippingCostValue_highlight {
   &:after {
     right: pxToRem(-5);
     border-left: none;

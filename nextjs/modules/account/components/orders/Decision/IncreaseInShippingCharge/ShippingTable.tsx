@@ -1,12 +1,14 @@
 import React from "react";
-import ProductImage from "@modules/account/components/order/order-table/ProductImage";
 import ProductCell from "@modules/account/components/order/order-table/ProductCell";
 import OrderTable from "@modules/account/components/order/order-table/OrderTable";
 import TableFooter from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/TableFooter";
 import cn from "classnames";
-import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
-import Button, { ETheme } from "@modules/ui/forms/Button";
+import Styles
+  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Button, {ETheme} from "@modules/ui/forms/Button";
 import Link from "next/link";
+import getStoreUrl from "@utils/getStoreUrl";
+import getThumbUrl from "@utils/getThumbUrl";
 
 interface IProps {
   group: any;
@@ -17,16 +19,17 @@ interface IProps {
 const ShippingTable: React.FC<IProps> = (props) => {
   const { group, showCaption, order } = props;
 
-  const items = group.products.map((item) => {
-    const total = parseFloat((item.price * item.amount).toFixed(2));
+  const items = group.details.map((item) => {
+    const total = (parseFloat(item.price) * item.amount).toFixed(2);
+
     return { ...item, total };
   });
 
   return (
     <>
       <div className={cn([Styles.table__name, Styles.tableName])}>
-        The items below are shipped from {group.manufacturer.city},{" "}
-        {group.manufacturer.state}, {group.manufacturer.country}
+        The items below are shipped from {group.manufacturer.m_city},{" "}
+        {group.manufacturer.m_state}, {group.manufacturer.m_country}
       </div>
       <OrderTable
         theme="grey"
@@ -62,25 +65,35 @@ const ShippingTable: React.FC<IProps> = (props) => {
             "col-5 col-md-auto",
           ],
         }}
-        rowItemTemplates={(item) => [
-          <ProductImage image={item.image} />,
-          <ProductCell name={item.product} sku={item.code} url={item.url} />,
-          <span className="d-none d-lg-block">US$ {item.price}</span>,
-          <>
-            <span className="d-none d-lg-block">{item.amount}</span>
-            <span className="d-none d-md-block d-lg-none">
-              US$ {item.price} x {item.amount}
-            </span>
-          </>,
-          <span className="d-none d-md-block text-end">
-            US$ {(item.amount * item.price).toFixed(2)}
-          </span>,
-          <span className="d-md-none">US$ {item.price}</span>,
-          <span className="d-md-none">x {item.amount}</span>,
-          <span className="d-md-none">
-            US$ {(item.amount * item.price).toFixed(2)}
-          </span>,
-        ]}
+        rowItemTemplates={(item) => {
+          const image = getThumbUrl(
+            getStoreUrl(item.xcart_products.images[0].image.path)
+          );
+
+          return [
+            <img src={image} alt="" width="42" height="42" />,
+            <ProductCell
+              name={item.product}
+              sku={item.xcart_products.productcode}
+              url={`/product/${item.xcart_products.productid}/`}
+            />,
+            <span className="d-none d-lg-block">US$ {item.price}</span>,
+            <>
+              <span className="d-none d-lg-block">{item.amount}</span>
+              <span className="d-none d-md-block d-lg-none">
+                US$ {item.price} x {item.amount}
+              </span>
+            </>,
+            <span className="d-none d-md-block text-end">
+              US$ {(item.amount * item.price).toFixed(2)}
+            </span>,
+            <span className="d-md-none">US$ {item.price}</span>,
+            <span className="d-md-none">x {item.amount}</span>,
+            <span className="d-md-none">
+              US$ {(item.amount * item.price).toFixed(2)}
+            </span>,
+          ];
+        }}
         rowFooterTemplate={(item, index) => {
           if (order.cb_status !== "P" || order.dc_status !== "Z") {
             return null;
@@ -148,12 +161,16 @@ const ShippingTable: React.FC<IProps> = (props) => {
       />
 
       <TableFooter
-        paymentStatus={group.paymentStatus}
-        shippingStatus={group.shippingStatus}
+        order={order}
+        group={group}
+        paymentStatus={
+          group.cb_status_rel.xcart_order_human_readable_statuses.name
+        }
+        shippingStatus={
+          group.dc_status_rel.xcart_order_human_readable_statuses.name
+        }
         regularShipping={group.shippingGross}
-        salesTax={group.totalPst}
-        vatTax={group.totalTax}
-        subtotal={group.totalGross}
+        subtotal={group.total_gross}
       />
     </>
   );
