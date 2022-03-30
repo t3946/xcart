@@ -4,10 +4,7 @@ import OrderTable from "@modules/account/components/orders/Decision/IncreaseInSh
 import cn from "classnames";
 import Styles
   from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
-import {
-  approveIncreaseInShippingChargeAction,
-  cancelOrderAction,
-} from "@redux/actions/account-actions/DecisionsActions";
+import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
 import Alert from "@modules/account/components/shared/Alert";
 import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import {
@@ -19,6 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import {useRouter} from "next/router";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import Button, {ETheme} from "@modules/ui/forms/Button";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;
@@ -54,10 +52,14 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
 
   const approveHandlerClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch(
-      approveIncreaseInShippingChargeAction({
-        data: {},
+      solveDecisionAction({
+        data: {
+          decision_id: decision.decision_id,
+          choice: "approve",
+        },
         success(res) {
           setShow(true);
+
           dispatch(
             setAlertAction({
               variant: "decisionSuccess",
@@ -72,10 +74,14 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
 
   const cancelOrderHandlerClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch(
-      cancelOrderAction({
-        data: {},
+      solveDecisionAction({
+        data: {
+          decision_id: decision.decision_id,
+          choice: "cancel",
+        },
         success(res) {
           setShow(true);
+
           dispatch(
             setAlertAction({
               variant: "decisionWarning",
@@ -142,34 +148,32 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
               Styles.decisionText,
             ])}
           >
-            <button
+            <Button
               className={cn([
-                "form-button",
                 "w-auto",
-                "h-100",
                 Styles.button,
                 Styles.decisionFooterButtonsApprove,
               ])}
+              disabled={decision.solved === 1}
               onClick={approveHandlerClick}
             >
               <span className="d-none d-md-block">
                 Approve increase in shipping charge
               </span>
               <span className="d-md-none">Approve</span>
-            </button>
-            <button
+            </Button>
+            <Button
               className={cn([
-                "form-button",
-                "form-button__outline",
                 "w-auto",
-                "h-100",
                 Styles.button,
                 Styles.decisionFooterButtonsCancel,
               ])}
               onClick={cancelOrderHandlerClick}
+              disabled={decision.solved === 1}
+              theme={ETheme.outlined}
             >
               Cancel order
-            </button>
+            </Button>
           </div>
         </>
       )}

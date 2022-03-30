@@ -238,7 +238,6 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
 
   switch (decision.type.slug) {
     case "po-send-check":
-      decision.solved = true;
       decision.options.address = req.body.address;
 
       await prisma.account_decisions.updateMany({
@@ -272,6 +271,21 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       await prisma.account_decisions.updateMany({
         data: {
           solved: 1,
+        },
+        where: {
+          decision_id: req.body.decision_id,
+        },
+      });
+
+      break;
+
+    case "increase-shipping-charge":
+      decision.options.choice = req.body.choice;
+
+      await prisma.account_decisions.updateMany({
+        data: {
+          solved: 1,
+          options: decision.options,
         },
         where: {
           decision_id: req.body.decision_id,
