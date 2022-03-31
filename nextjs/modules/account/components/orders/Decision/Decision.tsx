@@ -24,6 +24,7 @@ import StreetAddressRequired
 import {useDispatch} from "react-redux";
 import {resetAction} from "@redux/actions/account-actions/DecisionsActions";
 import {useRouter} from "next/router";
+import {userSetAction} from "@redux/actions/account-actions/UserActions";
 
 interface IProps {
   decision: Record<any, any>;
@@ -34,8 +35,10 @@ const Decision: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const { decision } = props;
 
-  async function onChangeDecision() {
+  async function onChangeDecision(res: any) {
     dispatch(resetAction());
+
+    dispatch(userSetAction(res.data.user));
 
     await router.push("/orders/decisions-required");
   }

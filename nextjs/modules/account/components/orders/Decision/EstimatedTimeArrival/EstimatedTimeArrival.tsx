@@ -1,19 +1,15 @@
 import React from "react";
-import EstimatedTimeArrivalTable, {
-  TableTypes,
-} from "@modules/account/components/orders/Decision/Table";
+import EstimatedTimeArrivalTable, {TableTypes,} from "@modules/account/components/orders/Decision/Table";
 import * as yup from "yup";
-import { Formik, Form, FormikHelpers } from "formik";
-import { Form as RBForm } from "react-bootstrap";
+import {Form, Formik, FormikHelpers} from "formik";
+import {Form as RBForm} from "react-bootstrap";
 import AdviceList from "@modules/account/components/orders/Decision/EstimatedTimeArrival/AdviceList";
-import {
-  getEtaProductsAction,
-  solveDecisionAction,
-} from "@redux/actions/account-actions/DecisionsActions";
-import { useDispatch } from "react-redux";
+import {getEtaProductsAction, solveDecisionAction,} from "@redux/actions/account-actions/DecisionsActions";
+import {useDispatch} from "react-redux";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
-import { AxiosResponse } from "axios";
+import {RowInterface} from "@modules/account/components/orders/Decision/TableRow";
+import {AxiosResponse} from "axios";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 
 interface IProps {
   onChange: (res: AxiosResponse) => any;
@@ -23,6 +19,7 @@ interface IProps {
 const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
   const { onChange, decision } = props;
   const dispatch = useDispatch();
+  const snackbar = useSnackbar();
 
   const initialState = {
     comment: decision?.options?.comment || "",
@@ -43,8 +40,9 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
       solveDecisionAction({
         data,
         success(res: AxiosResponse) {
-          onChange(res);
           actions.setSubmitting(false);
+          onChange(res);
+          snackbar.show("Decision solved");
         },
       })
     );
