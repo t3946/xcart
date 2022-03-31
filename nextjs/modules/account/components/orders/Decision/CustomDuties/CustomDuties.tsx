@@ -1,25 +1,24 @@
 import React from "react";
-import Checkbox from "@modules/ui/forms/Checkbox";
-import { Formik, Form } from "formik";
+import {Form, Formik} from "formik";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import cn from "classnames";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { submitResponsibilityForCustomDutiesAction } from "@redux/actions/account-actions/DecisionsActions";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
+import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
-
 import Styles from "@modules/account/components/orders/Decision/CustomDuties/CustomDuties.module.scss";
 
-const CustomDuties: React.FC = () => {
+const CustomDuties: React.FC = (props) => {
+  const { decision, onChange } = props;
   const initialValues = {
     agreement: false,
   };
@@ -51,38 +50,28 @@ const CustomDuties: React.FC = () => {
   const submit = (values, { setSubmitting }) => {
     setSubmitting(true);
     dispatch(
-      submitResponsibilityForCustomDutiesAction({
-        data: {},
+      solveDecisionAction({
+        data: {
+          decision_id: decision.decision_id,
+        },
         success(res) {
+          setSubmitting(false);
           setShow(true);
           dispatch(
             setAlertAction({
               variant: "decisionSuccess",
-              message: `Alert
-              message!`,
+              message: `Alert message!`,
             })
           );
           setTimeout(() => {
             setShow(false);
             dispatch(setAlertAction(null));
           }, 3000);
+
+          onChange(res);
         },
       })
     );
-
-    setShow(true);
-    dispatch(
-      setAlertAction({
-        variant: "decisionSuccess",
-        message: `Alert
-              message!`,
-      })
-    );
-    setTimeout(() => {
-      setShow(false);
-      dispatch(setAlertAction(null));
-    }, 3000);
-    //
   };
 
   return alert ? (
@@ -146,8 +135,8 @@ const CustomDuties: React.FC = () => {
               <HighlightCheckbox
                 className={Styles.checkbox__container}
                 onChange={handleChange}
-                checked={values.agreement}
-                disabled={isSubmitting}
+                checked={values.agreement || !!decision.solved}
+                disabled={isSubmitting || !!decision.solved}
                 label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
               />
 
@@ -162,7 +151,7 @@ const CustomDuties: React.FC = () => {
                   Styles.button,
                   Styles.decision__button
                 )}
-                disabled={!values.agreement || isSubmitting}
+                disabled={!values.agreement || isSubmitting || !!decision.solved}
               >
                 Submit
               </button>
