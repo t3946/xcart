@@ -28,26 +28,33 @@ const TableFooter: React.FC<IProps> = (props) => {
   function taxesTemplate() {
     const taxes = getTaxesGroup(group);
     const templates = [];
+    let i = 0;
 
     for (const name in taxes) {
       const value = taxes[name];
 
       templates.push(
-        <>
-          <span
-            className={cn([
-              Styles.tableFooterShippingSubtotalTax,
-              Styles.tableFooterShippingSubtotal__tax,
-            ])}
-          >
-            {name}:
-          </span>
-
-          <span className={cn([Styles.tableFooterShippingSubtotalTax])}>
-            US$ {value.toFixed(2)}
-          </span>
-        </>
+        <span
+          className={cn([
+            Styles.tableFooterShippingSubtotalTax,
+            Styles.tableFooterShippingSubtotal__tax,
+          ])}
+          key={`tax-name-${i}`}
+        >
+          {name}:
+        </span>
       );
+
+      templates.push(
+        <span
+          className={cn([Styles.tableFooterShippingSubtotalTax])}
+          key={`tax-value-${i}`}
+        >
+          US$ {value.toFixed(2)}
+        </span>
+      );
+
+      i++;
     }
 
     return templates;

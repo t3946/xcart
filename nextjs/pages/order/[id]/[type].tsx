@@ -1,17 +1,17 @@
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
-import {NextPage} from "next";
-import {OrderInfoHeader} from "@modules/account/components/orders/OrderInfoHeader";
-import {OrderTrackingPage} from "@modules/account/pages/OrderTrackingPage";
-import {OrderLogPage} from "@modules/account/pages/OrderLogPage";
-import {OrderAddressesPage} from "@modules/account/pages/OrderAddressesPage";
-import {ProductsOrderedPage} from "@modules/account/pages/ProductsOrderedPage";
-import {OrderActionsPage} from "@modules/account/pages/OrderActionsPage";
-import {setOrderView} from "@redux/actions/account-actions/OrdersActions";
-import {OrderView} from "@modules/account/ts/types/order/order-view.types";
+import { NextPage } from "next";
+import { OrderInfoHeader } from "@modules/account/components/orders/OrderInfoHeader";
+import { OrderTrackingPage } from "@modules/account/pages/OrderTrackingPage";
+import { OrderLogPage } from "@modules/account/pages/OrderLogPage";
+import { OrderAddressesPage } from "@modules/account/pages/OrderAddressesPage";
+import { ProductsOrderedPage } from "@modules/account/pages/ProductsOrderedPage";
+import { OrderActionsPage } from "@modules/account/pages/OrderActionsPage";
+import { setOrderView } from "@redux/actions/account-actions/OrdersActions";
+import { OrderView } from "@modules/account/ts/types/order/order-view.types";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import {useDispatch} from "react-redux";
-import {useRouter} from "next/router";
-import React, {useEffect} from "react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import Decision from "@modules/account/components/orders/Decision/Decision";
 
 const OrderPage: NextPage = () => {

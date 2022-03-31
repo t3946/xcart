@@ -18,21 +18,30 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
   function printTaxes() {
     const taxes = countTaxesOrder(order);
     const templates = [];
+    let i = 0;
 
     for (const name in taxes) {
       const value = taxes[name];
 
       templates.push(
-        <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
+        <span
+          key={`tax-name-${i}`}
+          className={cn([Styles.totalTableTax, Styles.totalTable__tax])}
+        >
           Total {name}:
         </span>
       );
 
       templates.push(
-        <span className={cn([Styles.totalTableTax, Styles.totalTable__tax])}>
+        <span
+          key={`tax-value-${i}`}
+          className={cn([Styles.totalTableTax, Styles.totalTable__tax])}
+        >
           US$ {value.toFixed(2)}
         </span>
       );
+
+      i++;
     }
 
     return templates;
