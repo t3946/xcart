@@ -80,4 +80,96 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
   res.json(orders);
 });
 
+app.post("/get", isAuthMiddleware, async (req, res) => {
+  const order = await prisma.xcart_orders.findFirst({
+    where: {
+      user_id: req.user.userId,
+      orderid: req.body.orderId,
+    },
+    select: {
+      cb_status: true,
+      dc_status: true,
+      subtotal: true,
+      total: true,
+      shipping_cost: true,
+      groups: {
+        select: {
+          order_group_id: true,
+          total_gross: true,
+          cb_status_rel: {
+            select: {
+              xcart_order_human_readable_statuses: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          dc_status_rel: {
+            select: {
+              xcart_order_human_readable_statuses: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          manufacturer: {
+            select: {
+              m_city: true,
+              m_country: true,
+              m_state: true,
+            },
+          },
+          details: {
+            select: {
+              price: true,
+              product: true,
+              amount: true,
+              xcart_products: {
+                select: {
+                  productid: true,
+                  productcode: true,
+                  images: {
+                    orderBy: {
+                      order_by: "asc",
+                    },
+                    take: 1,
+                    where: {
+                      is_active: 1,
+                    },
+                    select: {
+                      image: {
+                        select: {
+                          path: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          xcart_order_group_taxes: {
+            select: {
+              value: true,
+              xcart_tax_rates: {
+                select: {
+                  xcart_taxes: {
+                    select: {
+                      tax_name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  res.json({ order });
+});
+
 module.exports = app;

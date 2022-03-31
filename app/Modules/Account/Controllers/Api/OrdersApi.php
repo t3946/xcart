@@ -8,7 +8,6 @@ use Modules\Account\Models\OrderProblemsModel;
 use Modules\Account\Models\OrderProblemStatusesModel;
 use Modules\Core\Models\StateModel;
 use Modules\Order\Models\OrderGroupModel;
-use Modules\Forms\Models\EmailModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
@@ -95,7 +94,7 @@ class OrdersApi extends Controller
             $group_data = [];
 
             foreach ($order_model->groups as $group) {
-                $ar_products = [];
+                $details = [];
                 $manufacturer = $group->manufacturer;
 
                 if (!$manufacturer) {
@@ -103,12 +102,12 @@ class OrdersApi extends Controller
                 }
 
                 foreach ($group->detail_models as $model) {
-                    $ar_products[] = $model->getFrontendProduct();
+                    $details[] = $model->getFrontendProduct();
                 }
 
                 $group_data[] = [
                     'manufacturer' => $manufacturer->getFrontendAddress(),
-                    'products' => $ar_products ?? [],
+                    'details' => $details,
                 ];
             }
 
@@ -266,12 +265,12 @@ class OrdersApi extends Controller
         $order_model = $user->orders->get(["pk" => $order_id]);
         /** @var OrderGroupModel $group_model */
         foreach ($order_model->groups as $group_model) {
-            $ar_products = [];
+            $ar_details = [];
             $tracks = [];
             $manufacturer = $group_model->manufacturer;
 
             foreach ($group_model->detail_models as $model) {
-                $ar_products[] = $model->getFrontendProduct();
+                $ar_details[] = $model->getFrontendProduct();
             }
 
             foreach ($group_model->trackings as $tracking_model) {
@@ -293,7 +292,7 @@ class OrdersApi extends Controller
 
             $groups[] = [
                 'trackings' => $tracks ?? [],
-                'products' => $ar_products ?? [],
+                'details' => $ar_details ?? [],
                 'manufacturer' => $manufacturer->getFrontendAddress(),
                 'paymentStatus' => $paymentStatus,
                 'shippingStatus' => $shippingStatus,
