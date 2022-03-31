@@ -171,7 +171,7 @@ app.post("/create", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  const options = {};
+  const options = req.body.options || {};
 
   switch (type) {
     case "po-send-check":
