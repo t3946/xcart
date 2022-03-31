@@ -83,6 +83,7 @@ const OrderTable: React.FC<IProps> = (props: IProps) => {
       </Accordion.Collapse>
       <GrandTotalProductOrdered
         isDecision={true}
+        totalShippingInFrame={true}
         className={{
           "border-0": !isOpened,
           [Styles.accordionFooter_opened]: isOpened,

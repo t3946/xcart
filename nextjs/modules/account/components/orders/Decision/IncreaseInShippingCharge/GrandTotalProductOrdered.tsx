@@ -9,10 +9,11 @@ interface IProps {
   totals?: any;
   isDecision?: boolean;
   order: any;
+  totalShippingInFrame?: boolean;
 }
 
 const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
-  const { className, order } = props;
+  const { className, order, totalShippingInFrame = false } = props;
 
   function printTaxes() {
     const taxes = countTaxesOrder(order);
@@ -49,8 +50,12 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
             className={cn(
               Styles.totalTableShippingCost,
               Styles.totalTable__shippingCost,
-              Styles.totalTableShippingCost_highlight,
-              Styles.totalTableShippingCostLabel_highlight
+
+              {
+                [Styles.totalTableShippingCost_highlight]: totalShippingInFrame,
+                [Styles.totalTableShippingCostLabel_highlight]:
+                  totalShippingInFrame,
+              }
             )}
           >
             Total shipping cost:
@@ -60,8 +65,11 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
             className={cn(
               Styles.totalTableShippingCost,
               Styles.totalTable__shippingCost,
-              Styles.totalTableShippingCost_highlight,
-              Styles.totalTableShippingCostValue_highlight
+              {
+                [Styles.totalTableShippingCost_highlight]: totalShippingInFrame,
+                [Styles.totalTableShippingCostValue_highlight]:
+                  totalShippingInFrame,
+              }
             )}
           >
             US$ {shippingTotal.toFixed(2)}
