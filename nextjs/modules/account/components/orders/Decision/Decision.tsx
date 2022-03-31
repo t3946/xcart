@@ -25,6 +25,7 @@ import {useDispatch} from "react-redux";
 import {resetAction} from "@redux/actions/account-actions/DecisionsActions";
 import {useRouter} from "next/router";
 import {userSetAction} from "@redux/actions/account-actions/UserActions";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   decision: Record<any, any>;
@@ -34,11 +35,20 @@ const Decision: React.FC<IProps> = (props) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { decision } = props;
+  const user = useSelectorAccount((e) => e.user);
 
   async function onChangeDecision(res: any) {
     dispatch(resetAction());
 
-    dispatch(userSetAction(res.data.user));
+    dispatch(
+      userSetAction({
+        ...user,
+        decisions_required_count: Math.min(
+          0,
+          user.decisions_required_count - 1
+        ),
+      })
+    );
 
     await router.push("/orders/decisions-required");
   }

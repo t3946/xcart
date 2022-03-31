@@ -2,20 +2,22 @@ import React from "react";
 import Styles from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire.module.scss";
 import cn from "classnames";
 import * as yup from "yup";
-import { Formik, Form, FormikHelpers } from "formik";
+import {Form, Formik, FormikHelpers} from "formik";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
-import EstimatedTimeArrivalTable, {
-  TableTypes,
-} from "@modules/account/components/orders/Decision/Table";
+import {RowInterface} from "@modules/account/components/orders/Decision/TableRow";
+import EstimatedTimeArrivalTable, {TableTypes,} from "@modules/account/components/orders/Decision/Table";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import {
   getEtaProductsAction,
-  solveDecisionAction,
+  iSentOriginalPurchaseOrderViaFaxAction,
 } from "@redux/actions/account-actions/DecisionsActions";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import {AxiosResponse} from "axios";
+import UploadFile from "@modules/ui/UploadFile";
+import SentFiles from "@modules/account/components/orders/Decision/SentFiles";
+import Button from "@modules/ui/forms/Button";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;
@@ -37,6 +39,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
     "application/pdf",
   ];
   const dispatch = useDispatch();
+  const [files, setFiles] = React.useState<File[]>([]);
   const validationSchema = yup.object().shape({
     file: yup
       .mixed()
@@ -52,6 +55,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
       ),
   });
   const [products, setProducts] = React.useState(null);
+  const snack = useSnackbar();
 
   if (products === null) {
     dispatch(
@@ -86,19 +90,16 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
     const formData = new FormData();
     const files = inputFileRef.current?.files || [];
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append("attachments[]", files[i]);
-    }
-
-    formData.append("type", decision.type.toString());
+    formData.append("files[0]", files[0]);
     formData.append("decision_id", decision.decision_id.toString());
 
     dispatch(
-      solveDecisionAction({
+      iSentOriginalPurchaseOrderViaFaxAction({
         data: formData,
         success(res: AxiosResponse) {
-          onChange(res);
           actions.setSubmitting(false);
+          onChange(res);
+          snack.show("License sent successfully");
         },
       })
     );
@@ -110,7 +111,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
       validationSchema={validationSchema}
       onSubmit={submit}
     >
-      {({ handleChange }) => {
+      {({ handleChange, errors, isSubmitting }) => {
         return (
           <Form>
             <h1 className="decision-inner-header decision__inner-header">
@@ -131,18 +132,20 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
 
             <h5 className={cn(["fw-bold", Styles.label])}>Upload a document</h5>
 
-            <label
-              className={cn(["form-button__theme-grey", Styles.buttonUpload])}
-            >
-              Choose files
-              <input
-                type="file"
-                className="d-none"
-                ref={inputFileRef}
-                name="file"
-                multiple={true}
-              />
-            </label>
+            <UploadFile
+              classNames="mt-12 mt-md-14 mb-10 mb-md-3"
+              files={files}
+              setFiles={setFiles}
+              ref={inputFileRef}
+              formats={SUPPORTED_FORMATS}
+              maxSize={maxMB}
+              name="file"
+              onChange={handleChange}
+              error={errors.file}
+              disabled={isSubmitting || decision.solved}
+            />
+
+            {!!decision.solved && <SentFiles decision={decision} />}
 
             <div
               className={cn([
@@ -150,18 +153,21 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
                 "d-flex",
                 "justify-content-center",
                 "justify-content-lg-start",
+                { "d-none": decision.solved },
               ])}
             >
-              <button
+              <Button
+                type={"submit"}
                 className={cn([
                   "form-button",
                   "w-100",
                   "w-md-auto",
                   Styles.submitButton,
                 ])}
+                disabled={isSubmitting || decision.solved}
               >
                 Send
-              </button>
+              </Button>
             </div>
           </Form>
         );
