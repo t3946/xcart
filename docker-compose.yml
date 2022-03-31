@@ -74,7 +74,7 @@ services:
 
   backup:
     container_name: backup
-    image: databack/mysql-backup:master
+    image: kshon/mysqldump
     restart: always
     networks:
       - backend
