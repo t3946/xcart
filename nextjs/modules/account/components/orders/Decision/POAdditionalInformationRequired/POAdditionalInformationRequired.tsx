@@ -3,38 +3,31 @@ import InnerPage from "@components/common/inner-page/InnerPage";
 import UploadFile from "@modules/ui/UploadFile";
 import Checkbox from "@modules/ui/forms/Checkbox";
 import FormInputPhone, {
-  phoneYupValidation, phoneExtYupValidation
+  phoneExtYupValidation,
+  phoneYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
-import { Form, Formik } from "formik";
+import {Form, Formik} from "formik";
 import * as yup from "yup";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import cn from "classnames";
 import Feedback from "@modules/ui/forms/Feedback";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 import Alert from "@modules/account/components/shared/Alert";
-import { poAdditionalInformationRequiredAction } from "@redux/actions/account-actions/DecisionsActions";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
+import {iSentOriginalPurchaseOrderViaFaxAction} from "@redux/actions/account-actions/DecisionsActions";
+import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import { getCountryByCode } from "@utils/Countries";
-
-import Styles from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired.module.scss";
+import Styles
+  from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired.module.scss";
 import Label from "@modules/ui/forms/Label";
-
-const initialValues = {
-  file: [],
-  phoneCode: "",
-  phone: "",
-  phone_ext: "",
-  isApprove: false,
-};
+import getStoreUrl from "@utils/getStoreUrl";
 
 const accessFileFormats = [
   "image/jpg",
@@ -78,16 +71,25 @@ const classes = {
   title: cn(Styles.title),
 };
 
-const POAdditionalInformationRequired: React.FC = () => {
+const POAdditionalInformationRequired: React.FC = (props) => {
+  const { decision, onChange } = props;
   const countries = useSelector((e: StoreInterface) => e.countries);
   const dispatch = useDispatch();
   const [files, setFiles] = React.useState<File[]>([]);
   const inputFileRef = React.useRef<HTMLInputElement>();
   const breakpoint = useBreakpoint();
   const router = useRouter();
-
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
+
+  const initialValues = {
+    file: [],
+    phoneCode: decision.solved && decision.options.phoneCode || "",
+    phone: decision.solved && decision.options.phone || "",
+    phone_ext: decision.solved && decision.options.phone_ext || "",
+    isApprove: false,
+  };
+
   if (alert) {
     breakpoint({
       xs: function () {
@@ -109,19 +111,16 @@ const POAdditionalInformationRequired: React.FC = () => {
       return;
     }
 
-    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
-
     const formData = new FormData();
 
-    formData.append("file", inputFileRef.current.files[0]);
-    formData.append(
-      "phone",
-      `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, "")
-    );
+    formData.append("files[0]", inputFileRef.current.files[0]);
+    formData.append("phone", values.phone.replace(/[()\-\s]/gim, ""));
     formData.append("phone_ext", values.phone_ext);
+    formData.append("phoneCode", values.phoneCode);
+    formData.append("decision_id", decision.decision_id);
 
     dispatch(
-      poAdditionalInformationRequiredAction({
+      iSentOriginalPurchaseOrderViaFaxAction({
         data: formData,
         success(res) {
           setShow(true);
@@ -136,23 +135,49 @@ const POAdditionalInformationRequired: React.FC = () => {
             setShow(false);
             dispatch(setAlertAction(null));
           }, 3000);
+          onChange(res);
         },
       })
     );
-    setTimeout(() => {
-      // actions.setSubmitting(false);
-      // setShow(true);
-      // dispatch(
-      //   setAlertAction({
-      //     variant: "decisionSuccess",
-      //     message: `Thank you for providing us with missing information!
-      //         We'll process your order ASAP.`,
-      //   })
-      // );
-    }, 3000);
-
-    //
   };
+
+  function filesTemplate({ touched, errors, handleChange, isSubmitting }) {
+    const templates = [
+      <UploadFile
+        ref={inputFileRef}
+        onChange={handleChange}
+        files={files}
+        setFiles={setFiles}
+        name="file"
+        disabled={isSubmitting || decision.solved}
+        touched={!!touched.file}
+        formats={accessFileFormats}
+        maxSize={maxFileSizeMB}
+        error={errors?.file}
+        classNames={"mb-18 mb-lg-3"}
+      />,
+    ];
+
+    if (decision.solved) {
+      const fileTemplates = [];
+
+      for (const file of decision.files) {
+        const { path, original_name } = file.file;
+
+        fileTemplates.push(
+          <li>
+            <a href={getStoreUrl(path)} target="_blank">
+              {original_name}
+            </a>
+          </li>
+        );
+      }
+
+      templates.push(<ul>{fileTemplates}</ul>);
+    }
+
+    return templates;
+  }
 
   return alert ? (
     <InnerPage
@@ -187,6 +212,7 @@ const POAdditionalInformationRequired: React.FC = () => {
         touched,
         setFieldValue,
       }) => {
+        console.log({ values });
         return (
           <Form>
             <InnerPage
@@ -197,7 +223,7 @@ const POAdditionalInformationRequired: React.FC = () => {
               footer={
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || decision.solved}
                   className={cn(
                     "form-button",
                     "w-md-auto",
@@ -224,25 +250,14 @@ const POAdditionalInformationRequired: React.FC = () => {
               </div>
 
               <div className="mb-12 mb-lg-14">Upload original PO</div>
-              <UploadFile
-                ref={inputFileRef}
-                onChange={handleChange}
-                files={files}
-                setFiles={setFiles}
-                name="file"
-                disabled={isSubmitting}
-                touched={!!touched.file}
-                formats={accessFileFormats}
-                maxSize={maxFileSizeMB}
-                error={errors?.file}
-                classNames={"mb-18 mb-lg-3"}
-              />
+
+              {filesTemplate({ touched, errors, handleChange, isSubmitting })}
 
               <Checkbox
                 name="isApprove"
-                checked={values.isApprove}
+                checked={values.isApprove || !!decision.solved}
                 onChange={handleChange}
-                disabled={isSubmitting}
+                disabled={isSubmitting || decision.solved}
                 classes={{ container: Styles.checkbox }}
                 isValid={!!touched.isApprove && !errors.isApprove}
                 isInvalid={!!touched.isApprove && !!errors.isApprove}
@@ -287,7 +302,7 @@ const POAdditionalInformationRequired: React.FC = () => {
                     touched={touched}
                     errors={errors}
                     name={"phone"}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || decision.solved}
                     values={values}
                     mode={"ext"}
                   />

@@ -76,7 +76,7 @@ model account_decisions {
   decision_type_id     Int                    @db.UnsignedInt
   type                 decision_types         @relation(fields: [decision_type_id], references: [decision_type_id], onDelete: Cascade, map: "account_decisions_decision_types_decision_type_id_fk")
   order                xcart_orders           @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
-  decisions_user_files decisions_user_files[]
+  files                decisions_user_files[]
 
   @@index([order_id], map: "account_decision_xcart_orders_orderid_fk")
   @@index([decision_type_id], map: "account_decisions_decision_types_decision_type_id_fk")
@@ -6553,7 +6553,7 @@ model decisions_user_files {
   decision_id       Int               @db.UnsignedInt
   user_file_id      Int               @db.UnsignedInt
   account_decisions account_decisions @relation(fields: [decision_id], references: [decision_id], onDelete: Cascade, map: "decision")
-  user_files        user_files        @relation(fields: [user_file_id], references: [user_file_id], onDelete: Cascade, map: "file")
+  file              user_files        @relation(fields: [user_file_id], references: [user_file_id], onDelete: Cascade, map: "file")
 
   @@index([decision_id], map: "decision")
   @@index([user_file_id], map: "file")

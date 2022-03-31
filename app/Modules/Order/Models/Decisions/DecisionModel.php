@@ -2,12 +2,12 @@
 
 namespace Modules\Order\Models\Decisions;
 
-use Modules\Order\Models\OrderModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\JsonField;
 use Xcart\App\Orm\Model;
 
@@ -32,11 +32,6 @@ class DecisionModel extends Model
         return [
             'decision_id' => [
                 'class' => AutoField::class,
-            ],
-
-            'type' => [
-                'class' => CharField::class,
-                'null' => false,
             ],
 
             'solved' => [
@@ -64,12 +59,14 @@ class DecisionModel extends Model
                 'autoNowAdd' => true,
             ],
 
-            'order' => [
-                'field' => 'order_id',
+            'decision_type_id' => [
+                'class' => IntField::class,
+            ],
+
+            'type' => [
                 'class' => ForeignField::class,
-                'modelClass' => OrderModel::class,
-                'link' => ['order_id' => 'orderid'],
-                'null' => false
+                'modelClass' => DecisionTypeModel::class,
+                'link' => ['decision_type_id' => 'decision_type_id'],
             ]
         ];
     }

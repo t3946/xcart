@@ -8,6 +8,7 @@ use Modules\Order\Models\Decisions\CustomerFilesModel;
 use Modules\Order\Models\Decisions\DecisionLicenseModel;
 use Modules\Order\Models\Decisions\DecisionModel;
 use Modules\Order\Models\Decisions\DecisionsCustomerFiles;
+use Modules\Order\Models\Decisions\DecisionTypeModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserAccount\UserModel;
@@ -242,6 +243,7 @@ class DecisionController extends Controller
     }
 
     public function solveSUP() {
+        Xcart::app()->logger->debug(["post" => $_POST, "files" => $_FILES]);
         /**
          * @var $decision DecisionModel
         */
@@ -271,6 +273,18 @@ class DecisionController extends Controller
             "decision_id" => $_POST['decision_id'],
         ]);
         $link->save();
+
+        $decision_type = DecisionTypeModel::objects()->get(['decision_type_id' => $decision->decision_type_id]);
+
+        switch ($decision_type->slug) {
+            case "additional-information-required":
+                $decision->options = [
+                    "phone" => $_POST['phone'],
+                    "phoneCode" => $_POST['phoneCode'],
+                    "phone_ext" => $_POST['phone_ext'],
+                ];
+                break;
+        }
 
         $decision->save();
         $decision->setAttribute('solved', '1');

@@ -58,6 +58,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
       decision_id: decisionId,
     },
     include: {
+      type: true,
       order: {
         select: {
           cb_status: true,
@@ -141,7 +142,16 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
           },
         },
       },
-      type: true,
+      files: {
+        select: {
+          file: {
+            select: {
+              path: true,
+              original_name: true,
+            },
+          },
+        },
+      },
     },
   });
 
