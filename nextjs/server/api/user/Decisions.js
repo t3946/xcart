@@ -239,61 +239,34 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
   switch (decision.type.slug) {
     case "po-send-check":
       decision.options.address = req.body.address;
-
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-          options: decision.options,
-        },
-        where: {
-          decision_id: req.body.decision_id,
-        },
-      });
-
       break;
 
     case "estimated-time-arrival":
-      const { advice, comment } = req.body;
-
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-          options: { advice, comment },
-        },
-        where: {
-          decision_id: req.body.decision_id,
-        },
-      });
-
+      decision.options.advice = req.body.advice;
+      decision.options.comment = req.body.comment;
       break;
 
     case "ach-payment-required":
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-        },
-        where: {
-          decision_id: req.body.decision_id,
-        },
-      });
-
       break;
 
     case "increase-shipping-charge":
       decision.options.choice = req.body.choice;
+      break;
 
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-          options: decision.options,
-        },
-        where: {
-          decision_id: req.body.decision_id,
-        },
-      });
-
+    case "street-address-required":
+      decision.options.addressId = req.body.addressId;
       break;
   }
+
+  await prisma.account_decisions.updateMany({
+    data: {
+      solved: 1,
+      options: decision.options,
+    },
+    where: {
+      decision_id: req.body.decision_id,
+    },
+  });
 
   const user = await prisma.xcart_users.findUnique({
     where: {

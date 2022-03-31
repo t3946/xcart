@@ -2,13 +2,17 @@ import React from "react";
 import cn from "classnames";
 import Styles from "@modules/account/components/addresses/AddAddressForm.module.scss";
 import InputGroup from "./InputGroup";
-import { useSnackbar } from "@modules/account/hooks/useSnackbar";
+import {useSnackbar} from "@modules/account/hooks/useSnackbar";
 import Address from "@components/common/forms/Address";
 
-export const AddAddressForm: React.FC<any> = ({
-  addressInfo = undefined,
-  onCancelClick = undefined,
-}) => {
+interface IProps {
+  canBeDefault?: boolean;
+  addressInfo?: any;
+  onCancelClick?: any;
+}
+
+export const AddAddressForm: React.FC<IProps> = (props) => {
+  const { canBeDefault = true, addressInfo, onCancelClick } = props;
   const snackbar = useSnackbar();
 
   function onSubmitted() {
@@ -44,7 +48,7 @@ export const AddAddressForm: React.FC<any> = ({
       footerTemplate={footerTemplate}
       onSubmitted={onSubmitted}
       addressType={"shipping"}
-      canBeDefault={true}
+      canBeDefault={canBeDefault}
       editMode={!!addressInfo}
       address={addressInfo}
     />

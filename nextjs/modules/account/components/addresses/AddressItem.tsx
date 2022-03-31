@@ -105,6 +105,7 @@ export const AddressItem: React.FC<AddressItemPropsDto> = ({
           handleRemove={deleteAddressDialog.handleClickOpen}
         />
       </div>
+
       <BootstrapDialogHOC
         classes={{
           modal: StylesAddresses.modalWidth,

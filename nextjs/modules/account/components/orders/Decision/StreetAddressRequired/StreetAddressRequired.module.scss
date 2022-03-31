@@ -172,23 +172,6 @@
   }
 }
 
-.button {
-  font-size: pxToRem(20);
-  line-height: pxToRem(24);
-
-  @include breakpoint(md) {
-    font-size: pxToRem(26);
-    line-height: pxToRem(31);
-    padding: 0 pxToRem(50);
-    height: pxToRem(57);
-  }
-
-  @include breakpoint(lg) {
-    padding: 0 pxToRem(43);
-    height: pxToRem(41);
-  }
-}
-
 .decision__addAddressForm {
   @include breakpoint(lg) {
     margin: 0 pxToRem(-24) pxToRem(34);
@@ -204,4 +187,21 @@
 
 .cursor_pointer {
   cursor: pointer;
+}
+
+.modalWidth {
+  max-width: none;
+  @include breakpoint(lg) {
+    max-width: pxToRem(650);
+  }
+}
+
+.modalBody {
+  @include breakpoint(sm) {
+    padding: pxToRem(16) pxToRem(30);
+  }
+
+  @include breakpoint(lg) {
+    padding: pxToRem(16);
+  }
 }
