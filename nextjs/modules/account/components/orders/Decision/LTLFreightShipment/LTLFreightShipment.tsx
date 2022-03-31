@@ -1,39 +1,41 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import FormInputPhone, {
-  phoneYupValidation,
   phoneExtYupValidation,
+  phoneYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
 import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
-import { getCountryByCode } from "@utils/Countries";
-import { Formik, Form } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import {Form, Formik} from "formik";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/router";
 import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
+import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
+import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import * as Yup from "yup";
 import cn from "classnames";
-import { formAnswersLTLFreightShipmentAction } from "@redux/actions/account-actions/DecisionsActions";
-
-import RadioQuestionStyles from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
+import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import Button from "@modules/ui/forms/Button";
+import RadioQuestionStyles
+  from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
 import Styles from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment.module.scss";
 import Label from "@modules/ui/forms/Label";
 
-const LTLFreightShipment: React.FC = () => {
-  const countries = useSelector((e: StoreInterface) => e.countries);
+const LTLFreightShipment: React.FC = (props) => {
+  const { decision, onChange } = props;
   const dispatch = useDispatch();
   const breakpoint = useBreakpoint();
   const router = useRouter();
-
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
+
+  console.log({ decision });
+
   if (alert) {
     breakpoint({
       xs: function () {
@@ -54,15 +56,17 @@ const LTLFreightShipment: React.FC = () => {
   const mockData = [
     {
       label: "Commercial or residential delivery?",
+      slug: "deliveryType",
       radios: [
-        { label: "Commercical", value: "commercial" },
+        { label: "Commercial", value: "commercial" },
         { label: "Residential", value: "residential" },
       ],
     },
     {
       label: "If commercial, do you require a lift gate?",
+      slug: "requireLiftGate",
       dependency: {
-        question: "Commercial or residential delivery?",
+        question: "deliveryType",
         value: "commercial",
       },
       radios: [
@@ -72,6 +76,7 @@ const LTLFreightShipment: React.FC = () => {
     },
     {
       label: "Curbside or inside delivery?",
+      slug: "deliveryOutfit",
       ext: "Carriers may charge extra for residential, lift gate and inside delivery",
       radios: [
         { label: "Curbside delivery", value: "curbside" },
@@ -81,8 +86,9 @@ const LTLFreightShipment: React.FC = () => {
   ];
   const getInitialValues = () => {
     const values: Record<string, string> = {};
+
     for (const q of mockData) {
-      values[q.label] = { value: "" };
+      values[q.slug] = decision.options[q.slug];
     }
 
     values.phoneCode = "";
@@ -101,21 +107,14 @@ const LTLFreightShipment: React.FC = () => {
 
     for (const q of mockData) {
       if (q.dependency) {
-        fields[q.label] = Yup.object({
-          value: Yup.string().required("Required"),
-          label: Yup.string().required("Required"),
-        }).when(q.dependency.question, {
-          is: q.dependency.value,
-          then: Yup.object({
-            value: Yup.string().required("Required"),
-            label: Yup.string().required("Required"),
-          }).required("Required"),
-        });
+        fields[q.slug] = Yup.string()
+          .required("Required")
+          .when(q.dependency.question, {
+            is: q.dependency.value,
+            then: Yup.string().required("Required"),
+          });
       } else {
-        fields[q.label] = Yup.object({
-          value: Yup.string().required("Required"),
-          label: Yup.string().required("Required"),
-        }).required("Required");
+        fields[q.slug] = Yup.string().required("Required");
       }
     }
     return Yup.object().shape(fields);
@@ -123,17 +122,17 @@ const LTLFreightShipment: React.FC = () => {
 
   const submit = (values, actions) => {
     actions.setSubmitting(true);
-
-    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
-    const form = {
+    const data = {
       ...values,
-      phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
+      decision_id: decision.decision_id,
     };
 
     dispatch(
-      formAnswersLTLFreightShipmentAction({
-        data: form,
+      solveDecisionAction({
+        data,
         success() {
+          actions.setSubmitting(true);
+
           setShow(true);
           dispatch(
             setAlertAction({
@@ -146,6 +145,8 @@ const LTLFreightShipment: React.FC = () => {
             setShow(false);
             dispatch(setAlertAction(null));
           }, 3000);
+
+          onChange();
         },
       })
     );
@@ -160,7 +161,7 @@ const LTLFreightShipment: React.FC = () => {
     );
     setTimeout(() => {
       setShow(false);
-      dispatch(setAlertAction(null));
+      dispatch(setAlertAction(""));
     }, 3000);
   };
   return alert ? (
@@ -214,6 +215,7 @@ const LTLFreightShipment: React.FC = () => {
           touched,
           errors,
         }) => {
+          console.log({ values });
           return (
             <Form>
               <p
@@ -231,12 +233,12 @@ const LTLFreightShipment: React.FC = () => {
                   checkedValues={values}
                   key={index}
                   question={questionData}
-                  disabled={isSubmitting}
                   onChange={handleChange}
                   error={
                     touched[questionData.label] && errors[questionData.label]
                   }
                   classes={{ container: Styles.pageBody__container }}
+                  disabled={isSubmitting || decision.solved}
                 />
               ))}
 
@@ -259,24 +261,25 @@ const LTLFreightShipment: React.FC = () => {
                     touched={touched}
                     errors={errors}
                     name={"phone"}
-                    values={values}
+                    values={decision.solved ? decision.options : values}
                     mode={"ext"}
+                    disabled={isSubmitting || decision.solved}
                   />
                 </div>
               </div>
 
               <div className={Styles.pageBodySubmitButtonContainer}>
-                <button
+                <Button
                   type="submit"
                   className={cn(
-                    "form-button",
                     "w-md-auto",
                     Styles.button,
                     Styles.pageBody__submitButton
                   )}
+                  disabled={isSubmitting || decision.solved}
                 >
                   Submit
-                </button>
+                </Button>
               </div>
             </Form>
           );

@@ -256,6 +256,14 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
     case "street-address-required":
       decision.options.addressId = req.body.addressId;
       break;
+    case "questions-ltl-freight-shipment":
+      decision.options.deliveryType = req.body.deliveryType;
+      decision.options.requireLiftGate = req.body.requireLiftGate;
+      decision.options.deliveryOutfit = req.body.deliveryOutfit;
+      decision.options.phoneCode = req.body.phoneCode;
+      decision.options.phone = req.body.phone;
+      decision.options.phone_ext = req.body.phone_ext;
+      break;
   }
 
   await prisma.account_decisions.updateMany({
