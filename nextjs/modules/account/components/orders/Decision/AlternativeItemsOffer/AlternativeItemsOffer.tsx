@@ -1,22 +1,24 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
-import Advice, {
-  AdviceTypes,
-} from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
-import { Form as RBForm } from "react-bootstrap";
-import { Formik, Form } from "formik";
+import {RowInterface} from "@modules/account/components/orders/Decision/TableRow";
+import Advice, {AdviceTypes,} from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
+import {Form as RBForm} from "react-bootstrap";
+import {Form, Formik} from "formik";
 import * as yup from "yup";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
-import { useDispatch } from "react-redux";
-import { submitAlternativeItemsOffer } from "@redux/actions/account-actions/DecisionsActions";
-import AlternativeItemsTable from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsTable";
+import {useDispatch} from "react-redux";
+import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import AlternativeItemsTable
+  from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsTable";
+import useSnackbar from "@modules/account/hooks/useSnackbar";
+import Styles
+  from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer.module.scss";
+import Button from "@modules/ui/forms/Button";
 
-import Styles from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer.module.scss";
-
-const AlternativeItemsOffer: React.FC = () => {
+const AlternativeItemsOffer: React.FC = (props) => {
+  const { decision, onChange } = props;
   const dispatch = useDispatch();
   // mockData
   const productCategories: Record<string, RowInterface[]> = {
@@ -38,44 +40,41 @@ const AlternativeItemsOffer: React.FC = () => {
       },
     ],
   };
-
+  const snackbar = useSnackbar();
   const initialState = {
-    comment: "",
-    advice: "",
+    comment: decision.options.comment || "",
+    advice: decision.options.advice || "",
   };
-
   const validationSchema = yup.object().shape({
     comment: yup.string(),
     advice: yup.string().required(),
   });
 
   function buttonTemplate(isSubmitting: boolean) {
-    // if (decision.solved) {
-    //   return;
-    // }
-
     return (
-      <button
+      <Button
+        type={"submit"}
         className={"form-button estimate-advise__submit-button w-md-auto"}
-        disabled={isSubmitting}
+        disabled={isSubmitting || decision.solved}
       >
-        submit my decision
-      </button>
+        submit
+      </Button>
     );
   }
 
   function submit(values, { setSubmitting }) {
-    setSubmitting(false);
+    setSubmitting(true);
+
     dispatch(
-      submitAlternativeItemsOffer({
+      solveDecisionAction({
         data: {
-          // type: decision.type,
-          // decision_id: decision.decision_id,
-          options: values,
+          ...values,
+          decision_id: decision.decision_id,
         },
-        success(res: DecisionsInterface) {
+        success(res) {
           onChange(res);
           setSubmitting(false);
+          snackbar.show(`Solved`);
         },
       })
     );
@@ -129,7 +128,7 @@ const AlternativeItemsOffer: React.FC = () => {
                   name={"advice"}
                   checked={"cancel" === values.advice}
                   onChange={handleChange}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || decision.solved}
                 />
 
                 <RBForm.Group
@@ -147,7 +146,7 @@ const AlternativeItemsOffer: React.FC = () => {
                     onChange={handleChange}
                     className={"advice-comment"}
                     isInvalid={!!errors.comment}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || decision.solved}
                   />
 
                   <Feedback type="invalid">{errors.comment}</Feedback>

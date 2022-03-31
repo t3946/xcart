@@ -241,6 +241,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       decision.options.address = req.body.address;
       break;
 
+    case "alternative-items-offer":
     case "estimated-time-arrival":
       decision.options.advice = req.body.advice;
       decision.options.comment = req.body.comment;
