@@ -3,17 +3,9 @@
 namespace Modules\Order\Controllers;
 
 use Exception;
-use Modules\Account\Controllers\AccountController;
-use Modules\Core\Models\CountryLangsModel;
-use Modules\User\Helpers\SurfingHelper;
-use Modules\User\Models\SurfPathModel;
-use Xcart\App\Exceptions\HttpException;
-use Xcart\App\Exceptions\UnknownMethodException;
-use Xcart\App\Exceptions\UnknownPropertyException;
-use Xcart\App\QueryBuilder\Expression;
-use Xcart\App\QueryBuilder\Q\QAndNot;
 use Modules\Cart\Components\CartItem;
 use Modules\Cart\Helpers\StagesOfOrdering;
+use Modules\Core\Models\CountryLangsModel;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Core\Models\ZipCodeModel;
@@ -41,10 +33,17 @@ use Modules\Shipping\Models\ShippingRateModel;
 use Modules\Shipping\ShippingModule;
 use Modules\Sites\Helpers\TaxHelper;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Helpers\SurfingHelper;
+use Modules\User\Models\SurfPathModel;
 use Xcart\App\Application\Application;
 use Xcart\App\Controller\FrontendController;
+use Xcart\App\Exceptions\HttpException;
+use Xcart\App\Exceptions\UnknownMethodException;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Form\PrepareData;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAndNot;
 
 class CheckoutController extends FrontendController
 {
@@ -677,7 +676,6 @@ class CheckoutController extends FrontendController
                             $message = $ex->getMessage();
                         } finally {
                             $order->orig_po = $site->getAbsoluteUrl() . PurchaseOrderHelper::getPurchaseOrderFileName($original_file);
-                            $order->po_number = $poModel->PO_number;
                             $poModel->status = PurchaseOrderModel::PO_STATUS_ENTERED;
                             $poModel->save();
                             (new LogModel([
@@ -691,6 +689,7 @@ class CheckoutController extends FrontendController
                     }
                 }
 
+                $order->po_number = $checkoutReviewForm->getField('po_number')->getValue();
                 $order->cb_status = OrderStatusModel::ORDER_STATUS_CHECKOUT_STEP4;
                 $order->date = time();
                 $order->save();

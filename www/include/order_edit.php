@@ -938,6 +938,9 @@ if ($REQUEST_METHOD === 'POST')
                         ['purchase_order_received_status' => Xcart::app()->request->post->get('purchase_order_received_status')]
                     );
 
+                    $oOrder->po_number = $orderDetailsForm->getField('po_number')->getValue();
+                    $oOrder->save(['po_number']);
+
                     $extra->save();
 
                     $po_diff = array_merge($old_po, $extra->purchase_order);
