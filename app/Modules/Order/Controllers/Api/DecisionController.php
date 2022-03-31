@@ -277,6 +277,11 @@ class DecisionController extends Controller
         $decision_type = DecisionTypeModel::objects()->get(['decision_type_id' => $decision->decision_type_id]);
 
         switch ($decision_type->slug) {
+            case "send-us-po":
+                $decision->options = [
+                    "method" => $_POST['method'],
+                ];
+                break;
             case "additional-information-required":
                 $decision->options = [
                     "phone" => $_POST['phone'],

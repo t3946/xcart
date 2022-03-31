@@ -267,6 +267,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
     case "street-address-required":
       decision.options.addressId = req.body.addressId;
       break;
+
     case "questions-ltl-freight-shipment":
       decision.options.deliveryType = req.body.deliveryType;
       decision.options.requireLiftGate = req.body.requireLiftGate;
@@ -274,6 +275,10 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       decision.options.phoneCode = req.body.phoneCode;
       decision.options.phone = req.body.phone;
       decision.options.phone_ext = req.body.phone_ext;
+      break;
+
+    case "send-us-po":
+      decision.options.method = req.body.method;
       break;
   }
 
