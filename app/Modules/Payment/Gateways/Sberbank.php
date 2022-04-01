@@ -162,7 +162,7 @@ class Sberbank extends AbstractGateway
         return true;
     }
 
-    public function getState($mode)
+    public function getState($mode):? string
     {
         if (!$this->result->isSuccessful()) {
             return OrderTransactionModel::STATUS_FAILED;

@@ -88,7 +88,7 @@ class BluePay extends AbstractGateway
         return $res;
     }
 
-    public function getState($mode)
+    public function getState($mode):? string
     {
         $state = null;
         if (isset(OrderTransactionStore::$gatewayMethods[$mode]) && $this->result->isSuccessful()){

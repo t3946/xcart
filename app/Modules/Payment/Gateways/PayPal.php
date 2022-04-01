@@ -100,7 +100,7 @@ class PayPal extends AbstractGateway
         return $this->result->isSuccessful();
     }
 
-    public function getState($mode)
+    public function getState($mode):? string
     {
         $state = null;
 

@@ -293,7 +293,7 @@ function get_ccrequirements($module_params) {
 
 	if (empty($module_params) || empty($module_params["processor"])) return array(true,"");
 
-	$result = "";
+	$result = [];
 
 	if (file_exists($xcart_dir."/payment/req.".basename($module_params["processor"]))) {
 		@include $xcart_dir."/payment/req.".basename($module_params["processor"]);

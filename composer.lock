@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69b9f71354cf77c0ac575133bf17d040",
+    "content-hash": "e15a6d4e70ed59c5b536b75d103b2ba6",
     "packages": [
         {
             "name": "aftership/aftership-php-sdk",
@@ -163,16 +163,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.216.4",
+            "version": "3.217.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fd16bb2ecc4e1a47b145163d0bd7744c4578656d"
+                "reference": "a8cca383b13fe6cde479a4745b4d3dfe893fdc69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fd16bb2ecc4e1a47b145163d0bd7744c4578656d",
-                "reference": "fd16bb2ecc4e1a47b145163d0bd7744c4578656d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a8cca383b13fe6cde479a4745b4d3dfe893fdc69",
+                "reference": "a8cca383b13fe6cde479a4745b4d3dfe893fdc69",
                 "shasum": ""
             },
             "require": {
@@ -248,9 +248,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.216.4"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.217.0"
             },
-            "time": "2022-03-29T18:29:23+00:00"
+            "time": "2022-03-30T18:18:30+00:00"
         },
         {
             "name": "calcinai/xero-php",
@@ -1802,16 +1802,16 @@
         },
         {
             "name": "gabrielbull/ups-api",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gabrielbull/php-ups-api.git",
-                "reference": "b0c73fd0289d4ce70f9edcdf2951a37b4d9dbd79"
+                "reference": "2ef3ac8d2ce537d693a77f60a82514907fe7d27e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gabrielbull/php-ups-api/zipball/b0c73fd0289d4ce70f9edcdf2951a37b4d9dbd79",
-                "reference": "b0c73fd0289d4ce70f9edcdf2951a37b4d9dbd79",
+                "url": "https://api.github.com/repos/gabrielbull/php-ups-api/zipball/2ef3ac8d2ce537d693a77f60a82514907fe7d27e",
+                "reference": "2ef3ac8d2ce537d693a77f60a82514907fe7d27e",
                 "shasum": ""
             },
             "require": {
@@ -1879,9 +1879,9 @@
             ],
             "support": {
                 "issues": "https://github.com/gabrielbull/php-ups-api/issues",
-                "source": "https://github.com/gabrielbull/php-ups-api/tree/2.0.3"
+                "source": "https://github.com/gabrielbull/php-ups-api/tree/2.0.4"
             },
-            "time": "2022-02-28T10:23:34+00:00"
+            "time": "2022-03-30T11:54:54+00:00"
         },
         {
             "name": "geoip2/geoip2",
@@ -5055,12 +5055,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "7aeee1b0789a1dc3610cbbcbed64181e237470a1"
+                "reference": "2736c5d211f09c9baa165845d74eabdd25ec71f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/7aeee1b0789a1dc3610cbbcbed64181e237470a1",
-                "reference": "7aeee1b0789a1dc3610cbbcbed64181e237470a1",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/2736c5d211f09c9baa165845d74eabdd25ec71f1",
+                "reference": "2736c5d211f09c9baa165845d74eabdd25ec71f1",
                 "shasum": ""
             },
             "require": {
@@ -5129,7 +5129,7 @@
                 "issues": "https://github.com/php-amqplib/php-amqplib/issues",
                 "source": "https://github.com/php-amqplib/php-amqplib/tree/master"
             },
-            "time": "2022-03-11T10:18:30+00:00"
+            "time": "2022-03-31T09:23:00+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -7965,55 +7965,6 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.10.0"
             },
             "time": "2021-03-09T10:59:23+00:00"
-        },
-        {
-            "name": "zek/omnipay-coinbase",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zek/omnipay-coinbase.git",
-                "reference": "141b516093d3ad84024a56d93da6e7e82bb070ef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zek/omnipay-coinbase/zipball/141b516093d3ad84024a56d93da6e7e82bb070ef",
-                "reference": "141b516093d3ad84024a56d93da6e7e82bb070ef",
-                "shasum": ""
-            },
-            "require": {
-                "omnipay/common": "~3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Omnipay\\Coinbase\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Talha Zekeriya Durmuş",
-                    "homepage": "https://github.com/zek"
-                }
-            ],
-            "description": "Coinbase driver for the Omnipay payment processing library",
-            "homepage": "https://github.com/zek/omnipay-coinbase",
-            "keywords": [
-                "coinbase",
-                "gateway",
-                "merchant",
-                "omnipay",
-                "pay",
-                "payment"
-            ],
-            "support": {
-                "issues": "https://github.com/zek/omnipay-coinbase/issues",
-                "source": "https://github.com/zek/omnipay-coinbase/tree/master"
-            },
-            "time": "2018-10-28T22:35:06+00:00"
         }
     ],
     "packages-dev": [],

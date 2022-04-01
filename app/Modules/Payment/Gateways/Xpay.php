@@ -65,9 +65,9 @@ class Xpay extends AbstractGateway
         return true;
     }
 
-    public function getState($mode)
+    public function getState($mode):? string
     {
-
+        return null;
     }
 
     /**

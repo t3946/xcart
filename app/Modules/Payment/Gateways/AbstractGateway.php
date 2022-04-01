@@ -22,7 +22,7 @@ abstract class AbstractGateway implements GatewayInterface
 
     public bool $test_mode = false;
 
-    public ResponseInterface $result;
+    public ?ResponseInterface $result = null;
 
     public function __construct(ProcessorModel $model)
     {
