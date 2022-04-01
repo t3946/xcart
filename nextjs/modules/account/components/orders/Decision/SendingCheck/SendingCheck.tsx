@@ -6,15 +6,9 @@ import cn from "classnames";
 import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch, useSelector } from "react-redux";
 import Alert from "@modules/account/components/shared/Alert";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
-import {
-  setIsVisibleAction as showMobileAlertAction,
-  setMobileAlertAction,
-} from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import AddressText from "@components/common/address-text/AddressText";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   decision: any;
@@ -26,7 +20,6 @@ const SendingCheck: React.FC<IProps> = (props) => {
   const firstAddress = decision.options.addresses[0];
   const secondAddress = decision.options.addresses[1];
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
   const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
   const [show, setShow] = React.useState(alert !== null);
   const initialValues = {
@@ -34,8 +27,9 @@ const SendingCheck: React.FC<IProps> = (props) => {
   };
 
   const addressTemplate = (address: string) => {
-    //todo: load from server
-    const corporation = "S3 Stores, Inc.";
+    const corporation = useSelectorAccount(
+      (e) => e.config.site.corporationName
+    );
 
     return (
       <div className={Styles.decisionCardBodyText}>
@@ -47,25 +41,6 @@ const SendingCheck: React.FC<IProps> = (props) => {
       </div>
     );
   };
-
-  if (alert) {
-    breakpoint({
-      xs: function () {
-        dispatch(setAlertAction(null));
-        dispatch(setMobileAlertAction(alert));
-        dispatch(showMobileAlertAction(true));
-        dispatch(setVisibleShadowPanelAction(true));
-        // router.push("/account/orders/open-orders/decisions-required");
-      },
-      md: function () {},
-    });
-  }
-
-  React.useEffect(() => {
-    return () => {
-      dispatch(setAlertAction(null));
-    };
-  }, []);
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     actions.setSubmitting(true);

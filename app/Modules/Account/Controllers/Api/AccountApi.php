@@ -103,6 +103,7 @@ class AccountApi extends Controller
                     'logo_mobile' => (string)$site->logo_mobile,
                     'file_edit_image_favicon' => (string)$site->file_edit_image_favicon,
                     'fax_number' => $site->fax_number,
+                    'corporationName' => $site->corporation->name,
                 ],
                 'google_recaptchav2_site_key' => '6LenP30eAAAAAOUcOLvofYoaPMW6lMYTsov-RJ4p',
             ],

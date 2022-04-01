@@ -12,21 +12,12 @@ import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import cn from "classnames";
 import Feedback from "@modules/ui/forms/Feedback";
-import StoreInterface from "@modules/account/ts/types/store.type";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
-import Alert from "@modules/account/components/shared/Alert";
+import { useDispatch } from "react-redux";
 import { iSentOriginalPurchaseOrderViaFaxAction } from "@redux/actions/account-actions/DecisionsActions";
-import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
-import {
-  setIsVisibleAction as showMobileAlertAction,
-  setMobileAlertAction,
-} from "@redux/actions/account-actions/MobileMenuActions";
-import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import Styles from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired.module.scss";
 import Label from "@modules/ui/forms/Label";
 import getStoreUrl from "@utils/getStoreUrl";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 const accessFileFormats = [
   "image/jpg",
@@ -82,7 +73,7 @@ const POAdditionalInformationRequired: React.FC = (props) => {
     phone_ext: (decision.solved && decision.options.phone_ext) || "",
     isApprove: false,
   };
-  const companyName = "S3 Stores, Inc.";
+  const companyName = useSelectorAccount((e) => e.config.site.corporationName);
 
   function submit(values, actions) {
     actions.setSubmitting(true);
