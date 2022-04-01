@@ -28,7 +28,7 @@ const AddressText: React.FC<IProps> = ({ address }) => {
   row = [];
   address.city && row.push(address.city);
   address.state && row.push(address.state.state);
-  row.push(address.zip);
+  address.zip && row.push(address.zip);
   lines.push(row);
 
   row = [];

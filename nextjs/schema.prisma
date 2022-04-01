@@ -3925,7 +3925,7 @@ model xcart_orders {
   xcart_states_xcart_orders_s_state_idToxcart_states                   xcart_states?                        @relation("xcart_orders_s_state_idToxcart_states", fields: [s_state_id], references: [stateid], onDelete: Restrict, map: "xcart_orders_xcart_states_state_id_fk_s_state_id")
   xcart_storefronts                                                    xcart_storefronts                    @relation(fields: [storefrontid], references: [storefrontid], map: "FK_xcart_orders_xcart_storefronts")
   xcart_users                                                          xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: Restrict, map: "FK_xcart_orders_xcart_users")
-  account_decisions                                                    account_decisions[]
+  decisions                                                            account_decisions[]
   account_order_cancel_requests                                        account_order_cancel_requests[]
   account_transactions                                                 account_transactions[]
   faxes_fax                                                            faxes_fax[]

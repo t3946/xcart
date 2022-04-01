@@ -49,11 +49,7 @@ const OrderPage: NextPage = () => {
 
   return (
     <PageTwoColumns>
-      <OrderInfoHeader
-        orderNumber={order.orderNumber}
-        orderId={order.orderId}
-        orderStatus={order.cb_status}
-      />
+      <OrderInfoHeader order={order} />
 
       {getSection()}
     </PageTwoColumns>

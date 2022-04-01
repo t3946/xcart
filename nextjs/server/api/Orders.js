@@ -86,16 +86,13 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
       user_id: req.user.userId,
       orderid: req.body.orderId,
     },
-    select: {
-      cb_status: true,
-      dc_status: true,
-      subtotal: true,
-      total: true,
-      shipping_cost: true,
+    include: {
+      decisions: true,
       groups: {
         select: {
           order_group_id: true,
           total_gross: true,
+          xcart_order_statuses_history: true,
           cb_status_rel: {
             select: {
               xcart_order_human_readable_statuses: {

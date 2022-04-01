@@ -5,7 +5,7 @@ export const getOrderReturnProducts = (groups) => {
   return groups.reduce((products, group) => {
     let shippedStatus;
 
-    for (const statusesHistoryElement of group.statuses_history) {
+    for (const statusesHistoryElement of group.xcart_order_statuses_history) {
       if (statusesHistoryElement.status === "Z") {
         shippedStatus = statusesHistoryElement;
         break;
@@ -32,7 +32,7 @@ export const getOrderCancelProducts = (groups) => {
     let dispatched = false;
     const dispatchStatuses = ["T", "K", "M", "E", "DP"];
 
-    for (const statusesHistoryElement of group.statuses_history) {
+    for (const statusesHistoryElement of group.xcart_order_statuses_history) {
       if (dispatchStatuses.indexOf(statusesHistoryElement.status) !== -1) {
         dispatched = true;
         break;
