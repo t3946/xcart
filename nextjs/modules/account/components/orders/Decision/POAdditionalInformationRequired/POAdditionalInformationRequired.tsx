@@ -124,17 +124,20 @@ const POAdditionalInformationRequired: React.FC = (props) => {
 
     if (decision.solved) {
       const fileTemplates = [];
+      let i = 0;
 
       for (const file of decision.files) {
         const { path, original_name } = file.file;
 
         fileTemplates.push(
-          <li>
+          <li key={`file-${i}`}>
             <a href={getStoreUrl(path)} target="_blank">
               {original_name}
             </a>
           </li>
         );
+
+        i++;
       }
 
       templates.push(<ul>{fileTemplates}</ul>);
