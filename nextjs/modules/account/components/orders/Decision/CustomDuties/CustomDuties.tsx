@@ -1,97 +1,38 @@
 import React from "react";
-import {Form, Formik} from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import cn from "classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
-import Alert from "@modules/account/components/shared/Alert";
-import StoreInterface from "@modules/account/ts/types/store.type";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
-import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
-import {
-  setIsVisibleAction as showMobileAlertAction,
-  setMobileAlertAction,
-} from "@redux/actions/account-actions/MobileMenuActions";
-import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
+import { useDispatch } from "react-redux";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import HighlightCheckbox from "@modules/account/components/orders/Decision/CustomDuties/HighlightCheckbox";
 import Styles from "@modules/account/components/orders/Decision/CustomDuties/CustomDuties.module.scss";
+import Button from "@modules/ui/forms/Button";
 
-const CustomDuties: React.FC = (props) => {
+const CustomDuties: React.FC<any> = (props) => {
   const { decision, onChange } = props;
   const initialValues = {
     agreement: false,
   };
-  React.useEffect(() => {
-    return () => {
-      dispatch(setAlertAction(null));
-    };
-  }, []);
-
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
-  const router = useRouter();
 
-  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const [show, setShow] = React.useState(alert !== null);
-  if (alert) {
-    breakpoint({
-      xs: function () {
-        dispatch(setAlertAction(null));
-        dispatch(setMobileAlertAction(alert));
-        dispatch(showMobileAlertAction(true));
-        dispatch(setVisibleShadowPanelAction(true));
-        router.push("/orders/decisions-required");
-      },
-      md: function () {},
-    });
-  }
+  async function submit(values: Record<any, any>, helpers: FormikHelpers<any>) {
+    helpers.setSubmitting(true);
 
-  const submit = (values, { setSubmitting }) => {
-    setSubmitting(true);
     dispatch(
       solveDecisionAction({
         data: {
           decision_id: decision.decision_id,
         },
-        success(res) {
-          setSubmitting(false);
-          setShow(true);
-          dispatch(
-            setAlertAction({
-              variant: "decisionSuccess",
-              message: `Alert message!`,
-            })
-          );
-          setTimeout(() => {
-            setShow(false);
-            dispatch(setAlertAction(null));
-          }, 3000);
-
-          onChange(res);
+        success() {
+          helpers.setSubmitting(false);
         },
       })
     );
-  };
 
-  return alert ? (
-    <InnerPage
-      hatClasses={cn(Styles.decision__hat, Styles.decisionHat)}
-      headerClasses={Styles.decisionHeader}
-      bodyClasses={Styles.decision_body}
-      header={"Responsibility for custom duties"}
-    >
-      <Alert
-        show={show}
-        variant={alert.variant}
-        message={alert.message}
-        classes={{
-          container: "pt-20 pb-5 pt-lg-0",
-          alert: ["account-inner-page_alert"],
-        }}
-      />
-    </InnerPage>
-  ) : (
+    onChange("Decision solved");
+  }
+
+  return (
     <InnerPage
       hatClasses={cn(Styles.decision__hat, Styles.decisionHat)}
       headerClasses={Styles.decisionHeader}
@@ -140,7 +81,7 @@ const CustomDuties: React.FC = (props) => {
                 label="I agree to be responsible for custom duties, CODs, and other charges associated with bringing goods to Canada."
               />
 
-              <button
+              <Button
                 type="submit"
                 className={cn(
                   "form-button",
@@ -149,12 +90,13 @@ const CustomDuties: React.FC = (props) => {
                   "mx-auto",
                   "mx-lg-0",
                   Styles.button,
-                  Styles.decision__button
+                  Styles.decision__button,
+                  { "d-none": decision.solved }
                 )}
-                disabled={!values.agreement || isSubmitting || !!decision.solved}
+                disabled={!values.agreement || isSubmitting}
               >
                 Submit
-              </button>
+              </Button>
             </Form>
           );
         }}

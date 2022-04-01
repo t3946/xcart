@@ -1,25 +1,29 @@
 import React from "react";
-import EstimatedTimeArrivalTable, {TableTypes,} from "@modules/account/components/orders/Decision/Table";
+import EstimatedTimeArrivalTable, {
+  TableTypes,
+} from "@modules/account/components/orders/Decision/Table";
 import * as yup from "yup";
-import {Form, Formik, FormikHelpers} from "formik";
-import {Form as RBForm} from "react-bootstrap";
+import { Form, Formik, FormikHelpers } from "formik";
+import { Form as RBForm } from "react-bootstrap";
 import AdviceList from "@modules/account/components/orders/Decision/EstimatedTimeArrival/AdviceList";
-import {getEtaProductsAction, solveDecisionAction,} from "@redux/actions/account-actions/DecisionsActions";
-import {useDispatch} from "react-redux";
+import {
+  getEtaProductsAction,
+  solveDecisionAction,
+} from "@redux/actions/account-actions/DecisionsActions";
+import { useDispatch } from "react-redux";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import {RowInterface} from "@modules/account/components/orders/Decision/TableRow";
-import {AxiosResponse} from "axios";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
+import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
+import { AxiosResponse } from "axios";
+import Button from "@modules/ui/forms/Button";
 
 interface IProps {
-  onChange: (res: AxiosResponse) => any;
+  onChange: (message: string) => void;
   decision: DecisionsInterface;
 }
 
 const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
   const { onChange, decision } = props;
   const dispatch = useDispatch();
-  const snackbar = useSnackbar();
 
   const initialState = {
     comment: decision?.options?.comment || "",
@@ -32,34 +36,30 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
   });
 
   function submit(data: Record<any, any>, actions: FormikHelpers<any>) {
-    actions.setSubmitting(true);
-
     data.decision_id = decision.decision_id;
 
     dispatch(
       solveDecisionAction({
         data,
-        success(res: AxiosResponse) {
-          actions.setSubmitting(false);
-          onChange(res);
-          snackbar.show("Decision solved");
-        },
       })
     );
+
+    onChange("Decision solved");
   }
 
-  function buttonTemplate(isSubmitting: boolean) {
+  function buttonTemplate(values, isSubmitting: boolean) {
     if (decision.solved) {
       return;
     }
 
     return (
-      <button
-        className={"form-button estimate-advise__submit-button w-md-auto"}
-        disabled={isSubmitting}
+      <Button
+        className={"estimate-advise__submit-button w-md-auto"}
+        disabled={isSubmitting || !values.advice}
+        type={"submit"}
       >
         submit my decision
-      </button>
+      </Button>
     );
   }
 
@@ -194,7 +194,7 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                 </RBForm.Group>
 
                 <div className="estimate-advise-submit-button d-flex justify-content-md-center justify-content-lg-start">
-                  {buttonTemplate(isSubmitting)}
+                  {buttonTemplate(values, isSubmitting)}
                 </div>
               </div>
             </Form>

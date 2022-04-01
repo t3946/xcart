@@ -1,20 +1,19 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import {RowInterface} from "@modules/account/components/orders/Decision/TableRow";
-import Advice, {AdviceTypes,} from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
-import {Form as RBForm} from "react-bootstrap";
-import {Form, Formik} from "formik";
+import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
+import Advice, {
+  AdviceTypes,
+} from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
+import { Form as RBForm } from "react-bootstrap";
+import {Form, Formik, FormikHelpers} from "formik";
 import * as yup from "yup";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
-import {useDispatch} from "react-redux";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
-import AlternativeItemsTable
-  from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsTable";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
-import Styles
-  from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer.module.scss";
+import { useDispatch } from "react-redux";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
+import AlternativeItemsTable from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsTable";
+import Styles from "@modules/account/components/orders/Decision/AlternativeItemsOffer/AlternativeItemsOffer.module.scss";
 import Button from "@modules/ui/forms/Button";
 
 const AlternativeItemsOffer: React.FC = (props) => {
@@ -40,7 +39,6 @@ const AlternativeItemsOffer: React.FC = (props) => {
       },
     ],
   };
-  const snackbar = useSnackbar();
   const initialState = {
     comment: decision.options.comment || "",
     advice: decision.options.advice || "",
@@ -62,8 +60,8 @@ const AlternativeItemsOffer: React.FC = (props) => {
     );
   }
 
-  function submit(values, { setSubmitting }) {
-    setSubmitting(true);
+  async function submit(values: Record<any, any>, helpers: FormikHelpers<any>) {
+    helpers.setSubmitting(true);
 
     dispatch(
       solveDecisionAction({
@@ -71,13 +69,13 @@ const AlternativeItemsOffer: React.FC = (props) => {
           ...values,
           decision_id: decision.decision_id,
         },
-        success(res) {
-          onChange(res);
-          setSubmitting(false);
-          snackbar.show(`Solved`);
+        success() {
+          helpers.setSubmitting(false);
         },
       })
     );
+
+    onChange("Decision solved");
   }
 
   return (

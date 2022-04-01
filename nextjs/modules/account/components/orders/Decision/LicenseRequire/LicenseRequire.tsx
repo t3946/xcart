@@ -2,25 +2,26 @@ import React from "react";
 import Styles from "@modules/account/components/orders/Decision/LicenseRequire/LicenseRequire.module.scss";
 import cn from "classnames";
 import * as yup from "yup";
-import {Form, Formik, FormikHelpers} from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import {RowInterface} from "@modules/account/components/orders/Decision/TableRow";
-import EstimatedTimeArrivalTable, {TableTypes,} from "@modules/account/components/orders/Decision/Table";
+import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
+import EstimatedTimeArrivalTable, {
+  TableTypes,
+} from "@modules/account/components/orders/Decision/Table";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import {
   getEtaProductsAction,
   iSentOriginalPurchaseOrderViaFaxAction,
 } from "@redux/actions/account-actions/DecisionsActions";
-import {useDispatch} from "react-redux";
-import {AxiosResponse} from "axios";
+import { useDispatch } from "react-redux";
+import { AxiosResponse } from "axios";
 import UploadFile from "@modules/ui/UploadFile";
 import SentFiles from "@modules/account/components/orders/Decision/SentFiles";
 import Button from "@modules/ui/forms/Button";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
 
 interface IProps {
-  onChange: (decision: DecisionsInterface) => any;
+  onChange: (message: string) => any;
   decision: DecisionsInterface;
 }
 
@@ -55,7 +56,6 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
       ),
   });
   const [products, setProducts] = React.useState(null);
-  const snack = useSnackbar();
 
   if (products === null) {
     dispatch(
@@ -98,11 +98,11 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
         data: formData,
         success(res: AxiosResponse) {
           actions.setSubmitting(false);
-          onChange(res);
-          snack.show("License sent successfully");
         },
       })
     );
+
+    onChange("License sent successfully");
   }
 
   return (

@@ -1,18 +1,17 @@
 import React from "react";
 import cn from "classnames";
-import {useDispatch} from "react-redux";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import { useDispatch } from "react-redux";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import Styles from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired.module.scss";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import Button from "@modules/ui/forms/Button";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
 import AddressText from "@components/common/address-text/AddressText";
 
 interface IProps {
-  onChange: (res: AxiosResponse) => any;
+  onChange: (message: string) => any;
   decision: DecisionsInterface;
 }
 
@@ -71,7 +70,6 @@ const AchPaymentIsRequired: React.FC<IProps> = (props) => {
 
   const dispatch = useDispatch();
   const [disabled, setDisabled] = React.useState<boolean>(false);
-  const snack = useSnackbar();
 
   function submit() {
     setDisabled(true);
@@ -80,14 +78,14 @@ const AchPaymentIsRequired: React.FC<IProps> = (props) => {
         data: {
           decision_id: decision.decision_id,
         },
-        success(res) {
+        success() {
           setDisabled(false);
-          onChange(res);
-          snack.show(`Upon confirming the receipt of the funds we'll ship your order.
-              Thank you for your business`);
         },
       })
     );
+
+    onChange(`Upon confirming the receipt of the funds we'll ship your order.
+              Thank you for your business`);
   }
 
   return (

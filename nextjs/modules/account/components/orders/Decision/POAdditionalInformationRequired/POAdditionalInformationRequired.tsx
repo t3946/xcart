@@ -6,26 +6,25 @@ import FormInputPhone, {
   phoneExtYupValidation,
   phoneYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
-import {Form, Formik} from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import cn from "classnames";
 import Feedback from "@modules/ui/forms/Feedback";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import Alert from "@modules/account/components/shared/Alert";
-import {iSentOriginalPurchaseOrderViaFaxAction} from "@redux/actions/account-actions/DecisionsActions";
-import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
+import { iSentOriginalPurchaseOrderViaFaxAction } from "@redux/actions/account-actions/DecisionsActions";
+import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import Styles
-  from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired.module.scss";
+import Styles from "@modules/account/components/orders/Decision/POAdditionalInformationRequired/POAdditionalInformationRequired.module.scss";
 import Label from "@modules/ui/forms/Label";
 import getStoreUrl from "@utils/getStoreUrl";
 
@@ -73,38 +72,21 @@ const classes = {
 
 const POAdditionalInformationRequired: React.FC = (props) => {
   const { decision, onChange } = props;
-  const countries = useSelector((e: StoreInterface) => e.countries);
   const dispatch = useDispatch();
   const [files, setFiles] = React.useState<File[]>([]);
   const inputFileRef = React.useRef<HTMLInputElement>();
-  const breakpoint = useBreakpoint();
-  const router = useRouter();
-  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const [show, setShow] = React.useState(alert !== null);
-
   const initialValues = {
     file: [],
-    phoneCode: decision.solved && decision.options.phoneCode || "",
-    phone: decision.solved && decision.options.phone || "",
-    phone_ext: decision.solved && decision.options.phone_ext || "",
+    phoneCode: (decision.solved && decision.options.phoneCode) || "",
+    phone: (decision.solved && decision.options.phone) || "",
+    phone_ext: (decision.solved && decision.options.phone_ext) || "",
     isApprove: false,
   };
+  const companyName = "S3 Stores, Inc.";
 
-  if (alert) {
-    breakpoint({
-      xs: function () {
-        dispatch(setAlertAction(null));
-        dispatch(setMobileAlertAction(alert));
-        dispatch(showMobileAlertAction(true));
-        dispatch(setVisibleShadowPanelAction(true));
-        router.push("/orders/decisions-required");
-      },
-      md: function () {},
-    });
-  }
-
-  const submit = (values, actions) => {
+  function submit(values, actions) {
     actions.setSubmitting(true);
+
     if (!files.length) {
       actions.setFieldError("file", "Need to upload PO order");
       actions.setSubmitting(false);
@@ -122,24 +104,15 @@ const POAdditionalInformationRequired: React.FC = (props) => {
     dispatch(
       iSentOriginalPurchaseOrderViaFaxAction({
         data: formData,
-        success(res) {
-          setShow(true);
-          dispatch(
-            setAlertAction({
-              variant: "decisionSuccess",
-              message: `Thank you for providing us with missing information!
-              We'll process your order ASAP.`,
-            })
-          );
-          setTimeout(() => {
-            setShow(false);
-            dispatch(setAlertAction(null));
-          }, 3000);
-          onChange(res);
+        success() {
+          actions.setSubmitting(false);
         },
       })
     );
-  };
+
+    onChange(`Thank you for providing us with missing information!
+              We'll process your order ASAP.`);
+  }
 
   function filesTemplate({ touched, errors, handleChange, isSubmitting }) {
     const templates = [
@@ -179,22 +152,7 @@ const POAdditionalInformationRequired: React.FC = (props) => {
     return templates;
   }
 
-  return alert ? (
-    <InnerPage
-      hatClasses={Styles.hat}
-      header="PO: Additional information required"
-    >
-      <Alert
-        show={show}
-        variant={alert.variant}
-        message={alert.message}
-        classes={{
-          container: "pt-20 pb-5 pt-lg-0",
-          alert: ["account-inner-page_alert"],
-        }}
-      />
-    </InnerPage>
-  ) : (
+  return (
     <Formik
       initialValues={initialValues}
       validationSchema={getValidationScheme(
@@ -212,7 +170,6 @@ const POAdditionalInformationRequired: React.FC = (props) => {
         touched,
         setFieldValue,
       }) => {
-        console.log({ values });
         return (
           <Form>
             <InnerPage
@@ -269,9 +226,13 @@ const POAdditionalInformationRequired: React.FC = (props) => {
                         [Styles.green_submitting]: isSubmitting,
                       })}
                     >
-                      $85.52 total shipping charge
+                      $
+                      {parseFloat(decision.options.totalShippingCharge).toFixed(
+                        2
+                      )}{" "}
+                      total shipping charge
                     </span>{" "}
-                    calculated by S3 Stores, Inc.
+                    calculated by {companyName}
                   </>
                 }
               />

@@ -1,25 +1,24 @@
 import React from "react";
 import CardOr from "@modules/ui/CardOr";
-import {Form, Formik, FormikHelpers} from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import Styles from "@modules/account/components/orders/Decision/SendingCheck/SendingCheck.module.scss";
 import cn from "classnames";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
-import {useDispatch, useSelector} from "react-redux";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
+import { useDispatch, useSelector } from "react-redux";
 import Alert from "@modules/account/components/shared/Alert";
-import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
+import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import {AxiosResponse} from "axios";
 import AddressText from "@components/common/address-text/AddressText";
 
 interface IProps {
   decision: any;
-  onChange: (res: AxiosResponse) => void;
+  onChange: (message: string) => void;
 }
 
 const SendingCheck: React.FC<IProps> = (props) => {
@@ -77,21 +76,16 @@ const SendingCheck: React.FC<IProps> = (props) => {
           decision_id: decision.decision_id,
           address: parseInt(values.address),
         },
-        success(res: AxiosResponse) {
-          onChange(res);
+        success() {
           actions.setSubmitting(false);
         },
       })
     );
 
     setShow(true);
-    dispatch(
-      setAlertAction({
-        variant: "decisionSuccess",
-        message: `Thank you for your payment!
-              We are looking forward to doing business with you again.`,
-      })
-    );
+
+    onChange(`Thank you for your payment!
+              We are looking forward to doing business with you again.`);
   }
 
   return (

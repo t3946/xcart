@@ -61,6 +61,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
       type: true,
       order: {
         select: {
+          alt_items: true,
           cb_status: true,
           dc_status: true,
           subtotal: true,
@@ -97,6 +98,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
               },
               details: {
                 select: {
+                  items_stock: true,
                   price: true,
                   product: true,
                   amount: true,
@@ -265,7 +267,17 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "street-address-required":
-      decision.options.addressId = req.body.addressId;
+      const address = await prisma.account_addresses.findUnique({
+        where: {
+          address_id: req.body.addressId,
+        },
+        include: {
+          state: true,
+          country: true,
+        },
+      });
+
+      decision.options.newAddress = address;
       break;
 
     case "questions-ltl-freight-shipment":
@@ -279,6 +291,16 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
 
     case "send-us-po":
       decision.options.method = req.body.method;
+      break;
+
+    case "unpaid-order":
+      decision.options.payment = req.body.payment;
+      decision.options.card_id = req.body.card_id;
+      break;
+
+    case "additional-shipping-charge":
+      decision.options.method = req.body.method;
+      decision.options.card_id = req.body.card_id;
       break;
   }
 

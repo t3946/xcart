@@ -1,18 +1,16 @@
 import React from "react";
 import cn from "classnames";
-import Styles
-  from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder.module.scss";
+import Styles from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder.module.scss";
 import AsFile from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/AsFile";
 import Card from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/Card";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import Button from "@modules/ui/forms/Button";
 
 interface IProps {
-  onChange: (decision: DecisionsInterface) => any;
+  onChange: (message: string) => any;
   decision: DecisionsInterface;
 }
 
@@ -29,7 +27,6 @@ const OriginalPurchaseOrder: React.FC<IProps> = (props: IProps) => {
   };
   const dispatch = useDispatch();
   const [submitting, setSubmitting] = React.useState(false);
-  const snack = useSnackbar();
   const fax_number = useSelectorAccount((e) => e.config.site.fax_number);
 
   function submit() {
@@ -41,13 +38,13 @@ const OriginalPurchaseOrder: React.FC<IProps> = (props: IProps) => {
           decision_id: decision.decision_id,
           method: "fax",
         },
-        success(res) {
+        success() {
           setSubmitting(false);
-          onChange(res);
-          snack.show("Purchase Order has sent");
         },
       })
     );
+
+    onChange("Purchase Order has sent");
   }
 
   function cardOrCard() {

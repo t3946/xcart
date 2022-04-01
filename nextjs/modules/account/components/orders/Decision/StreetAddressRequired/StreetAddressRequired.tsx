@@ -1,28 +1,28 @@
 import React from "react";
 import RectangularButton from "@modules/account/components/common/RectangularButton";
-import {Form, Formik, FormikHelpers} from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import cn from "classnames";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import Styles
-  from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired.module.scss";
-import {useDispatch, useSelector} from "react-redux";
+import Styles from "@modules/account/components/orders/Decision/StreetAddressRequired/StreetAddressRequired.module.scss";
+import { useDispatch, useSelector } from "react-redux";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import {AddressTypeEnum} from "@modules/account/ts/consts/address-type.const";
-import {AddAddressForm} from "@modules/account/components/addresses/AddAddressForm";
-import {Accordion} from "react-bootstrap";
-import {useDialog} from "@modules/account/hooks/useDialog";
+import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
+import { AddAddressForm } from "@modules/account/components/addresses/AddAddressForm";
+import { Accordion } from "react-bootstrap";
+import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import {getTerritory} from "@redux/actions/account-actions/MainActions";
-import {getAddresses} from "@redux/actions/account-actions/AddressActions";
+import { getTerritory } from "@redux/actions/account-actions/MainActions";
+import { getAddresses } from "@redux/actions/account-actions/AddressActions";
 import Card from "@modules/ui/Card";
-import {formatPhone} from "@utils/phoneNumber";
+import { formatPhone } from "@utils/phoneNumber";
 import Button from "@modules/ui/forms/Button";
 import AddNewAddress from "@modules/account/components/addresses/AddNewAddress";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import AddressText from "@components/common/address-text/AddressText";
 
 const StreetAddressRequired: React.FC<any> = (props) => {
+  const { decision, onChange } = props;
   const dispatch = useDispatch();
   const userId = useSelector((e: StoreInterface) => {
     return e.user.user_id;
@@ -51,11 +51,12 @@ const StreetAddressRequired: React.FC<any> = (props) => {
       solveDecisionAction({
         data,
         success() {
-          props.onChange();
           actions.setSubmitting(false);
         },
       })
     );
+
+    onChange("Decision solved");
   }
 
   React.useEffect(() => {
@@ -188,61 +189,71 @@ const StreetAddressRequired: React.FC<any> = (props) => {
                 We can't ship orders to P.O. Box addresses.
                 <br />
                 <b>
-                  PO Box 123 <br />
-                  Herndon, VA 22071
+                  <AddressText address={decision.options.problemAddress} />
                 </b>
               </p>
-              <p className={cn(Styles.text, Styles.decision__caption)}>
-                Please provide us your physical street address.
-              </p>
-              <Accordion activeKey={addAddress}>
-                <div
-                  className={cn(
-                    Styles.addresses,
-                    Styles.decision__addresses,
-                    "d-grid"
-                  )}
-                >
-                  <AddNewAddress
-                    classes={{ container: "" }}
-                    onClick={addAddressDialog.handleClickOpen}
-                  />
-
-                  {addresses && AdressesTemplate(addresses)}
-                  {addresses && AddressTemplateMobile(addresses)}
-                </div>
-                <Accordion.Collapse eventKey="1">
-                  <>
-                    <h1
-                      className={cn(
-                        Styles.header,
-                        Styles.headerText,
-                        Styles.form__header,
-                        "fw-bold",
-                        "pt-0",
-                        "ps-0"
-                      )}
-                    >
-                      Add new address
-                    </h1>
+              {!decision.solved ? (
+                <>
+                  <p className={cn(Styles.text, Styles.decision__caption)}>
+                    Please provide us your physical street address.
+                  </p>
+                  <Accordion activeKey={addAddress}>
                     <div
                       className={cn(
-                        Styles.addAddressForm,
-                        Styles.decision__addAddressForm
+                        Styles.addresses,
+                        Styles.decision__addresses,
+                        "d-grid"
                       )}
                     >
-                      {addAddress && <AddAddressForm />}
+                      <AddNewAddress
+                        classes={{ container: "" }}
+                        onClick={addAddressDialog.handleClickOpen}
+                      />
+
+                      {addresses && AdressesTemplate(addresses)}
+                      {addresses && AddressTemplateMobile(addresses)}
                     </div>
-                  </>
-                </Accordion.Collapse>
-              </Accordion>
-              <Button
-                type="submit"
-                className={cn("w-md-auto", "mx-md-auto", "m-lg-0")}
-                disabled={!checkedAddress || isSubmitting}
-              >
-                Submit
-              </Button>
+                    <Accordion.Collapse eventKey="1">
+                      <>
+                        <h1
+                          className={cn(
+                            Styles.header,
+                            Styles.headerText,
+                            Styles.form__header,
+                            "fw-bold",
+                            "pt-0",
+                            "ps-0"
+                          )}
+                        >
+                          Add new address
+                        </h1>
+                        <div
+                          className={cn(
+                            Styles.addAddressForm,
+                            Styles.decision__addAddressForm
+                          )}
+                        >
+                          {addAddress && <AddAddressForm />}
+                        </div>
+                      </>
+                    </Accordion.Collapse>
+                  </Accordion>
+                  <Button
+                    type="submit"
+                    className={cn("w-md-auto", "mx-md-auto", "m-lg-0")}
+                    disabled={!checkedAddress || isSubmitting}
+                  >
+                    Submit
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p>New address will:</p>
+                  <b>
+                    <AddressText address={decision.options.newAddress} />
+                  </b>
+                </>
+              )}
             </Form>
           );
         }}

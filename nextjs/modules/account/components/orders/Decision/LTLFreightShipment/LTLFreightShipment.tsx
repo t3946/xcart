@@ -5,49 +5,29 @@ import FormInputPhone, {
   phoneYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
 import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
-import {Form, Formik} from "formik";
-import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
-import Alert from "@modules/account/components/shared/Alert";
+import { Form, Formik, FormikHelpers } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import StoreInterface from "@modules/account/ts/types/store.type";
-import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
+import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
 import {
   setIsVisibleAction as showMobileAlertAction,
   setMobileAlertAction,
 } from "@redux/actions/account-actions/MobileMenuActions";
-import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
+import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/ShadowPanelActions";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import * as Yup from "yup";
 import cn from "classnames";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import Button from "@modules/ui/forms/Button";
-import RadioQuestionStyles
-  from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
+import RadioQuestionStyles from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
 import Styles from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment.module.scss";
 import Label from "@modules/ui/forms/Label";
 
-const LTLFreightShipment: React.FC = (props) => {
+const LTLFreightShipment: React.FC<any> = (props) => {
   const { decision, onChange } = props;
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
-  const router = useRouter();
-  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const [show, setShow] = React.useState(alert !== null);
 
-  console.log({ decision });
-
-  if (alert) {
-    breakpoint({
-      xs: function () {
-        dispatch(setAlertAction(null));
-        dispatch(setMobileAlertAction(alert));
-        dispatch(showMobileAlertAction(true));
-        dispatch(setVisibleShadowPanelAction(true));
-        router.push("/orders/decisions-required");
-      },
-      md: function () {},
-    });
-  }
   React.useEffect(() => {
     return () => {
       dispatch(setAlertAction(null));
@@ -107,12 +87,10 @@ const LTLFreightShipment: React.FC = (props) => {
 
     for (const q of mockData) {
       if (q.dependency) {
-        fields[q.slug] = Yup.string()
-          .required("Required")
-          .when(q.dependency.question, {
-            is: q.dependency.value,
-            then: Yup.string().required("Required"),
-          });
+        fields[q.slug] = Yup.string().when(q.dependency.question, {
+          is: q.dependency.value,
+          then: Yup.string().required("Required"),
+        });
       } else {
         fields[q.slug] = Yup.string().required("Required");
       }
@@ -120,8 +98,9 @@ const LTLFreightShipment: React.FC = (props) => {
     return Yup.object().shape(fields);
   };
 
-  const submit = (values, actions) => {
-    actions.setSubmitting(true);
+  function submit(values: Record<any, any>, helpers: FormikHelpers<any>) {
+    helpers.setSubmitting(true);
+
     const data = {
       ...values,
       decision_id: decision.decision_id,
@@ -131,64 +110,16 @@ const LTLFreightShipment: React.FC = (props) => {
       solveDecisionAction({
         data,
         success() {
-          actions.setSubmitting(true);
-
-          setShow(true);
-          dispatch(
-            setAlertAction({
-              variant: "decisionSuccess",
-              message: `Thank you for providing us with the additional LTL freight information!
-              We'll get back to you with the updated shipping cost.`,
-            })
-          );
-          setTimeout(() => {
-            setShow(false);
-            dispatch(setAlertAction(null));
-          }, 3000);
-
-          onChange();
+          helpers.setSubmitting(true);
         },
       })
     );
 
-    setShow(true);
-    dispatch(
-      setAlertAction({
-        variant: "decisionSuccess",
-        message: `Thank you for providing us with the additional LTL freight information!
-              We'll get back to you with the updated shipping cost.`,
-      })
-    );
-    setTimeout(() => {
-      setShow(false);
-      dispatch(setAlertAction(""));
-    }, 3000);
-  };
-  return alert ? (
-    <InnerPage
-      hatClasses={Styles.hat}
-      headerClasses={Styles.header}
-      header={
-        <>
-          Questions on LTL{" "}
-          <span className={Styles.headerText_mobile_capitalized}>
-            freight shipment
-          </span>
-        </>
-      }
-      bodyClasses={"px-0"}
-    >
-      <Alert
-        show={show}
-        variant={alert.variant}
-        message={alert.message}
-        classes={{
-          container: "pt-20 pb-5 pt-lg-0",
-          alert: ["account-inner-page_alert"],
-        }}
-      />
-    </InnerPage>
-  ) : (
+    onChange(`Thank you for providing us with the additional LTL freight information!
+              We'll get back to you with the updated shipping cost.`);
+  }
+
+  return (
     <InnerPage
       hatClasses={Styles.hat}
       headerClasses={Styles.header}
@@ -215,7 +146,6 @@ const LTLFreightShipment: React.FC = (props) => {
           touched,
           errors,
         }) => {
-          console.log({ values });
           return (
             <Form>
               <p

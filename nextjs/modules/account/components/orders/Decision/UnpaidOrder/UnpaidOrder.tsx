@@ -4,27 +4,20 @@ import paymentItemStyles from "@modules/account/components/orders/Decision/Unpai
 import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
 import cn from "classnames";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import {Form, Formik} from "formik";
+import { Form, Formik } from "formik";
 import * as yup from "yup";
-import {CardElement} from "@stripe/react-stripe-js";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import {useDispatch} from "react-redux";
-import {
-  cancelOrderAction,
-  payOrderByPaypalAction,
-  solveDecisionAction,
-} from "@redux/actions/account-actions/DecisionsActions";
+import { useDispatch } from "react-redux";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import AddCreditCardButton from "@components/pages/wallet/AddCreditCardButton";
 
 interface IProps {
-  onChange: (decision: DecisionsInterface) => any;
+  onChange: (message: string) => any;
   decision: DecisionsInterface;
 }
 
 const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
-  const user = useSelectorAccount((e) => e.user);
-  const { decision } = props;
+  const { decision, onChange } = props;
 
   const classes = {
     p: [
@@ -35,8 +28,6 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
   };
   const initialState = {
     paymentMethod: "debit",
-    cardholderName: "",
-    stripe: "",
     billingSameShipping: false,
   };
   const validationSchema = yup.object().shape({
@@ -47,87 +38,48 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
       .min(2, "Min length is 2 character")
       .required("Cardholder name is a required field"),
   });
-  const [createPaymentMethod, setCreatePaymentMethod] = React.useState(null);
-  const [stripe, setStripe] = React.useState(null);
-  const [elements, setElements] = React.useState(null);
 
   async function submit(values: Record<any, any>, actions: Record<any, any>) {
-    console.log("submit");
     actions.setSubmitting(true);
-    if (values.paymentMethod === "debit") {
-      console.log("card");
 
-      const { error, paymentMethod } = await stripe.createPaymentMethod({
-        type: "card",
-        card: elements.getElement(CardElement),
-      });
-
-      if (error) {
-        actions.setErrors({ stripe: error.message });
-        return;
-      }
-
-      const form = {
-        id: paymentMethod.id,
-        billing_details: {
-          address: {
-            city: "New York",
-            country: "US",
-            line1: "asdsadasd",
-            line2: "asdasdasd",
-            postal_code: "61000",
-            state: "NY",
-          },
-          email: user.email,
-          name: user.public_name,
-          phone: user.phone,
+    dispatch(
+      solveDecisionAction({
+        data: {
+          decision_id: decision.decision_id,
+          payment: "card",
+          card_id: "1",
         },
-        decision: decision,
-      };
 
-      dispatch(
-        solveDecisionAction({
-          data: form,
+        success() {
+          actions.setSubmitting(false);
+        },
+      })
+    );
 
-          success(res) {
-            setTimeout(function () {
-              actions.setSubmitting(false);
-            }, 1000);
-          },
-        })
-      );
-    }
+    onChange("Decision solved");
   }
 
   function submitWithoutValidationOrder(
-    type: string,
+    payment: string,
     setSubmitting: (isSubmitting: boolean) => void
   ) {
     return async function () {
       setSubmitting(true);
-      if (type === "cancel") {
-        dispatch(
-          cancelOrderAction({
-            data: { decision: decision },
-            success() {
-              setTimeout(function () {
-                setSubmitting(false);
-              }, 4000);
-            },
-          })
-        );
-      } else if (type === "paypal") {
-        dispatch(
-          payOrderByPaypalAction({
-            data: { decision: decision },
-            success(res) {
-              setTimeout(function () {
-                setSubmitting(false);
-              }, 1000);
-            },
-          })
-        );
-      }
+
+      dispatch(
+        solveDecisionAction({
+          data: {
+            decision_id: decision.decision_id,
+            payment,
+          },
+
+          success() {
+            setSubmitting(false);
+          },
+        })
+      );
+
+      onChange("Decision solved");
     };
   }
 
@@ -138,15 +90,8 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
         validationSchema={validationSchema}
         onSubmit={submit}
       >
-        {({
-          values,
-          handleChange,
-          errors,
-          isSubmitting,
-          setSubmitting,
-          touched,
-          setErrors,
-        }) => {
+        {({ values, handleChange, isSubmitting, setSubmitting }) => {
+          console.log({ values });
           return (
             <Form>
               <h1
@@ -185,7 +130,9 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
                     caption:
                       "Secure Visa, MasterCard, and AmEx payment through our secure server.",
                     value: "debit",
-                    template: <AddCreditCardButton classes={{button: "w-auto"}} />,
+                    template: (
+                      <AddCreditCardButton classes={{ button: "w-auto" }} />
+                    ),
                   },
                   {
                     label: "Pay by PayPal Balance",

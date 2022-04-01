@@ -275,22 +275,20 @@ class DecisionController extends Controller
         $link->save();
 
         $decision_type = DecisionTypeModel::objects()->get(['decision_type_id' => $decision->decision_type_id]);
+        $options = json_decode(json_encode($decision->options), true);
 
         switch ($decision_type->slug) {
             case "send-us-po":
-                $decision->options = [
-                    "method" => $_POST['method'],
-                ];
+                $options['method'] = $_POST['method'];
                 break;
             case "additional-information-required":
-                $decision->options = [
-                    "phone" => $_POST['phone'],
-                    "phoneCode" => $_POST['phoneCode'],
-                    "phone_ext" => $_POST['phone_ext'],
-                ];
+                $options['phone'] = $_POST['phone'];
+                $options['phoneCode'] = $_POST['phoneCode'];
+                $options['phone_ext'] = $_POST['phone_ext'];
                 break;
         }
 
+        $decision->options = $options;
         $decision->save();
         $decision->setAttribute('solved', '1');
         $decision->update();
