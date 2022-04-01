@@ -5,7 +5,7 @@ import Advice, {
   AdviceTypes,
 } from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
 import { Form as RBForm } from "react-bootstrap";
-import {Form, Formik, FormikHelpers} from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import * as yup from "yup";
 import Label from "@modules/ui/forms/Label";
 import Input from "@modules/ui/forms/Input";
@@ -19,26 +19,53 @@ import Button from "@modules/ui/forms/Button";
 const AlternativeItemsOffer: React.FC = (props) => {
   const { decision, onChange } = props;
   const dispatch = useDispatch();
-  // mockData
-  const productCategories: Record<string, RowInterface[]> = {
-    outOfStock: [
-      {
-        name: "Pearl Couscous 22lb",
-        sku: " ABF-10637",
-        amount: 1,
-        date: "1-Oct-2021",
-        image: "",
-      },
-    ],
-    inStock: [
-      {
-        name: "Near East Couscous (12x10 Oz)",
-        sku: " B06706",
-        amount: 1,
-        image: "",
-      },
-    ],
+  const productCategories: any = {
+    outOfStock: [],
+    inStock: [],
   };
+
+  let i = 0;
+
+  for (const group of decision.order.groups) {
+    for (const detail of group.details) {
+      if (detail.amount <= detail.items_stock) {
+        i++;
+        continue;
+      }
+
+      const insufficientProductsNumber = detail.amount - detail.items_stock;
+      const etaDate = new Date(
+        detail.xcart_products.eta_date_mm_dd_yyyy * 1000
+      );
+      const dateDate = etaDate.getDate();
+      const dateMonth = etaDate.toLocaleDateString("en-EN", {
+        month: "short",
+      });
+      const dateYear = etaDate.getFullYear();
+      const dateString = [dateDate, dateMonth, dateYear].join("-");
+
+      productCategories.outOfStock.push({
+        name: detail.product,
+        sku: detail.xcart_products.productcode,
+        amount: insufficientProductsNumber,
+        date: dateString,
+        image: "",
+      });
+
+      const altItem = decision.order.alt_items[i];
+
+      productCategories.inStock.push({
+        name: altItem.product,
+        sku: altItem.productcode,
+        amount: insufficientProductsNumber,
+        image: "",
+      });
+
+      i++;
+    }
+  }
+  console.log({ productCategories });
+
   const initialState = {
     comment: decision.options.comment || "",
     advice: decision.options.advice || "",

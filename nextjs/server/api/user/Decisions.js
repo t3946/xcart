@@ -106,6 +106,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
                     select: {
                       productid: true,
                       productcode: true,
+                      eta_date_mm_dd_yyyy: true,
                       images: {
                         orderBy: {
                           order_by: "asc",
@@ -154,6 +155,19 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
           },
         },
       },
+    },
+  });
+
+  const altItemsSku = decision.order.alt_items.split(",");
+  decision.order.alt_items = await prisma.xcart_products.findMany({
+    where: {
+      productcode: {
+        in: altItemsSku,
+      },
+    },
+    select: {
+      product: true,
+      productcode: true,
     },
   });
 
