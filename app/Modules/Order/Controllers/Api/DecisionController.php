@@ -243,7 +243,6 @@ class DecisionController extends Controller
     }
 
     public function solveSUP() {
-        Xcart::app()->logger->debug(["post" => $_POST, "files" => $_FILES]);
         /**
          * @var $decision DecisionModel
         */
