@@ -304,16 +304,16 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "send-us-po":
-      decision.options.method = req.body.method;
+      decision.options.action = req.body.method;
       break;
 
     case "unpaid-order":
-      decision.options.payment = req.body.payment;
+      decision.options.action = req.body.payment;
       decision.options.card_id = req.body.card_id;
       break;
 
     case "additional-shipping-charge":
-      decision.options.method = req.body.method;
+      decision.options.action = req.body.method;
       decision.options.card_id = req.body.card_id;
       break;
   }

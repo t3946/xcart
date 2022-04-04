@@ -3,7 +3,7 @@ import Item from "@modules/account/components/orders/Navigation/Item";
 // import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 interface IProps {
   orderId: number;
@@ -18,6 +18,7 @@ const Navigation: React.FC<IProps> = ({ orderId, orderStatus }) => {
       text: "Decisions required",
       path: "/orders/decisions-required",
       badge: user?.decisions_required_count || 0,
+      isVisible: user?.decisions_required_count !== 0,
     },
     {
       text: "Order tracking",

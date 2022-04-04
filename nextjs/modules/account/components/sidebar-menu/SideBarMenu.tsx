@@ -1,14 +1,14 @@
 import React from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Item from "@modules/account/components/sidebar-menu/Item";
 import LogoutButton from "@modules/account/components/sidebar-menu/LogoutButton";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesItem from "@modules/account/components/sidebar-menu/Item.module.scss";
 import ItemAccordion from "@modules/account/components/sidebar-menu/ItemAccordion";
 import Styles from "@modules/account/components/sidebar-menu/SideBarMenu.module.scss";
-import {useDispatch} from "react-redux";
-import {setMenuItemsAction} from "@redux/actions/account-actions/SideBarMenuActions";
-import {hideAllMenu} from "@redux/actions/account-actions/MenuActions";
+import { useDispatch } from "react-redux";
+import { setMenuItemsAction } from "@redux/actions/account-actions/SideBarMenuActions";
+import { hideAllMenu } from "@redux/actions/account-actions/MenuActions";
 import Head from "next/head";
 
 const classes = {
@@ -37,6 +37,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
           to: "/orders/decisions-required",
           label: "Decisions required",
           badge: user?.decisions_required_count || 0,
+          isVisible: !!user?.decisions_required_count,
         },
         { to: "/orders/open-orders", label: "Open orders" },
         { to: "/orders/canceled-orders", label: "Canceled orders" },
@@ -90,6 +91,10 @@ const SideBarMenu: React.FC<IProps> = (props) => {
       </Head>
       <div className={Styles.sidebarMenuWrapper}>
         {menuItems.map((value: Record<any, any>, index) => {
+          if (value.isVisible === false) {
+            return null;
+          }
+
           if (!value.routerItems) {
             return (
               <Item

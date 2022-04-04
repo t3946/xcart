@@ -18,7 +18,7 @@ interface IProps {
 }
 
 const Item: React.FC<IProps> = (props: IProps) => {
-  const { text, path, orderId, active, badge } = props;
+  const { text, path, active, badge } = props;
   const classes = {
     button: [
       Styles.ordersNavigationButton,

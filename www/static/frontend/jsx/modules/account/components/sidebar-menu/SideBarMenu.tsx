@@ -17,8 +17,6 @@ interface IProps {
 }
 
 const SideBarMenu: React.FC<IProps> = (props) => {
-  const { showLogout = false } = props;
-  const breakpoint = useBreakpoint();
   const user = useSelector((e: StoreInterface) => e.user);
   const menuItems = [
     { to: "/account/dashboard", label: "Dashboard" },
@@ -30,6 +28,7 @@ const SideBarMenu: React.FC<IProps> = (props) => {
           to: "/account/orders/decisions-required",
           label: "Decisions required",
           badge: user?.decisions_required_count || 0,
+          isVisible: !!user?.decisions_required_count,
         },
         { to: "/account/orders/open-orders", label: "Open orders" },
         { to: "/account/orders/canceled-orders", label: "Canceled orders" },
@@ -66,6 +65,10 @@ const SideBarMenu: React.FC<IProps> = (props) => {
     <div className={cn("sidebar-menu-wrapper")}>
       <div className={Styles.sidebarMenuWrapper}>
         {menuItems.map((value: Record<any, any>) => {
+          if (value.isVisible === false) {
+            return  null;
+          }
+
           if (!value.routerItems) {
             return (
               <SideBarMenuItem
