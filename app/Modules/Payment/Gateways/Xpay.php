@@ -8,7 +8,7 @@ use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Xcart\App\Main\Xcart;
 
-class Xpay extends Gateway
+class Xpay extends AbstractGateway
 {
     public const PAYMENT_STATUS_NEW = 1;
     public const PAYMENT_STATUS_AUTHORIZED = 2;
@@ -17,12 +17,12 @@ class Xpay extends Gateway
     public const PAYMENT_STATUS_REFUNDED = 5;
     public const PAYMENT_STATUS_PARTIALY_REFUNDED = 6;
 
-    public static function getProcessorName()
+    public static function getProcessorName(): string
     {
         return 'Xpay';
     }
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -40,50 +40,50 @@ class Xpay extends Gateway
         return [];
     }
 
-    public function refund($params)
+    public function refund($params): bool
     {
-
+        return true;
     }
 
-    public function void($params)
+    public function void($params): bool
     {
-
+        return true;
     }
 
-    public function lookup($params)
+    public function lookup($params): bool
     {
-
+        return true;
     }
 
-    public function authorize($params)
+    public function authorize($params): bool
     {
-
+        return true;
     }
 
-    public function capture($params)
+    public function capture($params): bool
     {
-
+        return true;
     }
 
-    public function getState($mode)
+    public function getState($mode):? string
     {
-
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function reauthorize($params)
-    {
-        // TODO: Implement reauthorize() method.
+        return null;
     }
 
     /**
      * @param $params
      * @return bool
      */
-    public function purchase($params)
+    public function reauthorize($params): bool
+    {
+        return true;
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function purchase($params): bool
     {
         $this->result = $this->gateway
             ->purchase($params)
@@ -96,16 +96,16 @@ class Xpay extends Gateway
      * @param $params
      * @return bool
      */
-    public function complete($params)
+    public function complete($params): bool
     {
-        // TODO: Implement complete() method.
+        return true;
     }
 
     /**
      * @param $params
      * @throws \Exception
      */
-    public function success($params): void
+    public function success($params): bool
     {
         if ($params['action'] === 'check_cart'){
             $this->check_cart($params);
@@ -190,7 +190,7 @@ class Xpay extends Gateway
             Xcart::app()->logger->error('Transaction not found', $params, 'payment');
         }
 
-        parent::success($params);
+        return parent::success($params);
     }
 
     public function check_cart($params): void

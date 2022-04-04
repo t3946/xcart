@@ -3,29 +3,12 @@
 namespace Modules\Payment\Gateways;
 
 
-use Modules\Order\Models\OrderStatusModel;
-use Omnipay\Common\AbstractGateway;
-use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\Common\Message\AbstractResponse;
-use Omnipay\Common\Message\ResponseInterface;
-use Xcart\App\Main\Xcart;
 
-class Offline extends Gateway
+use Omnipay\Offline\Message\Response;
+
+class Offline extends AbstractGateway
 {
-    public function __construct($model)
-    {
-        $this->model = $model;
-
-        if (!$this->model) {
-            parent::__construct($model);
-        }
-
-        $this->gateway = new OfflineGateway();
-
-        $this->init();
-    }
-
-    public static function getProcessorName()
+    public static function getProcessorName(): string
     {
         return 'Offline';
     }
@@ -34,177 +17,81 @@ class Offline extends Gateway
      * @param $params
      * @return bool
      */
-    public function refund($params)
-    {
-        // TODO: Implement refund() method.
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function void($params)
-    {
-        // TODO: Implement void() method.
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function capture($params)
-    {
-        // TODO: Implement capture() method.
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function lookup($params)
-    {
-        // TODO: Implement lookup() method.
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function authorize($params)
-    {
-        // TODO: Implement authorize() method.
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function reauthorize($params)
-    {
-        // TODO: Implement reauthorize() method.
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function purchase($params)
-    {
-        $this->result = new OfflineResponse($this->gateway->purchase($params), $params);
-
-        return false;
-    }
-
-    /**
-     * @param $params
-     * @return bool
-     */
-    public function complete($params)
-    {
-        // TODO: Implement complete() method.
-    }
-
-    public function getState($mode)
-    {
-
-    }
-}
-
-class OfflineResponse extends AbstractResponse
-{
-
-    /**
-     * Is the response successful?
-     *
-     * @return boolean
-     */
-    public function isSuccessful()
-    {
-        return false;
-    }
-
-    public function isRedirect()
+    public function refund($params): bool
     {
         return true;
     }
 
-    public function getRedirectUrl()
-    {
-        return $this->getRequest()->getReturnUrl();
-    }
-
-    public function redirect(): void
-    {
-        $model = $this->getRequest()->getOrder();
-		Xcart::app()->event->trigger('order:paid', ['model' => $model, 'status' => $model->payment_method == 'Purchase Order' ? 'IO' : OrderStatusModel::ORDER_STATUS_QUEUED]);
-        Xcart::app()->request->redirect($this->getRedirectUrl());
-    }
-
-
-}
-
-class OfflineRequest extends AbstractRequest
-{
-
     /**
-     * Get the raw data array for this message. The format of this varies from gateway to
-     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     *
-     * @return mixed
+     * @param $params
+     * @return bool
      */
-    public function getData()
+    public function void($params): bool
     {
-        // TODO: Implement getData() method.
+        return true;
     }
 
     /**
-     * Send the request with specified data
-     *
-     * @param  mixed $data The data to send
-     * @return ResponseInterface
+     * @param $params
+     * @return bool
      */
-    public function sendData($data)
+    public function capture($params): bool
     {
-        // TODO: Implement sendData() method.
+        return true;
     }
 
-    public function setOrder(object $value): object
-    {
-        return $this->setParameter('order', $value);
-    }
-
-    public function getOrder(): object
-    {
-        return $this->getParameter('order');
-    }
-}
-
-/**
- * @method \Omnipay\Common\Message\RequestInterface authorize(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface capture(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface completePurchase(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface refund(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface void(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface createCard(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface updateCard(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface deleteCard(array $options = array())
- */
-class OfflineGateway extends AbstractGateway
-{
     /**
-     * Get gateway display name
-     *
-     * This can be used by carts to get the display name for each gateway.
+     * @param $params
+     * @return bool
      */
-    public function getName()
+    public function lookup($params): bool
     {
-        return 'Offline';
+        return true;
     }
 
-    public function purchase(array $options)
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function authorize($params): bool
     {
-        return $this->createRequest(OfflineRequest::class, $options);
+        return true;
     }
 
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function reauthorize($params): bool
+    {
+        return true;
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function purchase($params): bool
+    {
+        $this->result = new Response($this->gateway->purchase($params), $params);
+
+        return false;
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    public function complete($params): bool
+    {
+        return true;
+    }
+
+    public function getState($mode):? string
+    {
+
+    }
 }
+
+
+

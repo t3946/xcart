@@ -16,11 +16,10 @@ use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\TransactionLogModel;
 use Modules\Order\Stores\OrderStore;
-use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Gateways\AbstractGateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
-use function json_decode;
 
 class PaymentController extends Controller
 {
@@ -30,7 +29,7 @@ class PaymentController extends Controller
     public function process($gateway): void
     {
         /** @var ProcessorModel $pm */
-        if (($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) && $gw = Gateway::getGateway($pm)) {
+        if (($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) && $gw = AbstractGateway::getGateway($pm)) {
 
             /** @var OrderModel $order */
             $order = OrderHelper::getCartOrder();
@@ -61,7 +60,7 @@ class PaymentController extends Controller
                     'orderNumber' => $order_number
                 ];
 
-                if ($gw->purchase($params)) {
+                if ($gw->purchase($params) && $gw->result) {
 
                     $params = [
                         'mode' => OrderTransactionModel::TYPE_AUTHORIZATION,
@@ -90,7 +89,7 @@ class PaymentController extends Controller
                 }
 
             } catch (Exception $e) {
-                Xcart::app()->logger->error("{$gateway} process action error", [$e->getMessage()], 'payment');
+                Xcart::app()->logger->error("$gateway process action error", [$e->getMessage()], 'payment');
                 Xcart::app()->flash->error('Sorry, there was an error processing your payment. Please try again later.');
                 $this->redirect('checkout:review');
             }
@@ -106,7 +105,7 @@ class PaymentController extends Controller
 
         /** @var ProcessorModel $pm */
         if ($pm = ProcessorModel::objects()->get(['processor_name' => $gateway])) {
-            if ($gw = Gateway::getGateway($pm)) {
+            if ($gw = AbstractGateway::getGateway($pm)) {
                 try {
                     $gw->success($params);
 
@@ -140,7 +139,7 @@ class PaymentController extends Controller
         $pm = ProcessorModel::objects()->get(['processor_name' => $gateway]);
 
         if (!$pm) {
-            $this->error(404);
+            $this->error();
         }
 
         if (($action = Xcart::app()->request->get->get('action')) && $action === 'cancel') {
@@ -161,165 +160,180 @@ class PaymentController extends Controller
         /** @var OrderTransactionModel $txn */
 
         if ($app = Xcart::app()) {
-            $params = $order = $order_id = null;
+
+            $order = $order_id = null;
+
+            $body = $app->request->body;
+
+            $request = $app->request->request;
 
             $config = GlobalConfig::getInstance();
-            if ($gateway === 'paypal') {
 
-                if (($bodyReceived = file_get_contents('php://input')) && $params = json_decode($bodyReceived, true)) {
+            switch($gateway) {
+                case 'paypal':
+                    if ($body->has('event_type')) {
 
-                    switch ($params['event_type']) {
+                        switch ($body->event_type) {
 
-                        case 'CUSTOMER.DISPUTE.CREATED':
+                            case 'CUSTOMER.DISPUTE.CREATED':
 
-                            if ($params['buyer_transaction_id'] &&
-                                $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['buyer_transaction_id']])) {
+                                if ($body->has('buyer_transaction_id') &&
+                                    $txn = OrderTransactionModel::objects()->get(['transaction_id' => $body->buyer_transaction_id])) {
+                                    OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
+                                }
+
+                                break;
+                        }
+                    }
+
+                    if ($request->has('txn_type') && $request->has('txn_id')) {
+
+                        switch ($request->txn_type) {
+                            case 'invoice_payment':
+
+                                if ($request->has('invoice')
+                                    && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_number' => $request->invoice])) {
+                                    $order_id = $invoice->orderid;
+                                }
+
+                                break;
+                            case 'web_accept':
+                                if ($request->has('custom')) {
+                                    $order_id = (int)$request->custom;
+                                }
+                                break;
+                            case 'new_case':
+                                if (($txn = OrderTransactionModel::objects()->limit(1)->get(['transaction_id' => $request->txn_id]))
+                                    && $order = $txn->order) {
+                                    $order_id = $txn->order->orderid;
+                                }
+                                break;
+                        }
+
+                        /** @var OrderModel $order */
+                        if ($order_id && $order = OrderModel::objects()->get(['orderid' => $order_id])) {
+                            $txn_data = [
+                                'transaction_id' => $request->txn_id,
+                                'orderid' => $order->orderid
+                            ];
+
+                            [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
+                        }
+
+                        switch ($request->txn_type) {
+                            case 'new_case':
+
+                                if ($order) {
+                                    OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
+                                }
+
+                                break;
+                            case 'web_accept':
+
+                                /** @var OrderTransactionModel $txn */
+                                if ($order && in_array($request->payment_status, ['Pending', 'Authorized'])) {
+
+                                    $gross = (float)$request->payment_gross;
+
+                                    if (!$gross) {
+                                        $gross = (float)$request->mc_gross;
+                                    }
+
+                                    $txn->setAttributes([
+                                        'orderid' => $order->orderid,
+                                        'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
+                                        'transaction_status' => OrderTransactionModel::STATUS_PENDING,
+                                        'transaction_amount' => $gross,
+                                        'login' => $order->login,
+                                        'paymentid' => $order->paymentid,
+                                    ]);
+
+                                    $txn->save();
+
+                                    $txn->transaction_response = $request->all();
+                                    $txn->save();
+                                    $transactionLog = new TransactionLogModel(
+                                        [
+                                            'orderid' => $txn->orderid,
+                                            'paymentid' => $txn->paymentid,
+                                            'order_transaction_id' => $txn->id,
+                                            'transaction_id' => $txn->transaction_id,
+                                            'transaction_status' => $txn->transaction_status,
+                                            'transaction_total' => $txn->transaction_amount,
+                                            'transaction_currency' => $txn->transaction_currency,
+                                            'login' => $txn->login,
+                                            'transaction_log' => $txn->transaction_response
+                                        ]
+                                    );
+
+                                    if ($transactionLog->isValid()) {
+                                        $transactionLog->save();
+                                    }
+
+                                    if ($gross && $gross === (float)$order->total) {
+                                        $app->event->trigger('order:paid', ['model' => $order]);
+                                    }
+                                }
+
+                                break;
+                            case 'invoice_payment':
+                                if ($invoice && $order && $request->payment_status === 'Completed') {
+                                    $txn->setAttributes([
+                                        'orderid' => $order->orderid,
+                                        'type' => OrderTransactionModel::TYPE_CAPTURE,
+                                        'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
+                                        'transaction_amount' => $request->payment_gross,
+                                        'login' => $order->login,
+                                        'paymentid' => 100,
+                                    ]);
+
+                                    $txn->save();
+
+                                    $txn->transaction_response = $request->all();
+                                    $txn->save();
+
+                                    $invoice->status = OrderCxInvoiceModel::STATUS_PAID;
+                                    $invoice->save();
+
+                                    OrderLogModel::createLog(
+                                        $order->orderid,
+                                        OrderLogModel::LOG_TYPE_SYSTEM,
+                                        "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
+                                    );
+
+                                    if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() == 0) {
+                                        $app->event->trigger('order:paid', ['model' => $order]);
+                                    }
+                                    OrderTagEventHelper::orderTagEvent(5, $order->orderid);
+
+                                }
+                                break;
+                        }
+                    }
+
+                    break;
+                case 'stripe':
+                    $payment_intent = $body->data['object']['payment_intent'] ?? null;
+
+                    if (!$payment_intent) {
+                        break;
+                    }
+
+                    if ($txn = OrderTransactionModel::objects()->get(['transaction_id' => $payment_intent])) {
+                        switch ($body->type) {
+                            case 'charge.dispute.created' :
                                 OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
-                            }
-
-                            break;
-                    }
-                }
-
-                if (!$params && $app->request->request->has('txn_type') && $app->request->request->has('txn_id')) {
-
-                    switch ($app->request->request->get('txn_type')) {
-                        case 'invoice_payment':
-
-                            if ($app->request->request->has('invoice')
-                                && $invoice = OrderCxInvoiceModel::objects()->get(['invoice_number' => $app->request->request->get('invoice')])) {
-                                $order_id = $invoice->orderid;
-                            }
-
-                            break;
-                        case 'web_accept':
-                            if ($app->request->request->has('custom')) {
-                                $order_id = (int)$app->request->request->get('custom');
-                            }
-                            break;
-                        case 'new_case':
-                            if (($txn = OrderTransactionModel::objects()->limit(1)->get(['transaction_id' => $app->request->request->get('txn_id')]))
-                                && $order = $txn->order) {
-                                $order_id = $txn->order->orderid;
-                            }
-                            break;
-                    }
-
-                    /** @var OrderModel $order */
-                    if ($order_id && $order = OrderModel::objects()->get(['orderid' => $order_id])) {
-                        $txn_data = [
-                            'transaction_id' => $app->request->request->get('txn_id'),
-                            'orderid' => $order->orderid
-                        ];
-
-                        [$txn] = OrderTransactionModel::objects()->getOrCreate($txn_data);
-                    }
-
-                    switch ($app->request->request->get('txn_type')) {
-                        case 'new_case':
-
-                            if ($order) {
-                                OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $order->orderid);
-                            }
-
-                            break;
-                        case 'web_accept':
-
-                            /** @var OrderTransactionModel $txn */
-                            if ($order && in_array($app->request->request->get('payment_status'), ['Pending', 'Authorized'])) {
-                                $gross = (float)$app->request->request->get('payment_gross');
-                                if (!$gross) {
-                                    $gross = (float)$app->request->request->get('mc_gross');
-                                }
-                                $txn->setAttributes([
-                                    'orderid' => $order->orderid,
-                                    'type' => OrderTransactionModel::TYPE_AUTHORIZATION,
-                                    'transaction_status' => OrderTransactionModel::STATUS_PENDING,
-                                    'transaction_amount' => $gross,
-                                    'login' => $order->login,
-                                    'paymentid' => $order->paymentid,
-                                ]);
-
+                                break;
+                            case 'charge.expired':
+                                $txn->transaction_status = OrderTransactionModel::STATUS_EXPIRED;
                                 $txn->save();
-
-                                $txn->transaction_response = $app->request->request->all();
-                                $txn->save();
-                                $transactionLog = new TransactionLogModel(
-                                    [
-                                        'orderid' => $txn->orderid,
-                                        'paymentid' => $txn->paymentid,
-                                        'order_transaction_id' => $txn->id,
-                                        'transaction_id' => $txn->transaction_id,
-                                        'transaction_status' => $txn->transaction_status,
-                                        'transaction_total' => $txn->transaction_amount,
-                                        'transaction_currency' => $txn->transaction_currency,
-                                        'login' => $txn->login,
-                                        'transaction_log' => $txn->transaction_response
-                                    ]
-                                );
-
-                                if ($transactionLog->isValid()) {
-                                    $transactionLog->save();
-                                }
-
-                                if ($gross && $gross === (float)$order->total) {
-                                    $app->event->trigger('order:paid', ['model' => $order]);
-                                }
-                            }
-
-                            break;
-                        case 'invoice_payment':
-                            if ($invoice && $order && $app->request->request->get('payment_status') === 'Completed') {
-                                $txn->setAttributes([
-                                    'orderid' => $order->orderid,
-                                    'type' => OrderTransactionModel::TYPE_CAPTURE,
-                                    'transaction_status' => OrderTransactionModel::STATUS_COMPLETED,
-                                    'transaction_amount' => $app->request->request->get('payment_gross'),
-                                    'login' => $order->login,
-                                    'paymentid' => 100,
-                                ]);
-
-                                $txn->save();
-
-                                $txn->transaction_response = $app->request->request->all();
-                                $txn->save();
-
-                                $invoice->status = OrderCxInvoiceModel::STATUS_PAID;
-                                $invoice->save();
-
-                                OrderLogModel::createLog(
-                                    $order->orderid,
-                                    OrderLogModel::LOG_TYPE_SYSTEM,
-                                    "Paypal Cx invoice <a href=\"https://www.paypal.com/webscr?cmd=_history-details-from-hub&id={$invoice->invoice_number}\" target=\"_blank\">#{$invoice->invoice_number}</a> has been PAID"
-                                );
-
-                                if ((float)$order->total > 0 && ($order_store = new OrderStore($order)) && $order_store->getAmountDeficit() == 0) {
-                                    $app->event->trigger('order:paid', ['model' => $order]);
-                                }
-                                OrderTagEventHelper::orderTagEvent(5, $order->orderid);
-
-                            }
-                            break;
+                                break;
+                        }
                     }
-                }
-            } elseif ($gateway === 'stripe') {
-                if (($bodyReceived = file_get_contents('php://input'))
-                    && ($params = json_decode($bodyReceived, true, 512, JSON_THROW_ON_ERROR))
-                    && isset($params['data']['object']['payment_intent'])
-                    && $txn = OrderTransactionModel::objects()->get(['transaction_id' => $params['data']['object']['payment_intent']])) {
-                    switch ($params['type']) {
-                        case 'charge.dispute.created' :
-                            OrderTagEventHelper::orderTagEvent($config['tag_for_events_dispute_created'], $txn->order->orderid);
-                            break;
-                        case 'charge.expired':
-                            $txn->transaction_status = OrderTransactionModel::STATUS_EXPIRED;
-                            $txn->save();
-                            break;
-                    }
-                }
+                    break;
             }
 
-            $app->logger->info("{$gateway} IPN response", $params ?: $_REQUEST ?: [], 'ipn');
+            $app->logger->info("{$gateway} IPN response", $body->all() ?: $request->all() ?: [], 'ipn');
         }
     }
 }

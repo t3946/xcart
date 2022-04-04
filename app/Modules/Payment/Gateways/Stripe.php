@@ -6,7 +6,6 @@ namespace Modules\Payment\Gateways;
 
 use Modules\Cart\Helpers\StagesOfOrdering;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Helpers\OrderInvoiceHelper;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
@@ -15,16 +14,16 @@ use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Gateways\Omnipay\Stripe\Message\LookupPaymentIntentResponse;
 use Xcart\App\Main\Xcart;
 
-class Stripe extends Gateway
+class Stripe extends AbstractGateway
 {
     public const CONNECTED_ACCOUNT_ID = 'acct_1HIbMdI2P4rQcZLT';
 
-    public static function getProcessorName()
+    public static function getProcessorName(): string
     {
         return 'Stripe';
     }
 
-    public function init()
+    public function init(): void
     {
         parent::init();
         $this->gateway->initialize([
@@ -32,7 +31,7 @@ class Stripe extends Gateway
         ]);
     }
 
-    public function refund($params)
+    public function refund($params): bool
     {
         $params['payment_intent'] = $params['transactionReference'];
         $this->result = $this->gateway
@@ -41,7 +40,7 @@ class Stripe extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function void($params)
+    public function void($params): bool
     {
         $params['paymentIntentReference'] = $params['transactionReference'];
         $this->result = $this->gateway
@@ -50,7 +49,7 @@ class Stripe extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function capture($params)
+    public function capture($params): bool
     {
         $params['paymentIntentReference'] = $params['transactionReference'];
         $this->result = $this->gateway
@@ -59,7 +58,7 @@ class Stripe extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function lookup($params)
+    public function lookup($params): bool
     {
         $params['paymentIntentReference'] = $params['transactionReference'];
         $this->result = $this->gateway
@@ -68,7 +67,7 @@ class Stripe extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function authorize($params)
+    public function authorize($params): bool
     {
         $params['paymentMethod'] = $this->gateway->createCard(['card' => $params['card']])->send()->getCardReference();
         $params['confirm'] = true;
@@ -79,7 +78,7 @@ class Stripe extends Gateway
         return $this->result->isSuccessful();
     }
 
-    public function reauthorize($params)
+    public function reauthorize($params): bool
     {
         $params['paymentIntentReference'] = $params['transactionReference'];
         $order = $params['order'];
@@ -108,7 +107,7 @@ class Stripe extends Gateway
         return false;
     }
 
-    public function purchase($params)
+    public function purchase($params): bool
     {
         StagesOfOrdering::getInstance()->setStage(StagesOfOrdering::STAGE_PAYMENT);
 
@@ -158,12 +157,12 @@ class Stripe extends Gateway
         return $intent->isSuccessful();
     }
 
-    public function complete($params)
+    public function complete($params): bool
     {
-        // TODO: Implement complete() method.
+        return true;
     }
 
-    public function getState($mode)
+    public function getState($mode):? string
     {
         $state = null;
         if (!$this->result->isSuccessful()) {
@@ -190,7 +189,7 @@ class Stripe extends Gateway
         return $state;
     }
 
-    public function success($params): void
+    public function success($params): bool
     {
         $payload = @file_get_contents('php://input');
         $pay = json_decode($payload, true);
@@ -224,7 +223,6 @@ class Stripe extends Gateway
                 $transactionLog->save();
             }
         }
-        parent::success($params);
-
+        return parent::success($params);
     }
 }
