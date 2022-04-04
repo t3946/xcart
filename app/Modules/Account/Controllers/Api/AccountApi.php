@@ -173,12 +173,22 @@ class AccountApi extends Controller
 
     public function getProductInfo() {
         if (!$this->getRequest()->getIsAjax()) {
-            http_response_code(404);
+            $this->jsonResponse([], 404);
             return;
         }
 
-        $data = json_decode(file_get_contents("php://input"));
-        $product = ProductModel::objects()->get(['productid' => $data->productId]);
+        if (!$this->getRequest()->body->has('productId')) {
+            $this->jsonResponse([], 400);
+            return;
+        }
+
+        $product = ProductModel::objects()->get(['productid' => $this->getRequest()->body->productId]);
+
+        if ($product === null) {
+            $this->jsonResponse(['error' => 'product not found'], 404);
+            return;
+        }
+
         $ratings_models = RatingsModel::objects()->asArray()->all();
         $ratings = ['overall' => null, 'features' => []];
 
