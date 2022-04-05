@@ -164,7 +164,7 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
                   "w-md-auto",
                   Styles.submitButton,
                 ])}
-                disabled={isSubmitting || decision.solved}
+                disabled={isSubmitting || decision.solved || files.length === 0}
               >
                 Send
               </Button>
