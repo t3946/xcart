@@ -13,6 +13,7 @@ use Xcart\App\Orm\Model;
 
 /**
  * @property bool $solved
+ * @property $options
  */
 class DecisionModel extends Model
 {

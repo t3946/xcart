@@ -7,7 +7,7 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Model;
 
 /**
- * @property bool $solved
+ * @property int $decision_type_id
  */
 class DecisionTypeModel extends Model
 {

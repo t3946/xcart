@@ -9,6 +9,8 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Middleware\OrderCheckoutMiddleware;
+use Modules\Order\Models\Decisions\DecisionModel;
+use Modules\Order\Models\Decisions\DecisionTypeModel;
 use Modules\Order\Models\OrderCxInvoiceModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
@@ -229,6 +231,21 @@ class PaymentController extends Controller
 
                                 break;
                             case 'web_accept':
+                                //set solved
+                                /** @var DecisionTypeModel $decision_type */
+                                $decision_type = DecisionTypeModel::objects()->get(['slug'=> "unpaid-order"]);
+                                $decisions = DecisionModel::objects()->all([
+                                    'order_id' => $order_id,
+                                    'decision_type_id' => $decision_type->decision_type_id
+                                ]);
+                                /** @var DecisionModel $decision */
+                                foreach ($decisions as $_ => $decision) {
+                                    $options = json_decode(json_encode($decision->options), true);
+                                    $options['action'] = "pay-by-paypal";
+                                    $decision->options = $options;
+                                    $decision->solved = 1;
+                                    $decision->save();
+                                }
 
                                 /** @var OrderTransactionModel $txn */
                                 if ($order && in_array($request->payment_status, ['Pending', 'Authorized'])) {

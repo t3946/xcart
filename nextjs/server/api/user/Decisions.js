@@ -7,7 +7,7 @@ const app = express();
 const getBaseUrl = require("../../utils/getBaseUrl");
 const md5 = require("md5");
 
-function getPaypalUrl(req, order) {
+function getPaypalUrl(req, order, decisionId) {
   const [firstName, lastName] = order.b_firstname.split(" ");
   const orderHash = md5([order.orderid, order.s_zipcode, order.email].join(""));
   const returnUrl =
@@ -232,7 +232,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
   });
 
   if (decision.type.slug === "unpaid-order") {
-    resBody.paypalUrl = getPaypalUrl(req, order);
+    resBody.paypalUrl = getPaypalUrl(req, order, decision.decision_id);
   }
 
   res.json(resBody);

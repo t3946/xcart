@@ -168,11 +168,7 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
                     "d-flex justify-content-center justify-content-lg-start"
                   }
                 >
-                  <a
-                    href={paypalUrl}
-                    target={"_blank"}
-                    className={"text-decoration-none"}
-                  >
+                  <a href={paypalUrl} className={"text-decoration-none"}>
                     <Button
                       type={"button"}
                       disabled={isSubmitting}
