@@ -1343,8 +1343,7 @@ if ($mode === 'ref_notify')
         $order['refund_groups'][$notify_mid]['notify_status'] = 'S';
     }
 
-    if (func_check_email($userinfo['email']))
-    {
+
         if (!empty($order['refund_groups']) && is_array($order['refund_groups']) && !empty($notify_mid)) {
             foreach ($order['refund_groups'] as $k => $v) {
                 if ($k != $notify_mid) {
@@ -1453,13 +1452,6 @@ if ($mode === 'ref_notify')
                 'content' => 'Done.',
             ];
         }
-    }
-    else {
-        $top_message = [
-            'content' => func_get_langvar_by_name('txt_ref_notify_wrong_email'),
-            'type'    => 'E',
-        ];
-    }
 
     $section_name_top_message = $top_message;
     x_session_save("section_name_top_message");
