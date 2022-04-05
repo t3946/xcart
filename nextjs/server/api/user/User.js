@@ -739,7 +739,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const cards = (await stripeService.getSources(req.user.userId)).data;
 
   for (const order of orders) {
-    for (const group of order.groups) {
+    for (const group of order.xcart_refund_groups) {
       group.details = [];
 
       for (const refundedProduct of group.xcart_refunded_products) {
@@ -753,7 +753,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
 
     let totalShipping = 0;
     order.taxes = {};
-    for (const group of order.xcart_order_groups) {
+    for (const group of order.groups) {
       totalShipping = totalShipping + parseFloat(group.shipping_gross);
       group.paymentStatus = getPaymentStatusCommonName(group.cb_status);
       group.shippingStatus = getShippingStatusCommonName(group.dc_status);

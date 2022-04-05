@@ -31,7 +31,7 @@ export const TransactionItems = ({ refund = false, group, order }) => {
         </div>
         <div className="col-md-3 col-lg-2 text-end">Extended</div>
       </div>
-      {group.xcart_order_details.map((detail, i) => {
+      {group.details.map((detail, i) => {
         return (
           <TransactionItemsElem
             refund={refund}

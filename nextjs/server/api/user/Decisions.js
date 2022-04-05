@@ -441,6 +441,18 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             last4: card.last4,
           };
 
+          await prisma.xcart_order_transactions.create({
+            data: {
+              orderid: decision.order.orderid,
+              type: "authorization",
+              transaction_status: "authorized",
+              transaction_amount: amount / 100,
+              transaction_id: paymentIntentObject.id,
+              paymentid: 106,
+              date: Math.round(new Date().getTime() / 1000)
+            },
+          });
+
           break;
 
         case "cancel-order":
@@ -477,8 +489,10 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             },
           });
           const { orderid, order_prefix } = decision.order;
+          const amount =
+            parseFloat(decision.options.additionalShippingCharge) * 100;
           const paymentIntentObject = await stripeService.paymentIntent.create({
-            amount: parseFloat(decision.options.additionalShippingCharge) * 100,
+            amount,
             currency: "usd",
             payment_method_types: ["card"],
             description: `S3 Stores, Inc. Order # ${order_prefix}${orderid}`,
@@ -500,6 +514,18 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             brand: card.brand,
             last4: card.last4,
           };
+
+          await prisma.xcart_order_transactions.create({
+            data: {
+              orderid: decision.order.orderid,
+              type: "authorization",
+              transaction_status: "authorized",
+              transaction_amount: amount / 100,
+              transaction_id: paymentIntentObject.id,
+              paymentid: 106,
+              date: Math.round(new Date().getTime() / 1000)
+            },
+          });
 
           break;
 
