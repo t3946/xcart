@@ -7,7 +7,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
   const decisionId = parseInt(ctx.query.id);
   let decision = null;
-  let paypalUrl;
+  let paypalUrl = null;
   let cards;
   let defaultCardId;
 
