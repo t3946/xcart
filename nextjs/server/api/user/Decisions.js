@@ -7,7 +7,7 @@ const app = express();
 const getBaseUrl = require("../../utils/getBaseUrl");
 const md5 = require("md5");
 
-function getPaypalUrl(req, order, decisionId) {
+function getPaypalUrl(req, order, amount, decisionId) {
   const [firstName, lastName] = order.b_firstname.split(" ");
   const orderHash = md5([order.orderid, order.s_zipcode, order.email].join(""));
   const returnUrl =
@@ -19,7 +19,7 @@ function getPaypalUrl(req, order, decisionId) {
     mrb: "R-2JR83330TB370181P",
     pal: "RDGQCFJTT6Y6A",
     rm: "2",
-    custom: order.orderid,
+    custom: `${order.orderid}:${decisionId}`,
     business: "paypal@s3stores.com",
     email: order.email,
     first_name: firstName,
@@ -31,7 +31,7 @@ function getPaypalUrl(req, order, decisionId) {
     night_phone_b: order.phone.substr(3, 3),
     night_phone_c: order.phone.substr(6, 4),
     item_name: `S3 Stores, Inc. Order # ${order.order_prefix}${order.orderid}`,
-    amount: parseFloat(order.total),
+    amount,
     currency_code: order.currency,
     bn: "x-cart",
     paymentaction: "authorization",
@@ -231,8 +231,24 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  if (decision.type.slug === "unpaid-order") {
-    resBody.paypalUrl = getPaypalUrl(req, order, decision.decision_id);
+  switch (decision.type.slug) {
+    case "unpaid-order":
+      resBody.paypalUrl = getPaypalUrl(
+        req,
+        order,
+        parseFloat(order.total),
+        decision.decision_id
+      );
+      break;
+
+    case "additional-shipping-charge":
+      resBody.paypalUrl = getPaypalUrl(
+        req,
+        order,
+        decision.options.additionalShippingCharge,
+        decision.decision_id
+      );
+      break;
   }
 
   res.json(resBody);
@@ -446,16 +462,68 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             },
           });
           break;
-
-        case "pay-by-paypal":
-          re;
       }
 
       break;
 
     case "additional-shipping-charge":
-      decision.options.action = req.body.method;
-      decision.options.card_id = req.body.card_id;
+      decision.options.action = req.body.action;
+
+      switch (req.body.action) {
+        case "pay-by-card":
+          const user = await prisma.xcart_users.findUnique({
+            where: {
+              user_id: req.user.userId,
+            },
+          });
+          const { orderid, order_prefix } = decision.order;
+          const paymentIntentObject = await stripeService.paymentIntent.create({
+            amount: parseFloat(decision.options.additionalShippingCharge) * 100,
+            currency: "usd",
+            payment_method_types: ["card"],
+            description: `S3 Stores, Inc. Order # ${order_prefix}${orderid}`,
+            customer: user.stripe_customer_id,
+            capture_method: "manual",
+          });
+
+          await stripeService.paymentIntent.confirm(
+            paymentIntentObject.id,
+            req.body.cardId
+          );
+
+          const card = await stripeService.card.retrieve(
+            user.stripe_customer_id,
+            req.body.cardId
+          );
+
+          decision.options.card = {
+            brand: card.brand,
+            last4: card.last4,
+          };
+
+          break;
+
+        case "cancel-order":
+          await prisma.xcart_orders.update({
+            where: {
+              orderid: decision.order.orderid,
+            },
+            data: {
+              cb_status: "F",
+            },
+          });
+
+          await prisma.xcart_order_groups.updateMany({
+            where: {
+              orderid: decision.order.orderid,
+            },
+            data: {
+              cb_status: "F",
+            },
+          });
+          break;
+      }
+
       break;
   }
 

@@ -201,7 +201,12 @@ class PaymentController extends Controller
                                 break;
                             case 'web_accept':
                                 if ($request->has('custom')) {
-                                    $order_id = (int)$request->custom;
+                                    $parts = explode(":", $request->custom);
+                                    $order_id = (int)$parts[0];
+
+                                    if (isset($parts[1])){
+                                        $decision_id = (int)$parts[1];
+                                    }
                                 }
                                 break;
                             case 'new_case':
@@ -231,15 +236,12 @@ class PaymentController extends Controller
 
                                 break;
                             case 'web_accept':
-                                //set solved
-                                /** @var DecisionTypeModel $decision_type */
-                                $decision_type = DecisionTypeModel::objects()->get(['slug'=> "unpaid-order"]);
-                                $decisions = DecisionModel::objects()->all([
-                                    'order_id' => $order_id,
-                                    'decision_type_id' => $decision_type->decision_type_id
-                                ]);
-                                /** @var DecisionModel $decision */
-                                foreach ($decisions as $_ => $decision) {
+                                //solve decision after payment
+                                if (isset($decision_id)) {
+                                    /** @var DecisionModel $decision */
+                                    $decision = DecisionModel::objects()->get([
+                                        'decision_id' => $decision_id,
+                                    ]);
                                     $options = json_decode(json_encode($decision->options), true);
                                     $options['action'] = "pay-by-paypal";
                                     $decision->options = $options;

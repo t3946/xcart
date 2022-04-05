@@ -1,6 +1,4 @@
 import React from "react";
-import PaymentSelection from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentSelection";
-import paymentItemStyles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem.module.scss";
 import Styles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
 import cn from "classnames";
 import DecisionsInterface from "@modules/account/ts/types/decision";
@@ -8,10 +6,9 @@ import { Form, Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
-import AddCreditCardButton from "@components/pages/wallet/AddCreditCardButton";
-import RadioSelectCard from "@modules/ui/RadioSelectCard";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import CardHeader from "@modules/account/components/wallet/CardHeader";
+import PaymentSections from "@components/pages/decision/[id]/PaymentSections";
 
 interface IProps {
   onChange: (message: string) => any;
@@ -43,7 +40,7 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
       .required("Cardholder name is a required field"),
   });
 
-  function submitWithoutValidationOrder(
+  function submit(
     values,
     action: string,
     setSubmitting: (isSubmitting: boolean) => void
@@ -102,91 +99,16 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
     }
 
     return (
-      <PaymentSelection
-        //for formik
+      <PaymentSections
+        cards={cards}
+        defaultCardId={defaultCardId}
         checkedValue={values.paymentMethod}
-        onChange={handleChange}
-        disabled={isSubmitting}
-        name="paymentMethod"
-        options={[
-          {
-            label: "Pay by Credit / Debit card, Apple Pay and Google Pay",
-            caption:
-              "Secure Visa, MasterCard, and AmEx payment through our secure server.",
-            value: "debit",
-            template: (
-              <>
-                <div className={"mb-3"}>
-                  <p className={"mb-2"}>
-                    <b>Select card:</b>
-                  </p>
-
-                  <RadioSelectCard
-                    name={"cardId"}
-                    cards={cards}
-                    checkedValue={values.cardId}
-                    defaultCardId={defaultCardId}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <AddCreditCardButton classes={{ button: "w-auto" }} />
-
-                <Button
-                  type={"button"}
-                  onClick={submitWithoutValidationOrder(
-                    values,
-                    "pay-by-card",
-                    setSubmitting
-                  )}
-                  className={"w-auto mt-3"}
-                >
-                  Pay by card
-                </Button>
-              </>
-            ),
-          },
-          {
-            label: "Pay by PayPal Balance",
-            caption:
-              "Secure payment by PayPal Balance (click Create an Account to also access VISA, MC, AmEx, and Discover payments).",
-            value: "paypal",
-            template: (
-              <div>
-                <p
-                  className={cn([
-                    paymentItemStyles.paymentItemCaption,
-                    paymentItemStyles.paymentItemCaption_accent,
-                  ])}
-                >
-                  You will be transferred to PayPal website to complete your
-                  payment.
-                </p>
-
-                <div
-                  className={
-                    "d-flex justify-content-center justify-content-lg-start"
-                  }
-                >
-                  <a href={paypalUrl} className={"text-decoration-none"}>
-                    <Button
-                      type={"button"}
-                      disabled={isSubmitting}
-                      onClick={submitWithoutValidationOrder(
-                        values,
-                        "pay-by-paypal",
-                        setSubmitting
-                      )}
-                      className={cn(["form-button", Styles.button])}
-                    >
-                      Pay by PayPal
-                    </Button>
-                  </a>
-                </div>
-              </div>
-            ),
-          },
-        ]}
+        handleChange={handleChange}
+        isSubmitting={isSubmitting}
+        setSubmitting={setSubmitting}
+        submit={submit}
+        values={values}
+        paypalUrl={paypalUrl}
       />
     );
   }
@@ -219,11 +141,7 @@ const UnpaidOrder: React.FC<IProps> = (props: IProps) => {
         >
           <Button
             type="button"
-            onClick={submitWithoutValidationOrder(
-              values,
-              "cancel-order",
-              setSubmitting
-            )}
+            onClick={submit(values, "cancel-order", setSubmitting)}
             className={cn([
               "fw-bold",
               "mt-4",

@@ -1,31 +1,23 @@
 import React from "react";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import PaymentSelection from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentSelection";
 import { Formik, Form } from "formik";
 import cn from "classnames";
-import * as yup from "yup";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useDispatch } from "react-redux";
-import { CardElement } from "@stripe/react-stripe-js";
-import AddCreditCardButton from "@components/pages/wallet/AddCreditCardButton";
 import Button from "@modules/ui/forms/Button";
 import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import unpaidOrderStyles from "@modules/account/components/orders/Decision/UnpaidOrder/UnpaidOrder.module.scss";
-import paymentItemStyles from "@modules/account/components/orders/Decision/UnpaidOrder/PaymentItem.module.scss";
 import Styles from "@modules/account/components/orders/Decision/AdditionalShippingCharge/AdditionalShippingCharge.module.scss";
+import PaymentSections from "@components/pages/decision/[id]/PaymentSections";
+import CardHeader from "@modules/account/components/wallet/CardHeader";
 
 const AdditionalShippingCharge: React.FC<any> = (props) => {
-  const { decision, onChange } = props;
+  const { decision, onChange, cards, defaultCardId, paypalUrl } = props;
   const dispatch = useDispatch();
-  const user = useSelectorAccount((e) => e.user);
-  const [createPaymentMethod, setCreatePaymentMethod] = React.useState(null);
-  const [elements, setElements] = React.useState(null);
   const initialValues = {
-    paymentMethod: "card",
-    cardholderName: "",
-    stripe: "",
+    paymentMethod: "debit",
     billingSameShipping: false,
+    cardId: defaultCardId,
   };
 
   if (
@@ -34,15 +26,6 @@ const AdditionalShippingCharge: React.FC<any> = (props) => {
   ) {
     initialValues.paymentMethod = decision.options.method;
   }
-
-  const validationSchema = yup.object().shape({
-    paymentMethod: yup.string(),
-    cardholderName: yup
-      .string()
-      .max(40, "Max length is 40 character")
-      .min(2, "Min length is 2 character")
-      .required("Cardholder name is a required field"),
-  });
 
   const columnPadding = ["px-2", "px-md-3", "px-lg-4"];
 
@@ -62,54 +45,40 @@ const AdditionalShippingCharge: React.FC<any> = (props) => {
     ],
   };
 
-  async function submit(values: Record<any, any>, actions: Record<any, any>) {
-    actions.setSubmitting(true);
-
-    if (values.paymentMethod === "debit") {
-      const { error, paymentMethod } = await stripe.createPaymentMethod({
-        type: "card",
-        card: elements.getElement(CardElement),
-      });
-
-      if (error) {
-        actions.setErrors({ stripe: error.message });
-        return;
-      }
-
-      const form = {
-        id: paymentMethod.id,
-        billing_details: {
-          address: {
-            city: "New York",
-            country: "US",
-            line1: "asdsadasd",
-            line2: "asdasdasd",
-            postal_code: "61000",
-            state: "NY",
-          },
-          email: user.email,
-          name: user.public_name,
-          phone: user.phone,
-        },
-        decision: decision,
-      };
-
-      dispatch();
-    }
-  }
-
-  function submitWithoutValidationOrder(
-    method: string,
+  function submit(
+    values,
+    action: string,
     setSubmitting: (isSubmitting: boolean) => void
   ) {
     return async function () {
       setSubmitting(true);
 
-      const data: any = { decision_id: decision.decision_id, method };
+      dispatch(
+        solveDecisionAction({
+          data: {
+            decision_id: decision.decision_id,
+            cardId: values.cardId,
+            action,
+          },
 
-      if (method === "credit") {
-        data.card_id = 1;
-      }
+          success() {
+            setSubmitting(false);
+          },
+        })
+      );
+
+      onChange("Decision solved");
+    };
+  }
+
+  function submitWithoutValidationOrder(
+    action: string,
+    setSubmitting: (isSubmitting: boolean) => void
+  ) {
+    return async function () {
+      setSubmitting(true);
+
+      const data: any = { decision_id: decision.decision_id, action };
 
       dispatch(
         solveDecisionAction({
@@ -122,6 +91,125 @@ const AdditionalShippingCharge: React.FC<any> = (props) => {
 
       onChange("Decision solved");
     };
+  }
+
+  function paymentSectionTemplate() {
+    if (decision.solved) {
+      switch (decision.options.action) {
+        case "pay-by-card":
+          const card = decision.options.card;
+          return (
+            <>
+              <p className={cn(classes.text)}>Paid by credit card.</p>
+              <div className={cn(classes.text, Styles.decisionCaption)}>
+                <CardHeader cardLast4={card.last4} cardType={card.brand} />
+              </div>
+            </>
+          );
+        case "pay-by-paypal":
+          return <p className={cn(classes.text)}>Paid by paypal.</p>;
+        case "cancel-order":
+          return <p className={cn(classes.text)}>Order was canceled.</p>;
+      }
+      return null;
+    }
+
+    return (
+      <>
+        <p
+          className={cn(
+            Styles.pagePadding,
+            Styles.pageCaption,
+            "mb-lg-20",
+            classes.columnPadding
+          )}
+        >
+          <b>Please advise on how you would like to proceed with this order:</b>
+        </p>
+
+        <Formik initialValues={initialValues} onSubmit={submit}>
+          {({ values, handleChange, isSubmitting, setSubmitting }) => {
+            return (
+              <Form>
+                <GreyGrid
+                  classes={{
+                    item: [
+                      Styles.gridItem_border_none,
+                      Styles.gridPaymentItem,
+                      "m-0",
+                    ],
+                    list: [
+                      Styles.gridPayment,
+                      Styles.page__gridPayment,
+                      classes.columnPadding,
+                    ],
+                  }}
+                  items={[
+                    <ul className={Styles.list}>
+                      <li className={Styles.gridPaymentItemCaption}>
+                        If you would like to proceed and pay the difference,
+                        please use the following form
+                      </li>
+                    </ul>,
+
+                    <PaymentSections
+                      cards={cards}
+                      defaultCardId={defaultCardId}
+                      checkedValue={values.paymentMethod}
+                      handleChange={handleChange}
+                      isSubmitting={isSubmitting}
+                      setSubmitting={setSubmitting}
+                      submit={submit}
+                      values={values}
+                      paypalUrl={paypalUrl}
+                    />,
+                  ]}
+                />
+
+                <GreyGrid
+                  classes={{
+                    item: [Styles.gridItem_border_none, "p-0", "m-0"],
+                    list: [
+                      Styles.page__gridCancelOrder,
+                      Styles.gridPayment,
+                      Styles.gridCancel,
+                      classes.columnPadding,
+                    ],
+                  }}
+                  items={[
+                    <ul className={Styles.list}>
+                      <li className={Styles.gridPaymentItemCaption}>
+                        If you would like to cancel the order, press
+                      </li>
+                    </ul>,
+                    <Button
+                      className={cn(
+                        "form-button",
+                        "fw-bold",
+                        "form-button__outline",
+                        "w-md-auto",
+                        "mx-auto",
+                        "mt-20",
+                        "mx-lg-0",
+                        "mt-md-5",
+                        "mt-lg-4",
+                        unpaidOrderStyles.button
+                      )}
+                      onClick={submitWithoutValidationOrder(
+                        "cancel-order",
+                        setSubmitting
+                      )}
+                    >
+                      Cancel order
+                    </Button>,
+                  ]}
+                />
+              </Form>
+            );
+          }}
+        </Formik>
+      </>
+    );
   }
 
   return (
@@ -185,182 +273,11 @@ const AdditionalShippingCharge: React.FC<any> = (props) => {
             "m-0",
             classes.columnPadding,
           ],
-          list: [
-            Styles.gridShipping,
-            Styles.page__gridShipping,
-            { "mb-0": decision.solved },
-          ],
+          list: [Styles.gridShipping, Styles.page__gridShipping],
         }}
       />
 
-      {!decision.solved && (
-        <p
-          className={cn(
-            Styles.pagePadding,
-            Styles.pageCaption,
-            "mb-lg-20",
-            classes.columnPadding
-          )}
-        >
-          <b>Please advise on how you would like to proceed with this order:</b>
-        </p>
-      )}
-
-      {!decision.solved && (
-        <Formik initialValues={initialValues} onSubmit={submit}>
-          {({
-            values,
-            handleChange,
-            isSubmitting,
-            setSubmitting,
-            errors,
-            setErrors,
-            touched,
-          }) => {
-            return (
-              <Form>
-                <GreyGrid
-                  classes={{
-                    item: [
-                      Styles.gridItem_border_none,
-                      Styles.gridPaymentItem,
-                      "m-0",
-                    ],
-                    list: [
-                      Styles.gridPayment,
-                      Styles.page__gridPayment,
-                      classes.columnPadding,
-                    ],
-                  }}
-                  items={[
-                    <ul className={Styles.list}>
-                      <li className={Styles.gridPaymentItemCaption}>
-                        If you would like to proceed and pay the difference,
-                        please use the following form
-                      </li>
-                    </ul>,
-
-                    <PaymentSelection
-                      classes={Styles.payment}
-                      //for formik
-                      checkedValue={values.paymentMethod}
-                      onChange={handleChange}
-                      disabled={isSubmitting || decision.solved}
-                      name="paymentMethod"
-                      integrated
-                      options={[
-                        {
-                          label:
-                            "Pay by Credit / Debit card, Apple Pay and Google Pay",
-                          caption:
-                            "Secure Visa, MasterCard, and AmEx payment through our secure server.",
-                          value: "card",
-                          template: (
-                            <>
-                              <AddCreditCardButton
-                                classes={{ button: "w-auto" }}
-                              />
-                              <Button
-                                className={"w-auto mt-3"}
-                                onClick={submitWithoutValidationOrder(
-                                  "credit",
-                                  setSubmitting
-                                )}
-                                disabled={isSubmitting}
-                              >
-                                pay by credit
-                              </Button>
-                            </>
-                          ),
-                        },
-                        {
-                          label: "Pay by PayPal Balance",
-                          caption:
-                            "Secure payment by PayPal Balance (click Create an Account to also access VISA, MC, AmEx, and Discover payments).",
-                          value: "paypal",
-                          template: (
-                            <div className="w-100">
-                              <p
-                                className={cn([
-                                  paymentItemStyles.paymentItemCaption,
-                                  paymentItemStyles.paymentItemCaption_accent,
-                                ])}
-                              >
-                                You will be transferred to PayPal website to
-                                complete your payment.
-                              </p>
-
-                              <div
-                                className={
-                                  "d-flex justify-content-center justify-content-lg-start"
-                                }
-                              >
-                                <button
-                                  type={"button"}
-                                  disabled={isSubmitting}
-                                  onClick={submitWithoutValidationOrder(
-                                    "paypal",
-                                    setSubmitting
-                                  )}
-                                  className={cn([
-                                    "form-button",
-                                    unpaidOrderStyles.button,
-                                  ])}
-                                >
-                                  Pay by PayPal
-                                </button>
-                              </div>
-                            </div>
-                          ),
-                        },
-                      ]}
-                    />,
-                  ]}
-                />
-
-                <GreyGrid
-                  classes={{
-                    item: [Styles.gridItem_border_none, "p-0", "m-0"],
-                    list: [
-                      Styles.page__gridCancelOrder,
-                      Styles.gridPayment,
-                      Styles.gridCancel,
-                      classes.columnPadding,
-                    ],
-                  }}
-                  items={[
-                    <ul className={Styles.list}>
-                      <li className={Styles.gridPaymentItemCaption}>
-                        If you would like to cancel the order, press
-                      </li>
-                    </ul>,
-                    <Button
-                      className={cn(
-                        "form-button",
-                        "fw-bold",
-                        "form-button__outline",
-                        "w-md-auto",
-                        "mx-auto",
-                        "mt-20",
-                        "mx-lg-0",
-                        "mt-md-5",
-                        "mt-lg-4",
-                        unpaidOrderStyles.button
-                      )}
-                      onClick={submitWithoutValidationOrder(
-                        "cancel-order",
-                        setSubmitting
-                      )}
-                    >
-                      Cancel order
-                    </Button>,
-                  ]}
-                />
-              </Form>
-            );
-          }}
-        </Formik>
-      )}
+      {paymentSectionTemplate()}
     </InnerPage>
   );
 };
