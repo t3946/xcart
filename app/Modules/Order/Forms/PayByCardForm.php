@@ -7,12 +7,11 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\OrderModule;
-use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Gateways\AbstractGateway;
 use Modules\Payment\Models\ProcessorModel;
 use Xcart\App\Form\Fields\CharCleanField;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Main\Xcart;
-use Xcart\App\Orm\Base;
 
 class PayByCardForm extends FrontendForm
 {
@@ -42,7 +41,7 @@ class PayByCardForm extends FrontendForm
             /** @var ProcessorModel $pm */
             if (
                 ($pm = ProcessorModel::objects()->get(['processor_name' => 'Stripe']))
-                && $gw = Gateway::getGateway($pm)
+                && $gw = AbstractGateway::getGateway($pm)
             ) {
                 if (($transaction = $order
                     ->transactions

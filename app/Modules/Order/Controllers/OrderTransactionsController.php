@@ -4,21 +4,15 @@ namespace Modules\Order\Controllers;
 
 
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
-use Modules\Order\Models\TransactionLogModel;
-use Modules\Order\OrderModule;
 use Modules\Order\Stores\OrderTransactionStore;
-use Modules\Payment\Gateways\Gateway;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Payment\Models\PaymentMethodModel;
-use Xcart\App\Controller\Controller;
 use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
-use Xcart\OrderTransaction;
 
 class OrderTransactionsController extends PrototypeAdminController
 {

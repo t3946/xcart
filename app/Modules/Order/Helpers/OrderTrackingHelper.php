@@ -10,7 +10,7 @@ use Exception;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderTrackingModel;
 use Modules\Order\Models\OrderTransactionModel;
-use Modules\Payment\Gateways\Gateway;
+use Modules\Payment\Gateways\AbstractGateway;
 
 class OrderTrackingHelper
 {
@@ -69,7 +69,7 @@ class OrderTrackingHelper
 
     public static function trackStripe(OrderTrackingModel $tracking, OrderModel $order, OrderTransactionModel $transaction)
     {
-        if ($gw = Gateway::getGateway($transaction->payment_method_model->processor)) {
+        if ($gw = AbstractGateway::getGateway($transaction->payment_method_model->processor)) {
             $address = $order->getAddressInfo();
             $gw->gateway->update([
                 'paymentIntentReference' => $transaction->transaction_id,

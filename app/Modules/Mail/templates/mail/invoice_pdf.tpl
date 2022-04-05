@@ -340,25 +340,13 @@
 
 {set $colspan = 5}
 
-<table cellspacing="0" cellpadding="3" width="100%" border="1">
+<table cellspacing="0" cellpadding="3" width="100%" border="1" >
     <tr>
-        <th width="60" bgcolor="#cccccc" align="center">{t 'SKU'}</th>
-        <th
-                {if $this_is_printable_version == "Y"}
-                    {if $order.has_backordered_status}
-                        width="170"
-                    {else}
-                        width="240"
-                    {/if}
-                {else}
-                    width="*"
-                {/if} align="center" bgcolor="#cccccc">{t 'Product'}
-        </th>
-        <th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">{t 'Item price'}</th>
-        <th width="50" nowrap="nowrap" bgcolor="#cccccc" align="center">{t 'Qty ord'}</th>
-        <th nowrap="nowrap" width="50" bgcolor="#cccccc" align="center">{t 'Extended'}
-            <br/>
-        </th>
+        <th style="width:1%" bgcolor="#cccccc" align="center">{t 'SKU'}</th>
+        <th style="width:96%" align="center" bgcolor="#cccccc">{t 'Product'}</th>
+        <th style="width:1%" nowrap="nowrap" bgcolor="#cccccc" align="center">{t 'Item price'}</th>
+        <th style="width:1%" nowrap="nowrap" bgcolor="#cccccc" align="center">{t 'Qty ord'}</th>
+        <th style="width:1%" nowrap="nowrap" width="50" bgcolor="#cccccc" align="center">{t 'Extended'}</th>
     </tr>
 
     {foreach $order->groups as $k => $group}

@@ -5,14 +5,10 @@ namespace Modules\Brand\Models;
 use Doctrine\DBAL\Types\Types;
 use Modules\Brand\BrandModule;
 use Modules\Core\Helpers\Cache;
-use Modules\Core\Helpers\CoreHelper;
-use Modules\Goods\Models\ImageDModel;
-use Modules\Marketplace\Models\ExternalMarketplaceDisabledBrandModel;
-use Modules\Marketplace\Models\ExternalMarketplaceDisabledDxModel;
-use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledBrandModel;
+use Modules\Marketplace\Models\ExternalMarketplaceDisabledModel;
 use Modules\Marketplace\Models\ExternalMarketPlaceModel;
-use Modules\Sites\Models\SiteModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Components\Breadcrumbs;
 use Xcart\App\Main\Xcart;
@@ -21,7 +17,6 @@ use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
-use Xcart\App\Orm\Fields\HasToOneField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Fields\ManyToManyField;
@@ -299,7 +294,7 @@ class BrandModel extends Model
      * @throws \Xcart\App\Exceptions\UnknownMethodException
      * @throws \Xcart\App\Exceptions\UnknownPropertyException
      */
-    public function getAllAlphabetically()
+    public static function getAllAlphabetically(): array
     {
         $allBrands = static::getAllActive();
         return static::breakUpAlphabetically($allBrands);
@@ -310,7 +305,7 @@ class BrandModel extends Model
      * @param $allBrands
      * @return array
      */
-    private static function breakUpAlphabetically($allBrands)
+    private static function breakUpAlphabetically(array $allBrands): array
     {
         $brands = [];
         foreach ($allBrands as $brand) {

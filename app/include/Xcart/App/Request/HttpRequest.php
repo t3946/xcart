@@ -1,8 +1,12 @@
 <?php
 namespace Xcart\App\Request;
 
+use Exception;
+use Modules\User\Components\XcartSession;
+use Throwable;
 use Xcart\App\Exceptions\HttpException;
 use Xcart\App\Exceptions\InvalidConfigException;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Helpers\Collection;
 use Xcart\App\Helpers\Creator;
 use Xcart\App\Main\Xcart;
@@ -10,10 +14,10 @@ use Xcart\App\Main\Xcart;
 /**
  * Class HttpRequest
  *
- * @property \Xcart\App\Request\Session|\Modules\User\Components\XcartSession $session
- * @property \Xcart\App\Helpers\Collection $get
- * @property \Xcart\App\Helpers\Collection $post
- * @property \Xcart\App\Helpers\Collection $request $_GET replaced by $_POST without $_COOKIE
+ * @property Session|XcartSession $session
+ * @property Collection $get
+ * @property Collection $post
+ * @property Collection $request $_GET replaced by $_POST without $_COOKIE
  * @property CookieCollection $cookie
  *
  * @package Xcart\App\Request
@@ -26,57 +30,43 @@ class HttpRequest extends Request
      * request tunneled through POST. Defaults to '_method'.
      * @see getMethod()
      */
-    public $methodParam = '_method';
+    public string $methodParam = '_method';
 
-    protected $_hostInfo;
+    protected ?string $_hostInfo = null;
 
-    protected $_baseUrl;
+    protected ?string $_scriptUrl = null;
 
-    protected $_scriptUrl;
+    protected ?string $_url = null;
 
-    protected $_url;
-    protected $_url_resolved;
+    protected ?string $_url_resolved = null;
 
-    protected $_port;
+    protected ?int $_port = null;
 
-    protected $_securePort;
+    protected ?int $_securePort = null;
 
-    /**
-     * @var Session
-     */
-    protected $_session;
+    protected Session $_session;
 
-    /**
-     * @var CookieCollection
-     */
-    public $cookie;
+    public CookieCollection $cookie;
 
-    /**
-     * @var Collection
-     */
-    public $get;
+    public Collection $get;
 
-    /**
-     * @var Collection
-     */
-    public $post;
+    public Collection $post;
 
-    /**
-     * @var Collection
-     */
-    public $request;
+    public Collection $request;
 
-    public $enableCsrfValidation = false;
+    public Collection $body;
 
-    public $csrfTokenName = 'CSRF_TOKEN';
+    public bool $enableCsrfValidation = false;
 
-    public $csrfTokenHeader = 'X-CSRF-Token';
+    public string $csrfTokenName = 'CSRF_TOKEN';
+
+    public string $csrfTokenHeader = 'X-CSRF-Token';
 
     public $from_get = false;
 
-    protected $_csrfToken;
+    protected string $_csrfToken;
 
-    public function init()
+    public function init(): void
     {
         if ($this->enableCsrfValidation) {
             $this->validateCsrfToken();
@@ -86,7 +76,7 @@ class HttpRequest extends Request
     public function validateCsrfToken(): void
     {
         $method = $this->getMethod();
-        if (\in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+        if (in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             // @TODO: PUT, PATCH, DELETE check
             $userToken = $this->post->get($this->csrfTokenName);
             $validToken = $this->getCsrfToken();
@@ -95,7 +85,7 @@ class HttpRequest extends Request
                 $userToken = $this->getCsrfTokenFromHeader();
             }
 
-            $valid = $userToken == $validToken;
+            $valid = $userToken === $validToken;
             if (!$valid) {
                 throw new HttpException(400, 'CSRF token is invalid');
             }
@@ -114,7 +104,7 @@ class HttpRequest extends Request
         return $_SERVER[$key] ?? null;
     }
 
-    public function getCsrfToken()
+    public function getCsrfToken(): string
     {
         // Write to cookie
         if (!$this->_csrfToken) {
@@ -128,12 +118,25 @@ class HttpRequest extends Request
         return $this->_csrfToken;
     }
 
+    public function getBody()
+    {
+        return file_get_contents('php://input');
+    }
+
     public function __construct()
     {
         $this->get = new Collection($_GET);
         $this->post = new Collection($_POST);
         $this->request = new Collection(array_replace($_GET, $_POST));
         $this->cookie = new CookieCollection();
+
+        try {
+            $body = $this->getBody() ? json_decode($this->getBody(), true, 512, JSON_THROW_ON_ERROR) : [];
+        } catch (Throwable $e) {
+            $body = [];
+        } finally {
+            $this->body = new Collection($body);
+        }
     }
 
     public function setSession($session): void
@@ -141,18 +144,18 @@ class HttpRequest extends Request
         if ($session instanceof Session) {
             $this->_session = $session;
         }
-        elseif (\is_array($session) || \is_string($session)) {
+        elseif (is_array($session) || is_string($session)) {
             $session['request'] = $this;
             $this->_session = Creator::create($session);
         }
     }
 
-    public function getSession()
+    public function getSession(): Session
     {
         return $this->_session;
     }
 
-    public function getMethod()
+    public function getMethod(): string
     {
         if (isset($_POST[$this->methodParam])) {
             return strtoupper($_POST[$this->methodParam]);
@@ -172,7 +175,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a GET request.
      *
-     * @return boolean whether this is a GET request.
+     * @return bool whether this is a GET request.
      */
     public function getIsGet(): bool
     {
@@ -182,7 +185,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is an OPTIONS request.
      *
-     * @return boolean whether this is a OPTIONS request.
+     * @return bool whether this is a OPTIONS request.
      */
     public function getIsOptions(): bool
     {
@@ -192,7 +195,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a HEAD request.
      *
-     * @return boolean whether this is a HEAD request.
+     * @return bool whether this is a HEAD request.
      */
     public function getIsHead(): bool
     {
@@ -202,7 +205,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a POST request.
      *
-     * @return boolean whether this is a POST request.
+     * @return bool whether this is a POST request.
      */
     public function getIsPost(): bool
     {
@@ -212,7 +215,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a DELETE request.
      *
-     * @return boolean whether this is a DELETE request.
+     * @return bool whether this is a DELETE request.
      */
     public function getIsDelete(): bool
     {
@@ -222,7 +225,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a PUT request.
      *
-     * @return boolean whether this is a PUT request.
+     * @return bool whether this is a PUT request.
      */
     public function getIsPut(): bool
     {
@@ -232,7 +235,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a PATCH request.
      *
-     * @return boolean whether this is a PATCH request.
+     * @return bool whether this is a PATCH request.
      */
     public function getIsPatch(): bool
     {
@@ -245,7 +248,7 @@ class HttpRequest extends Request
      * Note that jQuery doesn't set the header in case of cross domain
      * requests: https://stackoverflow.com/questions/8163703/cross-domain-ajax-doesnt-send-x-requested-with-header
      *
-     * @return boolean whether this is an AJAX (XMLHttpRequest) request.
+     * @return bool whether this is an AJAX (XMLHttpRequest) request.
      */
     public function getIsAjax(): bool
     {
@@ -255,7 +258,7 @@ class HttpRequest extends Request
     /**
      * Returns whether this is a PJAX request
      *
-     * @return boolean whether this is a PJAX request
+     * @return bool whether this is a PJAX request
      */
     public function getIsPjax(): bool
     {
@@ -264,15 +267,7 @@ class HttpRequest extends Request
 
     public function getHost()
     {
-        if (isset($_SERVER['HTTP_HOST'])) {
-            return $_SERVER['HTTP_HOST'];
-        }
-        else if (isset($_SERVER['SERVER_NAME'])) {
-            return $_SERVER['SERVER_NAME'];
-        }
-        else {
-            return null;
-        }
+        return $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? null;
     }
 
     public function getDomain()
@@ -287,14 +282,14 @@ class HttpRequest extends Request
     /**
      * Returns the schema and host part of the current request URL.
      * The returned URL does not have an ending slash.
-     * By default this is determined based on the user request information.
+     * By default, this is determined based on the user request information.
      * You may explicitly specify it by setting the [[setHostInfo()|hostInfo]] property.
      *
      * @return string schema and hostname part (with port number if needed) of the request URL (e.g. `http://www.yiiframework.com`),
-     * null if can't be obtained from `$_SERVER` and wasn't set.
+     * null if it can't be obtained from `$_SERVER` and wasn't set.
      * @see setHostInfo()
      */
-    public function getHostInfo()
+    public function getHostInfo(): string
     {
         if ($this->_hostInfo === null) {
             $secure = $this->getIsSecureConnection();
@@ -354,9 +349,9 @@ class HttpRequest extends Request
      * This setter is provided in case the entry script URL cannot be determined
      * on certain Web servers.
      *
-     * @param string $value the relative URL for the application entry script.
+     * @param string|null $value the relative URL for the application entry script.
      */
-    public function setScriptUrl($value)
+    public function setScriptUrl(string $value = null): void
     {
         $this->_scriptUrl = $value === null ? null : '/' . trim($value, '/');
     }
@@ -386,7 +381,7 @@ class HttpRequest extends Request
      * This is a shortcut to the concatenation of [[hostInfo]] and [[url]].
      *
      * @return string the currently requested absolute URL.
-     * @throws \Xcart\App\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getAbsoluteUrl(): string
     {
@@ -398,10 +393,10 @@ class HttpRequest extends Request
      * This refers to the portion of the URL that is after the [[hostInfo]] part.
      * It includes the [[queryString]] part if any.
      *
-     * @return string the currently requested relative URL. Note that the URI returned is URL-encoded.
+     * @return string|null the currently requested relative URL. Note that the URI returned is URL-encoded.
      * @throws InvalidConfigException if the URL cannot be determined due to unusual server configuration
      */
-    public function getUrl(): string
+    public function getUrl():? string
     {
         if ($this->_url === null) {
             $this->_url = $this->getRequestUri();
@@ -414,7 +409,7 @@ class HttpRequest extends Request
      * Returns part of the request URL that is before the question mark.
      *
      * @return string part of the request URL that is before the question mark
-     * @throws \Xcart\App\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getPath(): string
     {
@@ -426,7 +421,7 @@ class HttpRequest extends Request
     {
         $requestUri = '';
 
-        if ($from_get_path && \is_bool($this->from_get) && $this->from_get) {
+        if ($from_get_path && is_bool($this->from_get) && $this->from_get) {
             if ($qs = $this->getQueryArray(null, false)) {
                 $requestUri = current(array_keys($qs));
             }
@@ -447,13 +442,14 @@ class HttpRequest extends Request
      * This refers to the portion that is after the [[hostInfo]] part. It includes the [[queryString]] part if any.
      * The implementation of this method referenced Zend_Controller_Request_Http in Zend Framework.
      *
-     * @return string|boolean the request URI portion for the currently requested URL.
+     * @return string the request URI portion for the currently requested URL.
      * Note that the URI returned is URL-encoded.
      * @throws InvalidConfigException if the request URI cannot be determined due to unusual server configuration
      */
-    public function getRequestUri()
+    public function getRequestUri(): ?string
     {
-        if (!$this->_url_resolved) {
+        if ($this->_url_resolved === null) {
+
             if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // IIS
                 $requestUri = urldecode($_SERVER['HTTP_X_REWRITE_URL']);
             }
@@ -505,19 +501,18 @@ class HttpRequest extends Request
      * @param bool $ignore_fg
      * @return array part of the request URL that is after the question mark
      */
-    public function getQueryArray($query_string = null, $ignore_fg = true): array
+    public function getQueryArray($query_string = null, bool $ignore_fg = true): array
     {
         $string = $query_string ?: $this->getQueryString();
         parse_str($string, $data);
 
-        if ($ignore_fg && \is_bool($this->from_get)) {
+        if ($ignore_fg && is_bool($this->from_get)) {
             if ($data) {
                 $requestUri = current(array_keys($data));
                 unset($data[$requestUri]);
             }
         }
-        else
-        if ($ignore_fg && $this->from_get && !empty($data[$this->from_get])) {
+        elseif ($ignore_fg && $this->from_get && !empty($data[$this->from_get])) {
             unset($data[$this->from_get]);
         }
 
@@ -527,7 +522,7 @@ class HttpRequest extends Request
     /**
      * Return if the request is sent via secure channel (https).
      *
-     * @return boolean if the request is sent via secure channel (https)
+     * @return bool if the request is sent via secure channel (https)
      */
     public function getIsSecureConnection(): bool
     {
@@ -548,11 +543,11 @@ class HttpRequest extends Request
     /**
      * Returns the server port number.
      *
-     * @return integer|null server port number, null if not available
+     * @return int|null server port number, null if not available
      */
     public function getServerPort(): ?int
     {
-        return isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : null;
+        return $_SERVER['SERVER_PORT'] ?? null;
     }
 
     /**
@@ -616,13 +611,13 @@ class HttpRequest extends Request
      * Defaults to 80, or the port specified by the server if the current
      * request is insecure.
      *
-     * @return integer port number for insecure requests.
+     * @return int port number for insecure requests.
      * @see setPort()
      */
     public function getPort(): int
     {
         if ($this->_port === null) {
-            $this->_port = !$this->getIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 80;
+            $this->_port = !$this->getIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
         }
 
         return $this->_port;
@@ -633,12 +628,12 @@ class HttpRequest extends Request
      * This setter is provided in case a custom port is necessary for certain
      * server configurations.
      *
-     * @param integer $value port number.
+     * @param int $value port number.
      */
-    public function setPort($value): void
+    public function setPort(int $value): void
     {
-        if ($value != $this->_port) {
-            $this->_port = (int)$value;
+        if ($value !== $this->_port) {
+            $this->_port = $value;
             $this->_hostInfo = null;
         }
     }
@@ -648,13 +643,13 @@ class HttpRequest extends Request
      * Defaults to 443, or the port specified by the server if the current
      * request is secure.
      *
-     * @return integer port number for secure requests.
+     * @return int port number for secure requests.
      * @see setSecurePort()
      */
     public function getSecurePort(): int
     {
         if ($this->_securePort === null) {
-            $this->_securePort = $this->getIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? (int)$_SERVER['SERVER_PORT'] : 443;
+            $this->_securePort = $this->getIsSecureConnection() && isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 443;
         }
 
         return $this->_securePort;
@@ -665,12 +660,12 @@ class HttpRequest extends Request
      * This setter is provided in case a custom port is necessary for certain
      * server configurations.
      *
-     * @param integer $value port number.
+     * @param int $value port number.
      */
-    public function setSecurePort($value): void
+    public function setSecurePort(int $value): void
     {
-        if ($value != $this->_securePort) {
-            $this->_securePort = (int)$value;
+        if ($value !== $this->_securePort) {
+            $this->_securePort = $value;
             $this->_hostInfo = null;
         }
     }
@@ -682,46 +677,37 @@ class HttpRequest extends Request
      * media type that would have been sent had the request been a GET.
      * For the MIME-types the user expects in response, see [[acceptableContentTypes]].
      *
-     * @return string request content-type. Null is returned if this information is not available.
+     * @return string|null request content-type. Null is returned if this information is not available.
      * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.17
      * HTTP 1.1 header field definitions
      */
     public function getContentType(): ?string
     {
-        if (isset($_SERVER['CONTENT_TYPE'])) {
-            return $_SERVER['CONTENT_TYPE'];
-        }
-
-        if (isset($_SERVER['HTTP_CONTENT_TYPE'])) {
-            //fix bug https://bugs.php.net/bug.php?id=66606
-            return $_SERVER['HTTP_CONTENT_TYPE'];
-        }
-
-        return null;
+        return $_SERVER['CONTENT_TYPE'] ?? $_SERVER['HTTP_CONTENT_TYPE'] ?? null;
     }
 
     /**
      * Redirects the browser to the specified URL.
      *
-     * @param string $url         URL to be redirected to. Note that when URL is not
+     * @param string|object $url  URL to be redirected to. Note that when URL is not
      *                            absolute (not starting with "/") it will be relative to current request URL.
      * @param array $data         Data for create url
-     * @param integer $statusCode the HTTP status code. Defaults to 302. See {@link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}
+     * @param int $statusCode the HTTP status code. Defaults to 302. See {@link http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}
      *                            for details about HTTP status code.
      *
      *
      * @param array $query         Data for create get params
      *
-     * @throws \Exception
-     * @throws \Xcart\App\Exceptions\InvalidConfigException
-     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws UnknownPropertyException
      */
-    public function redirect($url, array $data = [], $statusCode = 302, $query = [])
+    public function redirect($url, array $data = [], int $statusCode = 302, array $query = []): void
     {
-        if (\is_object($url) && method_exists($url, 'getAbsoluteUrl')) {
+        if (is_object($url) && method_exists($url, 'getAbsoluteUrl')) {
             $url = $url->getAbsoluteUrl();
         }
-        elseif (strpos($url, ':') !== false && strpos($url, 'http', 0) === false) {
+        elseif (strpos($url, ':') !== false && strpos($url, 'http') === false) {
             $url = Xcart::app()->router->url($url, $data, $query);
         }
 
