@@ -19,15 +19,19 @@ import { useRouter } from "next/router";
 import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
+import Head from "next/head";
 
 interface IProps {
   decision: Record<any, any>;
+  cards: any;
+  defaultCardId: any;
+  paypalUrl?: string;
 }
 
 const Decision: React.FC<IProps> = (props) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { decision } = props;
+  const { decision, cards, defaultCardId, paypalUrl } = props;
   const snackbar = useSnackbar();
   const user = useSelectorAccount((e) => e.user);
 
@@ -64,17 +68,29 @@ const Decision: React.FC<IProps> = (props) => {
     "additional-information-required": POAdditionalInformationRequired,
   };
   const DecisionComponents: React.FC<any> = components[decision.type.slug];
+
   return (
-    <div>
-      <h1 className={"text-center fw-bold decision-header decision__header"}>
-        Order # {decision.order_number}
-      </h1>
-      <Navigation
-        orderId={decision.order_id}
-        orderStatus={decision.order.cb_status}
-      />
-      <DecisionComponents onChange={onChangeDecision} decision={decision} />
-    </div>
+    <>
+      <Head>
+        <title>{decision.type.name}</title>
+      </Head>
+      <div>
+        <h1 className={"text-center fw-bold decision-header decision__header"}>
+          Order # {decision.order_number}
+        </h1>
+        <Navigation
+          orderId={decision.order_id}
+          orderStatus={decision.order.cb_status}
+        />
+        <DecisionComponents
+          onChange={onChangeDecision}
+          decision={decision}
+          cards={cards}
+          defaultCardId={defaultCardId}
+          paypalUrl={paypalUrl}
+        />
+      </div>
+    </>
   );
 };
 

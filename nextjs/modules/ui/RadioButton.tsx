@@ -6,13 +6,13 @@ interface IProps {
   name: string;
   value: any;
   checkedValue: any;
-  disabled: boolean;
-  onChange: (e) => void;
+  onChange: (e: any) => void;
+  disabled?: boolean;
   classes?: any;
 }
 
 const RadioButton: React.FC<IProps> = (props: IProps) => {
-  const { name, value, checkedValue, disabled, onChange } = props;
+  const { name, value, checkedValue, disabled = false, onChange } = props;
 
   const classes = [
     Styles.radioMarker,

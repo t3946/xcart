@@ -112,6 +112,11 @@ class AccountApi extends Controller
                 'mobile' => GoodsMenuLibrary::toArrayMobile(),
             ],
             'countries' => AccountController::getCountryPhoneCodes(),
+            'payments' => [
+                'cards' => [],
+                'cardsLoading' => false,
+                'methods' => $this->getPaymentMethods(),
+            ],
         ];
 
         $this->jsonResponse($initial_data);
@@ -153,8 +158,7 @@ class AccountApi extends Controller
         http_response_code(200);
     }
 
-    public function getPaymentMethods()
-    {
+    public function getPaymentMethods() {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $payment_methods = $site->payment_methods->asArray()->filter(['is_active' => 1])->order(['position'])->all();
 
@@ -162,7 +166,12 @@ class AccountApi extends Controller
             $payment_methods = PaymentMethodModel::objects()->asArray()->select(["logo", "name"])->all(['is_active' => 1]);
         }
 
-        $this->jsonResponse($payment_methods);
+        return $payment_methods;
+    }
+
+    public function getPaymentMethodsAction()
+    {
+        $this->jsonResponse($this->getPaymentMethods());
     }
 
     // получить данные для клиентской части старого сайта

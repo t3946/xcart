@@ -17,7 +17,7 @@ return [
 
     [
         'route' => '/get-payment-methods',
-        'target' => [AccountApi::class, 'getPaymentMethods'],
+        'target' => [AccountApi::class, 'getPaymentMethodsAction'],
         'name' => 'get-payment-methods'
     ],
 

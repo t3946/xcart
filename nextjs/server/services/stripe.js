@@ -8,7 +8,9 @@ async function getClient() {
       processor_name: "Stripe",
     },
   });
-  const stripeSK = paymentProcessorModel.param02;
+  // const stripeSK = paymentProcessorModel.param02;
+  const stripeSK =
+    "sk_test_51FmjzfBBFmepO8dOYfc0LN8QImGbPGfIq2gu95ZffQPLJcTwdZzir7Kndz5oggnWNerV7Q9aPxvagWxEKwkCZAKT00SRojdCTt";
 
   return Stripe(stripeSK);
 }
@@ -97,6 +99,11 @@ module.exports = {
   },
 
   paymentIntent: {
+    create: async function (params) {
+      const stripe = await getClient();
+
+      return await stripe.paymentIntents.create(params);
+    },
     confirm: async function (pi, pm) {
       const stripe = await getClient();
 
@@ -112,6 +119,14 @@ module.exports = {
       const customer = await getCustomer(userId, stripe);
 
       return await stripe.customers.updateSource(customer.id, cardId, params);
+    },
+  },
+
+  card: {
+    retrieve: async function (customerId, cardId) {
+      const stripe = await getClient();
+
+      return await stripe.customers.retrieveSource(customerId, cardId);
     },
   },
 };

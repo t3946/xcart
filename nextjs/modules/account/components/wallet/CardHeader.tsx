@@ -31,3 +31,5 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
     </div>
   );
 };
+
+export default CardHeader;

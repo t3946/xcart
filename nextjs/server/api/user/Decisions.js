@@ -1,8 +1,61 @@
 const express = require("express");
 const isAuthMiddleware = require("../../middleware/isAuth");
+const stripeService = require("../../services/stripe");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 const app = express();
+const getBaseUrl = require("../../utils/getBaseUrl");
+const md5 = require("md5");
+
+function getPaypalUrl(req, order) {
+  const [firstName, lastName] = order.b_firstname.split(" ");
+  const orderHash = md5([order.orderid, order.s_zipcode, order.email].join(""));
+  const returnUrl =
+    getBaseUrl(req) + `/payment/return/paypal/${order.orderid}/${orderHash}`;
+  const cancel_return = getBaseUrl(req) + `/payment/cancel/paypal/`;
+  const params = {
+    cmd: "_ext-enter",
+    redirect_cmd: "_xclick",
+    mrb: "R-2JR83330TB370181P",
+    pal: "RDGQCFJTT6Y6A",
+    rm: "2",
+    custom: order.orderid,
+    business: "paypal@s3stores.com",
+    email: order.email,
+    first_name: firstName,
+    last_name: lastName,
+    day_phone_a: order.phone.substr(0, 3),
+    day_phone_b: order.phone.substr(3, 3),
+    day_phone_c: order.phone.substr(6, 4),
+    night_phone_a: order.phone.substr(0, 3),
+    night_phone_b: order.phone.substr(3, 3),
+    night_phone_c: order.phone.substr(6, 4),
+    item_name: `S3 Stores, Inc. Order # ${order.order_prefix}${order.orderid}`,
+    amount: parseFloat(order.total),
+    currency_code: order.currency,
+    bn: "x-cart",
+    paymentaction: "authorization",
+    address1: order.b_address,
+    country: order.b_country,
+    state: order.b_state,
+    city: order.b_city,
+    zip: order.b_zipcode,
+    return: returnUrl,
+    cancel_return: cancel_return,
+  };
+  const baseUrl = "https://www.paypal.com/cgi-bin/webscr";
+  const urlParamsList = [];
+
+  for (const key in params) {
+    const value = params[key];
+
+    urlParamsList.push(`${key}=${value}`);
+  }
+
+  const urlParams = urlParamsList.join("&");
+
+  return `${baseUrl}?${urlParams}`;
+}
 
 //get current user decisions
 app.get("/get-initial-state", isAuthMiddleware, async function (req, res) {
@@ -157,8 +210,8 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
       },
     },
   });
-
   const altItemsSku = decision.order.alt_items.split(",");
+
   decision.order.alt_items = await prisma.xcart_products.findMany({
     where: {
       productcode: {
@@ -171,7 +224,18 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  res.json({ decision });
+  const resBody = { decision };
+  const order = await prisma.xcart_orders.findFirst({
+    where: {
+      orderid: decision.order.orderId,
+    },
+  });
+
+  if (decision.type.slug === "unpaid-order") {
+    resBody.paypalUrl = getPaypalUrl(req, order);
+  }
+
+  res.json(resBody);
 });
 
 app.post("/create", isAuthMiddleware, async function (req, res) {
@@ -259,6 +323,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
     },
     include: {
       type: true,
+      order: true,
     },
   });
 
@@ -308,8 +373,84 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "unpaid-order":
-      decision.options.action = req.body.payment;
-      decision.options.card_id = req.body.card_id;
+      decision.options.action = req.body.action;
+
+      switch (req.body.action) {
+        case "pay-by-card":
+          const user = await prisma.xcart_users.findUnique({
+            where: {
+              user_id: req.user.userId,
+            },
+          });
+          const { orderid, order_prefix } = decision.order;
+          const paymentIntentObject = await stripeService.paymentIntent.create({
+            amount: parseFloat(decision.order.total) * 100,
+            currency: "usd",
+            payment_method_types: ["card"],
+            description: `S3 Stores, Inc. Order # ${order_prefix}${orderid}`,
+            customer: user.stripe_customer_id,
+            capture_method: "manual",
+          });
+
+          await stripeService.paymentIntent.confirm(
+            paymentIntentObject.id,
+            req.body.cardId
+          );
+
+          await prisma.xcart_orders.update({
+            where: {
+              orderid: decision.order.orderid,
+            },
+            data: {
+              cb_status: "AP",
+            },
+          });
+
+          await prisma.xcart_order_groups.updateMany({
+            where: {
+              orderid: decision.order.orderid,
+            },
+            data: {
+              cb_status: "AP",
+            },
+          });
+
+          const card = await stripeService.card.retrieve(
+            user.stripe_customer_id,
+            req.body.cardId
+          );
+
+          decision.options.card = {
+            brand: card.brand,
+            last4: card.last4,
+          };
+
+          break;
+
+        case "cancel-order":
+          await prisma.xcart_orders.update({
+            where: {
+              orderid: decision.order.orderid,
+            },
+            data: {
+              cb_status: "F",
+            },
+          });
+
+          await prisma.xcart_order_groups.updateMany({
+            where: {
+              orderid: decision.order.orderid,
+            },
+            data: {
+              cb_status: "F",
+            },
+          });
+          break;
+
+        case "pay-by-paypal":
+          re;
+      }
+
       break;
 
     case "additional-shipping-charge":
