@@ -3,9 +3,8 @@ import ProductCell from "@modules/account/components/order/order-table/ProductCe
 import OrderTable from "@modules/account/components/order/order-table/OrderTable";
 import TableFooter from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/TableFooter";
 import cn from "classnames";
-import Styles
-  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
-import Button, {ETheme} from "@modules/ui/forms/Button";
+import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 import Link from "next/link";
 import getStoreUrl from "@utils/getStoreUrl";
 import getThumbUrl from "@utils/getThumbUrl";
@@ -146,13 +145,15 @@ const ShippingTable: React.FC<IProps> = (props) => {
                 <Button className={"w-md-auto"}>buy again</Button>
               </a>
 
-              <Link href={`/create-review/${item.productId}`}>
-                <a className={"text-decoration-none"}>
-                  <Button className={"w-md-auto"} theme={ETheme.outlined}>
-                    write a product review
-                  </Button>
-                </a>
-              </Link>
+              {item.xcart_products.xcart_product_reviews.length === 0 && (
+                <Link href={`/create-review/${item.xcart_products.productid}`}>
+                  <a className={"text-decoration-none"}>
+                    <Button className={"w-md-auto"} theme={ETheme.outlined}>
+                      write a product review
+                    </Button>
+                  </a>
+                </Link>
+              )}
             </div>
           );
 

@@ -165,6 +165,11 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
                       },
                     },
                   },
+                  xcart_product_reviews: {
+                    where: {
+                      user_id: req.user.userId,
+                    },
+                  },
                 },
               },
             },
