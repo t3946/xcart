@@ -1,5 +1,6 @@
 .feature-rating-stars {
   width: rem-calc(103);
+  flex-shrink: 0;
 
   @include breakpoint(md up) {
     width: rem-calc(157);
