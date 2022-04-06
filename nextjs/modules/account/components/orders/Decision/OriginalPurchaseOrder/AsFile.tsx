@@ -1,17 +1,15 @@
 import React from "react";
 import UploadFile from "@modules/ui/UploadFile";
-import {Form, Formik, FormikHelpers} from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import * as yup from "yup";
 import cn from "classnames";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
-import Styles
-  from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder.module.scss";
-import {useDispatch} from "react-redux";
+import Styles from "@modules/account/components/orders/Decision/OriginalPurchaseOrder/OriginalPurchaseOrder.module.scss";
+import { useDispatch } from "react-redux";
 import DecisionsInterface from "@modules/account/ts/types/decision";
-import {iSentOriginalPurchaseOrderViaFaxAction} from "@redux/actions/account-actions/DecisionsActions";
+import { iSentOriginalPurchaseOrderViaFaxAction } from "@redux/actions/account-actions/DecisionsActions";
 import SentFiles from "@modules/account/components/orders/Decision/SentFiles";
-import useSnackbar from "@modules/account/hooks/useSnackbar";
 
 interface IProps {
   onChange: (decision: DecisionsInterface) => any;
@@ -33,7 +31,6 @@ const AsFile: React.FC<IProps> = (props: IProps) => {
     "image/png",
     "application/pdf",
   ];
-  const snack = useSnackbar();
   const validationSchema = yup.object().shape({
     file: yup
       .mixed()
@@ -63,14 +60,14 @@ const AsFile: React.FC<IProps> = (props: IProps) => {
     dispatch(
       iSentOriginalPurchaseOrderViaFaxAction({
         data: formData,
-        success(res) {
+        success() {
           actions.setSubmitting(false);
-          snack.show(
-            `Thank you for sending your original Purchase Order! \n We will review it and send the order to you ASAP.`
-          );
-          onChange(res);
         },
       })
+    );
+
+    onChange(
+      `Thank you for sending your original Purchase Order! \n We will review it and send the order to you ASAP.`
     );
   }
   return (
