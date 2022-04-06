@@ -48,7 +48,7 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
             select: {
               id: true,
               tracknum: true,
-              xcart_tracking_links_carrier: {
+              carrier: {
                 select: {
                   link: true,
                 },
