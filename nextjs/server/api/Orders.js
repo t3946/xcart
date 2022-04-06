@@ -65,15 +65,8 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     const groups = orders[i].groups;
 
     for (const group of groups) {
-      group.statuses_history = group.statuses_history;
-      delete group.statuses_history;
       group.trackings = group.xcart_order_tracking;
       delete group.xcart_order_tracking;
-
-      for (const tracking of group.trackings) {
-        tracking.carrier = tracking.xcart_tracking_links_carrier;
-        delete tracking.xcart_tracking_links_carrier;
-      }
     }
   }
 
