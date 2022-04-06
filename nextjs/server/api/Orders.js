@@ -88,6 +88,13 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
     },
     include: {
       decisions: true,
+      logs: {
+        where: {
+          type: {
+            in: ["U"],
+          },
+        },
+      },
       groups: {
         select: {
           order_group_id: true,
