@@ -43,7 +43,7 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
         },
         select: {
           order_group_id: true,
-          xcart_order_statuses_history: true,
+          statuses_history: true,
           xcart_order_tracking: {
             select: {
               id: true,
@@ -65,8 +65,8 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     const groups = orders[i].groups;
 
     for (const group of groups) {
-      group.statuses_history = group.xcart_order_statuses_history;
-      delete group.xcart_order_statuses_history;
+      group.statuses_history = group.statuses_history;
+      delete group.statuses_history;
       group.trackings = group.xcart_order_tracking;
       delete group.xcart_order_tracking;
 
