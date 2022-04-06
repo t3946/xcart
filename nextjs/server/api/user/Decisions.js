@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 const app = express();
 const getBaseUrl = require("../../utils/getBaseUrl");
 const md5 = require("md5");
+const amqp = require("amqplib");
 
 function getPaypalUrl(req, order, amount, decisionId) {
   const [firstName, lastName] = order.b_firstname.split(" ");
@@ -332,6 +333,26 @@ app.post("/set-all-not-solved", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
+async function cancelOrder(orderid) {
+  await prisma.xcart_orders.update({
+    where: {
+      orderid,
+    },
+    data: {
+      cb_status: "F",
+    },
+  });
+
+  await prisma.xcart_order_groups.updateMany({
+    where: {
+      orderid,
+    },
+    data: {
+      cb_status: "F",
+    },
+  });
+}
+
 app.post("/solve", isAuthMiddleware, async function (req, res) {
   const decision = await prisma.account_decisions.findUnique({
     where: {
@@ -346,6 +367,16 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
   switch (decision.type.slug) {
     case "po-send-check":
       decision.options.address = req.body.address;
+
+      switch (decision.options.addresses[req.body.address].country.code) {
+        case "US":
+          decision.options.action = "american-address";
+          break;
+        case "CA":
+          decision.options.action = "canada-address";
+          break;
+      }
+
       break;
 
     case "alternative-items-offer":
@@ -358,7 +389,12 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "increase-shipping-charge":
-      decision.options.choice = req.body.choice;
+      decision.options.action = req.body.action;
+
+      if (decision.options.action === "cancel") {
+        await cancelOrder(decision.order.orderid);
+      }
+
       break;
 
     case "street-address-required":
@@ -449,30 +485,14 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
               transaction_amount: amount / 100,
               transaction_id: paymentIntentObject.id,
               paymentid: 106,
-              date: Math.round(new Date().getTime() / 1000)
+              date: Math.round(new Date().getTime() / 1000),
             },
           });
 
           break;
 
         case "cancel-order":
-          await prisma.xcart_orders.update({
-            where: {
-              orderid: decision.order.orderid,
-            },
-            data: {
-              cb_status: "F",
-            },
-          });
-
-          await prisma.xcart_order_groups.updateMany({
-            where: {
-              orderid: decision.order.orderid,
-            },
-            data: {
-              cb_status: "F",
-            },
-          });
+          await cancelOrder(decision.order.orderid);
           break;
       }
 
@@ -523,30 +543,14 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
               transaction_amount: amount / 100,
               transaction_id: paymentIntentObject.id,
               paymentid: 106,
-              date: Math.round(new Date().getTime() / 1000)
+              date: Math.round(new Date().getTime() / 1000),
             },
           });
 
           break;
 
         case "cancel-order":
-          await prisma.xcart_orders.update({
-            where: {
-              orderid: decision.order.orderid,
-            },
-            data: {
-              cb_status: "F",
-            },
-          });
-
-          await prisma.xcart_order_groups.updateMany({
-            where: {
-              orderid: decision.order.orderid,
-            },
-            data: {
-              cb_status: "F",
-            },
-          });
+          await cancelOrder(decision.order.orderid);
           break;
       }
 
@@ -555,7 +559,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
 
   await prisma.account_decisions.updateMany({
     data: {
-      solved: 1,
+      // solved: 1,
       options: decision.options,
     },
     where: {
@@ -568,6 +572,31 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       user_id: req.user.userId,
     },
   });
+
+  const open = amqp.connect("amqp://xcart:Uv5WxjbRj7pjqzY@159.65.220.58:5672/");
+
+  await open
+    .then(function (conn) {
+      return conn
+        .createChannel()
+        .then(function (ch) {
+          const q = "emails";
+          const msg = JSON.stringify({
+            action: "decision",
+            decision_id: decision.decision_id,
+          });
+          const ok = ch.assertQueue(q, { durable: true });
+
+          return ok.then(function () {
+            ch.sendToQueue(q, Buffer.from(msg));
+            return ch.close();
+          });
+        })
+        .finally(function () {
+          conn.close();
+        });
+    })
+    .catch(console.warn);
 
   res.json({ user });
 });

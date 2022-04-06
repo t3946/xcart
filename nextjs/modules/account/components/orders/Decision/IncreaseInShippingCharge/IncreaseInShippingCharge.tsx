@@ -26,7 +26,7 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
       solveDecisionAction({
         data: {
           decision_id: decision.decision_id,
-          choice: "approve",
+          action: "approve",
         },
         success() {
           setShow(true);
@@ -43,7 +43,7 @@ const IncreaseInShippingCharge: React.FC<IProps> = (props: IProps) => {
       solveDecisionAction({
         data: {
           decision_id: decision.decision_id,
-          choice: "cancel",
+          action: "cancel",
         },
         success() {
           setShow(true);

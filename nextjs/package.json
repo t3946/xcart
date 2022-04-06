@@ -26,6 +26,7 @@
     "@stripe/react-stripe-js": "^1.6.0",
     "@stripe/stripe-js": "^1.21.2",
     "@tinymce/tinymce-react": "^3.13.0",
+    "amqplib": "^0.8.0",
     "axios": "^0.24.0",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^5.0.1",

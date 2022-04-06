@@ -291,6 +291,12 @@ class DecisionController extends Controller
         $decision->save();
         $decision->setAttribute('solved', '1');
         $decision->update();
+        $data = [
+            'action' => 'decision',
+            'decision_id' => $decision->decision_id,
+        ];
+        $msg = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        Xcart::app()->queue->send('emails', $msg, true);
     }
 
     //solve payment required
