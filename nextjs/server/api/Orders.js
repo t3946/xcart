@@ -99,7 +99,22 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
         select: {
           order_group_id: true,
           total_gross: true,
-          xcart_order_statuses_history: true,
+          statuses_history: true,
+          xcart_order_tracking: {
+            include: {
+              carrier: {
+                select: {
+                  carrier: true,
+                  link: true,
+                },
+              },
+              link: {
+                select: {
+                  shipping: true,
+                },
+              },
+            },
+          },
           cb_status_rel: {
             select: {
               xcart_order_human_readable_statuses: {

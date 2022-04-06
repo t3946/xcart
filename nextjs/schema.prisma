@@ -3631,7 +3631,7 @@ model xcart_order_groups {
   xcart_order_voided_reasons      xcart_order_voided_reasons?                      @relation(fields: [voided_reason_id], references: [reason_id], onDelete: NoAction, map: "FK_xcart_order_groups_xcart_order_voided_reasons")
   details                         xcart_order_details[]
   xcart_order_group_taxes         xcart_order_group_taxes[]
-  xcart_order_statuses_history    xcart_order_statuses_history[]
+  statuses_history                xcart_order_statuses_history[]
   xcart_order_tracking            xcart_order_tracking[]
 
   @@unique([orderid, manufacturerid], map: "orderid_manufacturerid")
@@ -3736,8 +3736,8 @@ model xcart_order_tracking {
   aftership_id                 String?                      @db.VarChar(50)
   send_to_amazon               Int                          @default(0) @db.TinyInt
   created_at                   DateTime                     @default(now()) @db.Timestamp(0)
-  xcart_tracking_links_carrier xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
-  xcart_tracking_links         xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
+  carrier xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
+  link                         xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
   xcart_order_groups           xcart_order_groups           @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_order_groups")
 
   @@unique([order_group_id, tracknum], map: "order_group_id_tracknum")

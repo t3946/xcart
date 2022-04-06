@@ -24,7 +24,7 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
     api
       .get(
-        `https://nominatim.openstreetmap.org/search.php?city=${order.address.shippingCity}&state=${order.address.shippingState}&postalcode=${order.address.shippingZip}&polygon_geojson=1&format=jsonv2`
+        `https://nominatim.openstreetmap.org/search.php?city=${order.s_city}&state=${order.s_tate}&postalcode=${order.s_zipcode}&polygon_geojson=1&format=jsonv2`
       )
       .then((e) => {
         if (!e[0]) {
@@ -50,17 +50,17 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
         />
       ))}
       <div className="order-tracking-container order-tracking-footer">
-        {!!order.payment.status && (
-          <div className={cn({ "mb-3": !!order.payment.date })}>
+        {!!order.cb_status && (
+          <div className={cn({ "mb-3": !!order.date })}>
             <b>Payment status: </b>
-            <span>{order.payment.status}</span>
+            <span>{order.cb_status}</span>
           </div>
         )}
 
-        {!!order.payment.date && (
+        {!!order.date && (
           <div>
             <b>Payment date: </b>
-            <span>{moment.unix(order.payment.date).format("LL")}</span>
+            <span>{moment.unix(order.date).format("LL")}</span>
           </div>
         )}
       </div>

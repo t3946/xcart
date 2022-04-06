@@ -10,7 +10,7 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
 }) => {
   return (
     <div className="order-tracking-container">
-      {!!orderGroupInfo.trackings.length && (
+      {!!orderGroupInfo.xcart_order_tracking.length && (
         <div className="order-tracking-line-text">
           <div>
             {orderGroupInfo.trackings.map((track, i) => (
@@ -19,7 +19,8 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
                 className="order-tracking-weight-text"
               >
                 <div className="order-tracking-text">
-                  Shipped with {track.carrier.name} {track.carrier.method}
+                  Shipped with {track.carrier.carrier}{" "}
+                  {track.carrier.link.shipping}
                 </div>
                 Tracking number:{" "}
                 <a
