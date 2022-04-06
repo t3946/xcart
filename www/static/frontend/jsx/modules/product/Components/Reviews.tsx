@@ -17,18 +17,20 @@ interface IProps {
 }
 
 const Reviews: React.FC<any> = function (props: IProps) {
+  const { productId } = props;
   const site = useSelectorAccount((e) => e.site);
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
-  const totalReviews = site.product_info?.product?.total_reviews || 0;
   const ReviewsContainerRef = React.useRef<any>();
-  const {reviews, country} = useSelectorAccount((e)=> e.productPage);
+  const reviewsInfo = useSelectorAccount((e) => e.productsReviews[productId]);
+  const reviews = reviewsInfo?.reviews || [];
+  const country = reviewsInfo?.country;
+  const totalReviews = 8;
   const reviewsPerOnePage = 3;
   const [currentPage, setCurrentPage] = React.useState(0);
-  const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === 0);
+  const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === reviews.length);
   const [isLoading, setIsLoading] = React.useState(false);
   const orders = site?.reviews?.orders || null;
-
   const [sort, setSort] = React.useState(orders ? orders[0] : {
     previewValue: "Most recent",
     viewValue: "Most recent",
@@ -37,11 +39,17 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const breakpoint = useBreakpoint();
   const [isIntersecting, setIsIntersecting] = React.useState(false);
 
-  //load first reviews
+  //load reviews
+  //can load
   if (!isAllLoaded && !isLoading) {
-    if (!reviews || isIntersecting) {
+    //should load first items
+    if (reviews.length === 0 && totalReviews > 0) {
       getMoreReviews();
+    }
+    //should load additional items
+    else if (isIntersecting) {
       setIsIntersecting(false);
+      getMoreReviews();
     }
   }
 
@@ -79,19 +87,30 @@ const Reviews: React.FC<any> = function (props: IProps) {
   function getMoreReviews() {
     setIsLoading(true);
 
+    const maxLimit = totalReviews - reviews.length
+    const limit = Math.min(reviewsPerOnePage, maxLimit);
+    const offset = reviewsPerOnePage * currentPage;
+
+    if (limit === 0) {
+      console.warn("Excess loading");
+      setIsLoading(false);
+      return;
+    }
+
     dispatch(
       getReviewsAction({
         data: {
-          limit: reviewsPerOnePage,
-          offset: reviewsPerOnePage * currentPage,
+          limit,
+          offset,
           productId: props.productId,
           sort: sort.value,
         },
 
         success(res) {
-          if (!res.reviews.length) {
+          if (offset + limit === totalReviews) {
             setIsAllLoaded(true);
           }
+
           setIsLoading(false);
           setCurrentPage(currentPage + 1);
 
@@ -122,6 +141,60 @@ const Reviews: React.FC<any> = function (props: IProps) {
         </button>
       </div>
     );
+  }
+
+  function hatTemplate() {
+    if (totalReviews === 0) {
+      return "No reviews";
+    }
+
+    return (
+      <>
+        <span className={"d-none d-md-block"}>
+          {sort.previewValue} from the {country}
+        </span>
+
+        <FormSelect
+          items={orders}
+          onClick={changeSorting}
+          name={"select-sort"}
+          value={sort}
+          classes={{ group: "product-reviews-filter-select mb-20 mb-md-0" }}
+        />
+
+        <span className={"d-md-none"}>
+          {sort.previewValue} from the {country}
+        </span>
+      </>
+    );
+  }
+
+  const classes = {
+    hat: [
+      "product-reviews-header",
+      "product-reviews-header_big",
+      "product-reviews_column-header",
+      "mb-md-20",
+      "d-md-flex",
+      "justify-content-between",
+      "align-items-center",
+      { "skeleton-box": totalReviews > 0 && !country },
+    ],
+    container: [
+      "reviews-container",
+      "product-reviews__reviews-container",
+      "common-scrollbar",
+      {
+        "d-none": totalReviews === 0,
+      },
+    ],
+  };
+
+  function changeSorting(item) {
+    setSort(item);
+    dispatch(clearReviewsAction({ productId: props.productId }));
+    setCurrentPage(0);
+    setIsAllLoaded(false);
   }
 
   React.useEffect(function () {
@@ -162,58 +235,6 @@ const Reviews: React.FC<any> = function (props: IProps) {
       }
     };
   });
-
-  function hatTemplate() {
-    if (totalReviews === 0) {
-      return "No reviews";
-    }
-
-    return (
-      <>
-        <span className={"d-none d-md-block"}>
-          {sort.previewValue} from the {country}
-        </span>
-
-        <FormSelect
-          items={orders}
-          onClick={(item) => {
-            setSort(item);
-            dispatch(clearReviewsAction({ productId: props.productId }));
-            setCurrentPage(0);
-            setIsAllLoaded(false);
-          }}
-          name={"select-sort"}
-          value={sort}
-          classes={{ group: "product-reviews-filter-select mb-20 mb-md-0" }}
-        />
-
-        <span className={"d-md-none"}>
-          {sort.previewValue} from the {country}
-        </span>
-      </>
-    );
-  }
-
-  const classes = {
-    hat: [
-      "product-reviews-header",
-      "product-reviews-header_big",
-      "product-reviews_column-header",
-      "mb-md-20",
-      "d-md-flex",
-      "justify-content-between",
-      "align-items-center",
-      { "skeleton-box": totalReviews > 0 && !country },
-    ],
-    container: [
-      "reviews-container",
-      "product-reviews__reviews-container",
-      "common-scrollbar",
-      {
-        "d-none": totalReviews === 0,
-      },
-    ],
-  };
 
   return (
     <>

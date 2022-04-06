@@ -19,8 +19,18 @@ function* getProductRatingsAndReviews(action): Generator {
   });
 
   yield put({
-    type: "PRODUCT_PAGE_SET_REVIEWS",
-    reviews: res.reviews,
+    type: "ADD_REVIEWS",
+    payload: {
+      reviews: res.reviews,
+      country: res.country,
+      productId: data.productId,
+    }
+  });
+
+  yield put({
+    type: "REVIEWS_SET_TOTAL",
+    productId: data.productId,
+    total: res.total_reviews,
   });
 
   yield put({

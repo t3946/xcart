@@ -407,12 +407,15 @@ class ReviewsApi extends Controller
             $user_review = null;
         }
 
+        $total_reviews = ProductReviewsModel::objects()->filter(['product_id' => $product_id])->count();
+
         $this->jsonResponse([
             'ratings' => $this->getTotalRatings($product_id),
             'reviews' => $this->getReviews($product_id, $limit, $offset, $sort, $location),
             'country' => CountryModel::objects()->get(['code' => $location])->name,
             'product' => AccountController::getProduct($this->data['productId']),
             'canWriteReview' => $user_review ? false : true,
+            'total_reviews' => $total_reviews,
         ]);
     }
 

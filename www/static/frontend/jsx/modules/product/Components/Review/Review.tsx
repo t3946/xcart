@@ -45,7 +45,6 @@ const Review: React.FC<IProps> = function (props: IProps) {
     ],
   };
   const helpful_total = parseInt(props.review.helpful_total);
-  console.log({helpful_total});
 
   function formatDate(dateTime: string): string {
     const dateObject = dateTimeToDate(dateTime);

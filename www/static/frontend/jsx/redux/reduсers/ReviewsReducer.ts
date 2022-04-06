@@ -1,9 +1,11 @@
 import { AnyAction } from "redux";
-import { productsRatingsInitialValue } from "@client/modules/account/ts/consts/store-initial-value";
+import {
+  productsReviewsInitialValue
+} from "@client/modules/account/ts/consts/store-initial-value";
 import _unset from "lodash/unset";
 
 const ReviewsReducer = (
-  store: Record<number, any> = productsRatingsInitialValue,
+  store: Record<number, any> = productsReviewsInitialValue,
   action: AnyAction
 ): Record<any, any> => {
   switch (action.type) {
@@ -23,8 +25,13 @@ const ReviewsReducer = (
       store[productId].reviews = [...oldReviews, ...reviews];
       return { ...store };
 
+    case "REVIEWS_SET_TOTAL":
+      console.log("REVIEWS_SET_TOTAL", {action})
+      store[action.productId].total = action.total;
+      return { ...store };
+
     case "CLEAR_REVIEWS":
-      _unset(store, action.payload.productId);
+      store[action.payload.productId].reviews = [];
       return { ...store };
 
     default:
