@@ -3736,7 +3736,7 @@ model xcart_order_tracking {
   aftership_id                 String?                      @db.VarChar(50)
   send_to_amazon               Int                          @default(0) @db.TinyInt
   created_at                   DateTime                     @default(now()) @db.Timestamp(0)
-  carrier xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
+  carrier                      xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
   link                         xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
   xcart_order_groups           xcart_order_groups           @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_order_groups")
 
