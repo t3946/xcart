@@ -109,6 +109,16 @@ class CartController extends BaseCartController
         echo $cart->getQuantity();
     }
 
+    /**
+     * @throws \Xcart\App\Exceptions\UnknownPropertyException
+     */
+    public function actionProductAdd(): void
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $this->addInternal($data['productId'], $data['quantity'] ?? 1, $data['variantId'] ?? []);
+        $this->jsonResponse($this->getCartStateArray());
+    }
+
     public function actionProductsGet(): void
     {
         if ($this->getRequest()->getIsAjax()) {

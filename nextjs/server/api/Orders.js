@@ -142,6 +142,7 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
                 select: {
                   productid: true,
                   productcode: true,
+                  in_stock: true,
                   images: {
                     orderBy: {
                       order_by: "asc",

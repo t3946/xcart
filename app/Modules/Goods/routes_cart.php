@@ -15,6 +15,11 @@ return [
         'name' => 'products:add'
     ],
     [
+        'route' => '/add/one-product',
+        'target' => [CartController::class, 'actionProductAdd'],
+        'name' => 'products:add-one'
+    ],
+    [
         'route' => '/get/products',
         'target' => [CartController::class, 'actionProductsGet'],
         'name' => 'products:get'
