@@ -177,7 +177,7 @@ const MiniCartItems: React.FC<IProps> = function (props) {
       </div>
 
       <div className="buttons d-flex align-items-center justify-content-center">
-        <a href={checkoutUrl} className={"text-decoration-none"}>
+        <a href={"/checkout/shipping/"} className={"text-decoration-none"}>
           <Button type={"button"} className={"w-auto fs-6"}>
             Checkout <Checkout className={[Styles.checkoutIcon, "ms-2"]} />
           </Button>
