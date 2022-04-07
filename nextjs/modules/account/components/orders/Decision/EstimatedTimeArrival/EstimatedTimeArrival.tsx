@@ -27,15 +27,16 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
 
   const initialState = {
     comment: decision?.options?.comment || "",
-    advice: decision?.options?.advice || "",
+    action: decision?.options?.action || "",
   };
 
   const validationSchema = yup.object().shape({
     comment: yup.string(),
-    advice: yup.string().required(),
+    action: yup.string().required(),
   });
 
   function submit(data: Record<any, any>, actions: FormikHelpers<any>) {
+    actions.setSubmitting(false);
     data.decision_id = decision.decision_id;
 
     dispatch(
@@ -55,7 +56,7 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
     return (
       <Button
         className={"estimate-advise__submit-button w-md-auto"}
-        disabled={isSubmitting || !values.advice}
+        disabled={isSubmitting || !values.action}
         type={"submit"}
       >
         submit my decision
@@ -160,9 +161,9 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                 </div>
 
                 <AdviceList
-                  name={"advice"}
+                  name={"action"}
                   onChange={handleChange}
-                  value={values.advice}
+                  value={values.action}
                   hasInStock={true}
                   hasOutOfStock={true}
                   hasDiscontinued={true}

@@ -7,6 +7,7 @@ const app = express();
 const getBaseUrl = require("../../utils/getBaseUrl");
 const md5 = require("md5");
 const amqp = require("amqplib");
+const passport = require("../../auth/Passport");
 
 function getPaypalUrl(req, order, amount, decisionId) {
   const [firstName, lastName] = order.b_firstname.split(" ");
@@ -255,50 +256,54 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
   res.json(resBody);
 });
 
-app.post("/create", isAuthMiddleware, async function (req, res) {
-  const { type, order_id } = req.body;
-  const order = await prisma.xcart_orders.findFirst({
-    where: {
-      orderid: order_id,
-    },
-  });
-  const decisionType = await prisma.decision_types.findFirst({
-    where: {
-      slug: type,
-    },
-  });
+app.post(
+  "/create",
+  passport.authenticate("bearer", { session: false }),
+  async function (req, res) {
+    const { type, order_id } = req.body;
+    const order = await prisma.xcart_orders.findFirst({
+      where: {
+        orderid: order_id,
+      },
+    });
+    const decisionType = await prisma.decision_types.findFirst({
+      where: {
+        slug: type,
+      },
+    });
 
-  const options = req.body.options || {};
+    const options = req.body.options || {};
 
-  switch (type) {
-    case "po-send-check":
-      const addresses = await prisma.account_addresses.findMany({
-        where: {
-          address_id: {
-            in: req.body.addresses,
+    switch (type) {
+      case "po-send-check":
+        const addresses = await prisma.account_addresses.findMany({
+          where: {
+            address_id: {
+              in: req.body.addresses,
+            },
           },
-        },
-        include: {
-          country: true,
-          state: true,
-        },
-      });
+          include: {
+            country: true,
+            state: true,
+          },
+        });
 
-      options.addresses = addresses;
-      break;
+        options.addresses = addresses;
+        break;
+    }
+
+    const decision = await prisma.account_decisions.create({
+      data: {
+        decision_type_id: decisionType.decision_type_id,
+        order_id,
+        order_number: [order.order_prefix, order.orderid].join(""),
+        options,
+      },
+    });
+
+    res.json({ decision });
   }
-
-  const decision = await prisma.account_decisions.create({
-    data: {
-      decision_type_id: decisionType.decision_type_id,
-      order_id,
-      order_number: [order.order_prefix, order.orderid].join(""),
-      options,
-    },
-  });
-
-  res.json({ decision });
-});
+);
 
 app.post("/get-list", isAuthMiddleware, async function (req, res) {
   const { skip, take, solved } = req.body;
@@ -365,6 +370,32 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
   });
 
   switch (decision.type.slug) {
+    case "estimated-time-arrival":
+      decision.options.action = req.body.action;
+      decision.options.comment = req.body.comment;
+
+      switch (req.body.action) {
+        case "wait":
+          await prisma.xcart_orders_additional_tags.create({
+            data: {
+              status_id: 9,
+              orderid: decision.order.orderid,
+            },
+          });
+          break;
+
+        case "cancel":
+          // await prisma.xcart_orders.update({
+          //   where: {
+          //     orderid: decision.order.orderid,
+          //   },
+          //   data:
+          // });
+          break;
+      }
+
+      break;
+
     case "po-send-check":
       decision.options.address = req.body.address;
 
@@ -380,7 +411,6 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "alternative-items-offer":
-    case "estimated-time-arrival":
       decision.options.advice = req.body.advice;
       decision.options.comment = req.body.comment;
       break;

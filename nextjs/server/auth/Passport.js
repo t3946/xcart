@@ -3,6 +3,7 @@ module.exports = (function () {
 
   require("./strategies/Local")(passport);
   require("./strategies/JWT")(passport);
+  require("./strategies/Bearer")(passport);
 
   return passport;
 })();

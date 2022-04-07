@@ -25,6 +25,7 @@ interface IProps {
   isSearchable?: boolean;
   onChange?: (value: any) => void;
   placeholder?: React.ReactNode | string;
+  instanceId?: string;
   classes?: {
     select?: any;
     control?: any;
@@ -52,6 +53,7 @@ const Select = function (props: IProps) {
     clearable = true,
     defaultIsOpen = false,
     isSearchable = true,
+    instanceId,
   } = props;
   return (
     <ReactSelect
@@ -72,6 +74,7 @@ const Select = function (props: IProps) {
       isInvalid={isInvalid}
       isDisabled={disabled}
       placeholder={placeholder}
+      instanceId={instanceId}
       components={{
         Option,
         Menu,
