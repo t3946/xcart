@@ -3,9 +3,15 @@ const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 
 module.exports = [
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt", "bearer"], { session: false }),
 
   async function (req, res, next) {
+    //no user (bearer auth)
+    if (!req.user.userId) {
+      next();
+      return;
+    }
+
     const nowTimeMS = new Date().getTime();
 
     //session outdated

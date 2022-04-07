@@ -256,54 +256,50 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
   res.json(resBody);
 });
 
-app.post(
-  "/create",
-  passport.authenticate("bearer", { session: false }),
-  async function (req, res) {
-    const { type, order_id } = req.body;
-    const order = await prisma.xcart_orders.findFirst({
-      where: {
-        orderid: order_id,
-      },
-    });
-    const decisionType = await prisma.decision_types.findFirst({
-      where: {
-        slug: type,
-      },
-    });
+app.post("/create", isAuthMiddleware, async function (req, res) {
+  const { type, order_id } = req.body;
+  const order = await prisma.xcart_orders.findFirst({
+    where: {
+      orderid: order_id,
+    },
+  });
+  const decisionType = await prisma.decision_types.findFirst({
+    where: {
+      slug: type,
+    },
+  });
 
-    const options = req.body.options || {};
+  const options = req.body.options || {};
 
-    switch (type) {
-      case "po-send-check":
-        const addresses = await prisma.account_addresses.findMany({
-          where: {
-            address_id: {
-              in: req.body.addresses,
-            },
+  switch (type) {
+    case "po-send-check":
+      const addresses = await prisma.account_addresses.findMany({
+        where: {
+          address_id: {
+            in: req.body.addresses,
           },
-          include: {
-            country: true,
-            state: true,
-          },
-        });
+        },
+        include: {
+          country: true,
+          state: true,
+        },
+      });
 
-        options.addresses = addresses;
-        break;
-    }
-
-    const decision = await prisma.account_decisions.create({
-      data: {
-        decision_type_id: decisionType.decision_type_id,
-        order_id,
-        order_number: [order.order_prefix, order.orderid].join(""),
-        options,
-      },
-    });
-
-    res.json({ decision });
+      options.addresses = addresses;
+      break;
   }
-);
+
+  const decision = await prisma.account_decisions.create({
+    data: {
+      decision_type_id: decisionType.decision_type_id,
+      order_id,
+      order_number: [order.order_prefix, order.orderid].join(""),
+      options,
+    },
+  });
+
+  res.json({ decision });
+});
 
 app.post("/get-list", isAuthMiddleware, async function (req, res) {
   const { skip, take, solved } = req.body;
