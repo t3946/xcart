@@ -382,6 +382,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
 
       switch (req.body.action) {
         case "wait":
+        case "wait-discontinued":
           await prisma.xcart_orders_additional_tags.create({
             data: {
               status_id: 9,

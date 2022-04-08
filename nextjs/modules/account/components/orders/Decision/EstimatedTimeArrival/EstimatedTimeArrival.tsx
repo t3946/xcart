@@ -16,6 +16,14 @@ import { RowInterface } from "@modules/account/components/orders/Decision/TableR
 import { AxiosResponse } from "axios";
 import Button from "@modules/ui/forms/Button";
 
+export enum ECases {
+  DISCONTINUED = "001",
+  IN_STOCK_OUT_OF_STOCK = "110",
+  IN_STOCK_OUT_OF_STOCK_DISCONTINUED = "111",
+  OUT_OF_STOCK_DISCONTINUED = "011",
+  IN_STOCK_DISCONTINUED = "101",
+}
+
 interface IProps {
   onChange: (message: string) => void;
   decision: DecisionsInterface;
@@ -26,8 +34,8 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
   const dispatch = useDispatch();
 
   const initialState = {
-    comment: decision?.options?.comment || "",
-    action: decision?.options?.action || "",
+    comment: (decision.solved && decision?.options?.comment) || "",
+    action: (decision.solved && decision?.options?.action) || "",
   };
 
   const validationSchema = yup.object().shape({
@@ -35,9 +43,9 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
     action: yup.string().required(),
   });
 
-  function submit(data: Record<any, any>, actions: FormikHelpers<any>) {
+  function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
     actions.setSubmitting(false);
-    data.decision_id = decision.decision_id;
+    const data = { ...values, decision_id: decision.decision_id };
 
     dispatch(
       solveDecisionAction({
@@ -117,6 +125,26 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
     });
   }
 
+  //get case code
+  const caseCode =
+    (productCategories.inStock.length ? "1" : "0") +
+    (productCategories.outOfStock.length ? "1" : "0") +
+    (productCategories.discontinued.length ? "1" : "0");
+
+  if (decision.solved) {
+    switch (decision.options.action) {
+      case "acknowledged":
+      case "cancel-order":
+        return <p>Order was canceled.</p>;
+    }
+
+    switch (caseCode) {
+      case ECases.DISCONTINUED:
+        initialState.action = "acknowledged";
+        break;
+    }
+  }
+
   return (
     <div>
       <Formik
@@ -125,6 +153,37 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
         onSubmit={submit}
       >
         {({ isSubmitting, handleChange, values, errors }) => {
+          if (caseCode === ECases.DISCONTINUED) {
+            return (
+              <Form>
+                <p className={"ps-lg-4"}>
+                  All items you ordered are currently discontinued / 'out of
+                  stock' without definite re-stocking date:
+                </p>
+
+                <EstimatedTimeArrivalTable
+                  tableType={TableTypes.discontinued}
+                  items={productCategories.discontinued}
+                  key={"discontinued"}
+                />
+
+                <div className={"ps-lg-4"}>
+                  <p>
+                    Thus, we had to cancel your order and void the transaction.
+                  </p>
+
+                  <Button
+                    type={"submit"}
+                    className={"w-auto"}
+                    disabled={isSubmitting}
+                  >
+                    acknowledged
+                  </Button>
+                </div>
+              </Form>
+            );
+          }
+
           return (
             <Form>
               <h1 className="decision-inner-header decision__inner-header">
@@ -164,9 +223,7 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                   name={"action"}
                   onChange={handleChange}
                   value={values.action}
-                  hasInStock={true}
-                  hasOutOfStock={true}
-                  hasDiscontinued={true}
+                  caseCode={caseCode}
                   className={"estimated-time-arrival__advices-list"}
                   disabled={isSubmitting || decision.solved === 1}
                 />
@@ -193,7 +250,6 @@ const EstimatedTimeArrival: React.FC<IProps> = (props: IProps) => {
                     {errors.comment}
                   </RBForm.Control.Feedback>
                 </RBForm.Group>
-
                 <div className="estimate-advise-submit-button d-flex justify-content-md-center justify-content-lg-start">
                   {buttonTemplate(values, isSubmitting)}
                 </div>

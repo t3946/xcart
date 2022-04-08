@@ -72,27 +72,20 @@ const Table: React.FC<IProps> = (props: IProps) => {
   };
 
   let hatModifier;
-  let tableCaption;
 
   switch (tableType) {
     case TableTypes.inStock:
       hatModifier = Styles.estimateTableHat_theme_green;
-      tableCaption = "The items listed below are currently 'in stock':";
       break;
     case TableTypes.outOfStock:
       hatModifier = Styles.estimateTableHat_theme_yellow;
-      tableCaption =
-        "The following items are currently ‘out of stock’\n ETA date(s) are shown below:";
       break;
     case TableTypes.discontinued:
       hatModifier = Styles.estimateTableHat_theme_red;
-      tableCaption =
-        "All items you ordered are currently discontinued / 'out of stock' without definite re-stocking date:";
       break;
 
     case TableTypes.licenseRequired:
       hatModifier = Styles.estimateTableHat_theme_grey;
-      tableCaption = "You have ordered the following items:";
       break;
 
     case TableTypes.increaseInShippingCharge:
@@ -100,19 +93,14 @@ const Table: React.FC<IProps> = (props: IProps) => {
 
     case TableTypes.licenseRequired:
       hatModifier = Styles.estimateTableHat_theme_grey;
-      tableCaption = "You have ordered the following items:";
       break;
 
     case TableTypes.alternativeItemsOfferOutOfStock:
       hatModifier = Styles.estimateTableHat_theme_yellow;
-      tableCaption =
-        "The following item(s) which you have ordered are 'out of stock':";
       break;
 
     case TableTypes.alternativeItemsOfferInStock:
       hatModifier = Styles.estimateTableHat_theme_green;
-      tableCaption =
-        "As an alternative we can offer the following item(s) which are 'in stock':";
       break;
   }
 
@@ -182,17 +170,6 @@ const Table: React.FC<IProps> = (props: IProps) => {
         },
       ])}
     >
-      {tableCaption && (
-        <p
-          className={cn([
-            Styles.estimateTableCaption,
-            Styles.estimateTable__caption,
-          ])}
-        >
-          {tableCaption}
-        </p>
-      )}
-
       <div className={classnames(classes.hat)}>
         {tableType === TableTypes.increaseInShippingCharge && (
           <span className="d-none d-lg-block" />

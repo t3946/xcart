@@ -2,7 +2,7 @@ import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import Advice, {
   AdviceTypes,
-} from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
+} from "@modules/account/components/orders/Decision/AlternativeItemsOffer/Advice";
 import { Form as RBForm } from "react-bootstrap";
 import { Form, Formik, FormikHelpers } from "formik";
 import * as yup from "yup";
