@@ -27,9 +27,25 @@ use Xcart\App\Main\Xcart;
 class AccountApi extends Controller
 {
     public function cancelTransaction(){
-        $data = json_decode(file_get_contents("php://input"), true);
-        $orderid = $data['orderid'];
-        //todo: need implementation
+
+        if (Xcart::app()->auth->getUser(true)->getIsGuest()) {
+            $this->jsonResponse([], 401);
+        }
+
+        $data = $this->getRequest()->body;
+
+        if ($data->has('orderid') === false) {
+            $this->jsonResponse([], 400);
+        }
+
+        if (OrderModel::objects()->count(['orderid' => $data->orderid]) === 0) {
+            $this->jsonResponse([], 400);
+        }
+
+        OrderHelper::cancelOrder($data->orderid);
+
+        $this->jsonResponse();
+
     }
 
     public function getTerritory()
