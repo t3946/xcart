@@ -26,6 +26,12 @@ use Xcart\App\Main\Xcart;
 
 class AccountApi extends Controller
 {
+    public function cancelTransaction(){
+        $data = json_decode(file_get_contents("php://input"), true);
+        $orderid = $data['orderid'];
+        //todo: need implementation
+    }
+
     public function getTerritory()
     {
         $this->jsonResponse(['countries' => $this->getCountries(), 'states' => $this->getStates()]);

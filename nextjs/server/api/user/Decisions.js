@@ -7,7 +7,7 @@ const app = express();
 const getBaseUrl = require("../../utils/getBaseUrl");
 const md5 = require("md5");
 const amqp = require("amqplib");
-const passport = require("../../auth/Passport");
+const axios = require("axios");
 
 function getPaypalUrl(req, order, amount, decisionId) {
   const [firstName, lastName] = order.b_firstname.split(" ");
@@ -358,6 +358,11 @@ async function changeOrderStatus(orderid, status) {
 async function cancelOrder(orderid) {
   await changeOrderStatus(orderid, "F");
 }
+async function cancelTransaction(orderid) {
+  const url = getPaypalUrl() + "/api/account/cancel-transaction";
+
+  await axios.post(url, { orderid });
+}
 
 app.post("/solve", isAuthMiddleware, async function (req, res) {
   const decision = await prisma.account_decisions.findUnique({
@@ -498,6 +503,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             case "unpaid-order":
             case "check-for-purchase-order-should-be-issued":
               await changeOrderStatus(decision.order.orderid, "AP");
+              await cancelTransaction(decision.order.orderid);
               break;
           }
 

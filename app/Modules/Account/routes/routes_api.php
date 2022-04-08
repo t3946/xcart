@@ -4,6 +4,12 @@ use Modules\Account\Controllers\Api\AccountApi;
 
 return [
     [
+        'route' => '/cancel-transaction',
+        'target' => [AccountApi::class, 'cancelTransaction'],
+        'name' => 'cancel-transaction'
+    ],
+
+    [
         'route' => '/get-territory',
         'target' => [AccountApi::class, 'getTerritory'],
         'name' => 'territory'
