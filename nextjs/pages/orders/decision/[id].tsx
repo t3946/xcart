@@ -7,7 +7,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
   const instance = getInstance(ctx.req);
   const decisionId = parseInt(ctx.query.id);
   let decision = null;
-  let paypalUrl = null;
+  let paypalUrl;
   let cards;
   let defaultCardId;
 
@@ -17,10 +17,7 @@ export async function getServerSideProps(ctx: Record<any, any>) {
     })
     .then((res: any) => {
       decision = res.data.decision;
-
-      if (decision.type.slug === "unpaid-order") {
-        paypalUrl = res.data.paypalUrl;
-      }
+      paypalUrl = res.data.paypalUrl || null;
     });
 
   await instance
