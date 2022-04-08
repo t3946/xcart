@@ -3,13 +3,12 @@
 namespace Modules\Order\Models;
 
 use Doctrine\DBAL\Types\Types;
-use Xcart\App\QueryBuilder\Expression;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
-use Modules\Sites\Models\TaxRatesModel;
+use Xcart\App\Exceptions\UnknownPropertyException;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
@@ -19,7 +18,6 @@ use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\HasToOneField;
-use Xcart\App\Orm\Fields\ManyToManyField;
 use Xcart\App\Orm\Fields\SerializeField;
 use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
@@ -476,5 +474,39 @@ URL;
             $taxes[$tax] += $group_tax->value;
         }
         return $taxes ?? [];
+    }
+
+    /**
+     *  calc required shipping charge, used in snippet {{required_shipping_charge}}
+     * @return float
+     * @throws UnknownPropertyException
+     */
+    public function getRequiredShippingCharge(): float
+    {
+        if ($this->shipping_value_selectbox === 'required_shipping_charge') {
+            return (float) $this->actual_shipping_net;
+        }
+
+        $gross = (float) $this->actual_shipping_gross;
+
+        $method = $this->order->payment_method_model;
+
+        if ($method === null) {
+            return $gross;
+        }
+
+        $config = Xcart::app()->getModule('Sites')->getSite()->getGlobalConfig();
+
+        return round($gross * $config['required_shipping_charge_k'], 2);
+    }
+
+    /**
+     * calc additional shipping charge, used in snippet {{additional_shipping_charge}}
+     * @return float
+     * @throws UnknownPropertyException
+     */
+    public function getAdditionalShippingCharge(): float
+    {
+        return $this->getRequiredShippingCharge() - $this->shipping_gross;
     }
 }
