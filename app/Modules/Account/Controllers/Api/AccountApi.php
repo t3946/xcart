@@ -38,7 +38,7 @@ class AccountApi extends Controller
             $this->jsonResponse([], 400);
         }
 
-        if (OrderModel::objects()->count(['orderid' => $data->orderid]) === 0) {
+        if (OrderModel::objects()->filter(['orderid' => $data->orderid])->count() === 0) {
             $this->jsonResponse([], 400);
         }
 
