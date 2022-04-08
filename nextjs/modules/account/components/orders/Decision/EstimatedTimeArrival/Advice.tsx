@@ -11,6 +11,7 @@ export enum AdviceTypes {
   ship = "ship",
   cancel = "cancel",
   replace = "replace",
+  removeDiscontinued = "remove-discontinued",
 }
 
 interface IProps {
@@ -42,6 +43,8 @@ const Advice: React.FC<IProps> = (props: IProps) => {
         return <Ban className={classnames(iconClasses)} />;
       case AdviceTypes.replace:
         return <Replace className={classnames(iconClasses)} />;
+      case AdviceTypes.removeDiscontinued:
+        return <Clock className={classnames(iconClasses)} />;
     }
   }
 
@@ -52,6 +55,8 @@ const Advice: React.FC<IProps> = (props: IProps) => {
       cancel: "Cancel and void transaction for the whole order",
       replace:
         "Replace 'out of stock' item(s) with alternative one(s) and process the order",
+      removeDiscontinued:
+        "Remove discontinued items, then wait for 'out of stock' items and process the order",
     };
 
     return (

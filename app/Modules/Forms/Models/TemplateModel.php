@@ -5,6 +5,7 @@ namespace Modules\Forms\Models;
 
 
 use Modules\Order\Models\AttentionTagModel;
+use Modules\Order\Models\Decisions\DecisionTypeModel;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanCharField;
 use Xcart\App\Orm\Fields\CharField;
@@ -84,6 +85,12 @@ class TemplateModel extends Model
                 'class' => BooleanCharField::class,
                 'default' => true
             ],
+            'decision_type' => [
+                'field' => 'decision_type_id',
+                'class' => ForeignField::class,
+                'modelClass' => DecisionTypeModel::class,
+                'link' => ['decision_type_id' => 'decision_type_id']
+            ]
         ];
     }
 
