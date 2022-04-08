@@ -335,13 +335,13 @@ app.post("/set-all-not-solved", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
-async function cancelOrder(orderid) {
+async function changeOrderStatus(orderid, status) {
   await prisma.xcart_orders.update({
     where: {
       orderid,
     },
     data: {
-      cb_status: "F",
+      cb_status: status,
     },
   });
 
@@ -350,9 +350,13 @@ async function cancelOrder(orderid) {
       orderid,
     },
     data: {
-      cb_status: "F",
+      cb_status: status,
     },
   });
+}
+
+async function cancelOrder(orderid) {
+  await changeOrderStatus(orderid, "F");
 }
 
 app.post("/solve", isAuthMiddleware, async function (req, res) {
@@ -379,15 +383,12 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
               orderid: decision.order.orderid,
             },
           });
+
+          await changeOrderStatus(decision.order.orderid, "A");
           break;
 
         case "cancel":
-          // await prisma.xcart_orders.update({
-          //   where: {
-          //     orderid: decision.order.orderid,
-          //   },
-          //   data:
-          // });
+          await changeOrderStatus(decision.order.orderid, "A");
           break;
       }
 
@@ -408,8 +409,13 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       break;
 
     case "alternative-items-offer":
-      decision.options.advice = req.body.advice;
+      decision.options.action = req.body.action;
       decision.options.comment = req.body.comment;
+
+      if (req.body.action === "cancel") {
+        await changeOrderStatus(decision.order.orderid, "A");
+      }
+
       break;
 
     case "ach-payment-required":
@@ -455,6 +461,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
     case "unpaid-order":
       decision.options.action = req.body.action;
 
+      // handle payment
       switch (req.body.action) {
         case "pay-by-card":
           const user = await prisma.xcart_users.findUnique({
@@ -489,25 +496,8 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
           //what to do after successful payment
           switch (decision.type.slug) {
             case "unpaid-order":
-              await prisma.xcart_orders.update({
-                where: {
-                  orderid: decision.order.orderid,
-                },
-                data: {
-                  cb_status: "AP",
-                },
-              });
-
-              await prisma.xcart_order_groups.updateMany({
-                where: {
-                  orderid: decision.order.orderid,
-                },
-                data: {
-                  cb_status: "AP",
-                },
-              });
-              break;
             case "check-for-purchase-order-should-be-issued":
+              await changeOrderStatus(decision.order.orderid, "AP");
               break;
           }
 
@@ -536,7 +526,12 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
           break;
 
         case "cancel-order":
-          await cancelOrder(decision.order.orderid);
+          switch (decision.type.slug) {
+            case "unpaid-order":
+            case "check-for-purchase-order-should-be-issued":
+              await cancelOrder(decision.order.orderid);
+              break;
+          }
           break;
       }
 

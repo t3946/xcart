@@ -1,6 +1,5 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
 import Advice, {
   AdviceTypes,
 } from "@modules/account/components/orders/Decision/EstimatedTimeArrival/Advice";
@@ -68,11 +67,11 @@ const AlternativeItemsOffer: React.FC = (props) => {
 
   const initialState = {
     comment: decision.options.comment || "",
-    advice: decision.options.advice || "",
+    action: decision.options.action || "",
   };
   const validationSchema = yup.object().shape({
     comment: yup.string(),
-    advice: yup.string().required(),
+    action: yup.string().required(),
   });
 
   function buttonTemplate(isSubmitting: boolean) {
@@ -140,8 +139,8 @@ const AlternativeItemsOffer: React.FC = (props) => {
                   type={AdviceTypes.replace}
                   className={"advise-list__item"}
                   value={"replace"}
-                  name={"advice"}
-                  checked={"replace" === values.advice}
+                  name={"action"}
+                  checked={"replace" === values.action}
                   onChange={handleChange}
                   disabled={isSubmitting}
                 />
@@ -150,8 +149,8 @@ const AlternativeItemsOffer: React.FC = (props) => {
                   type={AdviceTypes.cancel}
                   className={"advise-list__item"}
                   value={"cancel"}
-                  name={"advice"}
-                  checked={"cancel" === values.advice}
+                  name={"action"}
+                  checked={"cancel" === values.action}
                   onChange={handleChange}
                   disabled={isSubmitting || decision.solved}
                 />
