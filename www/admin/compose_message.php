@@ -4,6 +4,7 @@ use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorUtilityModel;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Forms\Models\TemplateModel;
+use Modules\Order\Helpers\DecisionHelper;
 use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Models\OrderModel;
@@ -51,16 +52,20 @@ if ($department === 'distributor' && !empty($mid_templateid)) {
     $template_id = $mid_templateid_arr[1];
 }
 
+/** @var TemplateModel $template_model */
 $template_model = TemplateModel::objects()->get(['id' => $template_id]);
 
 if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
+    /** @var OrderModel $order */
+    $order = OrderModel::objects()->get(['pk' => $order['orderid']]);
+
     $body = func_eol2br(stripslashes(html_entity_decode($body)));
+
+    DecisionHelper::createDecision($order, $template_model);
 
     if ($attach_pdf_invoice) {
         /** @var OrderModel $order */
-
-        $order = OrderModel::objects()->get(['pk' => $order['orderid']]);
 
         $invoice = SnippetHelper::render('<br><br>{{invoice}}', ['order' => $order]);
 
@@ -68,7 +73,7 @@ if (($REQUEST_METHOD === 'POST') && ($mode === 'send_message')) {
 
     }
 
-    $order_number = $order['order_prefix'] . $order['orderid'];
+    $order_number = $order->getOrderNumber();
 
     if (strpos($subject, $order_number) === false) {
         $subject = "[[{$order_number}]] {$subject}";
