@@ -28,7 +28,9 @@ class AccountApi extends Controller
 {
     public function cancelTransaction(){
 
-        if (Xcart::app()->auth->getUser(true)->getIsGuest()) {
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
             $this->jsonResponse([], 401);
         }
 
@@ -38,7 +40,7 @@ class AccountApi extends Controller
             $this->jsonResponse([], 400);
         }
 
-        if (OrderModel::objects()->filter(['orderid' => $data->orderid])->count() === 0) {
+        if (OrderModel::objects()->filter(['orderid' => $data->orderid, 'user_id' => $user->user_id])->count() === 0) {
             $this->jsonResponse([], 400);
         }
 
