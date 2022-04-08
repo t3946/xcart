@@ -20,6 +20,8 @@ import { userSetAction } from "@redux/actions/account-actions/UserActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import Head from "next/head";
+import PurchaseOrderRequirePaymentBeforeDispatching from "@modules/account/components/orders/Decision/PurchaseOrderRequirePaymentBeforeDispatching/PurchaseOrderRequirePaymentBeforeDispatching";
+import CheckForPurchaseOrderShouldBeIssued from "@modules/account/components/orders/Decision/CheckForPurchaseOrderShouldBeIssued/CheckForPurchaseOrderShouldBeIssued";
 
 interface IProps {
   decision: Record<any, any>;
@@ -66,6 +68,10 @@ const Decision: React.FC<IProps> = (props) => {
     "alternative-items-offer": AlternativeItemsOffer,
     "additional-shipping-charge": AdditionalShippingCharge,
     "additional-information-required": POAdditionalInformationRequired,
+    "purchase-order-require-payment-before-dispatching":
+      PurchaseOrderRequirePaymentBeforeDispatching,
+    "check-for-purchase-order-should-be-issued":
+      CheckForPurchaseOrderShouldBeIssued,
   };
   const DecisionComponents: React.FC<any> = components[decision.type.slug];
 

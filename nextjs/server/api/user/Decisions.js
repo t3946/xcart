@@ -234,6 +234,7 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
   });
 
   switch (decision.type.slug) {
+    case "purchase-order-require-payment-before-dispatching":
     case "unpaid-order":
       resBody.paypalUrl = getPaypalUrl(
         req,
@@ -450,6 +451,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       decision.options.action = req.body.method;
       break;
 
+    case "purchase-order-require-payment-before-dispatching":
     case "unpaid-order":
       decision.options.action = req.body.action;
 
@@ -461,8 +463,17 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             },
           });
           const { orderid, order_prefix } = decision.order;
+          let amount;
+
+          switch (decision.type.slug) {
+            case "purchase-order-require-payment-before-dispatching":
+            case "unpaid-order":
+              amount = parseFloat(decision.order.total) * 100;
+              break;
+          }
+
           const paymentIntentObject = await stripeService.paymentIntent.create({
-            amount: parseFloat(decision.order.total) * 100,
+            amount,
             currency: "usd",
             payment_method_types: ["card"],
             description: `S3 Stores, Inc. Order # ${order_prefix}${orderid}`,
@@ -475,23 +486,30 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
             req.body.cardId
           );
 
-          await prisma.xcart_orders.update({
-            where: {
-              orderid: decision.order.orderid,
-            },
-            data: {
-              cb_status: "AP",
-            },
-          });
+          //what to do after successful payment
+          switch (decision.type.slug) {
+            case "unpaid-order":
+              await prisma.xcart_orders.update({
+                where: {
+                  orderid: decision.order.orderid,
+                },
+                data: {
+                  cb_status: "AP",
+                },
+              });
 
-          await prisma.xcart_order_groups.updateMany({
-            where: {
-              orderid: decision.order.orderid,
-            },
-            data: {
-              cb_status: "AP",
-            },
-          });
+              await prisma.xcart_order_groups.updateMany({
+                where: {
+                  orderid: decision.order.orderid,
+                },
+                data: {
+                  cb_status: "AP",
+                },
+              });
+              break;
+            case "check-for-purchase-order-should-be-issued":
+              break;
+          }
 
           const card = await stripeService.card.retrieve(
             user.stripe_customer_id,
@@ -585,7 +603,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
 
   await prisma.account_decisions.updateMany({
     data: {
-      // solved: 1,
+      solved: 1,
       options: decision.options,
     },
     where: {

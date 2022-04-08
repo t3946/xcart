@@ -278,13 +278,17 @@ class DecisionController extends Controller
 
         switch ($decision_type->slug) {
             case "send-us-po":
-                $options['method'] = $_POST['method'];
+                $options['action'] = $_POST['method'];
                 break;
             case "additional-information-required":
                 $options['phone'] = $_POST['phone'];
                 $options['phoneCode'] = $_POST['phoneCode'];
                 $options['phone_ext'] = $_POST['phone_ext'];
                 break;
+        }
+
+        if (isset($_POST['action'])) {
+            $options['action'] = $_POST['action'];
         }
 
         $decision->options = $options;
