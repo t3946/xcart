@@ -3,17 +3,12 @@ import Styles from "@modules/account/components/orders/Decision/LicenseRequire/L
 import cn from "classnames";
 import * as yup from "yup";
 import { Form, Formik, FormikHelpers } from "formik";
-import DecisionsInterface from "@modules/account/ts/types/decision";
-import { RowInterface } from "@modules/account/components/orders/Decision/TableRow";
 import EstimatedTimeArrivalTable, {
   TableTypes,
 } from "@modules/account/components/orders/Decision/Table";
 import validatorMaxFileSize from "@utils/yup/validatorMaxFileSize";
 import validatorFileFormat from "@utils/yup/validatorFileFormat";
-import {
-  getEtaProductsAction,
-  iSentOriginalPurchaseOrderViaFaxAction,
-} from "@redux/actions/account-actions/DecisionsActions";
+import { iSentOriginalPurchaseOrderViaFaxAction } from "@redux/actions/account-actions/DecisionsActions";
 import { useDispatch } from "react-redux";
 import { AxiosResponse } from "axios";
 import UploadFile from "@modules/ui/UploadFile";
@@ -22,7 +17,7 @@ import Button from "@modules/ui/forms/Button";
 
 interface IProps {
   onChange: (message: string) => any;
-  decision: DecisionsInterface;
+  decision: any;
 }
 
 const LicenseRequire: React.FC<IProps> = (props: IProps) => {
@@ -30,7 +25,6 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
   const initialState = {
     file: null,
   };
-  const [tableRows, setTableRows] = React.useState<RowInterface[]>([]);
   const inputFileRef = React.useRef<HTMLInputElement>();
   const maxMB = 10;
   const SUPPORTED_FORMATS = [
@@ -55,33 +49,17 @@ const LicenseRequire: React.FC<IProps> = (props: IProps) => {
         validatorFileFormat(inputFileRef, SUPPORTED_FORMATS)
       ),
   });
-  const [products, setProducts] = React.useState(null);
 
-  if (products === null) {
-    dispatch(
-      getEtaProductsAction({
-        orderId: decision.order_id,
+  const tableRows: any = [];
 
-        success(res) {
-          setProducts(res);
-
-          const newTableRows = [];
-
-          res.forEach((value) => {
-            const { orderAmount, product } = value;
-
-            newTableRows.push({
-              name: product.product,
-              sku: product.productcode,
-              amount: orderAmount,
-              date: null,
-            });
-          });
-
-          setTableRows(newTableRows);
-        },
-      })
-    );
+  for (const group of decision.order.groups) {
+    for (const detail of group.details) {
+      tableRows.push({
+        name: detail.product,
+        sku: detail.productcode,
+        amount: detail.amount,
+      });
+    }
   }
 
   function submit(values: Record<any, any>, actions: FormikHelpers<any>) {
