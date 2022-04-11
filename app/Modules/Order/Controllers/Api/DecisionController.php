@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Controllers\Api;
 
+use GuzzleHttp\Client;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\Decision\LicenseRequiredForm;
 use Modules\Order\Models\Decisions\CustomerFilesModel;
@@ -15,6 +16,7 @@ use Modules\User\Models\UserAccount\UserModel;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Request\HttpRequest;
 
 class DecisionController extends Controller
 {
@@ -242,6 +244,7 @@ class DecisionController extends Controller
         ]);
     }
 
+    //save decision files
     public function solveSUP() {
         /**
          * @var $decision DecisionModel
@@ -273,8 +276,7 @@ class DecisionController extends Controller
         ]);
         $link->save();
 
-        $decision_type = DecisionTypeModel::objects()->get(['decision_type_id' => $decision->decision_type_id]);
-        $options = json_decode(json_encode($decision->options), true);
+        $options = ['decision_id' => (int)$_POST['decision_id'],];
 
         switch ($decision_type->slug) {
             case "send-us-po":
@@ -287,14 +289,15 @@ class DecisionController extends Controller
                 break;
         }
 
-        if (isset($_POST['action'])) {
-            $options['action'] = $_POST['action'];
-        }
+        $client = new Client();
 
-        $decision->options = $options;
-        $decision->save();
-        $decision->setAttribute('solved', '1');
-        $decision->update();
+        $client->post('http://node-server:3001/api-client/user/decisions/solve', [
+            'json' => $options,
+            'headers' => [
+                'Cookie' => 'session=' . $_COOKIE['session'],
+            ]
+        ]);
+
         $data = [
             'action' => 'decision',
             'decision_id' => $decision->decision_id,

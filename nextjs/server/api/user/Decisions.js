@@ -634,6 +634,12 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
       }
 
       break;
+
+    case "additional-information-required":
+      decision.options.phone = req.phone;
+      decision.options.phoneCode = req.phoneCode;
+      decision.options.phone_ext = req.phone_ext;
+      break;
   }
 
   await prisma.account_decisions.updateMany({
