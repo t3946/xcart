@@ -34,6 +34,8 @@ class SnippetHelper
 
     public static function render(string $value, array $params)
     {
+        $value = html_entity_decode($value);
+
         $params = array_merge([
             'site' => Xcart::app()->getModule('Sites')->getSite(),
             'user' => Xcart::app()->user,
