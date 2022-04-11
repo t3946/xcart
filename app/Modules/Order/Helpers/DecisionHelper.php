@@ -48,6 +48,8 @@ class DecisionHelper
                 break;
         }
 
+        $options = (object)$options;
+
         $client = new Client();
 
         $client->post('http://node-server:3001/api-client/user/decisions/create', [
