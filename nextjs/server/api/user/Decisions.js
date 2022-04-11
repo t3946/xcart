@@ -361,10 +361,38 @@ async function changeOrderStatus(orderid, status) {
 async function cancelOrder(orderid) {
   await changeOrderStatus(orderid, "F");
 }
+
 async function cancelTransaction(orderid) {
   const url = getPaypalUrl() + "/api/account/cancel-transaction";
 
   await axios.post(url, { orderid });
+}
+
+async function sendEmail(decision_id) {
+  const open = amqp.connect("amqp://xcart:Uv5WxjbRj7pjqzY@159.65.220.58:5672/");
+
+  await open
+    .then(function (conn) {
+      return conn
+        .createChannel()
+        .then(function (ch) {
+          const q = "emails";
+          const msg = JSON.stringify({
+            action: "decision",
+            decision_id,
+          });
+          const ok = ch.assertQueue(q, { durable: true });
+
+          return ok.then(function () {
+            ch.sendToQueue(q, Buffer.from(msg));
+            return ch.close();
+          });
+        })
+        .finally(function () {
+          conn.close();
+        });
+    })
+    .catch(console.warn);
 }
 
 app.post("/solve", isAuthMiddleware, async function (req, res) {
@@ -392,12 +420,13 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
               orderid: decision.order.orderid,
             },
           });
-
-          await changeOrderStatus(decision.order.orderid, "A");
           break;
 
         case "cancel":
-          await changeOrderStatus(decision.order.orderid, "A");
+          if (decision.order.cb_status === "AP") {
+            await changeOrderStatus(decision.order.orderid, "A");
+            await cancelTransaction(decision.order.orderid);
+          }
           break;
       }
 
@@ -423,6 +452,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
 
       if (req.body.action === "cancel") {
         await changeOrderStatus(decision.order.orderid, "A");
+        await cancelTransaction(decision.order.orderid);
       }
 
       break;
@@ -622,30 +652,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  const open = amqp.connect("amqp://xcart:Uv5WxjbRj7pjqzY@159.65.220.58:5672/");
-
-  await open
-    .then(function (conn) {
-      return conn
-        .createChannel()
-        .then(function (ch) {
-          const q = "emails";
-          const msg = JSON.stringify({
-            action: "decision",
-            decision_id: decision.decision_id,
-          });
-          const ok = ch.assertQueue(q, { durable: true });
-
-          return ok.then(function () {
-            ch.sendToQueue(q, Buffer.from(msg));
-            return ch.close();
-          });
-        })
-        .finally(function () {
-          conn.close();
-        });
-    })
-    .catch(console.warn);
+  sendEmail(decision.decision_id);
 
   res.json({ user });
 });
