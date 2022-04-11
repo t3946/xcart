@@ -25,3 +25,6 @@ rebuild:
 
 deploy: git-deploy composer clear-cache rebuild
 
+email:
+	docker-compose exec php php ./app/console.php Mail MailSender
+
