@@ -53,7 +53,6 @@ const AdviceList: React.FC<IProps> = function (props: IProps) {
 
   function getAdviceTemplate(options: any) {
     const { text, action, type } = options;
-    console.log({text, action, type});
 
     return (
       <Advice

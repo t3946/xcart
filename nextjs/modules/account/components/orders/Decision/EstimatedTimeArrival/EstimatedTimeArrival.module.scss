@@ -1,0 +1,19 @@
+@import "styles/utils/Utils.module";
+
+.tableCaption {
+  padding: 0 0 0 pxToRem(9);
+
+  @include breakpoint(md) {
+    padding: 0 0 0 pxToRem(20);
+  }
+
+  @include breakpoint(lg) {
+    padding: 0 0 0 pxToRem(24);
+  }
+}
+
+.form {
+  @include breakpoint(lg) {
+    max-width: pxToRem(590);
+  }
+}

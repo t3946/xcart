@@ -394,37 +394,6 @@ class DecisionController extends Controller
 //        ]);
 //    }
 
-    public function getEtaProductsAction($order_id)
-    {
-        /**
-         * @var $order OrderModel
-         */
-        $order = OrderModel::objects()->get(['orderid' => $order_id]);
-        $products = $order->getProducts();
-        $details = $order->detail_models;
-        $order_products_with_amount = [];
-
-        /**
-         * @var $detail OrderDetailModel
-         * @var $product ProductModel
-         */
-        foreach ($details as $i => $detail) {
-            foreach ($products as $j => $product) {
-                if ($detail->productid !== $product->productid) {
-                    continue;
-                }
-
-                $order_products_with_amount[] = [
-                    'product' => $product->getAttributes(),
-                    'orderAmount' => $detail->getAttribute('amount'),
-                    'estimateTimeArrival' => $product->getETADate(),
-                ];
-            }
-        }
-
-        $this->jsonResponse($order_products_with_amount);
-    }
-
     public function createDecision()
     {
         $user = Xcart::app()->getUser(true);

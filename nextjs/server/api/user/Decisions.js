@@ -156,12 +156,15 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
                   items_stock: true,
                   price: true,
                   product: true,
+                  productcode: true,
                   amount: true,
+                  back: true,
                   xcart_products: {
                     select: {
                       productid: true,
                       productcode: true,
                       eta_date_mm_dd_yyyy: true,
+                      forsale: true,
                       images: {
                         orderBy: {
                           order_by: "asc",
@@ -378,7 +381,7 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
   switch (decision.type.slug) {
     case "estimated-time-arrival":
       decision.options.action = req.body.action;
-      decision.options.comment = req.body.comment;
+      decision.options.decision_comment = req.body.decision_comment;
 
       switch (req.body.action) {
         case "wait":
