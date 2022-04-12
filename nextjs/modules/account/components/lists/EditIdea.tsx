@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { editIdeaName } from "@redux/actions/account-actions/ListsActions";
 import { ListItem } from "@modules/account/ts/types/list.type";
 import cn from "classnames";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 import Styles from "@modules/account/components/lists/EditIdea.module.scss";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -81,32 +82,21 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
             </Feedback>
           </div>
           <div className="edit-idea-btns">
-            <button
+            <Button
               type={"submit"}
               disabled={isLoading}
-              className={cn(
-                "form-button",
-                "account-submit-btn",
-                "auto-width-button",
-                "confirm-edit-idea-btn",
-                Styles.button
-              )}
+              className={cn("w-auto", Styles.button, "me-2")}
             >
               Save
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => onSetEdit()}
               disabled={isLoading}
-              className={cn(
-                "form-button",
-                "account-submit-btn",
-                "account-submit-btn-outline",
-                "auto-width-button",
-                Styles.button
-              )}
+              className={cn("w-auto", Styles.button)}
+              theme={ETheme.outlined}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       ) : (
