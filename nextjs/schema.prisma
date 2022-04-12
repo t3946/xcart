@@ -104,7 +104,7 @@ model account_list_items {
   needs                 String?                      @db.VarChar(50)
   has                   String?                      @db.VarChar(50)
   add_date              DateTime                     @default(now()) @db.Timestamp(0)
-  account_product_lists account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_list_items_account_product_lists")
+  list account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_list_items_account_product_lists")
 
   @@unique([product_id, product_list_id], map: "account_list_items_product_id_product_list_id_uindex")
   @@index([product_list_id], map: "FK_account_list_items_account_product_lists")
@@ -154,10 +154,10 @@ model account_product_lists {
   cache_url               String?                   @db.VarChar(50)
   address_id              Int?                      @db.UnsignedInt
   user_id                 BigInt                    @db.UnsignedBigInt
-  account_addresses       account_addresses?        @relation(fields: [address_id], references: [address_id], onDelete: NoAction, onUpdate: NoAction, map: "account_product_lists_account_addresses_address_id_fk")
-  xcart_users             xcart_users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "account_product_lists_xcart_users_user_id_fk")
-  account_list_items      account_list_items[]
-  product_list_user_roles product_list_user_roles[]
+  addresses               account_addresses?        @relation(fields: [address_id], references: [address_id], onDelete: NoAction, onUpdate: NoAction, map: "account_product_lists_account_addresses_address_id_fk")
+  owner                   xcart_users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "account_product_lists_xcart_users_user_id_fk")
+  items                   account_list_items[]
+  roles product_list_user_roles[]
 
   @@index([address_id], map: "account_product_lists_account_addresses_address_id_fk")
   @@index([user_id], map: "account_product_lists_xcart_users_user_id_fk")
