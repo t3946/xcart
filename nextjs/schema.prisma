@@ -6201,7 +6201,7 @@ model product_list_user_roles {
   product_list_id           Int                          @db.UnsignedInt
   role                      product_list_user_roles_role
   account_product_lists     account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_user_list_account_product_lists")
-  xcart_users               xcart_users                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_user_list_xcart_users")
+  user                      xcart_users                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_user_list_xcart_users")
 
   @@unique([user_id, product_list_id], map: "product_list_user_roles_user_id_product_list_id_uindex")
   @@index([product_list_id], map: "FK_account_user_list_account_product_lists")

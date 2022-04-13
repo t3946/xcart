@@ -12,27 +12,23 @@ import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuF
 import { useRouter } from "next/router";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { List } from "@modules/account/ts/types/list.type";
 import cn from "classnames";
-
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
 import Styles from "@modules/account/components/lists/ListProductIdeaItem.module.scss";
 
 export const ListProductIdeaItem: React.FC<any> = (props) => {
-  const { listItem, drag, reorderProductList, index, deleteItem, edit } = props;
+  const { listItem, drag, reorderProductList, index, deleteItem, edit, list } =
+    props;
   const editCommentDialog = useDialog();
   const mobileMenuDialog = useDialog();
-  const listInfo: List = useSelectorAccount((state) => state.lists.listView);
   const router = useRouter();
   const breakpoint = useBreakpoint();
   const deleteIdeaDialog = useDialog();
-  const listView = useSelectorAccount((state) => state.lists.listView);
   const deleteIdea = () => {
     breakpoint({
       xs: () =>
         router.push(
-          `/shopping-lists/actions/delete-product/idea/${listInfo.product_list_id}/${listItem.list_item_id}`
+          `/shopping-lists/actions/delete-product/idea/${list.product_list_id}/${listItem.list_item_id}`
         ),
       md: deleteIdeaDialog.handleClickOpen,
     });
@@ -41,13 +37,13 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       image: "/static/frontend/images/icons/account/idea-logo.svg",
-      label: listItem.idea.name,
+      label: listItem.idea?.name,
     },
     {
       label: "Add comment, quantity & priority",
       onClick: () => {
         router.push(
-          `/shopping-lists/actions/add-comment/idea/${listInfo.product_list_id}/${listItem.list_item_id}`
+          `/shopping-lists/actions/add-comment/idea/${list.product_list_id}/${listItem.list_item_id}`
         );
       },
     },
@@ -55,7 +51,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
       label: "Move",
       onClick: () => {
         router.push(
-          `/shopping-lists/actions/move-product/idea/${listInfo.product_list_id}/${listItem.list_item_id}`
+          `/shopping-lists/actions/move-product/idea/${list.product_list_id}/${listItem.list_item_id}`
         );
       },
     },
@@ -79,7 +75,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
             onDownClick={() => reorderProductList(index, index + 1)}
             drag={drag}
             index={index}
-            length={listInfo.products.length}
+            length={list.items}
           />
         ) : (
           <div className="product-list-item-movable-area-placeholder" />
@@ -94,7 +90,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
         <div className="product-list-item-info">
           <EditIdea
             openMenuDialog={mobileMenuDialog.handleClickOpen}
-            listId={listInfo}
+            listId={list}
             listItem={listItem}
             edit={edit}
           />
@@ -104,7 +100,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
               <ListProductItemComment
                 listItem={listItem}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
-                list={listInfo}
+                list={list}
               />
             ) : (
               <div
@@ -120,8 +116,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
         btnLabel={"search"}
         mainBtnType={ETheme.outlined}
         edit={edit}
-        time={listItem.add_date}
-        listId={listView.productListId}
+        list={list}
         onMainBtnClick={() =>
           window.location.assign(`/search?q=${listItem.product.name}`)
         }
@@ -144,7 +139,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
       >
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
-          listId={listView.productListId}
+          listId={list.product_list_id}
           list_item_id={listItem.list_item_id}
           info={listItem}
         />

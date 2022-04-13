@@ -15,24 +15,16 @@ import { ListProductIdeaItem } from "@modules/account/components/lists/ListProdu
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
+import { resetServerContext } from "react-beautiful-dnd";
 
-export const ListProductItems: React.FC = () => {
-  const { listView, loading } = useSelectorAccount((state) => state.lists);
+interface IProps {
+  list: any;
+}
+
+export const ListProductItems: React.FC<IProps> = (props) => {
+  resetServerContext();
+  const { list } = props;
   const userId = useSelectorAccount((e) => e.user.user_id);
-
-  function listIsEdit() {
-    if (listView.owner.userId === userId) {
-      return UserPrivateVariantsEnum.EDIT;
-    }
-    if (
-      listView?.users.find((user) => user.userId === userId)?.role ===
-      UserPrivateVariantsEnum.EDIT
-    ) {
-      return UserPrivateVariantsEnum.EDIT;
-    }
-    return UserPrivateVariantsEnum.VIEW;
-  }
-
   const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const dispatch = useDispatch();
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -40,9 +32,6 @@ export const ListProductItems: React.FC = () => {
     boxShadow: isDragging ? "0px 4px 5px 0px rgba(0, 0, 0, 0.25)" : "",
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
-  function deleteItemHandler(list_item_id) {
-    dispatch(deleteItem({ data: { list_item_id } }));
-  }
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
@@ -50,21 +39,41 @@ export const ListProductItems: React.FC = () => {
     reorderProductList(result.source.index, result.destination.index);
   };
   const reorderProductList = (startIndex: number, endIndex: number) => {
-    const reOrder = reorderMass(listView.products, startIndex, endIndex);
-    dispatch(reorderList(reOrder, listView?.productListId));
+    const reOrder = reorderMass(list.items, startIndex, endIndex);
+
+    dispatch(reorderList(reOrder, list?.product_list_id));
   };
 
-  if (loading) {
-    return <span className="ps-4">Loading..</span>;
+  function listIsEdit() {
+    if (list.owner.user_id === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+
+    if (
+      list?.roles.find((role) => role.user.user_id === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+
+  function deleteItemHandler(list_item_id) {
+    dispatch(deleteItem({ data: { list_item_id } }));
   }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {listView.products.length ? (
-              listView.products.map((listItem, index) => {
+        {(provided, snapshot) => (
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            data-rbd-draggable-context-id={list.product_list_id}
+          >
+            {list.items.length ? (
+              list.items.map((listItem, index) => {
                 return (
                   <Draggable
                     key={`${index}_${listItem.list_item_id}`}
@@ -110,8 +119,8 @@ export const ListProductItems: React.FC = () => {
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}
                                       reorderProductList={reorderProductList}
-                                      listId={listView.product_list_id}
-                                      listInfo={listView}
+                                      listId={list.product_list_id}
+                                      listInfo={list}
                                       edit={edit}
                                       productItem={listItem}
                                     />
@@ -119,6 +128,7 @@ export const ListProductItems: React.FC = () => {
                                 case ListItemTypeEnum.IDEA:
                                   return (
                                     <ListProductIdeaItem
+                                      list={list}
                                       deleteItem={() =>
                                         deleteItemHandler(listItem.list_item_id)
                                       }
@@ -138,7 +148,7 @@ export const ListProductItems: React.FC = () => {
                 );
               })
             ) : (
-              <NoItemsBlock listInfo={listView} />
+              <NoItemsBlock listInfo={list} />
             )}
             {provided.placeholder}
           </div>

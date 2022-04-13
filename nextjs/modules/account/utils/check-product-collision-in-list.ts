@@ -10,9 +10,10 @@ export const checkProductCollisionInList = (
       (item) => item.list_item_id === list_item_id
     );
     if (movingItem?.productType === "product") {
-      const inList = toList.products.find(
-        (product) => product.productId === movingItem.productId
+      const inList = toList.items.find(
+        (item) => item.product_id === movingItem.product_id
       );
+
       if (inList) {
         return false;
       }

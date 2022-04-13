@@ -1,25 +1,23 @@
 import React from "react";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ShareList } from "@modules/account/components/lists/ShareList";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface ShareListDialogProps {
+interface IProps {
+  list: any;
   open: boolean;
   handleClose: () => void;
 }
 
-export const ShareListDialog: React.FC<ShareListDialogProps> = ({
-  open,
-  handleClose,
-}) => {
-  const { cacheUrl } = useSelectorAccount((state) => state.lists.listView);
+export const ShareListDialog: React.FC<IProps> = (props) => {
+  const { list, open, handleClose } = props;
+
   return (
     <BootstrapDialogHOC
       show={open}
       title={"Share list with others"}
       onClose={handleClose}
     >
-      <ShareList onClose={handleClose} cache={cacheUrl} />
+      <ShareList onClose={handleClose} cache={list.cache_url} />
     </BootstrapDialogHOC>
   );
 };

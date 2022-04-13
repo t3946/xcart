@@ -19,9 +19,9 @@ interface ListProductItemBtnsProps {
   mainBtnType?: ETheme;
   productId: number;
   onMainBtnClick: () => void;
-  time: string;
-  listId: string;
+  list: any;
   outOfStock?: boolean;
+  disabledAddToCart?: any;
 }
 
 export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
@@ -31,23 +31,22 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   mainBtnType,
   productId,
   onMainBtnClick,
-  time,
-  listId,
+  list,
   outOfStock,
   disabledAddToCart,
 }) => {
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
 
-  const { lists, listView }: AccountListsStore = useSelectorAccount(
+  const { lists }: AccountListsStore = useSelectorAccount(
     (state) => state.lists
   );
   const handleMove = (e) => {
     const toListId = e.target.value.value;
     const toList = lists.find((list) => list.productListId === toListId);
-    if (checkProductCollisionInList(listView, toList, productId)) {
-      const fromListId = listView.productListId;
-      dispatch(transferProductList(fromListId, toListId, productId));
+
+    if (checkProductCollisionInList(list, toList, productId)) {
+      dispatch(transferProductList(list.product_list_id, toListId, productId));
     } else {
       snackbar.show(
         `This item already added to list`,
@@ -56,6 +55,10 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
       );
     }
   };
+
+  if (!lists) {
+    return null;
+  }
 
   return (
     <div className={Styles.container}>
@@ -79,11 +82,13 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
             isSearchable={false}
             options={lists
               .filter((list) => list.role !== UserPrivateVariantsEnum.VIEW)
-              .filter((list) => list.productListId !== listView.productListId)
+              .filter(
+                (listItem) => listItem.product_list_id !== list.product_list_id
+              )
               .map((e) => {
                 return {
                   label: e.name,
-                  value: e.productListId,
+                  value: e.product_list_id,
                 };
               })}
             name={""}

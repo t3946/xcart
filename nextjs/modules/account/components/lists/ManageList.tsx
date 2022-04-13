@@ -25,12 +25,13 @@ import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 
 import Styles from "@modules/account/components/lists/ManageList.module.scss";
 
-interface ManageListProps {
+interface IProps {
+  list: any;
   onCancelClick: () => void;
 }
 
-export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
-  const listView: List = useSelectorAccount((state) => state.lists.listView);
+export const ManageList: React.FC<IProps> = (props) => {
+  const { list, onCancelClick } = props;
   const user = useSelectorAccount((state) => state.user);
   const addresses: AddressItemDto[] = useSelectorAccount((state) =>
     state.addresses.addressesList?.filter(
@@ -61,7 +62,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
   const handleSubmit = (values: ManageListFormData) => {
     dispatch(
       manageList(
-        listView.productListId,
+        list.productListId,
         convertManageListFormDataToRequest(values),
         onCancelClick
       )
@@ -70,26 +71,26 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
   let selectAddress = null;
   if (addresses) {
     selectAddress = addresses?.find(
-      (address) => address.address_id === listView.addressId
+      (address) => address.address_id === list.addressId
     );
   }
   const formik = useFormik({
     initialValues: {
-      listName: listView.name || "",
-      description: listView.description || "",
-      recipientName: listView.recipientName || "",
-      email: listView.recipientEmail || "",
+      listName: list.name || "",
+      description: list.description || "",
+      recipientName: list.recipientName || "",
+      email: list.recipientEmail || "",
       isPurchase: false,
       isDefault: false,
       shippingAddress: {
         value: selectAddress ? selectAddress.address_id : null,
         label: selectAddress?.full_name || "None",
       },
-      month: listView.birthday
-        ? monthItems[new Date(Number(listView.birthday)).getMonth() - 1]
+      month: list.birthday
+        ? monthItems[new Date(Number(list.birthday)).getMonth() - 1]
         : monthItems[0],
-      day: listView.birthday
-        ? dayItems[new Date(Number(listView.birthday)).getDate()]
+      day: list.birthday
+        ? dayItems[new Date(Number(list.birthday)).getDate()]
         : dayItems[0],
     },
     validationSchema: Yup.object().shape({

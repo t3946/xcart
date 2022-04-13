@@ -6,24 +6,23 @@ import Styles from "@modules/account/components/lists/ListsSidebarLabel.module.s
 
 interface ListsSidebarLabelProps {
   label: string;
-  privateType: ListPrivateEnum;
+  isPrivate: boolean;
 }
 
 export const ListsSidebarLabel: React.FC<ListsSidebarLabelProps> = ({
   label,
-  privateType,
+  isPrivate,
 }) => {
   return (
     <div className="d-flex justify-content-between align-items-center alight-center lists-sidebar-label-content">
-      <div className={Styles.listsSidebarLabelText} title={label}>{label}</div>
-      {(() => {
-        switch (privateType) {
-          case ListPrivateEnum.PRIVATE:
-            return <LockIcon className={Styles.icon} />;
-          case ListPrivateEnum.SHARED:
-            return <ShareIcon className={Styles.icon} />;
-        }
-      })()}
+      <div className={Styles.listsSidebarLabelText} title={label}>
+        {label}
+      </div>
+      {isPrivate ? (
+        <LockIcon className={Styles.icon} />
+      ) : (
+        <ShareIcon className={Styles.icon} />
+      )}
     </div>
   );
 };

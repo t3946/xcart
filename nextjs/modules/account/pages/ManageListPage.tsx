@@ -21,7 +21,7 @@ export const ManageListPage: React.FC<ManageListPage> = ({ listHash }) => {
   return (
     <Fragment>
       <div className="page-label">Manage list</div>
-      <ManageList info={list} onCancelClick={onCancelClick} />
+      <ManageList list={list} onCancelClick={onCancelClick} />
     </Fragment>
   );
 };

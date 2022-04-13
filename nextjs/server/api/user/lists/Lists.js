@@ -18,6 +18,7 @@ app.post("/get", async (req, res) => {
       addresses: true,
       owner: {
         select: {
+          user_id: true,
           name: true,
           avatar_image: true,
         },
@@ -33,8 +34,14 @@ app.post("/get", async (req, res) => {
       },
       roles: {
         select: {
-          user_id: true,
           role: true,
+          user: {
+            select: {
+              user_id: true,
+              public_name: true,
+              name: true,
+            },
+          },
         },
       },
     },
@@ -52,6 +59,7 @@ app.get("/get-all", async (req, res) => {
       addresses: true,
       owner: {
         select: {
+          user_id: true,
           name: true,
           avatar_image: true,
         },
@@ -60,11 +68,21 @@ app.get("/get-all", async (req, res) => {
         where: {
           deleted: null,
         },
+        include: {
+          idea: true,
+          product: true,
+        },
       },
       roles: {
         select: {
-          user_id: true,
           role: true,
+          user: {
+            select: {
+              user_id: true,
+              public_name: true,
+              name: true,
+            },
+          },
         },
       },
     },
@@ -83,15 +101,30 @@ app.get("/get-by-cache/:cache", async (req, res) => {
       addresses: true,
       owner: {
         select: {
+          user_id: true,
           name: true,
           avatar_image: true,
         },
       },
-      items: true,
+      items: {
+        where: {
+          deleted: null,
+        },
+        include: {
+          idea: true,
+          product: true,
+        },
+      },
       roles: {
         select: {
-          user_id: true,
           role: true,
+          user: {
+            select: {
+              user_id: true,
+              public_name: true,
+              name: true,
+            },
+          },
         },
       },
     },

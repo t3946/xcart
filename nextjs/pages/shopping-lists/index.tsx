@@ -14,6 +14,8 @@ const ShoppingLists: NextPage = () => {
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
 
+  return "ShoppingLists";
+
   React.useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -28,7 +30,7 @@ const ShoppingLists: NextPage = () => {
 
   return (
     <PageTwoColumns bar={<ListsSidebarMenu />}>
-      <ListsPage />
+      {"<ListsPage />"}
     </PageTwoColumns>
   );
 };

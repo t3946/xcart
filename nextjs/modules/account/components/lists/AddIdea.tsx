@@ -25,11 +25,9 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
 
   const ref = useRef<HTMLInputElement>();
   const dispatch = useDispatch();
-
   const snackbar = useSnackbar();
-
   const { loading, lists } = useSelector((state) => state.lists);
-  const listEdit = lists.find((e) => e.cacheUrl === listHash);
+  const listEdit = lists.find((e) => e.cache_url === listHash);
 
   const handleSubmit = () => {
     if (!formik.values.name.trim()) {

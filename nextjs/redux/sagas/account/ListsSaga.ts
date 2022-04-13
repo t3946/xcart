@@ -9,14 +9,12 @@ import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 const api = new ApiService();
 
-const getUser = () => {
-  return Store.getState().user;
-};
-
 function* getLists(): Generator {
-  const lists = yield api
-    .get("/api/account/lists/get-lists")
-    .then((response) => response);
+  let lists;
+
+  yield axios
+    .get("/api-client/user/lists/get-all")
+    .then((res) => (lists = res.data));
 
   yield put({
     type: "SET_LISTS",

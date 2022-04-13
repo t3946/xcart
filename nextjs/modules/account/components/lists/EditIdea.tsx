@@ -40,7 +40,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
     );
 
     formik.setTouched({});
-    onSetEdit(true);
+    onCancel(true);
   }
 
   const formik = useFormik({
@@ -55,8 +55,9 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
     isEdit && inputRef.current?.focus();
   }, [isEdit]);
 
-  const onSetEdit = (save?: boolean) => {
+  const onCancel = (save?: boolean) => {
     setIsEdit(!isEdit);
+
     if (isEdit && !save) {
       formik.values.name = listItem.product.name;
     }
@@ -92,7 +93,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
               Save
             </Button>
             <Button
-              onClick={() => onSetEdit()}
+              onClick={onCancel}
               disabled={isLoading}
               className={cn("w-auto", Styles.button)}
               theme={ETheme.outlined}
@@ -109,7 +110,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
           {edit && (
             <React.Fragment>
               <span
-                onClick={() => onSetEdit()}
+                onClick={onCancel}
                 className={cn("add-comment-text", Styles.editIdea)}
               >
                 Edit idea

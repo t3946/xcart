@@ -1,6 +1,5 @@
 import React from "react";
 import cn from "classnames";
-
 import Styles from "@modules/account/components/lists/ListItemMovableArea.module.scss";
 
 interface ListItemMovableAreaProps {
@@ -24,6 +23,9 @@ export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = ({
       className={cn("list-item-movable-area-container", {
         "d-none": length <= 1,
       })}
+      // id={"qwer1234"}
+      // aria-describedby={"qwer1234"}
+      // data-rbd-drag-handle-context-id={"qwe123"}
     >
       <div
         className={cn("list-item-movable-area-text", {

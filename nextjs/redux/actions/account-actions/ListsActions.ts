@@ -149,9 +149,9 @@ export const manageList = (
 export const fetchLists = () => ({
   type: "FETCH_LISTS",
 });
-export const setListView = (listView: List) => ({
+export const setListView = (currentList: List) => ({
   type: "SET_LIST_VIEW",
-  listView,
+  currentList,
 });
 
 export const dropByHash = (hash: List) => ({

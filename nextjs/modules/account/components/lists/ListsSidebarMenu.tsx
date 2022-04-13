@@ -11,16 +11,22 @@ import { fetchLists } from "@redux/actions/account-actions/ListsActions";
 
 import Styles from "@modules/account/components/lists/ListsSidebarMenu.module.scss";
 
-export const ListsSidebarMenu: React.FC = () => {
+interface IProps {
+  list?: any;
+}
+
+export const ListsSidebarMenu: React.FC<IProps> = (props) => {
+  const { list } = props;
   const router = useRouter();
   const createListDialog = useDialog();
   const storeLists = useSelectorAccount((e) => e.lists);
   const lists = storeLists.lists;
-  const listView = storeLists.listView;
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchLists());
   }, []);
+
   const backOnAccount = () => {
     router.push("/dashboard");
   };
@@ -36,16 +42,23 @@ export const ListsSidebarMenu: React.FC = () => {
           <div>Back to account</div>
         </div>
       </button>
+
       <div className="lists-sidebar-label">Shopping Lists</div>
       {lists?.map((e, index) => (
         <Item
-          to={`/shopping-lists/${e.cacheUrl}`}
-          label={<ListsSidebarLabel label={e.name} privateType={e.listType} />}
+          to={`/shopping-lists/${e.cache_url}`}
+          label={
+            <ListsSidebarLabel
+              label={e.name}
+              isPrivate={list.roles.length === 0}
+            />
+          }
           className={[
             "sidebar-menu-item__lists",
+            "py-2",
             {
               [Styles.listItem_active]:
-                e.productListId === listView?.productListId,
+                e.product_list_id === list?.product_list_id,
             },
           ]}
           key={index}

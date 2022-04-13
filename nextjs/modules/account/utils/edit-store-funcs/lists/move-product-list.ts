@@ -6,33 +6,35 @@ export const moveProductList = (
   toListId: number,
   productId: number
 ): AccountListsStore => {
-  const productMove = state.listView?.products.find(
+  const productMove = state.currentList?.items.find(
     (product) => product.list_item_id === productId
   );
+
   return {
     ...state,
     lists: state.lists?.map((list) => {
-      if (list.productListId === toListId) {
-        list.products = [...list.products, productMove];
-      } else if (list.productListId === fromListId) {
-        list.products = list.products.filter(
+      if (list.product_list_id === toListId) {
+        list.items = [...list.items, productMove];
+      } else if (list.product_list_id === fromListId) {
+        list.items = list.items.filter(
           (product) => product.list_item_id !== productId
         );
       }
+
       return list;
     }),
-    listView: {
-      ...state.listView,
-      products: state.listView?.products.map((product) => {
+    currentList: {
+      ...state.currentList,
+      items: state.currentList?.items.map((product) => {
         if (product.list_item_id === productId) {
           product.typeAction = {
             type: "move",
             productName: product.product.product || product.product.name,
             toListId: state.lists?.find(
-              (list) => list.productListId === toListId
+              (list) => list.product_list_id === toListId
             )?.cacheUrl,
             listName: state.lists?.find(
-              (list) => list.productListId === toListId
+              (list) => list.product_list_id === toListId
             )?.name,
           };
         }

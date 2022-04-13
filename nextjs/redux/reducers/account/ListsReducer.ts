@@ -8,11 +8,10 @@ import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/m
 import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
 import { addProductToList } from "@modules/account/utils/edit-store-funcs/lists/add-product-to-list";
 import { editIdeaName } from "@modules/account/utils/edit-store-funcs/lists/edit-idea-name";
-import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 const initialValue: AccountListsStore = {
   lists: null,
-  listView: null,
+  currentList: null,
   loading: false,
 };
 
@@ -41,28 +40,20 @@ const accountListReducer = (
     case "SET_LISTS":
       return {
         ...state,
-        lists:
-          action.lists &&
-          action.lists.map((list) => ({
-            ...list,
-            listType: list.users.length
-              ? ListPrivateEnum.SHARED
-              : ListPrivateEnum.PRIVATE,
-          })),
+        lists: action.lists,
         loading: false,
       };
     case "SET_LIST_VIEW":
       return {
         ...state,
-        listView: action.listView,
-        loading: false,
+        currentList: action.currentList,
       };
     case "EDIT_IDEA":
       return {
         ...state,
         loading: false,
-        listView: editIdeaName(
-          state.listView,
+        currentList: editIdeaName(
+          state.currentList,
           action.list_idea_id,
           action.name
         ),
@@ -70,8 +61,8 @@ const accountListReducer = (
     case "EDIT_COMMENT_LIST_VIEW":
       return {
         ...state,
-        listView: editCommentDataProduct(
-          state.listView,
+        currentList: editCommentDataProduct(
+          state.currentList,
           action.list_item_id,
           action.data
         ),
@@ -115,21 +106,21 @@ const accountListReducer = (
     case "SEND_REORDER_LIST":
       return {
         ...state,
-        listView: { ...state.listView, products: action.listIds },
+        currentList: { ...state.currentList, products: action.listIds },
       };
     case "DELETE_PRODUCT_LIST_VIEW":
       return {
         ...state,
-        listView: deleteProductList(state.listView, action.list_item_id),
+        currentList: deleteProductList(state.currentList, action.list_item_id),
       };
     case "UNDO_DELETE_PRODUCT":
       const list_item_id = action.payload.data.list_item_id;
 
       return {
         ...state,
-        listView: {
-          ...state.listView,
-          products: state.listView.products.map((product) => {
+        currentList: {
+          ...state.currentList,
+          products: state.currentList.products.map((product) => {
             if (product.list_item_id === list_item_id) {
               delete product.typeAction;
               return {

@@ -19,29 +19,31 @@ import Arrow from "@modules/icon/components/font-awesome/arrow-left/Solid";
 
 import Styles from "@modules/account/components/lists/ListHeader.module.scss";
 
-interface ListHeaderProps {
+interface IProps {
+  list: any;
   isShoppingList: boolean;
 }
 
-export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
+export const ListHeader: React.FC<IProps> = (props) => {
   const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const { listView: list, loading } = useSelectorAccount(
-    (state) => state.lists
-  );
+  const { list, isShoppingList } = props;
   const userId = useSelectorAccount((e) => e.user.user_id);
+
   function listIsEdit() {
-    if (list.owner.userId === userId) {
+    if (list.owner.user_id === userId) {
       return UserPrivateVariantsEnum.EDIT;
     }
+
     if (
-      list?.users.find((user) => user.userId === userId)?.role ===
+      list?.roles.find((role) => role.user.user_id === userId)?.role ===
       UserPrivateVariantsEnum.EDIT
     ) {
       return UserPrivateVariantsEnum.EDIT;
     }
     return UserPrivateVariantsEnum.VIEW;
   }
+
   const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const manageListDialog = useDialog();
   const deleteListDialog = useDialog();
@@ -78,10 +80,6 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
     onClick: () =>
       router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
   };
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <div
@@ -226,13 +224,14 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       <ShareListDialog
         open={shareDialog.open}
         handleClose={shareDialog.handleClose}
+        list={list}
       />
       <BootstrapDialogHOC
         show={manageListDialog.open}
         title={"Manage list"}
         onClose={manageListDialog.handleClose}
       >
-        <ManageList info={list} onCancelClick={manageListDialog.handleClose} />
+        <ManageList list={list} onCancelClick={manageListDialog.handleClose} />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC
         show={deleteListDialog.open}
