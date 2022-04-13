@@ -1,5 +1,3 @@
-import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
-import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import { EditCommentRequestData } from "@modules/account/ts/types/edit-comment-request-data";
 import { ManageListRequestData } from "@modules/account/ts/types/manage-list-form.types";
