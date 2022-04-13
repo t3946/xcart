@@ -9,10 +9,10 @@ export const editIdeaName = (
   ...listView,
   products: listView.products.map((product) => {
     if (
-      product.productId == productId &&
-      product.productType === ListItemTypeEnum.IDEA
+      product.list_idea_id == productId &&
+      product.product_type === ListItemTypeEnum.IDEA
     ) {
-      product.product.name = name;
+      product.idea.name = name;
     }
     return product;
   }),

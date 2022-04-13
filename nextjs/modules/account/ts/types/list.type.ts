@@ -27,10 +27,11 @@ export enum ListSource {
 }
 
 export interface ListItem {
+  list_idea_id: number;
   comment: string;
   has: number | string;
   image?: string;
-  list_items_id: number;
+  list_item_id: number;
   needs: string | number;
   orderBy: string;
   priority: PriorityProductEnum;

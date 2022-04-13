@@ -14,7 +14,7 @@ use Xcart\App\Orm\Model;
 
 /**
  * Class ListItemsModel
- * @property int list_items_id
+ * @property int list_item_id
  * @property ProductModel product
  * @property ProductListsModel list
  * @property int product_id
@@ -41,7 +41,7 @@ class ListItemsModel extends Model
     public static function getFields(): array
     {
         return [
-            'list_items_id' => [
+            'list_item_id' => [
                 'class' => AutoField::class,
             ],
             'product' => [
@@ -84,6 +84,9 @@ class ListItemsModel extends Model
             'add_date' => [
                 'class' => TimeStampField::class,
             ],
+            'list_idea_id' => [
+                'class' => IntField::class,
+            ],
         ];
     }
 
@@ -95,19 +98,25 @@ class ListItemsModel extends Model
             'has' => $this->has,
             'needs' => $this->needs,
             'orderBy' => $this->order_by,
+            'order_by' => $this->order_by,
             'productType' => $this->product_type,
+            'product_type' => $this->product_type,
             'productId' => (int)$this->product_id,
+            'product_id' => (int)$this->product_id,
+            'list_idea_id' => (int)$this->list_idea_id,
             'add_date'=> $this->add_date,
-            'list_items_id' => (int)$this->pk
+            'list_item_id' => (int)$this->pk
         ];
         switch ($this->product_type) {
             case self::TYPE_IDEA:
                 $product_model = $this->idea;
+                $idea = ListIdeaModel::objects()->asArray()->get(['list_idea_id' => (int)$this->list_idea_id]);
                 $base_data = array_merge($base_data, [
                     'product' => [
                         'productId' => $product_model->pk,
                         'name' => $product_model->name,
-                    ]
+                    ],
+                    'idea' => $idea,
                 ]);
                 break;
             case self::TYPE_PRODUCT:

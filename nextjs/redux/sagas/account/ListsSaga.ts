@@ -47,7 +47,7 @@ function* reorderList(action: AnyAction): Generator {
     .post(
       "/api/account/lists/reorder-products",
       JSON.stringify({
-        productIds: action.listIds.map((e) => e.list_items_id),
+        productIds: action.listIds.map((e) => e.list_item_id),
         productListId: action.productListId,
       })
     )
@@ -74,7 +74,7 @@ function* transferProductList(action: AnyAction): Generator {
       JSON.stringify({
         fromListId: fromListId,
         toListId: toListId,
-        list_items_id: productId,
+        list_item_id: productId,
       })
     )
     .then((response) => response);
@@ -128,40 +128,19 @@ function* addProductOnList(action: AnyAction): Generator {
   yield action?.callback(product);
 }
 
-function* editIdeaName(action: AnyAction): Generator {
-  const { productId, name } = action;
-  yield api
-    .post(
-      `/api/account/lists/edit-name-in-idea`,
-      JSON.stringify({
-        productId,
-        name,
-      })
-    )
-    .then((response) => response);
-
-  yield put({
-    type: "EDIT_IDEA_NAME",
-    name,
-    productId,
-  });
-
-  yield action.callback();
-}
-
 function* editCommentProduct(action: AnyAction): Generator {
-  const { list_items_id, productListId, data } = action;
+  const { list_item_id, productListId, data } = action;
   yield api
     .post(
       `/api/account/lists/edit-comment`,
       JSON.stringify({
-        list_items_id,
+        list_item_id,
         productListId,
         data,
       })
     )
     .then((res) => res);
-  yield put({ type: "EDIT_COMMENT_LIST_VIEW", list_items_id, data });
+  yield put({ type: "EDIT_COMMENT_LIST_VIEW", list_item_id, data });
   yield action.callback();
 }
 
@@ -186,33 +165,27 @@ function* manageList(action: AnyAction): Generator {
 }
 
 function* deleteProduct(action: AnyAction): Generator {
-  const { list_items_id } = action;
+  const { list_item_id } = action;
   yield api
     .post<any>(
       `/api/account/lists/delete-product`,
       JSON.stringify({
-        list_items_id,
+        list_item_id,
       })
     )
     .then((response) => response);
   yield put({
     type: "DELETE_PRODUCT_LIST_VIEW",
-    list_items_id,
+    list_item_id,
   });
 
   action?.callback && action?.callback();
 }
 
 function* undoDeleteProduct(action: AnyAction): Generator {
-  yield api
-    .post<number>(
-      `/api/account/lists/undo-delete-product`,
-      JSON.stringify({
-        ...action.product,
-        productListId: action.product_list_id,
-      })
-    )
-    .then((response) => response);
+  const { data } = action.payload;
+
+  yield axios.post(`/api-client/user/lists/item/restore`, data);
 }
 
 function* fetchListView(action: AnyAction): Generator {
@@ -245,6 +218,53 @@ function* fetchListView(action: AnyAction): Generator {
   });
 }
 
+function* editIdea(action: AnyAction): Generator {
+  const { data } = action.payload;
+
+  yield put({
+    type: "EDIT_IDEA",
+    name: data.name,
+    list_idea_id: data.list_idea_id,
+  });
+
+  yield axios.post(`/api-client/user/lists/idea/edit`, data);
+}
+
+function* createIdea(action: AnyAction): Generator {
+  const { data, success } = action.payload;
+  let newListItem;
+
+  yield axios
+    .post(`/api-client/user/lists/idea/create`, {
+      product_list_id: data.product_list_id,
+      name: data.name,
+    })
+    .then((res) => {
+      newListItem = res.data.list_item;
+    });
+
+  yield put({
+    type: "ADD_PRODUCT_TO_LIST",
+    listItem: newListItem,
+    productListId: data.product_list_id,
+  });
+
+  yield success();
+}
+
+function* deleteItem(action: AnyAction): Generator {
+  const { list_item_id } = action.payload.data;
+
+  yield axios.post("/api-client/user/lists/item/delete", {
+    list_item_id,
+  });
+
+  yield put({
+    type: "DELETE_PRODUCT_LIST_VIEW",
+    list_item_id,
+  });
+}
+
 export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("FETCH_LISTS", getLists);
   yield takeLatest("CREATE_LIST", createList);
@@ -254,10 +274,16 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("ENCRYPT_URL", encryptUrl);
   yield takeLatest("EDIT_USER_RIGHTS", editUserRights);
   yield takeLatest("ADD_PRODUCT_ON_LIST", addProductOnList);
-  yield takeLatest("SEND_EDIT_IDEA_NAME", editIdeaName);
   yield takeLatest("EDIT_COMMENT_PRODUCT", editCommentProduct);
   yield takeLatest("MANAGE_LIST", manageList);
   yield takeLatest("SEND_DELETE_PRODUCT", deleteProduct);
   yield takeLatest("UNDO_DELETE_PRODUCT", undoDeleteProduct);
   yield takeLatest("FETCH_LIST", fetchListView);
+
+  //idea
+  yield takeLatest("PRODUCT_LISTS_EDIT_IDEA", editIdea);
+  yield takeLatest("PRODUCT_LISTS_CREATE_IDEA", createIdea);
+
+  //item
+  yield takeLatest("PRODUCT_LISTS_DELETE_ITEM", deleteItem);
 }

@@ -52,23 +52,17 @@ export const deleteList = (
 });
 
 export const deleteProduct = (
-  list_items_id: number,
+  list_item_id: number,
   callback?: () => void
 ): any => ({
   type: "SEND_DELETE_PRODUCT",
-  list_items_id,
+  list_item_id,
   callback,
 });
 
-export const undoDeleteProduct = (
-  product_list_id: number,
-  list_items_id: number,
-  product: any
-): any => ({
+export const undoDeleteProduct = (payload: any): any => ({
   type: "UNDO_DELETE_PRODUCT",
-  product_list_id,
-  list_items_id,
-  product,
+  payload,
 });
 
 export const encryptUrl = (payload: any): any => ({
@@ -102,6 +96,17 @@ export const addProduct = (
   callback,
 });
 
+export const createIdea = (payload: any): any => ({
+  type: "PRODUCT_LISTS_CREATE_IDEA",
+  payload,
+});
+
+export const deleteItem = (payload: any): any => ({
+  type: "PRODUCT_LISTS_DELETE_ITEM",
+  payload,
+});
+
+//todo: @deprecated use editIdea instead
 export const editIdeaName = (
   listId: number,
   productId: number,
@@ -115,15 +120,20 @@ export const editIdeaName = (
   callback,
 });
 
+export const editIdea = (payload: any): any => ({
+  type: "PRODUCT_LISTS_EDIT_IDEA",
+  payload,
+});
+
 export const editCommentProduct = (
   productListId: number,
-  list_items_id: number,
+  list_item_id: number,
   data: EditCommentRequestData,
   callback: () => void
 ): any => ({
   type: "EDIT_COMMENT_PRODUCT",
   productListId,
-  list_items_id,
+  list_item_id,
   data,
   callback,
 });

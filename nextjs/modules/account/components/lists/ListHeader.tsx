@@ -167,11 +167,14 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
           {list.name}
         </div>
         {edit && (
-          <img
+          <span
+            className={"ms-3 py-10 px-1 cursor-pointer d-lg-none"}
             onClick={mobileMenuDialog.handleClickOpen}
-            className="list-header-ellipsis"
-            src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
-          />
+          >
+            <img
+              src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+            />
+          </span>
         )}
       </div>
 

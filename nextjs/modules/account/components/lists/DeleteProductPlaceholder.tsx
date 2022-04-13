@@ -3,21 +3,21 @@ import { useDispatch } from "react-redux";
 import { undoDeleteProduct } from "@redux/actions/account-actions/ListsActions";
 import { ListItem } from "@modules/account/ts/types/list.type";
 
-interface DeleteProductPlaceholderProps {
+interface IProps {
   name: string;
-  product: ListItem;
-  listItemId: number;
-  productListId: number;
+  listItem: ListItem;
 }
 
-export const DeleteProductPlaceholder: React.FC<
-  DeleteProductPlaceholderProps
-> = ({ name, product, listItemId, productListId }) => {
+export const DeleteProductPlaceholder: React.FC<IProps> = (props) => {
+  const { name, listItem } = props;
   const dispatch = useDispatch();
 
-  const undoDelete = () => {
-    dispatch(undoDeleteProduct(productListId, listItemId, product));
-  };
+  function undoDelete() {
+    dispatch(
+      undoDeleteProduct({ data: { list_item_id: listItem.list_item_id } })
+    );
+  }
+
   return (
     <div className="deleted-product-container w-100 d-none d-md-block">
       <div className="deleted-product-content">

@@ -35,8 +35,9 @@ const accountListReducer = (
         loading: true,
       };
     case "ADD_PRODUCT_TO_LIST":
-      const { product } = action;
-      return addProductToList(state, action.productListId, product);
+      console.log("ADD_PRODUCT_TO_LIST", action);
+      const { listItem } = action;
+      return addProductToList(state, action.productListId, listItem);
     case "SET_LISTS":
       return {
         ...state,
@@ -56,18 +57,22 @@ const accountListReducer = (
         listView: action.listView,
         loading: false,
       };
-    case "EDIT_IDEA_NAME":
+    case "EDIT_IDEA":
       return {
         ...state,
         loading: false,
-        listView: editIdeaName(state.listView, action.productId, action.name),
+        listView: editIdeaName(
+          state.listView,
+          action.list_idea_id,
+          action.name
+        ),
       };
     case "EDIT_COMMENT_LIST_VIEW":
       return {
         ...state,
         listView: editCommentDataProduct(
           state.listView,
-          action.list_items_id,
+          action.list_item_id,
           action.data
         ),
       };
@@ -115,15 +120,17 @@ const accountListReducer = (
     case "DELETE_PRODUCT_LIST_VIEW":
       return {
         ...state,
-        listView: deleteProductList(state.listView, action.list_items_id),
+        listView: deleteProductList(state.listView, action.list_item_id),
       };
     case "UNDO_DELETE_PRODUCT":
+      const list_item_id = action.payload.data.list_item_id;
+
       return {
         ...state,
         listView: {
           ...state.listView,
           products: state.listView.products.map((product) => {
-            if (product.productId === action.list_items_id) {
+            if (product.list_item_id === list_item_id) {
               delete product.typeAction;
               return {
                 ...product,

@@ -7,7 +7,7 @@ export const moveProductList = (
   productId: number
 ): AccountListsStore => {
   const productMove = state.listView?.products.find(
-    (product) => product.list_items_id === productId
+    (product) => product.list_item_id === productId
   );
   return {
     ...state,
@@ -16,7 +16,7 @@ export const moveProductList = (
         list.products = [...list.products, productMove];
       } else if (list.productListId === fromListId) {
         list.products = list.products.filter(
-          (product) => product.list_items_id !== productId
+          (product) => product.list_item_id !== productId
         );
       }
       return list;
@@ -24,7 +24,7 @@ export const moveProductList = (
     listView: {
       ...state.listView,
       products: state.listView?.products.map((product) => {
-        if (product.list_items_id === productId) {
+        if (product.list_item_id === productId) {
           product.typeAction = {
             type: "move",
             productName: product.product.product || product.product.name,

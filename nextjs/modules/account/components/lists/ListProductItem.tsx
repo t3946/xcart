@@ -15,14 +15,12 @@ import { cartAdd } from "@redux/reducers/appCartReducer";
 import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { CountGroup } from "@modules/ui/CountGroup";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
 import OverallRating from "@modules/shared/components/ratings/OverallRating";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
 import Styles from "@modules/account/components/lists/ListProductItem.module.scss";
 import {
@@ -43,15 +41,15 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
   const editCommentDialog = useDialog();
   const dispatch = useDispatch();
   let product: ListProductInfo;
+
   if ("product" in productItem.product) {
     product = productItem.product;
   }
+
   const router = useRouter();
-  const breakpoint = useBreakpoint();
   const deleteProductDialog = useDialog();
   const mobileMenuDialog = useDialog();
   const [disabledAddToCart, setDisabledAddToCart] = React.useState(false);
-
   const [countProductsOnCart, setCountProductsOnCart] = useState(
     product.minAmount
   );
@@ -66,7 +64,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
 
     setCountProductsOnCart(value);
   };
-
   const data = [
     {
       id: productItem.productId,
@@ -74,11 +71,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       options: [],
     },
   ];
-
   const ratings = productItem.product.ratings?.overall;
-
   const snackbar = useSnackbar();
-
   const onCountInputBlur = () => {
     if (product.multOrderQuantity) {
       setCountProductsOnCart(
@@ -86,7 +80,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       );
     }
   };
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       image: productItem.image,
@@ -96,21 +89,21 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       label: "Add comment, quantity & priority",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${productItem.list_items_id}`
+          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${productItem.list_item_id}`
         ),
     },
     {
       label: "Move",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${productItem.list_items_id}`
+          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${productItem.list_item_id}`
         ),
     },
     {
       label: "Delete",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${productItem.list_items_id}`
+          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${productItem.list_item_id}`
         ),
     },
   ];
@@ -261,7 +254,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             }}
             time={productItem.add_date}
             listId={productItem.product_list_id}
-            productId={productItem.list_items_id}
+            productId={productItem.list_item_id}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}
@@ -279,7 +272,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
           listId={listId}
-          list_items_id={productItem.list_items_id}
+          list_item_id={productItem.list_item_id}
           info={productItem}
         />
       </BootstrapDialogHOC>
@@ -290,7 +283,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       >
         <ConfirmDelete
           onCancelClick={deleteProductDialog.handleClose}
-          onDeleteClick={deleteItem}
+          onDeleteClick={() => {
+            deleteItem();
+            deleteProductDialog.handleClose();
+          }}
           deleteType={"product"}
         />
       </BootstrapDialogHOC>

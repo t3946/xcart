@@ -102,15 +102,15 @@ class AccountListsApi extends Controller
         /* @var $list_item ListItemsModel */
         foreach ($list_items as $_ => $list_item) {
             //unexpected product
-            if (in_array($list_item->list_items_id, $data['productIds']) === false) {
+            if (in_array($list_item->list_item_id, $data['productIds']) === false) {
                 http_response_code(400);
                 return;
             }
         }
 
-        foreach ($data['productIds'] as $index => $list_items_id) {
+        foreach ($data['productIds'] as $index => $list_item_id) {
             /** @var ListItemsModel $list_item */
-            $list_item = ListItemsModel::objects()->get(['list_items_id' => $list_items_id]);
+            $list_item = ListItemsModel::objects()->get(['list_item_id' => $list_item_id]);
             $list_item->order_by = $index;
             $list_item->save();
         }
@@ -152,7 +152,7 @@ class AccountListsApi extends Controller
 
         // move product
         /** @var ListItemsModel $listItem */
-        $listItem = ListItemsModel::objects()->get(['product_list_id' => $form['fromListId'], 'list_items_id' => $form['list_items_id']]);
+        $listItem = ListItemsModel::objects()->get(['product_list_id' => $form['fromListId'], 'list_item_id' => $form['list_item_id']]);
         $listItem->product_list_id = $form['toListId'];
         $listItem->save();
 
@@ -336,7 +336,7 @@ class AccountListsApi extends Controller
 
         $list_item = ListItemsModel::objects()->get(
             [
-                'list_items_id' => $form['list_items_id'],
+                'list_item_id' => $form['list_item_id'],
                 'product_list_id' => $form['productListId']
             ]
         );
@@ -388,7 +388,7 @@ class AccountListsApi extends Controller
     public function deleteProduct()
     {
         $form = json_decode(file_get_contents('php://input'), true);
-        $attr_form = ['list_items_id' => $form['list_items_id']];
+        $attr_form = ['list_item_id' => $form['list_item_id']];
         $user = Xcart::app()->auth->getUser(true);
         $list_item = ListItemsModel::objects()->get($attr_form);
 

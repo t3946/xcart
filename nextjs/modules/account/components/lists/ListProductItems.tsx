@@ -5,22 +5,21 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import {
   reorderList,
-  deleteProduct,
+  deleteItem,
 } from "@redux/actions/account-actions/ListsActions";
 import { reorderMass } from "@modules/account/utils/reorder-mass";
 import { ListItemTypeEnum } from "@modules/account/ts/consts/list-item-type.enum";
-import { List, ListItem } from "@modules/account/ts/types/list.type";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { ListProductIdeaItem } from "@modules/account/components/lists/ListProductIdeaItem";
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
-import { indexOf } from "lodash";
 
 export const ListProductItems: React.FC = () => {
   const { listView, loading } = useSelectorAccount((state) => state.lists);
   const userId = useSelectorAccount((e) => e.user.user_id);
+
   function listIsEdit() {
     if (listView.owner.userId === userId) {
       return UserPrivateVariantsEnum.EDIT;
@@ -33,26 +32,23 @@ export const ListProductItems: React.FC = () => {
     }
     return UserPrivateVariantsEnum.VIEW;
   }
+
   const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const dispatch = useDispatch();
-
   const getItemStyle = (isDragging, draggableStyle) => ({
     ...draggableStyle,
     boxShadow: isDragging ? "0px 4px 5px 0px rgba(0, 0, 0, 0.25)" : "",
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
-
-  const deleteItem = (id) => {
-    dispatch(deleteProduct(id));
-  };
-
+  function deleteItemHandler(list_item_id) {
+    dispatch(deleteItem({ data: { list_item_id } }));
+  }
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
     }
     reorderProductList(result.source.index, result.destination.index);
   };
-
   const reorderProductList = (startIndex: number, endIndex: number) => {
     const reOrder = reorderMass(listView.products, startIndex, endIndex);
     dispatch(reorderList(reOrder, listView?.productListId));
@@ -65,14 +61,14 @@ export const ListProductItems: React.FC = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
-        {(provided, snapshot) => (
+        {(provided) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {listView.products.length ? (
-              listView.products.map((product, index) => {
+              listView.products.map((listItem, index) => {
                 return (
                   <Draggable
-                    key={`${index}_${product.list_items_id}`}
-                    draggableId={`${index}_${product.list_items_id}`}
+                    key={`${index}_${listItem.list_item_id}`}
+                    draggableId={`${index}_${listItem.list_item_id}`}
                     index={index}
                   >
                     {(provided, snapshot) => (
@@ -85,54 +81,52 @@ export const ListProductItems: React.FC = () => {
                         )}
                       >
                         {(() => {
-                          switch (product?.typeAction?.type) {
+                          switch (listItem?.typeAction?.type) {
                             case AccountListProductActionEnum.DELETE: {
                               return (
                                 <DeleteProductPlaceholder
-                                  productListId={listView.productListId}
-                                  listItemId={product.productId}
-                                  name={product.typeAction.productName}
-                                  product={product}
+                                  name={listItem.typeAction.productName}
+                                  listItem={listItem}
                                 />
                               );
                             }
                             case AccountListProductActionEnum.MOVE: {
                               return (
                                 <MovedProductPlaceholder
-                                  label={product.typeAction.listName}
-                                  cache={product.typeAction.toListId}
-                                  productName={product.typeAction.productName}
+                                  label={listItem.typeAction.listName}
+                                  cache={listItem.typeAction.toListId}
+                                  productName={listItem.typeAction.productName}
                                 />
                               );
                             }
                             default:
-                              switch (product.productType) {
+                              switch (listItem.product_type) {
                                 case ListItemTypeEnum.PRODUCT:
                                   return (
                                     <ListProductItem
                                       deleteItem={() =>
-                                        deleteItem(product.list_items_id)
+                                        deleteItemHandler(listItem.list_item_id)
                                       }
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}
                                       reorderProductList={reorderProductList}
-                                      listId={listView.productListId}
+                                      listId={listView.product_list_id}
                                       listInfo={listView}
                                       edit={edit}
-                                      productItem={product}
+                                      productItem={listItem}
                                     />
                                   );
                                 case ListItemTypeEnum.IDEA:
                                   return (
                                     <ListProductIdeaItem
                                       deleteItem={() =>
-                                        deleteItem(product.list_items_id)
+                                        deleteItemHandler(listItem.list_item_id)
                                       }
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}
                                       reorderProductList={reorderProductList}
                                       edit={edit}
-                                      productItem={product}
+                                      listItem={listItem}
                                     />
                                   );
                               }

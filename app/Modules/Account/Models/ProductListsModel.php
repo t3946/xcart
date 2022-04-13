@@ -113,6 +113,7 @@ class ProductListsModel extends Model
             'recipientName' => $this->recipient_name,
             'recipientEmail' => $this->recipient_email,
             'productListId' => $this->pk,
+            'product_list_id' => $this->pk,
             'cacheUrl' => $this->cache_url,
             'birthday' => $this->birthday,
             'addressId' => $this->address_id,

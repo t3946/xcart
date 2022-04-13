@@ -10,6 +10,8 @@ export const addProductToList = (
   productListId: number,
   product: ListItem
 ): AccountListsStore => {
+  console.log("addProductToList", { productListId, product });
+
   const base: AccountListsStore = {
     lists: state.lists?.map((list) => {
       if (productListId == list.productListId) {
@@ -20,6 +22,7 @@ export const addProductToList = (
     loading: false,
     listView: null,
   };
+
   if (state.listView) {
     return {
       ...base,

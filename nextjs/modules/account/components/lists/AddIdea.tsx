@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Input from "@modules/ui/forms/Input";
 import Label from "@modules/ui/forms/Label";
 import Feedback from "@modules/ui/forms/Feedback";
-import { addProduct } from "@redux/actions/account-actions/ListsActions";
+import { createIdea } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,15 +40,22 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
       formik.setErrors({ name: "Maximum length 50 characters" });
       return;
     }
+
     dispatch(
-      addProduct(listEdit.productListId, null, formik.values.name, onAddingEnd)
+      createIdea({
+        data: {
+          product_list_id: listEdit.product_list_id,
+          name: formik.values.name,
+        },
+        success: onAddingEnd,
+      })
     );
   };
 
-  const onAddingEnd = (idea: ListItem) => {
+  function onAddingEnd() {
     onCancelBtnClick();
     snackbar.show(`"${formik.values.name}" idea added successfully`);
-  };
+  }
 
   const formik = useFormik({
     initialValues: { name: "" },

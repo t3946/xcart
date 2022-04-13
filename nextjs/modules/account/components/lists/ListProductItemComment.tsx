@@ -10,19 +10,16 @@ import cn from "classnames";
 
 import Styles from "@modules/account/components/lists/ListProductItemComment.module.scss";
 
-interface ListProductItemCommentProps {
-  info: ListItem;
-  listInfo: List;
+interface Iprops {
+  listItem: ListItem;
+  list: List;
   onEditCommentClick: () => void;
 }
 
-export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
-  info,
-  listInfo,
-  onEditCommentClick,
-}) => {
+export const ListProductItemComment: React.FC<Iprops> = (props) => {
+  const { listItem, list, onEditCommentClick } = props;
   const priority = priorityProductSelectValuesConst.find(
-    (e) => e.value === info.priority
+    (e) => e.value === listItem.priority
   ).label;
 
   const deleteCommentDialog = useDialog();
@@ -32,8 +29,8 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
   const deleteComment = () => {
     dispatch(
       editCommentProduct(
-        listInfo.productListId,
-        info.list_items_id,
+        list.product_list_id,
+        listItem.list_item_id,
         {
           comment: null,
           priority: null,
@@ -55,7 +52,7 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
       )}
     >
       <div className="list-product-item-comment-container-text">
-        {info.comment}
+        {listItem.comment}
       </div>
       <div className="list-product-items-comment-params">
         <div className={"d-flex"}>
@@ -67,13 +64,13 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
         <div className={"d-flex"}>
           <div className="list-product-item-comment-param">Need:</div>
           <div className="list-product-item-comment-param-value needs">
-            {info.needs}
+            {listItem.needs}
           </div>
         </div>
         <div className={"d-flex"}>
           <div className="list-product-item-comment-param">Have:</div>
           <div className="list-product-item-comment-param-value">
-            {info.has}
+            {listItem.has}
           </div>
         </div>
       </div>
