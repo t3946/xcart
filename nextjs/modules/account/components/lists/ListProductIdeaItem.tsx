@@ -62,7 +62,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
   }
 
   function movableAreaTemplate() {
-    if (!edit || list.items.length === 1) {
+    if (!edit) {
       return <div className="product-list-item-movable-area-placeholder" />;
     }
 
@@ -74,6 +74,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
           onUpClick={() => reorderProductList(index, index - 1)}
           onDownClick={() => reorderProductList(index, index + 1)}
           drag={drag}
+          classes={{ container: { "d-none": list.items.length === 1 } }}
         />
       </div>
     );

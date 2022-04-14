@@ -5,7 +5,6 @@ export const checkProductCollisionInList = (
   toList: List | undefined,
   list_item_id: number
 ) => {
-  console.log("checkProductCollisionInList", {});
   if (toList) {
     const movingItem = fromList.items.find(
       (item) => item.list_item_id === list_item_id

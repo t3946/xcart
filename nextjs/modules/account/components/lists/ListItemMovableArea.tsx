@@ -10,15 +10,21 @@ interface ListItemMovableAreaProps {
   onDownClick: () => void;
   isFirst: boolean;
   isLast: boolean;
+  classes?: {
+    container?: any;
+  };
 }
 
 export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = (
   props
 ) => {
-  const { drag, onUpClick, onDownClick, isFirst, isLast } = props;
+  const { drag, onUpClick, onDownClick, isFirst, isLast, classes = {} } = props;
 
   return (
-    <div {...drag} className={cn("list-item-movable-area-container")}>
+    <div
+      {...drag}
+      className={cn("list-item-movable-area-container", classes.container)}
+    >
       <div
         className={cn("list-item-movable-area-text", {
           [Styles.moveButton_hidden]: isFirst,
