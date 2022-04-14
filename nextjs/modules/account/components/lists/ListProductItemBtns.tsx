@@ -43,7 +43,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   );
   const handleMove = (e) => {
     const toListId = e.target.value.value;
-    const toList = lists.find((list) => list.productListId === toListId);
+    const toList = lists.find((list) => list.product_list_id === toListId);
 
     if (checkProductCollisionInList(list, toList, productId)) {
       dispatch(transferProductList(list.product_list_id, toListId, productId));

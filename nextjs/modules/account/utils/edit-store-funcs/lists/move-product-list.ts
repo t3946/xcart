@@ -29,7 +29,7 @@ export const moveProductList = (
         if (product.list_item_id === productId) {
           product.typeAction = {
             type: "move",
-            productName: product.product.product || product.product.name,
+            productName: product.product?.product || product.idea?.name,
             toListId: state.lists?.find(
               (list) => list.product_list_id === toListId
             )?.cacheUrl,
