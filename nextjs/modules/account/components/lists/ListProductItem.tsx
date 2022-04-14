@@ -123,7 +123,9 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
             index={index}
-            length={listInfo.items.length}
+            isFirst={listInfo.items.length === 0}
+            isLast={index === listInfo.items.length - 1}
+            classes={{ container: { "d-none": list.items.length === 1 } }}
             drag={drag}
           />
         ) : (
