@@ -8,39 +8,33 @@ interface ListItemMovableAreaProps {
   length?: number;
   onUpClick: () => void;
   onDownClick: () => void;
+  isFirst: boolean;
+  isLast: boolean;
 }
 
-export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = ({
-  drag,
-  onUpClick,
-  onDownClick,
-  index,
-  length = Number.MAX_VALUE,
-}) => {
+export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = (
+  props
+) => {
+  const { drag, onUpClick, onDownClick, isFirst, isLast } = props;
+
   return (
-    <div
-      {...drag}
-      className={cn("list-item-movable-area-container", {
-        "d-none": length <= 1,
-      })}
-      // id={"qwer1234"}
-      // aria-describedby={"qwer1234"}
-      // data-rbd-drag-handle-context-id={"qwe123"}
-    >
+    <div {...drag} className={cn("list-item-movable-area-container")}>
       <div
         className={cn("list-item-movable-area-text", {
-          [Styles.moveButton_hidden]: index === 0,
+          [Styles.moveButton_hidden]: isFirst,
         })}
-        onClick={index !== 0 ? onUpClick : undefined}
+        onClick={isFirst ? null : onUpClick}
       >
         UP
       </div>
+
       <img src="/static/frontend/images/icons/account/movable-icon.svg" />
+
       <div
         className={cn("list-item-movable-area-text", {
-          [Styles.moveButton_hidden]: index === length - 1,
+          [Styles.moveButton_hidden]: isLast,
         })}
-        onClick={index !== length - 1 ? onDownClick : undefined}
+        onClick={isLast ? null : onDownClick}
       >
         DOWN
       </div>

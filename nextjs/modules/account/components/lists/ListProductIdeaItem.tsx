@@ -24,16 +24,6 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
   const router = useRouter();
   const breakpoint = useBreakpoint();
   const deleteIdeaDialog = useDialog();
-  const deleteIdea = () => {
-    breakpoint({
-      xs: () =>
-        router.push(
-          `/shopping-lists/actions/delete-product/idea/${list.product_list_id}/${listItem.list_item_id}`
-        ),
-      md: deleteIdeaDialog.handleClickOpen,
-    });
-  };
-
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       image: "/static/frontend/images/icons/account/idea-logo.svg",
@@ -61,6 +51,34 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
     },
   ];
 
+  function deleteIdea() {
+    breakpoint({
+      xs: () =>
+        router.push(
+          `/shopping-lists/actions/delete-product/idea/${list.product_list_id}/${listItem.list_item_id}`
+        ),
+      md: deleteIdeaDialog.handleClickOpen,
+    });
+  }
+
+  function movableAreaTemplate() {
+    if (!edit || list.items.length === 1) {
+      return <div className="product-list-item-movable-area-placeholder" />;
+    }
+
+    return (
+      <div className="movable-area">
+        <ListItemMovableArea
+          isFirst={index === 0}
+          isLast={index === list.items.length - 1}
+          onUpClick={() => reorderProductList(index, index - 1)}
+          onDownClick={() => reorderProductList(index, index + 1)}
+          drag={drag}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -68,19 +86,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
         "product-list-item-container"
       )}
     >
-      <div className="movable-area">
-        {edit ? (
-          <ListItemMovableArea
-            onUpClick={() => reorderProductList(index, index - 1)}
-            onDownClick={() => reorderProductList(index, index + 1)}
-            drag={drag}
-            index={index}
-            length={list.items}
-          />
-        ) : (
-          <div className="product-list-item-movable-area-placeholder" />
-        )}
-      </div>
+      {movableAreaTemplate()}
 
       <div className="product-list-item-info-content">
         <img
