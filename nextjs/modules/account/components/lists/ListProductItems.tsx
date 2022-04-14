@@ -1,7 +1,12 @@
 import React from "react";
 import { NoItemsBlock } from "@modules/account/components/lists/NoItemsBlock";
 import { ListProductItem } from "@modules/account/components/lists/ListProductItem";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  resetServerContext,
+} from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import {
   reorderList,
@@ -15,7 +20,6 @@ import { ListProductIdeaItem } from "@modules/account/components/lists/ListProdu
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
-import { resetServerContext } from "react-beautiful-dnd";
 
 interface IProps {
   list: any;
@@ -32,17 +36,20 @@ export const ListProductItems: React.FC<IProps> = (props) => {
     boxShadow: isDragging ? "0px 4px 5px 0px rgba(0, 0, 0, 0.25)" : "",
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
-  const onDragEnd = (result: any) => {
+
+  function onDragEnd(result: any) {
     if (!result.destination) {
       return;
     }
+
     reorderProductList(result.source.index, result.destination.index);
-  };
-  const reorderProductList = (startIndex: number, endIndex: number) => {
+  }
+
+  function reorderProductList(startIndex: number, endIndex: number) {
     const reOrder = reorderMass(list.items, startIndex, endIndex);
 
     dispatch(reorderList(reOrder, list?.product_list_id));
-  };
+  }
 
   function listIsEdit() {
     if (list.owner.user_id === userId) {

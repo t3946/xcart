@@ -27,6 +27,9 @@ app.post("/get", async (req, res) => {
         where: {
           deleted: null,
         },
+        orderBy: {
+          order_by: "asc",
+        },
         include: {
           idea: true,
           product: true,
@@ -67,6 +70,9 @@ app.get("/get-all", async (req, res) => {
       items: {
         where: {
           deleted: null,
+        },
+        orderBy: {
+          order_by: "asc",
         },
         include: {
           idea: true,
@@ -109,6 +115,9 @@ app.get("/get-by-cache/:cache", async (req, res) => {
       items: {
         where: {
           deleted: null,
+        },
+        orderBy: {
+          order_by: "asc",
         },
         include: {
           idea: true,
@@ -221,7 +230,7 @@ app.post("/reorder-product", async (req, res) => {
       list_item_id: {
         in: req.body.productIds,
       },
-      account_product_lists: {
+      list: {
         owner: {
           user_id: req.user.userId,
         },

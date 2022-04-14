@@ -1,8 +1,5 @@
 import React from "react";
 import { ListHeader } from "@modules/account/components/lists/ListHeader";
-// import { ListProductItems } from "@modules/account/components/lists/ListProductItems";
-// import ListProductItems from "@modules/account/components/lists/list-items/ListProductItems";
-// import ListProductItems from "@modules/account/components/lists/list-items/ListProductItems";
 import { ListProductItems } from "@modules/account/components/lists/ListProductItems";
 import InnerPage from "@components/common/inner-page/InnerPage";
 

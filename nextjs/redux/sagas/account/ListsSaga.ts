@@ -41,15 +41,9 @@ function* createList(action: AnyAction): Generator {
 }
 
 function* reorderList(action: AnyAction): Generator {
-  yield api
-    .post(
-      "/api/account/lists/reorder-products",
-      JSON.stringify({
-        productIds: action.listIds.map((e) => e.list_item_id),
-        productListId: action.productListId,
-      })
-    )
-    .then((response) => response);
+  yield axios.post("/api-client/user/lists/reorder-product", {
+    productIds: action.listIds.map((e) => e.list_item_id),
+  });
 }
 
 function* deleteList(action: AnyAction): Generator {

@@ -104,9 +104,10 @@ const accountListReducer = (
         }),
       };
     case "SEND_REORDER_LIST":
+      state.currentList.items = action.listIds;
+
       return {
         ...state,
-        currentList: { ...state.currentList, products: action.listIds },
       };
     case "DELETE_PRODUCT_LIST_VIEW":
       return {
@@ -120,14 +121,14 @@ const accountListReducer = (
         ...state,
         currentList: {
           ...state.currentList,
-          products: state.currentList.products.map((product) => {
-            if (product.list_item_id === list_item_id) {
-              delete product.typeAction;
+          items: state.currentList.items.map((item) => {
+            if (item.list_item_id === list_item_id) {
+              delete item.typeAction;
               return {
-                ...product,
+                ...item,
               };
             }
-            return product;
+            return item;
           }),
         },
       };

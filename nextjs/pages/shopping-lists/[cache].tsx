@@ -24,7 +24,7 @@ const ShoppingLists: NextPage<any> = function () {
 
   React.useEffect(() => {
     dispatch(setListView(currentList));
-  }, []);
+  });
 
   if (!currentList) {
     return null;

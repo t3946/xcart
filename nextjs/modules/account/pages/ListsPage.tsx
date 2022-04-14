@@ -9,7 +9,6 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { ViewLists } from "@modules/account/components/lists/view-lists/ViewLists";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
@@ -20,9 +19,6 @@ interface IProps {
 
 const ListsPage: React.FC<IProps> = (props) => {
   const { list } = props;
-
-  console.log("ListsPage", { list });
-
   const router = useRouter();
   const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
@@ -76,8 +72,6 @@ const ListsPage: React.FC<IProps> = (props) => {
       </div>
     );
   }
-
-  console.log("lists", { lists });
 
   return (
     <div>

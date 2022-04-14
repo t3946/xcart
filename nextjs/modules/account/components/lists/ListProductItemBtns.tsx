@@ -78,6 +78,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
           )}
         >
           <Select
+            instanceId={`select-list_${list.product_list_id}`}
             clearable={false}
             isSearchable={false}
             options={lists
