@@ -1,16 +1,18 @@
 import { List } from "@modules/account/ts/types/list.type";
 
-export const deleteProductList = (state: List, list_item_id: number): List => {
+export const deleteProductList = (list: List, list_item_id: number): List => {
+  console.log("deleteProductList", {list, list_item_id});
+
   return {
-    ...state,
-    products: state.products.map((product) => {
-      if (product.list_item_id === list_item_id) {
-        product.typeAction = {
+    ...list,
+    items: list.items.map((item) => {
+      if (item.list_item_id === list_item_id) {
+        item.typeAction = {
           type: "delete",
-          productName: product.product.product || product.product.name,
+          productName: item.product?.product || item.idea?.name,
         };
       }
-      return product;
+      return item;
     }),
   };
 };
