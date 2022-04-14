@@ -80,6 +80,12 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
     );
   }
 
+  function getSearchLink() {
+    const name = listItem.product?.product || listItem.idea.name;
+
+    return `/search?q=${name}`;
+  }
+
   return (
     <div
       className={cn(
@@ -124,9 +130,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
         mainBtnType={ETheme.outlined}
         edit={edit}
         list={list}
-        onMainBtnClick={() =>
-          window.location.assign(`/search?q=${listItem.product.name}`)
-        }
+        searchLink={getSearchLink()}
         handleDelete={deleteIdea}
         productId={listItem.list_item_id}
       />

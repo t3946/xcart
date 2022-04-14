@@ -120,6 +120,7 @@ export const ListProductItems: React.FC<IProps> = (props) => {
                                 case ListItemTypeEnum.PRODUCT:
                                   return (
                                     <ListProductItem
+                                      list={list}
                                       deleteItem={() =>
                                         deleteItemHandler(listItem.list_item_id)
                                       }

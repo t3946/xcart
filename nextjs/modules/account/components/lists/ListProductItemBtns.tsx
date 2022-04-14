@@ -30,7 +30,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
   btnLabel,
   mainBtnType,
   productId,
-  onMainBtnClick,
+  searchLink,
   list,
   outOfStock,
   disabledAddToCart,
@@ -56,20 +56,18 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
     }
   };
 
-  if (!lists) {
-    return null;
-  }
-
   return (
     <div className={Styles.container}>
-      <Button
-        theme={mainBtnType}
-        disabled={outOfStock || disabledAddToCart}
-        className={cn("full-width-button", "fw-bold", Styles.button)}
-        onClick={onMainBtnClick}
-      >
-        {btnLabel}
-      </Button>
+      <a href={searchLink} className={"text-decoration-none"}>
+        <Button
+          theme={mainBtnType}
+          disabled={outOfStock || disabledAddToCart}
+          className={cn("full-width-button", "fw-bold", Styles.button)}
+        >
+          {btnLabel}
+        </Button>
+      </a>
+
       {edit && (
         <div
           className={cn(

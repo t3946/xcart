@@ -28,16 +28,18 @@ import {
   setAction as cartSetAction,
 } from "@redux/actions/CartActions";
 
-export const ListProductItem: React.FC<ListProductItemProps> = ({
-  productItem,
-  drag,
-  reorderProductList,
-  index,
-  listId,
-  deleteItem,
-  edit,
-  listInfo,
-}) => {
+export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
+  const {
+    productItem,
+    drag,
+    reorderProductList,
+    index,
+    listId,
+    deleteItem,
+    edit,
+    listInfo,
+    list,
+  } = props;
   const editCommentDialog = useDialog();
   const dispatch = useDispatch();
   let product: ListProductInfo;
@@ -121,7 +123,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
             index={index}
-            length={listInfo.products.length}
+            length={listInfo.items.length}
             drag={drag}
           />
         ) : (
@@ -184,9 +186,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
           )}
 
           <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>
-              ${product?.price.toFixed(2)}
-            </div>
+            <div className={Styles.productInfoPrice}>0.00</div>
             <div className="multiplication-symbol">X</div>
             <CountGroup
               avail={product.avail}
@@ -230,6 +230,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         </div>
         {!product.outOfStock && (
           <ListProductItemBtns
+            list={list}
             disabledAddToCart={disabledAddToCart}
             btnLabel={"Add to cart"}
             edit={edit}
