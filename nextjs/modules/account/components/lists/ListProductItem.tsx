@@ -30,7 +30,7 @@ import {
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
-    productItem,
+    listItem,
     drag,
     reorderProductList,
     index,
@@ -42,25 +42,20 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   } = props;
   const editCommentDialog = useDialog();
   const dispatch = useDispatch();
-  let product: ListProductInfo;
-
-  if ("product" in productItem.product) {
-    product = productItem.product;
-  }
-
+  const product: ListProductInfo = listItem.product;
   const router = useRouter();
   const deleteProductDialog = useDialog();
   const mobileMenuDialog = useDialog();
   const [disabledAddToCart, setDisabledAddToCart] = React.useState(false);
   const [countProductsOnCart, setCountProductsOnCart] = useState(
-    product.minAmount
+    product.min_amount
   );
   const changeCount = (value: number, isInputEnter?: boolean) => {
     if (isInputEnter) {
       setCountProductsOnCart(value);
       return;
     }
-    if (value < product.minAmount) {
+    if (value < product.min_amount) {
       return;
     }
 
@@ -68,44 +63,44 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   };
   const data = [
     {
-      id: productItem.productId,
+      id: listItem.product.productid,
       quantity: countProductsOnCart,
       options: [],
     },
   ];
-  const ratings = productItem.product.ratings?.overall;
+  const ratings = listItem.product.ratings?.overall;
   const snackbar = useSnackbar();
   const onCountInputBlur = () => {
-    if (product.multOrderQuantity) {
+    if (product.mult_order_quantity) {
       setCountProductsOnCart(
-        Math.ceil(countProductsOnCart / product.minAmount) * product.minAmount
+        Math.ceil(countProductsOnCart / product.min_amount) * product.min_amount
       );
     }
   };
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
-      image: productItem.image,
+      image: listItem.image,
       label: product.product,
     },
     {
       label: "Add comment, quantity & priority",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${productItem.list_item_id}`
+          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${listItem.list_item_id}`
         ),
     },
     {
       label: "Move",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${productItem.list_item_id}`
+          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${listItem.list_item_id}`
         ),
     },
     {
       label: "Delete",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${productItem.list_item_id}`
+          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${listItem.list_item_id}`
         ),
     },
   ];
@@ -136,12 +131,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       <div className="product-list-item-info-content">
         <img
           className="product-list-item-image product-image"
-          src={productItem.product.image}
+          src={listItem.product.image}
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
             <a
-              href={`/product/${productItem.productId}/`}
+              href={`/product/${listItem.productId}/`}
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
               {product.product}
@@ -165,7 +160,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                   </a>
                   <a
                     className="lh-sm"
-                    href={`/product/${productItem.productId}/`}
+                    href={`/product/${listItem.productId}/`}
                   >
                     {ratings.rates.reduce(
                       (pv, cv) => pv + parseInt(cv.totalRates),
@@ -178,7 +173,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 <div className={Styles.rating}>
                   <OverallRating ratings={ratings} />
                   <div className="text-center mt-14">
-                    <a href={`/product/${productItem.productId}/`}>
+                    <a href={`/product/${listItem.productId}/`}>
                       See all customer reviews
                     </a>
                   </div>
@@ -195,15 +190,15 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               onBlur={onCountInputBlur}
               value={countProductsOnCart}
               onChange={changeCount}
-              minAmount={product.minAmount}
-              multOrderQuantity={product.multOrderQuantity}
+              minAmount={product.min_amount}
+              multOrderQuantity={product.mult_order_quantity}
               className={Styles.counter}
             />
           </div>
           {edit &&
-            (productItem.comment ? (
+            (listItem.comment ? (
               <ListProductItemComment
-                info={productItem}
+                info={listItem}
                 listInfo={listInfo}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
               />
@@ -228,7 +223,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             "mb-12"
           )}
         >
-          Item added {moment(productItem.add_date).utc().format("MMM DD, Y")}
+          Item added {moment(listItem.add_date).utc().format("MMM DD, Y")}
         </div>
         {!product.outOfStock && (
           <ListProductItemBtns
@@ -241,13 +236,15 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             onMainBtnClick={() => {
               setDisabledAddToCart(true);
 
+              console.log("add to cart", {});
+              
               cartAdd(data, () => {
                 dispatch(
                   cartGetAction({
                     success(res) {
                       dispatch(cartSetAction({ cart: res.data }));
                       snackbar.show(
-                        `${productItem.product.product} added to cart`
+                        `${listItem.product.product} added to cart`
                       );
                       setDisabledAddToCart(false);
                     },
@@ -255,9 +252,9 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 );
               });
             }}
-            time={productItem.add_date}
-            listId={productItem.product_list_id}
-            productId={productItem.list_item_id}
+            time={listItem.add_date}
+            listId={listItem.product_list_id}
+            productId={listItem.list_item_id}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}
@@ -266,7 +263,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       <BootstrapDialogHOC
         show={editCommentDialog.open}
         title={
-          productItem.comment
+          listItem.comment
             ? "Edit comment, quantity & priority"
             : "Add comment, quantity & priority"
         }
@@ -275,8 +272,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
           listId={listId}
-          list_item_id={productItem.list_item_id}
-          info={productItem}
+          list_item_id={listItem.list_item_id}
+          info={listItem}
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC

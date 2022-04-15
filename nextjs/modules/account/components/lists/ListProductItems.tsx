@@ -130,7 +130,7 @@ export const ListProductItems: React.FC<IProps> = (props) => {
                                       listId={list.product_list_id}
                                       listInfo={list}
                                       edit={edit}
-                                      productItem={listItem}
+                                      listItem={listItem}
                                     />
                                   );
                                 case ListItemTypeEnum.IDEA:
