@@ -55,8 +55,6 @@ const ListsPage: React.FC<IProps> = (props) => {
       return null;
     }
 
-    return null;
-
     return (
       <div className={StylesInnerPage.accountPageFooter}>
         <Button

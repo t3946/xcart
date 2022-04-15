@@ -5,7 +5,6 @@ import { manageList } from "@modules/account/utils/edit-store-funcs/lists/manage
 import { deleteList } from "@modules/account/utils/edit-store-funcs/lists/delete-list";
 import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/move-product-list";
 import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
-import { addProductToList } from "@modules/account/utils/edit-store-funcs/lists/add-product-to-list";
 import { editIdeaName } from "@modules/account/utils/edit-store-funcs/lists/edit-idea-name";
 
 const initialValue: AccountListsStore = {
@@ -32,10 +31,25 @@ const accountListReducer = (
         ...state,
         loading: true,
       };
-    case "ADD_PRODUCT_TO_LIST":
-      console.log("ADD_PRODUCT_TO_LIST", action);
+
+    case "ADD_PRODUCT_TO_LIST": {
       const { listItem } = action;
-      return addProductToList(state, action.productListId, listItem);
+      let newItems;
+
+      for (const list of state.lists) {
+        if (action.productListId == list.product_list_id) {
+          newItems = [...list.items, listItem];
+          list.items = [...newItems];
+
+          if (state.currentList) {
+            state.currentList = [...newItems];
+          }
+        }
+      }
+
+      return { ...state };
+    }
+
     case "SET_LISTS":
       return {
         ...state,
