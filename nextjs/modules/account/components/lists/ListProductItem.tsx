@@ -198,8 +198,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
           {edit &&
             (listItem.comment ? (
               <ListProductItemComment
-                info={listItem}
-                listInfo={listInfo}
+                listItem={listItem}
+                list={list}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
               />
             ) : (
