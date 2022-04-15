@@ -7,7 +7,6 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 import cn from "classnames";
-
 import Styles from "@modules/account/components/lists/ListProductItemComment.module.scss";
 
 interface Iprops {
@@ -21,24 +20,20 @@ export const ListProductItemComment: React.FC<Iprops> = (props) => {
   const priority = priorityProductSelectValuesConst.find(
     (e) => e.value === listItem.priority
   ).label;
-
   const deleteCommentDialog = useDialog();
-
   const dispatch = useDispatch();
-
   const deleteComment = () => {
     dispatch(
-      editCommentProduct(
-        list.product_list_id,
-        listItem.list_item_id,
-        {
+      editCommentProduct({
+        data: {
           comment: null,
           priority: null,
           has: null,
           needs: null,
+          list_item_id: listItem.list_item_id,
         },
-        deleteCommentDialog.handleClose
-      )
+        callback: deleteCommentDialog.handleClose,
+      })
     );
   };
 

@@ -121,14 +121,14 @@ function* addProductOnList(action: AnyAction): Generator {
 }
 
 function* editCommentProduct(action: AnyAction): Generator {
-  const { data, success } = action.payload;
+  const { data, callback } = action.payload;
 
   yield put({
     type: "EDIT_COMMENT_LIST_VIEW",
     data,
   });
 
-  success && (yield success());
+  callback && (yield callback());
 
   yield axios.post("/api-client/user/lists/item/edit", data);
 }

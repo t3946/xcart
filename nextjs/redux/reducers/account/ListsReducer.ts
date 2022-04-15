@@ -1,7 +1,6 @@
 import { AnyAction } from "redux";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
-import { editCommentDataProduct } from "@modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 import { manageList } from "@modules/account/utils/edit-store-funcs/lists/manage-list";
 import { deleteList } from "@modules/account/utils/edit-store-funcs/lists/delete-list";
 import { moveProductList } from "@modules/account/utils/edit-store-funcs/lists/move-product-list";
@@ -59,11 +58,15 @@ const accountListReducer = (
         ),
       };
     case "EDIT_COMMENT_LIST_VIEW":
-      state.currentList = editCommentDataProduct(
-        state.currentList,
-        action.data.list_item_id,
-        action.data
-      );
+      const newItems = state.currentList.items.map((item) => {
+        if (item.list_item_id === action.data.list_item_id) {
+          return { ...item, ...action.data };
+        }
+        return item;
+      });
+
+      state.currentList.items = [...newItems];
+
       return { ...state };
     case "EDIT_USER_RIGHTS":
       if (action.actionType === UserRightsActionsEnum.DELETE) {
