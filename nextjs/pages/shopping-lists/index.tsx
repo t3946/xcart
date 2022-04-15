@@ -9,12 +9,10 @@ import { useRouter } from "next/router";
 import * as React from "react";
 
 const ShoppingLists: NextPage = () => {
-  const { lists } = useSelectorAccount((state) => state.lists);
+  const { currentList, lists } = useSelectorAccount((state) => state.lists);
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
-
-  return "ShoppingLists";
 
   React.useEffect(() => {
     if (!user) {
@@ -28,9 +26,13 @@ const ShoppingLists: NextPage = () => {
     }
   }, [lists]);
 
+  if (!currentList) {
+    return null;
+  }
+
   return (
-    <PageTwoColumns bar={<ListsSidebarMenu />}>
-      {"<ListsPage />"}
+    <PageTwoColumns bar={<ListsSidebarMenu list={currentList} />}>
+      <ListsPage list={currentList} />
     </PageTwoColumns>
   );
 };

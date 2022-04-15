@@ -10,20 +10,23 @@ import { useDispatch } from "react-redux";
 
 const ShoppingLists: NextPage<any> = function () {
   const router = useRouter();
-  const { cache } = router.query;
-  const lists = useSelectorAccount((state) => state.lists.lists);
+  const id = parseInt(router.query.id);
+  const { lists, currentList } = useSelectorAccount((state) => state.lists);
   const dispatch = useDispatch();
-  let currentList: any;
-
-  for (const list of lists) {
-    if (list.cache_url === cache) {
-      currentList = list;
-      break;
-    }
-  }
 
   React.useEffect(() => {
-    dispatch(setListView(currentList));
+    if (currentList && currentList.product_list_id === id) {
+      return;
+    }
+
+    for (const list of lists) {
+      if (list.product_list_id === id) {
+        dispatch(setListView(list));
+        return;
+      }
+    }
+
+    router.push("/shopping-lists");
   });
 
   if (!currentList) {

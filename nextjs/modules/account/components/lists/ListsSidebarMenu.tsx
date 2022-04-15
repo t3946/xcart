@@ -46,7 +46,7 @@ export const ListsSidebarMenu: React.FC<IProps> = (props) => {
       <div className="lists-sidebar-label">Shopping Lists</div>
       {lists?.map((e, index) => (
         <Item
-          to={`/shopping-lists/${e.cache_url}`}
+          to={`/shopping-lists/${e.product_list_id}`}
           label={
             <ListsSidebarLabel
               label={e.name}
