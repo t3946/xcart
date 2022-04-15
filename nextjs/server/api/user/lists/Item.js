@@ -30,7 +30,7 @@ async function checkRights(req, res, done) {
 }
 
 app.post("/edit", checkRights, async (req, res) => {
-  const { list_item_id, comment } = req.body;
+  const { list_item_id, comment, needs, has, priority } = req.body;
 
   await prisma.account_list_items.update({
     where: {
@@ -38,6 +38,9 @@ app.post("/edit", checkRights, async (req, res) => {
     },
     data: {
       comment,
+      needs,
+      has,
+      priority,
     },
   });
 

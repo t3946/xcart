@@ -95,21 +95,21 @@ model account_list_ideas {
 }
 
 model account_list_items {
-  list_item_id       Int                          @id @default(autoincrement())
-  product_id         Int?
-  list_idea_id       Int?                         @db.UnsignedInt
-  product_list_id    Int                          @db.UnsignedInt
-  order_by           Int                          @default(999999) @db.UnsignedMediumInt
-  product_type       String?                      @default("product") @db.VarChar(50)
-  comment            String?                      @db.VarChar(256)
-  priority           account_list_items_priority?
-  needs              String?                      @db.VarChar(50)
-  has                String?                      @db.VarChar(50)
-  add_date           DateTime                     @default(now()) @db.Timestamp(0)
-  deleted            DateTime?                    @db.DateTime(0)
-  idea               account_list_ideas?          @relation(fields: [list_idea_id], references: [list_idea_id], onDelete: Cascade, map: "account_list_items_account_list_ideas_list_idea_id_fk")
-  product            xcart_products?              @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "account_list_items_xcart_products_productid_fk")
-  list               account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "account_list_items_account_product_lists_product_list_id_fk")
+  list_item_id    Int                          @id @default(autoincrement())
+  product_id      Int?
+  list_idea_id    Int?                         @db.UnsignedInt
+  product_list_id Int                          @db.UnsignedInt
+  order_by        Int                          @default(999999) @db.UnsignedMediumInt
+  product_type    String?                      @default("product") @db.VarChar(50)
+  comment         String?                      @db.VarChar(256)
+  priority        account_list_items_priority?
+  needs           Int?                         @db.UnsignedInt
+  has             Int?                         @db.UnsignedInt
+  add_date        DateTime                     @default(now()) @db.Timestamp(0)
+  deleted         DateTime?                    @db.DateTime(0)
+  idea            account_list_ideas?          @relation(fields: [list_idea_id], references: [list_idea_id], onDelete: Cascade, map: "account_list_items_account_list_ideas_list_idea_id_fk")
+  product         xcart_products?              @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "account_list_items_xcart_products_productid_fk")
+  list            account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "account_list_items_account_product_lists_product_list_id_fk")
 
   @@unique([list_idea_id, product_list_id], map: "account_list_items_list_idea_id_product_list_id_uindex")
   @@unique([product_id, product_list_id], map: "account_list_items_product_id_product_list_id_uindex")
