@@ -134,23 +134,17 @@ function* editCommentProduct(action: AnyAction): Generator {
 }
 
 function* manageList(action: AnyAction): Generator {
-  const { productListId, data } = action;
-  yield api
-    .post(
-      `/api/account/lists/manage-list`,
-      JSON.stringify({
-        productListId,
-        data,
-      })
-    )
+  const { data } = action.payload;
+
+  yield axios
+    .post("/api-client/user/lists/update", data)
     .then((response) => response);
+
   yield put({
     type: "MANAGE_LIST_VIEW",
-    productListId,
+    product_list_id: data.product_list_id,
     data,
   });
-
-  yield action.callback();
 }
 
 function* deleteProduct(action: AnyAction): Generator {

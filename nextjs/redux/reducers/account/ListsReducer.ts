@@ -150,9 +150,11 @@ const accountListReducer = (
     case "SET_TRANSFER_PRODUCT":
       const { productId, toListId, fromListId } = action;
       return moveProductList(state, fromListId, toListId, productId);
+
     case "MANAGE_LIST_VIEW":
-      const { productListId, data } = action;
-      return manageList(state, productListId, data);
+      const { product_list_id, data } = action;
+      return manageList(state, product_list_id, data);
+
     case "DELETE_LIST":
       return deleteList(state, action.productListId);
     case "ADD_LIST":

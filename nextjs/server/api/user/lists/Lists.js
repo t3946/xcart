@@ -173,7 +173,7 @@ app.post("/update", async (req, res) => {
   }
 
   if (typeof req.body.birthday !== "undefined") {
-    data.birthday = req.body.birthday;
+    data.birthday = req.body.birthday + "";
   }
 
   if (typeof req.body.address_id !== "undefined") {

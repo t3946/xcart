@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";

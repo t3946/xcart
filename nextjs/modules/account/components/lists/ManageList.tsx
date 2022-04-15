@@ -16,7 +16,6 @@ import { convertManageListFormDataToRequest } from "@modules/account/utils/conve
 import { ManageListFormData } from "@modules/account/ts/types/manage-list-form.types";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import { List } from "@modules/account/ts/types/list.type";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
 import cn from "classnames";
@@ -38,9 +37,7 @@ export const ManageList: React.FC<IProps> = (props) => {
       (address) => address.address_type === AddressTypeEnum.SHIPPING
     )
   );
-
   const monthItems = fillingMassForMonths();
-
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -48,9 +45,7 @@ export const ManageList: React.FC<IProps> = (props) => {
   }, []);
 
   const [dayItems, setDayItems] = useState(getDaysForSelect(0));
-
   const loading = useSelector((e: StoreInterface) => e.lists.listLoading);
-
   const classes = {
     inputGroup: "d-flex flex-wrap justify-content-lg-between mb-20",
     label:
@@ -59,31 +54,35 @@ export const ManageList: React.FC<IProps> = (props) => {
     feedback: "mt-0 position-absolute",
   };
 
-  const handleSubmit = (values: ManageListFormData) => {
-    dispatch(
-      manageList(
-        list.productListId,
-        convertManageListFormDataToRequest(values),
-        onCancelClick
-      )
-    );
-  };
+  function submit(values: ManageListFormData) {
+    const data = {
+      ...convertManageListFormDataToRequest(values),
+      product_list_id: list.product_list_id,
+    };
+
+    dispatch(manageList({ data }));
+
+    onCancelClick();
+  }
+
   let selectAddress = null;
+
   if (addresses) {
     selectAddress = addresses?.find(
       (address) => address.address_id === list.addressId
     );
   }
+
   const formik = useFormik({
     initialValues: {
       listName: list.name || "",
       description: list.description || "",
-      recipientName: list.recipientName || "",
-      email: list.recipientEmail || "",
+      recipientName: list.recipient_name || "",
+      email: list.recipient_email || "",
       isPurchase: false,
       isDefault: false,
       shippingAddress: {
-        value: selectAddress ? selectAddress.address_id : null,
+        value: selectAddress ? selectAddress.address_id : "",
         label: selectAddress?.full_name || "None",
       },
       month: list.birthday
@@ -99,7 +98,7 @@ export const ManageList: React.FC<IProps> = (props) => {
       recipientName: Yup.string(),
       email: Yup.string().email("Please enter valid email"),
     }),
-    onSubmit: handleSubmit,
+    onSubmit: submit,
   });
 
   return (

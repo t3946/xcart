@@ -128,15 +128,9 @@ export const editCommentProduct = (payload: any): any => ({
   payload,
 });
 
-export const manageList = (
-  productListId: number,
-  data: ManageListRequestData,
-  callback: () => void
-): any => ({
+export const manageList = (payload: any): any => ({
   type: "MANAGE_LIST",
-  productListId,
-  data,
-  callback,
+  payload,
 });
 export const fetchLists = () => ({
   type: "FETCH_LISTS",
