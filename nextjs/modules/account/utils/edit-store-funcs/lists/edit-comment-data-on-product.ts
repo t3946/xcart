@@ -7,10 +7,10 @@ export const editCommentDataProduct = (
   data: EditCommentRequestData
 ): List => ({
   ...state,
-  products: state.products.map((product) => {
-    if (product.list_item_id === list_item_id) {
-      return { ...product, ...data };
+  items: state.items.map((item) => {
+    if (item.list_item_id === list_item_id) {
+      return { ...item, ...data };
     }
-    return product;
+    return item;
   }),
 });

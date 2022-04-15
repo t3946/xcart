@@ -59,14 +59,12 @@ const accountListReducer = (
         ),
       };
     case "EDIT_COMMENT_LIST_VIEW":
-      return {
-        ...state,
-        currentList: editCommentDataProduct(
-          state.currentList,
-          action.list_item_id,
-          action.data
-        ),
-      };
+      state.currentList = editCommentDataProduct(
+        state.currentList,
+        action.data.list_item_id,
+        action.data
+      );
+      return { ...state };
     case "EDIT_USER_RIGHTS":
       if (action.actionType === UserRightsActionsEnum.DELETE) {
         return {

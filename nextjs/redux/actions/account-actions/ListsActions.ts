@@ -123,17 +123,9 @@ export const editIdea = (payload: any): any => ({
   payload,
 });
 
-export const editCommentProduct = (
-  productListId: number,
-  list_item_id: number,
-  data: EditCommentRequestData,
-  callback: () => void
-): any => ({
+export const editCommentProduct = (payload: any): any => ({
   type: "EDIT_COMMENT_PRODUCT",
-  productListId,
-  list_item_id,
-  data,
-  callback,
+  payload,
 });
 
 export const manageList = (
