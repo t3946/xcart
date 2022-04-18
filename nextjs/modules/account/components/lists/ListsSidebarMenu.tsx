@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React  from "react";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
 import Item from "@modules/account/components/sidebar-menu/Item";
@@ -6,8 +6,6 @@ import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSideba
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@modules/icon/components/account/arrows/ArrowBackIcon";
-import { useDispatch } from "react-redux";
-import { fetchLists } from "@redux/actions/account-actions/ListsActions";
 import Styles from "@modules/account/components/lists/ListsSidebarMenu.module.scss";
 
 interface IProps {
