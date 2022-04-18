@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import ArrowBackIcon from "@modules/icon/components/account/arrows/ArrowBackIcon";
 import { useDispatch } from "react-redux";
 import { fetchLists } from "@redux/actions/account-actions/ListsActions";
-
 import Styles from "@modules/account/components/lists/ListsSidebarMenu.module.scss";
 
 interface IProps {
@@ -21,11 +20,6 @@ export const ListsSidebarMenu: React.FC<IProps> = (props) => {
   const createListDialog = useDialog();
   const storeLists = useSelectorAccount((e) => e.lists);
   const lists = storeLists.lists;
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchLists());
-  }, []);
 
   const backOnAccount = () => {
     router.push("/dashboard");

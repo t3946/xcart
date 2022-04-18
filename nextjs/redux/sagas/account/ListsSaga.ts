@@ -59,23 +59,15 @@ function* deleteList(action: AnyAction): Generator {
 }
 
 function* transferProductList(action: AnyAction): Generator {
-  const { fromListId, toListId, productId } = action;
-  yield api
-    .post<any>(
-      `/api/account/lists/transfer-product`,
-      JSON.stringify({
-        fromListId: fromListId,
-        toListId: toListId,
-        list_item_id: productId,
-      })
-    )
-    .then((response) => response);
+  const { data } = action.payload;
+
   yield put({
     type: "SET_TRANSFER_PRODUCT",
-    fromListId,
-    productId,
-    toListId,
+    product_list_id: data.product_list_id,
+    list_item_id: data.list_item_id,
   });
+
+  yield axios.post(`/api-client/user/lists/transfer`, data);
 }
 
 function* encryptUrl(action: AnyAction): Generator {
@@ -206,8 +198,10 @@ function* editIdea(action: AnyAction): Generator {
 
   yield put({
     type: "EDIT_IDEA",
-    name: data.name,
-    list_idea_id: data.list_idea_id,
+    data: {
+      name: data.name,
+      list_idea_id: data.list_idea_id,
+    },
   });
 
   yield axios.post(`/api-client/user/lists/idea/edit`, data);

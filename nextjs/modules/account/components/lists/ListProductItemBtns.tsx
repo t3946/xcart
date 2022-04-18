@@ -12,42 +12,50 @@ import { checkProductCollisionInList } from "@modules/account/utils/check-produc
 
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
 
-interface ListProductItemBtnsProps {
+interface IProps {
   handleDelete: () => void;
   edit: boolean;
   btnLabel: string;
   mainBtnType?: ETheme;
-  productId: number;
+  listItemId: number;
   onMainBtnClick: () => void;
   list: any;
   outOfStock?: boolean;
   disabledAddToCart?: any;
 }
 
-export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
-  handleDelete,
-  edit,
-  btnLabel,
-  mainBtnType,
-  productId,
-  searchLink,
-  list,
-  outOfStock,
-  disabledAddToCart,
-  onMainBtnClick,
-}) => {
+export const ListProductItemBtns: React.FC<IProps> = (props) => {
+  const {
+    handleDelete,
+    edit,
+    btnLabel,
+    mainBtnType,
+    listItemId,
+    searchLink,
+    list,
+    outOfStock,
+    disabledAddToCart,
+    onMainBtnClick,
+  } = props;
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
-
   const { lists }: AccountListsStore = useSelectorAccount(
     (state) => state.lists
   );
-  const handleMove = (e) => {
+
+  function handleMove(e) {
     const toListId = e.target.value.value;
     const toList = lists.find((list) => list.product_list_id === toListId);
 
-    if (checkProductCollisionInList(list, toList, productId)) {
-      dispatch(transferProductList(list.product_list_id, toListId, productId));
+    if (checkProductCollisionInList(list, toList, listItemId)) {
+      dispatch(
+        transferProductList({
+          data: {
+            product_list_id: toListId,
+            list_item_id: listItemId,
+          },
+        })
+      );
     } else {
       snackbar.show(
         `This item already added to list`,
@@ -55,7 +63,7 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
         VariantsEnum.error
       );
     }
-  };
+  }
 
   return (
     <div className={Styles.container}>

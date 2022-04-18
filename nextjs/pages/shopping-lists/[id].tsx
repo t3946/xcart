@@ -5,37 +5,33 @@ import { NextPage } from "next";
 import ListsPage from "@modules/account/pages/ListsPage";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
-import { setListView } from "@redux/actions/account-actions/ListsActions";
-import { useDispatch } from "react-redux";
 
 const ShoppingLists: NextPage<any> = function () {
   const router = useRouter();
-  const id = parseInt(router.query.id);
-  const { lists, currentList } = useSelectorAccount((state) => state.lists);
-  const dispatch = useDispatch();
+  const { lists } = useSelectorAccount((state) => state.lists);
+  const user = useSelectorAccount((state) => state.user);
+
+  const list = lists.find(
+    (e) => e.product_list_id === parseInt(router.query.id)
+  );
 
   React.useEffect(() => {
-    if (currentList && currentList.product_list_id === id) {
-      return;
+    if (!list) {
+      router.push("/shopping-lists");
     }
 
-    for (const list of lists) {
-      if (list.product_list_id === id) {
-        dispatch(setListView(list));
-        return;
-      }
+    if (!user) {
+      router.push("/login");
     }
-
-    router.push("/shopping-lists");
   });
 
-  if (!currentList) {
+  if (!list) {
     return null;
   }
 
   return (
-    <PageTwoColumns bar={<ListsSidebarMenu list={currentList} />}>
-      <ListsPage list={currentList} />
+    <PageTwoColumns bar={<ListsSidebarMenu list={list} />}>
+      <ListsPage list={list} />
     </PageTwoColumns>
   );
 };

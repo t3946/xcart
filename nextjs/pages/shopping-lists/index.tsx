@@ -1,16 +1,13 @@
 import PageTwoColumns from "@modules/account/components/layout/PageTwoColumns";
 import ListsSidebarMenu from "@modules/account/components/lists/ListsSidebarMenu";
 import ListsPage from "@modules/account/pages/ListsPage";
-import { useDispatch } from "react-redux";
-import { setListView } from "@redux/actions/account-actions/ListsActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import * as React from "react";
 
 const ShoppingLists: NextPage = () => {
-  const { currentList, lists } = useSelectorAccount((state) => state.lists);
-  const dispatch = useDispatch();
+  const { lists } = useSelectorAccount((state) => state.lists);
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
 
@@ -20,15 +17,15 @@ const ShoppingLists: NextPage = () => {
     }
   });
 
-  React.useEffect(() => {
-    if (lists && lists[0]) {
-      dispatch(setListView(lists[0]));
-    }
-  }, [lists]);
-
-  if (!currentList) {
+  if (!user) {
     return null;
   }
+
+  if (lists.length === 0) {
+    return "No lists";
+  }
+
+  const currentList = lists[0];
 
   return (
     <PageTwoColumns bar={<ListsSidebarMenu list={currentList} />}>

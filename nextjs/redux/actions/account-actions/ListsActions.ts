@@ -1,15 +1,8 @@
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
-import { EditCommentRequestData } from "@modules/account/ts/types/edit-comment-request-data";
-import { ManageListRequestData } from "@modules/account/ts/types/manage-list-form.types";
 import { List } from "@modules/account/ts/types/list.type";
 
 export const getLists = (): any => ({
   type: "GET_LISTS",
-});
-
-export const setLists = (lists): any => ({
-  type: "SET_LISTS",
-  lists,
 });
 
 export const createList = (
@@ -29,15 +22,9 @@ export const reorderList = (listIds: string[], productListId: number): any => ({
   productListId,
 });
 
-export const transferProductList = (
-  fromListId: number,
-  toListId: number,
-  productId: number
-): any => ({
+export const transferProductList = (payload: any): any => ({
   type: "TRANSFER_PRODUCT_LIST",
-  fromListId,
-  toListId,
-  productId,
+  payload,
 });
 
 export const deleteList = (
@@ -102,20 +89,6 @@ export const createIdea = (payload: any): any => ({
 export const deleteItem = (payload: any): any => ({
   type: "PRODUCT_LISTS_DELETE_ITEM",
   payload,
-});
-
-//todo: @deprecated use editIdea instead
-export const editIdeaName = (
-  listId: number,
-  productId: number,
-  name: string,
-  callback: () => void
-): any => ({
-  type: "SEND_EDIT_IDEA_NAME",
-  listId,
-  productId,
-  name,
-  callback,
 });
 
 export const editIdea = (payload: any): any => ({

@@ -55,8 +55,6 @@ export interface AccountMainStore {
 
 export interface AccountListsStore {
   lists: List[];
-  currentList: List | null;
-  loading: boolean;
 }
 
 export interface AccountPaymentsStore {

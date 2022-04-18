@@ -158,10 +158,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                   <a className="d-none d-md-block">
                     <Chevron />
                   </a>
-                  <a
-                    className="lh-sm"
-                    href={`/product/${listItem.productId}/`}
-                  >
+                  <a className="lh-sm" href={`/product/${listItem.productId}/`}>
                     {ratings.rates.reduce(
                       (pv, cv) => pv + parseInt(cv.totalRates),
                       0
@@ -237,7 +234,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               setDisabledAddToCart(true);
 
               console.log("add to cart", {});
-              
+
               cartAdd(data, () => {
                 dispatch(
                   cartGetAction({
@@ -254,7 +251,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             }}
             time={listItem.add_date}
             listId={listItem.product_list_id}
-            productId={listItem.list_item_id}
+            listItemId={listItem.list_item_id}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}
