@@ -202,7 +202,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className="add-comment-text"
+                className={cn("add-comment-text", "d-inline-block")}
               >
                 Add comment, quantity & priority
               </div>
