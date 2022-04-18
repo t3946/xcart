@@ -138,12 +138,21 @@ const accountListReducer = (
           return e;
         }),
       };
-    case "SEND_REORDER_LIST":
-      state.currentList.items = action.listIds;
 
-      return {
-        ...state,
-      };
+    case "SEND_REORDER_LIST":
+      //get list
+      for (const list of state.lists) {
+        for (const item of list.items) {
+          if (item.list_item_id === action.listIds[0].list_item_id) {
+            list.items = action.listIds;
+            return {
+              ...state,
+            };
+          }
+        }
+      }
+
+      break;
 
     case "DELETE_PRODUCT_LIST_VIEW":
       // const item = getItemById(state, action.list_item_id);
