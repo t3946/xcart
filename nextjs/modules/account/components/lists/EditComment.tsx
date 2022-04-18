@@ -26,6 +26,7 @@ export const EditComment: React.FC<IProps> = function (props) {
 
   function submit(values: any) {
     const data = { ...values, priority: values.priority.value, list_item_id };
+
     dispatch(
       editCommentProduct({
         data,

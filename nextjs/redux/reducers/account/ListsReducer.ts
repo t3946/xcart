@@ -91,17 +91,23 @@ const accountListReducer = (
       };
 
     case "EDIT_COMMENT_LIST_VIEW":
-      console.log("EDIT_COMMENT_LIST_VIEW", { action });
-      // const newItems = state.currentList.items.map((item) => {
-      //   if (item.list_item_id === action.data.list_item_id) {
-      //     return { ...item, ...action.data };
-      //   }
-      //   return item;
-      // });
-      //
-      // state.currentList.items = [...newItems];
+      for (const list of state.lists) {
+        for (const item of list.items) {
+          if (item.list_item_id === action.data.list_item_id) {
+            item.has = action.data.has;
+            item.comment = action.data.comment;
+            item.needs = action.data.needs;
+            item.priority = action.data.priority;
 
-      return { ...state };
+            return {
+              ...state,
+            };
+          }
+        }
+      }
+
+      break;
+
     case "EDIT_USER_RIGHTS":
       if (action.actionType === UserRightsActionsEnum.DELETE) {
         return {
@@ -140,7 +146,6 @@ const accountListReducer = (
       };
 
     case "SEND_REORDER_LIST":
-      //get list
       for (const list of state.lists) {
         for (const item of list.items) {
           if (item.list_item_id === action.listIds[0].list_item_id) {
