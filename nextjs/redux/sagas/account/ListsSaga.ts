@@ -23,21 +23,19 @@ function* getLists(): Generator {
 }
 
 function* createList(action: AnyAction): Generator {
-  const data: List = yield api
-    .post(
-      "/api/account/lists/create-lists",
-      JSON.stringify({
-        name: action.name,
-      })
-    )
-    .then((response) => response);
+  const { data, callback } = action.payload;
+  let newList;
+
+  yield axios.post("/api-client/user/lists/create", data).then((res) => {
+    newList = res.data;
+  });
 
   yield put({
     type: "ADD_LIST",
-    data,
+    list: newList,
   });
 
-  yield action.callback(data.cacheUrl);
+  callback(newList);
 }
 
 function* reorderList(action: AnyAction): Generator {
@@ -89,27 +87,6 @@ function* editUserRights(action: AnyAction): Generator {
     .then((response) => response);
 
   window.location.reload();
-}
-
-function* addProductOnList(action: AnyAction): Generator {
-  const product = yield api
-    .post(
-      `/api/account/lists/add-product-on-list`,
-      JSON.stringify({
-        listId: action.listId,
-        productId: action?.productId,
-        name: action.name,
-      })
-    )
-    .then((response) => response);
-
-  yield put({
-    type: "ADD_PRODUCT_TO_LIST",
-    product,
-    productListId: action.listId,
-  });
-
-  yield action?.callback(product);
 }
 
 function* editCommentProduct(action: AnyAction): Generator {
@@ -250,7 +227,6 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("TRANSFER_PRODUCT_LIST", transferProductList);
   yield takeLatest("ENCRYPT_URL", encryptUrl);
   yield takeLatest("EDIT_USER_RIGHTS", editUserRights);
-  yield takeLatest("ADD_PRODUCT_ON_LIST", addProductOnList);
   yield takeLatest("EDIT_COMMENT_PRODUCT", editCommentProduct);
   yield takeLatest("MANAGE_LIST", manageList);
   yield takeLatest("SEND_DELETE_PRODUCT", deleteProduct);

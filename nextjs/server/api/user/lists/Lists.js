@@ -9,10 +9,10 @@ const apiIdea = require("./Idea");
 app.use("/item", apiItem);
 app.use("/idea", apiIdea);
 
-app.post("/get", async (req, res) => {
-  const list = await prisma.account_product_lists.findFirst({
+async function getListsById(listId) {
+  return await prisma.account_product_lists.findFirst({
     where: {
-      product_list_id: req.body.product_list_id,
+      product_list_id: listId,
     },
     include: {
       addresses: true,
@@ -49,6 +49,10 @@ app.post("/get", async (req, res) => {
       },
     },
   });
+}
+
+app.post("/get", async (req, res) => {
+  const list = await getListsById(req.body.product_list_id);
 
   res.json(list);
 });
@@ -143,12 +147,14 @@ app.get("/get-by-cache/:cache", async (req, res) => {
 });
 
 app.post("/create", async (req, res) => {
-  const list = await prisma.account_product_lists.create({
+  const newList = await prisma.account_product_lists.create({
     data: {
       user_id: req.user.userId,
       name: req.body.name,
     },
   });
+
+  const list = await getListsById(newList.product_list_id);
 
   res.json(list);
 });

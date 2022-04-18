@@ -223,8 +223,12 @@ const accountListReducer = (
 
     case "DELETE_LIST":
       return deleteList(state, action.productListId);
+
     case "ADD_LIST":
-      return { ...state, lists: [...state.lists, action.data] };
+      state.lists.push(action.list);
+
+      return { ...state };
+
     case "FETCH_LISTS":
     case "FETCH_LIST":
     case "LIST_DROP_BY_HASH":

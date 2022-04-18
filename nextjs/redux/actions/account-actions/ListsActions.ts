@@ -5,15 +5,9 @@ export const getLists = (): any => ({
   type: "GET_LISTS",
 });
 
-export const createList = (
-  name: string,
-  callback: (hash: string) => void,
-  actionType: "list" | "product" | undefined
-): any => ({
+export const createList = (payload: any): any => ({
   type: "CREATE_LIST",
-  name,
-  callback,
-  actionType,
+  payload,
 });
 
 export const reorderList = (listIds: string[], productListId: number): any => ({
