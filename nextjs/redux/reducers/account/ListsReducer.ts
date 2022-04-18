@@ -2,8 +2,6 @@ import { AnyAction } from "redux";
 import { AccountListsStore } from "@modules/account/ts/types/store.type";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import { manageList } from "@modules/account/utils/edit-store-funcs/lists/manage-list";
-import { deleteList } from "@modules/account/utils/edit-store-funcs/lists/delete-list";
-import { deleteProductList } from "@modules/account/utils/edit-store-funcs/lists/delete-product-list";
 
 const initialValue: AccountListsStore = {
   lists: [],
@@ -14,18 +12,6 @@ function getListByItemId(state, list_item_id) {
     for (const item of list.items) {
       if (item.list_item_id === list_item_id) {
         return list;
-      }
-    }
-  }
-
-  return null;
-}
-
-function getItemById(state, list_item_id) {
-  for (const list of state.lists) {
-    for (const item of list.items) {
-      if (item.list_item_id === list_item_id) {
-        return item;
       }
     }
   }
@@ -221,8 +207,13 @@ const accountListReducer = (
       const { product_list_id, data } = action;
       return manageList(state, product_list_id, data);
 
-    case "DELETE_LIST":
-      return deleteList(state, action.productListId);
+    case "PRODUCT_LISTS_DELETE_LIST":
+      console.log("PRODUCT_LISTS_DELETE_LIST", {action});
+      state.lists = state.lists?.filter(
+        (list) => list.product_list_id != action.payload.data.product_list_id
+      );
+
+      return { ...state };
 
     case "ADD_LIST":
       state.lists.push(action.list);

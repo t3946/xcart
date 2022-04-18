@@ -21,13 +21,9 @@ export const transferProductList = (payload: any): any => ({
   payload,
 });
 
-export const deleteList = (
-  productListId: number,
-  callback: () => void
-): any => ({
-  type: "SEND_DELETE_LIST",
-  productListId,
-  callback,
+export const deleteList = (payload: any): any => ({
+  type: "PRODUCT_LISTS_DELETE_LIST",
+  payload,
 });
 
 export const deleteProduct = (

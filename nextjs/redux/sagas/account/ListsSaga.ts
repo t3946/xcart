@@ -45,15 +45,9 @@ function* reorderList(action: AnyAction): Generator {
 }
 
 function* deleteList(action: AnyAction): Generator {
-  const { productListId } = action;
-  yield axios
-    .delete(`/api/account/lists/delete-list/${productListId}`)
-    .then((res) => res);
-  yield put({
-    type: "DELETE_LIST",
-    productListId,
-  });
-  yield action.callback();
+  const { data } = action.payload;
+
+  yield axios.post("/api-client/user/lists/delete", data);
 }
 
 function* transferProductList(action: AnyAction): Generator {
@@ -223,7 +217,6 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("FETCH_LISTS", getLists);
   yield takeLatest("CREATE_LIST", createList);
   yield takeLatest("SEND_REORDER_LIST", reorderList);
-  yield takeLatest("SEND_DELETE_LIST", deleteList);
   yield takeLatest("TRANSFER_PRODUCT_LIST", transferProductList);
   yield takeLatest("ENCRYPT_URL", encryptUrl);
   yield takeLatest("EDIT_USER_RIGHTS", editUserRights);
@@ -239,4 +232,7 @@ export function* listsActionWatcher(): SagaIterator {
 
   //item
   yield takeLatest("PRODUCT_LISTS_DELETE_ITEM", deleteItem);
+
+  //list
+  yield takeLatest("PRODUCT_LISTS_DELETE_LIST", deleteList);
 }

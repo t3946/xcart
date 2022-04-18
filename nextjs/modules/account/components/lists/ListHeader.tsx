@@ -50,14 +50,20 @@ export const ListHeader: React.FC<IProps> = (props) => {
   const mobileMenuDialog = useDialog();
   const router = useRouter();
   const dispatch = useDispatch();
-  const onRequestEnd = () => {
+
+  function handleDeleteList() {
+    dispatch(
+      deleteList({
+        data: {
+          product_list_id: list.product_list_id,
+        },
+      })
+    );
     deleteListDialog.handleClose();
     snackbar.show(`${list.name} list deleted successfully`);
     router.replace(`/shopping-lists/`);
-  };
-  const handleDeleteList = () => {
-    dispatch(deleteList(list.productListId, onRequestEnd));
-  };
+  }
+
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
@@ -186,27 +192,27 @@ export const ListHeader: React.FC<IProps> = (props) => {
       >
         <div className="list-header-actions flex-grow-1 ms-lg-5">
           {edit && (
-            <div
-              onClick={manageListDialog.handleClickOpen}
-              className={cn(
-                Styles.istHeaderActions__listHeaderAction,
-                Styles.listHeaderAction
-              )}
-            >
-              Manage list
-            </div>
-          )}
-          {!isShoppingList && (
-            <div
-              onClick={deleteListDialog.handleClickOpen}
-              className={cn(
-                Styles.istHeaderActions__listHeaderAction,
-                Styles.listHeaderAction,
-                Styles.listHeaderAction_red
-              )}
-            >
-              Delete list
-            </div>
+            <>
+              <div
+                onClick={manageListDialog.handleClickOpen}
+                className={cn(
+                  Styles.istHeaderActions__listHeaderAction,
+                  Styles.listHeaderAction
+                )}
+              >
+                Manage list
+              </div>
+              <div
+                onClick={deleteListDialog.handleClickOpen}
+                className={cn(
+                  Styles.istHeaderActions__listHeaderAction,
+                  Styles.listHeaderAction,
+                  Styles.listHeaderAction_red
+                )}
+              >
+                Delete list
+              </div>
+            </>
           )}
         </div>
         {edit && (

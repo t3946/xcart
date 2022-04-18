@@ -21,15 +21,11 @@ const ShoppingLists: NextPage = () => {
     return null;
   }
 
-  if (lists.length === 0) {
-    return "No lists";
-  }
-
-  const currentList = lists[0];
+  const currentList = lists.length ? lists[0] : null;
 
   return (
     <PageTwoColumns bar={<ListsSidebarMenu list={currentList} />}>
-      <ListsPage list={currentList} />
+      {currentList && <ListsPage list={currentList} />}
     </PageTwoColumns>
   );
 };
