@@ -28,6 +28,8 @@ import {
   setAction as cartSetAction,
 } from "@redux/actions/CartActions";
 import getStoreUrl from "@utils/getStoreUrl";
+import Price from "@components/common/price/Price";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
@@ -62,6 +64,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
     setCountProductsOnCart(value);
   };
+  const currency = useSelectorAccount((e) => e.config.site.currency);
   const data = [
     {
       id: listItem.product.productid,
@@ -114,6 +117,32 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     );
   }
 
+  function itemPriceGroupTemplate() {
+    return (
+      <>
+        <div className="d-flex align-items-center d-none d-lg-flex">
+          <Price
+            currency={currency}
+            price={product.price}
+            classes={{ container: Styles.productInfoPrice }}
+          />
+
+          <span className={"mx-2"}>X</span>
+
+          <CountGroup
+            avail={product.avail}
+            onBlur={onCountInputBlur}
+            value={countProductsOnCart}
+            onChange={changeCount}
+            minAmount={product.min_amount}
+            multOrderQuantity={product.mult_order_quantity}
+            className={Styles.counter}
+          />
+        </div>
+      </>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -148,6 +177,11 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               href={`/product/${listItem.productId}/`}
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
+              {product.product}
+              {product.product}
+              {product.product}
+              {product.product}
+              {product.product}
               {product.product}
             </a>
             {edit && (
@@ -188,19 +222,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             />
           )}
 
-          <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>{product.price}</div>
-            <div className="multiplication-symbol">X</div>
-            <CountGroup
-              avail={product.avail}
-              onBlur={onCountInputBlur}
-              value={countProductsOnCart}
-              onChange={changeCount}
-              minAmount={product.min_amount}
-              multOrderQuantity={product.mult_order_quantity}
-              className={Styles.counter}
-            />
-          </div>
+          {itemPriceGroupTemplate()}
+
           {edit &&
             (listItem.comment ? (
               <ListProductItemComment
@@ -211,12 +234,21 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className={cn("add-comment-text", "d-inline-block")}
+                className={cn("add-comment-text", "d-none", "d-inline-block")}
               >
                 Add comment, quantity & priority
               </div>
             ))}
-          {itemAddedTemplate(["mt-18", "mb-12", "d-md-none"])}
+
+          <Price
+            currency={currency}
+            price={product.price}
+            classes={{
+              container: [Styles.productInfoPrice, "d-block", "d-lg-none"],
+            }}
+          />
+
+          {itemAddedTemplate(["mt-18", "d-md-none"])}
         </div>
       </div>
 
@@ -232,6 +264,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
         {!product.outOfStock && (
           <ListProductItemBtns
+            className={["mt-12", "mt-md-0"]}
             list={list}
             disabledAddToCart={disabledAddToCart}
             btnLabel={"Add to cart"}

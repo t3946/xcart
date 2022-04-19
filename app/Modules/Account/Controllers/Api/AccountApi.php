@@ -5,6 +5,7 @@ namespace Modules\Account\Controllers\Api;
 
 
 use Aws\Sns\SnsClient;
+use FacebookAds\Object\Currency;
 use Modules\Account\Controllers\AccountController;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
@@ -20,6 +21,7 @@ use Modules\Reviews\Controllers\Api\ReviewsApi;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\ReviewsModule;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\PaymentMethodModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
@@ -103,6 +105,7 @@ class AccountApi extends Controller
         }
 
         $stripeSettings = ProcessorModel::objects()->asArray()->get(['processor_name' => 'Stripe']);
+        $currency = CurrencyModel::objects()->asArray()->get(["currency_id" => $site->currency_id]);
 
         $initial_data = [
             'user' => $user,
@@ -128,6 +131,7 @@ class AccountApi extends Controller
                     'file_edit_image_favicon' => (string)$site->file_edit_image_favicon,
                     'fax_number' => $site->fax_number,
                     'corporationName' => $site->corporation->name,
+                    'currency' => $currency
                 ],
                 'google_recaptchav2_site_key' => '6LenP30eAAAAAOUcOLvofYoaPMW6lMYTsov-RJ4p',
             ],

@@ -126,6 +126,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
         </div>
       </div>
       <ListProductItemBtns
+        className={["mt-12", "mt-md-0"]}
         btnLabel={"search"}
         mainBtnType={ETheme.outlined}
         edit={edit}

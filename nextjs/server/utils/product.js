@@ -98,7 +98,6 @@ module.exports = {
     //get prices
     if (typeof product.pricings !== "undefined") {
       product.price = getPrice(product);
-      delete product.pricings;
     }
 
     //get images

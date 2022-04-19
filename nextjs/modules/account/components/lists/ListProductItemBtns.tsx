@@ -22,6 +22,7 @@ interface IProps {
   list: any;
   outOfStock?: boolean;
   disabledAddToCart?: any;
+  className?: any;
 }
 
 export const ListProductItemBtns: React.FC<IProps> = (props) => {
@@ -36,6 +37,7 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
     outOfStock,
     disabledAddToCart,
     onMainBtnClick,
+    className,
   } = props;
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
@@ -66,7 +68,7 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
   }
 
   return (
-    <div className={Styles.container}>
+    <div className={cn(Styles.container, className)}>
       <a href={searchLink} className={"text-decoration-none"}>
         <Button
           theme={mainBtnType}
