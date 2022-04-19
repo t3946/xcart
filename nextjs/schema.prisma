@@ -4661,7 +4661,7 @@ model xcart_products {
   xcart_external_verification_products_queue xcart_external_verification_products_queue?
   xcart_images_D                             xcart_images_D[]
   details                                    xcart_order_details[]
-  xcart_pricing                              xcart_pricing[]
+  pricings                                   xcart_pricing[]
   xcart_product_options                      xcart_product_options[]
   xcart_product_question                     xcart_product_question[]
   xcart_product_reviews                      xcart_product_reviews[]

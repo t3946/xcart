@@ -27,6 +27,7 @@ import {
   getAction as cartGetAction,
   setAction as cartSetAction,
 } from "@redux/actions/CartActions";
+import getStoreUrl from "@utils/getStoreUrl";
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
@@ -131,7 +132,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       <div className="product-list-item-info-content">
         <img
           className="product-list-item-image product-image"
-          src={listItem.product.image}
+          src={getStoreUrl(listItem.product.images[0].path)}
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
@@ -180,7 +181,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
           )}
 
           <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>0.00</div>
+            <div className={Styles.productInfoPrice}>{product.price}</div>
             <div className="multiplication-symbol">X</div>
             <CountGroup
               avail={product.avail}
@@ -232,8 +233,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             deleteItem={deleteProductDialog.handleClickOpen}
             onMainBtnClick={() => {
               setDisabledAddToCart(true);
-
-              console.log("add to cart", {});
 
               cartAdd(data, () => {
                 dispatch(

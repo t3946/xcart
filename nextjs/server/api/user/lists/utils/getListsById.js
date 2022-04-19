@@ -1,5 +1,7 @@
+const { normalize } = require("../../../../utils/product");
+
 module.exports = async function getListsById(prisma, listId) {
-  return await prisma.account_product_lists.findFirst({
+  const list = await prisma.account_product_lists.findFirst({
     where: {
       product_list_id: listId,
     },
@@ -21,7 +23,11 @@ module.exports = async function getListsById(prisma, listId) {
         },
         include: {
           idea: true,
-          product: true,
+          product: {
+            include: {
+              pricings: true,
+            },
+          },
         },
       },
       users: {
@@ -38,4 +44,12 @@ module.exports = async function getListsById(prisma, listId) {
       },
     },
   });
+
+  for (const item of list.items) {
+    if (item.product) {
+      await normalize(item.product);
+    }
+  }
+
+  return list;
 };

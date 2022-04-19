@@ -612,7 +612,6 @@ class ProductModel extends Model implements ICartItem
     public function getImages(): array
     {
         if ($this->isGroupRoot()) {
-
             return ProductImageModel::objects()
                 ->filter([
                     'products__group_root' => $this->pk,

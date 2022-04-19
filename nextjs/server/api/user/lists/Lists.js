@@ -6,6 +6,7 @@ const getListsById = require("./utils/getListsById");
 const apiItem = require("./Item");
 const apiIdea = require("./Idea");
 const apiInvite = require("./Invite");
+const { normalize } = require("../../../utils/product");
 
 app.use("/item", apiItem);
 app.use("/idea", apiIdea);
@@ -51,7 +52,11 @@ app.get("/get-all", async (req, res) => {
         },
         include: {
           idea: true,
-          product: true,
+          product: {
+            include: {
+              pricings: true,
+            },
+          },
         },
       },
       users: {
@@ -68,6 +73,14 @@ app.get("/get-all", async (req, res) => {
       },
     },
   });
+
+  for (const list of lists) {
+    for (const item of list.items) {
+      if (item.product) {
+        await normalize(item.product);
+      }
+    }
+  }
 
   res.json(lists);
 });
