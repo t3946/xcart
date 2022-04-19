@@ -87,6 +87,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
     onClick: () =>
       router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
   };
+  const listType = list.users.length === 0 ? "private" : "shared";
 
   return (
     <div
@@ -160,7 +161,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
         </Link>
         <img
           className="list-header-private-type-img"
-          src={`/static/frontend/images/icons/account/list-${list.listType}.svg`}
+          src={`/static/frontend/images/icons/account/list-${listType}.svg`}
         />
         <div
           className={cn(
