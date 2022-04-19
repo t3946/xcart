@@ -5648,7 +5648,7 @@ model xcart_storefronts {
   logo_mobile                   String?                            @db.VarChar(255)
   base_category_id              Int?                               @unique(map: "base_category_id")
   dimension_weight              xcart_storefronts_dimension_weight @default(lbs)
-  dimension_size                xcart_storefronts_dimension_size   @default(EMPTY_ENUM_VALUE)
+  dimension_size                String?                            @db.VarChar(255)
   corporation_id                Int?                               @db.UnsignedInt
   dimension_weight_id           Int?
   dimension_size_id             Int?
@@ -7166,11 +7166,6 @@ enum xcart_dimensions_type {
 enum xcart_storefronts_dimension_weight {
   kg
   lbs
-}
-
-enum xcart_storefronts_dimension_size {
-  cm
-  EMPTY_ENUM_VALUE @map("")
 }
 
 enum xcart_fraud_base_questions_active {
