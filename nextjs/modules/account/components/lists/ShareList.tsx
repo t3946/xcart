@@ -1,18 +1,19 @@
 import React from "react";
 import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
 import { useDispatch } from "react-redux";
-import { encryptUrl } from "@redux/actions/account-actions/ListsActions";
+import { getInvite } from "@redux/actions/account-actions/ListsActions";
 import { ShareListInviteSection } from "@modules/account/components/lists/ShareListInviteSection";
 import { ShareListManagePeople } from "@modules/account/components/lists/ShareListManagePeople";
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import { AxiosResponse } from "axios";
 
-interface ShareList {
+interface IProps {
   onClose: () => void;
-  cache: string;
+  list: Record<any, any>;
 }
 
-export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
+export const ShareList: React.FC<IProps> = (props) => {
+  const { onClose, list } = props;
   const snackbar = useSnackbar();
   const dispatch = useDispatch();
   const [showSharedStatus, setShowSharedStatus] = React.useState(
@@ -23,15 +24,16 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
 
   React.useEffect(() => {
     setSharedLink("");
+
     dispatch(
-      encryptUrl({
+      getInvite({
         data: {
-          hash: cache,
+          product_list_id: list.product_list_id,
           role: showSharedStatus,
         },
         success(res: AxiosResponse) {
-          const { tag, text } = res.data;
-          const url = `http://${window.location.hostname}/account/shopping-lists/invite/${tag}/${text}`;
+          const { iv, content } = res.data;
+          const url = `${window.location.origin}/account/shopping-lists/invite/${iv}/${content}`;
           setSharedLink(url);
         },
       })
@@ -57,7 +59,7 @@ export const ShareList: React.FC<ShareList> = ({ onClose, cache }) => {
         onCopyLinkFunc={onCopyLink}
       />
       <hr className="share-list-center-line" />
-      <ShareListManagePeople closeDialog={onClose} id={cache} />
+      <ShareListManagePeople closeDialog={onClose} list={list} />
     </div>
   );
 };

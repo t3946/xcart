@@ -57,7 +57,7 @@ export const ListProductItems: React.FC<IProps> = (props) => {
     }
 
     if (
-      list?.roles.find((role) => role.user.user_id === userId)?.role ===
+      list?.users.find((user) => user.user.user_id === userId)?.role ===
       UserPrivateVariantsEnum.EDIT
     ) {
       return UserPrivateVariantsEnum.EDIT;

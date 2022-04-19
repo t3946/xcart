@@ -62,23 +62,29 @@ function* transferProductList(action: AnyAction): Generator {
   yield axios.post(`/api-client/user/lists/transfer`, data);
 }
 
-function* encryptUrl(action: AnyAction): Generator {
+function* inviteGenerate(action: AnyAction): Generator {
   const { data, success } = action.payload;
 
-  axios.post<any>(`/api/account/lists/get-url-encrypt`, data).then(success);
+  yield axios
+    .post("/api-client/user/lists/invite/generate", data)
+    .then(success);
 }
 
-function* editUserRights(action: AnyAction): Generator {
-  yield api
-    .post<any>(
-      `/api/account/lists/edit-user-rights`,
-      JSON.stringify({
-        list_id: action.listId,
-        user_id: action.userId,
-        action: action.actionType,
-      })
-    )
-    .then((response) => response);
+function* inviteUse(action: AnyAction): Generator {
+  const { data, callback } = action.payload;
+  const { iv, content } = data;
+
+  yield axios.get(`/api-client/user/lists/invite/use/${iv}/${content}`);
+
+  yield getLists();
+
+  callback();
+}
+
+function* changeUserRole(action: AnyAction): Generator {
+  const { data } = action.payload;
+
+  yield axios.post("/api-client/user/lists/change-user-role", data);
 
   window.location.reload();
 }
@@ -110,58 +116,10 @@ function* manageList(action: AnyAction): Generator {
   });
 }
 
-function* deleteProduct(action: AnyAction): Generator {
-  const { list_item_id } = action;
-  yield api
-    .post<any>(
-      `/api/account/lists/delete-product`,
-      JSON.stringify({
-        list_item_id,
-      })
-    )
-    .then((response) => response);
-  yield put({
-    type: "DELETE_PRODUCT_LIST_VIEW",
-    list_item_id,
-  });
-
-  action?.callback && action?.callback();
-}
-
 function* undoDeleteProduct(action: AnyAction): Generator {
   const { data } = action.payload;
 
   yield axios.post(`/api-client/user/lists/item/restore`, data);
-}
-
-function* fetchListView(action: AnyAction): Generator {
-  const listView = yield api
-    .get(`/api/account/lists/get/${action.cache}`)
-    .then((res: List | null) => res);
-
-  // list removed
-  if (listView === null) {
-    yield put({
-      type: "LIST_DROP_BY_HASH",
-      hash: action.cache,
-    });
-
-    yield put({
-      type: "SET_LIST_VIEW",
-      listView: null,
-    });
-
-    return;
-  }
-
-  listView.listType = listView.users.length
-    ? ListPrivateEnum.SHARED
-    : ListPrivateEnum.PRIVATE;
-
-  yield put({
-    type: "SET_LIST_VIEW",
-    listView,
-  });
 }
 
 function* editIdea(action: AnyAction): Generator {
@@ -218,13 +176,9 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("CREATE_LIST", createList);
   yield takeLatest("SEND_REORDER_LIST", reorderList);
   yield takeLatest("TRANSFER_PRODUCT_LIST", transferProductList);
-  yield takeLatest("ENCRYPT_URL", encryptUrl);
-  yield takeLatest("EDIT_USER_RIGHTS", editUserRights);
   yield takeLatest("EDIT_COMMENT_PRODUCT", editCommentProduct);
   yield takeLatest("MANAGE_LIST", manageList);
-  yield takeLatest("SEND_DELETE_PRODUCT", deleteProduct);
   yield takeLatest("UNDO_DELETE_PRODUCT", undoDeleteProduct);
-  yield takeLatest("FETCH_LIST", fetchListView);
 
   //idea
   yield takeLatest("PRODUCT_LISTS_EDIT_IDEA", editIdea);
@@ -233,6 +187,11 @@ export function* listsActionWatcher(): SagaIterator {
   //item
   yield takeLatest("PRODUCT_LISTS_DELETE_ITEM", deleteItem);
 
+  //invite
+  yield takeLatest("PRODUCT_LISTS_INVITE_GENERATE", inviteGenerate);
+  yield takeLatest("PRODUCT_LISTS_INVITE_USE", inviteUse);
+
   //list
   yield takeLatest("PRODUCT_LISTS_DELETE_LIST", deleteList);
+  yield takeLatest("PRODUCT_LISTS_CHANGE_USER_ROLE", changeUserRole);
 }

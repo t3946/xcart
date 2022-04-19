@@ -42,7 +42,7 @@ export const ListsSidebarMenu: React.FC<IProps> = (props) => {
           label={
             <ListsSidebarLabel
               label={e.name}
-              isPrivate={list.roles.length === 0}
+              isPrivate={e.users.length === 0}
             />
           }
           className={[

@@ -5,43 +5,47 @@ import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitC
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
-import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
-import { ApiService } from "@modules/shared/services/api.service";
 import getStoreUrl from "@utils/getStoreUrl";
+import { inviteUse } from "@redux/actions/account-actions/ListsActions";
+import { useDispatch } from "react-redux";
 
-interface InvitationPage {
-  inviteUser: string;
-  type: UserPrivateVariantsEnum;
-  listData: {
-    productListId: number;
-    name: string;
-    cacheUrl: string;
-  };
+interface IProps {
+  list: any;
+  role: any;
+  iv: any;
+  content: any;
 }
 
-const api = new ApiService();
+export const InvitationPage: React.FC<IProps> = (props) => {
+  const { list, role, iv, content } = props;
+  const dispatch = useDispatch();
 
-export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
+  console.log("InvPa", { list, role, iv, content });
+
   const router = useRouter();
-  const editProfile = () => {
-    router.push("/public-profile");
-  };
-  const onCancelClick = () => {
-    router.push("/");
-  };
   const user = useSelectorAccount((state) => state.user);
-  const onAcceptClick = async () => {
-    await api
-      .post(
-        `/api/account/lists/accept-invite`,
-        JSON.stringify({
-          listId: other.listData.productListId,
-          role: other.type,
-        })
-      )
-      .then((res) => res);
-    await router.push("/shopping-lists");
-  };
+
+  async function onAcceptClick() {
+    dispatch(
+      inviteUse({
+        data: {
+          iv,
+          content,
+        },
+        callback() {
+          router.push(`/shopping-lists/${list.product_list_id}`);
+        },
+      })
+    );
+  }
+
+  function editProfile() {
+    router.push("/public-profile");
+  }
+
+  function onCancelClick() {
+    router.push("/");
+  }
 
   const avatar = user.avatar_image
     ? getStoreUrl(user.avatar_image)
@@ -52,12 +56,12 @@ export const InvitationPage: React.FC<InvitationPage> = ({ ...other }) => {
       <MobileMenuBackBtn redirectUrl={`/`} label={"account"} />
       <div className="page-label">Collaboration invitation</div>
       <div className="page-invitation-subtitle">
-        You have been invited to collaborate on <b>"{other.listData.name}"</b>{" "}
-        by {other.inviteUser}
+        You have been invited to collaborate on <b>"{list.name}"</b> by{" "}
+        {list.owner.name}
       </div>
       <div className="page-invitation-subtitle">
         You will appear to others in the List as{" "}
-        <b>{viewUserListRight(other.type)}</b>
+        <b>{viewUserListRight(role)}</b>
       </div>
       <div className="page-invitation-user-profile-container">
         <div className="page-invitation-user-profile">

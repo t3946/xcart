@@ -8,12 +8,13 @@ export const ShareListPage: React.FC = () => {
   const router = useRouter();
   const { cache } = router.query;
   const lists = UseSelectorAccount((state) => state.lists.lists);
-
   const list = lists.find((e) => e.cacheUrl === cache);
 
-  const onCancelClick = () => {
+  console.log("ShareListPage", {list});
+
+  function onCancelClick() {
     router.push(`/shopping-lists/${list.cacheUrl}`);
-  };
+  }
 
   return (
     <div>
@@ -22,7 +23,7 @@ export const ShareListPage: React.FC = () => {
         label={"back"}
       />
       <div className="page-label">Share list with others</div>
-      <ShareList onClose={onCancelClick} cache={cache} />
+      <ShareList onClose={onCancelClick} list={list} />
     </div>
   );
 };

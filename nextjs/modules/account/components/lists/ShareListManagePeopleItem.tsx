@@ -1,5 +1,4 @@
 import React from "react";
-import Store from "@redux/stores/Store";
 import { ShareListManagePeopleSelect } from "@modules/account/components/lists/ShareListManagePeopleSelect";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
@@ -8,24 +7,26 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
-import { ListProductUser } from "@modules/account/ts/types/list.type";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import getStoreUrl from "@utils/getStoreUrl";
 
-interface ShareListManagePeopleItem {
-  userListInfo: ListProductUser;
+interface IProps {
+  userListInfo: Record<any, any>;
+  role: string;
   onClick: (UserRightsType: UserRightsActionsEnum, userId: string) => void;
 }
 
-export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
-  userListInfo,
-  onClick,
-}) => {
-  const isYourAccount = userListInfo.userId === Store.getState().user.id;
+export const ShareListManagePeopleItem: React.FC<IProps> = (props) => {
+  const { userListInfo, role, onClick } = props;
+  const user = useSelectorAccount((e) => e.user);
+  const isYourAccount = userListInfo.user_id === user.user_id;
   const breakpoint = useBreakpoint();
   const mobileMenuDialog = useDialog();
   const defaultAvatar =
     "/static/frontend/images/pages/account/default-avatar.svg";
-  const userAvatar = userListInfo.avatar_image;
-  const avatarImage = userAvatar || defaultAvatar;
+  const avatarImage = userListInfo.avatar_image
+    ? getStoreUrl(userListInfo.avatar_image)
+    : defaultAvatar;
 
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
@@ -33,7 +34,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         <div className="d-flex align-items-center share-list-people-left-side-container">
           <img
             src={avatarImage}
-            className="page-invitation-user-profile-avatar"
+            className="page-invitation-user-profile-avatar 1"
             alt={"avatar image"}
           />
           <div>
@@ -47,7 +48,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
       label: (
         <div
           className={`share-list-mobile-menu-item ${
-            userListInfo.role === UserPrivateVariantsEnum.EDIT &&
+            role === UserPrivateVariantsEnum.EDIT &&
             "share-list-mobile-menu-item-selected"
           }`}
         >
@@ -55,7 +56,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         </div>
       ),
       onClick: () => {
-        onClick(UserRightsActionsEnum.EDIT, userListInfo.userId);
+        onClick(UserRightsActionsEnum.EDIT, userListInfo.user_id);
         mobileMenuDialog.handleClose();
       },
     },
@@ -63,7 +64,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
       label: (
         <div
           className={`share-list-mobile-menu-item ${
-            userListInfo.role === UserPrivateVariantsEnum.VIEW &&
+            role === UserPrivateVariantsEnum.VIEW &&
             "share-list-mobile-menu-item-selected"
           }`}
         >
@@ -71,7 +72,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         </div>
       ),
       onClick: () => {
-        onClick(UserRightsActionsEnum.VIEW, userListInfo.userId);
+        onClick(UserRightsActionsEnum.VIEW, userListInfo.user_id);
         mobileMenuDialog.handleClose();
       },
     },
@@ -82,7 +83,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
         </div>
       ),
       onClick: () => {
-        onClick(UserRightsActionsEnum.DELETE, userListInfo.userId);
+        onClick(UserRightsActionsEnum.DELETE, userListInfo.user_id);
         mobileMenuDialog.handleClose();
       },
     },
@@ -102,10 +103,8 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
           <div className="share-list-people-email">{userListInfo.email}</div>
         </div>
       </div>
-      {isYourAccount || UserPrivateVariantsEnum.OWNER === userListInfo.role ? (
-        <div className="share-list-account-role">
-          {viewUserListRight(userListInfo.role)}
-        </div>
+      {isYourAccount || UserPrivateVariantsEnum.OWNER === role ? (
+        <div className="share-list-account-role">{viewUserListRight(role)}</div>
       ) : (
         breakpoint({
           xs: (
@@ -113,7 +112,7 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
               onClick={mobileMenuDialog.handleClickOpen}
               className="share-list-account-role-mobile"
             >
-              {viewUserListRight(userListInfo.role)}
+              {viewUserListRight(role)}
             </div>
           ),
           md: (
@@ -123,12 +122,12 @@ export const ShareListManagePeopleItem: React.FC<ShareListManagePeopleItem> = ({
                 { value: UserRightsActionsEnum.VIEW, label: "Viewer" },
               ]}
               value={{
-                value: userListInfo.role,
-                label: viewUserListRight(userListInfo.role),
+                value: role,
+                label: viewUserListRight(role),
               }}
-              id={userListInfo.userId}
+              id={userListInfo.user_id}
               onClick={(selectValue) =>
-                onClick(selectValue.value, userListInfo.userId)
+                onClick(selectValue.value, userListInfo.user_id)
               }
               name="right"
             />

@@ -1,35 +1,42 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ShareListManagePeopleItem } from "@modules/account/components/lists/ShareListManagePeopleItem";
-import { editUserRights } from "@redux/actions/account-actions/ListsActions";
+import { changeUserRole } from "@redux/actions/account-actions/ListsActions";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
-import { List } from "@modules/account/ts/types/list.type";
 
-interface ShareListManagePeopleProps {
-  id: string;
-  closeDialog: () => void;
+interface IProps {
+  list: Record<any, any>;
 }
 
-export const ShareListManagePeople: React.FC<ShareListManagePeopleProps> = ({
-  id,
-}) => {
-  const lists: List[] = useSelector((state) => state.lists.lists);
-  const list: List = lists.find((list) => list.cacheUrl === id);
+export const ShareListManagePeople: React.FC<IProps> = (props) => {
+  const { list } = props;
   const dispatch = useDispatch();
 
-  const handleSelectItemCLick = (
-    actionType: UserRightsActionsEnum,
-    userId: string
-  ) => {
-    dispatch(editUserRights(list.productListId, userId, actionType));
-  };
+  function handleSelectItemCLick(role: UserRightsActionsEnum, user_id: string) {
+    dispatch(
+      changeUserRole({
+        data: {
+          product_list_id: list.product_list_id,
+          user_id,
+          role,
+        },
+      })
+    );
+  }
+
   return (
     <React.Fragment>
       <div className="share-list-label">Manage people</div>
-      {[list.owner, ...list.users].map((item, i) => (
+      <ShareListManagePeopleItem
+        onClick={handleSelectItemCLick}
+        userListInfo={list.owner}
+        role={"owner"}
+      />
+      {list.users.map((item, i) => (
         <ShareListManagePeopleItem
           onClick={handleSelectItemCLick}
-          userListInfo={item}
+          userListInfo={item.user}
+          role={item.role}
           key={`ShareListManagePeopleItem-${i}`}
         />
       ))}

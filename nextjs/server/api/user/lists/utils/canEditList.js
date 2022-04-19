@@ -7,7 +7,7 @@ async function canEditList(list_id, user_id) {
       product_list_id: list_id,
     },
     include: {
-      roles: true,
+      users: true,
     },
   });
 

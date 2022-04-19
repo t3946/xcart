@@ -1,6 +1,3 @@
-import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
-import { List } from "@modules/account/ts/types/list.type";
-
 export const getLists = (): any => ({
   type: "GET_LISTS",
 });
@@ -26,36 +23,24 @@ export const deleteList = (payload: any): any => ({
   payload,
 });
 
-export const deleteProduct = (
-  list_item_id: number,
-  callback?: () => void
-): any => ({
-  type: "SEND_DELETE_PRODUCT",
-  list_item_id,
-  callback,
-});
-
 export const undoDeleteProduct = (payload: any): any => ({
   type: "UNDO_DELETE_PRODUCT",
   payload,
 });
 
-export const encryptUrl = (payload: any): any => ({
-  type: "ENCRYPT_URL",
+export const getInvite = (payload: any): any => ({
+  type: "PRODUCT_LISTS_INVITE_GENERATE",
   payload,
 });
 
-export const editUserRights = (
-  listId: number,
-  userId: string,
-  actionType: UserRightsActionsEnum,
-  callback?: () => void
-): any => ({
-  type: "EDIT_USER_RIGHTS",
-  listId,
-  userId,
-  actionType,
-  callback,
+export const inviteUse = (payload: any): any => ({
+  type: "PRODUCT_LISTS_INVITE_USE",
+  payload,
+});
+
+export const changeUserRole = (payload: any): any => ({
+  type: "PRODUCT_LISTS_CHANGE_USER_ROLE",
+  payload,
 });
 
 export const addProduct = (
@@ -95,20 +80,4 @@ export const manageList = (payload: any): any => ({
   type: "MANAGE_LIST",
   payload,
 });
-export const fetchLists = () => ({
-  type: "FETCH_LISTS",
-});
-export const setListView = (currentList: List) => ({
-  type: "SET_LIST_VIEW",
-  currentList,
-});
 
-export const dropByHash = (hash: List) => ({
-  type: "LIST_DROP_BY_HASH",
-  hash,
-});
-
-export const fetchListByCache = (cache: string) => ({
-  type: "FETCH_LIST",
-  cache,
-});

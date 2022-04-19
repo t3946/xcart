@@ -35,7 +35,7 @@ const ListsPage: React.FC<IProps> = (props) => {
     }
 
     if (
-      list?.roles.find((role: any) => role.user.user_id === user.user_id)
+      list?.users.find((role: any) => role.user.user_id === user.user_id)
         ?.role === UserPrivateVariantsEnum.EDIT
     ) {
       return UserPrivateVariantsEnum.EDIT;

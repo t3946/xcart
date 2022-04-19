@@ -36,7 +36,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
     }
 
     if (
-      list?.roles.find((role) => role.user.user_id === userId)?.role ===
+      list?.users.find((role) => role.user.user_id === userId)?.role ===
       UserPrivateVariantsEnum.EDIT
     ) {
       return UserPrivateVariantsEnum.EDIT;
@@ -44,7 +44,8 @@ export const ListHeader: React.FC<IProps> = (props) => {
     return UserPrivateVariantsEnum.VIEW;
   }
 
-  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
+  const editor = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
+  const owner = list.user_id === userId;
   const manageListDialog = useDialog();
   const deleteListDialog = useDialog();
   const mobileMenuDialog = useDialog();
@@ -170,7 +171,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
         >
           {list.name}
         </div>
-        {edit && (
+        {editor && (
           <span
             className={"ms-3 py-10 px-1 cursor-pointer d-lg-none"}
             onClick={mobileMenuDialog.handleClickOpen}
@@ -191,7 +192,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
         )}
       >
         <div className="list-header-actions flex-grow-1 ms-lg-5">
-          {edit && (
+          {editor && (
             <>
               <div
                 onClick={manageListDialog.handleClickOpen}
@@ -202,20 +203,23 @@ export const ListHeader: React.FC<IProps> = (props) => {
               >
                 Manage list
               </div>
-              <div
-                onClick={deleteListDialog.handleClickOpen}
-                className={cn(
-                  Styles.istHeaderActions__listHeaderAction,
-                  Styles.listHeaderAction,
-                  Styles.listHeaderAction_red
-                )}
-              >
-                Delete list
-              </div>
+
+              {owner && (
+                <div
+                  onClick={deleteListDialog.handleClickOpen}
+                  className={cn(
+                    Styles.istHeaderActions__listHeaderAction,
+                    Styles.listHeaderAction,
+                    Styles.listHeaderAction_red
+                  )}
+                >
+                  Delete list
+                </div>
+              )}
             </>
           )}
         </div>
-        {edit && (
+        {owner && (
           <div className="list-header-shared-block">
             <ShareIcon className="list-header-share-btn blue" />
             <div

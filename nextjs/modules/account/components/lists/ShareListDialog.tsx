@@ -17,7 +17,7 @@ export const ShareListDialog: React.FC<IProps> = (props) => {
       title={"Share list with others"}
       onClose={handleClose}
     >
-      <ShareList onClose={handleClose} cache={list.cache_url} />
+      <ShareList onClose={handleClose} list={list} />
     </BootstrapDialogHOC>
   );
 };

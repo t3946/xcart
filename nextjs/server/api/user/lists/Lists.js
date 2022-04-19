@@ -1,58 +1,18 @@
 const app = require("express")();
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
-const { encrypt, decrypt } = require("../../../utils/aes256ctrEncrypt");
 const canEditList = require("./utils/canEditList");
+const getListsById = require("./utils/getListsById");
 const apiItem = require("./Item");
 const apiIdea = require("./Idea");
+const apiInvite = require("./Invite");
 
 app.use("/item", apiItem);
 app.use("/idea", apiIdea);
-
-async function getListsById(listId) {
-  return await prisma.account_product_lists.findFirst({
-    where: {
-      product_list_id: listId,
-    },
-    include: {
-      addresses: true,
-      owner: {
-        select: {
-          user_id: true,
-          name: true,
-          avatar_image: true,
-        },
-      },
-      items: {
-        where: {
-          deleted: null,
-        },
-        orderBy: {
-          order_by: "asc",
-        },
-        include: {
-          idea: true,
-          product: true,
-        },
-      },
-      roles: {
-        select: {
-          role: true,
-          user: {
-            select: {
-              user_id: true,
-              public_name: true,
-              name: true,
-            },
-          },
-        },
-      },
-    },
-  });
-}
+app.use("/invite", apiInvite);
 
 app.post("/get", async (req, res) => {
-  const list = await getListsById(req.body.product_list_id);
+  const list = await getListsById(prisma, req.body.product_list_id);
 
   res.json(list);
 });
@@ -60,7 +20,18 @@ app.post("/get", async (req, res) => {
 app.get("/get-all", async (req, res) => {
   const lists = await prisma.account_product_lists.findMany({
     where: {
-      user_id: req.user.userId,
+      OR: [
+        {
+          users: {
+            some: {
+              user_id: req.user.userId,
+            },
+          },
+        },
+        {
+          user_id: req.user.userId,
+        },
+      ],
     },
     include: {
       addresses: true,
@@ -83,7 +54,7 @@ app.get("/get-all", async (req, res) => {
           product: true,
         },
       },
-      roles: {
+      users: {
         select: {
           role: true,
           user: {
@@ -101,51 +72,6 @@ app.get("/get-all", async (req, res) => {
   res.json(lists);
 });
 
-app.get("/get-by-cache/:cache", async (req, res) => {
-  const list = await prisma.account_product_lists.findFirst({
-    where: {
-      user_id: req.user.userId,
-      cache_url: req.params.cache,
-    },
-    include: {
-      addresses: true,
-      owner: {
-        select: {
-          user_id: true,
-          name: true,
-          avatar_image: true,
-        },
-      },
-      items: {
-        where: {
-          deleted: null,
-        },
-        orderBy: {
-          order_by: "asc",
-        },
-        include: {
-          idea: true,
-          product: true,
-        },
-      },
-      roles: {
-        select: {
-          role: true,
-          user: {
-            select: {
-              user_id: true,
-              public_name: true,
-              name: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  res.json(list);
-});
-
 app.post("/create", async (req, res) => {
   const newList = await prisma.account_product_lists.create({
     data: {
@@ -154,7 +80,7 @@ app.post("/create", async (req, res) => {
     },
   });
 
-  const list = await getListsById(newList.product_list_id);
+  const list = await getListsById(prisma, newList.product_list_id);
 
   res.json(list);
 });
@@ -213,21 +139,6 @@ app.post("/delete", async (req, res) => {
   });
 
   res.sendStatus(200);
-});
-
-app.post("/get-invite-url", async (req, res) => {
-  const { list_id, invite_user_id, role } = req.body;
-  const data = [list_id, invite_user_id, role].join(",");
-  const { iv, content } = encrypt(data);
-  const url = `/api-client/user/lists/use-invite/${iv}/${content}`;
-
-  res.json({ url });
-});
-
-app.get("/use-invite/:iv/:content", async (req, res) => {
-  const data = decrypt(req.params).split("/");
-
-  res.json(data);
 });
 
 app.post("/reorder-product", async (req, res) => {
@@ -344,6 +255,29 @@ app.post("/add-idea", async (req, res) => {
       },
     });
   }
+
+  res.sendStatus(200);
+});
+
+app.post("/change-user-role", async (req, res) => {
+  const { user_id, product_list_id, role } = req.body;
+  const list = await getListsById(prisma, product_list_id);
+
+  // can't edit list
+  if (parseInt(list.user_id) !== req.user.userId) {
+    res.sendStatus(403);
+    return;
+  }
+
+  await prisma.product_list_user_roles.updateMany({
+    where: {
+      user_id,
+      product_list_id,
+    },
+    data: {
+      role,
+    },
+  });
 
   res.sendStatus(200);
 });
