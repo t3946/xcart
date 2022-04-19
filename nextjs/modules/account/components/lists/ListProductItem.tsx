@@ -106,6 +106,14 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     },
   ];
 
+  function itemAddedTemplate(className) {
+    return (
+      <div className={cn(Styles.productInfoDate, className)}>
+        Item added {moment(listItem.add_date).utc().format("MMM DD, Y")}
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -208,21 +216,20 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 Add comment, quantity & priority
               </div>
             ))}
+          {itemAddedTemplate(["mt-18", "mb-12", "d-md-none"])}
         </div>
       </div>
 
       <div>
-        <div
-          className={cn(
-            "text-center",
-            "text-md-end",
-            Styles.productInfoDate,
-            "mb-lg-10",
-            "mb-12"
-          )}
-        >
-          Item added {moment(listItem.add_date).utc().format("MMM DD, Y")}
-        </div>
+        {itemAddedTemplate([
+          "text-center",
+          "text-md-end",
+          "mb-lg-10",
+          "mb-12",
+          "d-none",
+          "d-md-block",
+        ])}
+
         {!product.outOfStock && (
           <ListProductItemBtns
             list={list}
