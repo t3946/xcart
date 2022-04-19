@@ -3,7 +3,6 @@
 namespace Modules\Dashboard\Controllers;
 
 use Exception;
-use Xcart\App\QueryBuilder\Expression;
 use Modules\Core\Models\GlobalConfigModel;
 use Modules\Dashboard\Helpers\SearchHelper;
 use Modules\Dashboard\Models\DashboardFilter;
@@ -24,6 +23,7 @@ use Xcart\App\Controller\PrototypeAdminController;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 use Xcart\App\Orm\ModelInterface;
+use Xcart\App\QueryBuilder\Expression;
 use Xcart\App\Store\BaseStore;
 
 class DashboardController extends PrototypeAdminController
@@ -229,7 +229,7 @@ class DashboardController extends PrototypeAdminController
     public function subscription($id): void
     {
         $user = Xcart::app()->user;
-        $super_user = ['pavel','sergey2', 'roman_n', 'zouhair'];
+        $super_user = ['pavel','sergey2', 'roman_n', 'zouhair', 'dariap'];
         $is_super_user = in_array($user->login, $super_user, true);
         $class = UserModel::classNameShort();
 
