@@ -69,23 +69,31 @@ export const ListHeader: React.FC<IProps> = (props) => {
     {
       label: "Manage list",
       onClick: () =>
-        router.push(`/shopping-lists/action-list/manage-list/${list.cacheUrl}`),
+        router.push(
+          `/shopping-lists/action-list/manage-list/${list.product_list_id}`
+        ),
     },
     {
       label: "Add idea",
       onClick: () =>
-        router.push(`/shopping-lists/action-list/add-idea/${list.cacheUrl}`),
+        router.push(
+          `/shopping-lists/action-list/add-idea/${list.product_list_id}`
+        ),
     },
     {
       label: "Share list with others",
       onClick: () =>
-        router.push(`/shopping-lists/action-list/share-list/${list.cacheUrl}`),
+        router.push(
+          `/shopping-lists/action-list/share-list/${list.product_list_id}`
+        ),
     },
   ];
   const mobileItemDelete = {
     label: "Delete list",
     onClick: () =>
-      router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
+      router.push(
+        `/shopping-lists/action-list/delete-list/${list.product_list_id}`
+      ),
   };
   const listType = list.users.length === 0 ? "private" : "shared";
 

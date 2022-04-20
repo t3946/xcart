@@ -3,13 +3,15 @@ import { useRouter } from "next/router";
 import { List } from "@modules/account/ts/types/list.type";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Link from "next/link";
+import cn from "classnames";
 
 export const ListMobileMenu: React.FC = () => {
   const lists: List[] = useSelectorAccount((state) => state.lists.lists);
   const router = useRouter();
 
-  const redirectToList = (hash: string) => {
-    router.push(`/shopping-lists/${hash}`);
+  const redirectToList = (id: string) => {
+    router.push(`/shopping-lists/${id}`);
   };
 
   function getListType(list) {
@@ -34,20 +36,24 @@ export const ListMobileMenu: React.FC = () => {
         </div>
       </div>
       {lists.map((list) => (
-        <div
+        <Link
+          href={`/shopping-lists/${list.product_list_id}`}
           key={list.product_list_id}
-          onClick={() => redirectToList(list.product_list_id)}
-          className={
-            "list-mobile-menu-item d-flex justify-content-between alight-center"
-          }
         >
-          <div className="list-mobile-menu-item-name">{list.name}</div>
-          <img
-            src={`/static/frontend/images/icons/account/list-${getListType(
-              list
-            )}.svg`}
-          />
-        </div>
+          <a
+            className={
+              cn("list-mobile-menu-item", "d-flex", "justify-content-between", "alight-center", "text-decoration-none")
+            }
+          >
+            <div className="list-mobile-menu-item-name">{list.name}</div>
+            <img
+              src={`/static/frontend/images/icons/account/list-${getListType(
+                list
+              )}.svg`}
+              alt={""}
+            />
+          </a>
+        </Link>
       ))}
     </div>
   );

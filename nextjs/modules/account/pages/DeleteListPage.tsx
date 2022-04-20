@@ -3,33 +3,32 @@ import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import { useDispatch } from "react-redux";
 import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import { useRouter } from "next/router";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { List } from "@modules/account/ts/types/list.type";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 
-export const DeleteListPage: React.FC = () => {
+interface IProps {
+  list: any;
+}
+
+export const DeleteListPage: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { cache } = router.query;
   const snackbar = useSnackbar();
+  const { list } = props;
 
-  const lists: List[] = useSelectorAccount((state) => state.lists.lists);
-
-  const list = lists.find((e) => e.cacheUrl === cache);
-
-  const onCancelClick = () => {
+  function onCancelClick() {
     router.push(`/shopping-lists/${cache}`);
-  };
+  }
 
-  const onRequestEnd = () => {
+  function onRequestEnd() {
     snackbar.show(`${list.name} list deleted successfully`);
     router.push("/shopping-lists");
-  };
+  }
 
-  const handleDeleteList = () => {
+  function handleDeleteList() {
     dispatch(deleteList(list.productListId, onRequestEnd));
-  };
+  }
 
   return (
     <div>

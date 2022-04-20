@@ -100,10 +100,7 @@ const ListsPage: React.FC<IProps> = (props) => {
         title={"Create a new idea"}
         onClose={createIdeaDialog.handleClose}
       >
-        <AddIdea
-          listHash={list.cache_url}
-          onCancelBtnClick={createIdeaDialog.handleClose}
-        />
+        <AddIdea list={list} onCancelBtnClick={createIdeaDialog.handleClose} />
       </BootstrapDialogHOC>
 
       {addToListIdea()}

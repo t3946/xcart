@@ -5,31 +5,22 @@ import Feedback from "@modules/ui/forms/Feedback";
 import { createIdea } from "@redux/actions/account-actions/ListsActions";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useSnackbar from "@modules/account/hooks/useSnackbar";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import { ListItem } from "@modules/account/ts/types/list.type";
 
-interface AddIdeaProps {
+interface IProps {
   onCancelBtnClick: () => void;
-  listHash: string;
+  list: string;
 }
 
-export const AddIdea: React.FC<AddIdeaProps> = ({
-  onCancelBtnClick,
-  listHash,
-}) => {
-  useEffect(() => {
-    ref.current.focus();
-  }, []);
-
-  const ref = useRef<HTMLInputElement>();
+export const AddIdea: React.FC<IProps> = (props) => {
+  const { onCancelBtnClick, list } = props;
+  const inputRef = useRef<HTMLInputElement>();
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
-  const { loading, lists } = useSelector((state) => state.lists);
-  const listEdit = lists.find((e) => e.cache_url === listHash);
 
-  const handleSubmit = () => {
+  function handleSubmit() {
     if (!formik.values.name.trim()) {
       formik.setErrors({ name: "Required field" });
       return;
@@ -42,13 +33,13 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
     dispatch(
       createIdea({
         data: {
-          product_list_id: listEdit.product_list_id,
+          product_list_id: list.product_list_id,
           name: formik.values.name,
         },
         success: onAddingEnd,
       })
     );
-  };
+  }
 
   function onAddingEnd() {
     onCancelBtnClick();
@@ -62,6 +53,11 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
     }),
     onSubmit: handleSubmit,
   });
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   return (
     <div>
       <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
@@ -69,7 +65,7 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
           <Label>Idea name</Label>
           <div>
             <Input
-              ref={ref}
+              ref={inputRef}
               name="name"
               value={formik.values.name}
               onChange={formik.handleChange}
@@ -83,12 +79,12 @@ export const AddIdea: React.FC<AddIdeaProps> = ({
         </div>
 
         <p className={"my-4"}>Save an idea. Shop for it later.</p>
+
         <SubmitCancelButtonsGroup
           submitText="save"
           cancelText="Cancel"
           onCancel={onCancelBtnClick}
           groupAdvancedClasses={"manage-list-btns"}
-          disabled={loading}
         />
       </form>
     </div>
