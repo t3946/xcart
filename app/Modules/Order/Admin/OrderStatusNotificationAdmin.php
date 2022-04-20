@@ -8,7 +8,6 @@ use Modules\Order\Forms\OrderStatusNotificationForm;
 use Modules\Order\Models\OrderStatusNotificationModel;
 use Xcart\App\Form\Form;
 use Xcart\App\Form\ModelForm;
-use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\Model;
 
 class OrderStatusNotificationAdmin extends Admin
@@ -30,7 +29,7 @@ class OrderStatusNotificationAdmin extends Admin
     {
         return [
             'customer_subject',
-            'code',
+            'status',
             'enabled',
             'lang'
         ];
@@ -47,7 +46,7 @@ class OrderStatusNotificationAdmin extends Admin
 
     public static function getName(): string
     {
-        return 'Order Status';
+        return 'Order Status Notifications options';
     }
 
     public function getListItemActions(): array

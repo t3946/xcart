@@ -6,7 +6,7 @@ use Modules\Editor\Fields\EditorField;
 use Modules\Order\Models\OrderStatusNotificationModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
-use Xcart\App\Form\Fields\Select2Field;
+use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\ModelForm;
 
 class OrderStatusNotificationForm extends ModelForm
@@ -19,8 +19,8 @@ class OrderStatusNotificationForm extends ModelForm
     public function getFields(): array
     {
         return [
-            'code' => [
-                'class' => CharField::class,
+            'status' => [
+                'class' => DropDownField::class,
             ],
             'customer_subject' => [
                 'class' => CharField::class,
@@ -44,7 +44,7 @@ class OrderStatusNotificationForm extends ModelForm
                 'class' => CheckboxField::class,
             ],
             'lang' => [
-                'class' => Select2Field::class,
+                'class' => DropDownField::class,
                 'html' => [
                     'style' => 'width: 100%'
                 ]
