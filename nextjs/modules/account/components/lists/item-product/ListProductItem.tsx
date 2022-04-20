@@ -151,11 +151,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
               {product.product}
-              {product.product}
-              {product.product}
-              {product.product}
-              {product.product}
-              {product.product}
             </a>
             {edit && (
               <img

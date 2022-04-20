@@ -91,17 +91,17 @@ function* editUserRights(action: AnyAction): Generator {
 }
 
 function* addProductOnList(action: AnyAction): Generator {
-  const product = yield axiosInstance
+  console.log("addProductOnList", {});
+  yield axiosInstance
     .post(
-      `/api/account/lists/add-product-on-list`,
-      JSON.stringify({
-        listId: action.listId,
-        productId: action?.productId,
-        name: action.name,
-      })
-    )
-    .then((response) => response.data);
-  yield action?.callback(product);
+      "/api-client/user/lists/add-product",
+      {
+        "product_id": action?.productId,
+        "product_list_id": action.listId
+      }
+    );
+
+  yield action?.callback();
 }
 
 function* editIdeaName(action: AnyAction): Generator {

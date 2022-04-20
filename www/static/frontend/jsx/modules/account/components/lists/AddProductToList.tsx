@@ -15,9 +15,9 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
   isAlreadyInList,
   product,
 }) => {
-  const viewYourList = () => {
-    window.location.assign(`/account/shopping-lists/${info.cacheUrl}`);
-  };
+  function viewYourList() {
+    window.location.assign(`/account/shopping-lists/${info.product_list_id}`);
+  }
 
   const text = isAlreadyInList ? "This item was already in" : "1 item added to";
 
