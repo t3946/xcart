@@ -38,6 +38,7 @@ module.exports = async function getListsById(prisma, listId) {
               user_id: true,
               public_name: true,
               name: true,
+              avatar_image: true,
             },
           },
         },

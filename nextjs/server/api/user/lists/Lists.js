@@ -69,6 +69,7 @@ app.get("/get-all", async (req, res) => {
               user_id: true,
               public_name: true,
               name: true,
+              avatar_image: true,
             },
           },
         },
