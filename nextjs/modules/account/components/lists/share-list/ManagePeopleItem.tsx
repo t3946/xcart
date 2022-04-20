@@ -2,7 +2,6 @@ import React from "react";
 import { ShareListManagePeopleSelect } from "@modules/account/components/lists/ShareListManagePeopleSelect";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
@@ -21,7 +20,6 @@ export const ManagePeopleItem: React.FC<IProps> = (props) => {
   const { userListInfo, role, onClick, userDelete } = props;
   const user = useSelectorAccount((e) => e.user);
   const isYourAccount = userListInfo.user_id === user.user_id;
-  const breakpoint = useBreakpoint();
   const mobileMenuDialog = useDialog();
   const defaultAvatar =
     "/static/frontend/images/pages/account/default-avatar.svg";
@@ -35,6 +33,7 @@ export const ManagePeopleItem: React.FC<IProps> = (props) => {
         <img
           src={avatarImage}
           className="page-invitation-user-profile-avatar"
+          alt={""}
         />
         <div>
           <div>

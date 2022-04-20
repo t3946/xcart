@@ -19,9 +19,6 @@ interface IProps {
 export const InvitationPage: React.FC<IProps> = (props) => {
   const { list, role, iv, content } = props;
   const dispatch = useDispatch();
-
-  console.log("InvPa", { list, role, iv, content });
-
   const router = useRouter();
   const user = useSelectorAccount((state) => state.user);
 
