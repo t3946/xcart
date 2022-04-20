@@ -5,6 +5,7 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import * as React from "react";
+import ListMobileMenu from "@modules/account/components/lists/ListMobileMenu";
 
 const ShoppingLists: NextPage = () => {
   const { lists } = useSelectorAccount((state) => state.lists);
@@ -25,7 +26,13 @@ const ShoppingLists: NextPage = () => {
 
   return (
     <PageTwoColumns bar={<ListsSidebarMenu list={currentList} />}>
-      {currentList && <ListsPage list={currentList} />}
+      <div className="d-md-none">
+        <ListMobileMenu />
+      </div>
+
+      <div className={"d-none d-md-block"}>
+        {currentList && <ListsPage list={currentList} />}
+      </div>
     </PageTwoColumns>
   );
 };

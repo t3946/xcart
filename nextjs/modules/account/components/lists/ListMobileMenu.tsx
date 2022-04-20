@@ -12,6 +12,10 @@ export const ListMobileMenu: React.FC = () => {
     router.push(`/shopping-lists/${hash}`);
   };
 
+  function getListType(list) {
+    return list.users.length ? "shared" : "private";
+  }
+
   return (
     <div>
       <MobileMenuBackBtn redirectUrl={`/dashboard`} label={"account"} />
@@ -29,20 +33,24 @@ export const ListMobileMenu: React.FC = () => {
           create a list
         </div>
       </div>
-      {lists.map((e) => (
+      {lists.map((list) => (
         <div
-          key={e.cacheUrl}
-          onClick={() => redirectToList(e.cacheUrl)}
+          key={list.product_list_id}
+          onClick={() => redirectToList(list.product_list_id)}
           className={
             "list-mobile-menu-item d-flex justify-content-between alight-center"
           }
         >
-          <div className="list-mobile-menu-item-name">{e.name}</div>
+          <div className="list-mobile-menu-item-name">{list.name}</div>
           <img
-            src={`/static/frontend/images/icons/account/list-${e.listType}.svg`}
+            src={`/static/frontend/images/icons/account/list-${getListType(
+              list
+            )}.svg`}
           />
         </div>
       ))}
     </div>
   );
 };
+
+export default ListMobileMenu;
