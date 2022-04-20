@@ -38,7 +38,7 @@
                         {if $file->isFileExists()}
                             {include 'product/tabs/__option.tpl'
                                 title=$file->description
-                                value="<div class='row margin-0'><div class='columns option-file-icon shrink'><img class='icon' src='{$file->getFormatIconUrl()}'></img></div><div class='columns padding-0 option-file_description'><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
+                                value="<div class='d-flex flex-row margin-0'><div class='option-file-icon'><img class='icon' src='{$file->getFormatIconUrl()}'></img></div><div class='padding-0 option-file_description'><a href='{$file->getAbsoluteUrl()}'>{$file->getGoodFileName()}<br>({$file->getFileSizeMB()})</a></div></div>"
                             }
                         {/if}
                     {/foreach}
