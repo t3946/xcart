@@ -86,3 +86,8 @@ export const manageList = (payload: any): any => ({
   type: "MANAGE_LIST",
   payload,
 });
+
+//items
+export const resetTypeAction = (): any => ({
+  type: "PRODUCT_LISTS_RESET_TYPE_ACTION",
+});

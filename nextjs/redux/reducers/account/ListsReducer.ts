@@ -5,7 +5,6 @@ import { manageList } from "@modules/account/utils/edit-store-funcs/lists/manage
 
 const initialValue: AccountListsStore = {
   lists: [],
-  deletedItems: [],
 };
 
 function getListByItemId(state, list_item_id) {
@@ -234,7 +233,7 @@ const accountListReducer = (
 
       return { ...state };
 
-    //lists
+    //items
     case "PRODUCT_LISTS_DELETE_ITEM": {
       const list = getListByItemId(state, action.payload.data.list_item_id);
 
@@ -251,8 +250,24 @@ const accountListReducer = (
           };
         }
       }
-      // typeAction?.type = "delete";
-      // state.deletedItems.push(action.payload.data.list_item_id);
+
+      return { ...state };
+    }
+    case "PRODUCT_LISTS_RESET_TYPE_ACTION": {
+      for (const list of state.lists) {
+        const newItems = [];
+
+        for (const item of list.items) {
+          if (item.typeAction) {
+            continue;
+          }
+
+          newItems.push(item);
+        }
+
+        list.items = newItems;
+      }
+
       return { ...state };
     }
 
