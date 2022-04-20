@@ -36,8 +36,6 @@ export const MobileMenu: React.FC<IProps> = function (props) {
     );
   }
 
-  console.log("list, item", { list, item });
-
   const items = [
     {
       label: "Add comment, quantity & priority",

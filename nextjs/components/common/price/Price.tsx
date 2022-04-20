@@ -41,8 +41,6 @@ export const Price: React.FC<IProps> = function (props) {
     return <span className={cn(classes?.number)}>{priceStr}</span>;
   }
 
-  console.log("Price", {});
-
   function symbolPrefixTemplate() {
     if (!currency.symbol_prefix) {
       return null;
