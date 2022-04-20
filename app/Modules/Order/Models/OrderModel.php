@@ -14,10 +14,10 @@ use Modules\Core\Models\StateModel;
 use Modules\Forms\Models\EmailEntityModel;
 use Modules\Forms\Models\EmailModel;
 use Modules\GeoIp\Models\GeoipLitecityLocationModel;
+use Modules\Goods\Models\ProductModel;
 use Modules\Order\Helpers\FraudCheckFAHelper;
 use Modules\Order\Helpers\OrderEventHelper;
 use Modules\Order\Helpers\OrderHelper;
-use Modules\Goods\Models\ProductModel;
 use Modules\Payment\Models\PaymentMethodModel;
 use Modules\Shipping\Models\ShippingModel;
 use Modules\Sites\Models\SiteModel;
@@ -825,10 +825,30 @@ class OrderModel extends Model
         $this->save();
     }
 
-    public
-    function getNotification(string $status = null): ?OrderStatusNotificationModel
+    public function getNotification(string $status = null): ?OrderStatusNotificationModel
     {
-        $site_model = $this->site;
-        return OrderStatusNotificationModel::objects()->get(['lang_id' => $site_model->lang->lang_id, 'code' => $status ?? $this->cb_status]);
+        return OrderStatusNotificationModel::objects()->get(['lang_id' => $this->site->lang->lang_id, 'code' => $status ?? $this->cb_status]);
+    }
+
+    public function getRequiredShippingCharge(): float
+    {
+        $result = 0.00;
+
+        foreach ($this->groups as $group) {
+            $result += $group->getRequiredShippingCharge();
+        }
+
+        return $result;
+    }
+
+    public function getAdditionalShippingCharge(): float
+    {
+        $result = 0.00;
+
+        foreach ($this->groups as $group) {
+            $result += $group->getAdditionalShippingCharge();
+        }
+
+        return $result;
     }
 }

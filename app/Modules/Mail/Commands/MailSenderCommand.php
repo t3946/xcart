@@ -33,6 +33,20 @@ class MailSenderCommand extends Command
 
                             $action = isset($options['action']) ? ['action' => $options['action']] : ['action__isnull' => true];
 
+                            $type = $decision->type;
+
+                            switch ($type->slug) {
+                                case 'questions-ltl-freight-shipment':
+                                    $options['commercialresidential'] = $options['deliveryType'];
+                                    $options['curbsideinside'] = $options['deliveryOutfit'];
+                                    $options['liftgate'] = $options['requireLiftGate'] ?? '';
+                                    $options['ltl_phone'] = "{$options['phoneCode']} {$options['phone']}";
+                                    if (!empty($options['phone_ext'])) {
+                                        $options['ltl_phone'] .= " ext. {$options['phone_ext']}";
+                                    }
+                                    break;
+                            }
+
                             $decision_template = $decision->templates->filter($action)->limit(1)->get();
 
                             if ($decision_template === null) {
