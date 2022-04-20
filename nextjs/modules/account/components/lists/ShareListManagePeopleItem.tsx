@@ -5,7 +5,7 @@ import { viewUserListRight } from "@modules/account/utils/view-user-list-right";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForList } from "@modules/account/components/lists/mobile-menu/MobileMenuForList";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import getStoreUrl from "@utils/getStoreUrl";

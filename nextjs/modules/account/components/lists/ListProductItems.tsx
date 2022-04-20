@@ -1,6 +1,6 @@
 import React from "react";
 import { NoItemsBlock } from "@modules/account/components/lists/NoItemsBlock";
-import { ListProductItem } from "@modules/account/components/lists/ListProductItem";
+import { ListProductItem } from "@modules/account/components/lists/item-product/ListProductItem";
 import {
   DragDropContext,
   Droppable,

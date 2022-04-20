@@ -1,0 +1,19 @@
+@import "styles/utils/Utils.module";
+
+.container {
+  padding: pxToRem(12) pxToRem(20);
+  height: pxToRem(72);
+}
+
+.columnLeft {
+  margin: 0 pxToRem(16) 0 0;
+  width: pxToRem(42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.columnRight {
+  display: flex;
+  align-items: center;
+}

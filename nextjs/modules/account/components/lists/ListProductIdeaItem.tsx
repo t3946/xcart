@@ -8,7 +8,7 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { EditComment } from "@modules/account/components/lists/EditComment";
 import { useDialog } from "../../hooks/useDialog";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForList } from "@modules/account/components/lists/mobile-menu/MobileMenuForList";
 import { useRouter } from "next/router";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";

@@ -6,7 +6,7 @@ import { ManageList } from "@modules/account/components/lists/ManageList";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForList } from "@modules/account/components/lists/mobile-menu/MobileMenuForList";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
 import { useSnackbar } from "@modules/account/hooks/useSnackbar";
@@ -244,6 +244,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
       >
         <ManageList list={list} onCancelClick={manageListDialog.handleClose} />
       </BootstrapDialogHOC>
+
       <BootstrapDialogHOC
         show={deleteListDialog.open}
         title={"Confirm delete list"}
@@ -255,6 +256,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
           onCancelClick={deleteListDialog.handleClose}
         />
       </BootstrapDialogHOC>
+
       <MobileMenuForList
         items={
           isShoppingList

@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
 import RatingStars from "@modules/shared/components/ratings/RatingStars";
 import { Tooltip } from "@modules/account/components/shared/Tooltip";
-import { ListProductItemBtns } from "./ListProductItemBtns";
+import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
 import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
 import { EditComment } from "@modules/account/components/lists/EditComment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@modules/account/hooks/useDialog";
-import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
@@ -22,7 +21,7 @@ import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
 import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
-import Styles from "@modules/account/components/lists/ListProductItem.module.scss";
+import Styles from "@modules/account/components/lists/item-product/ListProductItem.module.scss";
 import {
   getAction as cartGetAction,
   setAction as cartSetAction,
@@ -30,6 +29,7 @@ import {
 import getStoreUrl from "@utils/getStoreUrl";
 import Price from "@components/common/price/Price";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
@@ -81,33 +81,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       );
     }
   };
-  const mobileDialogItems: MobileMenuForListItem[] = [
-    {
-      image: listItem.image,
-      label: product.product,
-    },
-    {
-      label: "Add comment, quantity & priority",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${listItem.list_item_id}`
-        ),
-    },
-    {
-      label: "Move",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${listItem.list_item_id}`
-        ),
-    },
-    {
-      label: "Delete",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${listItem.list_item_id}`
-        ),
-    },
-  ];
 
   function itemAddedTemplate(className) {
     return (
@@ -326,11 +299,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
           deleteType={"product"}
         />
       </BootstrapDialogHOC>
-      <MobileMenuForList
-        items={mobileDialogItems}
-        dialogOpen={mobileMenuDialog.open}
-        dialogOnClose={mobileMenuDialog.handleClose}
-      />
+
+      <MobileMenu item={listItem} list={listInfo} dialog={mobileMenuDialog} />
     </div>
   );
 };
