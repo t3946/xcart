@@ -15,9 +15,6 @@ module.exports = async function getListsById(prisma, listId) {
         },
       },
       items: {
-        where: {
-          deleted: null,
-        },
         orderBy: {
           order_by: "asc",
         },

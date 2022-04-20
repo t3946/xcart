@@ -106,7 +106,6 @@ model account_list_items {
   needs           Int?                         @db.UnsignedInt
   has             Int?                         @db.UnsignedInt
   add_date        DateTime                     @default(now()) @db.Timestamp(0)
-  deleted         DateTime?                    @db.DateTime(0)
   idea            account_list_ideas?          @relation(fields: [list_idea_id], references: [list_idea_id], onDelete: Cascade, map: "account_list_items_account_list_ideas_list_idea_id_fk")
   product         xcart_products?              @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "account_list_items_xcart_products_productid_fk")
   list            account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "account_list_items_account_product_lists_product_list_id_fk")

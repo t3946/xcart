@@ -13,9 +13,7 @@ export const DeleteProductPlaceholder: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
 
   function undoDelete() {
-    dispatch(
-      undoDeleteProduct({ data: { list_item_id: listItem.list_item_id } })
-    );
+    dispatch(undoDeleteProduct({ data: { listItem: listItem } }));
   }
 
   return (

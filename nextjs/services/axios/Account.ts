@@ -53,11 +53,13 @@ const getInitialState = async function (req: any) {
     .then((res) => {
       initialState.lists = {
         lists: res.data,
+        deletedItems: [],
       };
     })
     .catch(() => {
       initialState.lists = {
         lists: [],
+        deletedItems: [],
       };
     });
 

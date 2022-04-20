@@ -46,9 +46,6 @@ app.get("/get-all", async (req, res) => {
         },
       },
       items: {
-        where: {
-          deleted: null,
-        },
         orderBy: {
           order_by: "asc",
         },

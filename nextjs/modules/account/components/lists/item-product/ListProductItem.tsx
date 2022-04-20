@@ -7,7 +7,6 @@ import { ListProductItemComment } from "@modules/account/components/lists/ListPr
 import { EditComment } from "@modules/account/components/lists/EditComment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@modules/account/hooks/useDialog";
-import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "@redux/reducers/appCartReducer";
@@ -15,7 +14,6 @@ import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { CountGroup } from "@modules/ui/CountGroup";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
 import cn from "classnames";
 import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
@@ -46,7 +44,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const editCommentDialog = useDialog();
   const dispatch = useDispatch();
   const product: ListProductInfo = listItem.product;
-  const router = useRouter();
   const deleteProductDialog = useDialog();
   const mobileMenuDialog = useDialog();
   const [disabledAddToCart, setDisabledAddToCart] = React.useState(false);
