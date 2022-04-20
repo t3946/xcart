@@ -47,6 +47,7 @@ app.post("/edit", checkRights, async (req, res) => {
   res.sendStatus(200);
 });
 
+// todo: что за метод не знаю
 // обычное удаление записи из таблицы
 app.post("/delete-2", checkRights, async (req, res) => {
   const { list_item_id } = req.body;

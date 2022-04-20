@@ -1,7 +1,10 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { ShareListManagePeopleItem } from "@modules/account/components/lists/ShareListManagePeopleItem";
-import { changeUserRole } from "@redux/actions/account-actions/ListsActions";
+import ManagePeopleItem from "@modules/account/components/lists/share-list/ManagePeopleItem";
+import {
+  roleUpdate,
+  roleDelete,
+} from "@redux/actions/account-actions/ListsActions";
 import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
 
 interface IProps {
@@ -12,9 +15,20 @@ export const ShareListManagePeople: React.FC<IProps> = (props) => {
   const { list } = props;
   const dispatch = useDispatch();
 
-  function handleSelectItemCLick(role: UserRightsActionsEnum, user_id: string) {
+  function userDelete(user_id: number) {
     dispatch(
-      changeUserRole({
+      roleDelete({
+        data: {
+          product_list_id: list.product_list_id,
+          user_id,
+        },
+      })
+    );
+  }
+
+  function handleSelectItemClick(role: UserRightsActionsEnum, user_id: string) {
+    dispatch(
+      roleUpdate({
         data: {
           product_list_id: list.product_list_id,
           user_id,
@@ -27,14 +41,17 @@ export const ShareListManagePeople: React.FC<IProps> = (props) => {
   return (
     <React.Fragment>
       <div className="share-list-label">Manage people</div>
-      <ShareListManagePeopleItem
-        onClick={handleSelectItemCLick}
+
+      <ManagePeopleItem
+        onClick={handleSelectItemClick}
         userListInfo={list.owner}
         role={"owner"}
       />
+
       {list.users.map((item, i) => (
-        <ShareListManagePeopleItem
-          onClick={handleSelectItemCLick}
+        <ManagePeopleItem
+          onClick={handleSelectItemClick}
+          userDelete={userDelete}
           userListInfo={item.user}
           role={item.role}
           key={`ShareListManagePeopleItem-${i}`}

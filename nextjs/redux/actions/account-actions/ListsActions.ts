@@ -38,8 +38,14 @@ export const inviteUse = (payload: any): any => ({
   payload,
 });
 
-export const changeUserRole = (payload: any): any => ({
-  type: "PRODUCT_LISTS_CHANGE_USER_ROLE",
+//role
+export const roleUpdate = (payload: any): any => ({
+  type: "PRODUCT_LISTS_ROLE_UPDATE",
+  payload,
+});
+
+export const roleDelete = (payload: any): any => ({
+  type: "PRODUCT_LISTS_ROLE_DELETE",
   payload,
 });
 
@@ -80,4 +86,3 @@ export const manageList = (payload: any): any => ({
   type: "MANAGE_LIST",
   payload,
 });
-

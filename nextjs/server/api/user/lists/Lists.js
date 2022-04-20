@@ -5,11 +5,13 @@ const canEditList = require("./utils/canEditList");
 const getListsById = require("./utils/getListsById");
 const apiItem = require("./Item");
 const apiIdea = require("./Idea");
+const apiRole = require("./Role");
 const apiInvite = require("./Invite");
 const { normalize } = require("../../../utils/product");
 
 app.use("/item", apiItem);
 app.use("/idea", apiIdea);
+app.use("/role", apiRole);
 app.use("/invite", apiInvite);
 
 app.post("/get", async (req, res) => {
@@ -268,29 +270,6 @@ app.post("/add-idea", async (req, res) => {
       },
     });
   }
-
-  res.sendStatus(200);
-});
-
-app.post("/change-user-role", async (req, res) => {
-  const { user_id, product_list_id, role } = req.body;
-  const list = await getListsById(prisma, product_list_id);
-
-  // can't edit list
-  if (parseInt(list.user_id) !== req.user.userId) {
-    res.sendStatus(403);
-    return;
-  }
-
-  await prisma.product_list_user_roles.updateMany({
-    where: {
-      user_id,
-      product_list_id,
-    },
-    data: {
-      role,
-    },
-  });
 
   res.sendStatus(200);
 });

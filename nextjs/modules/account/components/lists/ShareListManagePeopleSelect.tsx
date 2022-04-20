@@ -15,18 +15,19 @@ import StylesOption from "@modules/ui/forms/select/Option.module.scss";
 import StylesControl from "@modules/ui/forms/select/Control.module.scss";
 import Styles from "@modules/account/components/lists/ShareListManagePeopleSelect.module.scss";
 
-interface ShareListManagePeopleSelectProps {
+interface IProps {
   items: SelectValue<UserRightsActionsEnum, string>[];
   onClick: (value: SelectValue<UserRightsActionsEnum, string>) => void;
   value: SelectValue<UserRightsActionsEnum, string>;
   name: string;
 }
 
-export const ShareListManagePeopleSelect: React.FC<
-  ShareListManagePeopleSelectProps
-> = ({ items, onClick, value, name }) => {
+export const ShareListManagePeopleSelect: React.FC<IProps> = (props) => {
+  const { items, onClick, value, name } = props;
+
   return (
     <ReactSelect
+      instanceId={"select-role"}
       classes={{
         indicatorSeparator: "d-none",
         control: ["border-0", "cursor-pointer"],

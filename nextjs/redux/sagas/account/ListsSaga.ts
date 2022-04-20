@@ -1,13 +1,7 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
-import { ApiService } from "@modules/shared/services/api.service";
-import Store from "@redux/stores/Store";
 import { AnyAction } from "redux";
 import axios from "axios";
-import { List } from "@modules/account/ts/types/list.type";
-import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
-
-const api = new ApiService();
 
 function* getLists(): Generator {
   let lists;
@@ -81,12 +75,20 @@ function* inviteUse(action: AnyAction): Generator {
   callback();
 }
 
-function* changeUserRole(action: AnyAction): Generator {
+function* roleDelete(action: AnyAction): Generator {
   const { data } = action.payload;
 
-  yield axios.post("/api-client/user/lists/change-user-role", data);
+  yield axios.post("/api-client/user/lists/role/delete", data);
 
-  window.location.reload();
+  yield getLists();
+}
+
+function* roleUpdate(action: AnyAction): Generator {
+  const { data } = action.payload;
+
+  yield axios.post("/api-client/user/lists/role/update", data);
+
+  yield getLists();
 }
 
 function* editCommentProduct(action: AnyAction): Generator {
@@ -191,7 +193,10 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("PRODUCT_LISTS_INVITE_GENERATE", inviteGenerate);
   yield takeLatest("PRODUCT_LISTS_INVITE_USE", inviteUse);
 
+  //role
+  yield takeLatest("PRODUCT_LISTS_ROLE_UPDATE", roleUpdate);
+  yield takeLatest("PRODUCT_LISTS_ROLE_DELETE", roleDelete);
+
   //list
   yield takeLatest("PRODUCT_LISTS_DELETE_LIST", deleteList);
-  yield takeLatest("PRODUCT_LISTS_CHANGE_USER_ROLE", changeUserRole);
 }
