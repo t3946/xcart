@@ -255,7 +255,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             }}
             time={listItem.add_date}
             listId={listItem.product_list_id}
-            listItemId={listItem.list_item_id}
+            item={listItem}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}

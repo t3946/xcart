@@ -133,7 +133,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
         list={list}
         searchLink={getSearchLink()}
         handleDelete={deleteIdea}
-        listItemId={listItem.list_item_id}
+        item={listItem}
       />
       <MobileMenuForList
         items={mobileDialogItems}
