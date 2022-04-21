@@ -7,15 +7,15 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 import cn from "classnames";
-import Styles from "@modules/account/components/lists/ListProductItemComment.module.scss";
+import Styles from "@modules/account/components/lists/item/Comment.module.scss";
 
-interface Iprops {
+interface IProps {
   listItem: ListItem;
   list: List;
   onEditCommentClick: () => void;
 }
 
-export const ListProductItemComment: React.FC<Iprops> = (props) => {
+export const Comment: React.FC<IProps> = (props) => {
   const { listItem, list, onEditCommentClick } = props;
   const priority = priorityProductSelectValuesConst.find(
     (e) => e.value === listItem.priority
@@ -77,7 +77,7 @@ export const ListProductItemComment: React.FC<Iprops> = (props) => {
       </div>
       <div
         onClick={deleteCommentDialog.handleClickOpen}
-        className="list-product-item-comment-delete"
+        className={cn(Styles.comment__removeButton, "cursor-pointer", "d-flex")}
       >
         <svg
           width="26"
@@ -115,3 +115,5 @@ export const ListProductItemComment: React.FC<Iprops> = (props) => {
     </div>
   );
 };
+
+export default Comment;

@@ -3,11 +3,10 @@ import { ListItemMovableArea } from "@modules/account/components/lists/ListItemM
 import RatingStars from "@modules/shared/components/ratings/RatingStars";
 import { Tooltip } from "@modules/account/components/shared/Tooltip";
 import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
-import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
+import Comment from "@modules/account/components/lists/item/Comment";
 import { EditComment } from "@modules/account/components/lists/EditComment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@modules/account/hooks/useDialog";
-import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "@redux/reducers/appCartReducer";
@@ -15,7 +14,6 @@ import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { CountGroup } from "@modules/ui/CountGroup";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
 import cn from "classnames";
 import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
@@ -30,6 +28,9 @@ import getStoreUrl from "@utils/getStoreUrl";
 import Price from "@components/common/price/Price";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
+import StylesItem from "@modules/account/components/lists/item/Item.module.scss";
+import Image from "@modules/account/components/lists/item/Image";
+import AddDate from "@modules/account/components/lists/item/AddDate";
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
@@ -46,7 +47,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const editCommentDialog = useDialog();
   const dispatch = useDispatch();
   const product: ListProductInfo = listItem.product;
-  const router = useRouter();
   const deleteProductDialog = useDialog();
   const mobileMenuDialog = useDialog();
   const [disabledAddToCart, setDisabledAddToCart] = React.useState(false);
@@ -97,6 +97,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
           <Price
             currency={currency}
             price={product.price}
+            quantity={countProductsOnCart}
+            prices={product.pricings}
             classes={{ container: Styles.productInfoPrice }}
           />
 
@@ -139,22 +141,15 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
         )}
       </div>
 
-      <div className="product-list-item-info-content">
-        <img
-          className="product-list-item-image product-image"
-          src={getStoreUrl(listItem.product.images[0].path)}
-        />
+      <div className={cn("d-flex", "flex-grow-1")}>
+        <Image imgUrl={getStoreUrl(listItem.product.images[0].path)} />
+
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
             <a
-              href={`/product/${listItem.productId}/`}
+              href={`/product/${listItem.product.productid}/`}
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
-              {product.product}
-              {product.product}
-              {product.product}
-              {product.product}
-              {product.product}
               {product.product}
             </a>
             {edit && (
@@ -162,6 +157,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 onClick={mobileMenuDialog.handleClickOpen}
                 className="edit-idea-ellipsis"
                 src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+                alt={""}
               />
             )}
           </div>
@@ -174,7 +170,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                   <a className="d-none d-md-block">
                     <Chevron />
                   </a>
-                  <a className="lh-sm" href={`/product/${listItem.productId}/`}>
+                  <a
+                    className="lh-sm"
+                    href={`/product/${listItem.product.productid}/`}
+                  >
                     {ratings.rates.reduce(
                       (pv, cv) => pv + parseInt(cv.totalRates),
                       0
@@ -186,7 +185,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 <div className={Styles.rating}>
                   <OverallRating ratings={ratings} />
                   <div className="text-center mt-14">
-                    <a href={`/product/${listItem.productId}/`}>
+                    <a href={`/product/${listItem.product.productid}/`}>
                       See all customer reviews
                     </a>
                   </div>
@@ -199,7 +198,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
           {edit &&
             (listItem.comment ? (
-              <ListProductItemComment
+              <Comment
                 listItem={listItem}
                 list={list}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
@@ -207,7 +206,11 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className={cn("add-comment-text", "d-none", "d-inline-block")}
+                className={cn(
+                  "add-comment-text",
+                  "d-none",
+                  "d-md-inline-block"
+                )}
               >
                 Add comment, quantity & priority
               </div>
@@ -221,19 +224,25 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             }}
           />
 
-          {itemAddedTemplate(["mt-18", "d-md-none"])}
+          <AddDate
+            date={listItem.add_date}
+            className={["mt-18", "d-md-none"]}
+          />
         </div>
       </div>
 
       <div>
-        {itemAddedTemplate([
-          "text-center",
-          "text-md-end",
-          "mb-lg-10",
-          "mb-12",
-          "d-none",
-          "d-md-block",
-        ])}
+        <AddDate
+          date={listItem.add_date}
+          className={[
+            "text-center",
+            "text-md-end",
+            "mb-lg-10",
+            "mb-12",
+            "d-none",
+            "d-md-block",
+          ]}
+        />
 
         {!product.outOfStock && (
           <ListProductItemBtns
@@ -263,7 +272,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             }}
             time={listItem.add_date}
             listId={listItem.product_list_id}
-            listItemId={listItem.list_item_id}
+            item={listItem}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}
@@ -280,9 +289,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       >
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
-          listId={listId}
-          list_item_id={listItem.list_item_id}
-          info={listItem}
+          listItem={listItem}
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC

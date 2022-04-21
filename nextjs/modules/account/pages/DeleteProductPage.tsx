@@ -2,23 +2,22 @@ import React from "react";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { deleteItem } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
-import { List } from "@modules/account/ts/types/list.type";
 import { useRouter } from "next/router";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-export const DeleteProductPage: React.FC = () => {
+interface IProps {
+  list: any;
+  listItem: any;
+}
+
+export const DeleteProductPage: React.FC<IProps> = (props) => {
+  const { list, listItem } = props;
   const router = useRouter();
-  const { lists } = useSelectorAccount((state) => state.lists);
-  const { productListId, itemId, entityType } = router.query;
   const dispatch = useDispatch();
-  const list: List = lists.find(
-    (e: List) => e.productListId === Number(productListId)
-  );
 
   function deleteHandler() {
     dispatch(
       deleteItem({
-        data: { list_item_id: parseInt(itemId) },
+        data: { list_item_id: listItem.list_item_id },
       })
     );
 
@@ -35,7 +34,7 @@ export const DeleteProductPage: React.FC = () => {
       <ConfirmDelete
         onCancelClick={goToListPage}
         onDeleteClick={deleteHandler}
-        deleteType={entityType}
+        deleteType={listItem.product_type}
       />
     </div>
   );

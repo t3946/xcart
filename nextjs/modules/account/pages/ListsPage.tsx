@@ -12,6 +12,8 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
+import { resetTypeAction } from "@redux/actions/account-actions/ListsActions";
+import { useDispatch } from "react-redux";
 
 interface IProps {
   list: any;
@@ -23,6 +25,7 @@ const ListsPage: React.FC<IProps> = (props) => {
   const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
+  const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
 
   if (!user) {
@@ -69,6 +72,17 @@ const ListsPage: React.FC<IProps> = (props) => {
         </Button>
       </div>
     );
+  }
+
+  //clear removed and moved item placeholders
+  React.useEffect(() => {
+    return function () {
+      dispatch(resetTypeAction());
+    };
+  }, [list]);
+
+  if (!list) {
+    return null;
   }
 
   return (

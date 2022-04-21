@@ -166,13 +166,9 @@ const accountListReducer = (
 
       return { ...state };
 
-    // return {
-    //   ...state,
-    //   currentList: deleteProductList(state.currentList, action.list_item_id),
-    // };
-
     case "UNDO_DELETE_PRODUCT":
-      const list_item_id = action.payload.data.list_item_id;
+      console.log("UNDO_DELETE_PRODUCT", { action });
+      const list_item_id = action.payload.data.listItem.list_item_id;
       const list = getListByItemId(state, list_item_id);
 
       for (const item of list.items) {
@@ -185,6 +181,7 @@ const accountListReducer = (
       return {
         ...state,
       };
+
     case "SET_TRANSFER_PRODUCT": {
       const { product_list_id, list_item_id } = action;
       const fromList = getListByItemId(state, list_item_id);
@@ -208,7 +205,7 @@ const accountListReducer = (
       return manageList(state, product_list_id, data);
 
     case "PRODUCT_LISTS_DELETE_LIST":
-      console.log("PRODUCT_LISTS_DELETE_LIST", {action});
+      console.log("PRODUCT_LISTS_DELETE_LIST", { action });
       state.lists = state.lists?.filter(
         (list) => list.product_list_id != action.payload.data.product_list_id
       );
@@ -235,6 +232,45 @@ const accountListReducer = (
       state.lists = newLists;
 
       return { ...state };
+
+    //items
+    case "PRODUCT_LISTS_DELETE_ITEM": {
+      const list = getListByItemId(state, action.payload.data.list_item_id);
+
+      for (const item of list.items) {
+        if (item.list_item_id === action.payload.data.list_item_id) {
+          const productName =
+            item.product_type === "product"
+              ? item.product.product
+              : item.idea.name;
+
+          item.typeAction = {
+            type: "delete",
+            productName,
+          };
+        }
+      }
+
+      return { ...state };
+    }
+    case "PRODUCT_LISTS_RESET_TYPE_ACTION": {
+      for (const list of state.lists) {
+        const newItems = [];
+
+        for (const item of list.items) {
+          if (item.typeAction) {
+            continue;
+          }
+
+          newItems.push(item);
+        }
+
+        list.items = newItems;
+      }
+
+      return { ...state };
+    }
+
     default:
       return state;
   }

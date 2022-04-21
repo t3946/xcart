@@ -1,8 +1,10 @@
 @import "styles/utils/Utils.module";
 
-.editComment {
+.productInfoDate {
+  font-size: pxToRem(14);
+
   @include breakpoint(md) {
-    font-size: pxToRem(18);
+    font-size: pxToRem(16);
   }
 
   @include breakpoint(lg) {

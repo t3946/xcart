@@ -8,11 +8,13 @@ interface IProps {
     number?: any;
   };
   currency: Record<any, any>;
-  price: number;
+  price?: number;
+  prices?: Record<any, any>[];
+  quantity?: number;
 }
 
 export const Price: React.FC<IProps> = function (props) {
-  const { classes, currency, price } = props;
+  const { classes, currency, price, prices, quantity = 1 } = props;
 
   function prefixTemplate() {
     if (currency.after !== "N") {
@@ -30,15 +32,29 @@ export const Price: React.FC<IProps> = function (props) {
     return <span className={cn(classes?.symbol)}>{currency.symbol}</span>;
   }
 
-  function numberWithCommas(x: string) {
-    return x.replace(/\B(?=(\d{3})+(?!\d))/g, currency.thousands_separator);
+  function formatPrice(price: number) {
+    const priceStr = price.toFixed(currency.decimals);
+
+    return priceStr.replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      currency.thousands_separator
+    );
   }
 
   function numberTemplate() {
-    const priceFloat = price.toFixed(currency.decimals);
-    const priceStr = numberWithCommas(priceFloat);
+    let priceFormatted = null;
 
-    return <span className={cn(classes?.number)}>{priceStr}</span>;
+    if (prices && quantity) {
+      for (const priceData of prices) {
+        if (priceData.quantity <= quantity) {
+          priceFormatted = formatPrice(parseFloat(priceData.price));
+        }
+      }
+    } else if (price) {
+      priceFormatted = formatPrice(price);
+    }
+
+    return <span className={cn(classes?.number)}>{priceFormatted}</span>;
   }
 
   function symbolPrefixTemplate() {

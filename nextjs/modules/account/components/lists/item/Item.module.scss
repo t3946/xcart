@@ -1,0 +1,13 @@
+@import "styles/utils/Utils.module";
+
+.editComment {
+  font-size: pxToRem(14);
+
+  @include breakpoint(md) {
+    font-size: pxToRem(18);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(14);
+  }
+}

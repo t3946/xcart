@@ -17,7 +17,7 @@ interface IProps {
   edit: boolean;
   btnLabel: string;
   mainBtnType?: ETheme;
-  listItemId: number;
+  item: number;
   onMainBtnClick: () => void;
   list: any;
   outOfStock?: boolean;
@@ -31,7 +31,7 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
     edit,
     btnLabel,
     mainBtnType,
-    listItemId,
+    item,
     searchLink,
     list,
     outOfStock,
@@ -49,12 +49,12 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
     const toListId = e.target.value.value;
     const toList = lists.find((list) => list.product_list_id === toListId);
 
-    if (checkProductCollisionInList(list, toList, listItemId)) {
+    if (checkProductCollisionInList(list, toList, item.list_item_id)) {
       dispatch(
         transferProductList({
           data: {
             product_list_id: toListId,
-            list_item_id: listItemId,
+            list_item_id: item.list_item_id,
           },
         })
       );
@@ -92,10 +92,25 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
             clearable={false}
             isSearchable={false}
             options={lists
-              .filter((list) => list.role !== UserPrivateVariantsEnum.VIEW)
-              .filter(
-                (listItem) => listItem.product_list_id !== list.product_list_id
-              )
+              .filter(function (list) {
+                if (list.role === UserPrivateVariantsEnum.VIEW) {
+                  return false;
+                }
+
+                if (list.product_list_id === props.list.product_list_id) {
+                  return false;
+                }
+
+                if (props.item.product_type === "product") {
+                  for (const item of list.items) {
+                    if (item.product_id === props.item.product_id) {
+                      return false;
+                    }
+                  }
+                }
+
+                return true;
+              })
               .map((e) => {
                 return {
                   label: e.name,

@@ -101,12 +101,11 @@ model account_list_items {
   product_list_id Int                          @db.UnsignedInt
   order_by        Int                          @default(999999) @db.UnsignedMediumInt
   product_type    String?                      @default("product") @db.VarChar(50)
-  comment         String?                      @db.VarChar(256)
+  comment         String?                      @db.VarChar(255)
   priority        account_list_items_priority?
   needs           Int?                         @db.UnsignedInt
   has             Int?                         @db.UnsignedInt
   add_date        DateTime                     @default(now()) @db.Timestamp(0)
-  deleted         DateTime?                    @db.DateTime(0)
   idea            account_list_ideas?          @relation(fields: [list_idea_id], references: [list_idea_id], onDelete: Cascade, map: "account_list_items_account_list_ideas_list_idea_id_fk")
   product         xcart_products?              @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "account_list_items_xcart_products_productid_fk")
   list            account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "account_list_items_account_product_lists_product_list_id_fk")
@@ -151,15 +150,14 @@ model account_order_problems_statuses {
 
 model account_product_lists {
   product_list_id Int                       @id @default(autoincrement()) @db.UnsignedInt
-  public          Int                       @default(1) @db.TinyInt
   name            String                    @db.VarChar(50)
   description     String?                   @db.VarChar(300)
   recipient_name  String?                   @db.VarChar(50)
   recipient_email String?                   @db.VarChar(50)
   birthday        String?                   @db.VarChar(50)
-  cache_url       String?                   @db.VarChar(50)
   address_id      Int?                      @db.UnsignedInt
   user_id         BigInt                    @db.UnsignedBigInt
+  default         Int                       @default(0) @db.TinyInt
   addresses       account_addresses?        @relation(fields: [address_id], references: [address_id], onDelete: NoAction, onUpdate: NoAction, map: "account_product_lists_account_addresses_address_id_fk")
   owner           xcart_users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "account_product_lists_xcart_users_user_id_fk")
   items           account_list_items[]
@@ -5648,7 +5646,7 @@ model xcart_storefronts {
   logo_mobile                   String?                            @db.VarChar(255)
   base_category_id              Int?                               @unique(map: "base_category_id")
   dimension_weight              xcart_storefronts_dimension_weight @default(lbs)
-  dimension_size                String?                            @db.VarChar(255)
+  dimension_size                xcart_storefronts_dimension_size   @default(QUOTE)
   corporation_id                Int?                               @db.UnsignedInt
   dimension_weight_id           Int?
   dimension_size_id             Int?
@@ -6949,6 +6947,7 @@ enum xcart_logs_type {
 enum xcart_manufacturers_d_drop_ship_fee_type {
   value
   percent
+  percent_total
 }
 
 enum xcart_manufacturers_d_bulk_or_individual_order_payments {
@@ -7205,4 +7204,9 @@ enum xcart_manufacturers_upload_prices_status {
 enum xcart_order_fraud_checks_v2_fraud_result {
   positive
   negative
+}
+
+enum xcart_storefronts_dimension_size {
+  cm
+  QUOTE @map("\"")
 }

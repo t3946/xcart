@@ -16,7 +16,7 @@ import { reorderMass } from "@modules/account/utils/reorder-mass";
 import { ListItemTypeEnum } from "@modules/account/ts/consts/list-item-type.enum";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { ListProductIdeaItem } from "@modules/account/components/lists/ListProductIdeaItem";
+import Item from "@modules/account/components/lists/item/Item";
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
@@ -81,7 +81,6 @@ export const ListProductItems: React.FC<IProps> = (props) => {
           >
             {list.items.length ? (
               list.items.map((listItem, index) => {
-
                 if (listItem === undefined) {
                   console.log("UNDEFINED", list.items);
                 }
@@ -139,7 +138,7 @@ export const ListProductItems: React.FC<IProps> = (props) => {
                                   );
                                 case ListItemTypeEnum.IDEA:
                                   return (
-                                    <ListProductIdeaItem
+                                    <Item
                                       list={list}
                                       deleteItem={() =>
                                         deleteItemHandler(listItem.list_item_id)

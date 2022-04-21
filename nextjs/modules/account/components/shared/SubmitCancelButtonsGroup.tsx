@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-
+import Button, { ETheme } from "@modules/ui/forms/Button";
 import Styles from "@modules/account/components/shared/SubmitCancelButtonsGroup.module.scss";
 
 interface IProps {
@@ -34,18 +34,8 @@ const SubmitCancelButtonsGroup: React.FC<IProps> = function ({
   onConfirm,
 }) {
   const classes = {
-    submitButton: [
-      "form-button",
-      submitAdvancedClasses,
-      buttonAdvancedClasses,
-      Styles.button,
-    ],
-    cancelButton: [
-      "form-button fw-bold form-button__outline mt-14 mt-md-0 ms-md-12",
-      cancelAdvancedClasses,
-      buttonAdvancedClasses,
-      Styles.button,
-    ],
+    submitButton: [submitAdvancedClasses, buttonAdvancedClasses, Styles.button],
+    cancelButton: [cancelAdvancedClasses, buttonAdvancedClasses, Styles.button, "ms-10"],
   };
 
   if (submitDisabled === undefined) {
@@ -63,25 +53,26 @@ const SubmitCancelButtonsGroup: React.FC<IProps> = function ({
   }
 
   return (
-    <div className={classnames(groupAdvancedClasses)}>
-      <button
+    <div className={classnames(groupAdvancedClasses, "d-flex")}>
+      <Button
         className={classnames(classes.submitButton)}
         type={"submit"}
         disabled={submitDisabled}
         onClick={onConfirm}
       >
         {submitText || "submit"}
-      </button>
+      </Button>
 
       {onCancel && (
-        <button
+        <Button
           className={classnames(classes.cancelButton)}
           type={"button"}
           disabled={cancelDisabled}
           onClick={onClickCancel}
+          theme={ETheme.outlined}
         >
           {cancelText || "cancel"}
-        </button>
+        </Button>
       )}
     </div>
   );
