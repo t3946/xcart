@@ -170,7 +170,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                   <a className="d-none d-md-block">
                     <Chevron />
                   </a>
-                  <a className="lh-sm" href={`/product/${listItem.product.productid}/`}>
+                  <a
+                    className="lh-sm"
+                    href={`/product/${listItem.product.productid}/`}
+                  >
                     {ratings.rates.reduce(
                       (pv, cv) => pv + parseInt(cv.totalRates),
                       0
@@ -203,7 +206,11 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className={cn("add-comment-text", "d-none", "d-inline-block")}
+                className={cn(
+                  "add-comment-text",
+                  "d-none",
+                  "d-md-inline-block"
+                )}
               >
                 Add comment, quantity & priority
               </div>
