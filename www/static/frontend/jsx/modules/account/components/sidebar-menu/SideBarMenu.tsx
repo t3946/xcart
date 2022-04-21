@@ -24,12 +24,12 @@ const SideBarMenu: React.FC<IProps> = (props) => {
       to: "",
       label: "Orders",
       routerItems: [
-        {
-          to: "/account/orders/decisions-required",
-          label: "Decisions required",
-          badge: user?.decisions_required_count || 0,
-          isVisible: !!user?.decisions_required_count,
-        },
+        // {
+        //   to: "/account/orders/decisions-required",
+        //   label: "Decisions required",
+        //   badge: user?.decisions_required_count || 0,
+        //   isVisible: !!user?.decisions_required_count,
+        // },
         { to: "/account/orders/open-orders", label: "Open orders" },
         { to: "/account/orders/canceled-orders", label: "Canceled orders" },
         { to: "/account/orders/completed-orders", label: "Completed orders" },
