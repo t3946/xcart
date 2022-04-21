@@ -509,4 +509,35 @@ URL;
     {
         return $this->getRequiredShippingCharge() - $this->shipping_gross;
     }
+
+    /**
+     * calc total cost to us for all order details
+     * @return float
+     */
+    public function getCostToUs(): float
+    {
+        return (float) array_reduce($this->detail_models->all(),
+            static fn($c, OrderDetailModel $detail) => $c + $detail->amount * $detail->item_cost_to_us
+        );
+    }
+
+    /**
+     * calc Dx drop shipping fee
+     * @return float
+     */
+    public function getDropShipFee(): float
+    {
+        $dx = $this->manufacturer;
+
+        switch ($dx->d_drop_ship_fee_type) {
+            case 'value':
+                return (float)$dx->d_drop_ship_fee_in_us;
+            case 'percent':
+                return round($this->getCostToUs()  * ($dx->d_drop_ship_fee_in_us/100), 2);
+            case 'percent_total':
+                return round(($this->getCostToUs() + $this->actual_shipping_net)  * ($dx->d_drop_ship_fee_in_us/100), 2);
+        }
+
+        return 0.00;
+    }
 }

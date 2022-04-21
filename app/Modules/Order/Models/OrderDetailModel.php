@@ -9,10 +9,9 @@ use Xcart\App\Orm\AutoMetaTrait;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\DecimalField;
 use Xcart\App\Orm\Fields\ForeignField;
-use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\IntField;
-use Xcart\App\Orm\Model;
 use Xcart\App\Orm\Fields\SerializeField;
+use Xcart\App\Orm\Model;
 use Xcart\App\Traits\DataModelTrait;
 use Xcart\OrderDetail;
 
@@ -23,6 +22,7 @@ use Xcart\OrderDetail;
  * @property ProductModel product_model
  * @property OrderModel order
  * @property int orderid
+ * @property float $item_cost_to_us
  */
 class OrderDetailModel extends Model
 {
