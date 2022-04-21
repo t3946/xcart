@@ -1,6 +1,8 @@
 @import "styles/utils/Utils.module";
 
 .listProductItemCommentContainer {
+  font-size: pxToRem(14);
+
   @include breakpoint(md) {
     font-size: pxToRem(18);
   }
@@ -10,6 +12,7 @@
   }
 }
 
+
 .editComment {
   @include breakpoint(md) {
     font-size: pxToRem(18);
@@ -17,5 +20,17 @@
 
   @include breakpoint(lg) {
     font-size: pxToRem(14);
+  }
+}
+
+
+.comment__removeButton {
+  position: absolute;
+  top: pxToRem(2);
+  right: pxToRem(2);
+
+  @include breakpoint(md) {
+    top: pxToRem(10);
+    right: pxToRem(10);
   }
 }
