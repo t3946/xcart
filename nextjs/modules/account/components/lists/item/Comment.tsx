@@ -77,7 +77,7 @@ export const Comment: React.FC<IProps> = (props) => {
       </div>
       <div
         onClick={deleteCommentDialog.handleClickOpen}
-        className={Styles.comment__removeButton}
+        className={cn(Styles.comment__removeButton, "cursor-pointer", "d-flex")}
       >
         <svg
           width="26"
