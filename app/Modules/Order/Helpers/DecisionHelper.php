@@ -14,6 +14,10 @@ class DecisionHelper
 
         $type = $template->decision_type->slug;
 
+        if (!$type) {
+            return;
+        }
+
         $options = [];
 
         switch ($type) {
