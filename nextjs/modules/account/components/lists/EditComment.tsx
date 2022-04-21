@@ -16,16 +16,19 @@ import getStoreUrl from "@utils/getStoreUrl";
 
 interface IProps {
   onCloseClick: any;
-  list_item_id: any;
   listItem: any;
 }
 
 export const EditComment: React.FC<IProps> = function (props) {
-  const { onCloseClick, list_item_id, listItem } = props;
+  const { onCloseClick, listItem } = props;
   const dispatch = useDispatch();
 
   function submit(values: any) {
-    const data = { ...values, priority: values.priority.value, list_item_id };
+    const data = {
+      ...values,
+      priority: values.priority.value,
+      list_item_id: listItem.list_item_id,
+    };
 
     dispatch(
       editCommentProduct({
@@ -179,7 +182,9 @@ export const EditComment: React.FC<IProps> = function (props) {
             cancelText="Cancel"
             onCancel={onCloseClick}
             disabled={isLoading}
-            groupAdvancedClasses={"justify-content-center justify-content-lg-start"}
+            groupAdvancedClasses={
+              "justify-content-center justify-content-lg-start"
+            }
             submitAdvancedClasses={"w-md-auto"}
             cancelAdvancedClasses={"w-md-auto d-none d-md-block"}
           />
