@@ -94,6 +94,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
           <Price
             currency={currency}
             price={product.price}
+            quantity={countProductsOnCart}
+            prices={product.pricings}
             classes={{ container: Styles.productInfoPrice }}
           />
 
