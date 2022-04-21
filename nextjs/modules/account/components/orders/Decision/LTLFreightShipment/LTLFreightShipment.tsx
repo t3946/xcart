@@ -1,15 +1,13 @@
 import React from "react";
 import InnerPage from "@components/common/inner-page/InnerPage";
 import FormInputPhone, {
-  phoneYupValidation,
   phoneExtYupValidation,
+  phoneYupValidation,
 } from "@modules/account/components/shared/FormInputPhone";
 import RadioQuestion from "modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion";
-import { getCountryByCode } from "@utils/Countries";
-import { Formik, Form } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import Alert from "@modules/account/components/shared/Alert";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import { setAlertAction } from "@redux/actions/account-actions/ProfileActions";
 import {
@@ -20,32 +18,16 @@ import { setVisibleShadowPanelAction } from "@redux/actions/account-actions/Shad
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import * as Yup from "yup";
 import cn from "classnames";
-import { formAnswersLTLFreightShipmentAction } from "@redux/actions/account-actions/DecisionsActions";
-
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
+import Button from "@modules/ui/forms/Button";
 import RadioQuestionStyles from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
 import Styles from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment.module.scss";
 import Label from "@modules/ui/forms/Label";
 
-const LTLFreightShipment: React.FC = () => {
-  const countries = useSelector((e: StoreInterface) => e.countries);
+const LTLFreightShipment: React.FC<any> = (props) => {
+  const { decision, onChange } = props;
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
-  const router = useRouter();
 
-  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const [show, setShow] = React.useState(alert !== null);
-  if (alert) {
-    breakpoint({
-      xs: function () {
-        dispatch(setAlertAction(null));
-        dispatch(setMobileAlertAction(alert));
-        dispatch(showMobileAlertAction(true));
-        dispatch(setVisibleShadowPanelAction(true));
-        router.push("/orders/decisions-required");
-      },
-      md: function () {},
-    });
-  }
   React.useEffect(() => {
     return () => {
       dispatch(setAlertAction(null));
@@ -54,15 +36,17 @@ const LTLFreightShipment: React.FC = () => {
   const mockData = [
     {
       label: "Commercial or residential delivery?",
+      slug: "deliveryType",
       radios: [
-        { label: "Commercical", value: "commercial" },
+        { label: "Commercial", value: "commercial" },
         { label: "Residential", value: "residential" },
       ],
     },
     {
       label: "If commercial, do you require a lift gate?",
+      slug: "requireLiftGate",
       dependency: {
-        question: "Commercial or residential delivery?",
+        question: "deliveryType",
         value: "commercial",
       },
       radios: [
@@ -72,6 +56,7 @@ const LTLFreightShipment: React.FC = () => {
     },
     {
       label: "Curbside or inside delivery?",
+      slug: "deliveryOutfit",
       ext: "Carriers may charge extra for residential, lift gate and inside delivery",
       radios: [
         { label: "Curbside delivery", value: "curbside" },
@@ -81,8 +66,9 @@ const LTLFreightShipment: React.FC = () => {
   ];
   const getInitialValues = () => {
     const values: Record<string, string> = {};
+
     for (const q of mockData) {
-      values[q.label] = { value: "" };
+      values[q.slug] = decision.options[q.slug];
     }
 
     values.phoneCode = "";
@@ -101,93 +87,39 @@ const LTLFreightShipment: React.FC = () => {
 
     for (const q of mockData) {
       if (q.dependency) {
-        fields[q.label] = Yup.object({
-          value: Yup.string().required("Required"),
-          label: Yup.string().required("Required"),
-        }).when(q.dependency.question, {
+        fields[q.slug] = Yup.string().when(q.dependency.question, {
           is: q.dependency.value,
-          then: Yup.object({
-            value: Yup.string().required("Required"),
-            label: Yup.string().required("Required"),
-          }).required("Required"),
+          then: Yup.string().required("Required"),
         });
       } else {
-        fields[q.label] = Yup.object({
-          value: Yup.string().required("Required"),
-          label: Yup.string().required("Required"),
-        }).required("Required");
+        fields[q.slug] = Yup.string().required("Required");
       }
     }
     return Yup.object().shape(fields);
   };
 
-  const submit = (values, actions) => {
-    actions.setSubmitting(true);
+  function submit(values: Record<any, any>, helpers: FormikHelpers<any>) {
+    helpers.setSubmitting(true);
 
-    const phoneCode = getCountryByCode(values.phoneCode, countries).phone_code;
-    const form = {
+    const data = {
       ...values,
-      phone: `+${phoneCode}${values.phone}`.replace(/[()\-\s]/gim, ""),
+      decision_id: decision.decision_id,
     };
 
     dispatch(
-      formAnswersLTLFreightShipmentAction({
-        data: form,
+      solveDecisionAction({
+        data,
         success() {
-          setShow(true);
-          dispatch(
-            setAlertAction({
-              variant: "decisionSuccess",
-              message: `Thank you for providing us with the additional LTL freight information!
-              We'll get back to you with the updated shipping cost.`,
-            })
-          );
-          setTimeout(() => {
-            setShow(false);
-            dispatch(setAlertAction(null));
-          }, 3000);
+          helpers.setSubmitting(true);
         },
       })
     );
 
-    setShow(true);
-    dispatch(
-      setAlertAction({
-        variant: "decisionSuccess",
-        message: `Thank you for providing us with the additional LTL freight information!
-              We'll get back to you with the updated shipping cost.`,
-      })
-    );
-    setTimeout(() => {
-      setShow(false);
-      dispatch(setAlertAction(null));
-    }, 3000);
-  };
-  return alert ? (
-    <InnerPage
-      hatClasses={Styles.hat}
-      headerClasses={Styles.header}
-      header={
-        <>
-          Questions on LTL{" "}
-          <span className={Styles.headerText_mobile_capitalized}>
-            freight shipment
-          </span>
-        </>
-      }
-      bodyClasses={"px-0"}
-    >
-      <Alert
-        show={show}
-        variant={alert.variant}
-        message={alert.message}
-        classes={{
-          container: "pt-20 pb-5 pt-lg-0",
-          alert: ["account-inner-page_alert"],
-        }}
-      />
-    </InnerPage>
-  ) : (
+    onChange(`Thank you for providing us with the additional LTL freight information!
+              We'll get back to you with the updated shipping cost.`);
+  }
+
+  return (
     <InnerPage
       hatClasses={Styles.hat}
       headerClasses={Styles.header}
@@ -231,12 +163,12 @@ const LTLFreightShipment: React.FC = () => {
                   checkedValues={values}
                   key={index}
                   question={questionData}
-                  disabled={isSubmitting}
                   onChange={handleChange}
                   error={
                     touched[questionData.label] && errors[questionData.label]
                   }
                   classes={{ container: Styles.pageBody__container }}
+                  disabled={isSubmitting || decision.solved}
                 />
               ))}
 
@@ -259,24 +191,25 @@ const LTLFreightShipment: React.FC = () => {
                     touched={touched}
                     errors={errors}
                     name={"phone"}
-                    values={values}
+                    values={decision.solved ? decision.options : values}
                     mode={"ext"}
+                    disabled={isSubmitting || decision.solved}
                   />
                 </div>
               </div>
 
               <div className={Styles.pageBodySubmitButtonContainer}>
-                <button
+                <Button
                   type="submit"
                   className={cn(
-                    "form-button",
                     "w-md-auto",
                     Styles.button,
                     Styles.pageBody__submitButton
                   )}
+                  disabled={isSubmitting || decision.solved}
                 >
                   Submit
-                </button>
+                </Button>
               </div>
             </Form>
           );

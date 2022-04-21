@@ -18,16 +18,6 @@ function* getDecisions(action: any): Generator {
   yield axios.post("/api-client/user/decisions/get-list", data).then(success);
 }
 
-function* getEtaProductsDecision(action): Generator {
-  const { success, orderId } = action.payload;
-
-  yield api
-    .get<any>(route("order:api:get-eta-products", orderId))
-    .then(function (res) {
-      success(res);
-    });
-}
-
 function* uploadLicense(action): Generator {
   const { success, data } = action.payload;
 
@@ -170,7 +160,6 @@ export default function* ratingsActionWatcher(): SagaIterator {
   yield takeLatest("SOLVE_DECISION", solveDecision);
   yield takeLatest("GET_DECISIONS", getDecisions);
   yield takeLatest("UPLOAD_LICENSE_DECISION", uploadLicense);
-  yield takeLatest("GET_ETA_PRODUCTS_DECISION", getEtaProductsDecision);
   yield takeLatest("PAY_ORDER_DECISION", payOrder);
   yield takeLatest(
     "APPROVE_INCREASE_IN_SHIPPING_CHARGE_DECISION",

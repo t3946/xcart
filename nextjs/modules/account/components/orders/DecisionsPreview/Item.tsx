@@ -29,6 +29,14 @@ const Item = React.forwardRef(function (props: IProps, ref: any) {
     "alternative-items-offer": { shortName: "AIO", longName: "" },
     "additional-shipping-charge": { shortName: "ASC", longName: "" },
     "additional-information-required": { shortName: "AIR", longName: "" },
+    "purchase-order-require-payment-before-dispatching": {
+      shortName: "PORPBD",
+      longName: "",
+    },
+    "check-for-purchase-order-should-be-issued": {
+      shortName: "CHFPOSBI",
+      longName: "",
+    },
   };
   const { shortName, longName } = shortcutsMap[decision.type.slug];
 

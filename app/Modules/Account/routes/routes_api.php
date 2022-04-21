@@ -4,6 +4,12 @@ use Modules\Account\Controllers\Api\AccountApi;
 
 return [
     [
+        'route' => '/cancel-transaction',
+        'target' => [AccountApi::class, 'cancelTransaction'],
+        'name' => 'cancel-transaction'
+    ],
+
+    [
         'route' => '/get-territory',
         'target' => [AccountApi::class, 'getTerritory'],
         'name' => 'territory'
@@ -17,7 +23,7 @@ return [
 
     [
         'route' => '/get-payment-methods',
-        'target' => [AccountApi::class, 'getPaymentMethods'],
+        'target' => [AccountApi::class, 'getPaymentMethodsAction'],
         'name' => 'get-payment-methods'
     ],
 

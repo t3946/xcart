@@ -85,6 +85,10 @@ const ItemAccordion: React.FC<sideBarMenuItemPropsDto> = (
       >
         <div className="sidebar-menu-accordion-content">
           {routerItems.map((value: any, index: number) => {
+            if (value.isVisible === false) {
+              return null;
+            }
+
             return (
               <SideBarMenuAccordIonItem
                 to={value.to}

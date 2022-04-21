@@ -70,7 +70,7 @@ const Snackbar: React.FC = () => {
 
   const classes = {
     alert: [
-      "d-flex justify-content-center account-alert",
+      "d-flex justify-content-center account-alert mb-4",
       alertClass,
       Styles.snack,
       {

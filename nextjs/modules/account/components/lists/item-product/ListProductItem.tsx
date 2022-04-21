@@ -2,118 +2,116 @@ import React, { useState } from "react";
 import { ListItemMovableArea } from "@modules/account/components/lists/ListItemMovableArea";
 import RatingStars from "@modules/shared/components/ratings/RatingStars";
 import { Tooltip } from "@modules/account/components/shared/Tooltip";
-import { ListProductItemBtns } from "./ListProductItemBtns";
+import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
 import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
 import { EditComment } from "@modules/account/components/lists/EditComment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { useDialog } from "@modules/account/hooks/useDialog";
-import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
-import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { ListProductInfo } from "@modules/account/ts/types/list.type";
 import { ListProductItemProps } from "@modules/account/ts/types/list-product-item-props.type";
 import { cartAdd } from "@redux/reducers/appCartReducer";
 import useSnackbar from "@modules/account/hooks/useSnackbar";
 import { CountGroup } from "@modules/ui/CountGroup";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/router";
 import cn from "classnames";
 import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
 import moment from "moment";
 import OverallRating from "@modules/shared/components/ratings/OverallRating";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
-import Styles from "@modules/account/components/lists/ListProductItem.module.scss";
+import Styles from "@modules/account/components/lists/item-product/ListProductItem.module.scss";
 import {
   getAction as cartGetAction,
   setAction as cartSetAction,
 } from "@redux/actions/CartActions";
+import getStoreUrl from "@utils/getStoreUrl";
+import Price from "@components/common/price/Price";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
 
-export const ListProductItem: React.FC<ListProductItemProps> = ({
-  productItem,
-  drag,
-  reorderProductList,
-  index,
-  listId,
-  deleteItem,
-  edit,
-  listInfo,
-}) => {
+export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
+  const {
+    listItem,
+    drag,
+    reorderProductList,
+    index,
+    listId,
+    deleteItem,
+    edit,
+    listInfo,
+    list,
+  } = props;
   const editCommentDialog = useDialog();
   const dispatch = useDispatch();
-  let product: ListProductInfo;
-  if ("product" in productItem.product) {
-    product = productItem.product;
-  }
-  const router = useRouter();
-  const breakpoint = useBreakpoint();
+  const product: ListProductInfo = listItem.product;
   const deleteProductDialog = useDialog();
   const mobileMenuDialog = useDialog();
   const [disabledAddToCart, setDisabledAddToCart] = React.useState(false);
-
   const [countProductsOnCart, setCountProductsOnCart] = useState(
-    product.minAmount
+    product.min_amount
   );
   const changeCount = (value: number, isInputEnter?: boolean) => {
     if (isInputEnter) {
       setCountProductsOnCart(value);
       return;
     }
-    if (value < product.minAmount) {
+    if (value < product.min_amount) {
       return;
     }
 
     setCountProductsOnCart(value);
   };
-
+  const currency = useSelectorAccount((e) => e.config.site.currency);
   const data = [
     {
-      id: productItem.productId,
+      id: listItem.product.productid,
       quantity: countProductsOnCart,
       options: [],
     },
   ];
-
-  const ratings = productItem.product.ratings?.overall;
-
+  const ratings = listItem.product.ratings?.overall;
   const snackbar = useSnackbar();
-
   const onCountInputBlur = () => {
-    if (product.multOrderQuantity) {
+    if (product.mult_order_quantity) {
       setCountProductsOnCart(
-        Math.ceil(countProductsOnCart / product.minAmount) * product.minAmount
+        Math.ceil(countProductsOnCart / product.min_amount) * product.min_amount
       );
     }
   };
 
-  const mobileDialogItems: MobileMenuForListItem[] = [
-    {
-      image: productItem.image,
-      label: product.product,
-    },
-    {
-      label: "Add comment, quantity & priority",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/actions/add-comment/product/${listInfo.productListId}/${productItem.list_items_id}`
-        ),
-    },
-    {
-      label: "Move",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/actions/move-product/product/${listInfo.productListId}/${productItem.list_items_id}`
-        ),
-    },
-    {
-      label: "Delete",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/actions/delete-product/product/${listInfo.productListId}/${productItem.list_items_id}`
-        ),
-    },
-  ];
+  function itemAddedTemplate(className) {
+    return (
+      <div className={cn(Styles.productInfoDate, className)}>
+        Item added {moment(listItem.add_date).utc().format("MMM DD, Y")}
+      </div>
+    );
+  }
+
+  function itemPriceGroupTemplate() {
+    return (
+      <>
+        <div className="d-flex align-items-center d-none d-lg-flex">
+          <Price
+            currency={currency}
+            price={product.price}
+            classes={{ container: Styles.productInfoPrice }}
+          />
+
+          <span className={"mx-2"}>X</span>
+
+          <CountGroup
+            avail={product.avail}
+            onBlur={onCountInputBlur}
+            value={countProductsOnCart}
+            onChange={changeCount}
+            minAmount={product.min_amount}
+            multOrderQuantity={product.mult_order_quantity}
+            className={Styles.counter}
+          />
+        </div>
+      </>
+    );
+  }
 
   return (
     <div
@@ -128,7 +126,9 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             onUpClick={() => reorderProductList(index, index - 1)}
             onDownClick={() => reorderProductList(index, index + 1)}
             index={index}
-            length={listInfo.products.length}
+            isFirst={index === 0}
+            isLast={index === listInfo.items.length - 1}
+            classes={{ container: { "d-none": list.items.length === 1 } }}
             drag={drag}
           />
         ) : (
@@ -139,12 +139,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       <div className="product-list-item-info-content">
         <img
           className="product-list-item-image product-image"
-          src={productItem.product.image}
+          src={getStoreUrl(listItem.product.images[0].path)}
         />
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
             <a
-              href={`/product/${productItem.productId}/`}
+              href={`/product/${listItem.productId}/`}
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
               {product.product}
@@ -154,6 +154,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
                 onClick={mobileMenuDialog.handleClickOpen}
                 className="edit-idea-ellipsis"
                 src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+                alt={""}
               />
             )}
           </div>
@@ -166,10 +167,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
                   <a className="d-none d-md-block">
                     <Chevron />
                   </a>
-                  <a
-                    className="lh-sm"
-                    href={`/product/${productItem.productId}/`}
-                  >
+                  <a className="lh-sm" href={`/product/${listItem.productId}/`}>
                     {ratings.rates.reduce(
                       (pv, cv) => pv + parseInt(cv.totalRates),
                       0
@@ -181,7 +179,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
                 <div className={Styles.rating}>
                   <OverallRating ratings={ratings} />
                   <div className="text-center mt-14">
-                    <a href={`/product/${productItem.productId}/`}>
+                    <a href={`/product/${listItem.productId}/`}>
                       See all customer reviews
                     </a>
                   </div>
@@ -190,53 +188,50 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
             />
           )}
 
-          <div className="d-flex align-items-center">
-            <div className={Styles.productInfoPrice}>
-              ${product?.price.toFixed(2)}
-            </div>
-            <div className="multiplication-symbol">X</div>
-            <CountGroup
-              avail={product.avail}
-              onBlur={onCountInputBlur}
-              value={countProductsOnCart}
-              onChange={changeCount}
-              minAmount={product.minAmount}
-              multOrderQuantity={product.multOrderQuantity}
-              className={Styles.counter}
-            />
-          </div>
+          {itemPriceGroupTemplate()}
+
           {edit &&
-            (productItem.comment ? (
+            (listItem.comment ? (
               <ListProductItemComment
-                info={productItem}
-                listInfo={listInfo}
+                listItem={listItem}
+                list={list}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
               />
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className="add-comment-text"
+                className={cn("add-comment-text", "d-none", "d-inline-block")}
               >
                 Add comment, quantity & priority
               </div>
             ))}
+
+          <Price
+            currency={currency}
+            price={product.price}
+            classes={{
+              container: [Styles.productInfoPrice, "d-block", "d-lg-none"],
+            }}
+          />
+
+          {itemAddedTemplate(["mt-18", "d-md-none"])}
         </div>
       </div>
 
       <div>
-        <div
-          className={cn(
-            "text-center",
-            "text-md-end",
-            Styles.productInfoDate,
-            "mb-lg-10",
-            "mb-12"
-          )}
-        >
-          Item added {moment(productItem.add_date).utc().format("MMM DD, Y")}
-        </div>
+        {itemAddedTemplate([
+          "text-center",
+          "text-md-end",
+          "mb-lg-10",
+          "mb-12",
+          "d-none",
+          "d-md-block",
+        ])}
+
         {!product.outOfStock && (
           <ListProductItemBtns
+            className={["mt-12", "mt-md-0"]}
+            list={list}
             disabledAddToCart={disabledAddToCart}
             btnLabel={"Add to cart"}
             edit={edit}
@@ -251,7 +246,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
                     success(res) {
                       dispatch(cartSetAction({ cart: res.data }));
                       snackbar.show(
-                        `${productItem.product.product} added to cart`
+                        `${listItem.product.product} added to cart`
                       );
                       setDisabledAddToCart(false);
                     },
@@ -259,9 +254,9 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
                 );
               });
             }}
-            time={productItem.add_date}
-            listId={productItem.product_list_id}
-            productId={productItem.list_items_id}
+            time={listItem.add_date}
+            listId={listItem.product_list_id}
+            item={listItem}
             handleDelete={deleteProductDialog.handleClickOpen}
           />
         )}
@@ -270,7 +265,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       <BootstrapDialogHOC
         show={editCommentDialog.open}
         title={
-          productItem.comment
+          listItem.comment
             ? "Edit comment, quantity & priority"
             : "Add comment, quantity & priority"
         }
@@ -279,8 +274,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
           listId={listId}
-          list_items_id={productItem.list_items_id}
-          info={productItem}
+          list_item_id={listItem.list_item_id}
+          info={listItem}
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC
@@ -290,15 +285,15 @@ export const ListProductItem: React.FC<ListProductItemProps> = ({
       >
         <ConfirmDelete
           onCancelClick={deleteProductDialog.handleClose}
-          onDeleteClick={deleteItem}
+          onDeleteClick={() => {
+            deleteItem();
+            deleteProductDialog.handleClose();
+          }}
           deleteType={"product"}
         />
       </BootstrapDialogHOC>
-      <MobileMenuForList
-        items={mobileDialogItems}
-        dialogOpen={mobileMenuDialog.open}
-        dialogOnClose={mobileMenuDialog.handleClose}
-      />
+
+      <MobileMenu item={listItem} list={listInfo} dialog={mobileMenuDialog} />
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React from "react";
 import cn from "classnames";
-
 import Styles from "@modules/account/components/lists/ListItemMovableArea.module.scss";
 
 interface ListItemMovableAreaProps {
@@ -9,36 +8,39 @@ interface ListItemMovableAreaProps {
   length?: number;
   onUpClick: () => void;
   onDownClick: () => void;
+  isFirst: boolean;
+  isLast: boolean;
+  classes?: {
+    container?: any;
+  };
 }
 
-export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = ({
-  drag,
-  onUpClick,
-  onDownClick,
-  index,
-  length = Number.MAX_VALUE,
-}) => {
+export const ListItemMovableArea: React.FC<ListItemMovableAreaProps> = (
+  props
+) => {
+  const { drag, onUpClick, onDownClick, isFirst, isLast, classes = {} } = props;
+
   return (
     <div
       {...drag}
-      className={cn("list-item-movable-area-container", {
-        "d-none": length <= 1,
-      })}
+      className={cn("list-item-movable-area-container", classes.container)}
     >
       <div
         className={cn("list-item-movable-area-text", {
-          [Styles.moveButton_hidden]: index === 0,
+          [Styles.moveButton_hidden]: isFirst,
         })}
-        onClick={index !== 0 ? onUpClick : undefined}
+        onClick={isFirst ? null : onUpClick}
       >
         UP
       </div>
+
       <img src="/static/frontend/images/icons/account/movable-icon.svg" />
+
       <div
         className={cn("list-item-movable-area-text", {
-          [Styles.moveButton_hidden]: index === length - 1,
+          [Styles.moveButton_hidden]: isLast,
         })}
-        onClick={index !== length - 1 ? onDownClick : undefined}
+        onClick={isLast ? null : onDownClick}
       >
         DOWN
       </div>

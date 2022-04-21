@@ -51,3 +51,6 @@ rebuild: rebuild-submodules rebuild-node rebuild-old
 
 deploy: git-deploy composer clear-cache rebuild
 
+email:
+	docker-compose exec php php ./app/console.php Mail MailSender
+

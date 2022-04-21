@@ -1,7 +1,7 @@
-import { put, takeLatest } from "redux-saga/effects";
-import { SagaIterator } from "redux-saga";
-import { ApiService } from "@modules/shared/services/api.service";
-import { AnyAction } from "redux";
+import {put, takeLatest} from "redux-saga/effects";
+import {SagaIterator} from "redux-saga";
+import {ApiService} from "@modules/shared/services/api.service";
+import {AnyAction} from "redux";
 import Store from "@redux/stores/Store";
 import axios from "axios";
 
@@ -46,12 +46,15 @@ function* sendEmail(action: AnyAction): Generator {
 }
 
 function* fetchOrder(action: AnyAction): Generator {
-  const order = yield api
-    .get(`/api/account/orders/get-one/${action.orderId}`)
+  const data = yield api
+    .post("/api-client/orders/get", {
+      orderId: action.orderId,
+    })
     .then((response) => response);
+
   yield put({
     type: "SET_ORDER_VIEW",
-    order,
+    order: data.order,
   });
 }
 

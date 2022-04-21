@@ -16,7 +16,6 @@ import { convertManageListFormDataToRequest } from "@modules/account/utils/conve
 import { ManageListFormData } from "@modules/account/ts/types/manage-list-form.types";
 import StoreInterface from "@modules/account/ts/types/store.type";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
-import { List } from "@modules/account/ts/types/list.type";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { AddressItemDto } from "@modules/account/ts/types/address-item.type";
 import cn from "classnames";
@@ -25,21 +24,20 @@ import { AddressTypeEnum } from "@modules/account/ts/consts/address-type.const";
 
 import Styles from "@modules/account/components/lists/ManageList.module.scss";
 
-interface ManageListProps {
+interface IProps {
+  list: any;
   onCancelClick: () => void;
 }
 
-export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
-  const listView: List = useSelectorAccount((state) => state.lists.listView);
+export const ManageList: React.FC<IProps> = (props) => {
+  const { list, onCancelClick } = props;
   const user = useSelectorAccount((state) => state.user);
   const addresses: AddressItemDto[] = useSelectorAccount((state) =>
     state.addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.SHIPPING
     )
   );
-
   const monthItems = fillingMassForMonths();
-
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -47,9 +45,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
   }, []);
 
   const [dayItems, setDayItems] = useState(getDaysForSelect(0));
-
   const loading = useSelector((e: StoreInterface) => e.lists.listLoading);
-
   const classes = {
     inputGroup: "d-flex flex-wrap justify-content-lg-between mb-20",
     label:
@@ -58,38 +54,42 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
     feedback: "mt-0 position-absolute",
   };
 
-  const handleSubmit = (values: ManageListFormData) => {
-    dispatch(
-      manageList(
-        listView.productListId,
-        convertManageListFormDataToRequest(values),
-        onCancelClick
-      )
-    );
-  };
+  function submit(values: ManageListFormData) {
+    const data = {
+      ...convertManageListFormDataToRequest(values),
+      product_list_id: list.product_list_id,
+    };
+
+    dispatch(manageList({ data }));
+
+    onCancelClick();
+  }
+
   let selectAddress = null;
+
   if (addresses) {
     selectAddress = addresses?.find(
-      (address) => address.address_id === listView.addressId
+      (address) => address.address_id === list.addressId
     );
   }
+
   const formik = useFormik({
     initialValues: {
-      listName: listView.name || "",
-      description: listView.description || "",
-      recipientName: listView.recipientName || "",
-      email: listView.recipientEmail || "",
+      listName: list.name || "",
+      description: list.description || "",
+      recipientName: list.recipient_name || "",
+      email: list.recipient_email || "",
       isPurchase: false,
       isDefault: false,
       shippingAddress: {
-        value: selectAddress ? selectAddress.address_id : null,
+        value: selectAddress ? selectAddress.address_id : "",
         label: selectAddress?.full_name || "None",
       },
-      month: listView.birthday
-        ? monthItems[new Date(Number(listView.birthday)).getMonth() - 1]
+      month: list.birthday
+        ? monthItems[new Date(Number(list.birthday)).getMonth() - 1]
         : monthItems[0],
-      day: listView.birthday
-        ? dayItems[new Date(Number(listView.birthday)).getDate()]
+      day: list.birthday
+        ? dayItems[new Date(Number(list.birthday)).getDate()]
         : dayItems[0],
     },
     validationSchema: Yup.object().shape({
@@ -98,7 +98,7 @@ export const ManageList: React.FC<ManageListProps> = ({ onCancelClick }) => {
       recipientName: Yup.string(),
       email: Yup.string().email("Please enter valid email"),
     }),
-    onSubmit: handleSubmit,
+    onSubmit: submit,
   });
 
   return (

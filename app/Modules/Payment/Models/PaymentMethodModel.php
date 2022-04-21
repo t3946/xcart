@@ -9,7 +9,6 @@ use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\ForeignField;
 use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ManyToManyField;
-use Xcart\App\Orm\Fields\OneToOneField;
 use Xcart\App\Orm\Model;
 
 /**
@@ -69,6 +68,11 @@ class PaymentMethodModel extends Model
     public function __toString()
     {
         return $this->payment_method;
+    }
+
+    public function getPaymentFees(float $summa): float
+    {
+        return round($this->acc_percent ?? 0 / 100 * $summa + ($this->acc_per_trans ?? 0), 2);
     }
 
 }

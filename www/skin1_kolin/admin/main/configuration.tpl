@@ -250,13 +250,6 @@ Attention: this conditions only applied to XCart native orders (not applied to A
 
 
 <table cellpadding="3" cellspacing="1" width="100%">
-
-<tr>
-	<td class='FormButton' width="20%">Credit card processing fees: </td>
-	<td>
-	<input type="text" size="7" name="credit_card_processing_fees" value="{$config.Additional_shipping_charge.credit_card_processing_fees}" />% + $<input type="text" size="7" name="per_transaction" value="{$config.Additional_shipping_charge.per_transaction}" /> per transaction
-	</td>
-</tr>
 <tr>
         <td class='FormButton' colspan = "2">
 Required shipping charge {literal}({{required}}){/literal} = <input type="text" size="7" name="required_shipping_charge_k" value="{$config.Additional_shipping_charge.required_shipping_charge_k}" /> * Actual shipping cost

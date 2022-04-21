@@ -8,11 +8,16 @@ use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
 use Xcart\App\Orm\Fields\DateTimeField;
 use Xcart\App\Orm\Fields\ForeignField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\JsonField;
+use Xcart\App\Orm\Manager;
 use Xcart\App\Orm\Model;
 
 /**
  * @property bool $solved
+ * @property $options
+ * @property OrderModel $order
+ * @property DecisionTypeTemplateModel[]|Manager $templates
  */
 class DecisionModel extends Model
 {
@@ -32,11 +37,6 @@ class DecisionModel extends Model
         return [
             'decision_id' => [
                 'class' => AutoField::class,
-            ],
-
-            'type' => [
-                'class' => CharField::class,
-                'null' => false,
             ],
 
             'solved' => [
@@ -68,8 +68,20 @@ class DecisionModel extends Model
                 'field' => 'order_id',
                 'class' => ForeignField::class,
                 'modelClass' => OrderModel::class,
-                'link' => ['order_id' => 'orderid'],
-                'null' => false
+                'link' => ['order_id' => 'orderid']
+            ],
+
+            'type' => [
+                'field' => 'decision_type_id',
+                'class' => ForeignField::class,
+                'modelClass' => DecisionTypeModel::class,
+                'link' => ['decision_type_id' => 'decision_type_id'],
+            ],
+
+            'templates' => [
+                'class' => HasManyField::class,
+                'modelClass' => DecisionTypeTemplateModel::class,
+                'link' => ['decision_type_id' => 'decision_type_id']
             ]
         ];
     }

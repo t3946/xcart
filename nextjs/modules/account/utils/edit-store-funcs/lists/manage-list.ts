@@ -4,12 +4,12 @@ import { AccountListsStore } from "@modules/account/ts/types/store.type";
 
 export const manageList = (
   state: AccountListsStore,
-  productListId: number,
+  product_list_id: number,
   data: ManageListRequestData
 ): AccountListsStore => ({
   ...state,
   lists: state.lists.map((list) => {
-    if (list.productListId === productListId) {
+    if (list.product_list_id === product_list_id) {
       list = convertManageList(list, data);
     }
     return list;

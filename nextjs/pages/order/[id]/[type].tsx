@@ -34,7 +34,7 @@ const OrderPage: NextPage = () => {
       case "log":
         return <OrderLogPage logs={order.logs} />;
       case "products-ordered":
-        return <ProductsOrderedPage orderItem={order} />;
+        return <ProductsOrderedPage order={order} />;
       case "addresses":
         return <OrderAddressesPage orderItem={order} />;
       // case "communication":
@@ -46,14 +46,10 @@ const OrderPage: NextPage = () => {
         return <Decision decision={order} />;
     }
   };
-  console.log(order);
+
   return (
     <PageTwoColumns>
-      <OrderInfoHeader
-        orderNumber={order.orderNumber}
-        orderId={order.orderId}
-        orderStatus={order.cb_status}
-      />
+      <OrderInfoHeader order={order} />
 
       {getSection()}
     </PageTwoColumns>

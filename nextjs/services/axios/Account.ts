@@ -48,6 +48,19 @@ const getInitialState = async function (req: any) {
       initialState.cart = res.data;
     });
 
+  await instance
+    .get("/api-client/user/lists/get-all")
+    .then((res) => {
+      initialState.lists = {
+        lists: res.data,
+      };
+    })
+    .catch(() => {
+      initialState.lists = {
+        lists: [],
+      };
+    });
+
   return initialState;
 };
 

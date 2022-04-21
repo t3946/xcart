@@ -1,28 +1,28 @@
 import React from "react";
 import { ShareList } from "@modules/account/components/lists/ShareList";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
-import UseSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 
-export const ShareListPage: React.FC = () => {
+interface IProps {
+  list: any;
+}
+
+export const ShareListPage: React.FC<IProps> = (props) => {
   const router = useRouter();
-  const { cache } = router.query;
-  const lists = UseSelectorAccount((state) => state.lists.lists);
+  const { list } = props;
 
-  const list = lists.find((e) => e.cacheUrl === cache);
-
-  const onCancelClick = () => {
-    router.push(`/shopping-lists/${list.cacheUrl}`);
-  };
+  function onCancelClick() {
+    router.push(`/shopping-lists/${list.product_list_id}`);
+  }
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/shopping-lists/${list.cacheUrl}`}
+        redirectUrl={`/shopping-lists/${list.product_list_id}`}
         label={"back"}
       />
       <div className="page-label">Share list with others</div>
-      <ShareList onClose={onCancelClick} cache={cache} />
+      <ShareList onClose={onCancelClick} list={list} />
     </div>
   );
 };

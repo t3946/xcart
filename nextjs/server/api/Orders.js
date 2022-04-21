@@ -43,12 +43,12 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
         },
         select: {
           order_group_id: true,
-          xcart_order_statuses_history: true,
+          statuses_history: true,
           xcart_order_tracking: {
             select: {
               id: true,
               tracknum: true,
-              xcart_tracking_links_carrier: {
+              carrier: {
                 select: {
                   link: true,
                 },
@@ -65,19 +65,129 @@ app.get("/get-order-groups", isAuthMiddleware, async (req, res) => {
     const groups = orders[i].groups;
 
     for (const group of groups) {
-      group.statuses_history = group.xcart_order_statuses_history;
-      delete group.xcart_order_statuses_history;
       group.trackings = group.xcart_order_tracking;
       delete group.xcart_order_tracking;
-
-      for (const tracking of group.trackings) {
-        tracking.carrier = tracking.xcart_tracking_links_carrier;
-        delete tracking.xcart_tracking_links_carrier;
-      }
     }
   }
 
   res.json(orders);
+});
+
+app.post("/get", isAuthMiddleware, async (req, res) => {
+  const order = await prisma.xcart_orders.findFirst({
+    where: {
+      user_id: req.user.userId,
+      orderid: req.body.orderId,
+    },
+    include: {
+      decisions: true,
+      logs: {
+        where: {
+          type: {
+            in: ["U"],
+          },
+        },
+      },
+      groups: {
+        select: {
+          order_group_id: true,
+          total_gross: true,
+          statuses_history: true,
+          xcart_order_tracking: {
+            include: {
+              carrier: {
+                select: {
+                  carrier: true,
+                  link: true,
+                },
+              },
+              link: {
+                select: {
+                  shipping: true,
+                },
+              },
+            },
+          },
+          cb_status_rel: {
+            select: {
+              xcart_order_human_readable_statuses: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          dc_status_rel: {
+            select: {
+              xcart_order_human_readable_statuses: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+          manufacturer: {
+            select: {
+              m_city: true,
+              m_country: true,
+              m_state: true,
+            },
+          },
+          details: {
+            select: {
+              price: true,
+              product: true,
+              amount: true,
+              xcart_products: {
+                select: {
+                  productid: true,
+                  productcode: true,
+                  in_stock: true,
+                  images: {
+                    orderBy: {
+                      order_by: "asc",
+                    },
+                    take: 1,
+                    where: {
+                      is_active: 1,
+                    },
+                    select: {
+                      image: {
+                        select: {
+                          path: true,
+                        },
+                      },
+                    },
+                  },
+                  xcart_product_reviews: {
+                    where: {
+                      user_id: req.user.userId,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          xcart_order_group_taxes: {
+            select: {
+              value: true,
+              xcart_tax_rates: {
+                select: {
+                  xcart_taxes: {
+                    select: {
+                      tax_name: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  res.json({ order });
 });
 
 module.exports = app;

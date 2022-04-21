@@ -1,18 +1,14 @@
 import React, { Fragment } from "react";
 import { ManageList } from "@modules/account/components/lists/ManageList";
-import { List } from "@modules/account/ts/types/list.type";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 
-interface ManageListPage {
-  listHash: string;
+interface IProps {
+  list: any;
 }
 
-export const ManageListPage: React.FC<ManageListPage> = ({ listHash }) => {
+export const ManageListPage: React.FC<IProps> = (props) => {
+  const { list } = props;
   const router = useRouter();
-  const lists: List[] = useSelectorAccount((state) => state.lists.lists);
-
-  const list = lists.find((list) => list.cacheUrl === listHash);
 
   const onCancelClick = () => {
     router.push(`/shopping-lists/${list.cacheUrl}`);
@@ -21,7 +17,7 @@ export const ManageListPage: React.FC<ManageListPage> = ({ listHash }) => {
   return (
     <Fragment>
       <div className="page-label">Manage list</div>
-      <ManageList info={list} onCancelClick={onCancelClick} />
+      <ManageList list={list} onCancelClick={onCancelClick} />
     </Fragment>
   );
 };

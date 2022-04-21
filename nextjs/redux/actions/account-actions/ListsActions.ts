@@ -1,28 +1,10 @@
-import { ShowSharedStatusEnum } from "@modules/account/ts/types/show-shared-status.enum";
-import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
-import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-actions.enum";
-import { EditCommentRequestData } from "@modules/account/ts/types/edit-comment-request-data";
-import { ManageListRequestData } from "@modules/account/ts/types/manage-list-form.types";
-import { List } from "@modules/account/ts/types/list.type";
-
 export const getLists = (): any => ({
   type: "GET_LISTS",
 });
 
-export const setLists = (lists): any => ({
-  type: "SET_LISTS",
-  lists,
-});
-
-export const createList = (
-  name: string,
-  callback: (hash: string) => void,
-  actionType: "list" | "product" | undefined
-): any => ({
+export const createList = (payload: any): any => ({
   type: "CREATE_LIST",
-  name,
-  callback,
-  actionType,
+  payload,
 });
 
 export const reorderList = (listIds: string[], productListId: number): any => ({
@@ -31,62 +13,40 @@ export const reorderList = (listIds: string[], productListId: number): any => ({
   productListId,
 });
 
-export const transferProductList = (
-  fromListId: number,
-  toListId: number,
-  productId: number
-): any => ({
+export const transferProductList = (payload: any): any => ({
   type: "TRANSFER_PRODUCT_LIST",
-  fromListId,
-  toListId,
-  productId,
-});
-
-export const deleteList = (
-  productListId: number,
-  callback: () => void
-): any => ({
-  type: "SEND_DELETE_LIST",
-  productListId,
-  callback,
-});
-
-export const deleteProduct = (
-  list_items_id: number,
-  callback?: () => void
-): any => ({
-  type: "SEND_DELETE_PRODUCT",
-  list_items_id,
-  callback,
-});
-
-export const undoDeleteProduct = (
-  product_list_id: number,
-  list_items_id: number,
-  product: any
-): any => ({
-  type: "UNDO_DELETE_PRODUCT",
-  product_list_id,
-  list_items_id,
-  product,
-});
-
-export const encryptUrl = (payload: any): any => ({
-  type: "ENCRYPT_URL",
   payload,
 });
 
-export const editUserRights = (
-  listId: number,
-  userId: string,
-  actionType: UserRightsActionsEnum,
-  callback?: () => void
-): any => ({
-  type: "EDIT_USER_RIGHTS",
-  listId,
-  userId,
-  actionType,
-  callback,
+export const deleteList = (payload: any): any => ({
+  type: "PRODUCT_LISTS_DELETE_LIST",
+  payload,
+});
+
+export const undoDeleteProduct = (payload: any): any => ({
+  type: "UNDO_DELETE_PRODUCT",
+  payload,
+});
+
+export const getInvite = (payload: any): any => ({
+  type: "PRODUCT_LISTS_INVITE_GENERATE",
+  payload,
+});
+
+export const inviteUse = (payload: any): any => ({
+  type: "PRODUCT_LISTS_INVITE_USE",
+  payload,
+});
+
+//role
+export const roleUpdate = (payload: any): any => ({
+  type: "PRODUCT_LISTS_ROLE_UPDATE",
+  payload,
+});
+
+export const roleDelete = (payload: any): any => ({
+  type: "PRODUCT_LISTS_ROLE_DELETE",
+  payload,
 });
 
 export const addProduct = (
@@ -102,56 +62,32 @@ export const addProduct = (
   callback,
 });
 
-export const editIdeaName = (
-  listId: number,
-  productId: number,
-  name: string,
-  callback: () => void
-): any => ({
-  type: "SEND_EDIT_IDEA_NAME",
-  listId,
-  productId,
-  name,
-  callback,
+export const createIdea = (payload: any): any => ({
+  type: "PRODUCT_LISTS_CREATE_IDEA",
+  payload,
 });
 
-export const editCommentProduct = (
-  productListId: number,
-  list_items_id: number,
-  data: EditCommentRequestData,
-  callback: () => void
-): any => ({
+export const deleteItem = (payload: any): any => ({
+  type: "PRODUCT_LISTS_DELETE_ITEM",
+  payload,
+});
+
+export const editIdea = (payload: any): any => ({
+  type: "PRODUCT_LISTS_EDIT_IDEA",
+  payload,
+});
+
+export const editCommentProduct = (payload: any): any => ({
   type: "EDIT_COMMENT_PRODUCT",
-  productListId,
-  list_items_id,
-  data,
-  callback,
+  payload,
 });
 
-export const manageList = (
-  productListId: number,
-  data: ManageListRequestData,
-  callback: () => void
-): any => ({
+export const manageList = (payload: any): any => ({
   type: "MANAGE_LIST",
-  productListId,
-  data,
-  callback,
-});
-export const fetchLists = () => ({
-  type: "FETCH_LISTS",
-});
-export const setListView = (listView: List) => ({
-  type: "SET_LIST_VIEW",
-  listView,
+  payload,
 });
 
-export const dropByHash = (hash: List) => ({
-  type: "LIST_DROP_BY_HASH",
-  hash,
-});
-
-export const fetchListByCache = (cache: string) => ({
-  type: "FETCH_LIST",
-  cache,
+//items
+export const resetTypeAction = (): any => ({
+  type: "PRODUCT_LISTS_RESET_TYPE_ACTION",
 });

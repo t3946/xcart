@@ -24,7 +24,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
     const templates = [];
 
     for (const taxesKey in order.taxes) {
-      const taxValue = order.taxes[taxesKey];
+      const taxValue = parseFloat(order.taxes[taxesKey]).toFixed(2);
 
       templates.push(
         <div
@@ -80,7 +80,7 @@ export const TransactionItem: React.FC<IProps> = (props) => {
         )}
 
         <div className="transaction-items-label">Products ordered</div>
-        {order.xcart_order_groups.map((group, i) => {
+        {order.groups.map((group, i) => {
           return (
             <TransactionItems
               group={group}

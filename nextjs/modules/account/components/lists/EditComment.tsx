@@ -11,23 +11,29 @@ import Label from "@modules/ui/forms/Label";
 import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/priority-product-select-values.const";
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
-
 import Styles from "@modules/account/components/lists/EditComment.module.scss";
 
-export const EditComment = ({ onCloseClick, listId, list_items_id, info }) => {
-  const dispatch = useDispatch();
-  const handleSubmit = (values) => {
-    dispatch(
-      editCommentProduct(
-        listId,
-        list_items_id,
-        { ...values, priority: values.priority.value },
-        onCloseClick
-      )
-    );
-  };
+interface IProps {
+  onCloseClick: any;
+  list_item_id: any;
+  info: any;
+}
 
+export const EditComment: React.FC<IProps> = function (props) {
+  const { onCloseClick, list_item_id, info } = props;
+  const dispatch = useDispatch();
   const ideaImg = "/static/frontend/images/icons/account/idea-logo.svg";
+
+  function submit(values: any) {
+    const data = { ...values, priority: values.priority.value, list_item_id };
+
+    dispatch(
+      editCommentProduct({
+        data,
+        callback: onCloseClick,
+      })
+    );
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -46,9 +52,8 @@ export const EditComment = ({ onCloseClick, listId, list_items_id, info }) => {
       needs: Yup.number().required("Required field").min(0, "Min value - 0"),
       has: Yup.number().required("Required field").min(0, "Min value - 0"),
     }),
-    onSubmit: handleSubmit,
+    onSubmit: submit,
   });
-
   const isLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
 
   return (

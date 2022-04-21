@@ -4,7 +4,8 @@ import cn from "classnames";
 import Label from "@modules/ui/forms/Label";
 import Feedback from "@modules/ui/forms/Feedback";
 
-import LTLFreightShipmentStyles from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment.module.scss";
+import LTLFreightShipmentStyles
+  from "@modules/account/components/orders/Decision/LTLFreightShipment/LTLFreightShipment.module.scss";
 import Styles from "@modules/account/components/orders/Decision/LTLFreightShipment/RadioQuestion.module.scss";
 
 interface IProps {
@@ -32,11 +33,11 @@ interface IProps {
 }
 
 const RadioQuestion: React.FC<IProps> = (props) => {
-  const questionKey = props.question.name || props.question.label || "";
+  const questionKey = props.question.slug;
 
   if (props.question.dependency) {
     if (
-      props.checkedValues[props.question.dependency.question].value !==
+      props.checkedValues[props.question.dependency.question] !==
       props.question.dependency.value
     ) {
       return <></>;
@@ -96,11 +97,11 @@ const RadioQuestion: React.FC<IProps> = (props) => {
               <RadioButton
                 name={questionKey}
                 value={answer.value}
-                checkedValue={props.checkedValues[questionKey]?.value}
+                checkedValue={props.checkedValues[questionKey]}
                 disabled={props.disabled}
                 onChange={() =>
                   props.onChange({
-                    target: { name: questionKey, value: answer },
+                    target: { name: questionKey, value: answer.value },
                   })
                 }
               />

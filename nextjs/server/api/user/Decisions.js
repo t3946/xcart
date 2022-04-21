@@ -1,8 +1,63 @@
 const express = require("express");
 const isAuthMiddleware = require("../../middleware/isAuth");
+const stripeService = require("../../services/stripe");
 const PrismaClient = require("@prisma/client").PrismaClient;
 const prisma = new PrismaClient();
 const app = express();
+const getBaseUrl = require("../../utils/getBaseUrl");
+const md5 = require("md5");
+const amqp = require("amqplib");
+const axios = require("axios");
+
+function getPaypalUrl(req, order, amount, decisionId) {
+  const [firstName, lastName] = order.b_firstname.split(" ");
+  const orderHash = md5([order.orderid, order.s_zipcode, order.email].join(""));
+  const returnUrl =
+    getBaseUrl(req) + `/payment/return/paypal/${order.orderid}/${orderHash}`;
+  const cancel_return = getBaseUrl(req) + `/payment/cancel/paypal/`;
+  const params = {
+    cmd: "_ext-enter",
+    redirect_cmd: "_xclick",
+    mrb: "R-2JR83330TB370181P",
+    pal: "RDGQCFJTT6Y6A",
+    rm: "2",
+    custom: `${order.orderid}:${decisionId}`,
+    business: "paypal@s3stores.com",
+    email: order.email,
+    first_name: firstName,
+    last_name: lastName,
+    day_phone_a: order.phone.substr(0, 3),
+    day_phone_b: order.phone.substr(3, 3),
+    day_phone_c: order.phone.substr(6, 4),
+    night_phone_a: order.phone.substr(0, 3),
+    night_phone_b: order.phone.substr(3, 3),
+    night_phone_c: order.phone.substr(6, 4),
+    item_name: `S3 Stores, Inc. Order # ${order.order_prefix}${order.orderid}`,
+    amount,
+    currency_code: order.currency,
+    bn: "x-cart",
+    paymentaction: "authorization",
+    address1: order.b_address,
+    country: order.b_country,
+    state: order.b_state,
+    city: order.b_city,
+    zip: order.b_zipcode,
+    return: returnUrl,
+    cancel_return: cancel_return,
+  };
+  const baseUrl = "https://www.paypal.com/cgi-bin/webscr";
+  const urlParamsList = [];
+
+  for (const key in params) {
+    const value = params[key];
+
+    urlParamsList.push(`${key}=${value}`);
+  }
+
+  const urlParams = urlParamsList.join("&");
+
+  return `${baseUrl}?${urlParams}`;
+}
 
 //get current user decisions
 app.get("/get-initial-state", isAuthMiddleware, async function (req, res) {
@@ -58,8 +113,10 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
       decision_id: decisionId,
     },
     include: {
+      type: true,
       order: {
         select: {
+          alt_items: true,
           cb_status: true,
           dc_status: true,
           subtotal: true,
@@ -96,13 +153,18 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
               },
               details: {
                 select: {
+                  items_stock: true,
                   price: true,
                   product: true,
+                  productcode: true,
                   amount: true,
+                  back: true,
                   xcart_products: {
                     select: {
                       productid: true,
                       productcode: true,
+                      eta_date_mm_dd_yyyy: true,
+                      forsale: true,
                       images: {
                         orderBy: {
                           order_by: "asc",
@@ -141,11 +203,61 @@ app.post("/get", isAuthMiddleware, async function (req, res) {
           },
         },
       },
-      type: true,
+      files: {
+        select: {
+          file: {
+            select: {
+              path: true,
+              original_name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  const altItemsSku = decision.order.alt_items.split(",");
+
+  decision.order.alt_items = await prisma.xcart_products.findMany({
+    where: {
+      productcode: {
+        in: altItemsSku,
+      },
+    },
+    select: {
+      product: true,
+      productcode: true,
     },
   });
 
-  res.json({ decision });
+  const resBody = { decision };
+  const order = await prisma.xcart_orders.findFirst({
+    where: {
+      orderid: decision.order.orderId,
+    },
+  });
+
+  switch (decision.type.slug) {
+    case "purchase-order-require-payment-before-dispatching":
+    case "unpaid-order":
+      resBody.paypalUrl = getPaypalUrl(
+        req,
+        order,
+        parseFloat(order.total),
+        decision.decision_id
+      );
+      break;
+
+    case "additional-shipping-charge":
+      resBody.paypalUrl = getPaypalUrl(
+        req,
+        order,
+        decision.options.additionalShippingCharge,
+        decision.decision_id
+      );
+      break;
+  }
+
+  res.json(resBody);
 });
 
 app.post("/create", isAuthMiddleware, async function (req, res) {
@@ -161,7 +273,7 @@ app.post("/create", isAuthMiddleware, async function (req, res) {
     },
   });
 
-  const options = {};
+  const options = req.body.options || {};
 
   switch (type) {
     case "po-send-check":
@@ -226,6 +338,63 @@ app.post("/set-all-not-solved", isAuthMiddleware, async function (req, res) {
   res.sendStatus(200);
 });
 
+async function changeOrderStatus(orderid, status) {
+  await prisma.xcart_orders.update({
+    where: {
+      orderid,
+    },
+    data: {
+      cb_status: status,
+    },
+  });
+
+  await prisma.xcart_order_groups.updateMany({
+    where: {
+      orderid,
+    },
+    data: {
+      cb_status: status,
+    },
+  });
+}
+
+async function cancelOrder(orderid) {
+  await changeOrderStatus(orderid, "F");
+}
+
+async function cancelTransaction(orderid) {
+  const url = getPaypalUrl() + "/api/account/cancel-transaction";
+
+  await axios.post(url, { orderid });
+}
+
+async function sendEmail(decision_id) {
+  const open = amqp.connect("amqp://xcart:Uv5WxjbRj7pjqzY@159.65.220.58:5672/");
+
+  await open
+    .then(function (conn) {
+      return conn
+        .createChannel()
+        .then(function (ch) {
+          const q = "emails";
+          const msg = JSON.stringify({
+            action: "decision",
+            decision_id,
+          });
+          const ok = ch.assertQueue(q, { durable: true });
+
+          return ok.then(function () {
+            ch.sendToQueue(q, Buffer.from(msg));
+            return ch.close();
+          });
+        })
+        .finally(function () {
+          conn.close();
+        });
+    })
+    .catch(console.warn);
+}
+
 app.post("/solve", isAuthMiddleware, async function (req, res) {
   const decision = await prisma.account_decisions.findUnique({
     where: {
@@ -233,59 +402,263 @@ app.post("/solve", isAuthMiddleware, async function (req, res) {
     },
     include: {
       type: true,
+      order: true,
     },
   });
 
   switch (decision.type.slug) {
-    case "po-send-check":
-      decision.solved = true;
-      decision.options.address = req.body.address;
+    case "estimated-time-arrival":
+      decision.options.action = req.body.action;
+      decision.options.decision_comment = req.body.decision_comment;
 
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-          options: decision.options,
-        },
-        where: {
-          decision_id: req.body.decision_id,
-        },
-      });
+      switch (req.body.action) {
+        case "wait":
+        case "wait-discontinued":
+          await prisma.xcart_orders_additional_tags.create({
+            data: {
+              status_id: 9,
+              orderid: decision.order.orderid,
+            },
+          });
+          break;
+
+        case "cancel":
+          if (decision.order.cb_status === "AP") {
+            await changeOrderStatus(decision.order.orderid, "A");
+            await cancelTransaction(decision.order.orderid);
+          }
+          break;
+      }
 
       break;
 
-    case "estimated-time-arrival":
-      const { advice, comment } = req.body;
+    case "po-send-check":
+      decision.options.address = req.body.address;
 
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-          options: { advice, comment },
-        },
-        where: {
-          decision_id: req.body.decision_id,
-        },
-      });
+      switch (decision.options.addresses[req.body.address].country.code) {
+        case "US":
+          decision.options.action = "american-address";
+          break;
+        case "CA":
+          decision.options.action = "canada-address";
+          break;
+      }
+
+      break;
+
+    case "alternative-items-offer":
+      decision.options.action = req.body.action;
+      decision.options.comment = req.body.comment;
+
+      if (req.body.action === "cancel") {
+        await changeOrderStatus(decision.order.orderid, "A");
+        await cancelTransaction(decision.order.orderid);
+      }
 
       break;
 
     case "ach-payment-required":
-      await prisma.account_decisions.updateMany({
-        data: {
-          solved: 1,
-        },
+      break;
+
+    case "increase-shipping-charge":
+      decision.options.action = req.body.action;
+
+      if (decision.options.action === "cancel") {
+        await cancelOrder(decision.order.orderid);
+      }
+
+      break;
+
+    case "street-address-required":
+      const address = await prisma.account_addresses.findUnique({
         where: {
-          decision_id: req.body.decision_id,
+          address_id: req.body.addressId,
+        },
+        include: {
+          state: true,
+          country: true,
         },
       });
 
+      decision.options.newAddress = address;
+      break;
+
+    case "questions-ltl-freight-shipment":
+      decision.options.deliveryType = req.body.deliveryType;
+      decision.options.requireLiftGate = req.body.requireLiftGate;
+      decision.options.deliveryOutfit = req.body.deliveryOutfit;
+      decision.options.phoneCode = req.body.phoneCode;
+      decision.options.phone = req.body.phone;
+      decision.options.phone_ext = req.body.phone_ext;
+      break;
+
+    case "send-us-po":
+      decision.options.action = req.body.method;
+      break;
+
+    case "purchase-order-require-payment-before-dispatching":
+    case "unpaid-order":
+      decision.options.action = req.body.action;
+
+      // handle payment
+      switch (req.body.action) {
+        case "pay-by-card":
+          const user = await prisma.xcart_users.findUnique({
+            where: {
+              user_id: req.user.userId,
+            },
+          });
+          const { orderid, order_prefix } = decision.order;
+          let amount;
+
+          switch (decision.type.slug) {
+            case "purchase-order-require-payment-before-dispatching":
+            case "unpaid-order":
+              amount = parseFloat(decision.order.total) * 100;
+              break;
+          }
+
+          const paymentIntentObject = await stripeService.paymentIntent.create({
+            amount,
+            currency: "usd",
+            payment_method_types: ["card"],
+            description: `S3 Stores, Inc. Order # ${order_prefix}${orderid}`,
+            customer: user.stripe_customer_id,
+            capture_method: "manual",
+          });
+
+          await stripeService.paymentIntent.confirm(
+            paymentIntentObject.id,
+            req.body.cardId
+          );
+
+          //what to do after successful payment
+          switch (decision.type.slug) {
+            case "unpaid-order":
+            case "check-for-purchase-order-should-be-issued":
+              await changeOrderStatus(decision.order.orderid, "AP");
+              await cancelTransaction(decision.order.orderid);
+              break;
+          }
+
+          const card = await stripeService.card.retrieve(
+            user.stripe_customer_id,
+            req.body.cardId
+          );
+
+          decision.options.card = {
+            brand: card.brand,
+            last4: card.last4,
+          };
+
+          await prisma.xcart_order_transactions.create({
+            data: {
+              orderid: decision.order.orderid,
+              type: "authorization",
+              transaction_status: "authorized",
+              transaction_amount: amount / 100,
+              transaction_id: paymentIntentObject.id,
+              paymentid: 106,
+              date: Math.round(new Date().getTime() / 1000),
+            },
+          });
+
+          break;
+
+        case "cancel-order":
+          switch (decision.type.slug) {
+            case "unpaid-order":
+            case "check-for-purchase-order-should-be-issued":
+              await cancelOrder(decision.order.orderid);
+              break;
+          }
+          break;
+      }
+
+      break;
+
+    case "additional-shipping-charge":
+      decision.options.action = req.body.action;
+
+      switch (req.body.action) {
+        case "pay-by-card":
+          const user = await prisma.xcart_users.findUnique({
+            where: {
+              user_id: req.user.userId,
+            },
+          });
+          const { orderid, order_prefix } = decision.order;
+          const amount =
+            parseFloat(decision.options.additionalShippingCharge) * 100;
+          const paymentIntentObject = await stripeService.paymentIntent.create({
+            amount,
+            currency: "usd",
+            payment_method_types: ["card"],
+            description: `S3 Stores, Inc. Order # ${order_prefix}${orderid}`,
+            customer: user.stripe_customer_id,
+            capture_method: "manual",
+          });
+
+          await stripeService.paymentIntent.confirm(
+            paymentIntentObject.id,
+            req.body.cardId
+          );
+
+          const card = await stripeService.card.retrieve(
+            user.stripe_customer_id,
+            req.body.cardId
+          );
+
+          decision.options.card = {
+            brand: card.brand,
+            last4: card.last4,
+          };
+
+          await prisma.xcart_order_transactions.create({
+            data: {
+              orderid: decision.order.orderid,
+              type: "authorization",
+              transaction_status: "authorized",
+              transaction_amount: amount / 100,
+              transaction_id: paymentIntentObject.id,
+              paymentid: 106,
+              date: Math.round(new Date().getTime() / 1000),
+            },
+          });
+
+          break;
+
+        case "cancel-order":
+          await cancelOrder(decision.order.orderid);
+          break;
+      }
+
+      break;
+
+    case "additional-information-required":
+      decision.options.phone = req.phone;
+      decision.options.phoneCode = req.phoneCode;
+      decision.options.phone_ext = req.phone_ext;
       break;
   }
+
+  await prisma.account_decisions.updateMany({
+    data: {
+      solved: 1,
+      options: decision.options,
+    },
+    where: {
+      decision_id: req.body.decision_id,
+    },
+  });
 
   const user = await prisma.xcart_users.findUnique({
     where: {
       user_id: req.user.userId,
     },
   });
+
+  sendEmail(decision.decision_id);
 
   res.json({ user });
 });

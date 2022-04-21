@@ -6,20 +6,21 @@ import { AccountListProductActionEnum } from "@modules/account/ts/types/account-
 import { ListPrivateEnum } from "@modules/account/ts/consts/list-private.enum";
 
 export interface List {
-  listType: ListPrivateEnum;
+  list_type: ListPrivateEnum;
   role: UserPrivateVariantsEnum;
-  listId: number;
-  addressId: number;
+  list_id: number;
+  address_id: number;
   birthday: string | number;
-  cacheUrl: string;
+  cache_url: string;
   description: string | null;
   name: string;
-  productListId: number;
-  products: ListItem[];
+  product_list_id: number;
+  items: ListItem[];
   source: ListSource;
   users: ListProductUser[];
-  recipientName: string | null;
-  recipientEmail: string | null;
+  recipient_name: string | null;
+  recipient_email: string | null;
+  product_type: string;
 }
 export enum ListSource {
   Default = "default",
@@ -27,10 +28,11 @@ export enum ListSource {
 }
 
 export interface ListItem {
+  list_idea_id: number;
   comment: string;
   has: number | string;
   image?: string;
-  list_items_id: number;
+  list_item_id: number;
   needs: string | number;
   orderBy: string;
   priority: PriorityProductEnum;

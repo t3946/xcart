@@ -70,27 +70,27 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div className="order-item-body-right-side"></div>
           <div className="order-item-body-title">items ordered</div>
 
-          {order.groups[0]?.products[0] && (
+          {order.groups[0]?.details[0] && (
             <div className={"order-item-body-product-container"}>
               <div className="order-item-body-product-left-part">
                 <img
                   className="order-item-body-product-img"
-                  src={order.groups[0].products[0].image}
+                  src={order.groups[0].details[0].image}
                 />
                 <div>
                   <a
-                    href={order.groups[0].products[0].url}
+                    href={order.groups[0].details[0].url}
                     className="order-item-body-product-name"
                   >
-                    {order.groups[0].products[0].product}
+                    {order.groups[0].details[0].product}
                   </a>
                   <div className="order-item-body-product-sku">
-                    {order.groups[0].products[0].code}
+                    {order.groups[0].details[0].code}
                   </div>
                 </div>
               </div>
               <div className="order-item-body-product-right-part-text">
-                x {order.groups[0].products[0].amount}
+                x {order.groups[0].details[0].amount}
               </div>
             </div>
           )}
@@ -103,7 +103,7 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
             className="order-items-list"
           >
             {order.groups.map((group, groupIndex) => {
-              return group.products.map((product, itemIndex) => {
+              return group.details.map((product, itemIndex) => {
                 if (groupIndex === 0 && itemIndex === 0) {
                   return null;
                 }

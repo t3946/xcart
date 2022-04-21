@@ -21,3 +21,8 @@ export const setAction = (payload: Record<any, any>): any => ({
 export const emptyAction = (): any => ({
   type: "CART_EMPTY",
 });
+
+export const addAction = (payload: Record<any, any>): any => ({
+  type: "CART_ADD",
+  payload,
+});

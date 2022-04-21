@@ -4,44 +4,47 @@ import Feedback from "@modules/ui/forms/Feedback";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { editIdeaName } from "@redux/actions/account-actions/ListsActions";
+import { editIdea } from "@redux/actions/account-actions/ListsActions";
 import { ListItem } from "@modules/account/ts/types/list.type";
 import cn from "classnames";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 
 import Styles from "@modules/account/components/lists/EditIdea.module.scss";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface EditIdeaProps {
-  info: ListItem;
+  listItem: ListItem;
   listId: number;
   openMenuDialog: () => void;
   edit: boolean;
 }
 
 export const EditIdea: React.FC<EditIdeaProps> = ({
-  info,
-  listId,
+  listItem,
   openMenuDialog,
   edit,
 }) => {
   const inputRef = React.useRef<HTMLInputElement>();
   const [isEdit, setIsEdit] = useState(false);
-
   const isLoading = useSelectorAccount((state) => state.lists.loading);
-
   const dispatch = useDispatch();
 
-  const onSaveEdit = () => {
+  function onSaveEdit() {
     dispatch(
-      editIdeaName(listId, info.productId, formik.values.name, () => {
-        formik.setTouched({});
-        onSetEdit(true);
+      editIdea({
+        data: {
+          name: formik.values.name,
+          list_idea_id: listItem.list_idea_id,
+        },
       })
     );
-  };
+
+    formik.setTouched({});
+    onCancel(true);
+  }
 
   const formik = useFormik({
-    initialValues: { name: info.product.name },
+    initialValues: { name: listItem.idea.name },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Required field"),
     }),
@@ -52,10 +55,11 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
     isEdit && inputRef.current?.focus();
   }, [isEdit]);
 
-  const onSetEdit = (save?: boolean) => {
+  const onCancel = (save?: boolean) => {
     setIsEdit(!isEdit);
+
     if (isEdit && !save) {
-      formik.values.name = info.product.name;
+      formik.values.name = listItem.product.name;
     }
   };
 
@@ -81,52 +85,47 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
             </Feedback>
           </div>
           <div className="edit-idea-btns">
-            <button
+            <Button
               type={"submit"}
               disabled={isLoading}
-              className={cn(
-                "form-button",
-                "account-submit-btn",
-                "auto-width-button",
-                "confirm-edit-idea-btn",
-                Styles.button
-              )}
+              className={cn("w-auto", Styles.button, "me-2")}
             >
               Save
-            </button>
-            <button
-              onClick={() => onSetEdit()}
+            </Button>
+            <Button
+              onClick={onCancel}
               disabled={isLoading}
-              className={cn(
-                "form-button",
-                "account-submit-btn",
-                "account-submit-btn-outline",
-                "auto-width-button",
-                Styles.button
-              )}
+              className={cn("w-auto", Styles.button)}
+              theme={ETheme.outlined}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </form>
       ) : (
         <div className="edit-idea-text-container">
           <div className={cn(Styles.IdeaName, "product-list-idea-name")}>
-            {info.product.name}
+            {listItem.idea.name}
           </div>
           {edit && (
             <React.Fragment>
               <span
-                onClick={() => onSetEdit()}
+                onClick={onCancel}
                 className={cn("add-comment-text", Styles.editIdea)}
               >
                 Edit idea
               </span>
-              <img
+
+              <span
+                className={"py-10 px-1 cursor-pointer d-lg-none"}
                 onClick={openMenuDialog}
-                className="edit-idea-ellipsis"
-                src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
-              />
+              >
+                <img
+                  src={
+                    "/static/frontend/dist/images/icons/account/ellipsis.svg"
+                  }
+                />
+              </span>
             </React.Fragment>
           )}
         </div>

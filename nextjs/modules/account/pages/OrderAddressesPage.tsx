@@ -22,12 +22,12 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
     return (
       <AddressText
         address={{
-          street: orderItem.address.shippingAddress,
-          city: orderItem.address.shippingCity,
-          state: !!orderItem.address.shippingState && {
-            label: orderItem.address.shippingState,
+          street: orderItem.s_address,
+          city: orderItem.s_city,
+          state: !!orderItem.s_state && {
+            state: orderItem.s_state,
           },
-          zip: orderItem.address.shippingZip,
+          zip: orderItem.s_zip,
         }}
       />
     );
@@ -37,22 +37,22 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
     return (
       <AddressText
         address={{
-          street: orderItem.address.billingAddress,
-          city: orderItem.address.billingCity,
-          state: !!orderItem.address.billingState && {
-            label: orderItem.address.billingState,
+          street: orderItem.b_address,
+          city: orderItem.b_city,
+          state: !!orderItem.b_state && {
+            state: orderItem.b_state,
           },
-          zip: orderItem.address.billingZip,
+          zip: orderItem.b_zip,
         }}
       />
     );
   }
 
   function phone() {
-    const parts = [orderItem.client.phone || ""];
+    const parts = [orderItem.phone || ""];
 
-    if (orderItem.client.phoneExt) {
-      parts.push("ext " + orderItem.client.phoneExt);
+    if (orderItem.phoneExt) {
+      parts.push("ext " + orderItem.phoneExt);
     }
 
     const phone = parts.join(" ").trim();
@@ -85,7 +85,7 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
         <div className="order-address-text-block">
           <div className="order-address-text-block-label">Full Name:</div>
           <div className="order-address-text-block-info">
-            {orderItem.client.firstName || "No name"}
+            {orderItem.firstName || "No name"}
           </div>
         </div>
         <div className="order-address-text-block">
@@ -95,7 +95,7 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
         <div className="order-address-text-block">
           <div className="order-address-text-block-label">Email:</div>
           <div className="order-address-text-block-info">
-            {orderItem.client.email || "No email"}
+            {orderItem.email || "No email"}
           </div>
         </div>
       </div>
@@ -104,10 +104,11 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
     <div className="address-list">
       <div className={Styles.orderAddressItem}>
         <div className="order-address-block-title">Shipping address</div>
+
         <div className={Styles.orderAddress}>
           <div>
             <div className="order-address-text-block-label">
-              {orderItem.client.shippingFirstName}
+              {orderItem.shippingFirstName}
             </div>
             <div className="order-address-text">{shippingAddress()}</div>
           </div>
@@ -120,7 +121,7 @@ export const OrderAddressesPage: React.FC<OrderAddressesPage> = ({
         <div className={Styles.orderAddress}>
           <div>
             <div className="order-address-text-block-label">
-              {orderItem.client.billingName}
+              {orderItem.billingName}
             </div>
             <div className="order-address-text">{billingAddress()}</div>
           </div>

@@ -20,7 +20,7 @@ export const FormCheckBox = ({
         checked={value}
         disabled={disabled}
       />
-      <label className={"checkbox-label"}>
+      <label htmlFor={id} className={"checkbox-label"}>
         <div className={"label-text text-dark"}>{label}</div>
       </label>
     </div>

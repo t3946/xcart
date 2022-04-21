@@ -2,18 +2,21 @@
 
 namespace Modules\Order\Controllers\Api;
 
+use GuzzleHttp\Client;
 use Modules\Goods\Models\ProductModel;
 use Modules\Order\Forms\Decision\LicenseRequiredForm;
 use Modules\Order\Models\Decisions\CustomerFilesModel;
 use Modules\Order\Models\Decisions\DecisionLicenseModel;
 use Modules\Order\Models\Decisions\DecisionModel;
 use Modules\Order\Models\Decisions\DecisionsCustomerFiles;
+use Modules\Order\Models\Decisions\DecisionTypeModel;
 use Modules\Order\Models\OrderDetailModel;
 use Modules\Order\Models\OrderModel;
 use Modules\User\Models\UserAccount\UserModel;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
+use Xcart\App\Request\HttpRequest;
 
 class DecisionController extends Controller
 {
@@ -241,6 +244,7 @@ class DecisionController extends Controller
         ]);
     }
 
+    //save decision files
     public function solveSUP() {
         /**
          * @var $decision DecisionModel
@@ -272,9 +276,34 @@ class DecisionController extends Controller
         ]);
         $link->save();
 
-        $decision->save();
-        $decision->setAttribute('solved', '1');
-        $decision->update();
+        $options = ['decision_id' => (int)$_POST['decision_id'],];
+
+        switch ($decision_type->slug) {
+            case "send-us-po":
+                $options['action'] = $_POST['method'];
+                break;
+            case "additional-information-required":
+                $options['phone'] = $_POST['phone'];
+                $options['phoneCode'] = $_POST['phoneCode'];
+                $options['phone_ext'] = $_POST['phone_ext'];
+                break;
+        }
+
+        $client = new Client();
+
+        $client->post('http://node-server:3001/api-client/user/decisions/solve', [
+            'json' => $options,
+            'headers' => [
+                'Cookie' => 'session=' . $_COOKIE['session'],
+            ]
+        ]);
+
+        $data = [
+            'action' => 'decision',
+            'decision_id' => $decision->decision_id,
+        ];
+        $msg = json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        Xcart::app()->queue->send('emails', $msg, true);
     }
 
     //solve payment required
@@ -367,37 +396,6 @@ class DecisionController extends Controller
 //            'solved' => DecisionController::getDecisions($user['user_id'], 1, self::LIMIT_SELECT_DECISIONS, 0, ['-updated']),
 //        ]);
 //    }
-
-    public function getEtaProductsAction($order_id)
-    {
-        /**
-         * @var $order OrderModel
-         */
-        $order = OrderModel::objects()->get(['orderid' => $order_id]);
-        $products = $order->getProducts();
-        $details = $order->detail_models;
-        $order_products_with_amount = [];
-
-        /**
-         * @var $detail OrderDetailModel
-         * @var $product ProductModel
-         */
-        foreach ($details as $i => $detail) {
-            foreach ($products as $j => $product) {
-                if ($detail->productid !== $product->productid) {
-                    continue;
-                }
-
-                $order_products_with_amount[] = [
-                    'product' => $product->getAttributes(),
-                    'orderAmount' => $detail->getAttribute('amount'),
-                    'estimateTimeArrival' => $product->getETADate(),
-                ];
-            }
-        }
-
-        $this->jsonResponse($order_products_with_amount);
-    }
 
     public function createDecision()
     {

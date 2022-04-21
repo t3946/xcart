@@ -3,12 +3,12 @@ import ProductCell from "@modules/account/components/order/order-table/ProductCe
 import OrderTable from "@modules/account/components/order/order-table/OrderTable";
 import TableFooter from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/TableFooter";
 import cn from "classnames";
-import Styles
-  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
-import Button, {ETheme} from "@modules/ui/forms/Button";
+import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import Button, { ETheme } from "@modules/ui/forms/Button";
 import Link from "next/link";
 import getStoreUrl from "@utils/getStoreUrl";
 import getThumbUrl from "@utils/getThumbUrl";
+import BuyAgainButton from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/BuyAgainButton";
 
 interface IProps {
   group: any;
@@ -18,7 +18,6 @@ interface IProps {
 
 const ShippingTable: React.FC<IProps> = (props) => {
   const { group, showCaption, order } = props;
-
   const items = group.details.map((item) => {
     const total = (parseFloat(item.price) * item.amount).toFixed(2);
 
@@ -139,20 +138,24 @@ const ShippingTable: React.FC<IProps> = (props) => {
               )}
               key={`row-item-${index}`}
             >
-              <a
-                className={"text-decoration-none me-md-10 mb-3 mb-md-0 d-block"}
-                href={item.url}
-              >
-                <Button className={"w-md-auto"}>buy again</Button>
-              </a>
+              {item.xcart_products.in_stock === 1 ? (
+                <BuyAgainButton
+                  productId={item.xcart_products.productid}
+                  quantity={item.amount}
+                />
+              ) : (
+                <span>Out of stock</span>
+              )}
 
-              <Link href={`/create-review/${item.productId}`}>
-                <a className={"text-decoration-none"}>
-                  <Button className={"w-md-auto"} theme={ETheme.outlined}>
-                    write a product review
-                  </Button>
-                </a>
-              </Link>
+              {item.xcart_products.xcart_product_reviews.length === 0 && (
+                <Link href={`/create-review/${item.xcart_products.productid}`}>
+                  <a className={"text-decoration-none"}>
+                    <Button className={"w-md-auto"} theme={ETheme.outlined}>
+                      write a product review
+                    </Button>
+                  </a>
+                </Link>
+              )}
             </div>
           );
 

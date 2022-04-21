@@ -2,17 +2,16 @@ import React from "react";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 
-interface MobileMenuForListProps {
+interface IProps {
   items: MobileMenuForListItem[];
   dialogOpen: boolean;
   dialogOnClose: () => void;
+  hat?: any;
 }
 
-export const MobileMenuForList: React.FC<MobileMenuForListProps> = ({
-  items,
-  dialogOnClose,
-  dialogOpen,
-}) => {
+export const MobileMenuForList: React.FC<IProps> = (props) => {
+  const { items, dialogOnClose, dialogOpen, hat } = props;
+
   return (
     <BootstrapDialogHOC
       classes={{
@@ -21,9 +20,9 @@ export const MobileMenuForList: React.FC<MobileMenuForListProps> = ({
         modal: "list-menu-actions-dialog-modal",
       }}
       show={dialogOpen}
-      title=""
       onClose={dialogOnClose}
     >
+      {!!hat && hat()}
       {items.map((e, i) => {
         return (
           <div

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React  from "react";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
 import Item from "@modules/account/components/sidebar-menu/Item";
@@ -6,21 +6,19 @@ import { ListsSidebarLabel } from "@modules/account/components/lists/ListsSideba
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import ArrowBackIcon from "@modules/icon/components/account/arrows/ArrowBackIcon";
-import { useDispatch } from "react-redux";
-import { fetchLists } from "@redux/actions/account-actions/ListsActions";
-
 import Styles from "@modules/account/components/lists/ListsSidebarMenu.module.scss";
 
-export const ListsSidebarMenu: React.FC = () => {
+interface IProps {
+  list?: any;
+}
+
+export const ListsSidebarMenu: React.FC<IProps> = (props) => {
+  const { list } = props;
   const router = useRouter();
   const createListDialog = useDialog();
   const storeLists = useSelectorAccount((e) => e.lists);
   const lists = storeLists.lists;
-  const listView = storeLists.listView;
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchLists());
-  }, []);
+
   const backOnAccount = () => {
     router.push("/dashboard");
   };
@@ -36,16 +34,23 @@ export const ListsSidebarMenu: React.FC = () => {
           <div>Back to account</div>
         </div>
       </button>
+
       <div className="lists-sidebar-label">Shopping Lists</div>
       {lists?.map((e, index) => (
         <Item
-          to={`/shopping-lists/${e.cacheUrl}`}
-          label={<ListsSidebarLabel label={e.name} privateType={e.listType} />}
+          to={`/shopping-lists/${e.product_list_id}`}
+          label={
+            <ListsSidebarLabel
+              label={e.name}
+              isPrivate={e.users.length === 0}
+            />
+          }
           className={[
             "sidebar-menu-item__lists",
+            "py-2",
             {
               [Styles.listItem_active]:
-                e.productListId === listView?.productListId,
+                e.product_list_id === list?.product_list_id,
             },
           ]}
           key={index}

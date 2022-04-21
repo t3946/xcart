@@ -502,7 +502,7 @@ if ($REQUEST_METHOD === 'POST')
                 $actual_shipping_gross = $v['actual_shipping_cost_net'];
 
                 if ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_select'] === 'applies_to_all_orders') {
-                    if ($order['shipping_groups'][$mnf_id]['all_distributor_info']['d_drop_ship_fee_type'] === 'value') {
+                    if ($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_type'] === 'value') {
                         if (!empty($order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'])) {
                             $actual_shipping_gross += $order['shipping_groups'][$m_id]['all_distributor_info']['d_drop_ship_fee_in_us'];
                         }

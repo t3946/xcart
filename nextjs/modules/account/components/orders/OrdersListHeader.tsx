@@ -39,6 +39,7 @@ export const OrdersListHeader: React.FC<OrdersListHeaderProps> = ({
             onChange={(e) => {
               onSelectValueChange(e.target.value);
             }}
+            instanceId={"select-time-period"}
           />
         </div>
 

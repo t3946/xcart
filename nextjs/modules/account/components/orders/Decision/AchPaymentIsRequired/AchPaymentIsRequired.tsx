@@ -1,57 +1,35 @@
 import React from "react";
 import cn from "classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
-import Alert from "@modules/account/components/shared/Alert";
-import StoreInterface from "@modules/account/ts/types/store.type";
-import {solveDecisionAction} from "@redux/actions/account-actions/DecisionsActions";
-import {setAlertAction} from "@redux/actions/account-actions/ProfileActions";
+import { useDispatch } from "react-redux";
+import { solveDecisionAction } from "@redux/actions/account-actions/DecisionsActions";
 import InnerPage from "@components/common/inner-page/InnerPage";
-import {
-  setIsVisibleAction as showMobileAlertAction,
-  setMobileAlertAction,
-} from "@redux/actions/account-actions/MobileMenuActions";
-import {setVisibleShadowPanelAction} from "@redux/actions/account-actions/ShadowPanelActions";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import GreyGrid from "@components/common/grey-grid/GreyGrid";
 import Styles from "@modules/account/components/orders/Decision/AchPaymentIsRequired/AchPaymentIsRequired.module.scss";
-import {AxiosResponse} from "axios";
+import { AxiosResponse } from "axios";
 import DecisionsInterface from "@modules/account/ts/types/decision";
 import Button from "@modules/ui/forms/Button";
+import AddressText from "@components/common/address-text/AddressText";
 
 interface IProps {
-  onChange: (res: AxiosResponse) => any;
+  onChange: (message: string) => any;
   decision: DecisionsInterface;
 }
 
 const AchPaymentIsRequired: React.FC<IProps> = (props) => {
   const { onChange, decision } = props;
-  const mockData = {
-    bank: {
-      name: "Evolve Bank & Trust",
-      address: ` 6070 Poplar Ave 
-      Suite 200 
-    Memphis, TN 38119`,
-      swiftCode: "FRNAUS44XXX",
-    },
-    company: {
-      name: "S3 Stores Inc",
-      "Routing / ABA Number": "084106768",
-      accountNumber: "9800775190",
-      companyAddress: "270 Trace Colony Park, Suite B, Ridgeland, MS 39157",
-    },
-  };
-  const transferData = (mockData) => {
+  const transferData = (transfer) => {
     const itemList: React.ReactNode[] = [];
     itemList.push(
       <div className={Styles.gridLineItem}>
         <div className={Styles.gridLineItemName}>Bank Name:</div>
-        <div className={Styles.gridLineItemValue}>{mockData.bank.name}</div>
+        <div className={Styles.gridLineItemValue}>{transfer.bank.name}</div>
         <div className={Styles.gridLineItemName}>Bank Address:</div>
-        <div className={Styles.gridLineItemValue}>{mockData.bank.address}</div>
+        <div className={Styles.gridLineItemValue}>
+          <AddressText address={transfer.bank.address} />
+        </div>
         <div className={Styles.gridLineItemName}>Bank SWIFT Code:</div>
         <div className={Styles.gridLineItemValue}>
-          {mockData.bank.swiftCode}
+          {transfer.bank.swiftCode}
         </div>
       </div>
     );
@@ -62,14 +40,14 @@ const AchPaymentIsRequired: React.FC<IProps> = (props) => {
           Account Name:
         </div>
 
-        <div className={Styles.gridLineItemValue}>{mockData.company.name}</div>
+        <div className={Styles.gridLineItemValue}>{transfer.company.name}</div>
         <div className={cn(Styles.gridLineItemName, "mb-2", "mb-md-0")}>
           Routing / <br className="d-md-none" />
           ABA Number:
         </div>
 
         <div className={Styles.gridLineItemValue}>
-          {mockData.company["Routing / ABA Number"]}
+          {transfer.company.routingNumber}
         </div>
 
         <div className={cn(Styles.gridLineItemName, "mb-20", "mb-lg-3")}>
@@ -77,151 +55,101 @@ const AchPaymentIsRequired: React.FC<IProps> = (props) => {
         </div>
 
         <div className={cn(Styles.gridLineItemValue, "mb-20", "mb-lg-3")}>
-          {mockData.company.accountNumber}
+          {transfer.company.accountNumber}
         </div>
 
         <div className={Styles.gridLineItemName}>Company Address:</div>
         <div className={Styles.gridLineItemValue}>
-          {mockData.company.companyAddress}
+          {transfer.company.companyAddress}
         </div>
       </div>
     );
 
     return itemList;
   };
-  React.useEffect(() => {
-    return () => {
-      dispatch(setAlertAction(null));
-    };
-  }, []);
+
   const dispatch = useDispatch();
-  const breakpoint = useBreakpoint();
-  const router = useRouter();
   const [disabled, setDisabled] = React.useState<boolean>(false);
-  const alert = useSelector((e: StoreInterface) => e.publicProfile.alert);
-  const [show, setShow] = React.useState(alert !== null);
 
-  if (alert) {
-    breakpoint({
-      xs: function () {
-        dispatch(setAlertAction(null));
-        dispatch(setMobileAlertAction(alert));
-        dispatch(showMobileAlertAction(true));
-        dispatch(setVisibleShadowPanelAction(true));
-        router.push("/account/orders/open-orders/decisions-required");
-      },
-      md: function () {},
-    });
-  }
-
-  const iSentAchTransferHandler = () => {
+  function submit() {
     setDisabled(true);
     dispatch(
       solveDecisionAction({
         data: {
           decision_id: decision.decision_id,
         },
-        success(res) {
-          setShow(true);
-          onChange(res);
+        success() {
+          setDisabled(false);
         },
       })
     );
 
-    setShow(true);
-    dispatch(
-      setAlertAction({
-        variant: "decisionSuccess",
-        message: `Upon confirming the receipt of the funds we'll ship your order.
-              Thank you for your business!`,
-      })
-    );
-  };
+    onChange(`Upon confirming the receipt of the funds we'll ship your order.
+              Thank you for your business`);
+  }
 
   return (
-    <>
-      {alert ? (
+    <InnerPage
+      hatClasses={Styles.decisionHeader}
+      headerClasses={Styles.decisionHeaderText}
+      header={"ACH payment is required due to high risk"}
+      bodyClasses={cn(Styles.decisionContent, "p-0")}
+      footerClasses={[Styles.decisionFooter, { "d-none": !!decision.solved }]}
+      footer={
         <>
-          <InnerPage
-            hatClasses={Styles.decisionHeader}
-            headerClasses={Styles.decisionHeaderText}
-            header={"ACH payment is required due to high risk"}
-            bodyClasses={cn(Styles.decisionContent, "p-0")}
-          >
-            <Alert
-              show={show}
-              variant={alert.variant}
-              message={alert.message}
-              classes={{
-                container: "pt-20 pb-5 pt-lg-0",
-                alert: ["account-inner-page_alert"],
-              }}
-            />
-          </InnerPage>
-        </>
-      ) : (
-        <InnerPage
-          hatClasses={Styles.decisionHeader}
-          headerClasses={Styles.decisionHeaderText}
-          header={"ACH payment is required due to high risk"}
-          bodyClasses={cn(Styles.decisionContent, "p-0")}
-          footerClasses={Styles.decisionFooter}
-          footer={
-            <>
-              <p
-                className={cn(
-                  Styles.decisionFooter__text,
-                  Styles.decisionFooterText
-                )}
-              >
-                Upon sending the funds, please click
-              </p>
-
-              <div className={cn("ps-3", "ps-lg-0")}>
-                <Button
-                  className={cn(
-                    "w-md-auto",
-                    "mx-md-auto",
-                    "mx-lg-0",
-                    Styles.button
-                  )}
-                  onClick={iSentAchTransferHandler}
-                  disabled={disabled || !!decision.solved}
-                >
-                  i sent ach transfer
-                </Button>
-              </div>
-            </>
-          }
-        >
           <p
             className={cn(
-              Styles.decisionText,
-              Styles.decision__text,
-              "mb-20",
-              "mb-md-4",
-              "mb-lg-12"
+              Styles.decisionFooter__text,
+              Styles.decisionFooterText
             )}
           >
-            Due to high risk associated with your order, please remit your
-            payment via ACH transfer.
+            Upon sending the funds, please click
           </p>
 
-          <p className={cn(Styles.decisionText, Styles.decision__text)}>
-            To pay us via ACH transfer, please send funds to our Evolve Bank &
-            Trust USD checking account:
-          </p>
+          <div className={cn("ps-3", "ps-lg-0")}>
+            <Button
+              className={cn(
+                "w-md-auto",
+                "mx-md-auto",
+                "mx-lg-0",
+                Styles.button,
+                { "d-none": !!decision.solved }
+              )}
+              onClick={submit}
+              disabled={disabled || !!decision.solved}
+            >
+              i sent ach transfer
+            </Button>
+          </div>
+        </>
+      }
+    >
+      <p
+        className={cn(
+          Styles.decisionText,
+          Styles.decision__text,
+          "mb-20",
+          "mb-md-4",
+          "mb-lg-12"
+        )}
+      >
+        Due to high risk associated with your order, please remit your payment
+        via ACH transfer.
+      </p>
 
-          <GreyGrid
-            classes={{
-              item: [Styles.gridLine, "my-0"],
-              list: [Styles.decision__grid, Styles.decisionGrid, "m-lg-0"],
-            }}
-            items={transferData(mockData)}
-          />
-        </InnerPage>
-      )}
-    </>
+      <p className={cn(Styles.decisionText, Styles.decision__text)}>
+        To pay us via ACH transfer, please send funds to our Evolve Bank & Trust
+        USD checking account:
+      </p>
+
+      <GreyGrid
+        classes={{
+          item: [Styles.gridLine, "my-0"],
+          list: [Styles.decision__grid, Styles.decisionGrid, "m-lg-0"],
+        }}
+        items={transferData(decision.options)}
+      />
+    </InnerPage>
   );
 };
 

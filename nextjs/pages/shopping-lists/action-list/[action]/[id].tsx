@@ -11,20 +11,23 @@ import { AddIdeaPage } from "@modules/account/pages/AddIdeaPage";
 
 const ActionListPage: NextPage = () => {
   const router = useRouter();
-  const { action, cache } = router.query;
+  const { action, id } = router.query;
   const { lists } = useSelectorAccount((state) => state.lists);
-  const getComponent = () => {
+  const list = lists.find((list) => list.product_list_id === parseInt(id));
+
+  function getComponent() {
     switch (action) {
       case "manage-list":
-        return <ManageListPage listHash={cache} />;
+        return <ManageListPage list={list} />;
       case "delete-list":
-        return <DeleteListPage />;
+        return <DeleteListPage list={list} />;
       case "share-list":
-        return <ShareListPage />;
+        return <ShareListPage list={list} />;
       case "add-idea":
-        return <AddIdeaPage />;
+        return <AddIdeaPage list={list} />;
     }
-  };
+  }
+
   return (
     <PageTwoColumns bar={<ListsSidebarMenu />}>
       {lists && getComponent()}

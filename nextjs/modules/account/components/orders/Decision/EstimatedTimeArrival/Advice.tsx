@@ -14,17 +14,18 @@ export enum AdviceTypes {
 }
 
 interface IProps {
-  type: AdviceTypes | string;
+  type: AdviceTypes;
   className: any;
   value: string;
   name: string;
   checked?: boolean;
   onChange: any;
   disabled?: boolean;
+  text: string;
 }
 
 const Advice: React.FC<IProps> = (props: IProps) => {
-  const { type, className, value, name, checked, onChange } = props;
+  const { type, className, value, name, checked, onChange, text } = props;
   const disabled = props.disabled || false;
 
   function iconTemplate() {
@@ -43,22 +44,6 @@ const Advice: React.FC<IProps> = (props: IProps) => {
       case AdviceTypes.replace:
         return <Replace className={classnames(iconClasses)} />;
     }
-  }
-
-  function textTemplate() {
-    const text = {
-      wait: "Wait for 'out of stock' items and then process the order",
-      ship: "Ship 'in stock' items and remove 'out of stock' items",
-      cancel: "Cancel and void transaction for the whole order",
-      replace:
-        "Replace 'out of stock' item(s) with alternative one(s) and process the order",
-    };
-
-    return (
-      <div className={"estimate-advise-button__text estimate-advise-text"}>
-        {text[type]}
-      </div>
-    );
   }
 
   const classes = {
@@ -106,7 +91,9 @@ const Advice: React.FC<IProps> = (props: IProps) => {
 
       <div className={classnames(classes.button)}>
         {iconTemplate()}
-        {textTemplate()}
+        <div className={"estimate-advise-button__text estimate-advise-text"}>
+          {text}
+        </div>
       </div>
     </label>
   );

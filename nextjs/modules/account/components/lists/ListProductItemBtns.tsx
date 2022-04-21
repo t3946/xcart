@@ -12,42 +12,52 @@ import { checkProductCollisionInList } from "@modules/account/utils/check-produc
 
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
 
-interface ListProductItemBtnsProps {
+interface IProps {
   handleDelete: () => void;
   edit: boolean;
   btnLabel: string;
   mainBtnType?: ETheme;
-  productId: number;
+  item: number;
   onMainBtnClick: () => void;
-  time: string;
-  listId: string;
+  list: any;
   outOfStock?: boolean;
+  disabledAddToCart?: any;
+  className?: any;
 }
 
-export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
-  handleDelete,
-  edit,
-  btnLabel,
-  mainBtnType,
-  productId,
-  onMainBtnClick,
-  time,
-  listId,
-  outOfStock,
-  disabledAddToCart,
-}) => {
+export const ListProductItemBtns: React.FC<IProps> = (props) => {
+  const {
+    handleDelete,
+    edit,
+    btnLabel,
+    mainBtnType,
+    item,
+    searchLink,
+    list,
+    outOfStock,
+    disabledAddToCart,
+    onMainBtnClick,
+    className,
+  } = props;
   const dispatch = useDispatch();
   const snackbar = useSnackbar();
-
-  const { lists, listView }: AccountListsStore = useSelectorAccount(
+  const { lists }: AccountListsStore = useSelectorAccount(
     (state) => state.lists
   );
-  const handleMove = (e) => {
+
+  function handleMove(e) {
     const toListId = e.target.value.value;
-    const toList = lists.find((list) => list.productListId === toListId);
-    if (checkProductCollisionInList(listView, toList, productId)) {
-      const fromListId = listView.productListId;
-      dispatch(transferProductList(fromListId, toListId, productId));
+    const toList = lists.find((list) => list.product_list_id === toListId);
+
+    if (checkProductCollisionInList(list, toList, item.list_item_id)) {
+      dispatch(
+        transferProductList({
+          data: {
+            product_list_id: toListId,
+            list_item_id: item.list_item_id,
+          },
+        })
+      );
     } else {
       snackbar.show(
         `This item already added to list`,
@@ -55,18 +65,21 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
         VariantsEnum.error
       );
     }
-  };
+  }
 
   return (
-    <div className={Styles.container}>
-      <Button
-        theme={mainBtnType}
-        disabled={outOfStock || disabledAddToCart}
-        className={cn("full-width-button", "fw-bold", Styles.button)}
-        onClick={onMainBtnClick}
-      >
-        {btnLabel}
-      </Button>
+    <div className={cn(Styles.container, className)}>
+      <a href={searchLink} className={"text-decoration-none"}>
+        <Button
+          theme={mainBtnType}
+          disabled={outOfStock || disabledAddToCart}
+          className={cn("full-width-button", "fw-bold", Styles.button)}
+          onClick={onMainBtnClick}
+        >
+          {btnLabel}
+        </Button>
+      </a>
+
       {edit && (
         <div
           className={cn(
@@ -75,15 +88,33 @@ export const ListProductItemBtns: React.FC<ListProductItemBtnsProps> = ({
           )}
         >
           <Select
+            instanceId={`select-list_${list.product_list_id}`}
             clearable={false}
             isSearchable={false}
             options={lists
-              .filter((list) => list.role !== UserPrivateVariantsEnum.VIEW)
-              .filter((list) => list.productListId !== listView.productListId)
+              .filter(function (list) {
+                if (list.role === UserPrivateVariantsEnum.VIEW) {
+                  return false;
+                }
+
+                if (list.product_list_id === props.list.product_list_id) {
+                  return false;
+                }
+
+                if (props.item.product_type === "product") {
+                  for (const item of list.items) {
+                    if (item.product_id === props.item.product_id) {
+                      return false;
+                    }
+                  }
+                }
+
+                return true;
+              })
               .map((e) => {
                 return {
                   label: e.name,
-                  value: e.productListId,
+                  value: e.product_list_id,
                 };
               })}
             name={""}

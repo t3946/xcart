@@ -52,7 +52,19 @@ export const CreateNewList: React.FC<CreateNewList> = ({
       formik.setErrors({ name: "Maximum length 50 characters" });
       return;
     }
-    dispatch(createList(formik.values.name, onAddingEnd, actionType));
+
+    dispatch(
+      createList({
+        data: {
+          name: formik.values.name,
+        },
+        callback(list) {
+          snackbar.show(`${list.name} list added successfully`);
+          onCancelBtnClick();
+          router.push(`/shopping-lists/${list.product_list_id}`);
+        },
+      })
+    );
   };
 
   const formik = useFormik({
@@ -66,12 +78,6 @@ export const CreateNewList: React.FC<CreateNewList> = ({
   });
 
   const breakpoint = useBreakpoint();
-
-  const onAddingEnd = (cache: string) => {
-    snackbar.show(`${formik.values.name} list added successfully`);
-    onCancelBtnClick();
-    router.push(`/shopping-lists/${cache}`);
-  };
 
   return (
     <div>

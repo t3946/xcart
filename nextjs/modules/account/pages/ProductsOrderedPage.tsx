@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
-import { ProductsOrderedItem } from "@modules/account/components/orders/ProductsOrderedItem";
+import React, {useEffect} from "react";
 import Store from "@redux/stores/Store";
-import { setBreakpoint } from "@redux/actions/account-actions/MainActions";
-import { getBreakpointsFlags } from "@modules/account/hooks/useBreakpoint";
-import { OrderView } from "@modules/account/ts/types/order/order-view.types";
+import {setBreakpoint} from "@redux/actions/account-actions/MainActions";
+import {getBreakpointsFlags} from "@modules/account/hooks/useBreakpoint";
+import {OrderView} from "@modules/account/ts/types/order/order-view.types";
 import ShippingTable from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/ShippingTable";
-import GrandTotalProductOrdered from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered";
+import GrandTotalProductOrdered
+  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered";
 
 interface ProductsOrderedPageProps {
-  orderItem: OrderView;
+  order: OrderView;
 }
 
-export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
-  orderItem,
-}) => {
+export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = (
+  props
+) => {
+  const { order } = props;
+
   useEffect(() => {
     Store.dispatch(setBreakpoint(getBreakpointsFlags(window.innerWidth)));
   }, []);
@@ -22,11 +24,11 @@ export const ProductsOrderedPage: React.FC<ProductsOrderedPageProps> = ({
     <div>
       <div className="page-label products-ordered-label">Products ordered</div>
 
-      {orderItem.groups.map((group, i) => (
-        <ShippingTable group={group} key={`product-${i}`} order={orderItem} />
+      {order.groups.map((group, i) => (
+        <ShippingTable group={group} key={`product-${i}`} order={order} />
       ))}
 
-      <GrandTotalProductOrdered order={orderItem} />
+      <GrandTotalProductOrdered order={order} />
     </div>
   );
 };

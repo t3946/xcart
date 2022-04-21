@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import { Sceleton } from "@modules/shared/components/sceleton/Sceleton";
 import { ListProductItemSkeleton } from "../components/lists/ListProductItemSkeleton";
@@ -10,63 +9,94 @@ import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { ViewLists } from "@modules/account/components/lists/view-lists/ViewLists";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
-import { ListSource } from "@modules/account/ts/types/list.type";
-import { ListMobileMenu } from "@modules/account/components/lists/ListMobileMenu";
 import { useRouter } from "next/router";
 import cn from "classnames";
-
 import StylesInnerPage from "@components/common/inner-page/InnerPage.module.scss";
+import { resetTypeAction } from "@redux/actions/account-actions/ListsActions";
+import { useDispatch } from "react-redux";
 
-const ListsPage: React.FC = () => {
+interface IProps {
+  list: any;
+}
+
+const ListsPage: React.FC<IProps> = (props) => {
+  const { list } = props;
   const router = useRouter();
   const { lists, loading } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
   const breakpoints = useBreakpoint();
+  const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
-  const listView = useSelectorAccount((state) => state.lists.listView);
 
   if (!user) {
     return null;
   }
 
-  let role, cacheUrl, source, owner, users;
-
-  if (listView) {
-    role = listView.role;
-    cacheUrl = listView.cacheUrl;
-    source = listView.source;
-    owner = listView.owner;
-    users = listView.users;
-  }
-
   function listIsEdit() {
-    const userId = user.user_id;
-
-    if (owner?.userId === userId) {
+    if (list.owner.user_id === user.user_id) {
       return UserPrivateVariantsEnum.EDIT;
     }
+
     if (
-      users?.find((user) => user.userId === userId)?.role ===
-      UserPrivateVariantsEnum.EDIT
+      list?.users.find((role: any) => role.user.user_id === user.user_id)
+        ?.role === UserPrivateVariantsEnum.EDIT
     ) {
       return UserPrivateVariantsEnum.EDIT;
     }
+
     return UserPrivateVariantsEnum.VIEW;
   }
+
   const { cache } = router.query;
   const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
-  const isBase = source === ListSource.Default;
+  // todo: what it is
+  // const isBase = source === ListSource.Default;
+  const isBase = true;
+
+  function addToListIdea() {
+    if (!edit) {
+      return null;
+    }
+
+    return (
+      <div className={StylesInnerPage.accountPageFooter}>
+        <Button
+          onClick={createIdeaDialog.handleClickOpen}
+          theme={ETheme.outlined}
+          className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
+            "d-none": !cache || loading,
+            "d-lg-none": loading,
+          })}
+        >
+          Add idea to list
+        </Button>
+      </div>
+    );
+  }
+
+  //clear removed and moved item placeholders
+  React.useEffect(() => {
+    return function () {
+      dispatch(resetTypeAction());
+    };
+  }, [list]);
+
+  if (!list) {
+    return null;
+  }
+
   return (
     <div>
       {lists ? (
-        breakpoints({
-          xs: cache ? (
-            <ViewLists isShoppingList={isBase} />
-          ) : (
-            <ListMobileMenu />
-          ),
-          lg: !!listView && <ViewLists isShoppingList={isBase} />,
-        })
+        // breakpoints({
+        //   xs: cache ? (
+        //     <ViewLists list={list} isShoppingList={isBase} />
+        //   ) : (
+        //     <ListMobileMenu />
+        //   ),
+        //   lg: !!list && <ViewLists list={list} isShoppingList={isBase} />,
+        // })
+        <ViewLists list={list} isShoppingList={isBase} />
       ) : (
         <React.Fragment>
           <div className="list-header-container">
@@ -78,31 +108,16 @@ const ListsPage: React.FC = () => {
           ))}
         </React.Fragment>
       )}
+
       <BootstrapDialogHOC
         show={createIdeaDialog.open}
         title={"Create a new idea"}
         onClose={createIdeaDialog.handleClose}
       >
-        <AddIdea
-          listHash={cacheUrl}
-          onCancelBtnClick={createIdeaDialog.handleClose}
-        />
+        <AddIdea list={list} onCancelBtnClick={createIdeaDialog.handleClose} />
       </BootstrapDialogHOC>
 
-      {edit && listView && (
-        <div className={StylesInnerPage.accountPageFooter}>
-          <Button
-            onClick={createIdeaDialog.handleClickOpen}
-            theme={ETheme.outlined}
-            className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
-              "d-none": !cache || loading,
-              "d-lg-none": loading,
-            })}
-          >
-            Add idea to list
-          </Button>
-        </div>
-      )}
+      {addToListIdea()}
     </div>
   );
 };

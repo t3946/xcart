@@ -13,6 +13,7 @@ const apiTwoStepVerification = require("./TwoStepVerification");
 const apiAddresses = require("./Addresses");
 const apiDecisions = require("./Decisions");
 const apiStripe = require("./stripe/Stripe");
+const apiLists = require("./lists/Lists");
 const stripeService = require("../../services/stripe");
 const getBaseUrl = require("../../utils/getBaseUrl");
 const authenticator = require("../../utils/otpAuthenticator");
@@ -21,6 +22,7 @@ app.use("/stripe", isAuthMiddleware, apiStripe);
 app.use("/tsv", apiTwoStepVerification);
 app.use("/address", apiAddresses);
 app.use("/decisions", apiDecisions);
+app.use("/lists", isAuthMiddleware, apiLists);
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", { session: false }, async (error, result) => {
@@ -739,7 +741,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
   const cards = (await stripeService.getSources(req.user.userId)).data;
 
   for (const order of orders) {
-    for (const group of order.groups) {
+    for (const group of order.xcart_refund_groups) {
       group.details = [];
 
       for (const refundedProduct of group.xcart_refunded_products) {
@@ -753,7 +755,7 @@ app.get("/get-transactions", isAuthMiddleware, async function (req, res) {
 
     let totalShipping = 0;
     order.taxes = {};
-    for (const group of order.xcart_order_groups) {
+    for (const group of order.groups) {
       totalShipping = totalShipping + parseFloat(group.shipping_gross);
       group.paymentStatus = getPaymentStatusCommonName(group.cb_status);
       group.shippingStatus = getShippingStatusCommonName(group.dc_status);

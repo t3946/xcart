@@ -7,41 +7,33 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 import cn from "classnames";
-
 import Styles from "@modules/account/components/lists/ListProductItemComment.module.scss";
 
-interface ListProductItemCommentProps {
-  info: ListItem;
-  listInfo: List;
+interface Iprops {
+  listItem: ListItem;
+  list: List;
   onEditCommentClick: () => void;
 }
 
-export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
-  info,
-  listInfo,
-  onEditCommentClick,
-}) => {
+export const ListProductItemComment: React.FC<Iprops> = (props) => {
+  const { listItem, list, onEditCommentClick } = props;
   const priority = priorityProductSelectValuesConst.find(
-    (e) => e.value === info.priority
+    (e) => e.value === listItem.priority
   ).label;
-
   const deleteCommentDialog = useDialog();
-
   const dispatch = useDispatch();
-
   const deleteComment = () => {
     dispatch(
-      editCommentProduct(
-        listInfo.productListId,
-        info.list_items_id,
-        {
+      editCommentProduct({
+        data: {
           comment: null,
           priority: null,
           has: null,
           needs: null,
+          list_item_id: listItem.list_item_id,
         },
-        deleteCommentDialog.handleClose
-      )
+        callback: deleteCommentDialog.handleClose,
+      })
     );
   };
 
@@ -55,7 +47,7 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
       )}
     >
       <div className="list-product-item-comment-container-text">
-        {info.comment}
+        {listItem.comment}
       </div>
       <div className="list-product-items-comment-params">
         <div className={"d-flex"}>
@@ -67,13 +59,13 @@ export const ListProductItemComment: React.FC<ListProductItemCommentProps> = ({
         <div className={"d-flex"}>
           <div className="list-product-item-comment-param">Need:</div>
           <div className="list-product-item-comment-param-value needs">
-            {info.needs}
+            {listItem.needs}
           </div>
         </div>
         <div className={"d-flex"}>
           <div className="list-product-item-comment-param">Have:</div>
           <div className="list-product-item-comment-param-value">
-            {info.has}
+            {listItem.has}
           </div>
         </div>
       </div>

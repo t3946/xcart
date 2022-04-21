@@ -1,8 +1,14 @@
 @import "styles/utils/Utils.module";
 
 .productInfoName {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+
   @include breakpoint(md) {
     font-size: pxToRem(18);
+    display: inline;
   }
   @include breakpoint(lg) {
     font-size: pxToRem(14);
@@ -10,7 +16,7 @@
 }
 
 .productInfoPrice {
-  padding: pxToRem(10) 0;
+  font-size: pxToRem(20);
 
   @include breakpoint(md) {
     font-size: pxToRem(24);

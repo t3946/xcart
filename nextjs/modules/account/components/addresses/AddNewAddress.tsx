@@ -27,3 +27,5 @@ export const AddNewAddress: React.FC<IProps> = ({ onClick, classes }) => {
     />
   );
 };
+
+export default AddNewAddress;

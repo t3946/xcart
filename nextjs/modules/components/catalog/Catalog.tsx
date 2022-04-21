@@ -181,29 +181,29 @@ export default class Catalog extends React.Component {
 
   render() {
     if (this.state.loaded === true && this.state.items.length === 0) {
-      return (
-        <div className="catalog">
-          <CatalogContext.Provider
-            value={{ ...this.state, setItems: this.setItems }}
-          >
-            {this.printStateLine()}
-
-            <ProductsList
-              ref={this.productList}
-              catalogUrl={this.state.baseUrl}
-              onBeginLoading={this.onBeginLoading}
-              onEndLoading={this.onEndLoading}
-              isLoading={this.state.isLoading}
-              sortKey={this.state.sortKey}
-              searchText={this.props.searchText}
-            />
-
-            {this.loadMoreButtonTemplate()}
-          </CatalogContext.Provider>
-        </div>
-      );
-    } else {
       return <NoItems />;
     }
+
+    return (
+      <div className="catalog">
+        <CatalogContext.Provider
+          value={{ ...this.state, setItems: this.setItems }}
+        >
+          {this.printStateLine()}
+
+          <ProductsList
+            ref={this.productList}
+            catalogUrl={this.state.baseUrl}
+            onBeginLoading={this.onBeginLoading}
+            onEndLoading={this.onEndLoading}
+            isLoading={this.state.isLoading}
+            sortKey={this.state.sortKey}
+            searchText={this.props.searchText}
+          />
+
+          {this.loadMoreButtonTemplate()}
+        </CatalogContext.Provider>
+      </div>
+    );
   }
 }

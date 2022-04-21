@@ -4,16 +4,20 @@ import { ListProductItems } from "@modules/account/components/lists/ListProductI
 import InnerPage from "@components/common/inner-page/InnerPage";
 
 interface ViewLists {
+  list: any;
   isShoppingList: boolean;
 }
-export const ViewLists: React.FC<ViewLists> = ({ isShoppingList }) => {
+
+export const ViewLists: React.FC<ViewLists> = (props) => {
+  const { isShoppingList, list } = props;
+
   return (
     <InnerPage
       bodyClasses={"p-0"}
       headerClasses={"p-0"}
-      header={<ListHeader isShoppingList={isShoppingList} />}
+      header={<ListHeader list={list} isShoppingList={isShoppingList} />}
     >
-      <ListProductItems />
+      <ListProductItems list={list} />
     </InnerPage>
   );
 };

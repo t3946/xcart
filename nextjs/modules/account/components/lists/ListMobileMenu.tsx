@@ -3,14 +3,20 @@ import { useRouter } from "next/router";
 import { List } from "@modules/account/ts/types/list.type";
 import { MobileMenuBackBtn } from "@modules/account/pages/MobileMenuBackBtn";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import Link from "next/link";
+import cn from "classnames";
 
 export const ListMobileMenu: React.FC = () => {
   const lists: List[] = useSelectorAccount((state) => state.lists.lists);
   const router = useRouter();
 
-  const redirectToList = (hash: string) => {
-    router.push(`/shopping-lists/${hash}`);
+  const redirectToList = (id: string) => {
+    router.push(`/shopping-lists/${id}`);
   };
+
+  function getListType(list) {
+    return list.users.length ? "shared" : "private";
+  }
 
   return (
     <div>
@@ -29,20 +35,28 @@ export const ListMobileMenu: React.FC = () => {
           create a list
         </div>
       </div>
-      {lists.map((e) => (
-        <div
-          key={e.cacheUrl}
-          onClick={() => redirectToList(e.cacheUrl)}
-          className={
-            "list-mobile-menu-item d-flex justify-content-between alight-center"
-          }
+      {lists.map((list) => (
+        <Link
+          href={`/shopping-lists/${list.product_list_id}`}
+          key={list.product_list_id}
         >
-          <div className="list-mobile-menu-item-name">{e.name}</div>
-          <img
-            src={`/static/frontend/images/icons/account/list-${e.listType}.svg`}
-          />
-        </div>
+          <a
+            className={
+              cn("list-mobile-menu-item", "d-flex", "justify-content-between", "alight-center", "text-decoration-none")
+            }
+          >
+            <div className="list-mobile-menu-item-name">{list.name}</div>
+            <img
+              src={`/static/frontend/images/icons/account/list-${getListType(
+                list
+              )}.svg`}
+              alt={""}
+            />
+          </a>
+        </Link>
       ))}
     </div>
   );
 };
+
+export default ListMobileMenu;

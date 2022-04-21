@@ -66,17 +66,17 @@ model account_credit_cards {
 }
 
 model account_decisions {
-  decision_id          Int                    @id @default(autoincrement()) @db.UnsignedInt
-  solved               Int                    @default(0) @db.UnsignedTinyInt
-  options              Json?
-  order_id             Int
-  order_number         String?                @db.VarChar(31)
-  created              DateTime?              @default(now()) @db.DateTime(0)
-  updated              DateTime?              @default(now()) @db.DateTime(0)
-  decision_type_id     Int                    @db.UnsignedInt
-  type                 decision_types         @relation(fields: [decision_type_id], references: [decision_type_id], onDelete: Cascade, map: "account_decisions_decision_types_decision_type_id_fk")
-  order                xcart_orders           @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
-  decisions_user_files decisions_user_files[]
+  decision_id      Int                    @id @default(autoincrement()) @db.UnsignedInt
+  solved           Int                    @default(0) @db.UnsignedTinyInt
+  options          Json?
+  order_id         Int
+  order_number     String?                @db.VarChar(31)
+  created          DateTime?              @default(now()) @db.DateTime(0)
+  updated          DateTime?              @default(now()) @db.DateTime(0)
+  decision_type_id Int                    @db.UnsignedInt
+  type             decision_types         @relation(fields: [decision_type_id], references: [decision_type_id], onDelete: Cascade, map: "account_decisions_decision_types_decision_type_id_fk")
+  order            xcart_orders           @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "account_decision_xcart_orders_orderid_fk")
+  files            decisions_user_files[]
 
   @@index([order_id], map: "account_decision_xcart_orders_orderid_fk")
   @@index([decision_type_id], map: "account_decisions_decision_types_decision_type_id_fk")
@@ -89,23 +89,28 @@ model account_delivery_types {
 }
 
 model account_list_ideas {
-  list_idea_id Int    @id @default(autoincrement()) @db.UnsignedInt
-  name         String @db.VarChar(120)
+  list_idea_id       Int                  @id @default(autoincrement()) @db.UnsignedInt
+  name               String               @db.VarChar(120)
+  account_list_items account_list_items[]
 }
 
 model account_list_items {
-  list_items_id         Int                          @id @default(autoincrement())
-  product_id            Int
-  product_list_id       Int                          @db.UnsignedInt
-  order_by              Int                          @default(999999) @db.UnsignedMediumInt
-  product_type          String?                      @default("product") @db.VarChar(50)
-  comment               String?                      @db.VarChar(256)
-  priority              account_list_items_priority?
-  needs                 String?                      @db.VarChar(50)
-  has                   String?                      @db.VarChar(50)
-  add_date              DateTime                     @default(now()) @db.Timestamp(0)
-  account_product_lists account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_list_items_account_product_lists")
+  list_item_id    Int                          @id @default(autoincrement())
+  product_id      Int?
+  list_idea_id    Int?                         @db.UnsignedInt
+  product_list_id Int                          @db.UnsignedInt
+  order_by        Int                          @default(999999) @db.UnsignedMediumInt
+  product_type    String?                      @default("product") @db.VarChar(50)
+  comment         String?                      @db.VarChar(256)
+  priority        account_list_items_priority?
+  needs           Int?                         @db.UnsignedInt
+  has             Int?                         @db.UnsignedInt
+  add_date        DateTime                     @default(now()) @db.Timestamp(0)
+  idea            account_list_ideas?          @relation(fields: [list_idea_id], references: [list_idea_id], onDelete: Cascade, map: "account_list_items_account_list_ideas_list_idea_id_fk")
+  product         xcart_products?              @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "account_list_items_xcart_products_productid_fk")
+  list            account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "account_list_items_account_product_lists_product_list_id_fk")
 
+  @@unique([list_idea_id, product_list_id], map: "account_list_items_list_idea_id_product_list_id_uindex")
   @@unique([product_id, product_list_id], map: "account_list_items_product_id_product_list_id_uindex")
   @@index([product_list_id], map: "FK_account_list_items_account_product_lists")
 }
@@ -144,20 +149,20 @@ model account_order_problems_statuses {
 }
 
 model account_product_lists {
-  product_list_id         Int                       @id @default(autoincrement()) @db.UnsignedInt
-  public                  Int                       @default(1) @db.TinyInt
-  name                    String                    @db.VarChar(50)
-  description             String?                   @db.VarChar(300)
-  recipient_name          String?                   @db.VarChar(50)
-  recipient_email         String?                   @db.VarChar(50)
-  birthday                String?                   @db.VarChar(50)
-  cache_url               String?                   @db.VarChar(50)
-  address_id              Int?                      @db.UnsignedInt
-  user_id                 BigInt                    @db.UnsignedBigInt
-  account_addresses       account_addresses?        @relation(fields: [address_id], references: [address_id], onDelete: NoAction, onUpdate: NoAction, map: "account_product_lists_account_addresses_address_id_fk")
-  xcart_users             xcart_users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "account_product_lists_xcart_users_user_id_fk")
-  account_list_items      account_list_items[]
-  product_list_user_roles product_list_user_roles[]
+  product_list_id Int                       @id @default(autoincrement()) @db.UnsignedInt
+  public          Int                       @default(1) @db.TinyInt
+  name            String                    @db.VarChar(50)
+  description     String?                   @db.VarChar(300)
+  recipient_name  String?                   @db.VarChar(50)
+  recipient_email String?                   @db.VarChar(50)
+  birthday        String?                   @db.VarChar(50)
+  cache_url       String?                   @db.VarChar(50)
+  address_id      Int?                      @db.UnsignedInt
+  user_id         BigInt                    @db.UnsignedBigInt
+  addresses       account_addresses?        @relation(fields: [address_id], references: [address_id], onDelete: NoAction, onUpdate: NoAction, map: "account_product_lists_account_addresses_address_id_fk")
+  owner           xcart_users               @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "account_product_lists_xcart_users_user_id_fk")
+  items           account_list_items[]
+  users           product_list_user_roles[]
 
   @@index([address_id], map: "account_product_lists_account_addresses_address_id_fk")
   @@index([user_id], map: "account_product_lists_xcart_users_user_id_fk")
@@ -900,16 +905,20 @@ model sites_corporate {
   vat_tax_period_starts_month      Int?                                    @db.UnsignedTinyInt
   vat_period_duration              sites_corporate_vat_period_duration?
   sites_bank_account               sites_bank_account[]
+  sites_corporate_storefronts      sites_corporate_storefronts[]
   sites_share_holder               sites_share_holder[]
   sites_tax_return                 sites_tax_return[]
   xcart_storefronts                xcart_storefronts[]
 }
 
 model sites_corporate_storefronts {
-  storefront_id Int @unique(map: "storefront_id") @db.UnsignedInt
-  corporate_id  Int @db.UnsignedInt
+  storefront_id     Int               @unique(map: "storefront_id")
+  corporate_id      Int               @db.UnsignedInt
+  sites_corporate   sites_corporate   @relation(fields: [corporate_id], references: [id], onDelete: Cascade, map: "sites_corporate_storefronts_sites_corporate_id_fk")
+  xcart_storefronts xcart_storefronts @relation(fields: [storefront_id], references: [storefrontid], onDelete: Cascade, map: "sites_corporate_storefronts_xcart_storefronts_storefrontid_fk")
 
   @@id([storefront_id, corporate_id])
+  @@index([corporate_id], map: "sites_corporate_storefronts_sites_corporate_id_fk")
 }
 
 model sites_corporate_taxes {
@@ -2178,8 +2187,8 @@ model xcart_external_verification_products_queue {
   pack_qty_website                  Int?
   feed_id                           Int?                                                            @db.UnsignedInt
   amz_listing_status                xcart_external_verification_products_queue_amz_listing_status?
-  xcart_external_verification_feeds xcart_external_verification_feeds?                              @relation(fields: [feed_id], references: [feed_id], onDelete: NoAction, onUpdate: NoAction, map: "FK_xcart_external_verification_feeds")
-  xcart_products                    xcart_products                                                  @relation(fields: [productid], references: [productid], onDelete: NoAction, onUpdate: NoAction, map: "xcart_external_verification_products_queue_ibfk_1")
+  xcart_external_verification_feeds xcart_external_verification_feeds?                              @relation(fields: [feed_id], references: [feed_id], onDelete: Cascade, map: "FK_xcart_external_verification_feeds")
+  xcart_products                    xcart_products                                                  @relation(fields: [productid], references: [productid], onDelete: Cascade, map: "xcart_external_verification_products_queue_ibfk_1")
 
   @@index([feed_id], map: "FK_xcart_external_verification_feeds")
   @@index([cross_verify_count], map: "cross_verify_count")
@@ -3627,7 +3636,7 @@ model xcart_order_groups {
   xcart_order_voided_reasons      xcart_order_voided_reasons?                      @relation(fields: [voided_reason_id], references: [reason_id], onDelete: NoAction, map: "FK_xcart_order_groups_xcart_order_voided_reasons")
   details                         xcart_order_details[]
   xcart_order_group_taxes         xcart_order_group_taxes[]
-  xcart_order_statuses_history    xcart_order_statuses_history[]
+  statuses_history                xcart_order_statuses_history[]
   xcart_order_tracking            xcart_order_tracking[]
 
   @@unique([orderid, manufacturerid], map: "orderid_manufacturerid")
@@ -3641,12 +3650,13 @@ model xcart_order_groups {
 }
 
 model xcart_order_logs {
-  id      Int    @id @default(autoincrement())
-  orderid Int    @default(0) @db.UnsignedMediumInt
-  type    String @default("") @db.Char(2)
-  date    Int    @default(0)
-  login   String @default("") @db.VarChar(40)
-  log     String @db.MediumText
+  id           Int          @id @default(autoincrement())
+  orderid      Int
+  type         String       @default("") @db.Char(2)
+  date         Int          @default(0)
+  log          String       @db.MediumText
+  login        String?      @db.VarChar(255)
+  xcart_orders xcart_orders @relation(fields: [orderid], references: [orderid], onDelete: Cascade, map: "xcart_order_logs_xcart_orders_orderid_fk")
 
   @@index([id, orderid], map: "idx_id_orderid")
   @@index([id, orderid, type, date], map: "idx_id_orderid_type_date")
@@ -3722,18 +3732,18 @@ model xcart_order_statuses_history {
 }
 
 model xcart_order_tracking {
-  id                           Int                          @id @default(autoincrement()) @db.UnsignedInt
-  order_group_id               Int
-  linkid                       Int?
-  tracknum                     String?                      @db.VarChar(255)
-  shipping_date                DateTime                     @db.Date
-  carrier_id                   Int
-  aftership_id                 String?                      @db.VarChar(50)
-  send_to_amazon               Int                          @default(0) @db.TinyInt
-  created_at                   DateTime                     @default(now()) @db.Timestamp(0)
-  xcart_tracking_links_carrier xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
-  xcart_tracking_links         xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
-  xcart_order_groups           xcart_order_groups           @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_order_groups")
+  id                 Int                          @id @default(autoincrement()) @db.UnsignedInt
+  order_group_id     Int
+  linkid             Int?
+  tracknum           String?                      @db.VarChar(255)
+  shipping_date      DateTime                     @db.Date
+  carrier_id         Int
+  aftership_id       String?                      @db.VarChar(50)
+  send_to_amazon     Int                          @default(0) @db.TinyInt
+  created_at         DateTime                     @default(now()) @db.Timestamp(0)
+  carrier            xcart_tracking_links_carrier @relation(fields: [carrier_id], references: [carrier_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links_carrier")
+  link               xcart_tracking_links?        @relation(fields: [linkid], references: [linkid], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_tracking_links")
+  xcart_order_groups xcart_order_groups           @relation(fields: [order_group_id], references: [order_group_id], onDelete: Cascade, map: "FK_xcart_order_tracking_xcart_order_groups")
 
   @@unique([order_group_id, tracknum], map: "order_group_id_tracknum")
   @@index([linkid], map: "FK_xcart_order_tracking_xcart_tracking_links")
@@ -3925,16 +3935,18 @@ model xcart_orders {
   xcart_states_xcart_orders_s_state_idToxcart_states                   xcart_states?                        @relation("xcart_orders_s_state_idToxcart_states", fields: [s_state_id], references: [stateid], onDelete: Restrict, map: "xcart_orders_xcart_states_state_id_fk_s_state_id")
   xcart_storefronts                                                    xcart_storefronts                    @relation(fields: [storefrontid], references: [storefrontid], map: "FK_xcart_orders_xcart_storefronts")
   xcart_users                                                          xcart_users?                         @relation(fields: [user_id], references: [user_id], onDelete: Restrict, map: "FK_xcart_orders_xcart_users")
-  account_decisions                                                    account_decisions[]
+  decisions                                                            account_decisions[]
   account_order_cancel_requests                                        account_order_cancel_requests[]
   account_transactions                                                 account_transactions[]
   faxes_fax                                                            faxes_fax[]
   order_extra                                                          order_extra?
+  order_logs                                                           order_logs[]
   xcart_amazon_list_inbound_shipments                                  xcart_amazon_list_inbound_shipments?
   xcart_order_address_geolocation                                      xcart_order_address_geolocation[]
   xcart_order_details                                                  xcart_order_details[]
   xcart_order_fa_fraud_checks                                          xcart_order_fa_fraud_checks[]
   groups                                                               xcart_order_groups[]
+  logs                                                                 xcart_order_logs[]
   xcart_order_transactions                                             xcart_order_transactions[]
   xcart_po_pipeline                                                    xcart_po_pipeline[]
   xcart_refund_groups                                                  xcart_refund_groups[]
@@ -4636,6 +4648,7 @@ model xcart_products {
   xcart_brands                               xcart_brands?                               @relation(fields: [brandid], references: [brandid], map: "FK_xcart_products_xcart_brands")
   xcart_customers                            xcart_customers?                            @relation(fields: [last_modify_id], references: [id], map: "FK_xcart_products_xcart_customers")
   xcart_manufacturers                        xcart_manufacturers                         @relation(fields: [manufacturerid], references: [manufacturerid], onDelete: Cascade, map: "FK_xcart_products_xcart_manufacturers")
+  account_list_items                         account_list_items[]
   amazon_inventory_queue                     amazon_inventory_queue?
   amazon_price_queue                         amazon_price_queue?
   amazon_reorder_batch_data                  amazon_reorder_batch_data[]
@@ -4647,7 +4660,7 @@ model xcart_products {
   xcart_external_verification_products_queue xcart_external_verification_products_queue?
   xcart_images_D                             xcart_images_D[]
   details                                    xcart_order_details[]
-  xcart_pricing                              xcart_pricing[]
+  pricings                                   xcart_pricing[]
   xcart_product_options                      xcart_product_options[]
   xcart_product_question                     xcart_product_question[]
   xcart_product_reviews                      xcart_product_reviews[]
@@ -4786,12 +4799,12 @@ model xcart_products_hard_resell {
 }
 
 model xcart_products_images {
-  product_id           Int
-  image_id             Int                  @db.UnsignedInt
-  is_active            Int                  @default(1) @db.UnsignedTinyInt
-  order_by             Int                  @default(0) @db.UnsignedInt
-  image                xcart_product_images @relation(fields: [image_id], references: [image_id], onDelete: Cascade, map: "FK_xcart_products_images_xcart_product_images")
-  xcart_products       xcart_products       @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "FK_xcart_products_images_xcart_products")
+  product_id     Int
+  image_id       Int                  @db.UnsignedInt
+  is_active      Int                  @default(1) @db.UnsignedTinyInt
+  order_by       Int                  @default(0) @db.UnsignedInt
+  image          xcart_product_images @relation(fields: [image_id], references: [image_id], onDelete: Cascade, map: "FK_xcart_products_images_xcart_product_images")
+  xcart_products xcart_products       @relation(fields: [product_id], references: [productid], onDelete: Cascade, map: "FK_xcart_products_images_xcart_products")
 
   @@id([product_id, image_id])
   @@index([image_id], map: "FK_xcart_products_images_xcart_product_images")
@@ -5634,7 +5647,7 @@ model xcart_storefronts {
   logo_mobile                   String?                            @db.VarChar(255)
   base_category_id              Int?                               @unique(map: "base_category_id")
   dimension_weight              xcart_storefronts_dimension_weight @default(lbs)
-  dimension_size                xcart_storefronts_dimension_size   @default(EMPTY_ENUM_VALUE)
+  dimension_size                String?                            @db.VarChar(255)
   corporation_id                Int?                               @db.UnsignedInt
   dimension_weight_id           Int?
   dimension_size_id             Int?
@@ -5644,6 +5657,7 @@ model xcart_storefronts {
   xcart_countries               xcart_countries?                   @relation(fields: [country], references: [code], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_countries")
   xcart_currencies              xcart_currencies?                  @relation(fields: [currency_id], references: [currency_id], onDelete: NoAction, map: "FK_xcart_storefronts_xcart_currencies")
   core_static_notification      core_static_notification[]
+  sites_corporate_storefronts   sites_corporate_storefronts?
   sites_payment_methods         sites_payment_methods[]
   xcart_k                       xcart_k[]
   xcart_manufacturers_site      xcart_manufacturers_site[]
@@ -5849,11 +5863,15 @@ model xcart_templates_for_communication {
   status_id                                                                                            Int                                      @default(0)
   attach_pdf_invoice                                                                                   String                                   @default("N") @db.Char(1)
   category_id                                                                                          Int?                                     @db.UnsignedInt
+  decision_type_id                                                                                     Int?                                     @db.UnsignedInt
   xcart_templates_categories                                                                           xcart_templates_categories?              @relation(fields: [category_id], references: [id], onDelete: NoAction, map: "FK_xcart_templates_for_communication_xcart_templates_categories")
+  decision_types                                                                                       decision_types?                          @relation(fields: [decision_type_id], references: [decision_type_id], onDelete: Cascade, map: "FK_xcart_templates_for_communication_decision_types")
+  decision_types_templates                                                                             decision_types_templates[]
   xcart_manufacturers_xcart_manufacturers_order_entry_template_idToxcart_templates_for_communication   xcart_manufacturers[]                    @relation("xcart_manufacturers_order_entry_template_idToxcart_templates_for_communication")
   xcart_manufacturers_xcart_manufacturers_order_submit_template_idToxcart_templates_for_communication  xcart_manufacturers[]                    @relation("xcart_manufacturers_order_submit_template_idToxcart_templates_for_communication")
   xcart_manufacturers_xcart_manufacturers_request_avail_template_idToxcart_templates_for_communication xcart_manufacturers[]                    @relation("xcart_manufacturers_request_avail_template_idToxcart_templates_for_communication")
 
+  @@index([decision_type_id], map: "FK_xcart_templates_for_communication_decision_types")
   @@index([category_id], map: "FK_xcart_templates_for_communication_xcart_templates_categories")
   @@index([department, pos, active], map: "idx_dept_pos")
 }
@@ -5945,6 +5963,7 @@ model xcart_users {
   account_product_lists    account_product_lists[]
   account_transactions     account_transactions[]
   helpful_reviews          helpful_reviews[]                @ignore
+  order_logs               order_logs[]
   product_list_user_roles  product_list_user_roles[]
   xcart_authenticators     xcart_authenticators[]
   xcart_fingerprints       xcart_fingerprints[]
@@ -6181,7 +6200,7 @@ model product_list_user_roles {
   product_list_id           Int                          @db.UnsignedInt
   role                      product_list_user_roles_role
   account_product_lists     account_product_lists        @relation(fields: [product_list_id], references: [product_list_id], onDelete: Cascade, map: "FK_account_user_list_account_product_lists")
-  xcart_users               xcart_users                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_user_list_xcart_users")
+  user                      xcart_users                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "FK_account_user_list_xcart_users")
 
   @@unique([user_id, product_list_id], map: "product_list_user_roles_user_id_product_list_id_uindex")
   @@index([product_list_id], map: "FK_account_user_list_account_product_lists")
@@ -6541,10 +6560,12 @@ model xcart_order_human_readable_statuses {
 }
 
 model decision_types {
-  decision_type_id  Int                 @id @default(autoincrement()) @db.UnsignedInt
-  name              String              @db.VarChar(63)
-  slug              String              @unique(map: "decision_types_slug_uindex") @db.VarChar(63)
-  account_decisions account_decisions[]
+  decision_type_id                  Int                                 @id @default(autoincrement()) @db.UnsignedInt
+  name                              String                              @db.VarChar(63)
+  slug                              String                              @unique(map: "decision_types_slug_uindex") @db.VarChar(63)
+  account_decisions                 account_decisions[]
+  decision_types_templates          decision_types_templates[]
+  xcart_templates_for_communication xcart_templates_for_communication[]
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
@@ -6553,7 +6574,7 @@ model decisions_user_files {
   decision_id       Int               @db.UnsignedInt
   user_file_id      Int               @db.UnsignedInt
   account_decisions account_decisions @relation(fields: [decision_id], references: [decision_id], onDelete: Cascade, map: "decision")
-  user_files        user_files        @relation(fields: [user_file_id], references: [user_file_id], onDelete: Cascade, map: "file")
+  file              user_files        @relation(fields: [user_file_id], references: [user_file_id], onDelete: Cascade, map: "file")
 
   @@index([decision_id], map: "decision")
   @@index([user_file_id], map: "file")
@@ -6565,6 +6586,41 @@ model user_files {
   original_name        String                 @db.VarChar(255)
   created              DateTime               @default(now()) @db.DateTime(0)
   decisions_user_files decisions_user_files[]
+}
+
+model decision_types_templates {
+  decision_types_templates_id          Int                                @id @default(autoincrement()) @db.UnsignedInt
+  decision_type_id                     Int                                @db.UnsignedInt
+  action                               String?                            @db.VarChar(255)
+  xcart_templates_for_communication_id Int?
+  template_data                        Json?
+  decision_types                       decision_types                     @relation(fields: [decision_type_id], references: [decision_type_id], onDelete: Cascade, map: "decision_types_templates_decision_types_decision_type_id_fk")
+  xcart_templates_for_communication    xcart_templates_for_communication? @relation(fields: [xcart_templates_for_communication_id], references: [id], onDelete: Cascade, map: "decision_types_templates_xcart_templates_for_communication_id_fk")
+
+  @@index([decision_type_id], map: "decision_types_templates_decision_types_decision_type_id_fk")
+  @@index([xcart_templates_for_communication_id], map: "decision_types_templates_xcart_templates_for_communication_id_fk")
+}
+
+model order_log_types {
+  order_log_type_id Int          @id @default(autoincrement()) @db.UnsignedInt
+  name              String?      @db.VarChar(32)
+  order_logs        order_logs[]
+}
+
+model order_logs {
+  order_log_id      Int             @id @default(autoincrement()) @db.UnsignedInt
+  user_id           BigInt          @db.UnsignedBigInt
+  order_id          Int
+  order_log_type_id Int             @db.UnsignedInt
+  message           String          @db.MediumText
+  created           DateTime        @default(now()) @db.DateTime(0)
+  xcart_orders      xcart_orders    @relation(fields: [order_id], references: [orderid], onDelete: Cascade, map: "order_logs_xcart_orders_orderid_fk")
+  order_log_types   order_log_types @relation(fields: [order_log_type_id], references: [order_log_type_id], onDelete: Cascade, map: "order_logs_order_log_types_order_log_type_id_fk")
+  xcart_users       xcart_users     @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "order_logs_xcart_users_user_id_fk")
+
+  @@index([order_log_type_id], map: "order_logs_order_log_types_order_log_type_id_fk")
+  @@index([order_id], map: "order_logs_xcart_orders_orderid_fk")
+  @@index([user_id], map: "order_logs_xcart_users_user_id_fk")
 }
 
 enum account_list_items_priority {
@@ -7109,11 +7165,6 @@ enum xcart_dimensions_type {
 enum xcart_storefronts_dimension_weight {
   kg
   lbs
-}
-
-enum xcart_storefronts_dimension_size {
-  cm
-  EMPTY_ENUM_VALUE @map("")
 }
 
 enum xcart_fraud_base_questions_active {

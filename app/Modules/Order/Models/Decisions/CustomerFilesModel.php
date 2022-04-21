@@ -44,21 +44,4 @@ class CustomerFilesModel extends Model
             ],
         ];
     }
-
-    /**
-     * save image and link
-     */
-    public function saveImage(int $linked_entity_id, array $image_attributes)
-    {
-        $image = new ImagesModel($image_attributes);
-        $image->save();
-
-        $attributes = [
-            'review_id' => $linked_entity_id,
-            'image_id' => (int)$image->pk,
-        ];
-
-        $this->setAttributes($attributes);
-        $this->save();
-    }
 }

@@ -1,11 +1,21 @@
-import { takeLatest } from "redux-saga/effects";
+import { put, takeLatest } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
 import axios from "axios";
 
 function* add(action: Record<any, any>): Generator {
-  const { data, success } = action.payload;
+  const { data, callback } = action.payload;
+  let newCart;
 
-  yield axios.post("/cart/add/products", data).then(success);
+  yield axios.post("/cart/add/one-product", data).then((res) => {
+    newCart = res.data;
+  });
+
+  yield put({
+    type: "CART_SET",
+    payload: { cart: newCart },
+  });
+
+  callback && callback();
 }
 
 function* setQuantity(action: Record<any, any>): Generator {

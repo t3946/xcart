@@ -5,6 +5,7 @@ namespace Modules\Account\Controllers\Api;
 
 
 use Aws\Sns\SnsClient;
+use FacebookAds\Object\Currency;
 use Modules\Account\Controllers\AccountController;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
@@ -20,12 +21,37 @@ use Modules\Reviews\Controllers\Api\ReviewsApi;
 use Modules\Reviews\Models\RatingsModel;
 use Modules\Reviews\ReviewsModule;
 use Modules\Sites\Helpers\StorageHelper;
+use Modules\Sites\Models\CurrencyModel;
 use Modules\Sites\Models\PaymentMethodModel;
 use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 
 class AccountApi extends Controller
 {
+    public function cancelTransaction(){
+
+        $user = Xcart::app()->auth->getUser(true);
+
+        if ($user->getIsGuest()) {
+            $this->jsonResponse([], 401);
+        }
+
+        $data = $this->getRequest()->body;
+
+        if ($data->has('orderid') === false) {
+            $this->jsonResponse([], 400);
+        }
+
+        if (OrderModel::objects()->filter(['orderid' => $data->orderid, 'user_id' => $user->user_id])->count() === 0) {
+            $this->jsonResponse([], 400);
+        }
+
+        OrderHelper::cancelOrder($data->orderid);
+
+        $this->jsonResponse();
+
+    }
+
     public function getTerritory()
     {
         $this->jsonResponse(['countries' => $this->getCountries(), 'states' => $this->getStates()]);
@@ -79,6 +105,7 @@ class AccountApi extends Controller
         }
 
         $stripeSettings = ProcessorModel::objects()->asArray()->get(['processor_name' => 'Stripe']);
+        $currency = CurrencyModel::objects()->asArray()->get(["currency_id" => $site->currency_id]);
 
         $initial_data = [
             'user' => $user,
@@ -102,6 +129,9 @@ class AccountApi extends Controller
                     'logo' => (string)$site->logo,
                     'logo_mobile' => (string)$site->logo_mobile,
                     'file_edit_image_favicon' => (string)$site->file_edit_image_favicon,
+                    'fax_number' => $site->fax_number,
+                    'corporationName' => $site->corporation->name,
+                    'currency' => $currency
                 ],
                 'google_recaptchav2_site_key' => '6LenP30eAAAAAOUcOLvofYoaPMW6lMYTsov-RJ4p',
             ],
@@ -110,6 +140,11 @@ class AccountApi extends Controller
                 'mobile' => GoodsMenuLibrary::toArrayMobile(),
             ],
             'countries' => AccountController::getCountryPhoneCodes(),
+            'payments' => [
+                'cards' => [],
+                'cardsLoading' => false,
+                'methods' => $this->getPaymentMethods(),
+            ],
         ];
 
         $this->jsonResponse($initial_data);
@@ -151,8 +186,7 @@ class AccountApi extends Controller
         http_response_code(200);
     }
 
-    public function getPaymentMethods()
-    {
+    public function getPaymentMethods() {
         $site = Xcart::app()->getModule('Sites')->getSite();
         $payment_methods = $site->payment_methods->asArray()->filter(['is_active' => 1])->order(['position'])->all();
 
@@ -160,7 +194,12 @@ class AccountApi extends Controller
             $payment_methods = PaymentMethodModel::objects()->asArray()->select(["logo", "name"])->all(['is_active' => 1]);
         }
 
-        $this->jsonResponse($payment_methods);
+        return $payment_methods;
+    }
+
+    public function getPaymentMethodsAction()
+    {
+        $this->jsonResponse($this->getPaymentMethods());
     }
 
     // получить данные для клиентской части старого сайта

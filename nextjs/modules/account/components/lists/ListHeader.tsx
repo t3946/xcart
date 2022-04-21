@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { ShareListDialog } from "@modules/account/components/lists/ShareListDialog";
@@ -6,7 +6,7 @@ import { ManageList } from "@modules/account/components/lists/ManageList";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@modules/account/components/lists/MobileMenuForList";
+import { MobileMenuForList } from "@modules/account/components/lists/mobile-menu/MobileMenuForList";
 import { deleteList } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
 import { useSnackbar } from "@modules/account/hooks/useSnackbar";
@@ -19,69 +19,83 @@ import Arrow from "@modules/icon/components/font-awesome/arrow-left/Solid";
 
 import Styles from "@modules/account/components/lists/ListHeader.module.scss";
 
-interface ListHeaderProps {
+interface IProps {
+  list: any;
   isShoppingList: boolean;
 }
 
-export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
+export const ListHeader: React.FC<IProps> = (props) => {
   const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const { listView: list, loading } = useSelectorAccount(
-    (state) => state.lists
-  );
+  const { list, isShoppingList } = props;
   const userId = useSelectorAccount((e) => e.user.user_id);
+
   function listIsEdit() {
-    if (list.owner.userId === userId) {
+    if (list.owner.user_id === userId) {
       return UserPrivateVariantsEnum.EDIT;
     }
+
     if (
-      list?.users.find((user) => user.userId === userId)?.role ===
+      list?.users.find((role) => role.user.user_id === userId)?.role ===
       UserPrivateVariantsEnum.EDIT
     ) {
       return UserPrivateVariantsEnum.EDIT;
     }
     return UserPrivateVariantsEnum.VIEW;
   }
-  const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
+
+  const editor = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
+  const owner = list.user_id === userId;
   const manageListDialog = useDialog();
   const deleteListDialog = useDialog();
   const mobileMenuDialog = useDialog();
   const router = useRouter();
   const dispatch = useDispatch();
-  const onRequestEnd = () => {
+
+  function handleDeleteList() {
+    dispatch(
+      deleteList({
+        data: {
+          product_list_id: list.product_list_id,
+        },
+      })
+    );
     deleteListDialog.handleClose();
     snackbar.show(`${list.name} list deleted successfully`);
     router.replace(`/shopping-lists/`);
-  };
-  const handleDeleteList = () => {
-    dispatch(deleteList(list.productListId, onRequestEnd));
-  };
+  }
+
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       label: "Manage list",
       onClick: () =>
-        router.push(`/shopping-lists/action-list/manage-list/${list.cacheUrl}`),
+        router.push(
+          `/shopping-lists/action-list/manage-list/${list.product_list_id}`
+        ),
     },
     {
       label: "Add idea",
       onClick: () =>
-        router.push(`/shopping-lists/action-list/add-idea/${list.cacheUrl}`),
+        router.push(
+          `/shopping-lists/action-list/add-idea/${list.product_list_id}`
+        ),
     },
     {
       label: "Share list with others",
       onClick: () =>
-        router.push(`/shopping-lists/action-list/share-list/${list.cacheUrl}`),
+        router.push(
+          `/shopping-lists/action-list/share-list/${list.product_list_id}`
+        ),
     },
   ];
   const mobileItemDelete = {
     label: "Delete list",
     onClick: () =>
-      router.push(`/shopping-lists/action-list/delete-list/${list.cacheUrl}`),
+      router.push(
+        `/shopping-lists/action-list/delete-list/${list.product_list_id}`
+      ),
   };
-
-  if (loading) {
-    return null;
-  }
+  const listType = list.users.length === 0 ? "private" : "shared";
 
   return (
     <div
@@ -155,7 +169,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
         </Link>
         <img
           className="list-header-private-type-img"
-          src={`/static/frontend/images/icons/account/list-${list.listType}.svg`}
+          src={`/static/frontend/images/icons/account/list-${listType}.svg`}
         />
         <div
           className={cn(
@@ -166,12 +180,15 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
         >
           {list.name}
         </div>
-        {edit && (
-          <img
+        {editor && (
+          <span
+            className={"ms-3 py-10 px-1 cursor-pointer d-lg-none"}
             onClick={mobileMenuDialog.handleClickOpen}
-            className="list-header-ellipsis"
-            src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
-          />
+          >
+            <img
+              src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+            />
+          </span>
         )}
       </div>
 
@@ -184,31 +201,34 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
         )}
       >
         <div className="list-header-actions flex-grow-1 ms-lg-5">
-          {edit && (
-            <div
-              onClick={manageListDialog.handleClickOpen}
-              className={cn(
-                Styles.istHeaderActions__listHeaderAction,
-                Styles.listHeaderAction
+          {editor && (
+            <>
+              <div
+                onClick={manageListDialog.handleClickOpen}
+                className={cn(
+                  Styles.istHeaderActions__listHeaderAction,
+                  Styles.listHeaderAction
+                )}
+              >
+                Manage list
+              </div>
+
+              {owner && (
+                <div
+                  onClick={deleteListDialog.handleClickOpen}
+                  className={cn(
+                    Styles.istHeaderActions__listHeaderAction,
+                    Styles.listHeaderAction,
+                    Styles.listHeaderAction_red
+                  )}
+                >
+                  Delete list
+                </div>
               )}
-            >
-              Manage list
-            </div>
-          )}
-          {!isShoppingList && (
-            <div
-              onClick={deleteListDialog.handleClickOpen}
-              className={cn(
-                Styles.istHeaderActions__listHeaderAction,
-                Styles.listHeaderAction,
-                Styles.listHeaderAction_red
-              )}
-            >
-              Delete list
-            </div>
+            </>
           )}
         </div>
-        {edit && (
+        {owner && (
           <div className="list-header-shared-block">
             <ShareIcon className="list-header-share-btn blue" />
             <div
@@ -223,14 +243,16 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
       <ShareListDialog
         open={shareDialog.open}
         handleClose={shareDialog.handleClose}
+        list={list}
       />
       <BootstrapDialogHOC
         show={manageListDialog.open}
         title={"Manage list"}
         onClose={manageListDialog.handleClose}
       >
-        <ManageList info={list} onCancelClick={manageListDialog.handleClose} />
+        <ManageList list={list} onCancelClick={manageListDialog.handleClose} />
       </BootstrapDialogHOC>
+
       <BootstrapDialogHOC
         show={deleteListDialog.open}
         title={"Confirm delete list"}
@@ -242,6 +264,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ isShoppingList }) => {
           onCancelClick={deleteListDialog.handleClose}
         />
       </BootstrapDialogHOC>
+
       <MobileMenuForList
         items={
           isShoppingList

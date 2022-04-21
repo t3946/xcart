@@ -1,78 +1,94 @@
 import React from "react";
 import { NoItemsBlock } from "@modules/account/components/lists/NoItemsBlock";
-import { ListProductItem } from "@modules/account/components/lists/ListProductItem";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { ListProductItem } from "@modules/account/components/lists/item-product/ListProductItem";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  resetServerContext,
+} from "react-beautiful-dnd";
 import { useDispatch } from "react-redux";
 import {
   reorderList,
-  deleteProduct,
+  deleteItem,
 } from "@redux/actions/account-actions/ListsActions";
 import { reorderMass } from "@modules/account/utils/reorder-mass";
 import { ListItemTypeEnum } from "@modules/account/ts/consts/list-item-type.enum";
-import { List, ListItem } from "@modules/account/ts/types/list.type";
 import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private-variants.enum";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { ListProductIdeaItem } from "@modules/account/components/lists/ListProductIdeaItem";
 import { AccountListProductActionEnum } from "@modules/account/ts/types/account-list-product-action";
 import { DeleteProductPlaceholder } from "@modules/account/components/lists/DeleteProductPlaceholder";
 import { MovedProductPlaceholder } from "@modules/account/components/lists/MovedProductPlaceholder";
-import { indexOf } from "lodash";
 
-export const ListProductItems: React.FC = () => {
-  const { listView, loading } = useSelectorAccount((state) => state.lists);
+interface IProps {
+  list: any;
+}
+
+export const ListProductItems: React.FC<IProps> = (props) => {
+  resetServerContext();
+  const { list } = props;
   const userId = useSelectorAccount((e) => e.user.user_id);
-  function listIsEdit() {
-    if (listView.owner.userId === userId) {
-      return UserPrivateVariantsEnum.EDIT;
-    }
-    if (
-      listView?.users.find((user) => user.userId === userId)?.role ===
-      UserPrivateVariantsEnum.EDIT
-    ) {
-      return UserPrivateVariantsEnum.EDIT;
-    }
-    return UserPrivateVariantsEnum.VIEW;
-  }
   const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const dispatch = useDispatch();
-
   const getItemStyle = (isDragging, draggableStyle) => ({
     ...draggableStyle,
     boxShadow: isDragging ? "0px 4px 5px 0px rgba(0, 0, 0, 0.25)" : "",
     height: isDragging ? draggableStyle.height - 1 : "auto",
   });
 
-  const deleteItem = (id) => {
-    dispatch(deleteProduct(id));
-  };
-
-  const onDragEnd = (result: any) => {
+  function onDragEnd(result: any) {
     if (!result.destination) {
       return;
     }
+
     reorderProductList(result.source.index, result.destination.index);
-  };
+  }
 
-  const reorderProductList = (startIndex: number, endIndex: number) => {
-    const reOrder = reorderMass(listView.products, startIndex, endIndex);
-    dispatch(reorderList(reOrder, listView?.productListId));
-  };
+  function reorderProductList(startIndex: number, endIndex: number) {
+    const reOrder = reorderMass(list.items, startIndex, endIndex);
 
-  if (loading) {
-    return <span className="ps-4">Loading..</span>;
+    dispatch(reorderList(reOrder, list?.product_list_id));
+  }
+
+  function listIsEdit() {
+    if (list.owner.user_id === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+
+    if (
+      list?.users.find((user) => user.user.user_id === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+
+  function deleteItemHandler(list_item_id) {
+    dispatch(deleteItem({ data: { list_item_id } }));
   }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
         {(provided, snapshot) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {listView.products.length ? (
-              listView.products.map((product, index) => {
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            data-rbd-draggable-context-id={list.product_list_id}
+          >
+            {list.items.length ? (
+              list.items.map((listItem, index) => {
+
+                if (listItem === undefined) {
+                  console.log("UNDEFINED", list.items);
+                }
                 return (
                   <Draggable
-                    key={`${index}_${product.list_items_id}`}
-                    draggableId={`${index}_${product.list_items_id}`}
+                    key={`${index}_${listItem.list_item_id}`}
+                    draggableId={`${index}_${listItem.list_item_id}`}
                     index={index}
                   >
                     {(provided, snapshot) => (
@@ -85,54 +101,54 @@ export const ListProductItems: React.FC = () => {
                         )}
                       >
                         {(() => {
-                          switch (product?.typeAction?.type) {
+                          switch (listItem?.typeAction?.type) {
                             case AccountListProductActionEnum.DELETE: {
                               return (
                                 <DeleteProductPlaceholder
-                                  productListId={listView.productListId}
-                                  listItemId={product.productId}
-                                  name={product.typeAction.productName}
-                                  product={product}
+                                  name={listItem.typeAction.productName}
+                                  listItem={listItem}
                                 />
                               );
                             }
                             case AccountListProductActionEnum.MOVE: {
                               return (
                                 <MovedProductPlaceholder
-                                  label={product.typeAction.listName}
-                                  cache={product.typeAction.toListId}
-                                  productName={product.typeAction.productName}
+                                  label={listItem.typeAction.listName}
+                                  cache={listItem.typeAction.toListId}
+                                  productName={listItem.typeAction.productName}
                                 />
                               );
                             }
                             default:
-                              switch (product.productType) {
+                              switch (listItem.product_type) {
                                 case ListItemTypeEnum.PRODUCT:
                                   return (
                                     <ListProductItem
+                                      list={list}
                                       deleteItem={() =>
-                                        deleteItem(product.list_items_id)
+                                        deleteItemHandler(listItem.list_item_id)
                                       }
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}
                                       reorderProductList={reorderProductList}
-                                      listId={listView.productListId}
-                                      listInfo={listView}
+                                      listId={list.product_list_id}
+                                      listInfo={list}
                                       edit={edit}
-                                      productItem={product}
+                                      listItem={listItem}
                                     />
                                   );
                                 case ListItemTypeEnum.IDEA:
                                   return (
                                     <ListProductIdeaItem
+                                      list={list}
                                       deleteItem={() =>
-                                        deleteItem(product.list_items_id)
+                                        deleteItemHandler(listItem.list_item_id)
                                       }
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}
                                       reorderProductList={reorderProductList}
                                       edit={edit}
-                                      productItem={product}
+                                      listItem={listItem}
                                     />
                                   );
                               }
@@ -144,7 +160,7 @@ export const ListProductItems: React.FC = () => {
                 );
               })
             ) : (
-              <NoItemsBlock listInfo={listView} />
+              <NoItemsBlock listInfo={list} />
             )}
             {provided.placeholder}
           </div>

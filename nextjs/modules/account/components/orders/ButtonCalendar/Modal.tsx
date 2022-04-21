@@ -32,6 +32,7 @@ const Modal: React.FC<IProps> = function (props: IProps) {
             onSelect(option);
             dialog.handleClose();
           }}
+          key={`option-${i}`}
         >
           {option.label}
         </div>

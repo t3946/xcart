@@ -99,12 +99,12 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
             text={
               <AddressText
                 address={{
-                  street: orderItem.address.shippingAddress,
-                  city: orderItem.address.shippingCity,
-                  state: !!orderItem.address.shippingState && {
-                    label: orderItem.address.shippingState,
+                  street: orderItem.s_address,
+                  city: orderItem.s_city,
+                  state: !!orderItem.s_state && {
+                    state: orderItem.s_state,
                   },
-                  zip: orderItem.address.shippingZip,
+                  zip: orderItem.s_zipcode,
                 }}
               />
             }

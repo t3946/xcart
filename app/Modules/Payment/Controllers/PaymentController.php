@@ -9,6 +9,8 @@ use Modules\Order\Helpers\OrderHelper;
 use Modules\Order\Helpers\OrderTagEventHelper;
 use Modules\Order\Helpers\OrderTransactionHelper;
 use Modules\Order\Middleware\OrderCheckoutMiddleware;
+use Modules\Order\Models\Decisions\DecisionModel;
+use Modules\Order\Models\Decisions\DecisionTypeModel;
 use Modules\Order\Models\OrderCxInvoiceModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
@@ -199,7 +201,12 @@ class PaymentController extends Controller
                                 break;
                             case 'web_accept':
                                 if ($request->has('custom')) {
-                                    $order_id = (int)$request->custom;
+                                    $parts = explode(":", $request->custom);
+                                    $order_id = (int)$parts[0];
+
+                                    if (isset($parts[1])){
+                                        $decision_id = (int)$parts[1];
+                                    }
                                 }
                                 break;
                             case 'new_case':
@@ -229,6 +236,18 @@ class PaymentController extends Controller
 
                                 break;
                             case 'web_accept':
+                                //solve decision after payment
+                                if (isset($decision_id)) {
+                                    /** @var DecisionModel $decision */
+                                    $decision = DecisionModel::objects()->get([
+                                        'decision_id' => $decision_id,
+                                    ]);
+                                    $options = json_decode(json_encode($decision->options), true);
+                                    $options['action'] = "pay-by-paypal";
+                                    $decision->options = $options;
+                                    $decision->solved = 1;
+                                    $decision->save();
+                                }
 
                                 /** @var OrderTransactionModel $txn */
                                 if ($order && in_array($request->payment_status, ['Pending', 'Authorized'])) {

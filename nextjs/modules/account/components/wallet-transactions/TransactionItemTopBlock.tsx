@@ -2,7 +2,8 @@ import React from "react";
 import ReactToPrint from "react-to-print";
 import PrintIcon from "@modules/icon/components/account/print/PrintIcon";
 import PictureAsPdfIcon from "@modules/icon/components/account/pdf/PictureAsPdfIcon";
-import Button, { ETheme } from "@modules/ui/forms/Button";
+import Button, {ETheme} from "@modules/ui/forms/Button";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   componentRef: any;
@@ -12,6 +13,7 @@ interface IProps {
 
 export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
   const { componentRef, refund, order } = props;
+  const fax_number = useSelectorAccount((e) => e.config.site.fax_number);
 
   const date = new Date(Number(order.date * 1000)).toLocaleDateString("en-EN", {
     month: "long",
@@ -82,7 +84,8 @@ export const TransactionItemTopBlock: React.FC<IProps> = (props: IProps) => {
               </div>
               <div>
                 <p>
-                  <b>Fax:</b> 1-800-929-2835
+                  <b>Fax:</b>
+                  <span>{fax_number}</span>
                 </p>
               </div>
               <div>
