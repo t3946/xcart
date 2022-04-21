@@ -12,17 +12,17 @@ import { priorityProductSelectValuesConst } from "@modules/account/ts/consts/pri
 import SubmitCancelButtonsGroup from "@modules/account/components/shared/SubmitCancelButtonsGroup";
 import { editCommentProduct } from "@redux/actions/account-actions/ListsActions";
 import Styles from "@modules/account/components/lists/EditComment.module.scss";
+import getStoreUrl from "@utils/getStoreUrl";
 
 interface IProps {
   onCloseClick: any;
   list_item_id: any;
-  info: any;
+  listItem: any;
 }
 
 export const EditComment: React.FC<IProps> = function (props) {
-  const { onCloseClick, list_item_id, info } = props;
+  const { onCloseClick, list_item_id, listItem } = props;
   const dispatch = useDispatch();
-  const ideaImg = "/static/frontend/images/icons/account/idea-logo.svg";
 
   function submit(values: any) {
     const data = { ...values, priority: values.priority.value, list_item_id };
@@ -37,13 +37,13 @@ export const EditComment: React.FC<IProps> = function (props) {
 
   const formik = useFormik({
     initialValues: {
-      comment: info?.comment || "",
+      comment: listItem?.comment || "",
       priority:
         priorityProductSelectValuesConst.find(
-          (e) => e.value === info.priority
+          (e) => e.value === listItem.priority
         ) || priorityProductSelectValuesConst[2],
-      needs: info?.needs || 1,
-      has: info?.has || 0,
+      needs: listItem?.needs || 1,
+      has: listItem?.has || 0,
     },
     validationSchema: Yup.object().shape({
       comment: Yup.string()
@@ -55,6 +55,21 @@ export const EditComment: React.FC<IProps> = function (props) {
     onSubmit: submit,
   });
   const isLoading = useSelector((e: StoreInterface) => e.lists.listLoading);
+
+  function getImageUrl() {
+    let imageUrl;
+
+    switch (listItem.product_type) {
+      case "product":
+        imageUrl = getStoreUrl(listItem.product.images[0].path);
+        break;
+      case "idea":
+        imageUrl = "/static/frontend/images/icons/account/idea-logo.svg";
+        break;
+    }
+
+    return imageUrl;
+  }
 
   return (
     <div>
@@ -94,7 +109,7 @@ export const EditComment: React.FC<IProps> = function (props) {
 
           <div className={cn(Styles.imageContainer, "edit-comment-img-block")}>
             <img
-              src={info.image || ideaImg}
+              src={getImageUrl()}
               className={cn(
                 Styles.image,
                 "product-image",
@@ -104,11 +119,12 @@ export const EditComment: React.FC<IProps> = function (props) {
               )}
             />
             <div className={cn("text-start", "edit-comment-name", Styles.name)}>
-              {info.product?.name || info.product?.product}
+              {listItem.product?.name || listItem.product?.product}
             </div>
           </div>
         </div>
-        <div className="edit-comment-inputs-container mb-20">
+
+        <div className={cn(Styles.inputsGroup)}>
           <div>
             <Label>Priority</Label>
             <Select
@@ -124,65 +140,50 @@ export const EditComment: React.FC<IProps> = function (props) {
             />
           </div>
 
-          <div
-            className={cn(
-              "justify-content-md-end",
-              "justify-content-lg-between",
-              "edit-idea-text-inputs"
-            )}
-          >
-            <div
-              className={cn(
-                "edit-comment-input-text-field-container",
-                "edit-comment-input-text-field-needs-container",
-                "me-md-20",
-                "me-lg-0"
-              )}
-            >
-              <Label>Need</Label>
-              <Input
-                type="number"
-                name="needs"
-                className={cn("list-input-edit-idea", "full-width")}
-                value={formik.values.needs}
-                onChange={formik.handleChange}
-                isInvalid={!!formik.touched.needs && !!formik.errors.needs}
-                isValid={!!formik.touched.needs && !formik.errors.needs}
-              />
-              <Feedback className="position-absolute mt-0" type="invalid">
-                {!!formik.touched.needs && formik.errors.needs}
-              </Feedback>
-            </div>
+          <div>
+            <Label>Need</Label>
+            <Input
+              type="number"
+              name="needs"
+              className={cn("list-input-edit-idea", "full-width")}
+              value={formik.values.needs}
+              onChange={formik.handleChange}
+              isInvalid={!!formik.touched.needs && !!formik.errors.needs}
+              isValid={!!formik.touched.needs && !formik.errors.needs}
+            />
+            <Feedback className="position-absolute mt-0" type="invalid">
+              {!!formik.touched.needs && formik.errors.needs}
+            </Feedback>
+          </div>
 
-            <div
-              className={cn(
-                "edit-comment-input-text-field-container",
-                "edit-comment-input-text-field-needs-container"
-              )}
-            >
-              <Label>Have</Label>
-              <Input
-                type="number"
-                name="has"
-                className={cn("list-input-edit-idea", "full-width")}
-                value={formik.values.has}
-                onChange={formik.handleChange}
-                isInvalid={!!formik.touched.has && !!formik.errors.has}
-                isValid={!!formik.touched.has && !formik.errors.has}
-              />
-              <Feedback className="position-absolute mt-0" type="invalid">
-                {!!formik.touched.has && formik.errors.has}
-              </Feedback>
-            </div>
+          <div>
+            <Label>Have</Label>
+            <Input
+              type="number"
+              name="has"
+              className={cn("list-input-edit-idea", "full-width")}
+              value={formik.values.has}
+              onChange={formik.handleChange}
+              isInvalid={!!formik.touched.has && !!formik.errors.has}
+              isValid={!!formik.touched.has && !formik.errors.has}
+            />
+            <Feedback className="position-absolute mt-0" type="invalid">
+              {!!formik.touched.has && formik.errors.has}
+            </Feedback>
           </div>
         </div>
-        <SubmitCancelButtonsGroup
-          submitText="Confirm"
-          cancelText="Cancel"
-          onCancel={onCloseClick}
-          disabled={isLoading}
-          groupAdvancedClasses={"edit-idea-info-btns"}
-        />
+
+        <div className={"mt-3"}>
+          <SubmitCancelButtonsGroup
+            submitText="Confirm"
+            cancelText="Cancel"
+            onCancel={onCloseClick}
+            disabled={isLoading}
+            groupAdvancedClasses={"justify-content-center justify-content-lg-start"}
+            submitAdvancedClasses={"w-md-auto"}
+            cancelAdvancedClasses={"w-md-auto d-none d-md-block"}
+          />
+        </div>
       </form>
     </div>
   );

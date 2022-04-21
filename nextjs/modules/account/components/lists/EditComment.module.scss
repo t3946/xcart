@@ -7,6 +7,10 @@
 
 .imageContainer {
   padding: pxToRem(34) 0 0 0;
+
+  @include breakpoint(md) {
+    width: pxToRem(120);
+  }
 }
 
 .image {
@@ -20,4 +24,10 @@
   @include breakpoint(md) {
     font-weight: bold;
   }
+}
+
+.inputsGroup {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  column-gap: pxToRem(50);
 }
