@@ -3,10 +3,10 @@ import { ListItemMovableArea } from "@modules/account/components/lists/ListItemM
 import { ListProductItemBtns } from "@modules/account/components/lists/ListProductItemBtns";
 import { ETheme } from "@modules/ui/forms/Button";
 import { EditIdea } from "@modules/account/components/lists/EditIdea";
-import { ListProductItemComment } from "@modules/account/components/lists/ListProductItemComment";
+import { Comment } from "@modules/account/components/lists/item/Comment";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { EditComment } from "@modules/account/components/lists/EditComment";
-import { useDialog } from "../../hooks/useDialog";
+import { useDialog } from "@modules/account/hooks/useDialog";
 import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
 import { MobileMenuForList } from "@modules/account/components/lists/mobile-menu/MobileMenuForList";
 import { useRouter } from "next/router";
@@ -14,9 +14,11 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import cn from "classnames";
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
-import Styles from "@modules/account/components/lists/ListProductIdeaItem.module.scss";
+import StylesItem from "@modules/account/components/lists/item/Item.module.scss";
+import Image from "@modules/account/components/lists/item/Image";
+import AddDate from "@modules/account/components/lists/item/AddDate";
 
-export const ListProductIdeaItem: React.FC<any> = (props) => {
+export const Item: React.FC<any> = (props) => {
   const { listItem, drag, reorderProductList, index, deleteItem, edit, list } =
     props;
   const editCommentDialog = useDialog();
@@ -24,6 +26,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
   const router = useRouter();
   const breakpoint = useBreakpoint();
   const deleteIdeaDialog = useDialog();
+
   const mobileDialogItems: MobileMenuForListItem[] = [
     {
       image: "/static/frontend/images/icons/account/idea-logo.svg",
@@ -95,22 +98,22 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
     >
       {movableAreaTemplate()}
 
-      <div className="product-list-item-info-content">
-        <img
-          className="product-image product-list-item-image"
-          src={"/static/frontend/images/icons/account/idea-logo.svg"}
-        />
+      <div className={cn("d-flex", "flex-grow-1")}>
+        <Image imgUrl={"/static/frontend/images/icons/account/idea-logo.svg"} />
+
         <div className="product-list-item-info">
-          <EditIdea
-            openMenuDialog={mobileMenuDialog.handleClickOpen}
-            listId={list}
-            listItem={listItem}
-            edit={edit}
-          />
+          {listItem.product_type === "idea" && (
+            <EditIdea
+              openMenuDialog={mobileMenuDialog.handleClickOpen}
+              listId={list}
+              listItem={listItem}
+              edit={edit}
+            />
+          )}
 
           {edit &&
             (listItem.comment ? (
-              <ListProductItemComment
+              <Comment
                 listItem={listItem}
                 onEditCommentClick={editCommentDialog.handleClickOpen}
                 list={list}
@@ -118,23 +121,44 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
             ) : (
               <div
                 onClick={editCommentDialog.handleClickOpen}
-                className={cn(Styles.editComment, "add-comment-text")}
+                className={cn(StylesItem.editComment, "add-comment-text")}
               >
                 Add comment, quantity & priority
               </div>
             ))}
+
+          <AddDate
+            date={listItem.add_date}
+            className={["mt-18", "d-md-none"]}
+          />
         </div>
       </div>
-      <ListProductItemBtns
-        className={["mt-12", "mt-md-0"]}
-        btnLabel={"search"}
-        mainBtnType={ETheme.outlined}
-        edit={edit}
-        list={list}
-        searchLink={getSearchLink()}
-        handleDelete={deleteIdea}
-        item={listItem}
-      />
+
+      <div>
+        <AddDate
+          date={listItem.add_date}
+          className={[
+            "text-center",
+            "text-md-end",
+            "mb-lg-10",
+            "mb-12",
+            "d-none",
+            "d-md-block",
+          ]}
+        />
+
+        <ListProductItemBtns
+          className={["mt-12", "mt-md-0"]}
+          btnLabel={"search"}
+          mainBtnType={ETheme.outlined}
+          edit={edit}
+          list={list}
+          searchLink={getSearchLink()}
+          handleDelete={deleteIdea}
+          item={listItem}
+        />
+      </div>
+
       <MobileMenuForList
         items={mobileDialogItems}
         dialogOpen={mobileMenuDialog.open}
@@ -151,9 +175,7 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
       >
         <EditComment
           onCloseClick={editCommentDialog.handleClose}
-          listId={list.product_list_id}
-          list_item_id={listItem.list_item_id}
-          info={listItem}
+          listItem={listItem}
         />
       </BootstrapDialogHOC>
       <BootstrapDialogHOC
@@ -173,3 +195,5 @@ export const ListProductIdeaItem: React.FC<any> = (props) => {
     </div>
   );
 };
+
+export default Item;

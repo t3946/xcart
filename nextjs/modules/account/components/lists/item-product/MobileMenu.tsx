@@ -41,21 +41,21 @@ export const MobileMenu: React.FC<IProps> = function (props) {
       label: "Add comment, quantity & priority",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/add-comment/product/${list.productListId}/${item.list_item_id}`
+          `/shopping-lists/actions/add-comment/product/${list.product_list_id}/${item.list_item_id}`
         ),
     },
     {
       label: "Move",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/move-product/product/${list.productListId}/${item.list_item_id}`
+          `/shopping-lists/actions/move-product/product/${list.product_list_id}/${item.list_item_id}`
         ),
     },
     {
       label: "Delete",
       onClick: () =>
         router.push(
-          `/shopping-lists/actions/delete-product/product/${list.productListId}/${item.list_item_id}`
+          `/shopping-lists/actions/delete-product/product/${list.product_list_id}/${item.list_item_id}`
         ),
     },
   ];

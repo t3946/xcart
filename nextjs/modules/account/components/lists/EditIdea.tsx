@@ -117,7 +117,7 @@ export const EditIdea: React.FC<EditIdeaProps> = ({
               </span>
 
               <span
-                className={"py-10 px-1 cursor-pointer d-lg-none"}
+                className={cn("py-10", "px-1", "cursor-pointer", "d-md-none")}
                 onClick={openMenuDialog}
               >
                 <img
