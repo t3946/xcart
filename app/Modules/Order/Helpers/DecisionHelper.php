@@ -40,14 +40,14 @@ class DecisionHelper
                 break;
             case 'additional-shipping-charge':
                 $options = [
-                    'actualShippingCost' => '',
-                    'shippingCostPaid' => '',
-                    'additionalShippingCharge' => '',
+                    'actualShippingCost' => $order->getRequiredShippingCharge(),
+                    'shippingCostPaid' => $order->shipping_cost,
+                    'additionalShippingCharge' => $order->getAdditionalShippingCharge(),
                 ];
                 break;
             case 'additional-information-required':
                 $options = [
-                    'totalShippingCharge' => ''
+                    'totalShippingCharge' => $order->shipping_cost
                 ];
                 break;
         }
