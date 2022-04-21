@@ -822,13 +822,7 @@ function check_r_fields() {
                                         &nbsp;
 
                                         {if $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_all_orders"}
-                                            Drop-ship fee:
-                                            {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
-                                                {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'}
-                                            {else}
-                                                {assign var=dropship_calc value=$v.oOrderGroup->getTotalCostToUs() * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
-                                                {include file="currency.tpl" value=$dropship_calc hide_zero='Y'}
-                                            {/if}
+                                            Drop-ship fee: {include file="currency.tpl" value=$v.oOrderGroup->getDropShipFee() hide_zero='Y'}
                                             applies to this order
                                         {elseif $order_manufacturers[$m_id].d_drop_ship_fee_select eq "applies_to_orders_below_minimum_order_amount_only"}
                                             Drop-ship fee: {include file="currency.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us hide_zero='Y'} applies to orders below {include file="currency.tpl" value=$order_manufacturers[$m_id].d_minimum_order_amount_in_us hide_zero='Y'}

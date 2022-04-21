@@ -210,6 +210,7 @@ class DistributorShippingPolicyForm extends DistributorForm
                 'choices' => [
                     'value' => $currency->symbol_prefix.$currency->symbol,
                     'percent' => '% of subtotal in Cost to us pricing',
+                    'percent_total' => '% of total order amount',
                 ]
             ],
             'd_minimum_order_amount' => [

@@ -33,6 +33,7 @@ rebuild-node:
 	docker-compose exec node /bin/bash -c "cd ../www/static/local_modules/bootstrap; npm i; npm run css-compile"
 	docker-compose exec node npm run build
 	docker-compose restart node
+	docker-compose restart node-server
 
 rebuild-npm:
 	docker-compose exec node /bin/bash -c "cd ../www/static; npm i --include=dev"

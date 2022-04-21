@@ -869,12 +869,7 @@ Drop-ship fee in X-cart
   <input id="manufacturer_invoices_data_drop_ship_fee_charged_{$m_id}_{$invoice_number}" name="manufacturer_invoices_data[{$m_id}][{$invoice_number}][drop_ship_fee_charged]" size="8" value="{$invoice.drop_ship_fee_charged}" onkeyup="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" onchange="func_recalculate_manufacturer_invoices_data('{$m_id}','{$invoice_number}')" {if $invoice.status eq "R"}readonly="readonly"{/if} />
 
 <div class="bg__yellow color__black" align="right">
-  {if $order_manufacturers[$m_id].d_drop_ship_fee_type === 'value'}
-    {include file="currency2.tpl" value=$order_manufacturers[$m_id].d_drop_ship_fee_in_us}
-  {else}
-    {assign var=dropship_calc value=$cost_to_us_for_products_in_xcart * ($order_manufacturers[$m_id].d_drop_ship_fee_in_us/100)}
-    {include file="currency2.tpl" value=$dropship_calc}
-  {/if}
+    {include file="currency2.tpl" value=$v.oOrderGroup->getDropShipFee()}
 </div>
 </td>
 </tr>

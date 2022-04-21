@@ -1708,12 +1708,12 @@ if ($REQUEST_METHOD === 'POST')
 
                         $SUM_drop_ship_fee_charged += $drop_ship_fee_charged;
 
-                        if ($drop_ship_fee_charged != $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["drop_ship_fee_charged"]) {
+                        if ($drop_ship_fee_charged !== (float)$order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["drop_ship_fee_charged"]) {
                             $group_invoices["drop_ship_fee_charged"] = $drop_ship_fee_charged;
                             $log .= "<br />invoice_number-" . $invoice_number . ": drop_ship_fee_charged: " . $order["shipping_groups"][$certain_mid]["invoices"][$invoice_number]["drop_ship_fee_charged"] . " -> " . $drop_ship_fee_charged;
                             $update_invoices_table_flag = true;
 
-                            if ($drop_ship_fee_charged > $order['shipping_groups'][$m_id]["all_distributor_info"]["d_drop_ship_fee_in_us"]) {
+                            if ($drop_ship_fee_charged > $orderGroupModel->getDropShipFee()) {
                                 OrderHelper::setOrderTag(
                                     $orderid,
                                     $config['Attention_tags_invoices']['tag_for_Drop_ship_fee_charged_GT_Drop_ship_fee_in_xcart'],
