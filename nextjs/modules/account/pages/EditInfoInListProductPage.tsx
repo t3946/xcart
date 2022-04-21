@@ -5,36 +5,28 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { List } from "@modules/account/ts/types/list.type";
 import { useRouter } from "next/router";
 
-export const EditInfoInListProductPage: React.FC = () => {
+interface IProps {
+  list: any;
+  listItem: any;
+}
+
+export const EditInfoInListProductPage: React.FC<IProps> = (props) => {
+  const { list, listItem } = props;
   const router = useRouter();
-  const { list_item_id, productListId } = router.query;
-  const lists: List[] = useSelectorAccount((state) => state.lists.lists);
 
-  const list = lists.find(
-    (list) => list.productListId === Number(productListId)
-  );
-
-  const product = list.products.find(
-    (product) => product.list_item_id === Number(list_item_id)
-  );
-
-  const onCloseClick = () => {
-    router.push(`/shopping-lists/${list.cacheUrl}`);
-  };
+  function onCloseClick() {
+    router.push(`/shopping-lists/${list.product_list_id}`);
+  }
 
   return (
     <div>
       <MobileMenuBackBtn
-        redirectUrl={`/shopping-lists/${list.cacheUrl}`}
+        redirectUrl={`/shopping-lists/${list.product_list_id}`}
         label={"back"}
       />
       <div className="page-label">Edit comment, quantity & priority</div>
-      <EditComment
-        info={product}
-        list_item_id={list_item_id}
-        listId={list?.productListId}
-        onCloseClick={onCloseClick}
-      />
+
+      <EditComment listItem={listItem} onCloseClick={onCloseClick} />
     </div>
   );
 };
