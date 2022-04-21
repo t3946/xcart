@@ -3,6 +3,7 @@
 namespace Modules\Order\Models;
 
 
+use Doctrine\DBAL\Types\Types;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Translate\Models\LanguageModel;
 use Xcart\App\Orm\AutoMetaTrait;
@@ -38,9 +39,13 @@ class OrderStatusNotificationModel extends Model
     {
         return [
             'notification_id' => AutoField::class,
-            'code' => [
-                'class' => CharField::class,
-                'verboseName' => 'Code'
+            'status' => [
+                'field' => 'code',
+                'class' => ForeignField::class,
+                'modelClass' => OrderStatusModel::class,
+                'link' => ['code' => 'code'],
+                'sqlType' => Types::STRING,
+                'verboseName' => 'Status'
             ],
             'customer_subject' => [
                 'class' => CharField::class,
@@ -63,12 +68,12 @@ class OrderStatusNotificationModel extends Model
             ],
             'customer_attach_pdf_invoice' => [
                 'class' => BooleanCharField::class,
-                'verboseName' => 'Attach PDF invoice',
+                'verboseName' => 'Attach PDF invoice to customer',
                 'default' => 'Y',
             ],
             'admin_attach_pdf_invoice' => [
                 'class' => BooleanCharField::class,
-                'verboseName' => 'Attach PDF invoice',
+                'verboseName' => 'Attach PDF invoice to admin',
                 'default' => 'Y',
             ],
             'lang' => [
@@ -93,5 +98,10 @@ class OrderStatusNotificationModel extends Model
     public function render($name, $params)
     {
         return SnippetHelper::render($this->{$name}, $params);
+    }
+
+    public function __toString()
+    {
+        return (string)($this->code ? $this->status : 'Order status notification');
     }
 }

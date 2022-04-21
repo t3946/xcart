@@ -2,8 +2,9 @@
 
 namespace Modules\Order\Forms\FilterForms;
 
+use Modules\Order\Models\OrderStatusModel;
 use Modules\Translate\Models\LanguageModel;
-use Xcart\App\Form\Fields\CharField;
+use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\Select2Field;
 use Xcart\App\Form\Form;
 
@@ -17,6 +18,7 @@ class OrderStatusNotificationFilterForm extends Form
                 'html' => [
                     'style' => 'width: 300px'
                 ],
+                'multiple' => true,
                 'choices' => function () {
                     $ar_lang = LanguageModel::objects()->all();
                     foreach ($ar_lang as $lang_model) {
@@ -25,11 +27,19 @@ class OrderStatusNotificationFilterForm extends Form
                     return $options ?? [];
                 },
             ],
-            'code' => [
-                'class' => CharField::class,
+            'status' => [
+                'class' => DropDownField::class,
                 'html' => [
                     'style' => 'width: 300px'
-                ]
+                ],
+                'choices' => function (): array {
+                    $statuses = OrderStatusModel::objects()->order(['name'])->all();
+                    $options[] = '';
+                    foreach ($statuses as $status) {
+                        $options[$status->code] = (string)$status;
+                    }
+                    return $options ?? [];
+                },
             ],
         ];
     }

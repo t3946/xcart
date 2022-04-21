@@ -4,7 +4,6 @@ namespace Modules\Distributor\Commands;
 
 use Exception;
 use JsonException;
-use League\Flysystem\FileNotFoundException;
 use Modules\Core\Classes\SaveFilePrice;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Distributor\Models\ColumnTableSaveModel;
@@ -83,7 +82,7 @@ class UploadFileCommand extends Command
             } catch (Throwable $e) {
                 $upload_model->status = DistributorUploadPriceModel::UPLOAD_STATUS_ERROR;
                 Xcart::app()->logger->error('error consume dx price', [$e->getMessage(), $e->getFile(), $e->getLine()], 'upload dx file');
-                $message->nack(true);
+                $message->ack();
             } finally {
                 if (isset($path_save) && file_exists($path_save)) {
                     unlink($path_save);
