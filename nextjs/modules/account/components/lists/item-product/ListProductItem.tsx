@@ -154,6 +154,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 onClick={mobileMenuDialog.handleClickOpen}
                 className="edit-idea-ellipsis"
                 src={"/static/frontend/dist/images/icons/account/ellipsis.svg"}
+                alt={""}
               />
             )}
           </div>

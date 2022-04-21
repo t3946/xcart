@@ -8,7 +8,7 @@
 
   @include breakpoint(md) {
     font-size: pxToRem(18);
-    display: block;
+    display: inline;
   }
   @include breakpoint(lg) {
     font-size: pxToRem(14);
