@@ -81,7 +81,6 @@ export const ListProductItems: React.FC<IProps> = (props) => {
           >
             {list.items.length ? (
               list.items.map((listItem, index) => {
-
                 if (listItem === undefined) {
                   console.log("UNDEFINED", list.items);
                 }
@@ -126,7 +125,9 @@ export const ListProductItems: React.FC<IProps> = (props) => {
                                     <ListProductItem
                                       list={list}
                                       deleteItem={() =>
-                                        deleteItemHandler(listItem.list_item_id)
+                                        deleteItemHandler(
+                                          parseInt(listItem.list_item_id)
+                                        )
                                       }
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}
@@ -142,7 +143,9 @@ export const ListProductItems: React.FC<IProps> = (props) => {
                                     <ListProductIdeaItem
                                       list={list}
                                       deleteItem={() =>
-                                        deleteItemHandler(listItem.list_item_id)
+                                        deleteItemHandler(
+                                          parseInt(listItem.list_item_id)
+                                        )
                                       }
                                       index={index}
                                       drag={{ ...provided.dragHandleProps }}

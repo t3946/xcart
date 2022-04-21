@@ -5,10 +5,7 @@ import { CardSceletonBlock } from "@modules/components/product/card/catalog/Card
 import { CardSceletonLine } from "@modules/components/product/card/catalog/CardSceletonLine";
 import React from "react";
 import Store from "@redux/stores/Store";
-import {
-  addProduct,
-  deleteProduct,
-} from "@redux/actions/account-actions/ListsActions";
+import { addProduct } from "@redux/actions/account-actions/ListsActions";
 import $ from "jquery";
 import Styles from "@modules/components/catalog/ProductList.module.scss";
 
@@ -171,9 +168,6 @@ export default class ProductsList extends React.Component {
       );
       return;
     }
-    Store.dispatch(
-      deleteProduct(this.state.lists.product_list_id, productId, () => {})
-    );
   }
 
   render() {
