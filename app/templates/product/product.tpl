@@ -104,11 +104,11 @@
 
         <section class="images_prices row row-cols-1 row-cols-lg-2">
             <div class="col block__image mb-10">
-                <div class="product-slider-sticky-container">
+                {set $images = $model->getImages()}
+
+                <div class="product-slider-sticky-container{if !$images} product-slider-sticky-container_no-images{/if}">
                     <div class="product__images-slider">
                     {add $site = $model->sites->limit(1)->get()}
-
-                    {set $images = $model->getImages()}
 
                     {if $images}
                         <div class="product-slider-skeleton-wrapper">
@@ -160,11 +160,14 @@
                         </div>
                     {/if}
                     </div>
-                    <div class="pinterest-bookmark" id="pinterest-bookmark">
-                        <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true"
-                           data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/">
-                        </a>
-                    </div>
+
+                    {if $images}
+                        <div class="pinterest-bookmark" id="pinterest-bookmark">
+                            <a data-pin-do="buttonBookmark" data-pin-tall="true" data-pin-round="true"
+                               data-pin-save="false" rel="nofollow" href="https://www.pinterest.com/pin/create/button/">
+                            </a>
+                        </div>
+                    {/if}
                 </div>
             </div>
 
