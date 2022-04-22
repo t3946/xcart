@@ -21,19 +21,18 @@ function* getLists(): Generator {
 }
 
 function* createList(action: AnyAction): Generator {
-  const result = yield axiosInstance
-    .post("/api/account/lists/create-lists", {
+  const list = yield axiosInstance
+    .post("/api-client/user/lists/create", {
       name: action.name,
-      user_id: getUser().id,
     })
     .then((response) => response.data);
 
   yield put({
     type: "ADD_NEW_LIST",
-    list: result,
+    list,
   });
 
-  yield action.callback(result);
+  yield action.callback(list);
 }
 
 function* moveProduct(action: AnyAction): Generator {
@@ -91,7 +90,7 @@ function* editUserRights(action: AnyAction): Generator {
 }
 
 function* addProductOnList(action: AnyAction): Generator {
-  console.log("addProductOnList", {});
+  console.log("addProductOnList", {action});
   yield axiosInstance
     .post(
       "/api-client/user/lists/add-product",

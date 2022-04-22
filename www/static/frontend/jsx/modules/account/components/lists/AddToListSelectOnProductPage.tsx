@@ -53,11 +53,11 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const addProductToList = (listId: number) => {
     if (
       lists
-        .find((e) => e.productListId === listId)
+        .find((e) => e.product_list_id === listId)
         ?.products.find((e) => e.productId === parseInt(productId))
     ) {
       setIsAlreadyInList(true);
-      setSelectedList(lists.find((e) => e.productListId === listId));
+      setSelectedList(lists.find((e) => e.product_list_id === listId));
       showAddProductContent(listId);
       return;
     }
@@ -68,14 +68,15 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
       addProduct(listId, productId, null, () => showAddProductContent(listId))
     );
 
-    setSelectedList(lists.find((e) => e.productListId === listId));
+    setSelectedList(lists.find((list) => list.product_list_id === listId));
   };
   const onCreateList = (listInfo: List): void => {
     setSelectedList(listInfo);
     createListDialog.handleClose();
+
     dispatch(
-      addProduct(listInfo.productListId, productId, null, () =>
-        showAddProductContent(listInfo.productListId)
+      addProduct(listInfo.product_list_id, productId, null, () =>
+        showAddProductContent(listInfo.product_list_id)
       )
     );
   };
@@ -184,7 +185,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
             <div className="add-to-list-select-list-items">
               {lists?.map((item) => (
                 <li
-                  onClick={() => addProductToList(item.productListId)}
+                  onClick={() => addProductToList(item.product_list_id)}
                   className="form-select-item add-to-list-select-item"
                 >
                   <img

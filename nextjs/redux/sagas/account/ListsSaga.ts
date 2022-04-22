@@ -18,18 +18,16 @@ function* loadLists(): Generator {
 
 function* createList(action: AnyAction): Generator {
   const { data, callback } = action.payload;
-  let newList;
-
-  yield axios.post("/api-client/user/lists/create", data).then((res) => {
-    newList = res.data;
-  });
+  const list = yield axios
+    .post("/api-client/user/lists/create", data)
+    .then((res) => res.data);
 
   yield put({
     type: "ADD_LIST",
-    list: newList,
+    list,
   });
 
-  callback(newList);
+  callback(list);
 }
 
 function* reorderList(action: AnyAction): Generator {
