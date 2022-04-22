@@ -12,7 +12,7 @@ export const ViewLists: React.FC<ViewLists> = (props) => {
 
   return (
     <InnerPage
-      hatClasses={"pb-md-0"}
+      hatClasses={"pb-md-0 pb-lg-4"}
       bodyClasses={"px-lg-0"}
       header={<ListHeader list={list} />}
     >
