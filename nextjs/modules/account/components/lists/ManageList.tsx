@@ -11,7 +11,7 @@ import classnames from "classnames";
 import { fillingMassForMonths } from "@modules/account/utils/filling-mass-for-months";
 import { getDaysForSelect } from "@modules/account/utils/get-days-for-select";
 import { useDispatch, useSelector } from "react-redux";
-import { manageList } from "@redux/actions/account-actions/ListsActions";
+import { updateList } from "@redux/actions/account-actions/ListsActions";
 import { convertManageListFormDataToRequest } from "@modules/account/utils/convert-manage-list-form-data-to-request";
 import { ManageListFormData } from "@modules/account/ts/types/manage-list-form.types";
 import StoreInterface from "@modules/account/ts/types/store.type";
@@ -60,7 +60,9 @@ export const ManageList: React.FC<IProps> = (props) => {
       product_list_id: list.product_list_id,
     };
 
-    dispatch(manageList({ data }));
+    console.log("update list submit", {data});
+
+    dispatch(updateList({ data }));
 
     onCancelClick();
   }

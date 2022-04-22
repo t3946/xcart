@@ -4,7 +4,7 @@ import { UserRightsActionsEnum } from "@modules/account/ts/consts/user-rights-ac
 import { manageList } from "@modules/account/utils/edit-store-funcs/lists/manage-list";
 
 const initialValue: AccountListsStore = {
-  lists: [],
+  lists: null,
 };
 
 function getListByItemId(state, list_item_id) {
@@ -28,8 +28,6 @@ const accountListReducer = (
   action: AnyAction
 ): AccountListsStore => {
   switch (action.type) {
-    case "GET_LISTS":
-      return { ...state };
     case "SUCCESS_ADD_PRODUCT":
       return {
         ...state,
@@ -254,6 +252,10 @@ const accountListReducer = (
       return { ...state };
     }
     case "PRODUCT_LISTS_RESET_TYPE_ACTION": {
+      if (state.lists === null) {
+        return state;
+      }
+
       for (const list of state.lists) {
         const newItems = [];
 

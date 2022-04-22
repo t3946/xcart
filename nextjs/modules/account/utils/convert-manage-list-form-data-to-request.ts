@@ -25,5 +25,6 @@ export const convertManageListFormDataToRequest = function (
     recipient_email: data.email || null,
     birthday,
     address_id: parseInt(data.shippingAddress.value) || null,
+    default: data.isDefault,
   };
 };

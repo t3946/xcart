@@ -3,7 +3,7 @@ import { SagaIterator } from "redux-saga";
 import { AnyAction } from "redux";
 import axios from "axios";
 
-function* getLists(): Generator {
+function* loadLists(): Generator {
   let lists;
 
   yield axios
@@ -70,7 +70,7 @@ function* inviteUse(action: AnyAction): Generator {
 
   yield axios.get(`/api-client/user/lists/invite/use/${iv}/${content}`);
 
-  yield getLists();
+  yield loadLists();
 
   callback();
 }
@@ -80,7 +80,7 @@ function* roleDelete(action: AnyAction): Generator {
 
   yield axios.post("/api-client/user/lists/role/delete", data);
 
-  yield getLists();
+  yield loadLists();
 }
 
 function* roleUpdate(action: AnyAction): Generator {
@@ -88,7 +88,7 @@ function* roleUpdate(action: AnyAction): Generator {
 
   yield axios.post("/api-client/user/lists/role/update", data);
 
-  yield getLists();
+  yield loadLists();
 }
 
 function* editCommentProduct(action: AnyAction): Generator {
@@ -104,7 +104,7 @@ function* editCommentProduct(action: AnyAction): Generator {
   yield axios.post("/api-client/user/lists/item/edit", data);
 }
 
-function* manageList(action: AnyAction): Generator {
+function* updateList(action: AnyAction): Generator {
   const { data } = action.payload;
 
   yield axios
@@ -174,12 +174,10 @@ function* deleteItem(action: AnyAction): Generator {
 }
 
 export function* listsActionWatcher(): SagaIterator {
-  yield takeLatest("FETCH_LISTS", getLists);
   yield takeLatest("CREATE_LIST", createList);
   yield takeLatest("SEND_REORDER_LIST", reorderList);
   yield takeLatest("TRANSFER_PRODUCT_LIST", transferProductList);
   yield takeLatest("EDIT_COMMENT_PRODUCT", editCommentProduct);
-  yield takeLatest("MANAGE_LIST", manageList);
   yield takeLatest("UNDO_DELETE_PRODUCT", undoDeleteProduct);
 
   //idea
@@ -198,5 +196,7 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("PRODUCT_LISTS_ROLE_DELETE", roleDelete);
 
   //list
+  yield takeLatest("PRODUCT_LISTS_LOAD_LISTS", loadLists);
   yield takeLatest("PRODUCT_LISTS_DELETE_LIST", deleteList);
+  yield takeLatest("PRODUCT_LISTS_UPDATE_LIST", updateList);
 }

@@ -87,6 +87,13 @@ export const ListHeader: React.FC<IProps> = (props) => {
           `/shopping-lists/action-list/share-list/${list.product_list_id}`
         ),
     },
+    {
+      label: "Delete list",
+      onClick: () =>
+        router.push(
+          `/shopping-lists/action-list/share-list/${list.product_list_id}`
+        ),
+    },
   ];
   const mobileItemDelete = {
     label: "Delete list",
