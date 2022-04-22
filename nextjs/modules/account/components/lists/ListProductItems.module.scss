@@ -13,4 +13,13 @@
     min-height: pxToRem(171);
     padding: pxToRem(21) pxToRem(26) pxToRem(21) pxToRem(5);
   }
+
+  &_noDragArm {
+    @include breakpoint(xl) {
+      min-height: pxToRem(171);
+      padding: pxToRem(21) pxToRem(26) pxToRem(21);
+    }
+  }
 }
+
+

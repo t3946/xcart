@@ -123,10 +123,14 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
   return (
     <div
-      className={cn(
+      className={cn([
         StylesListProductItems.productListItemContainer,
-        "product-list-item-container"
-      )}
+        "product-list-item-container",
+        {
+          [StylesListProductItems.productListItemContainer_noDragArm]:
+            list.items.length === 1,
+        },
+      ])}
     >
       <div className="movable-area">
         {edit ? (

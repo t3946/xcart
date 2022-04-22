@@ -95,7 +95,7 @@ const ProductReviews: React.FC = function () {
 
             <RatingStars
               classes={{
-                container: "flex-grow-0 feature-rating-stars",
+                container: "flex-grow-0 flex-shrink-0 feature-rating-stars",
                 icon: "feature-rating-star",
               }}
               rating={total}
