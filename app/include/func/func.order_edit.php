@@ -8,7 +8,6 @@ use Modules\Order\Models\OrderGroupRefundModel;
 use Modules\Order\Models\OrderLogModel;
 use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
-use Modules\User\Models\UserModel;
 
 x_load('cart', 'mail', 'order', 'product', 'taxes');
 
@@ -1085,6 +1084,7 @@ function func_add_refund_group($group)
         $query_data['accounting'] = '';
         $query_data['OLD_accounting'] = '';
         $query_data['refund_reason'] = '';
+        $query_data['tracking'] = '';
 
         if ($ref_ship === false) {
             func_array2insert('refund_groups', $query_data);
@@ -1261,7 +1261,7 @@ function func_manage_refund_group(&$group, $ref_notify_mode = false)
         $query_data['shipping_gross'] = $group['shipping_gross'] = $group['ref_ship'];
 
         foreach ($price_details_names as $pn) {
-            $query_data["total_$pn"] = $group["shipping_$pn"];
+            $query_data["total_$pn"] = $group["shipping_$pn"] ?? 0.0;
         }
 
         $group['total']['gross'] = $group['shipping_gross'];
