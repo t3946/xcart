@@ -133,7 +133,6 @@ axios.get("/api/account/get-site-data").then(async (res) => {
     });
 
     //load lists
-    console.log("load lists", {});
     const lists: any = await axios
       .get("/api-client/user/lists/get-all")
       .then((response) => response.data);
