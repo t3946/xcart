@@ -96,7 +96,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
     return (
       <>
-        <div className="d-flex align-items-center d-none d-lg-flex">
+        <div className="d-flex align-items-center d-none d-lg-flex mt-lg-20">
           <Price
             currency={currency}
             price={product.price}
@@ -212,7 +212,8 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 className={cn(
                   "add-comment-text",
                   "d-none",
-                  "d-md-inline-block"
+                  "d-md-inline-block",
+                  "mt-lg-3"
                 )}
               >
                 Add comment, quantity & priority

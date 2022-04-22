@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
 import classnames from "classnames";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 import {
   addProduct,
 } from "@client/jsx/redux/actions/account-actions/ListsActions";
-import Store from "@client/jsx/redux/stores/Store";
-import { useDialog } from "@client/modules/account/hooks/useDialog";
-import { CreateNewListDialog } from "@client/modules/account/components/lists/CreateNewListDialog";
-import { AddProductToList } from "@client/modules/account/components/lists/AddProductToList";
+import {useDialog} from "@client/modules/account/hooks/useDialog";
+import {CreateNewListDialog} from "@client/modules/account/components/lists/CreateNewListDialog";
+import {AddProductToList} from "@client/modules/account/components/lists/AddProductToList";
 import BootstrapDialogHOC from "@client/modules/account/hoc/BootstrapDialogHOC";
-import { List } from "@client/modules/account/ts/types/list.type";
+import {List} from "@client/modules/account/ts/types/list.type";
 import Styles from "@client/modules/account/components/lists/AddToListSelectOnProductPage.module.scss";
 import Medium from "@client/modules/icon/components/account/chevron-down/Medium";
 import StyleUtils from "@client/style-modules/style-utils.module.scss";
 import Plus from "@client/jsx/modules/icon/components/account/plus/Plus";
-import StoreInterface from "@client/modules/account/ts/types/store.type";
+import ImageNotAvailable from "@client/jsx/components/common/image-not-available/ImageNotAvailable";
 
 interface IProps {
   items: List[];
@@ -31,10 +30,10 @@ interface IProps {
 export const AddToListSelectOnProductPage: React.FC<IProps> = (
   props: IProps
 ) => {
-  const { name, label = "" } = props;
+  const {name, label = ""} = props;
   const user = useSelectorAccount((e) => e.user);
   const site = useSelectorAccount((e) => e.site);
-  const lists = Store.getState().lists.lists;
+  const {lists} = useSelectorAccount((e) => e.lists);
   const productInfo = site.product_info?.product || {};
   const productId = productInfo?.productid;
   const [open, setOpen] = useState(false);
@@ -44,48 +43,49 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const clickListener = useCLickListener(() => setOpen(false));
   const buttonRef = React.useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const showAddProductContent = (listId) => {
+
+  function showAddProductContent() {
     addProductDialog.handleClickOpen();
-  };
-  const createList = () => {
+  }
+
+  function createList() {
     createListDialog.handleClickOpen();
-  };
-  const addProductToList = (listId: number) => {
-    if (
-      lists
-        .find((e) => e.product_list_id === listId)
-        ?.products.find((e) => e.productId === parseInt(productId))
-    ) {
+  }
+
+  function addProductToList(product_list_id: number) {
+    const currentList = lists.find((e) => e.product_list_id === product_list_id);
+    const product = currentList.items.find((item) => item.productid === parseInt(productId))
+
+    if (product) {
       setIsAlreadyInList(true);
-      setSelectedList(lists.find((e) => e.product_list_id === listId));
-      showAddProductContent(listId);
+      setSelectedList(lists.find((e) => e.product_list_id === product_list_id));
+      showAddProductContent(product_list_id);
       return;
     }
 
     setIsAlreadyInList(false);
 
     dispatch(
-      addProduct(listId, productId, null, () => showAddProductContent(listId))
+      addProduct(product_list_id, productId, null, () => showAddProductContent(product_list_id))
     );
 
-    setSelectedList(lists.find((list) => list.product_list_id === listId));
-  };
-  const onCreateList = (listInfo: List): void => {
-    setSelectedList(listInfo);
+    setSelectedList(lists.find((list) => list.product_list_id === product_list_id));
+  }
+
+  function onCreateList(list: List) {
+    setSelectedList(list);
     createListDialog.handleClose();
 
     dispatch(
-      addProduct(listInfo.product_list_id, productId, null, () =>
-        showAddProductContent(listInfo.product_list_id)
+      addProduct(list.product_list_id, productId, null, () =>
+        showAddProductContent(list.product_list_id)
       )
     );
-  };
-  const account_enabled = useSelector((e: StoreInterface) => e.site.account_enabled);
+  }
 
   useEffect(() => {
     clickListener.startListen();
 
-    // account_enabled && user && dispatch(getLists());
     return () => {
       clickListener.endListen();
     };
@@ -142,6 +142,57 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
 
   if (!user) return null;
 
+  function getStoreUrl(link: string) {
+    if (!link) {
+      return null;
+    }
+
+    return `https://i1.s3stores.com/${link}`;
+  }
+
+  function getListImagePreview(list) {
+    let image;
+    let listHasIdea = false;
+
+    for (const item of list.items) {
+      switch (item.product_type) {
+        case "product":
+          if (item.product.images.length === 0) {
+            continue;
+          }
+
+          return getStoreUrl(item.product.images[0].path);
+
+        case "idea":
+          listHasIdea = true;
+      }
+    }
+
+    if (!image && listHasIdea) {
+      image = "/static/frontend/images/icons/account/idea-logo.svg";
+    }
+
+    return image;
+  }
+
+  function imageTemplate(list) {
+    const image = getListImagePreview(list);
+
+    if (!image) {
+      return (
+        <div className="form-select-item-img">
+          <ImageNotAvailable/>
+        </div>
+      );
+    }
+
+    return (
+      <div className="form-select-item-img">
+        <img src={getListImagePreview(list)} alt=""/>
+      </div>
+    );
+  }
+
   return (
     <div className={classnames(classes.container)}>
       {label && (
@@ -171,7 +222,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
           <div className={classnames(classes.label)}>ADD TO LIST</div>
 
           <div className={classnames(classes.arrowButton)}>
-            <Medium className={classnames(classes.arrowButtonIcon)} />
+            <Medium className={classnames(classes.arrowButtonIcon)}/>
           </div>
         </div>
 
@@ -183,20 +234,14 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
             )}
           >
             <div className="add-to-list-select-list-items">
-              {lists?.map((item) => (
+              {lists?.map((list) => (
                 <li
-                  onClick={() => addProductToList(item.product_list_id)}
+                  onClick={() => addProductToList(list.product_list_id)}
                   className="form-select-item add-to-list-select-item"
                 >
-                  <img
-                    className="form-select-item-img"
-                    src={
-                      item?.products[0]?.image ||
-                      "/static/frontend/images/icons/account/idea-logo.svg"
-                    }
-                  />
+                  {imageTemplate(list)}
 
-                  <div className="form-select-item-label">{item.name}</div>
+                  <div className="form-select-item-label">{list.name}</div>
                 </li>
               ))}
             </div>
@@ -205,7 +250,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
               onClick={createList}
               className={classnames(classes.createListButton)}
             >
-              <Plus className={Styles.createListButtonIcon} />
+              <Plus className={Styles.createListButtonIcon}/>
 
               <div className="create-list-label ms-4">create a list</div>
             </div>

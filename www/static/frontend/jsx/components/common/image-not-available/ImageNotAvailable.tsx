@@ -1,5 +1,5 @@
 import * as React from "react";
-import Styles from "@components/common/image-not-available/ImageNotAvailable.module.scss";
+import Styles from "@client/jsx/components/common/image-not-available/ImageNotAvailable.module.scss";
 import cn from "classnames";
 
 interface IProps {
@@ -18,7 +18,6 @@ export const ImageNotAvailable: React.FC<IProps> = function (props) {
         "d-flex",
         "align-items-center",
         "justify-content-center",
-        "p-10",
         className,
       ])}
     >

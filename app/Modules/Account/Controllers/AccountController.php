@@ -88,7 +88,6 @@ class AccountController extends FrontendController
             $attributes = $user->getAttributes();
             unset($attributes['password']);
             unset($attributes['access_token']);
-            $attributes['lists'] = AccountListsApi::getLists($user['user_id']);
             $attributes['avatar_image'] = $user->avatar_image->getUrl();
 
             StorageHelper::push($attributes, null, 'user');

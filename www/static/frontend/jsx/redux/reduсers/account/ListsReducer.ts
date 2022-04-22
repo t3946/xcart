@@ -12,11 +12,9 @@ const accountListReducer = (
     case "GET_LISTS":
       return { ...state };
     case "SET_LISTS":
-      return {
-        ...state,
-        lists: action.lists,
-        listLoading: false,
-      };
+      console.log("SET_LISTS", {action});
+      state.lists = action.lists;
+      return { ...state };
     case "CREATE_LIST":
       return {
         ...state,

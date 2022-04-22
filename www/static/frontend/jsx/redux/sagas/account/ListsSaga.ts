@@ -6,17 +6,16 @@ import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/l
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 import axiosInstance from "@client/jsx/utils/axiosInstance";
 
-const getUser = () => {
-  return Store.getState().user;
-};
-
 function* getLists(): Generator {
-  const result: any = yield axiosInstance
-    .get("/api/account/lists/get-lists")
+  const lists: any = yield axiosInstance
+    .get("/api-client/user/lists/get-all")
     .then((response) => response.data);
+
+  console.log("getLists", {lists});
+
   yield put({
     type: "SET_LISTS",
-    lists: result,
+    lists,
   });
 }
 
