@@ -1,7 +1,7 @@
-import { FormSelect } from "@client/modules/account/components/shared/FormSelect";
+import {FormSelect} from "@client/modules/account/components/shared/FormSelect";
 import React from "react";
 import Review from "@client/modules/product/Components/Review/Review";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import ReviewSkeleton from "@client/modules/product/Components/Review/ReviewSkeleton";
 import {
   getReviewsAction,
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 const Reviews: React.FC<any> = function (props: IProps) {
-  const { productId } = props;
+  const {productId} = props;
   const site = useSelectorAccount((e) => e.site);
   const dispatch = useDispatch();
   const LastReviewRef = React.useRef<any>();
@@ -25,10 +25,10 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const reviewsInfo = useSelectorAccount((e) => e.productsReviews[productId]);
   const reviews = reviewsInfo?.reviews || [];
   const country = reviewsInfo?.country;
-  const totalReviews = 8;
+  const totalReviews = reviewsInfo ? reviewsInfo.total : 0;
   const reviewsPerOnePage = 3;
   const [currentPage, setCurrentPage] = React.useState(0);
-  const [isAllLoaded, setIsAllLoaded] = React.useState(totalReviews === reviews.length);
+  const [isAllLoaded, setIsAllLoaded] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const orders = site?.reviews?.orders || null;
   const [sort, setSort] = React.useState(orders ? orders[0] : {
@@ -39,22 +39,25 @@ const Reviews: React.FC<any> = function (props: IProps) {
   const breakpoint = useBreakpoint();
   const [isIntersecting, setIsIntersecting] = React.useState(false);
 
+
   //load reviews
   //can load
   if (!isAllLoaded && !isLoading) {
     //should load first items
     if (reviews.length === 0 && totalReviews > 0) {
+      setIsLoading(true);
       getMoreReviews();
     }
     //should load additional items
     else if (isIntersecting) {
+      setIsLoading(true);
       setIsIntersecting(false);
       getMoreReviews();
     }
   }
 
   //update all reviews loaded flag
-  if (reviews && totalReviews === reviews.length && !isAllLoaded) {
+  if (reviewsInfo && totalReviews === reviews.length && !isAllLoaded) {
     setIsAllLoaded(true);
   }
 
@@ -64,9 +67,9 @@ const Reviews: React.FC<any> = function (props: IProps) {
     if (reviews) {
       for (let i = 0; i < reviews.length; i++) {
         if (i + 1 === reviews.length) {
-          reviewsTemplates.push(<Review review={reviews[i]} ref={LastReviewRef} />);
+          reviewsTemplates.push(<Review review={reviews[i]} ref={LastReviewRef}/>);
         } else {
-          reviewsTemplates.push(<Review review={reviews[i]} />);
+          reviewsTemplates.push(<Review review={reviews[i]}/>);
         }
       }
     }
@@ -77,7 +80,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
       const skeletonsNumber = Math.min(lastReviews, reviewsPerOnePage);
 
       for (let i = 0; i < skeletonsNumber; i++) {
-        reviewsTemplates.push(<ReviewSkeleton />);
+        reviewsTemplates.push(<ReviewSkeleton/>);
       }
     }
 
@@ -85,8 +88,6 @@ const Reviews: React.FC<any> = function (props: IProps) {
   }
 
   function getMoreReviews() {
-    setIsLoading(true);
-
     const maxLimit = totalReviews - reviews.length
     const limit = Math.min(reviewsPerOnePage, maxLimit);
     const offset = reviewsPerOnePage * currentPage;
@@ -159,7 +160,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
           onClick={changeSorting}
           name={"select-sort"}
           value={sort}
-          classes={{ group: "product-reviews-filter-select mb-20 mb-md-0" }}
+          classes={{group: "product-reviews-filter-select mb-20 mb-md-0"}}
         />
 
         <span className={"d-md-none"}>
@@ -178,7 +179,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
       "d-md-flex",
       "justify-content-between",
       "align-items-center",
-      { "skeleton-box": totalReviews > 0 && !country },
+      {"skeleton-box": totalReviews > 0 && !country},
     ],
     container: [
       "reviews-container",
@@ -192,7 +193,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
 
   function changeSorting(item) {
     setSort(item);
-    dispatch(clearReviewsAction({ productId: props.productId }));
+    dispatch(clearReviewsAction({productId: props.productId}));
     setCurrentPage(0);
     setIsAllLoaded(false);
   }
@@ -217,7 +218,10 @@ const Reviews: React.FC<any> = function (props: IProps) {
 
         reviewLoadedObserver = new IntersectionObserver((entries, observer) => {
           entries.forEach((entry) => {
-            setIsIntersecting(entry.isIntersecting);
+
+            if (isIntersecting !== entry.isIntersecting) {
+              setIsIntersecting(entry.isIntersecting);
+            }
 
             if (entry.isIntersecting) {
               observer.unobserve(target);
@@ -225,7 +229,9 @@ const Reviews: React.FC<any> = function (props: IProps) {
           });
         }, options);
 
-        reviewLoadedObserver.observe(target);
+        if (!isLoading && !isAllLoaded && !isIntersecting) {
+          reviewLoadedObserver.observe(target);
+        }
       },
     });
 
@@ -243,7 +249,7 @@ const Reviews: React.FC<any> = function (props: IProps) {
       <div
         className={classnames([
           "reviews-wrapper",
-          { "overflow-hidden": reviews && reviews.length === 0 },
+          {"overflow-hidden": reviews && reviews.length === 0},
         ])}
       >
         <div
