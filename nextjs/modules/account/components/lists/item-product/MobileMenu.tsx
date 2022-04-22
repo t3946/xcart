@@ -4,6 +4,7 @@ import { Hat } from "@modules/account/components/lists/mobile-menu/Hat";
 import { useRouter } from "next/router";
 import getStoreUrl from "@utils/getStoreUrl";
 import Styles from "@modules/account/components/lists/item-product/MobileMenu.module.scss";
+import ImageNotAvailable from "@components/common/image-not-available/ImageNotAvailable";
 
 interface IProps {
   dialog: Record<any, any>;
@@ -15,12 +16,16 @@ export const MobileMenu: React.FC<IProps> = function (props) {
   const { list, item, dialog } = props;
   const router = useRouter();
 
+  function imageTemplate() {
+    if (item.product.images.length === 0) {
+      return <ImageNotAvailable />;
+    }
+
+    return <img src={getStoreUrl(item.product.images[0].path)} alt="" />;
+  }
+
   function leftColumnTemplate() {
-    return (
-      <div>
-        <img src={getStoreUrl(item.product.images[0].path)} alt="" />
-      </div>
-    );
+    return <div>{imageTemplate()}</div>;
   }
 
   function rightColumnTemplate() {

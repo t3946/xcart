@@ -1,6 +1,7 @@
 import React from "react";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 import { List } from "@client/modules/account/ts/types/list.type";
+import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 
 interface AddProductToListProps {
   info: List;
@@ -15,6 +16,8 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
   isAlreadyInList,
   product,
 }) => {
+  const product_info = useSelectorAccount((e) => e.site.product_info);
+
   function viewYourList() {
     window.location.assign(`/account/shopping-lists/${info.product_list_id}`);
   }
@@ -31,7 +34,7 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
       </div>
       <div className="add-product-to-list-content">
         <img
-          src={product.image}
+          src={product_info?.image}
           className="add-product-to-list-content-img"
         />
         <div className="add-product-to-list-content-text">

@@ -26,7 +26,6 @@ const ReviewsReducer = (
       return { ...store };
 
     case "REVIEWS_SET_TOTAL":
-      console.log("REVIEWS_SET_TOTAL", {action})
       store[action.productId].total = action.total;
       return { ...store };
 

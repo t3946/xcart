@@ -26,24 +26,19 @@ export const CreateNewList: React.FC<CreateNewList> = ({
   actionType,
 }) => {
   const dispatch = useDispatch();
-
   const learnMoreDialog = useDialog();
-
   const ref = useRef<HTMLInputElement>();
   useEffect(() => {
     ref.current.focus();
   }, []);
 
   const snackbar = useSnackbar();
-
   const [isViewingInfo, setIsViewingInfo] = useState(false);
-
   const router = useRouter();
-
   const { loading } = useSelectorAccount((e) => e.lists);
   const countList = useSelectorAccount((e) => e.lists.lists?.length);
 
-  const handleSubmit = () => {
+  function handleSubmit() {
     if (!formik.values.name.trim()) {
       formik.setErrors({ name: "Required field" });
       return;

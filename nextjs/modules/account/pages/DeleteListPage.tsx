@@ -21,13 +21,17 @@ export const DeleteListPage: React.FC<IProps> = (props) => {
     router.push(`/shopping-lists/${cache}`);
   }
 
-  function onRequestEnd() {
+  function handleDeleteList() {
+    dispatch(
+      deleteList({
+        data: {
+          product_list_id: list.product_list_id,
+        },
+      })
+    );
+
     snackbar.show(`${list.name} list deleted successfully`);
     router.push("/shopping-lists");
-  }
-
-  function handleDeleteList() {
-    dispatch(deleteList(list.productListId, onRequestEnd));
   }
 
   return (

@@ -18,18 +18,16 @@ function* loadLists(): Generator {
 
 function* createList(action: AnyAction): Generator {
   const { data, callback } = action.payload;
-  let newList;
-
-  yield axios.post("/api-client/user/lists/create", data).then((res) => {
-    newList = res.data;
-  });
+  const list = yield axios
+    .post("/api-client/user/lists/create", data)
+    .then((res) => res.data);
 
   yield put({
     type: "ADD_LIST",
-    list: newList,
+    list,
   });
 
-  callback(newList);
+  callback(list);
 }
 
 function* reorderList(action: AnyAction): Generator {
@@ -174,7 +172,6 @@ function* deleteItem(action: AnyAction): Generator {
 }
 
 export function* listsActionWatcher(): SagaIterator {
-  yield takeLatest("CREATE_LIST", createList);
   yield takeLatest("SEND_REORDER_LIST", reorderList);
   yield takeLatest("TRANSFER_PRODUCT_LIST", transferProductList);
   yield takeLatest("EDIT_COMMENT_PRODUCT", editCommentProduct);
@@ -196,6 +193,7 @@ export function* listsActionWatcher(): SagaIterator {
   yield takeLatest("PRODUCT_LISTS_ROLE_DELETE", roleDelete);
 
   //list
+  yield takeLatest("PRODUCT_LISTS_CREATE", createList);
   yield takeLatest("PRODUCT_LISTS_LOAD_LISTS", loadLists);
   yield takeLatest("PRODUCT_LISTS_DELETE_LIST", deleteList);
   yield takeLatest("PRODUCT_LISTS_UPDATE_LIST", updateList);

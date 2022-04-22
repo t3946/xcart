@@ -126,16 +126,19 @@ app.post("/update", async (req, res) => {
   }
 
   if (typeof req.body.default !== "undefined") {
-    data.default = 1;
+    //change default list
+    if (req.body.default === 1) {
+      data.default = 1;
 
-    await prisma.account_product_lists.updateMany({
-      where: {
-        user_id: req.user.userId,
-      },
-      data: {
-        default: 0,
-      },
-    });
+      await prisma.account_product_lists.updateMany({
+        where: {
+          user_id: req.user.userId,
+        },
+        data: {
+          default: 0,
+        },
+      });
+    }
   }
 
   await prisma.account_product_lists.updateMany({

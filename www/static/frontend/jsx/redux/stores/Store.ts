@@ -34,6 +34,8 @@ import SuggestionReducer from "@client/jsx/redux/reduсers/SuggestionReducer";
 import ConfigReducer from "@client/jsx/redux/reduсers/account/ConfigReducer";
 import SiteReducer from "@client/jsx/redux/reduсers/account/SiteReducer";
 import ProductPageReducer from "@client/jsx/redux/reduсers/ProductPageReducer";
+import axiosInstance from "@client/jsx/utils/axiosInstance";
+import {put} from "redux-saga/effects";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -80,11 +82,6 @@ axios.get("/api/account/get-site-data").then(async (res) => {
       type: "USER_SET",
       user: initialState.user,
     });
-
-    Store.dispatch({
-      type: "SET_LISTS",
-      lists: initialState.user.lists,
-    });
   }
 
   Store.dispatch({
@@ -129,9 +126,21 @@ axios.get("/api/account/get-site-data").then(async (res) => {
       type: "PRODUCT_INFO_SET",
       productInfo,
     });
+
     Store.dispatch({
       type: "REVIEWS_SETTINGS_SET",
       reviews,
+    });
+
+    //load lists
+    console.log("load lists", {});
+    const lists: any = await axios
+      .get("/api-client/user/lists/get-all")
+      .then((response) => response.data);
+
+    Store.dispatch({
+      type: "SET_LISTS",
+      lists,
     });
   }
 });

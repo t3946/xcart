@@ -3,7 +3,7 @@ export const loadLists = (): any => ({
 });
 
 export const createList = (payload: any): any => ({
-  type: "CREATE_LIST",
+  type: "PRODUCT_LISTS_CREATE",
   payload,
 });
 

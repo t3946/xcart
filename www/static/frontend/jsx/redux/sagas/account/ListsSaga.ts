@@ -6,34 +6,32 @@ import { editNameOnList } from "@client/modules/account/utils/edit-store-funcs/l
 import { EditCommentDataOnProduct } from "@client/modules/account/utils/edit-store-funcs/lists/edit-comment-data-on-product";
 import axiosInstance from "@client/jsx/utils/axiosInstance";
 
-const getUser = () => {
-  return Store.getState().user;
-};
-
 function* getLists(): Generator {
-  const result: any = yield axiosInstance
-    .get("/api/account/lists/get-lists")
+  const lists: any = yield axiosInstance
+    .get("/api-client/user/lists/get-all")
     .then((response) => response.data);
+
+  console.log("getLists", {lists});
+
   yield put({
     type: "SET_LISTS",
-    lists: result,
+    lists,
   });
 }
 
 function* createList(action: AnyAction): Generator {
-  const result = yield axiosInstance
-    .post("/api/account/lists/create-lists", {
+  const list = yield axiosInstance
+    .post("/api-client/user/lists/create", {
       name: action.name,
-      user_id: getUser().id,
     })
     .then((response) => response.data);
 
   yield put({
     type: "ADD_NEW_LIST",
-    list: result,
+    list,
   });
 
-  yield action.callback(result);
+  yield action.callback(list);
 }
 
 function* moveProduct(action: AnyAction): Generator {
@@ -91,7 +89,7 @@ function* editUserRights(action: AnyAction): Generator {
 }
 
 function* addProductOnList(action: AnyAction): Generator {
-  console.log("addProductOnList", {});
+  console.log("addProductOnList", {action});
   yield axiosInstance
     .post(
       "/api-client/user/lists/add-product",

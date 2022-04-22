@@ -28,7 +28,6 @@ import getStoreUrl from "@utils/getStoreUrl";
 import Price from "@components/common/price/Price";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
-import StylesItem from "@modules/account/components/lists/item/Item.module.scss";
 import Image from "@modules/account/components/lists/item/Image";
 import AddDate from "@modules/account/components/lists/item/AddDate";
 
@@ -38,7 +37,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     drag,
     reorderProductList,
     index,
-    listId,
     deleteItem,
     edit,
     listInfo,
@@ -81,6 +79,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       );
     }
   };
+  const inStock = listItem.product.in_stock === 1;
 
   function itemAddedTemplate(className) {
     return (
@@ -91,9 +90,13 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   }
 
   function itemPriceGroupTemplate() {
+    if (!inStock) {
+      return null;
+    }
+
     return (
       <>
-        <div className="d-flex align-items-center d-none d-lg-flex">
+        <div className="d-flex align-items-center d-none d-lg-flex mt-lg-20">
           <Price
             currency={currency}
             price={product.price}
@@ -110,7 +113,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             value={countProductsOnCart}
             onChange={changeCount}
             minAmount={product.min_amount}
-            multOrderQuantity={product.mult_order_quantity}
+            multOrderQuantity={product.mult_order_quantity === "Y"}
             className={Styles.counter}
           />
         </div>
@@ -142,7 +145,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       </div>
 
       <div className={cn("d-flex", "flex-grow-1")}>
-        <Image imgUrl={getStoreUrl(listItem.product.images[0].path)} />
+        <Image imgUrl={getStoreUrl(listItem.product.images[0]?.path)} />
 
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
@@ -209,20 +212,23 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
                 className={cn(
                   "add-comment-text",
                   "d-none",
-                  "d-md-inline-block"
+                  "d-md-inline-block",
+                  "mt-lg-3"
                 )}
               >
                 Add comment, quantity & priority
               </div>
             ))}
 
-          <Price
-            currency={currency}
-            price={product.price}
-            classes={{
-              container: [Styles.productInfoPrice, "d-block", "d-lg-none"],
-            }}
-          />
+          {inStock && (
+            <Price
+              currency={currency}
+              price={product.price}
+              classes={{
+                container: [Styles.productInfoPrice, "d-block", "d-lg-none"],
+              }}
+            />
+          )}
 
           <AddDate
             date={listItem.add_date}
@@ -251,7 +257,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             disabledAddToCart={disabledAddToCart}
             btnLabel={"Add to cart"}
             edit={edit}
-            // outOfStock={info.product}
+            outOfStock={!inStock}
             deleteItem={deleteProductDialog.handleClickOpen}
             onMainBtnClick={() => {
               setDisabledAddToCart(true);
