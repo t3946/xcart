@@ -145,7 +145,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       </div>
 
       <div className={cn("d-flex", "flex-grow-1")}>
-        <Image imgUrl={getStoreUrl(listItem.product.images[0].path)} />
+        <Image imgUrl={getStoreUrl(listItem.product.images[0]?.path)} />
 
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
@@ -219,13 +219,15 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               </div>
             ))}
 
-          <Price
-            currency={currency}
-            price={product.price}
-            classes={{
-              container: [Styles.productInfoPrice, "d-block", "d-lg-none"],
-            }}
-          />
+          {inStock && (
+            <Price
+              currency={currency}
+              price={product.price}
+              classes={{
+                container: [Styles.productInfoPrice, "d-block", "d-lg-none"],
+              }}
+            />
+          )}
 
           <AddDate
             date={listItem.add_date}

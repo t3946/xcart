@@ -2,15 +2,28 @@
 
 .image {
   width: pxToRem(60);
+  height: pxToRem(60);
   margin: 0 pxToRem(14) 0 0;
 
   @include breakpoint(md) {
     width: pxToRem(87);
+    height: pxToRem(87);
     margin: 0 pxToRem(30) 0 0;
   }
 
   @include breakpoint(lg) {
     width: pxToRem(100);
+    height: pxToRem(100);
     margin: 0 pxToRem(40) 0 0;
+  }
+}
+
+.imageNotAvailable {
+  @include breakpoint(md) {
+    font-size: pxToRem(14);
+  }
+
+  @include breakpoint(lg) {
+    font-size: pxToRem(16);
   }
 }
