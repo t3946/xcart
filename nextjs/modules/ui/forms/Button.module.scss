@@ -27,10 +27,6 @@
     background-color: #f09e05;
   }
 
-  &:hover:disabled {
-    background-color: #ffb426;
-  }
-
   &:focus {
     background-color: #f09e05;
     color: #000000;
@@ -45,9 +41,14 @@
     background-color: #ef8807;
   }
 
+  &:focus:disabled,
+  &:active:disabled,
+  &:hover:disabled,
   &:disabled {
+    background-color: #ffb426;
     opacity: 0.6;
     cursor: default;
+    box-shadow: none;
   }
 
   @include breakpoint(md) {
