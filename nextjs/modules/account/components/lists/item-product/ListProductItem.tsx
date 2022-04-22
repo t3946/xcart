@@ -28,7 +28,6 @@ import getStoreUrl from "@utils/getStoreUrl";
 import Price from "@components/common/price/Price";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
-import StylesItem from "@modules/account/components/lists/item/Item.module.scss";
 import Image from "@modules/account/components/lists/item/Image";
 import AddDate from "@modules/account/components/lists/item/AddDate";
 
@@ -38,7 +37,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     drag,
     reorderProductList,
     index,
-    listId,
     deleteItem,
     edit,
     listInfo,
@@ -81,6 +79,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       );
     }
   };
+  const inStock = listItem.product.in_stock === 1;
 
   function itemAddedTemplate(className) {
     return (
@@ -91,6 +90,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   }
 
   function itemPriceGroupTemplate() {
+    if (!inStock) {
+      return null;
+    }
+
     return (
       <>
         <div className="d-flex align-items-center d-none d-lg-flex">
@@ -251,7 +254,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             disabledAddToCart={disabledAddToCart}
             btnLabel={"Add to cart"}
             edit={edit}
-            // outOfStock={info.product}
+            outOfStock={!inStock}
             deleteItem={deleteProductDialog.handleClickOpen}
             onMainBtnClick={() => {
               setDisabledAddToCart(true);
