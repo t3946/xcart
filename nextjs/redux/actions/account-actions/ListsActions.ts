@@ -1,5 +1,5 @@
-export const getLists = (): any => ({
-  type: "GET_LISTS",
+export const loadLists = (): any => ({
+  type: "PRODUCT_LISTS_LOAD_LISTS",
 });
 
 export const createList = (payload: any): any => ({
@@ -82,9 +82,15 @@ export const editCommentProduct = (payload: any): any => ({
   payload,
 });
 
-export const manageList = (payload: any): any => ({
-  type: "MANAGE_LIST",
+//lists
+export const updateList = (payload: any): any => ({
+  type: "PRODUCT_LISTS_UPDATE_LIST",
   payload,
+});
+
+export const setLists = (lists: any): any => ({
+  type: "SET_LISTS",
+  lists,
 });
 
 //items

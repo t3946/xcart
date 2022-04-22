@@ -6,8 +6,12 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import * as React from "react";
 import ListMobileMenu from "@modules/account/components/lists/ListMobileMenu";
+import { getInstance } from "@services/axios/Instance";
+import { useDispatch } from "react-redux";
+import { loadLists } from "@redux/actions/account-actions/ListsActions";
 
 const ShoppingLists: NextPage = () => {
+  const dispatch = useDispatch();
   const { lists } = useSelectorAccount((state) => state.lists);
   const router = useRouter();
   const user = useSelectorAccount((e) => e.user);
@@ -19,6 +23,11 @@ const ShoppingLists: NextPage = () => {
   });
 
   if (!user) {
+    return null;
+  }
+
+  if (lists === null) {
+    dispatch(loadLists());
     return null;
   }
 

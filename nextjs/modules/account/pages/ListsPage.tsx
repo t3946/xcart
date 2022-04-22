@@ -6,7 +6,6 @@ import { UserPrivateVariantsEnum } from "@modules/account/ts/consts/user-private
 import { AddIdea } from "@modules/account/components/lists/AddIdea";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
-import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import { ViewLists } from "@modules/account/components/lists/view-lists/ViewLists";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
@@ -22,9 +21,8 @@ interface IProps {
 const ListsPage: React.FC<IProps> = (props) => {
   const { list } = props;
   const router = useRouter();
-  const { lists, loading } = useSelectorAccount((state) => state.lists);
+  const { lists } = useSelectorAccount((state) => state.lists);
   const createIdeaDialog = useDialog();
-  const breakpoints = useBreakpoint();
   const dispatch = useDispatch();
   const user = useSelectorAccount((e) => e.user);
 
@@ -49,7 +47,7 @@ const ListsPage: React.FC<IProps> = (props) => {
 
   const { cache } = router.query;
   const edit = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
-  // todo: what it is
+  // todo: what it is (default)
   // const isBase = source === ListSource.Default;
   const isBase = true;
 
@@ -64,8 +62,7 @@ const ListsPage: React.FC<IProps> = (props) => {
           onClick={createIdeaDialog.handleClickOpen}
           theme={ETheme.outlined}
           className={cn("d-lg-block w-md-auto mx-md-auto mx-lg-0 w-md-auto", {
-            "d-none": !cache || loading,
-            "d-lg-none": loading,
+            "d-none": !cache,
           })}
         >
           Add idea to list

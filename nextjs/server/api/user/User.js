@@ -126,6 +126,14 @@ app.post("/create", async function (req, res) {
       },
     });
 
+    await prisma.account_product_lists.create({
+      data: {
+        name: "Shopping list",
+        user_id: user.user_id,
+        default: 1,
+      },
+    });
+
     await setSessionCookie(res, { userId: user.user_id });
 
     delete user.password;
