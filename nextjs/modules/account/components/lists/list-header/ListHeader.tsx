@@ -16,34 +16,18 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
 import Link from "next/link";
 import Arrow from "@modules/icon/components/font-awesome/arrow-left/Solid";
-
-import Styles from "@modules/account/components/lists/ListHeader.module.scss";
+import MobileMenu from "@modules/account/components/lists/list-header/MobileMenu";
+import Styles from "@modules/account/components/lists/list-header/ListHeader.module.scss";
 
 interface IProps {
   list: any;
-  isShoppingList: boolean;
 }
 
 export const ListHeader: React.FC<IProps> = (props) => {
   const snackbar = useSnackbar();
   const shareDialog = useDialog();
-  const { list, isShoppingList } = props;
+  const { list } = props;
   const userId = useSelectorAccount((e) => e.user.user_id);
-
-  function listIsEdit() {
-    if (list.owner.user_id === userId) {
-      return UserPrivateVariantsEnum.EDIT;
-    }
-
-    if (
-      list?.users.find((role) => role.user.user_id === userId)?.role ===
-      UserPrivateVariantsEnum.EDIT
-    ) {
-      return UserPrivateVariantsEnum.EDIT;
-    }
-    return UserPrivateVariantsEnum.VIEW;
-  }
-
   const editor = listIsEdit() !== UserPrivateVariantsEnum.VIEW;
   const owner = list.user_id === userId;
   const manageListDialog = useDialog();
@@ -65,43 +49,43 @@ export const ListHeader: React.FC<IProps> = (props) => {
     router.replace(`/shopping-lists/`);
   }
 
-  const mobileDialogItems: MobileMenuForListItem[] = [
-    {
-      label: "Manage list",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/action-list/manage-list/${list.product_list_id}`
-        ),
-    },
-    {
-      label: "Add idea",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/action-list/add-idea/${list.product_list_id}`
-        ),
-    },
-    {
-      label: "Share list with others",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/action-list/share-list/${list.product_list_id}`
-        ),
-    },
-    {
-      label: "Delete list",
-      onClick: () =>
-        router.push(
-          `/shopping-lists/action-list/share-list/${list.product_list_id}`
-        ),
-    },
-  ];
-  const mobileItemDelete = {
-    label: "Delete list",
-    onClick: () =>
-      router.push(
-        `/shopping-lists/action-list/delete-list/${list.product_list_id}`
-      ),
-  };
+  function listIsEdit() {
+    if (list.owner.user_id === userId) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+
+    if (
+      list?.users.find((role) => role.user.user_id === userId)?.role ===
+      UserPrivateVariantsEnum.EDIT
+    ) {
+      return UserPrivateVariantsEnum.EDIT;
+    }
+    return UserPrivateVariantsEnum.VIEW;
+  }
+
+  function deleteListButtonTemplate() {
+    if (!owner) {
+      return null;
+    }
+
+    if (list.default === 1) {
+      return null;
+    }
+
+    return (
+      <div
+        onClick={deleteListDialog.handleClickOpen}
+        className={cn(
+          Styles.istHeaderActions__listHeaderAction,
+          Styles.listHeaderAction,
+          Styles.listHeaderAction_red
+        )}
+      >
+        Delete list
+      </div>
+    );
+  }
+
   const listType = list.users.length === 0 ? "private" : "shared";
 
   return (
@@ -220,18 +204,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
                 Manage list
               </div>
 
-              {owner && (
-                <div
-                  onClick={deleteListDialog.handleClickOpen}
-                  className={cn(
-                    Styles.istHeaderActions__listHeaderAction,
-                    Styles.listHeaderAction,
-                    Styles.listHeaderAction_red
-                  )}
-                >
-                  Delete list
-                </div>
-              )}
+              {deleteListButtonTemplate()}
             </>
           )}
         </div>
@@ -272,15 +245,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
         />
       </BootstrapDialogHOC>
 
-      <MobileMenuForList
-        items={
-          isShoppingList
-            ? mobileDialogItems
-            : [...mobileDialogItems, mobileItemDelete]
-        }
-        dialogOpen={mobileMenuDialog.open}
-        dialogOnClose={mobileMenuDialog.handleClose}
-      />
+      <MobileMenu list={list} dialog={mobileMenuDialog} />
     </div>
   );
 };

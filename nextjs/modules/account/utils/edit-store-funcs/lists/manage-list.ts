@@ -11,10 +11,13 @@ export const manageList = (
   lists: state.lists.map((list) => {
     if (list.product_list_id === product_list_id) {
       list = convertManageList(list, data);
+    } else {
+      if (data.default === 1) {
+        list.default = 0;
+      }
     }
     return list;
   }),
-  listView: convertManageList(state.listView, data),
 });
 
 export const convertManageList = (
@@ -28,4 +31,5 @@ export const convertManageList = (
   recipientEmail: data.recipient_email,
   recipientName: data.recipient_name,
   birthday: data.birthday,
+  default: data.default,
 });
