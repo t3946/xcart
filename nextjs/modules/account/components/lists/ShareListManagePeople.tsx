@@ -44,7 +44,8 @@ export const ShareListManagePeople: React.FC<IProps> = (props) => {
 
       <ManagePeopleItem
         onClick={handleSelectItemClick}
-        userListInfo={list.owner}
+        user={list.owner}
+        list={list}
         role={"owner"}
       />
 
@@ -52,7 +53,8 @@ export const ShareListManagePeople: React.FC<IProps> = (props) => {
         <ManagePeopleItem
           onClick={handleSelectItemClick}
           userDelete={userDelete}
-          userListInfo={item.user}
+          user={item.user}
+          list={list}
           role={item.role}
           key={`ShareListManagePeopleItem-${i}`}
         />
