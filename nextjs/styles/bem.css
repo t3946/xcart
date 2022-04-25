@@ -6916,7 +6916,7 @@ textarea.advice-comment:disabled {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .order-address,
   .order-address-block,
   .order-addresses {
@@ -7042,7 +7042,7 @@ textarea.advice-comment:disabled {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .order-product-list-body {
     padding-bottom: 32px;
   }
@@ -7438,7 +7438,7 @@ textarea.advice-comment:disabled {
   margin-top: 35px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .submit-to-rma-dep-btn {
     width: 100%;
   }
@@ -7671,7 +7671,7 @@ textarea.advice-comment:disabled {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .order-tracking-info-addresses-cards {
     flex-direction: column;
   }
@@ -8067,7 +8067,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .product-ordered-total-left {
     background-color: #f8f8f8;
   }
@@ -8689,7 +8689,7 @@ div.account-page-right-column {
   transition: all 0.3s ease-in-out;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .order-communication-send-btn {
     width: 100%;
     margin-left: 0 !important;
@@ -8772,7 +8772,7 @@ div.account-page-right-column {
   margin-left: 0 !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .problem-with-order-send-btn {
     width: 100%;
   }
@@ -9147,7 +9147,7 @@ div.account-page-right-column {
   margin-top: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .add-product-to-list-btns {
     display: block;
   }
@@ -9294,7 +9294,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .deleted-product-content {
     margin-left: 0.625rem;
   }
@@ -9320,7 +9320,7 @@ div.account-page-right-column {
   width: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .edit-comment-img-block {
     width: 100%;
   }
@@ -9513,7 +9513,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .add-comment-text {
     display: none;
   }
@@ -9573,7 +9573,7 @@ div.account-page-right-column {
   width: 80px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .create-list-tooltip-text {
     padding-top: 10px;
   }
@@ -9653,7 +9653,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .list-header-actions,
   .list-header-shared-block {
     display: none;
@@ -9701,7 +9701,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .product-list-idea-name {
     max-width: 100%;
     width: 100%;
@@ -9774,7 +9774,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .accept-invite-btn-group {
     display: block;
     width: 100%;
@@ -9924,7 +9924,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .product-list-item-container {
     flex-direction: column;
     padding: 10px;
@@ -10009,7 +10009,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .list-product-item-btns-container {
     display: none;
   }
@@ -10034,7 +10034,7 @@ div.account-page-right-column {
   font-size: 16px !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .add-idea-btn {
     display: none !important;
   }
@@ -10093,7 +10093,7 @@ div.account-page-right-column {
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .list-product-item-comment-container:before {
     display: none;
   }
@@ -10253,7 +10253,7 @@ div.account-page-right-column {
   margin-right: 1.0625rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .mobile-menu-back-btn-container {
     display: block;
   }
@@ -10395,7 +10395,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .moved-product-content {
     margin-left: 0.625rem;
     justify-content: space-between;
@@ -10434,7 +10434,7 @@ div.account-page-right-column {
   margin-bottom: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .no-items-block-container {
     border: 0;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
@@ -10505,7 +10505,7 @@ div.account-page-right-column {
   align-items: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .share-list-radio {
     margin-bottom: -0.0625rem;
     border: 0.0625rem solid #c4c4c4;
@@ -10821,7 +10821,7 @@ div.account-page-right-column {
   border-top-color: #c4c4c4;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .tooltip-content {
     display: none;
   }
@@ -10970,7 +10970,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .addresses-list-container {
     justify-content: center;
   }
@@ -11364,7 +11364,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .add-card-form-container {
     width: 100%;
     margin: 0 auto;
@@ -11405,7 +11405,7 @@ div.account-page-right-column {
   margin-right: 5px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .add-new-payment-method-container {
     flex-direction: column-reverse;
   }
@@ -11560,7 +11560,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 769px) {
+@media (max-width: 767px) {
   .edit-card-input-card-name {
     margin-right: 0;
   }
@@ -11889,7 +11889,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .transaction-addresses-container,
   .transaction-order-info-container {
     flex-direction: column;
@@ -12048,7 +12048,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .transactions-mobile-header-arrow {
     display: flex;
   }
@@ -12174,7 +12174,7 @@ div.account-page-right-column {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .wallet-card-billing-header,
   .wallet-header-default-block {
     display: none;
@@ -12269,7 +12269,7 @@ div.account-page-right-column {
   font-weight: 700;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .page-label {
     text-align: center;
     margin-left: 0;
@@ -14670,7 +14670,7 @@ textarea.form-review-text-body {
   justify-content: space-between;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .help-wrap {
     display: block;
     padding: 0 10px;
@@ -14912,7 +14912,7 @@ textarea.form-review-text-body {
   padding-left: 10px;
 }
 
-@media (max-width: 769px) {
+@media (max-width: 767px) {
   .navbar-wrap-title {
     text-align: center;
   }
@@ -14933,7 +14933,7 @@ textarea.form-review-text-body {
   padding: 23px 0 23px 15px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .navigate-item-text {
     padding-left: 45px;
   }

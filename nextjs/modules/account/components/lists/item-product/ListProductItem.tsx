@@ -16,7 +16,6 @@ import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
 import { useDispatch } from "react-redux";
 import cn from "classnames";
 import Chevron from "@modules/icon/components/font-awesome/chevron-down/Light";
-import moment from "moment";
 import OverallRating from "@modules/shared/components/ratings/OverallRating";
 import StylesListProductItems from "@modules/account/components/lists/ListProductItems.module.scss";
 import Styles from "@modules/account/components/lists/item-product/ListProductItem.module.scss";
@@ -30,6 +29,7 @@ import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
 import Image from "@modules/account/components/lists/item/Image";
 import AddDate from "@modules/account/components/lists/item/AddDate";
+import OutOfStock from "@components/common/catalog/out-of-stock/OutOfStock";
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
@@ -80,14 +80,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     }
   };
   const inStock = listItem.product.in_stock === 1;
-
-  function itemAddedTemplate(className) {
-    return (
-      <div className={cn(Styles.productInfoDate, className)}>
-        Item added {moment(listItem.add_date).utc().format("MMM DD, Y")}
-      </div>
-    );
-  }
 
   function itemPriceGroupTemplate() {
     if (!inStock) {
@@ -214,7 +206,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               <div
                 onClick={editCommentDialog.handleClickOpen}
                 className={cn(
-                  "add-comment-text",
+                  Styles.addCommentText,
                   "d-none",
                   "d-md-inline-block",
                   "mt-lg-3"
@@ -234,10 +226,10 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
             />
           )}
 
-          <AddDate
-            date={listItem.add_date}
-            className={["mt-18", "d-md-none"]}
-          />
+          <div className="d-md-none">
+            <AddDate date={listItem.add_date} className={["mt-18"]} />
+            {!inStock && <OutOfStock className={"mt-12"} />}
+          </div>
         </div>
       </div>
 

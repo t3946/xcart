@@ -9,7 +9,6 @@ import { transferProductList } from "@redux/actions/account-actions/ListsActions
 import useSnackbar, { VariantsEnum } from "@modules/account/hooks/useSnackbar";
 import Button, { ETheme } from "@modules/ui/forms/Button";
 import { checkProductCollisionInList } from "@modules/account/utils/check-product-collision-in-list";
-
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
 import OutOfStock from "@components/common/catalog/out-of-stock/OutOfStock";
 
@@ -70,7 +69,7 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
 
   function addToCartTemplate() {
     if (outOfStock) {
-      return <OutOfStock />;
+      return <OutOfStock className={["d-none", "d-md-flex"]} />;
     }
 
     return (

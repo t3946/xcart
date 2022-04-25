@@ -3,9 +3,22 @@ import Styles from "@components/common/catalog/out-of-stock/OutOfStock.module.sc
 import IconOutOfStock from "@components/common/icons/out-of-stock/OutOfStock";
 import cn from "classnames";
 
-export const OutOfStock: React.FC = function () {
+interface IProps {
+  className?: any;
+}
+
+export const OutOfStock: React.FC<IProps> = function (props) {
+  const { className } = props;
+
   return (
-    <div className={cn(Styles.IconOutOfStock, "d-flex", "align-items-center")}>
+    <div
+      className={cn(
+        Styles.IconOutOfStock,
+        "d-flex",
+        "align-items-center",
+        className
+      )}
+    >
       <IconOutOfStock className={Styles.icon} />
       <span className={cn(Styles.text, "ms-2")}>Out of stock</span>
     </div>

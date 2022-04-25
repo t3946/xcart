@@ -42,3 +42,14 @@
     padding: pxToRem(25);
   }
 }
+
+
+.addCommentText {
+  color: #055a93;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    color: #183e5c;
+  }
+}
