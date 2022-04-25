@@ -5,9 +5,10 @@ import { ShareListDialog } from "@modules/account/components/lists/ShareListDial
 import { ManageList } from "@modules/account/components/lists/ManageList";
 import BootstrapDialogHOC from "@modules/account/hoc/BootstrapDialogHOC";
 import { ConfirmDelete } from "@modules/account/components/lists/ConfirmDelete";
-import { MobileMenuForListItem } from "@modules/account/ts/types/MobileMenuForListItem";
-import { MobileMenuForList } from "@modules/account/components/lists/mobile-menu/MobileMenuForList";
-import { deleteList } from "@redux/actions/account-actions/ListsActions";
+import {
+  deleteList,
+  roleDelete,
+} from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
 import { useSnackbar } from "@modules/account/hooks/useSnackbar";
 import ShareIcon from "@modules/icon/components/account/share/ShareIcon";
@@ -37,13 +38,28 @@ export const ListHeader: React.FC<IProps> = (props) => {
   const dispatch = useDispatch();
 
   function handleDeleteList() {
-    dispatch(
-      deleteList({
-        data: {
-          product_list_id: list.product_list_id,
-        },
-      })
-    );
+    //delete list
+    if (owner) {
+      dispatch(
+        deleteList({
+          data: {
+            product_list_id: list.product_list_id,
+          },
+        })
+      );
+    }
+    // delete yourself from list
+    else {
+      dispatch(
+        roleDelete({
+          data: {
+            product_list_id: list.product_list_id,
+            user_id: userId,
+          },
+        })
+      );
+    }
+
     deleteListDialog.handleClose();
     snackbar.show(`${list.name} list deleted successfully`);
     router.replace(`/shopping-lists/`);
@@ -64,11 +80,7 @@ export const ListHeader: React.FC<IProps> = (props) => {
   }
 
   function deleteListButtonTemplate() {
-    if (!owner) {
-      return null;
-    }
-
-    if (list.default === 1) {
+    if (owner && list.default === 1) {
       return null;
     }
 
@@ -182,7 +194,6 @@ export const ListHeader: React.FC<IProps> = (props) => {
           </span>
         )}
       </div>
-
       <div
         className={cn(
           Styles.listHeaderRightSide,
@@ -193,20 +204,17 @@ export const ListHeader: React.FC<IProps> = (props) => {
       >
         <div className="list-header-actions flex-grow-1 ms-lg-5">
           {editor && (
-            <>
-              <div
-                onClick={manageListDialog.handleClickOpen}
-                className={cn(
-                  Styles.istHeaderActions__listHeaderAction,
-                  Styles.listHeaderAction
-                )}
-              >
-                Manage list
-              </div>
-
-              {deleteListButtonTemplate()}
-            </>
+            <div
+              onClick={manageListDialog.handleClickOpen}
+              className={cn(
+                Styles.istHeaderActions__listHeaderAction,
+                Styles.listHeaderAction
+              )}
+            >
+              Manage list
+            </div>
           )}
+          {deleteListButtonTemplate()}
         </div>
         {owner && (
           <div className="list-header-shared-block">
@@ -232,7 +240,6 @@ export const ListHeader: React.FC<IProps> = (props) => {
       >
         <ManageList list={list} onCancelClick={manageListDialog.handleClose} />
       </BootstrapDialogHOC>
-
       <BootstrapDialogHOC
         show={deleteListDialog.open}
         title={"Confirm delete list"}
@@ -244,7 +251,6 @@ export const ListHeader: React.FC<IProps> = (props) => {
           onCancelClick={deleteListDialog.handleClose}
         />
       </BootstrapDialogHOC>
-
       <MobileMenu list={list} dialog={mobileMenuDialog} />
     </div>
   );
