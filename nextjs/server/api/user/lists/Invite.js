@@ -40,12 +40,6 @@ app.get("/info/:iv/:content", async (req, res) => {
     return;
   }
 
-  //user can't invite yourself
-  if (parseInt(list.owner.user_id) === req.user.userId) {
-    res.sendStatus(403);
-    return;
-  }
-
   res.json({
     list,
     role,

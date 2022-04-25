@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { loadLists } from "@redux/actions/account-actions/ListsActions";
 import { useDispatch } from "react-redux";
+import Link from "next/link";
 
 interface IProps {
   role: any;
@@ -38,6 +39,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 const InviteList: NextPage<IProps> = (props) => {
+  const { role, list: listNew, iv, content } = props;
   const user = useSelectorAccount((e) => e.user);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -58,14 +60,27 @@ const InviteList: NextPage<IProps> = (props) => {
     return null;
   }
 
+  let isAlreadyHasList = false;
+
+  for (const list of lists) {
+    if (listNew.product_list_id === list.product_list_id) {
+      isAlreadyHasList = true;
+      break;
+    }
+  }
+
   return (
     <PageTwoColumns bar={<ListsSidebarMenu />}>
-      <InvitationPage
-        role={props.role}
-        list={props.list}
-        iv={props.iv}
-        content={props.content}
-      />
+      {isAlreadyHasList ? (
+        <p>
+          You already added in this{" "}
+          <Link href={`/shopping-lists/${list.product_list_id}`}>
+            <a>list</a>
+          </Link>
+        </p>
+      ) : (
+        <InvitationPage role={role} list={listNew} iv={iv} content={content} />
+      )}
     </PageTwoColumns>
   );
 };
