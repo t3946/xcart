@@ -15,7 +15,7 @@ app.use("/role", apiRole);
 app.use("/invite", apiInvite);
 
 app.post("/get", async (req, res) => {
-  const list = await getListsById(prisma, req.body.product_list_id);
+  const list = await getListsById(prisma, req.body.product_list_id, req.storefront);
 
   res.json(list);
 });
@@ -77,7 +77,7 @@ app.get("/get-all", async (req, res) => {
   for (const list of lists) {
     for (const item of list.items) {
       if (item.product) {
-        await normalize(item.product);
+        await normalize(req.storefront, item.product);
       }
     }
   }
@@ -93,7 +93,7 @@ app.post("/create", async (req, res) => {
     },
   });
 
-  const list = await getListsById(prisma, newList.product_list_id);
+  const list = await getListsById(prisma, newList.product_list_id, req.storefront);
 
   res.json(list);
 });

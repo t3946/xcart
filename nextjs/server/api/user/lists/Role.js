@@ -5,7 +5,7 @@ const getListsById = require("./utils/getListsById");
 
 app.post("/delete", async (req, res) => {
   const { product_list_id, user_id } = req.body;
-  const list = await getListsById(prisma, product_list_id);
+  const list = await getListsById(prisma, product_list_id, req.storefront);
 
   if (
     parseInt(list.owner.user_id) === req.user.userId ||
@@ -27,7 +27,7 @@ app.post("/delete", async (req, res) => {
 
 app.post("/update", async (req, res) => {
   const { user_id, product_list_id, role } = req.body;
-  const list = await getListsById(prisma, product_list_id);
+  const list = await getListsById(prisma, product_list_id, req.storefront);
 
   // can't edit list
   if (parseInt(list.user_id) !== req.user.userId) {

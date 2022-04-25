@@ -94,7 +94,7 @@ async function getImages(product) {
 module.exports = {
   getPrice,
   //get product prices and images if available
-  async normalize(product) {
+  async normalize(storefront, product) {
     //get prices
     if (typeof product.pricings !== "undefined") {
       product.price = getPrice(product);

@@ -12,7 +12,7 @@ app.post("/generate", async (req, res) => {
     return;
   }
 
-  const list = await getListsById(prisma, product_list_id);
+  const list = await getListsById(prisma, product_list_id, req.storefront);
 
   if (!list) {
     res.sendStatus(400);
@@ -33,7 +33,7 @@ app.post("/generate", async (req, res) => {
 app.get("/info/:iv/:content", async (req, res) => {
   const [productListIdStr, role] = decrypt(req.params).split(",");
   const product_list_id = parseInt(productListIdStr);
-  let list = await getListsById(prisma, product_list_id);
+  let list = await getListsById(prisma, product_list_id, req.storefront);
 
   if (!list) {
     res.sendStatus(400);
@@ -55,7 +55,7 @@ app.get("/info/:iv/:content", async (req, res) => {
 app.get("/use/:iv/:content", async (req, res) => {
   const [productListIdStr, roleStr] = decrypt(req.params).split(",");
   const product_list_id = parseInt(productListIdStr);
-  let list = await getListsById(prisma, product_list_id);
+  let list = await getListsById(prisma, product_list_id, req.storefront);
 
   if (!list) {
     res.sendStatus(400);
@@ -89,7 +89,7 @@ app.get("/use/:iv/:content", async (req, res) => {
     },
   });
 
-  list = await getListsById(prisma, product_list_id);
+  list = await getListsById(prisma, product_list_id, req.storefront);
 
   res.json({
     list,
