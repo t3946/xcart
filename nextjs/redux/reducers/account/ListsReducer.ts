@@ -203,7 +203,6 @@ const accountListReducer = (
       return manageList(state, product_list_id, data);
 
     case "PRODUCT_LISTS_DELETE_LIST":
-      console.log("PRODUCT_LISTS_DELETE_LIST", { action });
       state.lists = state.lists?.filter(
         (list) => list.product_list_id != action.payload.data.product_list_id
       );
