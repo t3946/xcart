@@ -60,8 +60,6 @@ export const ManageList: React.FC<IProps> = (props) => {
       product_list_id: list.product_list_id,
     };
 
-    console.log("update list submit", {data});
-
     dispatch(updateList({ data }));
 
     onCancelClick();
@@ -253,17 +251,19 @@ export const ManageList: React.FC<IProps> = (props) => {
           </div>
         </div>
 
-        <div className={"d-flex justify-content-end manage-list-checkbox"}>
-          <div className={classnames(classes.input)}>
-            <FormCheckBox
-              label={"Make this list default"}
-              value={formik.values.isDefault}
-              name={"isDefault"}
-              handleChange={formik.handleChange}
-              id={"is_default"}
-            />
+        {user.user_id === list.user_id && (
+          <div className={"d-flex justify-content-end manage-list-checkbox"}>
+            <div className={classnames(classes.input)}>
+              <FormCheckBox
+                label={"Make this list default"}
+                value={formik.values.isDefault}
+                name={"isDefault"}
+                handleChange={formik.handleChange}
+                id={"is_default"}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         <SubmitCancelButtonsGroup
           submitText="Confirm"

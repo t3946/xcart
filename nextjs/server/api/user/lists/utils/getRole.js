@@ -17,7 +17,7 @@ async function getRole(list_id, user_id) {
 
   const role = await prisma.product_list_user_roles.findFirst({
     where: {
-      list_id,
+      product_list_id: list_id,
       user_id,
     },
   });
