@@ -8,6 +8,7 @@ const apiIdea = require("./Idea");
 const apiRole = require("./Role");
 const apiInvite = require("./Invite");
 const { normalize } = require("../../../utils/product");
+const getRole = require("./utils/getRole");
 
 app.use("/item", apiItem);
 app.use("/idea", apiIdea);
@@ -15,7 +16,11 @@ app.use("/role", apiRole);
 app.use("/invite", apiInvite);
 
 app.post("/get", async (req, res) => {
-  const list = await getListsById(prisma, req.body.product_list_id, req.storefront);
+  const list = await getListsById(
+    prisma,
+    req.body.product_list_id,
+    req.storefront
+  );
 
   res.json(list);
 });
@@ -93,13 +98,23 @@ app.post("/create", async (req, res) => {
     },
   });
 
-  const list = await getListsById(prisma, newList.product_list_id, req.storefront);
+  const list = await getListsById(
+    prisma,
+    newList.product_list_id,
+    req.storefront
+  );
 
   res.json(list);
 });
 
 app.post("/update", async (req, res) => {
   const data = {};
+  const role = await getRole(req.body.product_list_id, req.user.userId);
+
+  if (!role || role === "viewer") {
+    res.sendStatus(403);
+    return;
+  }
 
   if (typeof req.body.description !== "undefined") {
     data.description = req.body.description;
@@ -125,7 +140,7 @@ app.post("/update", async (req, res) => {
     data.address_id = req.body.address_id;
   }
 
-  if (typeof req.body.default !== "undefined") {
+  if (role === "owner" && typeof req.body.default !== "undefined") {
     //change default list
     if (req.body.default === 1) {
       data.default = 1;
@@ -144,14 +159,12 @@ app.post("/update", async (req, res) => {
   await prisma.account_product_lists.updateMany({
     data,
     where: {
-      user_id: req.user.userId,
       product_list_id: req.body.product_list_id,
     },
   });
 
   const list = await prisma.account_product_lists.findFirst({
     where: {
-      user_id: req.user.userId,
       product_list_id: req.body.product_list_id,
     },
   });
