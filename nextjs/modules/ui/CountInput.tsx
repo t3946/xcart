@@ -1,6 +1,5 @@
 import React from "react";
 import cn from "classnames";
-
 import Styles from "@modules/ui/CountInput.module.scss";
 
 interface IProps {
