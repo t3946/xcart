@@ -35,11 +35,11 @@ const ShoppingLists: NextPage = () => {
 
   return (
     <PageTwoColumns bar={<ListsSidebarMenu list={currentList} />}>
-      <div className="d-md-none">
+      <div className="d-lg-none">
         <ListMobileMenu />
       </div>
 
-      <div className={"d-none d-md-block"}>
+      <div className={"d-none d-lg-block"}>
         {currentList && <ListsPage list={currentList} />}
       </div>
     </PageTwoColumns>
