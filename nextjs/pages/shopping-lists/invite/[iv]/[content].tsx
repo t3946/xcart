@@ -6,6 +6,8 @@ import { InvitationPage } from "@modules/account/pages/InvitationPage";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import { useRouter } from "next/router";
 import React from "react";
+import { loadLists } from "@redux/actions/account-actions/ListsActions";
+import { useDispatch } from "react-redux";
 
 interface IProps {
   role: any;
@@ -37,7 +39,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 const InviteList: NextPage<IProps> = (props) => {
   const user = useSelectorAccount((e) => e.user);
+  const dispatch = useDispatch();
   const router = useRouter();
+  const { lists } = useSelectorAccount((state) => state.lists);
 
   React.useEffect(() => {
     if (!user) {
@@ -46,6 +50,11 @@ const InviteList: NextPage<IProps> = (props) => {
   });
 
   if (!user) {
+    return null;
+  }
+
+  if (lists === null) {
+    dispatch(loadLists());
     return null;
   }
 
