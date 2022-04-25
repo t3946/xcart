@@ -14,17 +14,7 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface CreateNewList {
-  onCancelBtnClick: () => void;
-  onCreateList?: (listId) => void;
-  actionType?: "list" | "product";
-}
-
-export const CreateNewList: React.FC<CreateNewList> = ({
-  onCancelBtnClick,
-  onCreateList,
-  actionType,
-}) => {
+export const CreateNewList: React.FC<IProps> = () => {
   const dispatch = useDispatch();
   const learnMoreDialog = useDialog();
   const ref = useRef<HTMLInputElement>();
@@ -54,13 +44,12 @@ export const CreateNewList: React.FC<CreateNewList> = ({
           name: formik.values.name,
         },
         callback(list) {
-          snackbar.show(`${list.name} list added successfully`);
-          onCancelBtnClick();
-          router.push(`/shopping-lists/${list.product_list_id}`);
+          snackbar.show(`${list.name} list added successfully (await redirect to /shopping-lists)`);
+          router.push(`/shopping-lists`);
         },
       })
     );
-  };
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -125,7 +114,6 @@ export const CreateNewList: React.FC<CreateNewList> = ({
           <SubmitCancelButtonsGroup
             submitText="Confirm"
             cancelText="Cancel"
-            onCancel={onCancelBtnClick}
             groupAdvancedClasses={"manage-list-btns"}
             disabled={loading}
           />
