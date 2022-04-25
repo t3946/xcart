@@ -11,6 +11,7 @@ import Button, { ETheme } from "@modules/ui/forms/Button";
 import { checkProductCollisionInList } from "@modules/account/utils/check-product-collision-in-list";
 
 import Styles from "@modules/account/components/lists/ListProductItemBtns.module.scss";
+import OutOfStock from "@components/common/catalog/out-of-stock/OutOfStock";
 
 interface IProps {
   handleDelete: () => void;
@@ -67,8 +68,12 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
     }
   }
 
-  return (
-    <div className={cn(Styles.container, className)}>
+  function addToCartTemplate() {
+    if (outOfStock) {
+      return <OutOfStock />;
+    }
+
+    return (
       <a href={searchLink} className={"text-decoration-none"}>
         <Button
           theme={mainBtnType}
@@ -79,6 +84,12 @@ export const ListProductItemBtns: React.FC<IProps> = (props) => {
           {btnLabel}
         </Button>
       </a>
+    );
+  }
+
+  return (
+    <div className={cn(Styles.container, className)}>
+      {addToCartTemplate()}
 
       {edit && (
         <div

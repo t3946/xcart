@@ -81,9 +81,6 @@ export const ListProductItems: React.FC<IProps> = (props) => {
           >
             {list.items.length ? (
               list.items.map((listItem, index) => {
-                if (listItem === undefined) {
-                  console.log("UNDEFINED", list.items);
-                }
                 return (
                   <Draggable
                     key={`${index}_${listItem.list_item_id}`}
