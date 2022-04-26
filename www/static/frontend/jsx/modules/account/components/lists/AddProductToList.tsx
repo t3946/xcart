@@ -18,15 +18,27 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
   isAlreadyInList,
   product,
 }) => {
-  const product_info = useSelectorAccount((e) => e.site.product_info);
+  console.log("AddProductToList", {product});
+
+  const text = isAlreadyInList ? "This item was already in" : "1 item added to";
+  let image = null;
 
   function viewYourList() {
     window.location.assign(`/account/shopping-lists/${info.product_list_id}`);
   }
 
-  const text = isAlreadyInList ? "This item was already in" : "1 item added to";
+  function getStoreUrl(link: string) {
+    if (!link) {
+      return null;
+    }
 
-  console.log("AddProductToList", {product});
+    return `https://i1.s3stores.com/${link}`;
+  }
+
+  if (product.images.length) {
+    image = getStoreUrl(product.images[0].image.path);
+  }
+
 
   return (
     <div>
@@ -39,7 +51,7 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
       <div className="add-product-to-list-content">
         <div className={cn(Styles.imageContainer, "d-flex", "justify-content-center", "flex-shrink-0")}>
           <img
-            src={product_info?.image}
+            src={image}
             className={Styles.image}
             alt={""}
           />

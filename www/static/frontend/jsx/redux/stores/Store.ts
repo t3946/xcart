@@ -106,6 +106,16 @@ axios.get("/api/account/get-site-data").then(async (res) => {
 
   const pathname = document.location.pathname;
 
+  //load lists
+  const lists: any = await axios
+    .get("/api-client/user/lists/get-all")
+    .then((response) => response.data);
+
+  Store.dispatch({
+    type: "SET_LISTS",
+    lists,
+  });
+
   // product page
   if (pathname.search(/^\/product\/\d+/) !== -1) {
     const productId = document.location.pathname.match(/^\/product\/(\d+)/)[1];
@@ -130,16 +140,6 @@ axios.get("/api/account/get-site-data").then(async (res) => {
     Store.dispatch({
       type: "REVIEWS_SETTINGS_SET",
       reviews,
-    });
-
-    //load lists
-    const lists: any = await axios
-      .get("/api-client/user/lists/get-all")
-      .then((response) => response.data);
-
-    Store.dispatch({
-      type: "SET_LISTS",
-      lists,
     });
   }
 });

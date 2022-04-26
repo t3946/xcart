@@ -34,7 +34,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const user = useSelectorAccount((e) => e.user);
   const site = useSelectorAccount((e) => e.site);
   const {lists} = useSelectorAccount((e) => e.lists);
-  const productInfo = site.product_info?.product || {};
+  const productInfo = site.product_info?.product || props.product;
   const productId = productInfo?.productid;
   const [open, setOpen] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
@@ -270,7 +270,16 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
         <AddProductToList
           onCancelClick={addProductDialog.handleClose}
           info={selectedList}
-          product={productInfo}
+          product={{
+            //convert dto to prisma model
+            product: productInfo.name,
+            group_mask: "",
+            images: [{
+              image: {
+                path: productInfo.images[0].url.replace("https://i1.s3stores.com/", ""),
+              }
+            }]
+          }}
           isAlreadyInList={isAlreadyInList}
         />
       </BootstrapDialogHOC>

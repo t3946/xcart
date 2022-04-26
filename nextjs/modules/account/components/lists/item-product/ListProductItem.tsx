@@ -119,6 +119,16 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     firstImage = getStoreUrl(listItem.product.images[0].image.path);
   }
 
+  function getProductName() {
+    let name = product.product;
+
+    if (product.group_mask) {
+      name = product.group_mask + " " + name;
+    }
+
+    return name;
+  }
+
   return (
     <div
       className={cn([
@@ -155,7 +165,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               href={`/product/${listItem.product.productid}/`}
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
-              {`${product.group_mask} ${product.product}`}
+              {getProductName()}
             </a>
             {edit && (
               <img
