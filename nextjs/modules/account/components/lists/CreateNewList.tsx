@@ -14,7 +14,12 @@ import { useDialog } from "@modules/account/hooks/useDialog";
 import useBreakpoint from "@modules/account/hooks/useBreakpoint";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-export const CreateNewList: React.FC<IProps> = () => {
+interface IProps {
+  created?: () => any;
+}
+
+export const CreateNewList: React.FC<IProps> = (props) => {
+  const { created } = props;
   const dispatch = useDispatch();
   const learnMoreDialog = useDialog();
   const ref = useRef<HTMLInputElement>();
@@ -44,8 +49,10 @@ export const CreateNewList: React.FC<IProps> = () => {
           name: formik.values.name,
         },
         callback(list) {
-          snackbar.show(`${list.name} list added successfully (await redirect to /shopping-lists)`);
+          snackbar.show(`${list.name} list added successfully`);
           router.push(`/shopping-lists`);
+
+          created && created();
         },
       })
     );

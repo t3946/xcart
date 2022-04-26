@@ -10,25 +10,17 @@ interface CreateNewListDialogProps {
   actionType?: "product" | "list";
 }
 
-export const CreateNewListDialog: React.FC<CreateNewListDialogProps> = ({
-  handleClose,
-  open,
-  productId,
-  onProductAdded,
-  actionType,
-}) => {
+export const CreateNewListDialog: React.FC<CreateNewListDialogProps> = (
+  props
+) => {
+  const { handleClose, open } = props;
   return (
     <BootstrapDialogHOC
       show={open}
       title={"Create a new list"}
       onClose={handleClose}
     >
-      <CreateNewList
-        productId={productId}
-        onCreateList={onProductAdded}
-        onCancelBtnClick={handleClose}
-        actionType={actionType}
-      />
+      <CreateNewList created={handleClose} />
     </BootstrapDialogHOC>
   );
 };

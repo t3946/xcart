@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import { useDialog } from "@modules/account/hooks/useDialog";
 import { CreateNewListDialog } from "@modules/account/components/lists/CreateNewListDialog";
 import Item from "@modules/account/components/sidebar-menu/Item";
