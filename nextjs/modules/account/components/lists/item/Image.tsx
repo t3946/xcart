@@ -15,11 +15,20 @@ export const Image: React.FC<IProps> = function (props) {
       return <ImageNotAvailable className={Styles.imageNotAvailable} />;
     }
 
-    return <img className={cn("w-100")} src={imgUrl} alt={""} />;
+    return <img className={cn("mw-100", "mh-100")} src={imgUrl} alt={""} />;
   }
 
   return (
-    <div className={cn(Styles.image, "flex-shrink-0")}>{imageTemplate()}</div>
+    <div
+      className={cn(
+        Styles.image,
+        "flex-shrink-0",
+        "d-flex",
+        "justify-content-center"
+      )}
+    >
+      {imageTemplate()}
+    </div>
   );
 };
 
