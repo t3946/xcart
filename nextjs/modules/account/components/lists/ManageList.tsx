@@ -32,11 +32,11 @@ interface IProps {
 export const ManageList: React.FC<IProps> = (props) => {
   const { list, onCancelClick } = props;
   const user = useSelectorAccount((state) => state.user);
-  const addresses: AddressItemDto[] = useSelectorAccount((state) =>
-    state.addresses.addressesList?.filter(
+  const addresses = useSelectorAccount((state) => state.addresses);
+  const addressesShipping =
+    addresses.addressesList?.filter(
       (address) => address.address_type === AddressTypeEnum.SHIPPING
-    )
-  );
+    ) || [];
   const monthItems = fillingMassForMonths();
   const dispatch = useDispatch();
 
@@ -65,13 +65,9 @@ export const ManageList: React.FC<IProps> = (props) => {
     onCancelClick();
   }
 
-  let selectAddress = null;
-
-  if (addresses) {
-    selectAddress = addresses?.find(
-      (address) => address.address_id === list.addressId
-    );
-  }
+  const selectAddress = addressesShipping.find(function (address) {
+    return address.address_id === list.address_id;
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -228,7 +224,7 @@ export const ManageList: React.FC<IProps> = (props) => {
             <Select
               clearable={false}
               options={getValuesForSelect(
-                addresses || [],
+                addressesShipping,
                 "address_id",
                 "full_name"
               )}
