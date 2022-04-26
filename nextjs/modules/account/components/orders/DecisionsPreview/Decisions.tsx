@@ -1,19 +1,15 @@
 import React from "react";
 import List from "@modules/account/components/orders/DecisionsPreview/List";
-import { Row } from "react-bootstrap";
+import {Row} from "react-bootstrap";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import cn from "classnames";
 import NoItems from "@modules/account/components/common/NoItems";
-import { useRouter } from "next/router";
 
 function totalDecisions(decisions: Record<any, any>): number {
   return decisions.notSolved.items.length + decisions.solved.items.length;
 }
 
 const Decisions: React.FC = function () {
-  const router = useRouter();
-  router.push("/");
-  return;
   const decisions = useSelectorAccount((state) => state.decisions);
   const classes: Record<string, any> = {
     header: ["decisions-list-header", "decisions-lists__header"],
