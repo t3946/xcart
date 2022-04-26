@@ -5,7 +5,7 @@ export const getDaysForSelect = (
 ): SelectValue<number, number>[] => {
   return Array.from(
     {
-      length: new Date(new Date().getFullYear(), month, 0).getDate(),
+      length: new Date(2000, month, 0).getDate(),
     },
     (v, k) => k
   ).map((e) => {
