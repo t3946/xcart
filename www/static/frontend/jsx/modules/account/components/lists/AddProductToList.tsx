@@ -2,6 +2,8 @@ import React from "react";
 import SubmitCancelButtonsGroup from "@client/modules/account/components/shared/SubmitCancelButtonsGroup";
 import { List } from "@client/modules/account/ts/types/list.type";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
+import Styles from "@client/jsx/modules/account/components/lists/AddProductToList.module.scss";
+import cn from "classnames";
 
 interface AddProductToListProps {
   info: List;
@@ -33,11 +35,15 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
         </div>
       </div>
       <div className="add-product-to-list-content">
-        <img
-          src={product_info?.image}
-          className="add-product-to-list-content-img"
-        />
-        <div className="add-product-to-list-content-text">
+        <div className={cn(Styles.imageContainer, "d-flex", "justify-content-center")}>
+          <img
+            src={product_info?.image}
+            className={Styles.image}
+            alt={""}
+          />
+        </div>
+
+        <div className={cn(Styles.name, "ms-3")}>
           {product.product}
         </div>
       </div>
