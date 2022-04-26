@@ -26,6 +26,8 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
 
   const text = isAlreadyInList ? "This item was already in" : "1 item added to";
 
+  console.log("AddProductToList", {product});
+
   return (
     <div>
       <div className="add-product-to-list-label-container d-flex">
@@ -35,7 +37,7 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
         </div>
       </div>
       <div className="add-product-to-list-content">
-        <div className={cn(Styles.imageContainer, "d-flex", "justify-content-center")}>
+        <div className={cn(Styles.imageContainer, "d-flex", "justify-content-center", "flex-shrink-0")}>
           <img
             src={product_info?.image}
             className={Styles.image}
@@ -44,7 +46,7 @@ export const AddProductToList: React.FC<AddProductToListProps> = ({
         </div>
 
         <div className={cn(Styles.name, "ms-3")}>
-          {product.product}
+          {`${product.group_mask} ${product.product}`}
         </div>
       </div>
       <SubmitCancelButtonsGroup

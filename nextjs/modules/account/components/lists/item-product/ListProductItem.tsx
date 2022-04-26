@@ -113,6 +113,12 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     );
   }
 
+  let firstImage = null;
+
+  if (listItem.product.images.length) {
+    firstImage = getStoreUrl(listItem.product.images[0].image.path);
+  }
+
   return (
     <div
       className={cn([
@@ -141,7 +147,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
       </div>
 
       <div className={cn("d-flex", "flex-grow-1")}>
-        <Image imgUrl={getStoreUrl(listItem.product.images[0]?.path)} />
+        <Image imgUrl={firstImage} />
 
         <div className="product-list-item-info">
           <div className="product-list-item-info-container">
@@ -149,7 +155,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
               href={`/product/${listItem.product.productid}/`}
               className={cn("product-list-item-name", Styles.productInfoName)}
             >
-              {product.product}
+              {`${product.group_mask} ${product.product}`}
             </a>
             {edit && (
               <img

@@ -77,13 +77,23 @@ async function getImages(product) {
       },
     });
   } else {
-    images = await prisma.xcart_product_images.findMany({
+    images = await prisma.xcart_products_images.findMany({
       where: {
-        xcart_products_images: {
-          some: {
-            AND: [{ product_id: product.productid }, { is_active: 1 }],
-          },
+        product_id: product.productid,
+        is_active: 1,
+      },
+
+      orderBy: [
+        {
+          order_by: "asc",
         },
+        {
+          image_id: "asc",
+        },
+      ],
+
+      include: {
+        image: true,
       },
     });
   }

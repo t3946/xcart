@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import useCLickListener from "@client/modules/account/hooks/useClickListener";
-import classnames from "classnames";
+import cn from "classnames";
 import {useDispatch} from "react-redux";
 import useSelectorAccount from "@client/modules/account/hooks/useSelectorAccount";
 import {
@@ -161,7 +161,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
             continue;
           }
 
-          return getStoreUrl(item.product.images[0].path);
+          return getStoreUrl(item.product.images[0].image.path);
 
         case "idea":
           listHasIdea = true;
@@ -178,26 +178,22 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   function imageTemplate(list) {
     const image = getListImagePreview(list);
 
-    if (!image) {
-      return (
-        <div className="form-select-item-img">
-          <ImageNotAvailable/>
-        </div>
-      );
-    }
-
     return (
-      <div className="form-select-item-img">
-        <img src={getListImagePreview(list)} alt=""/>
+      <div className={cn(Styles.imageContainer, "d-flex", "justify-content-center", "flex-shrink-0")}>
+        {
+          image ?
+          <img className={Styles.image} src={getListImagePreview(list)} alt=""/> :
+          <ImageNotAvailable/>
+        }
       </div>
     );
   }
 
   return (
-    <div className={classnames(classes.container)}>
+    <div className={cn(classes.container)}>
       {label && (
         <label
-          className={classnames(["form-input-label", Styles.addToListLabel])}
+          className={cn(["form-input-label", Styles.addToListLabel])}
         >
           {label}
         </label>
@@ -208,7 +204,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
           e.stopPropagation();
           setOpen(!open);
         }}
-        className={classnames("select-wrapper", props.classes?.input)}
+        className={cn("select-wrapper", props.classes?.input)}
         ref={buttonRef}
       >
         <input
@@ -218,17 +214,17 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
           name={name}
         />
 
-        <div className={classnames(classes.selectHeader)}>
-          <div className={classnames(classes.label)}>ADD TO LIST</div>
+        <div className={cn(classes.selectHeader)}>
+          <div className={cn(classes.label)}>ADD TO LIST</div>
 
-          <div className={classnames(classes.arrowButton)}>
-            <Medium className={classnames(classes.arrowButtonIcon)}/>
+          <div className={cn(classes.arrowButton)}>
+            <Medium className={cn(classes.arrowButtonIcon)}/>
           </div>
         </div>
 
         {open && (
           <ul
-            className={classnames(
+            className={cn(
               "form-select-list add-to-list-select-list",
               props.classes?.selectList
             )}
@@ -248,7 +244,7 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
 
             <div
               onClick={createList}
-              className={classnames(classes.createListButton)}
+              className={cn(classes.createListButton)}
             >
               <Plus className={Styles.createListButtonIcon}/>
 
