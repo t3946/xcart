@@ -3,7 +3,6 @@ import { Fragment } from "preact";
 import Product from "@modules/components/product/card/Product";
 import ImgCatalog from "@modules/components/product/card/catalog/ImgCatalog";
 import Price from "@modules/components/product/card/components/Price";
-import QuantityGroup from "@modules/components/product/card/QuantityGroup";
 import CatalogContext from "@modules/components/catalog/CatalogContext";
 import t from "@utils/i18n";
 import Highlighter from "react-highlight-words";
@@ -199,8 +198,10 @@ export default class Card extends React.Component {
   }
 
   minAmount() {
+    console.log("minAmount", {product: this.product});
+
     if (this.product.min_amount > 1) {
-      if (this.product.mult_order_quantity === "Y") {
+      if (this.product.mult_order_quantity) {
         return (
           <div className="multiply-quantity icon info padding product-card__label">
             <i />
