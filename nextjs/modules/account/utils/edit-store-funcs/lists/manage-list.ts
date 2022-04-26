@@ -15,6 +15,10 @@ export const manageList = (
       if (data.default === 1) {
         list.default = 0;
       }
+
+      if (data.keep_purchased === 1) {
+        list.keep_purchased = 0;
+      }
     }
     return list;
   }),
@@ -32,4 +36,5 @@ export const convertManageList = (
   recipientName: data.recipient_name,
   birthday: data.birthday,
   default: data.default,
+  keep_purchased: data.keep_purchased,
 });

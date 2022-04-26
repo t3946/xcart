@@ -26,5 +26,6 @@ export const convertManageListFormDataToRequest = function (
     birthday,
     address_id: parseInt(data.shippingAddress.value) || null,
     default: data.isDefault ? 1 : 0,
+    keep_purchased: data.keep_purchased ? 1 : 0,
   };
 };

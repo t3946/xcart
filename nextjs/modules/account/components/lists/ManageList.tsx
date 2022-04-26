@@ -75,8 +75,8 @@ export const ManageList: React.FC<IProps> = (props) => {
       description: list.description || "",
       recipientName: list.recipient_name || "",
       email: list.recipient_email || "",
-      isPurchase: false,
-      isDefault: false,
+      keep_purchased: list.keep_purchased === 1,
+      isDefault: list.default === 1,
       shippingAddress: {
         value: selectAddress ? selectAddress.address_id : "",
         label: selectAddress?.full_name || "None",
@@ -235,30 +235,32 @@ export const ManageList: React.FC<IProps> = (props) => {
           </div>
         </div>
 
-        <div className={"d-flex justify-content-end manage-list-checkbox"}>
-          <div className={classnames(classes.input)}>
-            <FormCheckBox
-              label={"Keep purchased items on this list"}
-              value={formik.values.isPurchase}
-              name={"isPurchase"}
-              handleChange={formik.handleChange}
-              id={"id_purchase"}
-            />
-          </div>
-        </div>
-
         {user.user_id === list.user_id && (
-          <div className={"d-flex justify-content-end manage-list-checkbox"}>
-            <div className={classnames(classes.input)}>
-              <FormCheckBox
-                label={"Make this list default"}
-                value={formik.values.isDefault}
-                name={"isDefault"}
-                handleChange={formik.handleChange}
-                id={"is_default"}
-              />
+          <>
+            <div className={"d-flex justify-content-end manage-list-checkbox"}>
+              <div className={classnames(classes.input)}>
+                <FormCheckBox
+                  label={"Keep purchased items on this list"}
+                  value={formik.values.keep_purchased}
+                  name={"keep_purchased"}
+                  handleChange={formik.handleChange}
+                  id={"id_purchase"}
+                />
+              </div>
             </div>
-          </div>
+
+            <div className={"d-flex justify-content-end manage-list-checkbox"}>
+              <div className={classnames(classes.input)}>
+                <FormCheckBox
+                  label={"Make this list default"}
+                  value={formik.values.isDefault}
+                  name={"isDefault"}
+                  handleChange={formik.handleChange}
+                  id={"is_default"}
+                />
+              </div>
+            </div>
+          </>
         )}
 
         <SubmitCancelButtonsGroup

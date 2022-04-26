@@ -140,11 +140,9 @@ app.post("/update", async (req, res) => {
     data.address_id = req.body.address_id;
   }
 
-  if (role === "owner" && typeof req.body.default !== "undefined") {
+  if (role === "owner") {
     //change default list
-    if (req.body.default === 1) {
-      data.default = 1;
-
+    if (typeof req.body.default !== "undefined") {
       await prisma.account_product_lists.updateMany({
         where: {
           user_id: req.user.userId,
@@ -153,6 +151,22 @@ app.post("/update", async (req, res) => {
           default: 0,
         },
       });
+
+      data.default = req.body.default;
+    }
+
+    if (typeof req.body.keep_purchased !== "undefined") {
+      //disable others
+      await prisma.account_product_lists.updateMany({
+        where: {
+          user_id: req.user.userId,
+        },
+        data: {
+          keep_purchased: 0,
+        },
+      });
+
+      data.keep_purchased = req.body.keep_purchased;
     }
   }
 
