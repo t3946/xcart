@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useAccordion } from "@modules/account/hooks/useAccordion";
 import { OrderStoreItem } from "@modules/account/ts/types/order/orders-store.types";
 import Button, { ETheme } from "@modules/ui/forms/Button";
+import Price from "@components/common/price/Price";
 
 interface OrderItemProps {
   order: OrderStoreItem;
@@ -60,7 +61,9 @@ export const OrderItem: React.FC<OrderItemProps> = ({ order, orderType }) => {
           <div>
             <div className="order-item-header-grand-total">GRAND TOTAL</div>
             <div className="order-item-header-grand-total">
-              <b>US$ {order.total}</b>
+              <b>
+                <Price price={order.total} />
+              </b>
             </div>
           </div>
         </div>

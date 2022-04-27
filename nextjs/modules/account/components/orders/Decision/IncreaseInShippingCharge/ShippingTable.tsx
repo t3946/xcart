@@ -9,6 +9,7 @@ import Link from "next/link";
 import getStoreUrl from "@utils/getStoreUrl";
 import getThumbUrl from "@utils/getThumbUrl";
 import BuyAgainButton from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/BuyAgainButton";
+import Price from "@components/common/price/Price";
 
 interface IProps {
   group: any;
@@ -71,25 +72,36 @@ const ShippingTable: React.FC<IProps> = (props) => {
 
           return [
             <img src={image} alt="" width="42" height="42" />,
+
             <ProductCell
               name={item.product}
               sku={item.xcart_products.productcode}
               url={`/product/${item.xcart_products.productid}/`}
             />,
-            <span className="d-none d-lg-block">US$ {item.price}</span>,
+
+            <span className="d-none d-lg-block">
+              <Price price={item.price} />
+            </span>,
+
             <>
               <span className="d-none d-lg-block">{item.amount}</span>
               <span className="d-none d-md-block d-lg-none">
-                US$ {item.price} x {item.amount}
+                <Price price={item.price} /> x {item.amount}
               </span>
             </>,
+
             <span className="d-none d-md-block text-end">
-              US$ {(item.amount * item.price).toFixed(2)}
+              <Price price={item.amount * item.price} />
             </span>,
-            <span className="d-md-none">US$ {item.price}</span>,
-            <span className="d-md-none">x {item.amount}</span>,
+
             <span className="d-md-none">
-              US$ {(item.amount * item.price).toFixed(2)}
+              <Price price={item.price} />
+            </span>,
+
+            <span className="d-md-none">x {item.amount}</span>,
+
+            <span className="d-md-none">
+              <Price price={item.amount * item.price} />
             </span>,
           ];
         }}

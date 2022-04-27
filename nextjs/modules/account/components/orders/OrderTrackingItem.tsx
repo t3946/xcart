@@ -13,7 +13,7 @@ export const OrderTrackingItem: React.FC<OrderTrackingItemProps> = ({
       {!!orderGroupInfo.xcart_order_tracking.length && (
         <div className="order-tracking-line-text">
           <div>
-            {orderGroupInfo.trackings.map((track, i) => (
+            {orderGroupInfo.xcart_order_tracking.map((track, i) => (
               <div
                 key={`${track.id}_${i}`}
                 className="order-tracking-weight-text"

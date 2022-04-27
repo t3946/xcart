@@ -1,4 +1,5 @@
 import React from "react";
+import Price from "@components/common/price/Price";
 
 export const TransactionItemsListTotal = (props) => {
   const { group } = props;
@@ -15,7 +16,9 @@ export const TransactionItemsListTotal = (props) => {
           key={`group-tax-${taxesKey}`}
         >
           <p>{taxesKey}: </p>
-          <p>US$ {taxValue}</p>
+          <p>
+            <Price price={taxValue} />
+          </p>
         </div>
       );
     }
@@ -42,9 +45,9 @@ export const TransactionItemsListTotal = (props) => {
       <div className="total-group-right-side">
         {group.shipping_gross > 0 && (
           <div className="info-item-container info-item-container-spacing regular">
-            <p className="">Regular shipping:</p>
-            <p className="">
-              US$ {parseFloat(group.shipping_gross)?.toFixed(2)}
+            <p>Regular shipping:</p>
+            <p>
+              <Price price={group.shipping_gross} />
             </p>
           </div>
         )}
@@ -52,8 +55,10 @@ export const TransactionItemsListTotal = (props) => {
         {groupTaxesTemplate()}
 
         <div className="info-item-container info-item-container-spacing subtotal">
-          <p className="">Subtotal:</p>
-          <p className="">US$ {parseFloat(group.total_gross)?.toFixed(2)}</p>
+          <p>Subtotal:</p>
+          <p>
+            <Price price={group.total_gross} />
+          </p>
         </div>
       </div>
     </div>

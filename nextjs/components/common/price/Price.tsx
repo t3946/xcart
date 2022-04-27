@@ -1,20 +1,20 @@
 import React from "react";
 import cn from "classnames";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface IProps {
+export interface IProps {
   classes?: {
     container?: any;
     symbol?: any;
     number?: any;
   };
-  currency: Record<any, any>;
-  price?: number;
-  prices?: Record<any, any>[];
-  quantity?: number;
+  price: number | string;
+  refund?: boolean;
 }
 
 export const Price: React.FC<IProps> = function (props) {
-  const { classes, currency, price, prices, quantity = 1 } = props;
+  const { classes, price, refund = false } = props;
+  const currency = useSelectorAccount((e) => e.config.site.currency);
 
   function prefixTemplate() {
     if (currency.after !== "N") {
@@ -32,29 +32,17 @@ export const Price: React.FC<IProps> = function (props) {
     return <span className={cn(classes?.symbol)}>{currency.symbol}</span>;
   }
 
-  function formatPrice(price: number) {
+  function formatPrice(price: number | string) {
+    if (typeof price === "string") {
+      price = parseFloat(price);
+    }
+
     const priceStr = price.toFixed(currency.decimals);
 
     return priceStr.replace(
       /\B(?=(\d{3})+(?!\d))/g,
       currency.thousands_separator
     );
-  }
-
-  function numberTemplate() {
-    let priceFormatted = null;
-
-    if (prices && quantity) {
-      for (const priceData of prices) {
-        if (priceData.quantity <= quantity) {
-          priceFormatted = formatPrice(parseFloat(priceData.price));
-        }
-      }
-    } else if (price) {
-      priceFormatted = formatPrice(price);
-    }
-
-    return <span className={cn(classes?.number)}>{priceFormatted}</span>;
   }
 
   function symbolPrefixTemplate() {
@@ -66,15 +54,19 @@ export const Price: React.FC<IProps> = function (props) {
   }
 
   return (
-    <span className={cn(classes?.container, "ws-nowrap")}>
-      {symbolPrefixTemplate()}
+    <>
+      {refund && "("}
+      <span className={cn(classes?.container, "ws-nowrap")}>
+        {symbolPrefixTemplate()}
 
-      {prefixTemplate()}
+        {prefixTemplate()}
 
-      {numberTemplate()}
+        <span className={cn(classes?.number)}>{formatPrice(price)}</span>
 
-      {postfixTemplate()}
-    </span>
+        {postfixTemplate()}
+      </span>
+      {refund && ")"}
+    </>
   );
 };
 

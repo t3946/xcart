@@ -1,6 +1,6 @@
 import React from "react";
 
-export const TransactionAddresses = ({ refund = undefined, order }) => {
+export const TransactionAddresses = ({ refund = false, order }) => {
   return (
     <div
       className={`transaction-addresses-container ${

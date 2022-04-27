@@ -2,6 +2,7 @@ import React from "react";
 import cn from "classnames";
 import Styles from "@modules/account/components/orders/Decision/Table.module.scss";
 import { TableTypes } from "@modules/account/components/orders/Decision/Table";
+import Price from "@components/common/price/Price";
 
 export interface RowInterface {
   name: string;
@@ -55,21 +56,29 @@ const TableRow: React.FC<IProps> = (props: IProps) => {
           <br />
           <span className={cn([Styles.estimateTableProductSku])}>{sku}</span>
         </span>
-        <span className={"d-none d-lg-block"}>US$ {price}</span>
+        <span className={"d-none d-lg-block"}>
+          <Price price={price} />
+        </span>
         <span className={"d-none d-md-block"}>
-          <span className="d-lg-none">US$ {price} x </span>
+          <span className="d-lg-none">
+            <Price price={price} /> x{" "}
+          </span>
           {amount}
         </span>
 
         <span
           className={"d-flex d-md-none text-start mt-2 justify-content-between"}
         >
-          <span className={Styles.estimateTableProductPrice}>US$ {price}</span>
+          <span className={Styles.estimateTableProductPrice}>
+            <Price price={price} />
+          </span>
           <span className={Styles.estimateTableProductAmount}>x {amount}</span>
-          <span className="text-right">US$ {total.toFixed(2)}</span>
+          <span className="text-right">
+            <Price price={total} />
+          </span>
         </span>
         <span className="d-none d-md-block text-right">
-          US$ {total.toFixed(2)}
+          <Price price={total} />
         </span>
       </div>
     );
