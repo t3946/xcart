@@ -8,13 +8,12 @@ use Modules\Core\Models\LanguageModel;
 use Modules\Sites\Models\CurrencyModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\FileField;
 use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\UrlField;
 
 class DistributorPriceForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes', 'feed_info'];
     public $section;
     public $ownerField = 'manufacturerid';
     public $allTemplate = 'admin/distributor/dx_price.tpl';

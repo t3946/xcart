@@ -102,7 +102,11 @@
             <div class="row align-center">
                 <div class="column col-12">
                     <div class="submit-notes text-center submit-order-comment">
+                        {if $order->payment_method_model->submit_hint}
+                            {$order->payment_method_model->submit_hint}
+                        {else}
                         {t 'Submit your order and get transferred to a credit card payment system.'}
+                        {/if}
                     </div>
                 </div>
             </div>
