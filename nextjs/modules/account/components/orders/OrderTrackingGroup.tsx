@@ -50,6 +50,8 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
     null
   );
 
+  console.log("", {orderGroupInfo});
+
   return (
     <Fragment>
       <OrderTrackingItem orderGroupInfo={orderGroupInfo} />
@@ -80,13 +82,13 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
             text={
               <AddressText
                 address={{
-                  city: orderGroupInfo.manufacturer?.city,
-                  state: !!orderGroupInfo.manufacturer?.state && {
-                    label: orderGroupInfo.manufacturer?.state,
+                  city: orderGroupInfo.manufacturer?.m_city,
+                  state: !!orderGroupInfo.manufacturer?.m_state && {
+                    state: orderGroupInfo.manufacturer?.m_state,
                   },
-                  zip: orderGroupInfo.manufacturer?.zip,
-                  country: !!orderGroupInfo.manufacturer?.country && {
-                    label: orderGroupInfo.manufacturer?.country,
+                  zip: orderGroupInfo.manufacturer?.m_zip,
+                  country: !!orderGroupInfo.manufacturer?.m_country && {
+                    country: orderGroupInfo.manufacturer?.m_country,
                   },
                 }}
               />
