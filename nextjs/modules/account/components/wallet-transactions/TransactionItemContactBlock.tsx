@@ -1,6 +1,6 @@
 import React from "react";
 
-export const TransactionItemContactBlock = ({ refund = undefined, order }) => {
+export const TransactionItemContactBlock = ({ refund = false, order }) => {
   if (!order.firstname && !order.lastname && !order.phone && !order.email) {
     return null;
   }

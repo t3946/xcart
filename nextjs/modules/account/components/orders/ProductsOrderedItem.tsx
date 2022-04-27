@@ -1,10 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { AccountStore } from "@modules/account/ts/types/store.type";
-import {
-  OrderGroup,
-  OrderProduct,
-} from "@modules/account/ts/types/order/orders-store.types";
+import { OrderGroup } from "@modules/account/ts/types/order/orders-store.types";
+import Price from "@components/common/price/Price";
 
 interface ProductsOrderedItem {
   group: OrderGroup;
@@ -66,13 +64,13 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItem> = ({
                     {!breakpoints.md && (
                       <div className={"product-ordered-extended-mobile"}>
                         <div className="products-order-item-header-price">
-                          US$ {product.price}
+                          <Price price={product.price} />
                         </div>
                         <div className="products-order-item-header-price">
                           х {product.amount}
                         </div>
                         <div className="products-order-item-header-price">
-                          US$ {product.price}
+                          <Price price={product.price} />
                         </div>
                       </div>
                     )}
@@ -81,7 +79,7 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItem> = ({
                 {breakpoints.md && (
                   <>
                     <div className="products-order-item-header-price">
-                      US$ {product.price}
+                      <Price price={product.price} />
                       {breakpoints.sm &&
                         !breakpoints.lg &&
                         `x ${product.amount}`}
@@ -92,7 +90,7 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItem> = ({
                       </div>
                     )}
                     <div className="products-order-item-header-extended">
-                      US$ {product.price}
+                      <Price price={product.price} />
                     </div>
                   </>
                 )}
@@ -114,19 +112,27 @@ export const ProductsOrderedItem: React.FC<ProductsOrderedItem> = ({
               <div className="total-group-right-side product-ordered-total-right">
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing regular">
                   <p className=""> Regular shipping:</p>
-                  <p className="">US$ {group.shippingGross}</p>
+                  <p className="">
+                    <Price price={group.shippingGross} />
+                  </p>
                 </div>
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing tax">
                   <div className="">Sales Tax:</div>
-                  <div className="">US$ {group.totalPst}</div>
+                  <div className="">
+                    <Price price={group.totalPst} />
+                  </div>
                 </div>
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing tax">
                   <p className="">VAT Tax: </p>
-                  <p className="">US$ {group.totalTax}</p>
+                  <p className="">
+                    <Price price={group.totalTax} />
+                  </p>
                 </div>
                 <div className="info-item-container info-item-container-spacing product-ordered-total-container-spacing subtotal">
                   <p className="">Subtotal:</p>
-                  <p className="">US$ {group.totalGross}</p>
+                  <p className="">
+                    <Price price={group.totalGross} />
+                  </p>
                 </div>
               </div>
             </div>

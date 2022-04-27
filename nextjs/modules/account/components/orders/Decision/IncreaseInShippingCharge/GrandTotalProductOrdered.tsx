@@ -1,8 +1,8 @@
 import React from "react";
 import cn from "classnames";
-import {countTaxesOrder} from "@utils/countTaxesOrder";
-import Styles
-  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered.module.scss";
+import { countTaxesOrder } from "@utils/countTaxesOrder";
+import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/GrandTotalProductOrdered.module.scss";
+import Price from "@components/common/price/Price";
 
 interface IProps {
   className?: any;
@@ -37,7 +37,7 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
           key={`tax-value-${i}`}
           className={cn([Styles.totalTableTax, Styles.totalTable__tax])}
         >
-          US$ {value.toFixed(2)}
+          <Price price={value} />
         </span>
       );
 
@@ -52,7 +52,7 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
   return (
     <div className={cn([Styles.container, className])}>
       <span>Total items cost:</span>
-      <span>US$ {order.subtotal}</span>
+      <Price price={order.subtotal} />
       {shippingTotal > 0 && (
         <>
           <span
@@ -81,7 +81,7 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
               }
             )}
           >
-            US$ {shippingTotal.toFixed(2)}
+            <Price price={shippingTotal} />
           </span>
         </>
       )}
@@ -103,7 +103,7 @@ const GrandTotalProductOrdered: React.FC<IProps> = (props) => {
           Styles.totalTable__grandTotal,
         ])}
       >
-        US$ {order.total}
+        <Price price={order.total} />
       </span>
     </div>
   );

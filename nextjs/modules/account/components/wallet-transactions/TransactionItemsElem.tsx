@@ -1,8 +1,8 @@
 import React from "react";
+import Price from "@components/common/price/Price";
 
 export const TransactionItemsElem = ({
   orderGroupsItemInfo,
-  breakpoint,
   refund = false,
 }) => {
   return (
@@ -17,29 +17,18 @@ export const TransactionItemsElem = ({
         </div>
       </div>
       <div className="col-md-3 col-lg-2 text-center">
-        US${" "}
-        {breakpoint.is768
-          ? `${parseFloat(orderGroupsItemInfo.price)?.toFixed(2)} x ${
-              orderGroupsItemInfo.amount
-            }`
-          : parseFloat(orderGroupsItemInfo.price)?.toFixed(2)}
-        <span className="d-none d-md-inline d-lg-none">
-          {" "}
-          x {orderGroupsItemInfo.amount}
-        </span>
+        <Price price={orderGroupsItemInfo.price} />
+        <span>{` x ${orderGroupsItemInfo.amount}`}</span>
       </div>
       <div className="text-center d-md-none d-lg-block col-lg-1">
         <span className="d-md-none">x </span>
         {orderGroupsItemInfo.amount}
       </div>
       <div className="col-md-3 col-lg-2 text-end">
-        {refund
-          ? `(US$ ${(
-              orderGroupsItemInfo.price * orderGroupsItemInfo.amount
-            )?.toFixed(2)})`
-          : `US$ ${(
-              orderGroupsItemInfo.price * orderGroupsItemInfo.amount
-            )?.toFixed(2)}`}
+        <Price
+          price={orderGroupsItemInfo.price * orderGroupsItemInfo.amount}
+          refund={refund}
+        />
       </div>
     </div>
   );

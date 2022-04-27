@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 import ChevronIcon from "@modules/icon/components/font-awesome/chevron-down/Regular";
-
+import Price from "@components/common/price/Price";
 import Styles from "@modules/account/components/wallet-transactions/TransactionHeader.module.scss";
 
 export const TransactionHeader = ({
@@ -49,7 +49,7 @@ export const TransactionHeader = ({
             refund && "transactions-header-price-refund"
           }`}
         >
-          US$ {parseFloat(transaction.transaction_amount).toFixed(2)}
+          <Price price={transaction.transaction_amount} />
         </div>
         <div className="transactions-header-arrow">
           <ChevronIcon

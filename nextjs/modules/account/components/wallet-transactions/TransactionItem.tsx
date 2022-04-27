@@ -8,6 +8,7 @@ import { TransactionItems } from "./TransactionItems";
 import { PurchaseOrderInformation } from "./PurchaseOrderInformation";
 import { FormCheckBox } from "../shared/FormCheckBox";
 import cn from "classnames";
+import Price from "@components/common/price/Price";
 
 interface IProps {
   order: any;
@@ -32,7 +33,9 @@ export const TransactionItem: React.FC<IProps> = (props) => {
           key={`order-tax-${taxesKey}`}
         >
           <p className="total-text total-text-left">Total {taxesKey}:</p>
-          <p className="total-text">US$ {taxValue}</p>
+          <p className="total-text">
+            <Price price={taxValue} />
+          </p>
         </div>
       );
     }
@@ -95,13 +98,13 @@ export const TransactionItem: React.FC<IProps> = (props) => {
             <div className="info-item-container info-item-container-spacing">
               <p className="total-text total-text-left"> Total Items Cost:</p>
               <p className="total-text">
-                US$ {parseFloat(order.subtotal).toFixed(2)}
+                <Price price={order.subtotal} />
               </p>
             </div>
             <div className="info-item-container info-item-container-spacing regular">
               <p className="total-text total-text-left">Total Shipping Cost:</p>
               <p className="total-text">
-                US$ {parseFloat(order.shipping_cost).toFixed(2)}
+                <Price price={order.shipping_cost} />
               </p>
             </div>
 
@@ -109,7 +112,9 @@ export const TransactionItem: React.FC<IProps> = (props) => {
 
             <div className="info-item-container info-item-container-spacing subtotal fw-bold">
               <p className="total-text total-text-left">GRAND TOTAL:</p>
-              <p className="total-text">US$ {parseFloat(order.total).toFixed(2)}</p>
+              <p className="total-text">
+                <Price price={order.total} />
+              </p>
             </div>
           </div>
         </div>

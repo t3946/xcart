@@ -1,8 +1,8 @@
 import React from "react";
 import cn from "classnames";
-import Styles
-  from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
-import {getTaxesGroup} from "@utils/countTaxesOrder";
+import Styles from "@modules/account/components/orders/Decision/IncreaseInShippingCharge/IncreaseInShippingCharge.module.scss";
+import { getTaxesGroup } from "@utils/countTaxesOrder";
+import Price from "@components/common/price/Price";
 
 interface IProps {
   paymentStatus: string;
@@ -16,14 +16,8 @@ interface IProps {
 }
 
 const TableFooter: React.FC<IProps> = (props) => {
-  const {
-    paymentStatus,
-    shippingStatus,
-    regularShipping,
-    subtotal,
-    group,
-    order,
-  } = props;
+  const { paymentStatus, shippingStatus, regularShipping, subtotal, group } =
+    props;
 
   function taxesTemplate() {
     const taxes = getTaxesGroup(group);
@@ -50,7 +44,7 @@ const TableFooter: React.FC<IProps> = (props) => {
           className={cn([Styles.tableFooterShippingSubtotalTax])}
           key={`tax-value-${i}`}
         >
-          US$ {value.toFixed(2)}
+          <Price price={value} />
         </span>
       );
 
@@ -117,7 +111,7 @@ const TableFooter: React.FC<IProps> = (props) => {
                 Styles.tableFooterShippingSubtotal__regularShipping,
               ])}
             >
-              US$ {regularShipping}
+              <Price price={regularShipping} />
             </span>
           </>
         )}
@@ -139,7 +133,7 @@ const TableFooter: React.FC<IProps> = (props) => {
             Styles.tableFooterShipping__subtotal,
           ])}
         >
-          US$ {subtotal}
+          <Price price={subtotal} />
         </span>
       </div>
     </div>

@@ -2,17 +2,18 @@ import React from "react";
 import cn from "classnames";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
-interface IProps {
+export interface IProps {
   classes?: {
     container?: any;
     symbol?: any;
     number?: any;
   };
   price: number | string;
+  refund?: boolean;
 }
 
 export const Price: React.FC<IProps> = function (props) {
-  const { classes, price } = props;
+  const { classes, price, refund = false } = props;
   const currency = useSelectorAccount((e) => e.config.site.currency);
 
   function prefixTemplate() {
@@ -53,15 +54,19 @@ export const Price: React.FC<IProps> = function (props) {
   }
 
   return (
-    <span className={cn(classes?.container, "ws-nowrap")}>
-      {symbolPrefixTemplate()}
+    <>
+      {refund && "("}
+      <span className={cn(classes?.container, "ws-nowrap")}>
+        {symbolPrefixTemplate()}
 
-      {prefixTemplate()}
+        {prefixTemplate()}
 
-      <span className={cn(classes?.number)}>{formatPrice(price)}</span>
+        <span className={cn(classes?.number)}>{formatPrice(price)}</span>
 
-      {postfixTemplate()}
-    </span>
+        {postfixTemplate()}
+      </span>
+      {refund && ")"}
+    </>
   );
 };
 

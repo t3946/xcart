@@ -6,6 +6,7 @@ import { TransactionAddresses } from "./TransactionAddresses";
 import { TransactionItems } from "./TransactionItems";
 import { useAccordion } from "../../hooks/useAccordion";
 import cn from "classnames";
+import Price from "@components/common/price/Price";
 
 export const TransactionItemRefund = ({ order, transaction, card, header }) => {
   const accordion = useAccordion(500);
@@ -22,7 +23,9 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
           key={`order-tax-${taxesKey}`}
         >
           <p className="total-text total-text-left">Total {taxesKey}:</p>
-          <p className="total-text">(US$ {taxValue.toFixed(2)})</p>
+          <p className="total-text">
+            <Price price={taxValue} refund={true} />
+          </p>
         </div>
       );
     }
@@ -53,11 +56,11 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
       >
         <TransactionItemTopBlock
           order={order}
-          refund
+          refund={true}
           componentRef={accordion.ref}
         />
-        <TransactionItemContactBlock order={order} refund />
-        <TransactionAddresses order={order} refund />
+        <TransactionItemContactBlock order={order} refund={true} />
+        <TransactionAddresses order={order} refund={true} />
 
         <div className="transaction-items-label">
           Refund issued for the following items
@@ -80,7 +83,7 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
                 Shipping Cost Refund:{" "}
               </p>
               <p className="total-text">
-                (US$ {parseFloat(order.shipping_cost).toFixed(2)})
+                <Price price={order.shipping_cost} refund={true} />
               </p>
             </div>
 
@@ -89,7 +92,7 @@ export const TransactionItemRefund = ({ order, transaction, card, header }) => {
             <div className="info-item-container info-item-container-spacing subtotal">
               <p className="total-text total-text-left">Total Refund: </p>
               <p className="total-text">
-                (US$ {parseFloat(order.total).toFixed(2)})
+                <Price price={order.total} refund={true} />
               </p>
             </div>
           </div>
