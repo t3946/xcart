@@ -5,16 +5,9 @@ namespace Modules\Order\Helpers;
 use DateTime;
 use GuzzleHttp\Client;
 use Modules\Account\Models\AddressesModel;
-use Modules\Goods\Models\ProductQuestionModel;
-use Modules\Order\Models\VoidedReasonModel;
-use Modules\User\Models\UserAccount\UserModel as AccountUserModel;
-use Xcart\App\QueryBuilder\Expression;
-use Xcart\App\QueryBuilder\Q\QAnd;
-use Xcart\App\QueryBuilder\Q\QAndNot;
-use Xcart\App\QueryBuilder\Q\QOr;
-use Xcart\App\QueryBuilder\QueryBuilder;
 use Modules\Forms\Helpers\SnippetHelper;
 use Modules\Goods\Models\ProductModel;
+use Modules\Goods\Models\ProductQuestionModel;
 use Modules\Order\Middleware\OrderCheckoutMiddleware;
 use Modules\Order\Models\AttentionTagModel;
 use Modules\Order\Models\OrderAdditionalTagLinkModel;
@@ -25,12 +18,19 @@ use Modules\Order\Models\OrderModel;
 use Modules\Order\Models\OrderStatusModel;
 use Modules\Order\Models\OrderTransactionModel;
 use Modules\Order\Models\OrderUserLastActivityModel;
+use Modules\Order\Models\VoidedReasonModel;
 use Modules\Order\Stores\OrderTransactionStore;
 use Modules\Payment\Helpers\PaymentHelper;
 use Modules\Sites\Models\SiteModel;
+use Modules\User\Models\UserAccount\UserModel as AccountUserModel;
 use Modules\User\Models\UserModel;
 use Xcart\App\Form\BaseForm;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Expression;
+use Xcart\App\QueryBuilder\Q\QAnd;
+use Xcart\App\QueryBuilder\Q\QAndNot;
+use Xcart\App\QueryBuilder\Q\QOr;
+use Xcart\App\QueryBuilder\QueryBuilder;
 use Xcart\OrderToTicketResolver;
 
 class OrderHelper
@@ -730,7 +730,7 @@ HTML;
                 'street' => $shipping['address'][0],
                 'detailed' => $shipping['address'][1],
                 'city' => $order->s_city,
-                'state' => $order->s_state_id,
+                'state_id' => $order->s_state_id,
                 'zip' => $order->s_zipcode,
                 'phone_number' => $order->phone,
                 'phone_ext' => $order->phone_ext,
