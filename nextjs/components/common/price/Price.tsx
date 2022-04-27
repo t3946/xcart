@@ -8,7 +8,7 @@ interface IProps {
     symbol?: any;
     number?: any;
   };
-  price: number;
+  price: number | string;
 }
 
 export const Price: React.FC<IProps> = function (props) {
@@ -31,7 +31,11 @@ export const Price: React.FC<IProps> = function (props) {
     return <span className={cn(classes?.symbol)}>{currency.symbol}</span>;
   }
 
-  function formatPrice(price: number) {
+  function formatPrice(price: number | string) {
+    if (typeof price === "string") {
+      price = parseFloat(price);
+    }
+
     const priceStr = price.toFixed(currency.decimals);
 
     return priceStr.replace(
