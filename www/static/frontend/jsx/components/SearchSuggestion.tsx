@@ -1,7 +1,7 @@
 import { h, render } from "preact";
 import storeApp from "../redux/stores/StoreApp";
 import SuggestionsListForAll from "./SuggestionsListForAll";
-import { checkOff, action } from "../redux/reduсers/appHeadReduсer";
+import { checkOff, action } from "../redux/reducers/appHeadReduсer";
 
 export default class SearchSuggestion {
   private classes: any;

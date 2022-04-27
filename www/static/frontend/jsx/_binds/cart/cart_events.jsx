@@ -1,7 +1,7 @@
 import storeCart from "../../redux/stores/StoreCart";
 import storeApp from "../../redux/stores/StoreApp";
-import { hideAll, action } from "../../redux/reduсers/appHeadReduсer";
-import { cartAdd } from "../../redux/reduсers/appCartReducer";
+import { hideAll, action } from "../../redux/reducers/appHeadReduсer";
+import { cartAdd } from "../../redux/reducers/appCartReducer";
 import { AddToCartButton } from "@/js/Classes/AddToCartButton";
 import { h, render } from "preact";
 import SelectNumberItems from "../../components/SelectNumberItems";

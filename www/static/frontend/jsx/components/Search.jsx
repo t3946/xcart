@@ -1,6 +1,6 @@
 import storeApp from "../redux/stores/StoreApp";
 import SearchSuggestion from "./SearchSuggestion";
-import { actionMobileSearch } from "../redux/reduсers/appHeadReduсer";
+import { actionMobileSearch } from "../redux/reducers/appHeadReduсer";
 
 export default class Search {
   constructor(elements = "header .mobile__search-btn") {

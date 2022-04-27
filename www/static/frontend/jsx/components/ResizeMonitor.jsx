@@ -1,7 +1,7 @@
 import throttle from "lodash/throttle";
 import extend from "lodash/extend";
 import ScreenSize from "../utils/ScreenSize";
-import { actionMedia } from "../redux/reduсers/appHeadReduсer";
+import { actionMedia } from "../redux/reducers/appHeadReduсer";
 
 class ResizeMonitor {
   constructor() {
