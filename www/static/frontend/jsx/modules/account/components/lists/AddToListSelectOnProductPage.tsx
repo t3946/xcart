@@ -44,7 +44,6 @@ export const AddToListSelectOnProductPage: React.FC<IProps> = (
   const buttonRef = React.useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
-  console.log("productInfo", {productInfo});
   if (!productInfo) {
     return null;
   }

@@ -34,8 +34,6 @@ import SuggestionReducer from "@client/jsx/redux/reducers/SuggestionReducer";
 import ConfigReducer from "@client/jsx/redux/reducers/account/ConfigReducer";
 import SiteReducer from "@client/jsx/redux/reducers/account/SiteReducer";
 import ProductPageReducer from "@client/jsx/redux/reducers/ProductPageReducer";
-import axiosInstance from "@client/jsx/utils/axiosInstance";
-import {put} from "redux-saga/effects";
 
 const sagaMiddleware = createSagaMiddleware();
 
