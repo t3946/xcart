@@ -15,6 +15,7 @@ import SuggestionSaga from "@redux/sagas/SuggestionSaga";
 import FeedbackSaga from "@redux/sagas/account/FeedbackSaga";
 import Cart from "@redux/sagas/Cart";
 import axios from "axios";
+import ProductsSlider from "@redux/sagas/account/ProductsSlider";
 
 axios.interceptors.request.use(
   function (config) {
@@ -63,5 +64,6 @@ export default function* accountRootSaga(): Generator {
     SuggestionSaga(),
     FeedbackSaga(),
     Cart(),
+    ProductsSlider(),
   ]);
 }

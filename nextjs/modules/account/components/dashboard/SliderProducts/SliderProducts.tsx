@@ -5,21 +5,27 @@ import CardSkeleton from "@modules/account/components/dashboard/SliderProducts/C
 import CartProduct from "@modules/components/product/card/slider/Card";
 import React from "react";
 import ViewAllDepartmentsIcon from "@modules/icon/components/header/ViewAllDepartments";
-
+import { load } from "@redux/actions/layout/ProductsSliders";
 import Styles from "@modules/account/components/dashboard/SliderProducts/SliderProducts.module.scss";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
+import { useDispatch } from "react-redux";
 
 SwiperCore.use([Lazy, Scrollbar]);
 
 const SliderProducts: React.FC<any> = function (props) {
   const { url, title, classes } = props;
-  const [paginationPage, setPaginationPage] = React.useState(1);
-  const [items, setItems] = React.useState<Record<any, any>[]>([]);
+  //move to store
+  const dispatch = useDispatch();
+  const { items, pagination } = useSelectorAccount(
+    (state) => state.productSliders.featured
+  );
+  const isAllLoaded =
+    pagination.total !== null && pagination.current >= pagination.total;
+
   const [swiperObject, setSwiperObject] = React.useState<SwiperCore>();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isAllLoaded, setIsAllLoaded] = React.useState(false);
   const [isReachBegin, setIsReachBegin] = React.useState(false);
   const [isReachEnd, setIsReachEnd] = React.useState(false);
-  const [hover, setHover] = React.useState(false);
   const navStep = 3;
 
   function goTo(step: number) {
@@ -50,22 +56,15 @@ const SliderProducts: React.FC<any> = function (props) {
 
     setIsLoading(true);
 
-    fetch(`/api${url}?page=${paginationPage}`, {
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        // if all product was loaded then disable this function
-        if (res.pager.currentPage >= res.pager.pagesCount) {
-          setIsAllLoaded(true);
-        }
-
-        setItems((prevstate) => [...prevstate, ...res.items]);
-        setIsLoading(false);
-        setPaginationPage((prevstate) => prevstate + 1);
-      });
+    dispatch(
+      load({
+        url,
+        page: pagination.current,
+        callback: function () {
+          setIsLoading(false);
+        },
+      })
+    );
   }
 
   function itemsTemplate() {

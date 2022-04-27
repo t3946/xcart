@@ -181,6 +181,10 @@ interface StoreInterface {
     };
   };
   config: Record<any, any>;
+  productSliders: Record<
+    string,
+    { items: any[]; pagination: Record<any, any> }
+  >;
 }
 
 export default StoreInterface;

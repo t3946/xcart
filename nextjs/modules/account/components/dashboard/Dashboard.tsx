@@ -23,14 +23,13 @@ const Dashboard = (props) => {
         )}
 
         <AccountNavigation />
-
         {user && (
           <SliderProducts
             classes={{
               container: ["d-none", "d-md-block", Styles.dashboard__slider],
             }}
             title="Recommended products"
-            url={"/category/featured"}
+            url={"/category/new"}
           />
         )}
       </div>

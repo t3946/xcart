@@ -35,7 +35,7 @@ import SideBarMenuReducer from "@redux/reducers/account/SideBarMenuReducer";
 import DecisionsReducer from "@redux/reducers/account/DecisionsReducer";
 import ConfigReducer from "@redux/reducers/ConfigReducer";
 import MainMenuReducer from "@redux/reducers/MainMenuReducer";
-
+import ProductsSliders from "@redux/reducers/ProductsSliders";
 import { staticRoutes } from "@modules/account/ts/consts/breadcrumbs";
 import OrderViewReducer from "@redux/reducers/account/OrderViewReducer";
 import accountWalletReducer from "@redux/reducers/account/PaymentsReducer";
@@ -86,6 +86,7 @@ const reducers = combineReducers({
   // photoswipe: PhotoSwipeReducer,
   mainMenu: MainMenuReducer,
   config: ConfigReducer,
+  productSliders: ProductsSliders,
 });
 
 const store = createStore(
