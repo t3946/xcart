@@ -53,7 +53,7 @@ export const OrderTrackingPage: React.FC<OrderTrackingPage> = ({ order }) => {
         {!!order.cb_status && (
           <div className={cn({ "mb-3": !!order.date })}>
             <b>Payment status: </b>
-            <span>{order.cb_status}</span>
+            <span>{order.cb_status_model.name}</span>
           </div>
         )}
 

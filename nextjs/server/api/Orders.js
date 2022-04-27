@@ -80,6 +80,8 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
       orderid: req.body.orderId,
     },
     include: {
+      cb_status_model: true,
+      dc_status_model: true,
       decisions: true,
       logs: {
         where: {

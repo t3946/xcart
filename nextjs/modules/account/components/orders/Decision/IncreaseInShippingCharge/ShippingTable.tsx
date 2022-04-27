@@ -25,6 +25,8 @@ const ShippingTable: React.FC<IProps> = (props) => {
     return { ...item, total };
   });
 
+  console.log("ShippingTable", {});
+
   return (
     <>
       <div className={cn([Styles.table__name, Styles.tableName])}>

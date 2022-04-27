@@ -50,8 +50,6 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
     null
   );
 
-  console.log("", {orderGroupInfo});
-
   return (
     <Fragment>
       <OrderTrackingItem orderGroupInfo={orderGroupInfo} />
