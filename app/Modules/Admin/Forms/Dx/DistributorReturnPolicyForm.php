@@ -5,14 +5,14 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
-use Xcart\App\Form\Fields\CharField;
 use Modules\Editor\Fields\EditorField;
+use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\DropDownField;
 use Xcart\App\Form\Fields\HiddenField;
 
 class DistributorReturnPolicyForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes', 'feed_info'];
 
     public function getFieldsets()
     {

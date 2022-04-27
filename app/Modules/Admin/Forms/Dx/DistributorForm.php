@@ -10,7 +10,7 @@ use Xcart\App\Main\Xcart;
 
 class DistributorForm extends ModelForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes', 'feed_info'];
 
     public array $templates = [
         'default' => 'admin/distributor/form/_dx_form.tpl'

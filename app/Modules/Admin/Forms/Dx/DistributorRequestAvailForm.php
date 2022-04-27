@@ -5,7 +5,6 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
-use Modules\Distributor\Models\DistributorContactsModel;
 use Modules\Distributor\Models\DistributorContactUtilityModel;
 use Modules\Distributor\Models\DistributorModel;
 use Modules\Distributor\Models\DistributorUtilityModel;
@@ -14,12 +13,11 @@ use Modules\Forms\Models\TemplateModel;
 use Xcart\App\Form\Fields\CharField;
 use Xcart\App\Form\Fields\CheckboxField;
 use Xcart\App\Form\Fields\DropDownField;
-use Xcart\App\Form\Fields\HiddenField;
 use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorRequestAvailForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes', 'feed_info'];
 
     public function getFieldsets()
     {

@@ -10,7 +10,7 @@ use Xcart\App\Form\Fields\CheckboxField;
 
 class DistributorProductVerificationForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'taxes', 'feed_info'];
 
     public function getFieldsets()
     {

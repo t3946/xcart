@@ -5,12 +5,11 @@ namespace Modules\Admin\Forms\Dx;
 
 
 use Modules\Core\Models\LanguageModel;
-use Modules\Marketplace\Models\ExternalMarketPlaceModel;
 use Xcart\App\Form\Fields\Select2Field;
 
 class DistributorExcludedMarketplacesForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'taxes'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'taxes', 'feed_info'];
 
     public function getFieldsets()
     {

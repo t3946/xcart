@@ -9,7 +9,7 @@ use Xcart\App\Form\Fields\ListViewField;
 
 class DistributorProductsForm extends DistributorForm
 {
-    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces'];
+    public array $exclude = ['carriers', 'provider_model', 'site', 'sites', 'country_model', 'state_model', 'disabled_marketplaces', 'feed_info'];
 
     public function getFieldsets()
     {
