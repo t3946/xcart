@@ -727,7 +727,7 @@ HTML;
             $data = [
                 'full_name' => $order->s_firstname,
                 'country_id' => $order->s_country_id,
-                'phone_country_id' => $order->s_country_id,
+                'phone_number_country_id' => $order->s_country_id,
                 'street' => $shipping['address'][0],
                 'detailed' => $shipping['address'][1],
                 'city' => $order->s_city,

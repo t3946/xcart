@@ -79,10 +79,10 @@ class AddressesModel extends Model
                 'default' => 'shipping',
             ],
             'phone_country' => [
-                'field' => 'phone_country_id',
+                'field' => 'phone_number_country_id',
                 'class' => ForeignField::class,
                 'modelClass' => CountryModel::class,
-                'link' => ['phone_country_id' => 'country_id'],
+                'link' => ['phone_number_country_id' => 'country_id'],
             ]
         ];
     }
