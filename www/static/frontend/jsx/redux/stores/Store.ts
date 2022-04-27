@@ -118,19 +118,20 @@ axios.get("/api/account/get-site-data").then(async (res) => {
 
   // product page
   if (pathname.search(/^\/product\/\d+/) !== -1) {
-    const productId = document.location.pathname.match(/^\/product\/(\d+)/)[1];
-    let productInfo = null;
+    const productId = parseInt(document.location.pathname.match(/^\/product\/(\d+)/)[1]);
     let reviews = null;
 
+    //todo: replace on node js get reviews api method
     await axios.post("/api/account/get-product-info", {productId}, {
       headers: {
         "X-Requested-With": "XMLHttpRequest",
       },
     })
       .then((res) => {
-        productInfo = res.data.product_info;
         reviews = res.data.reviews;
       });
+
+    const productInfo = await axios.post("/api-client/product/get", {productId}).then((res) => res.data);
 
     Store.dispatch({
       type: "PRODUCT_INFO_SET",

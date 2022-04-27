@@ -8,10 +8,10 @@ const SiteReducer = (
   switch (action.type) {
     case "PRODUCT_INFO_SET":
       store.product_info = action.productInfo;
-      return store;
+      return {...store};
     case "REVIEWS_SETTINGS_SET":
       store.reviews = action.reviews;
-      return store;
+      return {...store};
 
     case "SITE_SET":
       return {...action.site};
