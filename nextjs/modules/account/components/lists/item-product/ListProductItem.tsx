@@ -25,11 +25,11 @@ import {
 } from "@redux/actions/CartActions";
 import getStoreUrl from "@utils/getStoreUrl";
 import Price from "@components/common/price/Price";
-import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import MobileMenu from "@modules/account/components/lists/item-product/MobileMenu";
 import Image from "@modules/account/components/lists/item/Image";
 import AddDate from "@modules/account/components/lists/item/AddDate";
 import OutOfStock from "@components/common/catalog/out-of-stock/OutOfStock";
+import PriceWithQuantity from "@components/common/price/PriceWithQuantity";
 
 export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
   const {
@@ -62,7 +62,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
     setCountProductsOnCart(value);
   };
-  const currency = useSelectorAccount((e) => e.config.site.currency);
   const data = [
     {
       id: listItem.product.productid,
@@ -89,9 +88,7 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
     return (
       <>
         <div className="d-flex align-items-center d-none d-lg-flex mt-lg-20">
-          <Price
-            currency={currency}
-            price={product.price}
+          <PriceWithQuantity
             quantity={countProductsOnCart}
             prices={product.pricings}
             classes={{ container: Styles.productInfoPrice }}
@@ -234,7 +231,6 @@ export const ListProductItem: React.FC<ListProductItemProps> = (props) => {
 
           {inStock && (
             <Price
-              currency={currency}
               price={product.price}
               classes={{
                 container: [Styles.productInfoPrice, "d-block", "d-lg-none"],

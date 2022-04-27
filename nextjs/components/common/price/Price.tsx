@@ -1,5 +1,6 @@
 import React from "react";
 import cn from "classnames";
+import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 
 interface IProps {
   classes?: {
@@ -7,14 +8,12 @@ interface IProps {
     symbol?: any;
     number?: any;
   };
-  currency: Record<any, any>;
-  price?: number;
-  prices?: Record<any, any>[];
-  quantity?: number;
+  price: number;
 }
 
 export const Price: React.FC<IProps> = function (props) {
-  const { classes, currency, price, prices, quantity = 1 } = props;
+  const { classes, price } = props;
+  const currency = useSelectorAccount((e) => e.config.site.currency);
 
   function prefixTemplate() {
     if (currency.after !== "N") {
@@ -41,22 +40,6 @@ export const Price: React.FC<IProps> = function (props) {
     );
   }
 
-  function numberTemplate() {
-    let priceFormatted = null;
-
-    if (prices && quantity) {
-      for (const priceData of prices) {
-        if (priceData.quantity <= quantity) {
-          priceFormatted = formatPrice(parseFloat(priceData.price));
-        }
-      }
-    } else if (price) {
-      priceFormatted = formatPrice(price);
-    }
-
-    return <span className={cn(classes?.number)}>{priceFormatted}</span>;
-  }
-
   function symbolPrefixTemplate() {
     if (!currency.symbol_prefix) {
       return null;
@@ -71,7 +54,7 @@ export const Price: React.FC<IProps> = function (props) {
 
       {prefixTemplate()}
 
-      {numberTemplate()}
+      <span className={cn(classes?.number)}>{formatPrice(price)}</span>
 
       {postfixTemplate()}
     </span>
