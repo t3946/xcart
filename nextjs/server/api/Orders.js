@@ -133,6 +133,8 @@ app.post("/get", isAuthMiddleware, async (req, res) => {
               m_city: true,
               m_country: true,
               m_state: true,
+              m_address: true,
+              m_zipcode: true,
             },
           },
           details: {

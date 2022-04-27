@@ -30,7 +30,7 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
   useEffect(() => {
     api
       .get(
-        `https://nominatim.openstreetmap.org/search.php?street=${orderGroupInfo.manufacturer?.address}&city=${orderGroupInfo.manufacturer?.city}&state=${orderGroupInfo.manufacturer?.state}&postalcode=${orderGroupInfo.manufacturer?.zip}&polygon_geojson=1&format=jsonv2`
+        `https://nominatim.openstreetmap.org/search.php?street=${orderGroupInfo.manufacturer?.m_address}&city=${orderGroupInfo.manufacturer?.m_city}&state=${orderGroupInfo.manufacturer?.m_state}&postalcode=${orderGroupInfo.manufacturer?.m_zipcode}&polygon_geojson=1&format=jsonv2`
       )
       .then((e) => {
         if (e.length) {
@@ -49,6 +49,8 @@ export const OrderTrackingGroup: React.FC<OrderTrackingGroupProps> = ({
   const [markerCarrier, setMarkerCarrier] = useState<[number, number] | null>(
     null
   );
+
+  console.log("markers", [shippingPos, markerCarrier]);
 
   return (
     <Fragment>
