@@ -20,6 +20,7 @@ import Input from "@modules/ui/forms/Input";
 import Feedback from "@modules/ui/forms/Feedback";
 import Label from "@modules/ui/forms/Label";
 import Textarea from "@modules/ui/forms/Textarea";
+import Image from "@components/common/product/Image";
 
 interface IProps {
   product: number;
@@ -27,6 +28,7 @@ interface IProps {
 
 const ReviewForm: React.FC<IProps> = (props: IProps): any => {
   const { product } = props;
+  console.log("product", { product });
   const dispatch = useDispatch();
   const user = useSelector((e: StoreInterface) => e.user);
   if (!user) {
@@ -256,14 +258,13 @@ const ReviewForm: React.FC<IProps> = (props: IProps): any => {
                       "align-items-center d-flex form-review-product-image-container justify-content-center form-review__image"
                     }
                   >
-                    <a href={`/product/${product.productid}/`}>
-                      <img
-                        className={"form-review-product-image"}
-                        src={product.image}
-                        alt={product.product}
-                        width={"100"}
-                        height={"100"}
-                      />
+                    <a
+                      className={
+                        "form-review-product-image d-flex align-items-center justify-content-center flex-shrink-0 text-decoration-none"
+                      }
+                      href={`/product/${product.productid}/`}
+                    >
+                      <Image src={product.images[0]?.image?.path} />
                     </a>
                   </div>
 

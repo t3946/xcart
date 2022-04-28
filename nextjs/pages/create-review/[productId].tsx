@@ -15,14 +15,14 @@ export async function getServerSideProps(ctx: NextPageContext) {
   }
 
   const instance = getInstance(ctx.req);
-  const productId = ctx.query.productId;
+  const productId = parseInt(ctx.query.productId);
   let product;
   let isUserCanWrite = true;
 
   await instance
     .post("/api-client/product/get", { productId })
     .then((res: AxiosResponse) => {
-      product = res.data;
+      product = res.data.product;
     });
 
   await instance
@@ -44,9 +44,13 @@ export async function getServerSideProps(ctx: NextPageContext) {
 const CreateReviewPage = (props: any) => {
   const { product } = props;
 
+  if (!product) {
+    return null;
+  }
+
   return (
     <PageTwoColumns>
-      {product && <ReviewForm product={product} />}
+      <ReviewForm product={product} />
     </PageTwoColumns>
   );
 };
