@@ -8,7 +8,7 @@
     <div class="info-title col-6">{t 'Company:' }</div>
     <div class="col info-text">{$info['company']}</div>
 </div>
-<div class="row address">
+<div class="row">
     <div class="info-title col-6">{t 'Address:' }</div>
     <div class="col info-text">{$info['address'][0]} {if $info['address'][1]}<br/>{$info['address'][1]}{/if}</div>
 </div>

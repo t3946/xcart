@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-<div class="row info-row address">
+<div class="row info-row">
     <div class=" col-12 col-lg-6">
         {set $lbl}{t 'Shipping Address'}{/set}
         {include "checkout/_address_view_full.tpl" info=$shipping_address uri='checkout:shipping' header=$lbl}
@@ -41,11 +41,7 @@
 {*</div>*}
 <div class="row delivery">
     <div class=" col-12 col-lg-6">
-        <div class="row">
-            <div class="">
-                <h2 class="">{t 'Delivery methods' }</h2>
-            </div>
-        </div>
+        <h2 class="">{t 'Delivery methods' }</h2>
         {foreach $order->groups as $group}
             {set $warehouse = $.get_warehouse($group->manufacturerid)}
             {set $shipping_model = $group->shippingModel}
@@ -68,22 +64,16 @@
         </div>
     </div>
     <div class=" col-12 col-lg-6">
-        <div class="row">
-            <div class="">
-                <h2 class="">{t 'Payment method' }</h2>
-            </div>
-        </div>
+        <h2 class="">{t 'Payment method' }</h2>
+
         <div class="row payment-method info-row">
             <div class=" col-6 info-title">
                 {t 'Payment method' }:
             </div>
             <div class=" info-text col">{$order->payment_method}</div>
         </div>
-        <div class="row align-center">
-            <div class=" col-12">
-                <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border text-decoration-none">{t 'Modify' }</a>
-            </div>
-        </div>
+
+        <a href="{url 'checkout:options'}" class="button yellow-white waves waves-orange waves-effect small yellow-border text-decoration-none">{t 'Modify' }</a>
     </div>
 </div>
 <div class="row">
