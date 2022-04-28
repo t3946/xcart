@@ -300,9 +300,7 @@ class ApiDxController extends Controller
             return;
         }
 
-        $this->response(
-            json_encode(['status' => true, 'data' => $dx->feed_info], JSON_THROW_ON_ERROR | JSON_FORCE_OBJECT)
-        );
+        $this->jsonResponse(['status' => true, 'data' => $dx->feed_info]);
     }
 
 }
