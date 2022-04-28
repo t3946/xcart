@@ -2,7 +2,6 @@
 
 namespace Modules\Account\Controllers;
 
-use Modules\Account\Controllers\Api\AccountListsApi;
 use Modules\Core\Helpers\AdminHelper;
 use Modules\Core\Models\CountryModel;
 use Modules\Core\TemplateLibraries\StaticMessagesLibrary;
