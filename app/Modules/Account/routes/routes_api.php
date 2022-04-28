@@ -55,11 +55,6 @@ return [
         'path' => 'Modules.Account.routes.routes_lists_api',
         'namespace' => 'lists',
     ],
-    [
-        'route' => '/authorization',
-        'path' => 'Modules.Account.routes.routes_authorization_api',
-        'namespace' => 'user',
-    ],
 
     [
         'route' => '/profile',
@@ -71,12 +66,6 @@ return [
         'route' => '/wallet',
         'path' => 'Modules.Account.routes.routes_wallet_api',
         'namespace' => 'wallet',
-    ],
-
-    [
-        'route' => '/login-and-security',
-        'path' => 'Modules.Account.routes.routes_login-and-securities_api',
-        'namespace' => 'login-and-security',
     ],
 
     [
