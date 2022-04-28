@@ -7,7 +7,6 @@ namespace Modules\Distributor\Controllers\Api;
 use Exception;
 use JsonException;
 use Modules\Core\Classes\GoogleDrive;
-use Modules\Core\Classes\SaveFilePrice;
 use Modules\Core\Helpers\CoreHelper;
 use Modules\Distributor\Helpers\DistributorHelper;
 use Modules\Distributor\Models\ColumnTableSaveModel;
@@ -301,7 +300,9 @@ class ApiDxController extends Controller
             return;
         }
 
-        $this->jsonResponse(['status' => true, 'data' => $dx->feed_info]);
+        $this->response(
+            json_encode(['status' => true, 'data' => $dx->feed_info], JSON_THROW_ON_ERROR | JSON_FORCE_OBJECT)
+        );
     }
 
 }
