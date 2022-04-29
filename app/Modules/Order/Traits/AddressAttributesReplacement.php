@@ -8,6 +8,7 @@ use Modules\Core\Models\CountryModel;
 use Modules\Core\Models\StateModel;
 use Modules\Sites\Models\SiteModel;
 use Xcart\App\Main\Xcart;
+use Xcart\App\QueryBuilder\Q\QOr;
 
 trait AddressAttributesReplacement
 {
@@ -96,7 +97,7 @@ trait AddressAttributesReplacement
             if ($data[$replacement . 'state'] && $data[$replacement . 'country']) {
                 /** @var StateModel $sModel */
                 if ($sModel = StateModel::objects()->get([
-                    'state' => $data[$replacement . 'state'],
+                    new QOR(['state' => $data[$replacement . 'state'], 'code' => $data[$replacement . 'state']]),
                     'country_code' => $data[$replacement . 'country']
                 ])) {
                     $data[$replacement . 'state'] = $sModel->code;
