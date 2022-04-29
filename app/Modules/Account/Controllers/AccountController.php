@@ -75,8 +75,6 @@ class AccountController extends FrontendController
                 'mobile' => GoodsMenuLibrary::toArrayMobile(),
             ], null, 'departmentsMenu');
 
-            StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
-
             StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
             StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
@@ -85,6 +83,8 @@ class AccountController extends FrontendController
 
             Xcart::app()->cache->set("storage_$site->code", StorageHelper::getStorage(), 3600);
         }
+
+        StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 
         StorageHelper::push([
             "quantity" => Xcart::app()->cart->getQuantity(),
