@@ -38,61 +38,69 @@ class AccountController extends FrontendController
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        StorageHelper::push([
-            "code" => strtolower($site->code),
-            "shortName" => $site->short_name,
-            "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
-            'account_enabled' => $site->account_enabled,
-            'logo' => (string) ($site->logo ?? ''),
-            'logo_mobile' => (string) ($site->logo_mobile ?? ''),
-            'cidev_header_code' => $site->cidev_header_code,
-            'templates' => [
-                "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
-            ],
-            'mainMenu' => MenuLibrary::getData("main-menu"),
-            'time' => time(),
-        ], null, 'site');
+        $storage = Xcart::app()->cache->get("storage_$site->code", []);
 
-        StorageHelper::push([
-            "quantity" => Xcart::app()->cart->getQuantity(),
-            "checkoutUrl" => OrderHelper::getCheckoutUrl(),
-        ], null, 'cart');
+        if ($storage) {
 
-        $config = $site->getConfig();
+            StorageHelper::setStorage($storage);
 
-        StorageHelper::push([
-            "cidev_top_header_code" => $config['cidev_top_header_code'],
-            "cidev_header_code" => $config['cidev_header_code'],
-            "companyName" => $config['company_name'],
-            'logo' => (string) ($site->logo ?? ''),
-            'logo_mobile' => (string) ($site->logo_mobile ?? ''),
-        ], null, 'config');
+        } else {
+            StorageHelper::push([
+                "code" => strtolower($site->code),
+                "shortName" => $site->short_name,
+                "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
+                'account_enabled' => $site->account_enabled,
+                'logo' => (string) ($site->logo ?? ''),
+                'logo_mobile' => (string) ($site->logo_mobile ?? ''),
+                'cidev_header_code' => $site->cidev_header_code,
+                'templates' => [
+                    "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
+                ],
+                'mainMenu' => MenuLibrary::getData("main-menu"),
+                'time' => time(),
+            ], null, 'site');
 
+            StorageHelper::push([
+                "quantity" => Xcart::app()->cart->getQuantity(),
+                "checkoutUrl" => OrderHelper::getCheckoutUrl(),
+            ], null, 'cart');
 
-        StorageHelper::push([
-            'desktop' => GoodsMenuLibrary::toArrayDesktop(),
-            'mobile' => GoodsMenuLibrary::toArrayMobile(),
-        ], null, 'departmentsMenu');
+            $config = $site->getConfig();
 
-        StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
+            StorageHelper::push([
+                "cidev_top_header_code" => $config['cidev_top_header_code'],
+                "cidev_header_code" => $config['cidev_header_code'],
+                "companyName" => $config['company_name'],
+                'logo' => (string) ($site->logo ?? ''),
+                'logo_mobile' => (string) ($site->logo_mobile ?? ''),
+            ], null, 'config');
 
-        StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
-        StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
+            StorageHelper::push([
+                'desktop' => GoodsMenuLibrary::toArrayDesktop(),
+                'mobile' => GoodsMenuLibrary::toArrayMobile(),
+            ], null, 'departmentsMenu');
 
-        StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
+            StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 
-        $user = Xcart::app()->getUser(true);
+            StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
 
-        if ($user->getIsGuest() === false) {
-            $attributes = $user->getAttributes();
-            unset($attributes['password']);
-            unset($attributes['access_token']);
-            $attributes['avatar_image'] = $user->avatar_image->getUrl();
+            StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
 
-            StorageHelper::push($attributes, null, 'user');
+            $user = Xcart::app()->getUser(true);
+
+            if ($user->getIsGuest() === false) {
+                $attributes = $user->getAttributes();
+                unset($attributes['password']);
+                unset($attributes['access_token']);
+                $attributes['avatar_image'] = $user->avatar_image->getUrl();
+
+                StorageHelper::push($attributes, null, 'user');
+            }
+
+            AdminHelper::routesData();
+
+            Xcart::app()->cache->set("storage_$site->code", StorageHelper::getStorage(), 3600);
         }
-
-        AdminHelper::routesData();
     }
 
     public function actionProductIndex($sku)
