@@ -60,11 +60,6 @@ class AccountController extends FrontendController
                 'time' => time(),
             ], null, 'site');
 
-            StorageHelper::push([
-                "quantity" => Xcart::app()->cart->getQuantity(),
-                "checkoutUrl" => OrderHelper::getCheckoutUrl(),
-            ], null, 'cart');
-
             $config = $site->getConfig();
 
             StorageHelper::push([
@@ -86,20 +81,25 @@ class AccountController extends FrontendController
 
             StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
 
-            $user = Xcart::app()->getUser(true);
-
-            if ($user->getIsGuest() === false) {
-                $attributes = $user->getAttributes();
-                unset($attributes['password']);
-                unset($attributes['access_token']);
-                $attributes['avatar_image'] = $user->avatar_image->getUrl();
-
-                StorageHelper::push($attributes, null, 'user');
-            }
-
             AdminHelper::routesData();
 
             Xcart::app()->cache->set("storage_$site->code", StorageHelper::getStorage(), 3600);
+        }
+
+        StorageHelper::push([
+            "quantity" => Xcart::app()->cart->getQuantity(),
+            "checkoutUrl" => OrderHelper::getCheckoutUrl(),
+        ], null, 'cart');
+
+        $user = Xcart::app()->getUser(true);
+
+        if ($user->getIsGuest() === false) {
+            $attributes = $user->getAttributes();
+            unset($attributes['password']);
+            unset($attributes['access_token']);
+            $attributes['avatar_image'] = $user->avatar_image->getUrl();
+
+            StorageHelper::push($attributes, null, 'user');
         }
     }
 
