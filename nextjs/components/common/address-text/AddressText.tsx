@@ -26,10 +26,10 @@ const AddressText: React.FC<IProps> = ({ address }) => {
 
   for (let i = 0; i < lines.length; i++) {
     if (i > 0) {
-      items.push(<br />);
+      items.push(<br key={`text-br-${i}`} />);
     }
 
-    items.push(<span>{lines[i]}</span>);
+    items.push(<span key={`text-${i}`}>{lines[i]}</span>);
   }
 
   return items;
