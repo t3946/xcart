@@ -10,14 +10,21 @@ use Modules\Goods\Helpers\PromotionalProductsHelper;
 use Modules\Goods\Helpers\SliderDataHelper;
 use Modules\Goods\Models\CategoryModel;
 use Modules\Goods\Models\ProductModel;
+use Modules\Order\Models\OrderStatusModel;
 use Modules\User\Models\SurfMetaModel;
 use Modules\User\Models\UserAccount\UserModel;
+use Xcart\App\Controller\Controller;
 use Xcart\App\Main\Xcart;
 use Xcart\App\Orm\QuerySet;
-use Modules\Order\Models\OrderStatusModel;
+use Xcart\App\Pagination\DataSource\QuerySetDataSource;
+use Xcart\App\Pagination\Pagination;
 
-class ApiCategoriesController extends AbstractCatalogController
+class ApiCategoriesController extends Controller
 {
+    public int $pageSize = 20;
+
+    public array $filters = ['price', 'brand', 'filter'];
+
     public bool $is_slider = false;
     public function actionSliderBestsellers(): void
     {
@@ -30,7 +37,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderNew(): void
     {
-        $qs = parent::getQS()
+        $qs = AbstractCatalogController::getQS()
             ->filter(['detail_images__image_id__isnull' => false])
             ->order(['-add_date'])
             ->group(['productid'])
@@ -44,7 +51,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderFeatured(): void
     {
-        $qs = parent::getQS()
+        $qs = AbstractCatalogController::getQS()
             ->filter(['featured__product_order__isnull' => false])
             ->order(['?']);
 
@@ -55,7 +62,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function actionSliderAlsoBought($id): void
     {
-        $qs = parent::getQS();
+        $qs = AbstractCatalogController::getQS();
         $qs = $qs->getQuerySet();
         $qs->select(['p2.*'])
             ->distinct()
@@ -86,7 +93,7 @@ class ApiCategoriesController extends AbstractCatalogController
     public function actionSliderViewed($id = null): void
     {
         if ($meta_id = SurfMetaModel::getInstance()->id) {
-            $qs = parent::getQS()
+            $qs = AbstractCatalogController::getQS()
                 ->distinct()
                 ->filter(['surf_path__meta_id' => $meta_id])
                 ->order(['-surf_path__position']);
@@ -101,7 +108,7 @@ class ApiCategoriesController extends AbstractCatalogController
 
     public function getQS($data = null)
     {
-        return parent::getQS($data)
+        return AbstractCatalogController::getQS($data)
             ->filter(
                 [
                     'categories__lft__gte' => $data->lft,
@@ -128,7 +135,6 @@ class ApiCategoriesController extends AbstractCatalogController
         }
 
         $pager = $this->getPager($qs);
-        $this->setCanonical($this->model);
         $products = $pager->paginate();
         return [
             'items' => ApiProductHelper::getProductData($products, ['is_slider' => $this->is_slider]),
@@ -164,7 +170,6 @@ class ApiCategoriesController extends AbstractCatalogController
         $this->sort = $this->getRequest()->get->get('sort', $this->sort);
         $qs = $this->getSortedQS($qs);
         $pager = $this->getPager($qs);
-        $this->setCanonical($this->model);
         $products = $pager->paginate();
 
         $this->jsonResponse([
@@ -197,5 +202,22 @@ class ApiCategoriesController extends AbstractCatalogController
                 $this->jsonResponse($this->getPaginatedProducts($qs));
             }
         }
+    }
+
+    public function getSortedQS($qs, $model = null)
+    {
+        return (new ProductSortHelper($qs))
+            ->setCategory(($model instanceof CategoryModel ? $model : null))
+            ->getSortedQS($this->sort);
+    }
+
+    public function getPager($qs): Pagination
+    {
+        return new Pagination($qs, [
+            'pageSize' => $this->pageSize,
+            'view' => 'core/pager/front_endless.tpl',
+            'pageKey' => 'page',
+            'is_ajax' => $this->getRequest()->getIsAjax()
+        ], new QuerySetDataSource());
     }
 }
