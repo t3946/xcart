@@ -1,0 +1,39 @@
+.tooltipContent {
+  padding: 4px 12px;
+}
+
+
+.popper {
+  background: #ffffff;
+  border-radius: 5px;
+  //margin: 0 0 20px 0;
+}
+
+
+.popperArrow {
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #ffffff;
+}
+
+
+.list {
+  width: 175px;
+  font-size: 14px;
+  color: #0a0a0a;
+}
+
+
+.shortName {
+  color: #71717a;
+}
+
+
+.paymentItem {
+  padding: 8px 0;
+  border-bottom: 1px solid #e4e4e7;
+}
+.paymentItem:last-child {
+  border: none;
+}

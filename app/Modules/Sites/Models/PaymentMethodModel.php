@@ -7,6 +7,7 @@ namespace Modules\Sites\Models;
 use Xcart\App\Orm\Fields\AutoField;
 use Xcart\App\Orm\Fields\BooleanField;
 use Xcart\App\Orm\Fields\CharField;
+use Xcart\App\Orm\Fields\HasManyField;
 use Xcart\App\Orm\Fields\ImageField;
 use Xcart\App\Orm\Fields\IntField;
 use Xcart\App\Orm\Manager;
@@ -26,6 +27,9 @@ class PaymentMethodModel extends Model
             'name' => [
                 'class' => CharField::class
             ],
+            'short_name' => [
+                'class' => CharField::class,
+            ],
             'logo' => [
                 'class' => ImageField::class,
                 'adapterName' => 'www',
@@ -39,7 +43,12 @@ class PaymentMethodModel extends Model
             'position' => [
                 'class' => IntField::class,
                 'default' => 0
-            ]
+            ],
+            'children' => [
+                'class' => HasManyField::class,
+                'modelClass' => __CLASS__,
+                'link' => ['payment_method_id' => 'parent_id']
+            ],
         ];
     }
 

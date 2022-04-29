@@ -20,6 +20,9 @@ class SitePaymentMethodForm extends ModelForm
             'name' => [
                 'class' => CharField::class,
             ],
+            'short_name' => [
+                'class' => CharField::class,
+            ],
             'logo' => [
                 'class' => ImageField::class,
             ],

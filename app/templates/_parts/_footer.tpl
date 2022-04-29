@@ -115,22 +115,8 @@
                             <div class="col-lg-8 col-md-6 col-12">
                                 <div class="footer-info-block-title">{t 'Payment Methods'}</div>
 
-                                <ul class="footer-payment-methods footer_payment-methods no-bullet menu-list">
-                                    {set $payment_methods = $site.payment_methods->filter(['is_active' => 1])->order(['position'])->all()}
-                                    {if !$payment_methods }
-                                        {set $payment_methods = $.call.Modules.Sites.Models.PaymentMethodModel::active()}
-                                    {/if}
-                                    {foreach $payment_methods as $key => $method }
-                                        {if $method->name === 'Po'}
-                                            {set $po = $method}
-                                        {else}
-                                            <li class="footer-payment-method-item footer-payment-method_item">
-                                                <img width="54" height="36" class="lazy-img footer-payment-method-image"
-                                                     data-src="/{$method->logo}" alt="{$method->name}">
-                                            </li>
-                                        {/if}
-                                    {/foreach}
-                                </ul>
+                                {set $payment_methods = $site.payment_methods->asArray()->filter(['is_active' => 1])->order(['position'])->all()}
+                                <div class="footer-payment-methods-container" data-payment-methods='{json_encode($payment_methods)}'></div>
 
                                 {if !in_array($site->code, ['RD'])}<a class="footer-link"
                                                                       href="/ecomerce-fraud">{t 'Combating eCommerce Fraud'}</a>{/if}

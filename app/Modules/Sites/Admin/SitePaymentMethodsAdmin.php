@@ -19,6 +19,7 @@ class SitePaymentMethodsAdmin extends Admin
     {
         return [
             'name',
+            'short_name',
             'logo',
             'is_active',
         ];
