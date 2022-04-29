@@ -8,9 +8,10 @@ async function getClient() {
       processor_name: "Stripe",
     },
   });
-  // const stripeSK = paymentProcessorModel.param02;
-  const stripeSK =
-    "sk_test_51FmjzfBBFmepO8dOYfc0LN8QImGbPGfIq2gu95ZffQPLJcTwdZzir7Kndz5oggnWNerV7Q9aPxvagWxEKwkCZAKT00SRojdCTt";
+  const stripeSK = paymentProcessorModel.param02;
+  // test key
+  // const stripeSK =
+  //   "sk_test_51FmjzfBBFmepO8dOYfc0LN8QImGbPGfIq2gu95ZffQPLJcTwdZzir7Kndz5oggnWNerV7Q9aPxvagWxEKwkCZAKT00SRojdCTt";
 
   return Stripe(stripeSK);
 }
