@@ -8,8 +8,8 @@ function loadStripe() {
     return null;
   }
 
-  // const { stripePK } = config;
-  const stripePK = "pk_test_aROFDjrZWDxMRE5YKa7keJku00ORq1PbK4";
+  const { stripePK } = config;
+  // const stripePK = "pk_test_aROFDjrZWDxMRE5YKa7keJku00ORq1PbK4";
 
   return StripeJs.loadStripe(stripePK, {
     locale: "en",
