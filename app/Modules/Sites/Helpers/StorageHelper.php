@@ -53,8 +53,14 @@ class StorageHelper
         }
     }
 
-    public static function getStorage(): array {
+    public static function getStorage(): array
+    {
         return self::$store;
+    }
+
+    public static function setStorage(array $data)
+    {
+        self::$store = $data;
     }
 
     public static function print(): string
