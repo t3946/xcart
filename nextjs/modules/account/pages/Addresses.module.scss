@@ -6,16 +6,16 @@
   justify-content: center;
 
   @include breakpoint(md) {
-    grid-template-columns: repeat(2, pxToRem(323));
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @include breakpoint(lg) {
-    grid-template-columns: repeat(2, pxToRem(323));
+    grid-template-columns: repeat(2, 1fr);
     justify-content: start;
   }
 
   @include breakpoint(xxl) {
-    grid-template-columns: repeat(3, pxToRem(323));
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
