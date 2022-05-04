@@ -42,7 +42,7 @@ const MultiplePaymentItem: React.FC<IProps> = (props) => {
     for (const payment of paymentChildren) {
       paymentItems.push(
         <li className={cn("d-flex", Styles.paymentItem)}>
-          <img src={payment.logo} alt={payment.name}/>
+          <img src={"/" + payment.logo} alt={payment.name}/>
           <span className={"flex-grow-1 mx-2"}>{payment.name}</span>
           <span className={Styles.shortName}>{payment.short_name}</span>
         </li>
