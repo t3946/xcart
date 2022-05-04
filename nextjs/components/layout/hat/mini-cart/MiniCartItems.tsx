@@ -1,7 +1,7 @@
 import * as React from "react";
 import CountInput from "@modules/ui/CountInput";
 import map from "lodash/map";
-import Price from "@modules/components/product/card/components/Price";
+import Price from "@components/common/price/Price";
 import classnames from "classnames";
 import { useDispatch } from "react-redux";
 import {
@@ -144,7 +144,7 @@ const MiniCartItems: React.FC<IProps> = function (props) {
                       </div>
                       <div className="x">x</div>
                       <div className="price">
-                        <Price currency={cart.currency} price={item.price} />
+                        <Price className={"price-number"} price={item.price} />
                       </div>
                     </div>
                   </div>
