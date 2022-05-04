@@ -11,7 +11,10 @@ import {useDispatch} from "react-redux";
 import {getTerritory} from "@redux/actions/account-actions/MainActions";
 import FormGroup from "@modules/ui/forms/FormGroup";
 import Input from "@modules/ui/forms/Input";
-import {addAddress, editAddress,} from "@redux/actions/account-actions/AddressActions";
+import {
+  addAddress,
+  editAddress,
+} from "@redux/actions/account-actions/AddressActions";
 import useSelectorAccount from "@modules/account/hooks/useSelectorAccount";
 import ErrorFocus from "@components/common/form-validation-focus/focusFormikComponent";
 import * as Yup from "yup";
@@ -63,7 +66,7 @@ export const Address: React.FC<IProps> = (props) => {
   const states = useSelectorAccount((e) => e.main.states);
   const selectOptionsCountry: any = [];
   let initialValues = {
-    country: { value: "", label: "Select country" },
+    country: {value: "", label: "Select country"},
     full_name: "",
     phone_numberCode: "",
     phone_number: "",
@@ -71,7 +74,7 @@ export const Address: React.FC<IProps> = (props) => {
     street: "",
     detailed: "",
     city: "",
-    state: { value: "", label: "Select state" },
+    state: {value: "", label: "Select state"},
     zip: "",
     is_default: false,
     address_type: addressType,
@@ -109,7 +112,7 @@ export const Address: React.FC<IProps> = (props) => {
       .test("Value required", "Required field", (selectedCountry) => {
         return Boolean(selectedCountry.value);
       })
-      .shape({ value: Yup.string() }),
+      .shape({value: Yup.string()}),
     zip: Yup.string()
       .required("Required field")
       .max(50, "The maximum number of characters is 50"),
@@ -140,7 +143,7 @@ export const Address: React.FC<IProps> = (props) => {
   }
 
   if (editMode) {
-    initialValues = { ...address };
+    initialValues = {...address};
 
     const country = getCountryById(countries, address.country_id);
 
@@ -179,15 +182,15 @@ export const Address: React.FC<IProps> = (props) => {
       onSubmit={submit}
     >
       {({
-        errors,
-        setFieldValue,
-        values,
-        touched,
-        handleChange,
-        isSubmitting,
-        setValues,
-      }) => {
-        const { country, state } = values;
+          errors,
+          setFieldValue,
+          values,
+          touched,
+          handleChange,
+          isSubmitting,
+          setValues,
+        }) => {
+        const {country, state} = values;
         const statesForSelectedCountry = getStates(
           states,
           values.country.value
@@ -218,6 +221,9 @@ export const Address: React.FC<IProps> = (props) => {
                   }}
                   isValid={!!touched.country && !errors.country}
                   isInvalid={!!touched.country && !!errors.country}
+                  classes={{
+                    valueContainer: "ps-0",
+                  }}
                 />
               }
               label="Country"
@@ -309,6 +315,9 @@ export const Address: React.FC<IProps> = (props) => {
                   name={"state"}
                   isValid={!!touched.state && !errors.state}
                   isInvalid={!!touched.state && !!errors.state}
+                  classes={{
+                    valueContainer: "ps-0",
+                  }}
                 />
               }
               label="State/Province"
@@ -332,7 +341,7 @@ export const Address: React.FC<IProps> = (props) => {
 
             {canBeDefault && (
               <InputGroup
-                classNames={{ container: "m-0" }}
+                classNames={{container: "m-0"}}
                 component={
                   <Checkbox
                     label={
@@ -343,7 +352,7 @@ export const Address: React.FC<IProps> = (props) => {
                     checked={values.is_default}
                     name={"is_default"}
                     onChange={handleChange}
-                    classes={{ container: "mt-20 mb-4" }}
+                    classes={{container: "mt-20 mb-4"}}
                   />
                 }
               />
