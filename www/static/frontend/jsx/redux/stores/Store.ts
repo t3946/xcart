@@ -105,14 +105,16 @@ axios.get("/api/account/get-site-data").then(async (res) => {
   const pathname = document.location.pathname;
 
   //load lists
-  const lists: any = await axios
-    .get("/api-client/user/lists/get-all")
-    .then((response) => response.data);
+  if (initialState.user) {
+    const lists: any = await axios
+      .get("/api-client/user/lists/get-all")
+      .then((response) => response.data);
 
-  Store.dispatch({
-    type: "SET_LISTS",
-    lists,
-  });
+    Store.dispatch({
+      type: "SET_LISTS",
+      lists,
+    });
+  }
 
   // product page
   if (pathname.search(/^\/product\/\d+/) !== -1) {
