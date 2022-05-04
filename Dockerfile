@@ -20,7 +20,7 @@ RUN apt-get update
 RUN apt-get install -y msmtp git
 
 # Install extensions
-RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis opcache
+RUN install-php-extensions xdebug gd pdo_mysql mbstring zip soap sockets redis opcache xhprof
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

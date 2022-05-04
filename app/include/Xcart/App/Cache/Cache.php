@@ -43,7 +43,7 @@ class Cache
     public function set($key, $value, $timeout = null)
     {
         if ($this->saveInMemory) {
-            $this->getDriver($this->memoryDriver)->set($key, $value, $timeout);
+            return $this->getDriver($this->memoryDriver)->set($key, $value, $timeout);
         }
 
         return $this->getDriver($this->defaultDriver)->set($key, $value, $timeout);
