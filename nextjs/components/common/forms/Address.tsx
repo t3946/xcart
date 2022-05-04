@@ -129,6 +129,7 @@ export const Address: React.FC<IProps> = (props) => {
       country_id: values.country.value,
       state_id: values.state.value,
       phone_number_country_id: phoneCountry.country_id,
+      phone_ext: values.phone_ext.replaceAll("_", ""),
     };
 
     delete data.country;
