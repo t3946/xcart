@@ -16,7 +16,7 @@ export const PaymentItem: React.FC<IProps> = function (props) {
   return (
     <div className={cn("position-relative", {[Styles.item_multiple]: isMultiple})} ref={ref}>
       <img width="54" height="36" className="lazy-img footer-payment-method-image"
-           data-src={"/" + paymentMethod.logo} alt={paymentMethod.name}
+           src={"/" + paymentMethod.logo} alt={paymentMethod.name}
       />
 
       {isMultiple && <Chevron className={cn([Styles.arrow, Styles.item__arrow, {
