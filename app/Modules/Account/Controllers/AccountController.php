@@ -38,48 +38,58 @@ class AccountController extends FrontendController
     {
         $site = Xcart::app()->getModule('Sites')->getSite();
 
-        StorageHelper::push([
-            "code" => strtolower($site->code),
-            "shortName" => $site->short_name,
-            "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
-            'account_enabled' => $site->account_enabled,
-            'logo' => (string) ($site->logo ?? ''),
-            'logo_mobile' => (string) ($site->logo_mobile ?? ''),
-            'cidev_header_code' => $site->cidev_header_code,
-            'templates' => [
-                "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
-            ],
-            'mainMenu' => MenuLibrary::getData("main-menu"),
-            'time' => time(),
-        ], null, 'site');
+        $storage = Xcart::app()->cache->get("storage_$site->code", []);
+
+        if ($storage) {
+
+            StorageHelper::setStorage($storage);
+
+        } else {
+            StorageHelper::push([
+                "code" => strtolower($site->code),
+                "shortName" => $site->short_name,
+                "workingDayTimeNow" => WorkingTimeHelper::workingDayTimeNow(),
+                'account_enabled' => $site->account_enabled,
+                'logo' => (string) ($site->logo ?? ''),
+                'logo_mobile' => (string) ($site->logo_mobile ?? ''),
+                'cidev_header_code' => $site->cidev_header_code,
+                'templates' => [
+                    "renderStaticNotifications" => StaticMessagesLibrary::renderStaticMessages(),
+                ],
+                'mainMenu' => MenuLibrary::getData("main-menu"),
+                'time' => time(),
+            ], null, 'site');
+
+            $config = $site->getConfig();
+
+            StorageHelper::push([
+                "cidev_top_header_code" => $config['cidev_top_header_code'],
+                "cidev_header_code" => $config['cidev_header_code'],
+                "companyName" => $config['company_name'],
+                'logo' => (string) ($site->logo ?? ''),
+                'logo_mobile' => (string) ($site->logo_mobile ?? ''),
+            ], null, 'config');
+
+            StorageHelper::push([
+                'desktop' => GoodsMenuLibrary::toArrayDesktop(),
+                'mobile' => GoodsMenuLibrary::toArrayMobile(),
+            ], null, 'departmentsMenu');
+
+            StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
+
+            StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
+
+            AdminHelper::routesData();
+
+            Xcart::app()->cache->set("storage_$site->code", StorageHelper::getStorage(), 3600);
+        }
+
+        StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
 
         StorageHelper::push([
             "quantity" => Xcart::app()->cart->getQuantity(),
             "checkoutUrl" => OrderHelper::getCheckoutUrl(),
         ], null, 'cart');
-
-        $config = $site->getConfig();
-
-        StorageHelper::push([
-            "cidev_top_header_code" => $config['cidev_top_header_code'],
-            "cidev_header_code" => $config['cidev_header_code'],
-            "companyName" => $config['company_name'],
-            'logo' => (string) ($site->logo ?? ''),
-            'logo_mobile' => (string) ($site->logo_mobile ?? ''),
-        ], null, 'config');
-
-
-        StorageHelper::push([
-            'desktop' => GoodsMenuLibrary::toArrayDesktop(),
-            'mobile' => GoodsMenuLibrary::toArrayMobile(),
-        ], null, 'departmentsMenu');
-
-        StorageHelper::push(Xcart::app()->request->get->all(), 'get', 'params');
-
-        StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
-        StorageHelper::push(APP_LOCAL, 'APP_LOCAL');
-
-        StorageHelper::push(self::getCountryPhoneCodes(), null, 'countries');
 
         $user = Xcart::app()->getUser(true);
 
@@ -91,8 +101,6 @@ class AccountController extends FrontendController
 
             StorageHelper::push($attributes, null, 'user');
         }
-
-        AdminHelper::routesData();
     }
 
     public function actionProductIndex($sku)
