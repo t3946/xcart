@@ -219,13 +219,6 @@ class AccountApi extends Controller
             return;
         }
 
-        $product = ProductModel::objects()->get(['productid' => $this->getRequest()->body->productId]);
-
-        if ($product === null) {
-            $this->jsonResponse(['error' => 'product not found'], 404);
-            return;
-        }
-
         $ratings_models = RatingsModel::objects()->asArray()->all();
         $ratings = ['overall' => null, 'features' => []];
 
@@ -240,20 +233,6 @@ class AccountApi extends Controller
         StorageHelper::push($ratings, 'ratings', 'ratings');
 
         $this->jsonResponse([
-            'product_info' => [
-                'product' => $product->getAttributes(),
-                'image' => (string)$product->getMainImage(),
-                'brand' => $product->brand,
-                'distributor' => $product->distributor,
-                'flags' => [
-                    'isGroupRoot' => $product->isGroupRoot(),
-                    'isOutOfStockFrontend' => $product->isOutOfStockFrontend(),
-                    'isFreeShipping' => $product->isFreeShipping(),
-                    'isFlatRate' => $product->isFlatRate(),
-                    'isEarlyChildhoodResources' => $product->manufacturerid === 85,
-                ],
-            ],
-
             'reviews' => [
                 'orders' => [
                     [
