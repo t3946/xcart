@@ -109,7 +109,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-8 col-12 border-right-desktop footer-payment-column">
+                <div class="col-md-8 col-12 border-right-desktop pe-md-0 pe-lg-12">
                     <div class="confirmations footer-border-top">
                         <div class="row">
                             <div class="col-lg-8 col-md-6 col-12">
