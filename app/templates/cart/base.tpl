@@ -122,7 +122,7 @@
 {/block}
 
 {block "content-wrapper"}
-    <div class="cart_shipping-page default-content-page default-form container px-0">
+    <div class="cart_shipping-page default-content-page default-form container">
         {block "content"}{/block}
     </div>
 {/block}

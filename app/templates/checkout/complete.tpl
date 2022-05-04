@@ -77,7 +77,7 @@
 {/block}
 
 {block 'content'}
-    <div class="order-confirmation-container">
+    <div class="order-confirmation-container mt-2 mt-md-0">
 
         {set $extra = $order->extra_model}
 
