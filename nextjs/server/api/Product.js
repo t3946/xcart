@@ -9,7 +9,6 @@ app.post("/get", async function (req, res) {
   });
 
   await normalize(req.storefront, product);
-  console.log("/get", {product});
   res.json({ product });
 });
 

@@ -9,40 +9,44 @@ use Cocur\Slugify\Slugify;
  */
 trait SlugifyTrait
 {
-    protected $slugify;
+    protected ?Slugify $slugify = null;
+    protected ?string $slug = null;
 
     /**
      * @param $source
      *
      * @return string
      */
-    protected function createSlug($source)
+    protected function createSlug($source): string
     {
         if ($this->slugify === null) {
-            $this->slugify = new Slugify();
+            $this->slugify = new Slugify(['rulesets' => ['default']]);
         }
 
-        return $this->slugify->slugify($source);
+        if ($this->slug === null) {
+            $this->slug = $this->slugify->slugify($source);
+        }
+
+        return $this->slug;
     }
 
     /**
      * @param $url
-     * @param int  $count
+     * @param int $count
      * @param null $pk
      *
      * @return string
      */
-    public function uniqueUrl($url, $count = 0, $pk = null)
+    public function uniqueUrl($url, int $count = 0, $pk = null): string
     {
-        /* @var $model \Xcart\App\Orm\Model */
-        $model = $this->getModel();
         $newUrl = $url;
+
         if ($count) {
             $newUrl .= '-'.$count;
         }
 
-        $qs = call_user_func([$model, 'objects'])
-            ->filter([$this->getName() => $newUrl]);
+        $qs = $this->getModel()::objects()->filter([$this->getName() => $newUrl]);
+
         if ($pk) {
             $qs = $qs->exclude(['pk' => $pk]);
         }

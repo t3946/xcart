@@ -72,6 +72,8 @@ services:
       SERVICE_TAGS: dev
       PHP_IDE_CONFIG: serverName=localhost
       PHP_OPCACHE_VALIDATE_TIMESTAMPS: 1
+      XHGUI_PROFILING: 1
+      XHGUI_SAVE_HANDLER: upload
     working_dir: /var/www
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -83,6 +85,7 @@ services:
       - ./docker/php/sendmail.ini:/usr/local/etc/php/conf.d/mail.ini
       - ./docker/php/msmtprc:/etc/msmtprc
       - ./docker/php/openssl.cnf:/etc/ssl/openssl.cnf
+      - xhgui-vendor:/xhgui/vendor:ro
 
   redis:
     container_name: redis
@@ -127,9 +130,18 @@ services:
       - ./:/home/node/app
     command: npm run dev-server
 
+  xhgui:
+    image: frxyt/xhgui-dev
+    ports:
+      - 8070:80
+    volumes:
+      - xhgui-vendor:/xhgui/vendor:rw
+    networks:
+      - frontend
+      - backend
+
 volumes:
-  data1:
-    driver: local
+  xhgui-vendor:
 
 
 networks:

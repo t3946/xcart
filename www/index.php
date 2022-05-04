@@ -1,4 +1,8 @@
 <?php
+if ($_SERVER['XHGUI_PROFILING'] && file_exists('/xhgui/vendor/perftools/xhgui-collector/external/header.php')) {
+    require_once('/xhgui/vendor/perftools/xhgui-collector/external/header.php');
+}
+
 error_reporting(E_ALL ^ E_DEPRECATED);
 
 date_default_timezone_set('EST'); //Magic;
